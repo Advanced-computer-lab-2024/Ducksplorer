@@ -1,5 +1,8 @@
 import React from "react";
 import { useFormik } from "formik";
+import DropDown from "./DropDown";
+import {useEffect} from 'react';
+import { useState } from "react";
 
 const validate = (values) => {
   const errors = {};
@@ -11,7 +14,8 @@ const validate = (values) => {
 
   if (!values.lastName) {
     errors.lastName = "Last Name cannot be empty";
-  } else if (values.lastName.length > 20) {
+  } else if (values.lastName.length > 20) 
+    {
     errors.lastName = "Must be 20 characters or less";
   }
 
@@ -30,7 +34,11 @@ const validate = (values) => {
   return errors;
 };
 
-function FormSection() {
+
+
+function FormSection(type) {
+  
+
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -94,6 +102,22 @@ function FormSection() {
           {formik.errors.password ? (
             <div className="error">{formik.errors.password}</div>
           ) : null}
+          {type === "Tourist" && <div> <input
+            type="Date"
+            placeholder="Date of birth"
+            name="DOB"
+            id="DOB"
+            onChange={formik.handleChange}
+            value={formik.values.DOB}
+          />  ,<input
+          type="email"
+          placeholder="Email Address"
+          name="email"
+          id="email"
+          onChange={formik.handleChange}
+          value={formik.values.email}
+        /></div>}
+         <DropDown />
           <button
             type="submit"
             className="submit-btn text-white cursor-pointer"
@@ -111,5 +135,4 @@ function FormSection() {
     </div>
   );
 }
-
 export default FormSection;
