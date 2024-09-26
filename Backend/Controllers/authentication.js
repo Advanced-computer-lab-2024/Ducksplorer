@@ -21,5 +21,6 @@ const signUp = (req,res) => { //req gai mn el frontend el etmalet wa2t el signup
         const companyProfile = req.body.companyProfile;
     }
 
- 
+    
+    
 }
