@@ -9,11 +9,11 @@ const reviewSchema = new mongoose.Schema({
     },
     comment: {
       type: String,
+
       required: true
     },
     date: {
       type: Date,
-      default: Date.now
     }
   });
 
@@ -45,11 +45,11 @@ const productSchema = new mongoose.Schema({
       trim: true
     },
     seller: {
-      type: mongoose.Schema.Types.ObjectId, // Assuming a reference to a Seller model
-      ref: "Seller",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Seller',
       required: true
     },
-    reviews: [reviewSchema] // Array of reviews
+    reviews: [reviewSchema]
   });
 
 const Product = mongoose.model("Product", productSchema);
