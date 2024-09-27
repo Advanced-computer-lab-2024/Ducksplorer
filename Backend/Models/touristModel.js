@@ -25,7 +25,7 @@ const touristSchema = new  Schema({
     nationality:{
         type : String,
         required : true,
-        default : "Egyptian" //error
+        default : "Egyptian" //error (Lazem tet7at gowa quotations)
     },
     DOB : {
         type : Date,
