@@ -1,7 +1,7 @@
 import './App.css';
 import React from 'react';
 import {BrowserRouter,Routes,Route} from 'react-router-dom';
-import Signup from './Routes/Signup.js';
+import Signup from './Pages/Signup.js';
 
    
 
