@@ -15,7 +15,9 @@ body {
   align-items: center;
 
   padding: 20px;
-  height: 100vh;
+  height: 120vh;
+  
+
 
   background-image: url(../public/Images/bg-intro-mobile.png);
   background-color: hsl(65, 100%, 74%);
@@ -51,8 +53,16 @@ body {
 
 /* FormSection Component Styling */
 
+.both-sections {
+  display: flex;
+}
+
+
 .section-container {
-  margin-top: 50px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .trial-btn {
@@ -63,19 +73,20 @@ body {
   border-radius: 10px;
   padding: 15px;
   line-height: 1.5em;
+  text-align: center;
 }
 
 .form-container {
-  margin-top: 20px;
+  width: 100%;
+  max-width: 600px; /* Set a maximum width for the form */
+  overflow: auto; /* Hide overflow content */
   padding: 20px;
-  background-color: white;
-  border-radius: 10px;
-  border-bottom: 5px solid rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
 }
 
 .form-container input {
   width: 100%;
-  padding: 15px;
+  padding: 10px;
   margin-bottom: 10px;
   border: 1px solid lightgray;
   border-radius: 5px;
