@@ -1,16 +1,24 @@
-import logo from './logo.svg';
 import './App.css';
-import FormSection from './Components/FormSection.js';
-import TextSection from './Components/TextSection.js';
+import React from 'react';
+import {BrowserRouter,Routes,Route} from 'react-router-dom';
+import Signup from './Routes/Signup.js';
 
+   
+
+ 
 function App() {
-  return (
-    <>
-    <FormSection/>
-    <TextSection/>
-    </>
 
+  return (
+    <React.StrictMode>
+    <BrowserRouter>
+      <Routes>
+        <Route path = "/signUp" element=  {<Signup/>} />  
+      </Routes>
+    </BrowserRouter>
+    </React.StrictMode>
   );
 }
+
+
 
 export default App;

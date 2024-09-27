@@ -1,5 +1,9 @@
 import React from "react";
 import { useFormik } from "formik";
+import DropDown from "./DropDown";
+import {useEffect} from 'react';
+import { useState } from "react";
+import { useTypeContext } from "../context/TypeContext";
 
 const validate = (values) => {
   const errors = {};
@@ -11,7 +15,8 @@ const validate = (values) => {
 
   if (!values.lastName) {
     errors.lastName = "Last Name cannot be empty";
-  } else if (values.lastName.length > 20) {
+  } else if (values.lastName.length > 20) 
+    {
     errors.lastName = "Must be 20 characters or less";
   }
 
@@ -30,7 +35,13 @@ const validate = (values) => {
   return errors;
 };
 
+
+
 function FormSection() {
+
+  const {type} = useTypeContext();
+  
+
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -45,30 +56,22 @@ function FormSection() {
 
   return (
     <div className="section-container">
-      <button className="trial-btn text-white cursor-pointer">
+      <div className="trial-btn text-white cursor-pointer">
         <span className="text-bold">Welcome To Ducksplorer</span> 
-      </button>
+      </div>
       <div className="form-container">
         <form onSubmit={formik.handleSubmit}>
           <input
             type="text"
-            placeholder="First Name"
-            name="firstName"
-            id="firstName"
+            placeholder="Username"
+            name="Username"
+            id="Username"
             onChange={formik.handleChange}
             value={formik.values.firstName}
           />
           {formik.errors.firstName ? (
-            <div className="error">{formik.errors.firstName}</div>
+            <div className="error">{formik.errors.Username}</div>
           ) : null}
-          <input
-            type="text"
-            placeholder="Last Name"
-            name="lastName"
-            id="lastName"
-            onChange={formik.handleChange}
-            value={formik.values.lastName}
-          />
           {formik.errors.lastName ? (
             <div className="error">{formik.errors.lastName}</div>
           ) : null}
@@ -94,11 +97,54 @@ function FormSection() {
           {formik.errors.password ? (
             <div className="error">{formik.errors.password}</div>
           ) : null}
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            name="confirmPassword"
+            id="confirmPassword"
+            onChange={formik.handleChange}
+            value={formik.values.confirmPassword}
+        />
+          {type === "Tourist" && <div> 
+            <input
+            type="text"
+            placeholder="Mobile Number"
+            name="mobileNumber"
+            id="mobileNumber"
+            onChange={formik.handleChange}
+            value={formik.values.mobileNumber}
+          />
+          <input
+            type="text"
+            placeholder="Nationality"
+            name="nationality"
+            id="nationality"
+            onChange={formik.handleChange}
+            value={formik.values.nationality}
+          />
+           <input
+            type="Date"
+            placeholder="Date of birth"
+            name="DOB"
+            id="DOB"
+            onChange={formik.handleChange}
+            value={formik.values.DOB}
+          /> 
+          <input
+            type="text"
+            placeholder="Employment Status"
+            name="employmentStatus"
+            id="employmentStatus"
+            onChange={formik.handleChange}
+            value={formik.values.employmentStatus}
+          />
+           </div>}
+         <DropDown />
           <button
             type="submit"
             className="submit-btn text-white cursor-pointer"
           >
-            CLAIM YOUR FREE TRIAL
+            Signup
           </button>
         </form>
         <p className="terms-text">
@@ -111,5 +157,4 @@ function FormSection() {
     </div>
   );
 }
-
 export default FormSection;
