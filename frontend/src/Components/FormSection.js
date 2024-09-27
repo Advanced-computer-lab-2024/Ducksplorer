@@ -14,8 +14,7 @@ const validate = (values) => {
 
   if (!values.lastName) {
     errors.lastName = "Last Name cannot be empty";
-  } else if (values.lastName.length > 20) 
-    {
+  } else if (values.lastName.length > 20) {
     errors.lastName = "Must be 20 characters or less";
   }
 
@@ -34,12 +33,8 @@ const validate = (values) => {
   return errors;
 };
 
-
-
 function FormSection() {
-
-  const {type} = useTypeContext();
-  
+  const { type } = useTypeContext();
 
   const formik = useFormik({
     initialValues: {
@@ -56,7 +51,7 @@ function FormSection() {
   return (
     <div className="section-container">
       <div className="trial-btn text-white cursor-pointer">
-        <span className="text-bold">Welcome To Ducksplorer</span> 
+        <span className="text-bold">Welcome To Ducksplorer</span>
       </div>
       <div className="form-container">
         <form onSubmit={formik.handleSubmit}>
@@ -66,7 +61,7 @@ function FormSection() {
             name="Username"
             id="Username"
             onChange={formik.handleChange}
-            value={formik.values.firstName}
+            value={formik.values.Username}
           />
           {formik.errors.firstName ? (
             <div className="error">{formik.errors.Username}</div>
@@ -103,42 +98,120 @@ function FormSection() {
             id="confirmPassword"
             onChange={formik.handleChange}
             value={formik.values.confirmPassword}
-        />
-          {type === "Tourist" && <div> 
-            <input
-            type="text"
-            placeholder="Mobile Number"
-            name="mobileNumber"
-            id="mobileNumber"
-            onChange={formik.handleChange}
-            value={formik.values.mobileNumber}
           />
-          <input
-            type="text"
-            placeholder="Nationality"
-            name="nationality"
-            id="nationality"
-            onChange={formik.handleChange}
-            value={formik.values.nationality}
-          />
-           <input
-            type="Date"
-            placeholder="Date of birth"
-            name="DOB"
-            id="DOB"
-            onChange={formik.handleChange}
-            value={formik.values.DOB}
-          /> 
-          <input
-            type="text"
-            placeholder="Employment Status"
-            name="employmentStatus"
-            id="employmentStatus"
-            onChange={formik.handleChange}
-            value={formik.values.employmentStatus}
-          />
-           </div>}
-         <DropDown />
+          {type === "Tourist" && (
+            <div>
+              <input
+                type="text"
+                placeholder="Mobile Number"
+                name="mobileNumber"
+                id="mobileNumber"
+                onChange={formik.handleChange}
+                value={formik.values.mobileNumber}
+              />
+              <input
+                type="text"
+                placeholder="Nationality"
+                name="nationality"
+                id="nationality"
+                onChange={formik.handleChange}
+                value={formik.values.nationality}
+              />
+              <input
+                type="Date"
+                placeholder="Date of birth"
+                name="DOB"
+                id="DOB"
+                onChange={formik.handleChange}
+                value={formik.values.DOB}
+              />
+              <input
+                type="text"
+                placeholder="Employment Status"
+                name="employmentStatus"
+                id="employmentStatus"
+                onChange={formik.handleChange}
+                value={formik.values.employmentStatus}
+              />
+            </div>
+          )}
+          {type === "Guide" && (
+            <div>
+              <input
+                type="text"
+                placeholder="Mobile Number"
+                name="mobileNumber"
+                id="mobileNumber"
+                onChange={formik.handleChange}
+                value={formik.values.mobileNumber}
+              />
+              <input
+                type="text"
+                placeholder="Years of experience"
+                name="yearsOfExperience"
+                id="yearsOfExperience"
+                onChange={formik.handleChange}
+                value={formik.values.yearsOfExperience}
+              />
+              <input
+                type="text"
+                placeholder="Previous work"
+                name="previousWork"
+                id="previousWork"
+                onChange={formik.handleChange}
+                value={formik.values.previousWork}
+              />
+            </div>
+          )}
+          {type === "Advertiser" && (
+            <div>
+              <input
+                type="text"
+                placeholder="Website Link"
+                name="websiteLink"
+                id="websiteLink"
+                onChange={formik.handleChange}
+                value={formik.values.websiteLink}
+              />
+              <input
+                type="text"
+                placeholder="Hotline"
+                name="hotline"
+                id="hotline"
+                onChange={formik.handleChange}
+                value={formik.values.hotline}
+              />
+              <input
+                type="text"
+                placeholder="Company Profile"
+                name="companyProfile"
+                id="companyProfile"
+                onChange={formik.handleChange}
+                value={formik.values.companyProfile}
+              />
+            </div>
+          )}
+          {type === "Seller" && (
+            <div>
+              <input
+                type="text"
+                placeholder="Name"
+                name="name"
+                id="name"
+                onChange={formik.handleChange}
+                value={formik.values.name}
+              />
+              <input
+                type="text"
+                placeholder="Description"
+                name="description"
+                id="description"
+                onChange={formik.handleChange}
+                value={formik.values.description}
+              />
+            </div>
+          )}
+          <DropDown />
           <button
             type="submit"
             className="submit-btn text-white cursor-pointer"
