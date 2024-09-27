@@ -25,7 +25,7 @@ const touristSchema = new  Schema({
     nationality:{
         type : String,
         required : true,
-        default : Egyptian
+        default : "Egyptian" //error
     },
     DOB : {
         type : Date,

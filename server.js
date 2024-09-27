@@ -6,7 +6,10 @@ const PORT = process.env.PORT || 8000; //tells us to get port from env file or l
 
 console.log(process.env.PORT );
 app.use(express.json());
-app.use('/api');
+
+const signUpRoutes = require("./Backend/Routes/signUpRoutes.js");
+
+app.use("/signUp", signUpRoutes);
 
 
 const connectToMongoDB = async () => {
