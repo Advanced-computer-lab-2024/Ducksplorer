@@ -1,9 +1,8 @@
 import React from "react";
 import { useFormik } from "formik";
 import DropDown from "./DropDown";
-import {useEffect} from 'react';
-import { useState } from "react";
-import { useTypeContext } from "../context/TypeContext";
+
+import { useTypeContext } from "../context/TypeContext.js";
 
 const validate = (values) => {
   const errors = {};
