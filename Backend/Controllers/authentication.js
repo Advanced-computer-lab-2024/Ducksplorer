@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const Tourist = require("../Models/touristModel");
 const TourGuide = require("../Models/tourGuideModel");
 const Seller = require("../Models/sellerModel");
@@ -40,15 +41,31 @@ const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el 
         }
     }   catch (error) {
         res.status(500).json({ message: error.message });
+=======
+const signUp = (req,res) => { //req gai mn el frontend el etmalet wa2t el signup
+    const {email,userName,password} = req.body;
+    if(req.body.type.equals("Tourist")){
+        const mobileNumber = req.body.mobileNumber;
+        const nationality = req.body.nationality;
+        const DOB = req.body.DOB;
+        const employmentStatus = req.body.employmentStatus;
+>>>>>>> 61a8f9f830edb4113c92ce6392492fa815d2e1a1
     }
-}
-const login = async (req,res) => {
-    try{
-        const {userName,password} = req.body;
-        
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+    if(req.body.type.equals("TourGuide")){
+        const mobileNumber = req.body.mobileNumber;
+        const yearsOfExperience = req.body.yearsOfExperience;
+        const previousWork = req.body.previousWork;
     }
-}
+    if(req.body.type.equals("Seller")){
+        const description = req.body.description;
+        const name = req.body.name;
+    }
+    if(req.body.type.equals("Advertiser")){
+        const websiteLink = req.body.websiteLink;
+        const hotline = req.body.hotline;
+        const companyProfile = req.body.companyProfile;
+    }
 
-module.exports = {signUp, login};
+    
+    
+}
