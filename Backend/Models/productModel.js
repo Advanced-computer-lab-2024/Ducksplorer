@@ -5,7 +5,9 @@ const reviewSchema = new mongoose.Schema({
     user: {
       type: mongoose.Schema.Types.ObjectId, // Assuming a reference to a User model
       ref: 'User',
-      required: true
+      required: true,
+      unique: true,
+      immutable: true
     },
     comment: {
       type: String,
