@@ -30,14 +30,13 @@ const getAllItineraries = async (req, res) => {
 }
 
 const getItinerary = async (req, res) => {
-    //retrieve all Itineraries from the database
+    //retrieve an Itineraries from the database
     try {
         const { id } = req.params;
-        const { activity, locations, timeline, language, price, availableDates, availableTimes, accessibility, pickUpLocation, dropOffLocation } = req.body;
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ error: "ID invalid" });
         }
-        const itinerary = await itineraryModel.findByIdAndUpdate(id, { activity, locations, timeline, language, price, availableDates, availableTimes, accessibility, pickUpLocation, dropOffLocation });
+        const itinerary = await itineraryModel.findById(id);
         if (!itinerary) {
             return res.status(404).json({ error: "Itinerary not found" });
         }
@@ -49,7 +48,7 @@ const getItinerary = async (req, res) => {
 }
 
 const updateItinerary = async (req, res) => {
-    //update a itinerary in the database
+    //update an itinerary in the database
     console.log(req.body);
     try {
         const { id } = req.params;
