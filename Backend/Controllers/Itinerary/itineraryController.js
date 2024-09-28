@@ -1,5 +1,5 @@
 const express = require("express");
-const itineraryModel = require("../Models/itineraryModel")
+const itineraryModel = require("../../Models/itineraryModel");
 const mongoose = require('mongoose');
 
 //router.post("/", authentication.signUp);
