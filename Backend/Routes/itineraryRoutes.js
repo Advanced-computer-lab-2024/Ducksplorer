@@ -6,3 +6,4 @@ router.route("/").post(createItinerary).get(getAllItineraries)
 router.route("/:id").get(getItinerary).put(updateItinerary).delete(deleteItinerary)
 
 module.exports = router
+jaydaa
