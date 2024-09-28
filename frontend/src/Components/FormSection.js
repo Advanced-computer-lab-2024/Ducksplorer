@@ -1,5 +1,8 @@
 import React from "react";
 import { useFormik } from "formik";
+import DropDown from "./DropDown";
+
+import { useTypeContext } from "../context/TypeContext.js";
 
 const validate = (values) => {
   const errors = {};
@@ -31,6 +34,8 @@ const validate = (values) => {
 };
 
 function FormSection() {
+  const { type } = useTypeContext();
+
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -45,30 +50,22 @@ function FormSection() {
 
   return (
     <div className="section-container">
-      <button className="trial-btn text-white cursor-pointer">
-        <span className="text-bold">Welcome To Ducksplorer</span> 
-      </button>
+      <div className="trial-btn text-white cursor-pointer">
+        <span className="text-bold">Welcome To Ducksplorer</span>
+      </div>
       <div className="form-container">
         <form onSubmit={formik.handleSubmit}>
           <input
             type="text"
-            placeholder="First Name"
-            name="firstName"
-            id="firstName"
+            placeholder="Username"
+            name="Username"
+            id="Username"
             onChange={formik.handleChange}
-            value={formik.values.firstName}
+            value={formik.values.Username}
           />
           {formik.errors.firstName ? (
-            <div className="error">{formik.errors.firstName}</div>
+            <div className="error">{formik.errors.Username}</div>
           ) : null}
-          <input
-            type="text"
-            placeholder="Last Name"
-            name="lastName"
-            id="lastName"
-            onChange={formik.handleChange}
-            value={formik.values.lastName}
-          />
           {formik.errors.lastName ? (
             <div className="error">{formik.errors.lastName}</div>
           ) : null}
@@ -94,11 +91,132 @@ function FormSection() {
           {formik.errors.password ? (
             <div className="error">{formik.errors.password}</div>
           ) : null}
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            name="confirmPassword"
+            id="confirmPassword"
+            onChange={formik.handleChange}
+            value={formik.values.confirmPassword}
+          />
+          {type === "Tourist" && (
+            <div>
+              <input
+                type="text"
+                placeholder="Mobile Number"
+                name="mobileNumber"
+                id="mobileNumber"
+                onChange={formik.handleChange}
+                value={formik.values.mobileNumber}
+              />
+              <input
+                type="text"
+                placeholder="Nationality"
+                name="nationality"
+                id="nationality"
+                onChange={formik.handleChange}
+                value={formik.values.nationality}
+              />
+              <input
+                type="Date"
+                placeholder="Date of birth"
+                name="DOB"
+                id="DOB"
+                onChange={formik.handleChange}
+                value={formik.values.DOB}
+              />
+              <input
+                type="text"
+                placeholder="Employment Status"
+                name="employmentStatus"
+                id="employmentStatus"
+                onChange={formik.handleChange}
+                value={formik.values.employmentStatus}
+              />
+            </div>
+          )}
+          {type === "Guide" && (
+            <div>
+              <input
+                type="text"
+                placeholder="Mobile Number"
+                name="mobileNumber"
+                id="mobileNumber"
+                onChange={formik.handleChange}
+                value={formik.values.mobileNumber}
+              />
+              <input
+                type="text"
+                placeholder="Years of experience"
+                name="yearsOfExperience"
+                id="yearsOfExperience"
+                onChange={formik.handleChange}
+                value={formik.values.yearsOfExperience}
+              />
+              <input
+                type="text"
+                placeholder="Previous work"
+                name="previousWork"
+                id="previousWork"
+                onChange={formik.handleChange}
+                value={formik.values.previousWork}
+              />
+            </div>
+          )}
+          {type === "Advertiser" && (
+            <div>
+              <input
+                type="text"
+                placeholder="Website Link"
+                name="websiteLink"
+                id="websiteLink"
+                onChange={formik.handleChange}
+                value={formik.values.websiteLink}
+              />
+              <input
+                type="text"
+                placeholder="Hotline"
+                name="hotline"
+                id="hotline"
+                onChange={formik.handleChange}
+                value={formik.values.hotline}
+              />
+              <input
+                type="text"
+                placeholder="Company Profile"
+                name="companyProfile"
+                id="companyProfile"
+                onChange={formik.handleChange}
+                value={formik.values.companyProfile}
+              />
+            </div>
+          )}
+          {type === "Seller" && (
+            <div>
+              <input
+                type="text"
+                placeholder="Name"
+                name="name"
+                id="name"
+                onChange={formik.handleChange}
+                value={formik.values.name}
+              />
+              <input
+                type="text"
+                placeholder="Description"
+                name="description"
+                id="description"
+                onChange={formik.handleChange}
+                value={formik.values.description}
+              />
+            </div>
+          )}
+          <DropDown />
           <button
             type="submit"
             className="submit-btn text-white cursor-pointer"
           >
-            CLAIM YOUR FREE TRIAL
+            Signup
           </button>
         </form>
         <p className="terms-text">
@@ -111,5 +229,4 @@ function FormSection() {
     </div>
   );
 }
-
 export default FormSection;
