@@ -1,7 +1,7 @@
 const Tourist = require("../Models/touristModel.js");
 const TourGuide = require("../Models/tourGuideModel.js");
 const Seller = require("../Models/sellerModel.js");
-const Advertiser = require("../Models/advertiserModel");
+const Advertiser = require("../Models/advertiserModel.js");
 
 const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el signup
     try{
