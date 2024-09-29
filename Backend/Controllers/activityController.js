@@ -42,7 +42,24 @@ const deleteActivity = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+const searchActivities = async (req, res) => {
+    const searchParams = req.query;
+    try {
+        const activities = await activityService.searchActivities(searchParams);
+        res.json(activities);
+      } catch (error) {
+        res.status(500).json({ message: 'Error fetching activities' });
+      }
+};
+const viewUpcomingActivities = async (req,res) => {
+    try{
+        const upcomingActivities = await activityService.viewUpcomingActivities();
+        res.json(upcomingActivities);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching upcoming activities' });
+  }
+};
 
 
 
- module.exports = {createActivity, getAllActivitiesByAdvertiserId, updateActivity, deleteActivity};
+ module.exports = {createActivity, getAllActivitiesByAdvertiserId, updateActivity, deleteActivity, searchActivities, viewUpcomingActivities};

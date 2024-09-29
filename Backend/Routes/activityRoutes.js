@@ -1,9 +1,11 @@
 const express = require("express");
 const activity = require("../Controllers/activityController.js");
 
+
 const router = express.Router();
 
-router.post("/", activity.createActivity);
+router.route("/").post(activity.createActivity).get(activity.searchActivities);
+router.route("/upcoming").get(activity.viewUpcomingActivities);
 router.route("/:activityId").patch(activity.updateActivity).delete(activity.deleteActivity);
 router.get("/:advertiserId", activity.getAllActivitiesByAdvertiserId);
 module.exports = router;
