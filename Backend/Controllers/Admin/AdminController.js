@@ -46,7 +46,27 @@ const deleteUser = async (req, res) => {
   }
 };
 
-const addUser = async (req, res) => {
+const addAdmin = async (req, res) => {
+  const { userName, password, role} = req.body;
+
+  try {
+    const user = await User.findOne({ userName });
+    if (user) {
+      return res.status(400).json({ error: "Username Already Exists" });
+    }
+
+    const newUser = new User({ role, userName, password ,status:"Approved"});
+
+    // Save the user to the database
+    await newUser.save();
+
+    return res.status(200).json({ message: 'User added successfully' });
+  } catch (error) {
+    console.error('Error adding user:', error);
+    return res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+const addGovernor = async (req, res) => {
   const { userName, password, role } = req.body;
 
   try {
@@ -55,9 +75,8 @@ const addUser = async (req, res) => {
        {
           return res.status(400).json({error:"Username Already Exists"});
        }
-    const newuser = new User({ role, userName, password });
+    const newuser = new User({ role, userName, password ,status:"Approved"});
 
-    // Save the user to the database
     await newuser.save();
 
     return res.status(200).json({ message: 'User added successfully' });
@@ -105,7 +124,8 @@ const getUsers = async (req, res) => {
 
 module.exports = {
     deleteUser,
-    addUser,
+    addAdmin,
+    addGovernor,
     approveUser,
     getPendingUsers,
     getUsers

@@ -1,9 +1,11 @@
 const express = require("express");
-const { deleteUser, addUser , approveUser ,getPendingUsers , getUsers } = require("../Controllers/Admin/AdminController.js");
+const { deleteUser, addAdmin, addGovernor , approveUser ,getPendingUsers , getUsers } = require("../Controllers/Admin/AdminController.js");
 
 const router = express.Router();
 
-router.post("/adduser", addUser);
+router.post("/addAdmin", addAdmin);
+
+router.post("/addGovernor", addGovernor);
 
 router.delete("/deleteuser", deleteUser);
 
