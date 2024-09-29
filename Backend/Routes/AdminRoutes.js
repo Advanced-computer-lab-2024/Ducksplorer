@@ -11,7 +11,7 @@ router.put("/approveuser" , approveUser);
 
 router.get("/getpending" , getPendingUsers); 
 
-router.get("/getusers" , getUsers);
+router.get("/" , getUsers);
 
 
 module.exports = router;

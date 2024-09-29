@@ -95,7 +95,7 @@ try {
 
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find({ status: { $ne: 'Pending' } });
     return res.status(200).json({ users });
   } catch (error) {
     console.error(error);
