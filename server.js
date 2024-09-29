@@ -8,8 +8,10 @@ console.log(process.env.PORT );
 app.use(express.json());
 
 const signUpRoutes = require("./Backend/Routes/signUpRoutes.js");
+const activityRoutes = require("./Backend/Routes/activityRoutes.js");
 
 app.use("/signUp", signUpRoutes);
+app.use("/activity", activityRoutes);
 
 
 const connectToMongoDB = async () => {

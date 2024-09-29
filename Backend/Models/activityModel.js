@@ -2,6 +2,19 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const activitySchema = new Schema ({
+    name: {
+        type: String,
+        required: true
+    },
+    isOpen:{
+        type: Boolean,
+        required: true
+    },
+    advertiser: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Advertiser',
+        required: true
+      },
     date:{
         type : Date,
         required : true
