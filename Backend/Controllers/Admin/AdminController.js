@@ -67,10 +67,46 @@ const addUser = async (req, res) => {
   }
 };
 
+const approveUser = async (req, res) => {
+  const { userName } = req.body;
+  try {
+    const user = await User.findOne({ userName });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    user.status = 'Approved';
+    await user.save();
+    return res.status(200).json({ message: 'User approved successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
 
+const getPendingUsers = async (req, res) => {
+try {
+  const users = await User.find({ status: 'Pending' });
+  return res.status(200).json({ users });
+} catch (error) {
+  console.error(error);
+  return res.status(500).json({ error: 'Internal server error' });
+}
+};
 
+const getUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    return res.status(200).json({ users });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
 
 module.exports = {
     deleteUser,
-    addUser
+    addUser,
+    approveUser,
+    getPendingUsers,
+    getUsers
 };

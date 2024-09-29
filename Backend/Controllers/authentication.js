@@ -12,9 +12,8 @@ const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el 
             return res.status(400).json({error:"Username Already Exists"});
         }
         const role = req.body.role;
-        const newuser = new User({role , userName, password});
+        const newuser = new User({role , userName, password , status:"Pending"});
         await newuser.save();
-        res.status(201).json(user);
 
         if(role === "Tourist" ){
             const mobileNumber = req.body.mobileNumber;
