@@ -45,7 +45,6 @@ const deleteUser = async (req, res) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
-
 const addAdmin = async (req, res) => {
   const { userName, password, role} = req.body;
 

@@ -6,6 +6,8 @@ import AdminDashboard from './Components/AdminDashboard.js';
 import ApproveUsers from './Pages/Admin/ApproveUsers.js';
 import DeleteUser from './Pages/Admin/DeleteUsers.js';
 import AddAdmin from './Pages/Admin/AddAdmin.js';
+import AddGoverner from './Pages/Admin/AddGovernor.js';
+
 
    
 
@@ -21,6 +23,7 @@ function App() {
         <Route path ="/pendingusers" element ={<ApproveUsers />} />
         <Route path ="/deleteusers" element = {<DeleteUser />} />
         <Route path ="/addAdmin" element = {<AddAdmin />} />
+        <Route path ="/addGovernor" element= {<AddGoverner/>} />
       </Routes>
     </BrowserRouter>
     </React.StrictMode>

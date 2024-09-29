@@ -3,7 +3,8 @@ import { Drawer, Typography, Divider, List, ListItem, ListItemIcon, ListItemText
 import { Link } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
-import DeleteIcon from '@mui/icons-material/Delete'; // Import DeleteIcon
+import DeleteIcon from '@mui/icons-material/Delete';
+import PersonAddIcon from '@mui/icons-material/PersonAdd'; // Import PersonAddIcon
 
 const drawerWidth = 240;
 
@@ -35,11 +36,23 @@ const Sidebar = () => {
             </ListItemIcon>
             <ListItemText primary="Approve Pending Users" />
           </ListItem>
-          <ListItem button component={Link} to="/deleteusers"> 
+          <ListItem button component={Link} to="/deleteusers">
             <ListItemIcon>
               <DeleteIcon />
             </ListItemIcon>
             <ListItemText primary="Delete Users" />
+          </ListItem>
+          <ListItem button component={Link} to="/addAdmin"> 
+            <ListItemIcon>
+              <PersonAddIcon />
+            </ListItemIcon>
+            <ListItemText primary="Add Admin" />
+          </ListItem>
+          <ListItem button component={Link} to="/addGovernor"> 
+            <ListItemIcon>
+              <PersonAddIcon />
+            </ListItemIcon>
+            <ListItemText primary="Add Governor" />
           </ListItem>
         </List>
         <Divider />
