@@ -1,232 +1,277 @@
-import React from "react";
-import { useFormik } from "formik";
-import DropDown from "./DropDown";
+import React, { useState } from 'react';
+import { TextField, IconButton, InputAdornment, Button, Stack } from '@mui/material';
+import Iconify from './TopNav/iconify.js'; 
+import axios from 'axios';
+import { message } from 'antd';
+import { useTypeContext } from '../context/TypeContext';
+import DropDown from './DropDown.js';
 
-import { useTypeContext } from "../context/TypeContext.js";
-
-const validate = (values) => {
-  const errors = {};
-  if (!values.firstName) {
-    errors.firstName = "First Name cannot be empty";
-  } else if (values.firstName.length > 15) {
-    errors.firstName = "Must be 15 characters or less";
-  }
-
-  if (!values.lastName) {
-    errors.lastName = "Last Name cannot be empty";
-  } else if (values.lastName.length > 20) {
-    errors.lastName = "Must be 20 characters or less";
-  }
-
-  if (!values.email) {
-    errors.email = "Email is required";
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = "Invalid email address";
-  }
-
-  if (!values.password) {
-    errors.password = "Password is required";
-  } else if (values.password.length < 8) {
-    errors.password = "Password must not be less than 8 characters";
-  }
-
-  return errors;
-};
-
-function FormSection() {
+const FormSection = () => {
   const { type } = useTypeContext();
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const formik = useFormik({
-    initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-    },
-    validate,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-    },
-  });
+  // Additional state variables for conditional fields
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [nationality, setNationality] = useState('');
+  const [DOB, setDOB] = useState('');
+  const [employmentStatus, setEmploymentStatus] = useState('');
+  const [yearsOfExperience, setYearsOfExperience] = useState('');
+  const [previousWork, setPreviousWork] = useState('');
+  const [websiteLink, setWebsiteLink] = useState('');
+  const [hotline, setHotline] = useState('');
+  const [companyProfile, setCompanyProfile] = useState('');
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+
+  const validateFields = () => {
+    if (!userName || !password || !confirmPassword || !email) {
+      message.error('All fields are required');
+      return false;
+    }
+    if (password !== confirmPassword) {
+      message.error('Passwords do not match');
+      return false;
+    }
+    if (type === 'Tourist' && (!mobileNumber || !nationality || !DOB || !employmentStatus)) {
+      message.error('All fields are required for Tourist');
+      return false;
+    }
+    if (type === 'Guide' && (!mobileNumber || !yearsOfExperience || !previousWork)) {
+      message.error('All fields are required for Guide');
+      return false;
+    }
+    if (type === 'Advertiser' && (!websiteLink || !hotline || !companyProfile)) {
+      message.error('All fields are required for Advertiser');
+      return false;
+    }
+    if (type === 'Seller' && (!name || !description)) {
+      message.error('All fields are required for Seller');
+      return false;
+    }
+    return true;
+  };
+  const handleAdd = async () => {
+    if (!validateFields()) {
+      return;
+    }
+    const data = {
+      userName,
+      password,
+      email,
+      role: type,
+      ...(type === 'Tourist' && { mobileNumber, nationality, DOB, employmentStatus }),
+      ...(type === 'Guide' && { mobileNumber, yearsOfExperience, previousWork }),
+      ...(type === 'Advertiser' && { websiteLink, hotline, companyProfile }),
+      ...(type === 'Seller' && { name, description }),
+    };
+
+    try {
+      await axios.post('http://localhost:8000/signUp', data);
+      message.success('Signed Up successfully!');
+    } catch (error) {
+      message.error('An error occurred: ' + error.message);
+      console.error('There was an error signing up!', error);
+    }
+  };
 
   return (
-    <div className="section-container">
-      <div className="trial-btn text-white cursor-pointer">
+    <div style={{
+      backgroundImage: 'url(../../public/Images/bg-intro-desktop.png)', // Update with your image path
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      height: '100vh',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
+     
+      <Stack spacing={1} sx={{ width: '600px', padding: '10px', backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: '10px' }}>
+      <div className="trial-btn text-white cursor-pointer" >
         <span className="text-bold">Welcome To Ducksplorer</span>
       </div>
-      <div className="form-container">
-        <form onSubmit={formik.handleSubmit}>
-          <input
-            type="text"
-            placeholder="Username"
-            name="Username"
-            id="Username"
-            onChange={formik.handleChange}
-            value={formik.values.Username}
-          />
-          {formik.errors.firstName ? (
-            <div className="error">{formik.errors.Username}</div>
-          ) : null}
-          {formik.errors.lastName ? (
-            <div className="error">{formik.errors.lastName}</div>
-          ) : null}
-          <input
-            type="email"
-            placeholder="Email Address"
-            name="email"
-            id="email"
-            onChange={formik.handleChange}
-            value={formik.values.email}
-          />
-          {formik.errors.email ? (
-            <div className="error">{formik.errors.email}</div>
-          ) : null}
-          <input
-            type="password"
-            placeholder="Password"
-            name="password"
-            id="password"
-            onChange={formik.handleChange}
-            value={formik.values.password}
-          />
-          {formik.errors.password ? (
-            <div className="error">{formik.errors.password}</div>
-          ) : null}
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            name="confirmPassword"
-            id="confirmPassword"
-            onChange={formik.handleChange}
-            value={formik.values.confirmPassword}
-          />
-          {type === "Tourist" && (
-            <div>
-              <input
-                type="text"
-                placeholder="Mobile Number"
-                name="mobileNumber"
-                id="mobileNumber"
-                onChange={formik.handleChange}
-                value={formik.values.mobileNumber}
-              />
-              <input
-                type="text"
-                placeholder="Nationality"
-                name="nationality"
-                id="nationality"
-                onChange={formik.handleChange}
-                value={formik.values.nationality}
-              />
-              <input
-                type="Date"
-                placeholder="Date of birth"
-                name="DOB"
-                id="DOB"
-                onChange={formik.handleChange}
-                value={formik.values.DOB}
-              />
-              <input
-                type="text"
-                placeholder="Employment Status"
-                name="employmentStatus"
-                id="employmentStatus"
-                onChange={formik.handleChange}
-                value={formik.values.employmentStatus}
-              />
-            </div>
-          )}
-          {type === "Guide" && (
-            <div>
-              <input
-                type="text"
-                placeholder="Mobile Number"
-                name="mobileNumber"
-                id="mobileNumber"
-                onChange={formik.handleChange}
-                value={formik.values.mobileNumber}
-              />
-              <input
-                type="text"
-                placeholder="Years of experience"
-                name="yearsOfExperience"
-                id="yearsOfExperience"
-                onChange={formik.handleChange}
-                value={formik.values.yearsOfExperience}
-              />
-              <input
-                type="text"
-                placeholder="Previous work"
-                name="previousWork"
-                id="previousWork"
-                onChange={formik.handleChange}
-                value={formik.values.previousWork}
-              />
-            </div>
-          )}
-          {type === "Advertiser" && (
-            <div>
-              <input
-                type="text"
-                placeholder="Website Link"
-                name="websiteLink"
-                id="websiteLink"
-                onChange={formik.handleChange}
-                value={formik.values.websiteLink}
-              />
-              <input
-                type="text"
-                placeholder="Hotline"
-                name="hotline"
-                id="hotline"
-                onChange={formik.handleChange}
-                value={formik.values.hotline}
-              />
-              <input
-                type="text"
-                placeholder="Company Profile"
-                name="companyProfile"
-                id="companyProfile"
-                onChange={formik.handleChange}
-                value={formik.values.companyProfile}
-              />
-            </div>
-          )}
-          {type === "Seller" && (
-            <div>
-              <input
-                type="text"
-                placeholder="Name"
-                name="name"
-                id="name"
-                onChange={formik.handleChange}
-                value={formik.values.name}
-              />
-              <input
-                type="text"
-                placeholder="Description"
-                name="description"
-                id="description"
-                onChange={formik.handleChange}
-                value={formik.values.description}
-              />
-            </div>
-          )}
-          <DropDown />
-          <button
-            type="submit"
-            className="submit-btn text-white cursor-pointer"
-          >
-            Signup
-          </button>
-        </form>
-        <p className="terms-text">
-          By clicking the button, you are agreeing to our&nbsp;
-          <a href="nothing" className="terms-link">
-            Terms and Services
-          </a>
-        </p>
-      </div>
+        <TextField
+          name="username"
+          label="Username"
+          type="text"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+        />
+        <TextField
+          name="email"
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <TextField
+          name="password"
+          label="Password"
+          type={showPassword ? 'text' : 'password'} // Toggle password visibility
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                >
+                  <Iconify
+                    icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'}
+                    style={{ color: '#602b37', fontSize: '40px' }}
+                  />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+        <TextField
+          name="confirmPassword"
+          label="Confirm Password"
+          type={showConfirmPassword ? 'text' : 'password'} // Toggle password visibility
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  edge="end"
+                >
+                  <Iconify
+                    icon={showConfirmPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'}
+                    style={{ color: '#602b37', fontSize: '40px' }}
+                  />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+        {type === 'Tourist' && (
+          <>
+            <TextField
+              name="mobileNumber"
+              label="Mobile Number"
+              type="text"
+              value={mobileNumber}
+              onChange={(e) => setMobileNumber(e.target.value)}
+            />
+            <TextField
+              name="nationality"
+              label="Nationality"
+              type="text"
+              value={nationality}
+              onChange={(e) => setNationality(e.target.value)}
+            />
+            <TextField
+              name="DOB"
+              label="Date of Birth"
+              type="date"
+              value={DOB}
+              onChange={(e) => setDOB(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+            />
+            <TextField
+              name="employmentStatus"
+              label="Employment Status"
+              type="text"
+              value={employmentStatus}
+              onChange={(e) => setEmploymentStatus(e.target.value)}
+            />
+          </>
+        )}
+        {type === 'Guide' && (
+          <>
+            <TextField
+              name="mobileNumber"
+              label="Mobile Number"
+              type="text"
+              value={mobileNumber}
+              onChange={(e) => setMobileNumber(e.target.value)}
+            />
+            <TextField
+              name="yearsOfExperience"
+              label="Years of Experience"
+              type="text"
+              value={yearsOfExperience}
+              onChange={(e) => setYearsOfExperience(e.target.value)}
+            />
+            <TextField
+              name="previousWork"
+              label="Previous Work"
+              type="text"
+              value={previousWork}
+              onChange={(e) => setPreviousWork(e.target.value)}
+            />
+          </>
+        )}
+        {type === 'Advertiser' && (
+          <>
+            <TextField
+              name="websiteLink"
+              label="Website Link"
+              type="text"
+              value={websiteLink}
+              onChange={(e) => setWebsiteLink(e.target.value)}
+            />
+            <TextField
+              name="hotline"
+              label="Hotline"
+              type="text"
+              value={hotline}
+              onChange={(e) => setHotline(e.target.value)}
+            />
+            <TextField
+              name="companyProfile"
+              label="Company Profile"
+              type="text"
+              value={companyProfile}
+              onChange={(e) => setCompanyProfile(e.target.value)}
+            />
+          </>
+        )}
+        {type === 'Seller' && (
+          <>
+            <TextField
+              name="name"
+              label="Name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <TextField
+              name="description"
+              label="Description"
+              type="text"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </>
+        )}
+        <DropDown />
+        <Button
+          variant="contained"
+          onClick={handleAdd}
+          style={{
+            width: '580px',
+            backgroundColor: 'Green',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            fontSize: '16px',
+            cursor: 'pointer'
+          }}
+        >
+          Sign Up
+        </Button>
+      </Stack>
     </div>
   );
-}
+};
+
 export default FormSection;
