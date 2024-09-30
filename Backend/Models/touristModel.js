@@ -37,6 +37,12 @@ const touristSchema = new  Schema({
         required : true ,
         type : String
     },
+    wallet: {
+        type: Number,
+        required: true,
+        default: 0,
+        immutable: true // This makes the field read-only
+    }
 },{timestamps: true})
 
 
