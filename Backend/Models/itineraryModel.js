@@ -27,12 +27,8 @@ const itinerarySchema = new Schema({
         type: Number,
         required: true
     },
-    availableDates: {
-        type: String, //ask law fi date
-        required: true
-    },
-    availableTimes: {
-        type: String, //ask law fi time
+    availableDatesAndTimes: {
+        type: [Date], 
         required: true
     },
     accessibility: { //ehh da ma3lesh?

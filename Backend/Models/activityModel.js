@@ -2,6 +2,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const activitySchema = new Schema ({
+    name:{
+        type: String,
+        required: true
+    },
+    isOpen:{
+        type: Boolean,
+        required: true
+    },
     date:{
         type : Date,
         required : true
@@ -31,7 +39,7 @@ const activitySchema = new Schema ({
         type : String,
         required : true
     },
-    tags:{
+    tags:{ //change this later for table prefs
         type: String,
         required: true
     },

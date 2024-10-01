@@ -6,10 +6,10 @@ const mongoose = require('mongoose');
 const createItinerary = async (req, res) => {
     //add a new itinerary to the database with 
     //activity,locations,timeline,language,price,availableDates,availableTimes,accessibility,pickUpLocation,dropOffLocation
-    const { activity, locations, timeline, language, price, availableDates, availableTimes, accessibility, pickUpLocation, dropOffLocation } = req.body;
+    const { activity, locations, timeline, language, price, availableDatesAndTimes, accessibility, pickUpLocation, dropOffLocation } = req.body;
     console.log(req.body);
     try {
-        const itinerary = await itineraryModel.create({ activity, locations, timeline, language, price, availableDates, availableTimes, accessibility, pickUpLocation, dropOffLocation });
+        const itinerary = await itineraryModel.create({ activity, locations, timeline, language, price, availableDatesAndTimes, accessibility, pickUpLocation, dropOffLocation });
         res.status(200).json(itinerary);
     }
     catch (error) {
@@ -29,7 +29,7 @@ const getAllItineraries = async (req, res) => {
 }
 
 const getItinerary = async (req, res) => {
-    //retrieve an Itineraries from the database
+    //retrieve an Itinerary from the database
     try {
         const { id } = req.params;
         if (!mongoose.Types.ObjectId.isValid(id)) {
