@@ -1,6 +1,7 @@
 const express = require("express");
 const itineraryModel = require("../../Models/itineraryModel");
 const mongoose = require('mongoose');
+const { $elemMatch } = require("sift");
 
 const searchItineraries = async (req, res) => {
     try {
@@ -8,16 +9,14 @@ const searchItineraries = async (req, res) => {
 
         const searches = {};
 
-        if (name || category) {
-            searches.activities = {
-                $elemMatch: {
-                    $or: [
-                        { name: { $regex: name, $options: 'i' } },
-                        { category: { $regex: category, $options: 'i' } }
-                    ]
-                }
-            };
+        if (name){
+            searches['activity.name'] =  {$regex: name, $options: 'i'}
         }
+        
+        if(category){
+            searches['activity.category'] = { $regex: category, $options: 'i'}
+        }
+
         const itineraries = await itineraryModel.find(searches);
 
         if (!itineraries.length) {

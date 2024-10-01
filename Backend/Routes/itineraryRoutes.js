@@ -4,6 +4,7 @@ const { sortItineraries } = require('../Controllers/Itinerary/itinerarySortContr
 const { filterItineraries } = require('../Controllers/Itinerary/itineraryFilterController');
 const { getUpcomingItineraries } = require('../Controllers/Itinerary/itineraryViewUpcomingController');
 const { searchItineraries } = require('../Controllers/Itinerary/itinerarySearchController');
+const { getAllMyItineraries } = require('../Controllers/Itinerary/itineraryGetMyController');
 const router = express.Router();
 
 router.route("/").post(createItinerary).get(getAllItineraries)
@@ -16,6 +17,8 @@ router.route("/filter").get(filterItineraries)
 router.route("/search").get(searchItineraries)
 
 router.route("/upcoming").get(getUpcomingItineraries)
+
+router.route("/myItineraries").get(getAllMyItineraries) 
 
 router.route("/:id").get(getItinerary).put(updateItinerary).delete(deleteItinerary)
 
