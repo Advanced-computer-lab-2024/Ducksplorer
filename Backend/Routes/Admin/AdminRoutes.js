@@ -1,5 +1,5 @@
 const express = require("express");
-const { deleteUser, addAdmin, addGovernor , approveUser ,getPendingUsers , getUsers } = require("../Controllers/Admin/AdminController.js");
+const { deleteUser, addAdmin, addGovernor , approveUser ,getPendingUsers , getUsers } = require("../../Controllers/Admin/AdminController.js");
 
 const router = express.Router();
 

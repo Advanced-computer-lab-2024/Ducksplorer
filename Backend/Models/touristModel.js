@@ -16,7 +16,7 @@ const touristSchema = new  Schema({
         unique : true,
         immutable : true
     },
-    password :{
+    password:{
         type : String ,
         required :true
     },

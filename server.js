@@ -10,12 +10,14 @@ app.use(express.json());
 app.use(cors());
 
 const signUpRoutes = require("./Backend/Routes/signUpRoutes.js");
-const adminRoutes = require("./Backend/Routes/AdminRoutes.js");
+const adminRoutes = require("./Backend/Routes/Admin/AdminRoutes.js");
 const touristAccountRoutes = require("./Backend/Routes/TouristAccountRoutes.js");
+const AdminActivityRoutes = require("./Backend/Routes/Admin/AdminActivityRoutes.js");
 
 app.use("/signUp", signUpRoutes);
 app.use("/admin", adminRoutes);
 app.use("/touristAccount", touristAccountRoutes);
+app.use("/adminActivity", AdminActivityRoutes);
 
 
 const connectToMongoDB = async () => {
