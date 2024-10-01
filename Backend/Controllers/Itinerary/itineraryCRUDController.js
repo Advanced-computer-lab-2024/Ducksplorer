@@ -2,7 +2,6 @@ const express = require("express");
 const itineraryModel = require("../../Models/itineraryModel");
 const mongoose = require('mongoose');
 
-//router.post("/", authentication.signUp);
 
 const createItinerary = async (req, res) => {
     //add a new itinerary to the database with 
@@ -52,11 +51,11 @@ const updateItinerary = async (req, res) => {
     console.log(req.body);
     try {
         const { id } = req.params;
-        const { activity, locations, timeline, language, price, availableDates, availableTimes, accessibility, pickUpLocation, dropOffLocation } = req.body;
+        const { activity, locations, timeline, language, price, availableDates, availableTimes, accessibility, pickUpLocation, dropOffLocation, rating } = req.body;
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ error: "ID invalid" });
         }
-        const itinerary = await itineraryModel.findByIdAndUpdate(id, { activity, locations, timeline, language, price, availableDates, availableTimes, accessibility, pickUpLocation, dropOffLocation });
+        const itinerary = await itineraryModel.findByIdAndUpdate(id, { activity, locations, timeline, language, price, availableDates, availableTimes, accessibility, pickUpLocation, dropOffLocation, rating });
         if (!itinerary) {
             return res.status(404).json({ error: "Itinerary not found" });
         }

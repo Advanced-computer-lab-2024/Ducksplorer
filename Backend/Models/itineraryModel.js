@@ -23,7 +23,7 @@ const itinerarySchema = new Schema({
         type: String,
         required: true
     },
-    price: { //ask noha law el range yetfekes
+    price: { 
         type: Number,
         required: true
     },
@@ -51,6 +51,13 @@ const itinerarySchema = new Schema({
         type: mongoose.Schema.Types.ObjectId, // Assuming a reference to a User model
         ref: 'TourGuide',
         required: false
+    },
+    rating: { 
+        type: Number,
+        min: 0,
+        max: 5,
+        required: false,
+        default: 0
     }
 }, { timestamps: true })
 

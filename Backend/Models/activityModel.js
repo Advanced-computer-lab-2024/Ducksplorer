@@ -7,7 +7,8 @@ const activitySchema = new Schema ({
         required : true
     },
     time:{
-        type : String, //check law fi time data type
+        type : String, //mafeesh time data type bas momken ne match le certain way of writing HH:MM
+        //match: [/^([01]\d|2[0-3]):([0-5]\d)$/, 'Invalid time format. Use HH:MM']
         required : true
     },
     location :{
