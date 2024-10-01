@@ -2,21 +2,20 @@ require("dotenv").config(); //makes us read the env file
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express(); //el kol fel kol
-const PORT = process.env.PORT || 8000; //tells us to get port from env file or law ma3refsh yegebha it's 3000
+const PORT = process.env.PORT || 8000; //tells us to get port from env file or law ma3refsh yegebha it's 8000
 const touristRoutes = require('./Backend/Routes/touristRoutes.js');
 const sellerRoutes = require('./Backend/Routes/sellerRoutes.js');
 const adminRoutes = require('./Backend/Routes/adminRoutes.js');
+const signUpRoutes = require("./Backend/Routes/signUpRoutes.js");
 
 
 console.log(process.env.PORT );
 app.use(express.json());
-
-const signUpRoutes = require("./Backend/Routes/signUpRoutes.js");
-
 app.use("/signUp", signUpRoutes);
 app.use("/touristRoutes",touristRoutes);
 app.use("/sellerRoutes", sellerRoutes);
 app.use("/adminRoutes", adminRoutes);
+
 
 
 const connectToMongoDB = async () => {
