@@ -70,6 +70,31 @@ const searchActivities = async (searchParams) => {
     const upcomingActivities = await Activity.find({date: {$gte : currentDate}})
     return upcomingActivities;
   }
+
+  const filterActivities = async (filters) => {
+    const {price, date, category, ratings} = filters;
+    const filter = {};
+    let query = { date: { $gte: new Date() } };
+     
+      if (price) {
+        filter.price = {$regex: price};
+      }
+      if (date){
+        filter.date =  date;
+      }
+      if (category) {
+        filter.category = category;
+      }
+      if (ratings) {
+        filter.ratings = { $in: [ratings] };
+  }   try {
+    console.log(filters);
+    return await Activity.find(filter); // Return the filtered activities
+  } catch (error) {
+    throw new Error('Error fetching activities');
+  }
+};
+
   
 
-module.exports = {createActivity, getAllActivitiesByAdvertiserId, updateActivity, deleteActivity, searchActivities, viewUpcomingActivities };
+module.exports = {createActivity, getAllActivitiesByAdvertiserId, updateActivity, deleteActivity, searchActivities, viewUpcomingActivities, filterActivities };

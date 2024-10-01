@@ -59,7 +59,55 @@ const viewUpcomingActivities = async (req,res) => {
     res.status(500).json({ message: 'Error fetching upcoming activities' });
   }
 };
+const filterActivities = async (req, res) => {
+    const { price, date, category, rating } = req.query;
+  
+    try {
+      const activities = await activityService.filterActivities({ price, date, category, rating });
+      res.json(activities); // Return activities as JSON
+    } catch (error) {
+      res.status(500).json({ message: 'Error filtering activities' });
+    }
+  };
+
+const filterActivity = async (req, res) => {
+    const { price, date, category, rating } = req.query; //missing prefs waiting for wael to create table
+    const filters = {};
+
+    if (price) 
+        filters.price = price;
+    if (date) 
+        filters.date = language;
+    if (category) 
+        filters.category = availableDatesAndTimes;
+    if (rating)
+        filters.rating = rating;
+
+    try {
+        const activities = await Activity.find(filters);
+        res.status(200).json(activities)
+    }
+    catch(error){
+        res.status(400).json({error:error.message});
+    }
+}
+const sortActivities = async (req, res) => {
+    const { sortBy, order } = req.query;
+    const currentDate = new Date();
+  
+    let sortCriteria = {};
+    if (sortBy) {
+      sortCriteria[sortBy] = order === 'desc' ? -1 : 1;
+    }
+  
+    try {
+      const activities = await Activity.find({ date: { $gte: currentDate } }).sort(sortCriteria);
+      res.json(activities);
+    } catch (error) {
+      res.status(500).json({ message: 'Error sorting activities' });
+    }
+  };
+  
 
 
-
- module.exports = {createActivity, getAllActivitiesByAdvertiserId, updateActivity, deleteActivity, searchActivities, viewUpcomingActivities};
+ module.exports = {createActivity, getAllActivitiesByAdvertiserId, updateActivity, deleteActivity, searchActivities, viewUpcomingActivities, filterActivity, sortActivities};
