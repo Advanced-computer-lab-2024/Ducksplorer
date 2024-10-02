@@ -7,6 +7,7 @@ import ApproveUsers from './Pages/Admin/ApproveUsers.js';
 import DeleteUser from './Pages/Admin/DeleteUsers.js';
 import AddAdmin from './Pages/Admin/AddAdmin.js';
 import AddGoverner from './Pages/Admin/AddGovernor.js';
+import CategoriesActions from './Pages/Admin/CategoriesActions.js';
 
 
    
@@ -24,6 +25,7 @@ function App() {
         <Route path ="/deleteusers" element = {<DeleteUser />} />
         <Route path ="/addAdmin" element = {<AddAdmin />} />
         <Route path ="/addGovernor" element= {<AddGoverner/>} />
+        <Route path="/categoriesActions" element={<CategoriesActions />} />
       </Routes>
     </BrowserRouter>
     </React.StrictMode>

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Box, Button, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import {Tooltip, Box, IconButton, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { message } from 'antd';
-
+import Sidebar from '../../Components/Sidebar';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const ApproveUsers = () => {
   const [pendingUsers, setPendingUsers] = useState([]);
@@ -34,6 +35,8 @@ const ApproveUsers = () => {
   };
 
   return (
+    <>
+    <Sidebar/>
     <Box sx={{ p: 6 }}>
       <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
         <Typography variant="h4">
@@ -57,9 +60,11 @@ const ApproveUsers = () => {
                 <TableCell>{user.role}</TableCell>
                 <TableCell>{user.status}</TableCell>
                 <TableCell>
-                  <Button variant="contained" color="primary" onClick={() => handleApprove(user.userName)}>
-                    Approve
-                  </Button>
+                <Tooltip title="Approve User">
+                <IconButton color="success" aria-label="Approve user" onClick={() => handleApprove(user.userName)}>
+                      <CheckCircleIcon />
+                </IconButton>
+                </Tooltip>
                 </TableCell>
               </TableRow>
             ))}
@@ -67,6 +72,7 @@ const ApproveUsers = () => {
         </Table>
       </TableContainer>
     </Box>
+    </>
   );
 };
 

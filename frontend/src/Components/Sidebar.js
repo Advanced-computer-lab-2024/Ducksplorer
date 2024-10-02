@@ -4,7 +4,9 @@ import { Link } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import DeleteIcon from '@mui/icons-material/Delete';
-import PersonAddIcon from '@mui/icons-material/PersonAdd'; // Import PersonAddIcon
+import PersonAddIcon from '@mui/icons-material/PersonAdd'; 
+import CategoryIcon from '@mui/icons-material/Category';
+
 
 const drawerWidth = 240;
 
@@ -54,6 +56,12 @@ const Sidebar = () => {
             </ListItemIcon>
             <ListItemText primary="Add Governor" />
           </ListItem>
+          <ListItem button component={Link} to="/categoriesActions">
+            <ListItemIcon>
+              <CategoryIcon />
+            </ListItemIcon>
+            <ListItemText primary="Categories" />
+         </ListItem>
         </List>
         <Divider />
       </div>

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
-import { Box, Button, Table, Typography, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-
+import { Box, Button, Table, Typography, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Tooltip} from '@mui/material';
+import Sidebar from '../../Components/Sidebar';
+import DeleteIcon from '@mui/icons-material/Delete';
 const DeleteUser = () => {
   const [users, setUsers] = useState([]);
   const [open, setOpen] = useState(false);
@@ -61,6 +62,8 @@ const handleDelete = (username) => {
   };
 
   return (
+    <>
+    <Sidebar/>
     <Box sx={{ p: 6 }}>
       <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
         <Typography variant="h4">
@@ -84,9 +87,11 @@ const handleDelete = (username) => {
                 <TableCell>{user.role}</TableCell>
                 <TableCell>{user.status}</TableCell>
                 <TableCell>
-                  <Button variant="contained" color="red" onClick={() => handleClickOpen(user.userName)}>
-                    Delete
-                  </Button>
+                <Tooltip title="Delete User">
+                <IconButton color="error" aria-label="delete category" onClick={() => handleClickOpen(user.userName)}>
+                      <DeleteIcon />
+                </IconButton>
+                </Tooltip>
                 </TableCell>
               </TableRow>
             ))}
@@ -105,12 +110,13 @@ const handleDelete = (username) => {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleConfirmDelete} color="red">
+          <Button onClick={handleConfirmDelete} color="error">
             Delete
           </Button>
         </DialogActions>
       </Dialog>
     </Box>
+    </>
   );
 };
 
