@@ -1,12 +1,11 @@
 const express = require("express");
-const {getProducts, sortProducts, filterProducts, findProduct}= require('../Controllers/TAScontroller');
-const { editProduct } = require("../Controllers/AScontroller");
+const {getProducts,findProduct,filterProducts,sortProducts}= require('../Controllers/TAScontroller');
 
 const router = express.Router();
 
 router.get("/getproducts",getProducts);
 router.get("/findProduct", findProduct);
-router.put("/editProduct",editProduct);
+router.put("/sortProducts",sortProducts);
 router.get("/filterProducts",filterProducts);
 
 
