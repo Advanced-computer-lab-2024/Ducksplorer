@@ -8,6 +8,9 @@ const sellerRoutes = require('./Backend/Routes/sellerRoutes.js');
 const adminRoutes = require('./Backend/Routes/adminRoutes.js');
 const signUpRoutes = require("./Backend/Routes/signUpRoutes.js");
 
+const cors = require('cors');
+app.use(cors());
+
 
 console.log(process.env.PORT );
 app.use(express.json());
