@@ -13,11 +13,13 @@ const signUpRoutes = require("./Backend/Routes/signUpRoutes.js");
 const adminRoutes = require("./Backend/Routes/Admin/AdminRoutes.js");
 const touristAccountRoutes = require("./Backend/Routes/TouristAccountRoutes.js");
 const AdminActivityRoutes = require("./Backend/Routes/Admin/AdminActivityRoutes.js");
+const preferenceTagsRoutes = require("./Backend/Routes/Admin/PreferenceTagsRoutes.js");
 
 app.use("/signUp", signUpRoutes);
 app.use("/admin", adminRoutes);
 app.use("/touristAccount", touristAccountRoutes);
 app.use("/adminActivity", AdminActivityRoutes);
+app.use("/preferenceTags", preferenceTagsRoutes);
 
 
 const connectToMongoDB = async () => {

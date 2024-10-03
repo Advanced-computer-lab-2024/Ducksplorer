@@ -6,6 +6,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PersonAddIcon from '@mui/icons-material/PersonAdd'; 
 import CategoryIcon from '@mui/icons-material/Category';
+import LabelIcon from '@mui/icons-material/Label';
 
 
 const drawerWidth = 300;
@@ -63,6 +64,12 @@ const Sidebar = () => {
             </ListItemIcon>
             <ListItemText primary="Categories" />
          </ListItem>
+         <ListItem button component={Link} to="/preferenceTags">
+          <ListItemIcon>
+            <LabelIcon />
+          </ListItemIcon>
+          <ListItemText primary="Tags" />
+        </ListItem>
         </List>
         <Divider />
       </div>

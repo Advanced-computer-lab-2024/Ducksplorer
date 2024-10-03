@@ -8,6 +8,7 @@ import DeleteUser from './Pages/Admin/DeleteUsers.js';
 import AddAdmin from './Pages/Admin/AddAdmin.js';
 import AddGoverner from './Pages/Admin/AddGovernor.js';
 import CategoriesActions from './Pages/Admin/CategoriesActions.js';
+import PreferenceTags from './Pages/Admin/PreferenceTags.js';
 
 
    
@@ -26,6 +27,7 @@ function App() {
         <Route path ="/addAdmin" element = {<AddAdmin />} />
         <Route path ="/addGovernor" element= {<AddGoverner/>} />
         <Route path="/categoriesActions" element={<CategoriesActions />} />
+        <Route path="/preferenceTags" element={<PreferenceTags />} />
       </Routes>
     </BrowserRouter>
     </React.StrictMode>

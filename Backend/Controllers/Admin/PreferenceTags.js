@@ -31,7 +31,7 @@ const updateTags = async (req,res) => {
       { name: newName},
       { new: true }
     );
-    if (!updatedCategory) {
+    if (!updatedTag) {
       return res.status(404).json({ message: 'Tag not found' });
     }
     res.status(200).json(updatedTag);
@@ -63,4 +63,12 @@ const getTagsbyName = async (req, res) => {
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
+  };
+
+  module.exports = {
+    createTags,
+    deleteTags,
+    updateTags,
+    getTagsbyName,
+    getAllTags
   };
