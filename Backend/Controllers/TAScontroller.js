@@ -35,7 +35,7 @@ const sortProducts = async (req, res) => {
 const filterProducts  = async (req, res) => { //filter products by price 
   const price = parseFloat(req.body.price);
   try{
-    const products = await productModel.find({price : {$lte : price}}); //lte means less than or equal
+    const products = await productModel.find({price : {$lte : price}}).sort({price : 1}); //lte means less than or equal
     if(!products){
       res.status(400).send("no products were found");
     }

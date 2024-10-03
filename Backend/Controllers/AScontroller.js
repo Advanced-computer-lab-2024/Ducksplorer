@@ -15,22 +15,31 @@ const createProduct  = async (req, res) => { //add new products
 
 }
 const editProduct = async (req, res) => {
-  const { name, namee, price, ratings, availableQuantity, picture, description, seller } = req.body;
+  const { id, name, price, availableQuantity, picture, description, seller } = req.body;
 
   try {
-      const product = await productModel.findOneAndUpdate(
-          { name: { $regex: name, $options: 'i' } },
-          { name: namee, price, ratings, availableQuantity, picture, description, seller },
-          { new: true }
-      );
+    const product = await productModel.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          name,
+          price,
+          availableQuantity,
+          picture,
+          description,
+          seller
+        }
+      },
+      { new: true }
+    );
 
-      if (!product) {
-          res.status(400).json('no product with this name');
-      }
+    if (!product) {
+      return res.status(400).json({ error: 'No product with this ID' });
+    }
 
-      res.status(200).json(product);
+    return res.status(200).json(product);
   } catch (err) {
-      res.status(400).json(err.message);
+    return res.status(400).json({ error: err.message });
   }
 };
 module.exports = { createProduct, editProduct};
