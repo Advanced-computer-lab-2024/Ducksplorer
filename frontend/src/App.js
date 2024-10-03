@@ -9,6 +9,7 @@ import AddAdmin from './Pages/Admin/AddAdmin.js';
 import AddGoverner from './Pages/Admin/AddGovernor.js';
 import CategoriesActions from './Pages/Admin/CategoriesActions.js';
 import PreferenceTags from './Pages/Admin/PreferenceTags.js';
+import Login from './Pages/Login.js';
 
 
    
@@ -20,6 +21,7 @@ function App() {
     <React.StrictMode>
     <BrowserRouter>
       <Routes>
+        <Route path ="/login" element={<Login/>} />
         <Route path = "/signUp" element=  {<Signup/>} />  
         <Route path ="/AdminDashboard" element = {<AdminDashboard/>} />
         <Route path ="/pendingusers" element ={<ApproveUsers />} />

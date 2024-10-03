@@ -57,8 +57,8 @@ const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el 
 }
 const login = async (req,res) => {
     try{
-        const {username, password} = req.body;
-        const user = await User.findOne({username});
+        const {userName, password} = req.body;
+        const user = await User.findOne({userName});
 
 
         if(!user || (user.password !== password)){
@@ -69,9 +69,8 @@ const login = async (req,res) => {
 
         res.status(200).json({
             _id: user._id,
-            fullName: user.fullName,
-            username: user.username,
-            profilePic: user.profilePic
+            username: user.userName,
+            role : user.role
         })
 
     }catch(error){

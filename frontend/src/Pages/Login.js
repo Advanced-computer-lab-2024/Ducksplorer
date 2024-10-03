@@ -3,38 +3,44 @@ import Button from '@mui/material/Button';
 import { message } from 'antd';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
-import Iconify from '../../Components/TopNav/iconify.js';
+import Iconify from '../Components/TopNav/iconify.js';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import axios from 'axios';
-import Sidebar from '../../Components/Sidebar.js';
 
 
 
 
 
-function AddGovernor() {
+function Login() {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const [loading, setLoading] = useState(false);
 
-  
-
-  
-const handleAdd = async () => {
+const handleLogin = async () => {
     try {
-        const response = await axios.post('http://localhost:8000/admin/addGoverner', {
+        setLoading(true);
+        console.log(localStorage.getItem('user'));
+        const response = await axios.post('http://localhost:8000/signUp/login', {
             userName,
             password,
-            role: 'Governor',
         });
         if (response.status === 200) {
-            message.success('Admin added successfully');
-        } else {
-            message.error('Failed to add admin');
+            message.success('Logged in successfully');
+            if (response.data.role === 'Admin') {
+                window.location.href = '/AdminDashboard';
+            }
+           localStorage.setItem('user', JSON.stringify(response.data));
+        } else if (response.status === 400) {
+            message.error('Failed to Login , Incorrect Username or Password');
+            return;
         }
     } catch (error) {
-        message.error('An error occurred: ' + error.message);
+        message.error('Failed to Login , Incorrect credentials');
+    }
+    finally{
+        setLoading(false);
     }
 };
 
@@ -43,11 +49,10 @@ const handleAdd = async () => {
   return (
    
    <>
-   <Sidebar/>
       <div className="text-center">
           <img src="logo1.png" style={{ width: '300px' , height: '200px', justifyContent: 'center'}} alt="logo" />
           <h4 className="mt-1 mb-5 pb-1" style={{color: 'orange', textAlign: 'center', fontSize: '24px', fontWeight: 'bold', textShadow: '2px 2px 4px #aaa'}}>
-            Add Governor
+            Login
           </h4>     
       </div>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -84,7 +89,7 @@ const handleAdd = async () => {
                         }}
           />
 
-          <Button variant="contained" onClick={handleAdd} 
+          <Button variant="contained" onClick={handleLogin} 
           style={{
             width: '300px', 
             backgroundColor: 'orange', 
@@ -94,8 +99,8 @@ const handleAdd = async () => {
             padding: '10px 20px',
             fontSize: '16px',
             cursor: 'pointer'
-            }}>
-            Add Governor
+            }} disabled={loading}>
+             {loading? <span className='loading loading-spinner'></span> : 'Login'}
           </Button>
       </Stack>
       </div>
@@ -105,4 +110,4 @@ const handleAdd = async () => {
   );
 }
 
-export default AddGovernor;
+export default Login;
