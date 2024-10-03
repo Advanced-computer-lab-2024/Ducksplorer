@@ -44,8 +44,8 @@ const handleAdd = async () => {
    < >
    <Sidebar/>
       <div className="text-center">
-          <img src="logo192.png" style={{ width: '185px' }} alt="logo" />
-          <h4 className="mt-1 mb-5 pb-1" style={{color: 'yellow', textAlign: 'center', fontSize: '24px', fontWeight: 'bold', textShadow: '2px 2px 4px #aaa'}}>
+          <img src="logo1.png" style={{ width: '300px' , height: '200px', justifyContent: 'center'}} alt="logo" />
+          <h4 className="mt-1 mb-5 pb-1" style={{color: 'orange', textAlign: 'center', fontSize: '24px', fontWeight: 'bold', textShadow: '2px 2px 4px #aaa'}}>
             Add Admin
           </h4>     
       </div>
@@ -75,7 +75,7 @@ const handleAdd = async () => {
               >
               <Iconify 
                 icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} 
-                style={{ color: '#602b37', fontSize: '40px' }}
+                style={{ color: 'orange', fontSize: '40px' }}
               />        
             </IconButton>
             </InputAdornment>
@@ -85,7 +85,7 @@ const handleAdd = async () => {
           <Button variant="contained" onClick={handleAdd} 
           style={{
             width: '300px', 
-            backgroundColor: 'yellow', 
+            backgroundColor: 'orange', 
             color: 'white', 
             border: 'none', 
             borderRadius: '4px', 

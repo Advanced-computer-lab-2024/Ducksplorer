@@ -8,7 +8,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import CategoryIcon from '@mui/icons-material/Category';
 
 
-const drawerWidth = 240;
+const drawerWidth = 300;
 
 const Sidebar = () => {
   return (
@@ -21,6 +21,7 @@ const Sidebar = () => {
       }}
     >
       <div>
+      {/* <img src="logo1.png" style={{ width: '120px' , height: '120px' , padding: '10px', marginLeft: '50px'}} alt="logo" /> */}
         <Typography variant="h6" noWrap sx={{ padding: 2 }}>
           Admin Dashboard
         </Typography>

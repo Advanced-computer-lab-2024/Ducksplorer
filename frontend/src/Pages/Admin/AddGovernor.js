@@ -44,7 +44,7 @@ const handleAdd = async () => {
    <>
    <Sidebar/>
       <div className="text-center">
-          <img src="logo.png" style={{ width: '300px' , height: '200px', justifyContent: 'center'}} alt="logo" />
+          <img src="logo1.png" style={{ width: '300px' , height: '200px', justifyContent: 'center'}} alt="logo" />
           <h4 className="mt-1 mb-5 pb-1" style={{color: 'orange', textAlign: 'center', fontSize: '24px', fontWeight: 'bold', textShadow: '2px 2px 4px #aaa'}}>
             Add Governor
           </h4>     
