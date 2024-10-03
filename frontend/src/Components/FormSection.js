@@ -63,11 +63,8 @@ function FormSection() {
             onChange={formik.handleChange}
             value={formik.values.Username}
           />
-          {formik.errors.firstName ? (
-            <div className="error">{formik.errors.Username}</div>
-          ) : null}
-          {formik.errors.lastName ? (
-            <div className="error">{formik.errors.lastName}</div>
+          {formik.errors.userName ? (
+            <div className="error">{formik.errors.userName}</div>
           ) : null}
           <input
             type="email"
