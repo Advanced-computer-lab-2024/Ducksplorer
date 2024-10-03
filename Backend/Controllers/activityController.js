@@ -1,5 +1,5 @@
 const Activity = require("../Models/activityModel.js");
-const activityService = require("../Services/activityService.js");
+const activityService = require("../Services/activityServices.js");
 
 const createActivity = async (req, res) => {
   try {
@@ -65,21 +65,22 @@ const viewUpcomingActivities = async (req, res) => {
     res.status(500).json({ message: "Error fetching upcoming activities" });
   }
 };
-const filterActivities = async (req, res) => {
-  const { price, date, category, rating } = req.query;
 
-  try {
-    const activities = await activityService.filterActivities({
-      price,
-      date,
-      category,
-      rating,
-    });
-    res.json(activities); // Return activities as JSON
-  } catch (error) {
-    res.status(500).json({ message: "Error filtering activities" });
-  }
-};
+// const filterActivities = async (req, res) => {
+//   const { price, date, category, rating } = req.query;
+
+//   try {
+//     const activities = await activityService.filterActivities({
+//       price,
+//       date,
+//       category,
+//       rating,
+//     });
+//     res.json(activities); // Return activities as JSON
+//   } catch (error) {
+//     res.status(500).json({ message: "Error filtering activities" });
+//   }
+// };
 
 const filterActivity = async (req, res) => {
   const { price, date, category, rating } = req.query; //missing prefs waiting for wael to create table
