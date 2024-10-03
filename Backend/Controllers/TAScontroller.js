@@ -14,15 +14,28 @@ const getProducts  = async (req, res) => { //view all products
   }
 }
 
+const sortProducts = async (req, res) => {
+  const ratings = req.body.ratings;
 
-const sortProducts  = async (req, res) => { //sort by rating products
-  
-}
+  try {
+    const products = await productModel.find({});
+
+    products.forEach(product => {
+    product.averageRating = product.ratings.length > 0 ? ((product.ratings.reduce((sum, num) => sum + num, 0)) / product.ratings.length ): 0;
+    });
+    
+    products.sort((a, b) => b.averageRating - a.averageRating);    
+    
+    res.status(200).send(products);
+  } catch (error) {
+    res.status(500).json({ error: error.message });               
+  }
+};
 
 const filterProducts  = async (req, res) => { //filter products by price 
   const price = parseFloat(req.body.price);
   try{
-    const products = await productModel.find({price : {$lte : price}});
+    const products = await productModel.find({price : {$lte : price}}).sort({price : 1}); //lte means less than or equal
     if(!products){
       res.status(400).send("no products were found");
     }
@@ -35,17 +48,18 @@ const filterProducts  = async (req, res) => { //filter products by price
 }
 
 
-const findProduct  = async (req, res) => { //find based on products name
+const findProduct  = async (req, res) => { //search based on products name
   const {name} = req.body;
   if(!name){
     res.status(400).json('please provide the name');
   }
   try{
-    const products = await productModel.find({name : {$regex : name , $options : 'i'}});
+    const products = await productModel.find({name : {$regex : name , $options : 'i'}}); //i means case insensitive, case-insensitive search for products by name
     res.json(products);
   }catch(err){
     res.status(400).json(err.message);
   }
 }
+
 
 module.exports = {getProducts,findProduct,filterProducts,sortProducts};
