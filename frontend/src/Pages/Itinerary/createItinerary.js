@@ -111,9 +111,9 @@ const AddItinerary = () => {
                 required
             />
             <input
-                type="text"
+                type="datetime-local"
                 name="availableDatesAndTimes"
-                placeholder="Available Dates and Times (comma separated)"
+                placeholder="Available Dates and Times"
                 value={formData.availableDatesAndTimes.join(', ')} // Convert array to string for input
                 onChange={handleChange}
                 required

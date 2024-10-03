@@ -7,7 +7,7 @@ const cors = require('cors');
 
 console.log(process.env.PORT);
 app.use(express.json());
-app.use(cors({ origin: 'http://localhost:8000' })); // Adjust if needed
+app.use(cors()); // Adjust if needed
 
 const signUpRoutes = require("./Backend/Routes/signUpRoutes.js");
 const itineraryRoutes = require("./Backend/Routes/itineraryRoutes.js")
