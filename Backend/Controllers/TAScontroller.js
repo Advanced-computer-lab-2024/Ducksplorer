@@ -1,17 +1,34 @@
 const mongoose = require('mongoose');
 const productModel = require('../Models/productModel');
 const { $regex } = require('sift');
+const multer = require('multer');
+const path = require('path');
+
+
+const storage = multer.diskStorage({
+  destination: './uploads', // Directory to store uploaded images
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+
+const upload = multer({ storage });
+
 
 const getProducts  = async (req, res) => { //view all products
-  try{
-    const products = await productModel.find({}).sort({createdAt: -1})
-    if(! products){
-      res.status(404).json("product not found");
+    try {
+      const products = await productModel.find({}).sort({ createdAt: -1 });
+  
+      // Include the `picture` field in the response
+      const productsWithImages = products.map(product => ({
+        ...product.toObject(),
+        picture: `/uploads/${product.picture}` // Assuming you're storing images in the 'uploads' directory
+      }));
+  
+      res.status(200).json(productsWithImages);
+    } catch (err) {
+      res.status(400).json({ err: err.message });
     }
-    res.status(200).json(products)
-  }catch(err){
-    res.status(400).json({err: err.message}); //400 ashan error aady
-  }
 }
 
 const sortProducts = async (req, res) => {
@@ -49,16 +66,29 @@ const filterProducts  = async (req, res) => { //filter products by price
 
 
 const findProduct  = async (req, res) => { //search based on products name
-  const {name} = req.body;
-  if(!name){
-    res.status(400).json('please provide the name');
-  }
-  try{
-    const products = await productModel.find({name : {$regex : name , $options : 'i'}}); //i means case insensitive, case-insensitive search for products by name
-    res.json(products);
-  }catch(err){
-    res.status(400).json(err.message);
-  }
+    const name = parseFloat(req.query.name);
+
+    if (!name) {
+      return res.status(400).json('Please provide the name');
+    }
+  
+    try {
+      const product = await productModel.findOne({ name: { $regex: name, $options: 'i' } });
+  
+      if (!product) {
+        return res.status(404).json('Product not found');
+      }
+  
+      // Include the `picture` field in the response
+      const productWithImage = {
+        ...product.toObject(),
+        picture: `/uploads/${product.picture}` // Assuming you're storing images in the 'uploads' directory
+      };
+  
+      res.status(200).json(productWithImage);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
 }
 
 
