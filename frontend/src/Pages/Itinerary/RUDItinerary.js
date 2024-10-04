@@ -33,11 +33,6 @@ const RUDItinerary = () => {
     rating: '',
   });
 
-
-  const handleItineraryChange = (event) => {
-    setNewItinerary(event.target.value);
-  };
-
   // Handle editing an itinerary
   const handleEditClick = (itinerary) => {
     setFormData(itinerary); // Set form data to the selected itinerary's values
@@ -134,17 +129,6 @@ const RUDItinerary = () => {
             Available itineraries
           </Typography>
         </Box>
-        {showTextField && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
-            <TextField
-              label="New Itinerary"
-              variant="outlined"
-              value={newItinerary}
-              onChange={handleItineraryChange}
-              sx={{ mr: 2 }}
-            />
-          </Box>
-        )}
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
