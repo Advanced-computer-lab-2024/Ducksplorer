@@ -15,7 +15,17 @@ const AddActivityForm = () => {
   const [tags, setTags] = useState("");
   const [specialDiscount, setSpecialDiscount] = useState("");
   const [duration, setDuration] = useState("");
-  const [data, setData] = useState([]);
+  const data = {
+    name,
+    date,
+    duration,
+    isOpen,
+    specialDiscount,
+    price,
+    location,
+    tags,
+    category,
+  };
 
   // Additional state variables for conditional fields
 
@@ -30,18 +40,10 @@ const AddActivityForm = () => {
     if (!validateFields()) {
       return;
     }
-    setData({
-      name,
-      date,
-      duration,
-      isOpen,
-      specialDiscount,
-      price,
-      location,
-    });
 
     try {
-      console.log(data);
+      console.log("this is the data", data);
+
       await axios.post("http://localhost:8000/activity", data);
       message.success("Activity Created Successfully!");
     } catch (error) {
@@ -115,9 +117,7 @@ const AddActivityForm = () => {
             type="checkbox"
             checked={isOpen}
             onChange={() => {
-              console.log(isOpen);
               isOpen ? setIsOpen(false) : setIsOpen(true);
-              console.log(isOpen);
             }}
           />
         </div>
