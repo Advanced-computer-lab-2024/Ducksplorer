@@ -1,15 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
-import FormSection from './Components/FormSection.js';
-import TextSection from './Components/TextSection.js';
+import "./App.css";
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AddActivity from "../src/pages/AddActivity.js";
 
 function App() {
   return (
-    <>
-    <FormSection/>
-    <TextSection/>
-    </>
-
+    <React.StrictMode>
+      <BrowserRouter>
+        <Routes>
+          {/* <Route path="/signUp" element={<Signup />} /> */}
+          <Route path="/activity" element={<AddActivity />} />
+        </Routes>
+      </BrowserRouter>
+    </React.StrictMode>
   );
 }
 
