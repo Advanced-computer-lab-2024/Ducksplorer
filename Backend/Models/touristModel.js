@@ -26,10 +26,12 @@ const touristSchema = new Schema(
       required: true,
       default: "Egyptian", //error (Lazem tet7at gowa quotations)
     },
-    DOB: {
-      type: Date,
-      required: true,
-    },
+    DOB: 
+       {type: Date, 
+        default: Date.now , 
+        get: (date)=> date.toLocaleDateString('en-GB'), 
+        required: true}
+    ,
     employmentStatus: {
       required: true,
       type: String,

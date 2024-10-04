@@ -3,7 +3,7 @@ const { getTouristDetails, updateTouristDetails } = require("../Controllers/tour
 
 const router = express.Router();
 
-router.get("/viewaccount", getTouristDetails);
+router.get("/viewaccount/:userName", getTouristDetails);
 
 router.put("/editaccount", updateTouristDetails);
 

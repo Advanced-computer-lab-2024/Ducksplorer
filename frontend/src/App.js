@@ -11,6 +11,7 @@ import CategoriesActions from './Pages/Admin/CategoriesActions.js';
 import PreferenceTags from './Pages/Admin/PreferenceTags.js';
 import Login from './Pages/Login.js';
 import AddActivity from "./Pages/AddActivity.js";
+import TouristEditAccount from './Pages/TouristEditAccount.js';
 
 
    
@@ -32,6 +33,7 @@ function App() {
         <Route path="/categoriesActions" element={<CategoriesActions />} />
         <Route path="/preferenceTags" element={<PreferenceTags />} />
         <Route path="/activity" element={<AddActivity />} />
+        <Route path="/editAccount" element={<TouristEditAccount />} />
       </Routes>
     </BrowserRouter>
     </React.StrictMode>

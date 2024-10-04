@@ -8,11 +8,8 @@ import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+
  
-
-
-
-
 
 function Login() {
   const [userName, setUserName] = useState('');
@@ -32,6 +29,9 @@ const handleLogin = async () => {
             message.success('Logged in successfully');
             if (response.data.role === 'Admin') {
                 window.location.href = '/AdminDashboard';
+            }
+            else if(response.data.role === 'Tourist'){
+                window.location.href = '/editAccount';
             }
            localStorage.setItem('user', JSON.stringify(response.data));
         } else if (response.status === 400) {
