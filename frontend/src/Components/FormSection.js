@@ -273,6 +273,6 @@ const FormSection = () => {
     </div>
   );
 };
-};
+
 
 export default FormSection;
