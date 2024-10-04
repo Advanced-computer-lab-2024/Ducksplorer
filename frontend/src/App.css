@@ -1,4 +1,4 @@
-/* * {
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -25,11 +25,11 @@ body {
 
 .app {
   max-width: 1024px;
-} */
+}
 
 /* Universal Classes */
 
-/* .text-white {
+.text-white {
   color: white;
 }
 
@@ -39,21 +39,21 @@ body {
 
 .cursor-pointer {
   cursor: pointer;
-} */
+}
 
 /* TextSection Component Styling */
 
-/* .text-container {
+.text-container {
   text-align: center;
 }
 
 .paragraph {
   margin-top: 20px;
-} */
+}
 
 /* FormSection Component Styling */
 
-/* .both-sections {
+.both-sections {
   display: flex;
 }
 
@@ -65,22 +65,11 @@ body {
   align-items: center;
 }
 
-.trial-btn {
-  background-color: hsl(246, 91%, 5%);
-  width: 100%;
-  border: none;
-  border-bottom: 5px solid rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  padding: 15px;
-  line-height: 1.5em;
-  text-align: center;
-}
-
 .form-container {
   width: 100%;
   max-width: 600px; /* Set a maximum width for the form */
-/* overflow: auto; /* Hide overflow content */
-/*padding: 20px;
+  overflow: auto; /* Hide overflow content */
+  padding: 20px;
   box-sizing: border-box;
 }
 
@@ -99,15 +88,6 @@ body {
   margin-top: -10px;
 }
 
-.submit-btn {
-  width: 100%;
-  background-color: hsl(154, 59%, 51%);
-  border: none;
-  border-bottom: 3px solid rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-  padding: 15px;
-}
-
 .terms-text {
   margin-top: 10px;
   font-size: 10px;
@@ -119,10 +99,10 @@ body {
 .terms-link {
   text-decoration: none;
   color: hsl(0, 100%, 60%);
-}  */
+}
 
 /* Media Queries */
-/* 
+
 @media only screen and (min-width: 1024px) {
   .app {
     display: flex;
@@ -160,7 +140,7 @@ body {
 
 Menu {
   padding-bottom: 15px;
-}  */
+} */
 
 
 /* Reset CSS */
@@ -214,26 +194,10 @@ body {
   margin: auto;
 }
 
-form-container {
-  background-color: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 700px;
-  /* Wider form container */
-  margin: auto;
-}
-
 .form-container input {
   width: 100%;
-  /* Make input fields full width */
-  padding: 15px;
-  /* Increase padding for bigger input fields */
-  margin-bottom: 20px;
-  /* More space between inputs */
-  font-size: 1.1rem;
-  /* Larger text size */
+  padding: 10px;
+  margin-bottom: 15px;
   border: 1px solid lightgray;
   border-radius: 5px;
   outline: none;
@@ -247,14 +211,12 @@ form-container {
 button[type="submit"] {
   background-color: hsl(154, 59%, 51%);
   color: white;
-  padding: 20px;
-  /* Bigger submit button */
-  font-size: 1.2rem;
-  /* Larger text for the button */
+  padding: 15px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   width: 100%;
+  font-size: 1rem;
   transition: background-color 0.3s ease;
 }
 
@@ -267,17 +229,6 @@ button[type="submit"]:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.trial-btn {
-  background-color: hsl(246, 91%, 5%);
-  width: 100%;
-  border: none;
-  border-bottom: 5px solid rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  padding: 15px;
-  line-height: 1.5em;
-  text-align: center;
 }
 
 .terms-text {
@@ -301,11 +252,10 @@ button[type="submit"]:hover {
   }
 
   .form-container {
-    padding: 40px;
-    /* Add more padding on larger screens */
+    padding: 30px;
   }
 
   .form-container input {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
   }
 }

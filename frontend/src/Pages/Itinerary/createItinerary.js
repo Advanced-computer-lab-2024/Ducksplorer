@@ -67,83 +67,88 @@ const AddItinerary = () => {
 
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input
-                type="text"
-                name="activity"
-                placeholder="Activity"
-                value={formData.activity}
-                onChange={handleChange}
-                required
-            />
-            <input
-                type="text"
-                name="locations"
-                placeholder="Locations"
-                value={formData.locations.join(', ')} // Convert array to string for input
-                onChange={handleChange}
-                required
-            />
-            <input
-                type="text"
-                name="timeline"
-                placeholder="Timeline"
-                value={formData.timeline}
-                onChange={handleChange}
-                required
-            />
-            <input
-                type="text"
-                name="language"
-                placeholder="Language"
-                value={formData.language}
-                onChange={handleChange}
-                required
-            />
-            <input
-                type="number"
-                name="price"
-                placeholder="Price"
-                value={formData.price}
-                onChange={handleChange}
-                min="0.01"
-                step="0.01"
-                required
-            />
-            <input
-                type="datetime-local"
-                name="availableDatesAndTimes"
-                placeholder="Available Dates and Times"
-                value={formData.availableDatesAndTimes.join(', ')} // Convert array to string for input
-                onChange={handleChange}
-                required
-            />
-            <input
-                type="text"
-                name="accessibility"
-                placeholder="Accessibility"
-                value={formData.accessibility}
-                onChange={handleChange}
-                required
-            />
-            <input
-                type="text"
-                name="pickUpLocation"
-                placeholder="Pick Up Location"
-                value={formData.pickUpLocation}
-                onChange={handleChange}
-                required
-            />
-            <input
-                type="text"
-                name="dropOffLocation"
-                placeholder="Drop Off Location"
-                value={formData.dropOffLocation}
-                onChange={handleChange}
-                required
-            />
-            <button type="submit">Add Itinerary</button>
-        </form>
+        <div>
+            <h1>
+                Available itineraries
+            </h1>
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="text"
+                    name="activity"
+                    placeholder="Activity"
+                    value={formData.activity}
+                    onChange={handleChange}
+                    required
+                />
+                <input
+                    type="text"
+                    name="locations"
+                    placeholder="Locations )"
+                    value={formData.locations.join(', ')} // Convert array to string for input
+                    onChange={handleChange}
+                    required
+                />
+                <input
+                    type="text"
+                    name="timeline"
+                    placeholder="Timeline"
+                    value={formData.timeline}
+                    onChange={handleChange}
+                    required
+                />
+                <input
+                    type="text"
+                    name="language"
+                    placeholder="Language"
+                    value={formData.language}
+                    onChange={handleChange}
+                    required
+                />
+                <input
+                    type="number"
+                    name="price"
+                    placeholder="Price"
+                    value={formData.price}
+                    onChange={handleChange}
+                    min="0.01"
+                    step="0.01"
+                    required
+                />
+                <input
+                    type="text"
+                    name="availableDatesAndTimes"
+                    placeholder="Available Dates and Times (comma separated)"
+                    value={formData.availableDatesAndTimes.join(', ')} // Convert array to string for input
+                    onChange={handleChange}
+                    required
+                />
+                <input
+                    type="text"
+                    name="accessibility"
+                    placeholder="Accessibility"
+                    value={formData.accessibility}
+                    onChange={handleChange}
+                    required
+                />
+                <input
+                    type="text"
+                    name="pickUpLocation"
+                    placeholder="Pick Up Location"
+                    value={formData.pickUpLocation}
+                    onChange={handleChange}
+                    required
+                />
+                <input
+                    type="text"
+                    name="dropOffLocation"
+                    placeholder="Drop Off Location"
+                    value={formData.dropOffLocation}
+                    onChange={handleChange}
+                    required
+                />
+                <button type="submit">Add Itinerary</button>
+            </form>
+        </div>
     );
 };
 

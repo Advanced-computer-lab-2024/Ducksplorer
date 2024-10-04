@@ -14,11 +14,11 @@ const activitySchema = new Schema ({
         type : Date,
         required : true
     },
-    time:{
-        type : String, //mafeesh time data type bas momken ne match le certain way of writing HH:MM
-        //match: [/^([01]\d|2[0-3]):([0-5]\d)$/, 'Invalid time format. Use HH:MM']
-        required : true
-    },
+    // time:{
+    //     type : String, //mafeesh time data type bas momken ne match le certain way of writing HH:MM
+    //     //match: [/^([01]\d|2[0-3]):([0-5]\d)$/, 'Invalid time format. Use HH:MM']
+    //     required : true
+    // },
     location :{
         type : String , //link le google maps masalan
         required :true
@@ -27,14 +27,14 @@ const activitySchema = new Schema ({
         type : Number, 
         required : false
     },
-    minPrice:{ //ask noha law el range yetfekes
-        type : Number, 
-        required : false 
-    },
-    maxPrice:{ //we'll make one of these only required bas fel frontend
-        type : Number, 
-        required : false
-    },
+    // minPrice:{ //ask noha law el range yetfekes
+    //     type : Number, 
+    //     required : false 
+    // },
+    // maxPrice:{ //we'll make one of these only required bas fel frontend
+    //     type : Number, 
+    //     required : false
+    // },
     category:{
         type : String,
         required : true
