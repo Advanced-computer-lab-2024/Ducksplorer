@@ -10,6 +10,7 @@ import AddGoverner from './Pages/Admin/AddGovernor.js';
 import CategoriesActions from './Pages/Admin/CategoriesActions.js';
 import PreferenceTags from './Pages/Admin/PreferenceTags.js';
 import Login from './Pages/Login.js';
+import AddActivity from "./Pages/AddActivity.js";
 
 
    
@@ -30,9 +31,13 @@ function App() {
         <Route path ="/addGovernor" element= {<AddGoverner/>} />
         <Route path="/categoriesActions" element={<CategoriesActions />} />
         <Route path="/preferenceTags" element={<PreferenceTags />} />
+        <Route path="/activity" element={<AddActivity />} />
       </Routes>
     </BrowserRouter>
     </React.StrictMode>
+    
+      
+    
   );
 }
 
