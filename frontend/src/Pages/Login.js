@@ -7,6 +7,8 @@ import Iconify from '../Components/TopNav/iconify.js';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+ 
 
 
 
@@ -88,6 +90,83 @@ const handleLogin = async () => {
                          ), 
                         }}
           />
+          <p className="text-sm hover:undrline hover:text-blue-600 mt-2 inline-block">
+            Dont have an account?
+          </p>
+          <Link to="/signUp" className='text-sm hover:undrline hover:text-blue-600 mt-2 inline-block'> 
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               Sign Up  
+          </Link>
+
 
           <Button variant="contained" onClick={handleLogin} 
           style={{
