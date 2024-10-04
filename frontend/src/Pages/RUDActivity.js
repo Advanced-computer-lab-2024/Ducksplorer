@@ -1,212 +1,141 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { message } from "antd";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import {
-  TextField,
-  IconButton,
-  Box,
-  Button,
-  Table,
-  Typography,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Tooltip,
-} from "@mui/material";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { message } from 'antd';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { Checkbox, FormControlLabel, IconButton, Box, Button, Table, Typography, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Tooltip, TextField } from '@mui/material';
 
-const RUDItinerary = () => {
+const RUDActivity = () => {
   const [activities, setActivities] = useState([]);
   const [open, setOpen] = useState(false);
-  const [selectedItinerary, setselectedItinerary] = useState("");
-  const [showTextField, setShowTextField] = useState(false);
-  const [newItinerary, setNewItinerary] = useState("");
-  const [editingItinerary, setEditingItinerary] = useState(null);
-  const [editedItineraryName, setEditedItineraryName] = useState("");
+  const [selectedActivity, setSelectedActivity] = useState(null);
+  const [editingActivity, setEditingActivity] = useState(null);
+
   const [formData, setFormData] = useState({
-    name: [],
-    date: [],
-    duration: "",
-    isOpen: "",
-    price: "",
-    specialDiscount: "",
-    location: "",
+    name: '',
+    price: '',
+    isOpen: false,
+    category: '',
+    tags: [],
+    specialDiscount: '',
+    date: '',
+    duration: '',
+    location: '',
   });
 
-  const handleItineraryChange = (event) => {
-    setNewItinerary(event.target.value);
-  };
-
-  const handleEditClick = (itinerary) => {
-    setEditingItinerary(itinerary);
-  };
-
-  const handleEditItineraryChange = (event) => {
-    setEditedItineraryName(event.target.value);
-  };
-
+  // Handle fetching activities
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/activity/")
-      .then((response) => {
-        setItineraries(response.data);
+    axios.get('http://localhost:8000/activity/')
+      .then(response => {
+        setActivities(response.data);
       })
-      .catch((error) => {
-        console.error("There was an error fetching the activities!", error);
+      .catch(error => {
+        console.error('There was an error fetching the activities!', error);
       });
   }, []);
 
-  const handleDelete = (id) => {
-    fetch(`http://localhost:8000/activity/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ formData }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        message.success("Activity deleted successfully!");
-        setItineraries(itineraries.filter((itinerary) => itinerary._id !== id));
-      })
-      .catch((error) => {
-        console.log(itineraries);
-        message.error("There was an error deleting the activity!");
-        console.error("There was an error deleting the activity!", error);
-      });
+  // Handle edit button click
+  const handleEditClick = (activity) => {
+    setFormData(activity); // Set form data to the selected activity's values
+    setEditingActivity(activity);
   };
 
-  const handleClickOpen = (itinerary) => {
-    setselectedItinerary(itinerary);
+  // Handle input change in the form
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData(prevData => ({ ...prevData, [name]: value }));
+  };
+
+  // Handle checkbox change for 'isOpen'
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+    setFormData(prevData => ({ ...prevData, [name]: checked }));
+  };
+
+  // Handle updating the activity
+  const handleUpdate = (event) => {
+    event.preventDefault();
+    axios.patch(`http://localhost:8000/activity/${editingActivity._id}`, formData)
+      .then(() => {
+        setActivities(activities.map(activity => activity._id === editingActivity._id ? formData : activity));
+        message.success('Activity updated successfully!');
+        setEditingActivity(null);
+      })
+      .catch(error => message.error('Error updating activity!'));
+  };
+
+  // Handle delete activity
+  const handleDelete = (id) => {
+    axios.delete(`http://localhost:8000/activity/${id}`)
+      .then(() => {
+        message.success('Activity deleted successfully!');
+        setActivities(activities.filter(activity => activity._id !== id));
+      })
+      .catch(error => message.error('Error deleting activity!'));
+  };
+
+  // Open confirmation dialog for delete
+  const handleClickOpen = (activity) => {
+    setSelectedActivity(activity);
     setOpen(true);
   };
 
+  // Close the confirmation dialog
   const handleClose = () => {
     setOpen(false);
-    setselectedItinerary(null);
+    setSelectedActivity(null);
   };
 
+  // Confirm deletion
   const handleConfirmDelete = () => {
-    if (selectedItinerary) {
-      handleDelete(selectedItinerary);
+    if (selectedActivity) {
+      handleDelete(selectedActivity._id);
     }
     handleClose();
   };
 
-  const handleEdit = (itineraryId, field, newValue) => {
-    axios
-      .put(`http://localhost:8000/adminActivity/${itineraryId}`, {
-        field,
-        newValue,
-      })
-      .then((response) => {
-        setItineraries(
-          itineraries.map((itinerary) =>
-            itinerary._id === itineraryId
-              ? { ...itinerary, [field]: newValue }
-              : itinerary
-          )
-        );
-        message.success("Itinerary updated successfully!");
-      })
-      .catch((error) => {
-        message.error("There was an error updating the itinerary!");
-        console.error("There was an error updating the itinerary!", error);
-      });
-  };
-
   return (
     <>
-      <Box sx={{ p: 6, maxWidth: 1200 }}>
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Typography variant="h4">Available itineraries</Typography>
+      <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'auto', height: '100vh' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+          <Typography variant="h4">Available activities</Typography>
         </Box>
-        {showTextField && (
-          <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-            <TextField
-              label="New Itinerary"
-              variant="outlined"
-              value={newItinerary}
-              onChange={handleItineraryChange}
-              sx={{ mr: 2 }}
-            />
-          </Box>
-        )}
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
+                <TableCell>Name</TableCell>
                 <TableCell>Price</TableCell>
-                <TableCell>Activities</TableCell>
+                <TableCell>Is open</TableCell>
+                <TableCell>Category</TableCell>
+                <TableCell>Tags</TableCell>
+                <TableCell>Discount</TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell>Duration</TableCell>
+                <TableCell>Location</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {itineraries.map((itinerary) => (
-                <TableRow key={itinerary._id}>
-                  <TableCell>{itinerary.price}</TableCell>
-                  {/* <TableCell>
-                  {editingItinerary && editingItinerary._id === itinerary._id ? (
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <TextField
-                        value={editedItineraryName}
-                        onChange={handleEditItineraryChange}
-                        autoFocus
-                        sx={{ mr: 2 }}
-                      />
-                      <Button variant="contained" color="primary" onClick={() => handleEdit(itinerary._id, editedItineraryName)}>
-                        Confirm
-                      </Button>
-                    </Box>
-                  ) : (
-                    itinerary.name
-                  )}
-                </TableCell> */}
+              {activities.map(activity => (
+                <TableRow key={activity._id}>
+                  <TableCell>{activity.name}</TableCell>
+                  <TableCell>{activity.price}</TableCell>
+                  <TableCell>{activity.isOpen ? 'Yes' : 'No'}</TableCell>
+                  <TableCell>{activity.category}</TableCell>
+                  <TableCell>{activity.tags}</TableCell>
+                  <TableCell>{activity.specialDiscount}</TableCell>
+                  <TableCell>{activity.date}</TableCell>
+                  <TableCell>{activity.duration}</TableCell>
+                  <TableCell>{activity.location}</TableCell>
                   <TableCell>
-                    {itinerary.activity && itinerary.activity.length > 0
-                      ? itinerary.activity
-                          .map(
-                            (activity) =>
-                              `${activity.name || "N/A"} - Price: ${
-                                activity.price || "N/A"
-                              }, Location: ${activity.location}, Category: ${
-                                activity.category
-                              }`
-                          )
-                          .join(", ")
-                      : "No activities available"}
-                  </TableCell>
-                  <TableCell>
-                    <Tooltip title="Delete Category">
-                      <IconButton
-                        color="error"
-                        aria-label="delete category"
-                        onClick={() => handleClickOpen(itinerary._id)}
-                      >
+                    <Tooltip title="Delete Activity">
+                      <IconButton color="error" onClick={() => handleClickOpen(activity)}>
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="Edit Category">
-                      <IconButton
-                        color="primary"
-                        aria-label="edit category"
-                        onClick={() => handleEditClick(itinerary)}
-                      >
+                    <Tooltip title="Edit Activity">
+                      <IconButton color="primary" onClick={() => handleEditClick(activity)}>
                         <EditIcon />
                       </IconButton>
                     </Tooltip>
@@ -216,20 +145,38 @@ const RUDItinerary = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        {editingActivity && (
+          <form onSubmit={handleUpdate} style={{ marginTop: '20px' }}>
+            <TextField label="Name" name="name" value={formData.name} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} />
+            <TextField label="Price" name="price" value={formData.price} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} type="number" />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={formData.isOpen}
+                  onChange={handleCheckboxChange}
+                  name="isOpen"
+                />
+              }
+              label="Is open"
+              sx={{ mb: 2 }}
+            />
+            <TextField label="Discount" name="specialDiscount" value={formData.specialDiscount} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} type="number" />
+            <TextField label="Date" name="date" value={formData.date} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} type="datetime-local" />
+            <TextField label="Category" name="category" value={formData.category} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} />
+            <TextField label="Tags" name="tags" value={formData.tags} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} />
+            <TextField label="Duration" name="duration" value={formData.duration} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} />
+            <TextField label="Location" name="location" value={formData.location} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} />
+            <Button type="submit" variant="contained" color="primary">Update Activity</Button>
+          </form>
+        )}
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Confirm Deletion</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              Are you sure you want to delete this Itinerary?
-            </DialogContentText>
+            <DialogContentText>Are you sure you want to delete this Activity?</DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleConfirmDelete} color="error">
-              Delete
-            </Button>
+            <Button onClick={handleClose} color="primary">Cancel</Button>
+            <Button onClick={handleConfirmDelete} color="error">Delete</Button>
           </DialogActions>
         </Dialog>
       </Box>
@@ -237,4 +184,4 @@ const RUDItinerary = () => {
   );
 };
 
-export default RUDItinerary;
+export default RUDActivity;
