@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { TextField, Button, Stack } from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
-
+import DropDown from "./DropDown.js";
 
 const AddActivityForm = () => {
   //   const { type } = useTypeContext();
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [location, setLocation] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
@@ -20,14 +20,7 @@ const AddActivityForm = () => {
   // Additional state variables for conditional fields
 
   const validateFields = () => {
-    if (
-      !date ||
-      !isOpen ||
-      !location ||
-      !price ||
-      !specialDiscount ||
-      !duration
-    ) {
+    if (!date || !location || !price || !specialDiscount || !duration) {
       message.error("All fields are required");
       return false;
     }
@@ -44,11 +37,11 @@ const AddActivityForm = () => {
       isOpen,
       specialDiscount,
       price,
+      location,
     });
 
     try {
       console.log(data);
-      console.log("i am sending the data");
       await axios.post("http://localhost:8000/activity", data);
       message.success("Activity Created Successfully!");
     } catch (error) {
@@ -93,7 +86,9 @@ const AddActivityForm = () => {
           label="Price"
           type="number"
           value={price}
-          onChange={(e) => setPrice(e.target.value)}
+          onChange={(e) => {
+            setPrice(e.target.value);
+          }}
         />
         <div
           style={{
@@ -117,9 +112,13 @@ const AddActivityForm = () => {
           <input
             name="isOpen"
             label="isOpen"
-            type="checkbox" // Toggle password visibility
-            value={isOpen}
-            onChange={(e) => setIsOpen(e.target.value)}
+            type="checkbox"
+            checked={isOpen}
+            onChange={() => {
+              console.log(isOpen);
+              isOpen ? setIsOpen(false) : setIsOpen(true);
+              console.log(isOpen);
+            }}
           />
         </div>
         <TextField
