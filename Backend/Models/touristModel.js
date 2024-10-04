@@ -7,13 +7,15 @@ const touristSchema = new Schema(
       type: String,
       required: true,
     },
-    userName: {
-      type: String,
-      required: true,
+    userName:{
+        type : String,
+        required : true,
+        unique : true,
+        immutable : true
     },
-    password: {
-      type: String,
-      required: true,
+    password:{
+        type : String ,
+        required :true
     },
     mobileNumber: {
       type: Number,
@@ -32,9 +34,14 @@ const touristSchema = new Schema(
       required: true,
       type: String,
     },
-  },
-  { timestamps: true }
-);
+    wallet: {
+        type: Number,
+        required: true,
+        default: 0,
+        immutable: true // This makes the field read-only
+    }
+},{timestamps: true})
+
 
 const Tourist = mongoose.model("Tourist", touristSchema);
 

@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const sellerSchema = new Schema ({
-    email:{
+const userSchema = new  Schema({
+    role:{
         type : String,
         required : true
     },
@@ -16,18 +16,16 @@ const sellerSchema = new Schema ({
         type : String ,
         required :true
     },
-    name:{
-        type: String,
-        required :true
-    },
-    description:{
-        type: String,
-        required :true
+    status:{
+        type : String,
+        required : true
     }
-},
-{timestamps: true})
+},{timestamps: true})
 
 
-const Seller = mongoose.model("Seller", sellerSchema);
+const User = mongoose.model("User",userSchema);
 
-module.exports = Seller;
+
+module.exports = User;
+
+

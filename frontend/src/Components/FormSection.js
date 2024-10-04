@@ -1,71 +1,56 @@
-import React, { useState } from "react";
-import {
-  TextField,
-  IconButton,
-  InputAdornment,
-  Button,
-  Stack,
-} from "@mui/material";
-import Iconify from "./TopNav/iconify.js";
-import axios from "axios";
-import { message } from "antd";
-import { useTypeContext } from "../context/TypeContext";
-import DropDown from "./DropDown.js";
+import React, { useState } from 'react';
+import { TextField, IconButton, InputAdornment, Button, Stack } from '@mui/material';
+import Iconify from './TopNav/iconify.js'; 
+import axios from 'axios';
+import { message } from 'antd';
+import { useTypeContext } from '../context/TypeContext';
+import DropDown from './DropDown.js';
 
 const FormSection = () => {
   const { type } = useTypeContext();
-  const [userName, setUserName] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [email, setEmail] = useState("");
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Additional state variables for conditional fields
-  const [mobileNumber, setMobileNumber] = useState("");
-  const [nationality, setNationality] = useState("");
-  const [DOB, setDOB] = useState("");
-  const [employmentStatus, setEmploymentStatus] = useState("");
-  const [yearsOfExperience, setYearsOfExperience] = useState("");
-  const [previousWork, setPreviousWork] = useState("");
-  const [websiteLink, setWebsiteLink] = useState("");
-  const [hotline, setHotline] = useState("");
-  const [companyProfile, setCompanyProfile] = useState("");
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [nationality, setNationality] = useState('');
+  const [DOB, setDOB] = useState('');
+  const [employmentStatus, setEmploymentStatus] = useState('');
+  const [yearsOfExperience, setYearsOfExperience] = useState('');
+  const [previousWork, setPreviousWork] = useState('');
+  const [websiteLink, setWebsiteLink] = useState('');
+  const [hotline, setHotline] = useState('');
+  const [companyProfile, setCompanyProfile] = useState('');
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
 
   const validateFields = () => {
     if (!userName || !password || !confirmPassword || !email) {
-      message.error("All fields are required");
+      message.error('All fields are required');
       return false;
     }
     if (password !== confirmPassword) {
-      message.error("Passwords do not match");
+      message.error('Passwords do not match');
       return false;
     }
-    if (
-      type === "Tourist" &&
-      (!mobileNumber || !nationality || !DOB || !employmentStatus)
-    ) {
-      message.error("All fields are required for Tourist");
+    if (type === 'Tourist' && (!mobileNumber || !nationality || !DOB || !employmentStatus)) {
+      message.error('All fields are required for Tourist');
       return false;
     }
-    if (
-      type === "Guide" &&
-      (!mobileNumber || !yearsOfExperience || !previousWork)
-    ) {
-      message.error("All fields are required for Guide");
+    if (type === 'Guide' && (!mobileNumber || !yearsOfExperience || !previousWork)) {
+      message.error('All fields are required for Guide');
       return false;
     }
-    if (
-      type === "Advertiser" &&
-      (!websiteLink || !hotline || !companyProfile)
-    ) {
-      message.error("All fields are required for Advertiser");
+    if (type === 'Advertiser' && (!websiteLink || !hotline || !companyProfile)) {
+      message.error('All fields are required for Advertiser');
       return false;
     }
-    if (type === "Seller" && (!name || !description)) {
-      message.error("All fields are required for Seller");
+    if (type === 'Seller' && (!name || !description)) {
+      message.error('All fields are required for Seller');
       return false;
     }
     return true;
@@ -79,54 +64,36 @@ const FormSection = () => {
       password,
       email,
       role: type,
-      ...(type === "Tourist" && {
-        mobileNumber,
-        nationality,
-        DOB,
-        employmentStatus,
-      }),
-      ...(type === "Guide" && {
-        mobileNumber,
-        yearsOfExperience,
-        previousWork,
-      }),
-      ...(type === "Advertiser" && { websiteLink, hotline, companyProfile }),
-      ...(type === "Seller" && { name, description }),
+      ...(type === 'Tourist' && { mobileNumber, nationality, DOB, employmentStatus }),
+      ...(type === 'Guide' && { mobileNumber, yearsOfExperience, previousWork }),
+      ...(type === 'Advertiser' && { websiteLink, hotline, companyProfile }),
+      ...(type === 'Seller' && { name, description }),
     };
 
     try {
-      await axios.post("http://localhost:8000/signUp", data);
-      message.success("Signed Up successfully!");
+      await axios.post('http://localhost:8000/signUp', data);
+      message.success('Signed Up successfully!');
     } catch (error) {
-      message.error("An error occurred: " + error.message);
-      console.error("There was an error signing up!", error);
+      message.error('An error occurred: ' + error.message);
+      console.error('There was an error signing up!', error);
     }
   };
 
   return (
-    <div
-      style={{
-        backgroundImage: "url(../../public/Images/bg-intro-desktop.png)", // Update with your image path
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Stack
-        spacing={1}
-        sx={{
-          width: "600px",
-          padding: "10px",
-          backgroundColor: "rgba(255, 255, 255, 0.8)",
-          borderRadius: "10px",
-        }}
-      >
-        <div className="trial-btn text-white cursor-pointer">
-          <span className="text-bold">Welcome To Ducksplorer</span>
-        </div>
+    <div style={{
+      backgroundImage: 'url(../../public/Images/bg-intro-desktop.png)', // Update with your image path
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      height: '100vh',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
+     
+      <Stack spacing={1} sx={{ width: '600px', padding: '10px', backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: '10px' }}>
+      <div className="trial-btn text-white cursor-pointer" >
+        <span className="text-bold">Welcome To Ducksplorer</span>
+      </div>
         <TextField
           name="username"
           label="Username"
@@ -144,7 +111,7 @@ const FormSection = () => {
         <TextField
           name="password"
           label="Password"
-          type={showPassword ? "text" : "password"} // Toggle password visibility
+          type={showPassword ? 'text' : 'password'} // Toggle password visibility
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           InputProps={{
@@ -155,8 +122,8 @@ const FormSection = () => {
                   edge="end"
                 >
                   <Iconify
-                    icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
-                    style={{ color: "#602b37", fontSize: "40px" }}
+                    icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'}
+                    style={{ color: '#602b37', fontSize: '40px' }}
                   />
                 </IconButton>
               </InputAdornment>
@@ -166,7 +133,7 @@ const FormSection = () => {
         <TextField
           name="confirmPassword"
           label="Confirm Password"
-          type={showConfirmPassword ? "text" : "password"} // Toggle password visibility
+          type={showConfirmPassword ? 'text' : 'password'} // Toggle password visibility
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           InputProps={{
@@ -177,17 +144,15 @@ const FormSection = () => {
                   edge="end"
                 >
                   <Iconify
-                    icon={
-                      showConfirmPassword ? "eva:eye-fill" : "eva:eye-off-fill"
-                    }
-                    style={{ color: "#602b37", fontSize: "40px" }}
+                    icon={showConfirmPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'}
+                    style={{ color: '#602b37', fontSize: '40px' }}
                   />
                 </IconButton>
               </InputAdornment>
             ),
           }}
         />
-        {type === "Tourist" && (
+        {type === 'Tourist' && (
           <>
             <TextField
               name="mobileNumber"
@@ -220,7 +185,7 @@ const FormSection = () => {
             />
           </>
         )}
-        {type === "Guide" && (
+        {type === 'Guide' && (
           <>
             <TextField
               name="mobileNumber"
@@ -245,7 +210,7 @@ const FormSection = () => {
             />
           </>
         )}
-        {type === "Advertiser" && (
+        {type === 'Advertiser' && (
           <>
             <TextField
               name="websiteLink"
@@ -270,7 +235,7 @@ const FormSection = () => {
             />
           </>
         )}
-        {type === "Seller" && (
+        {type === 'Seller' && (
           <>
             <TextField
               name="name"
@@ -293,13 +258,13 @@ const FormSection = () => {
           variant="contained"
           onClick={handleAdd}
           style={{
-            width: "580px",
-            backgroundColor: "Green",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            fontSize: "16px",
-            cursor: "pointer",
+            width: '580px',
+            backgroundColor: 'Green',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            fontSize: '16px',
+            cursor: 'pointer'
           }}
         >
           Sign Up
@@ -307,6 +272,7 @@ const FormSection = () => {
       </Stack>
     </div>
   );
+};
 };
 
 export default FormSection;

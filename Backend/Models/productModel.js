@@ -1,10 +1,10 @@
 const Seller = require('../Models/sellerModel');
-const User = require('../Models/userModel');
+const Tourist = require('../Models/touristModel');
 
 const reviewSchema = new mongoose.Schema({
     user: {
       type: mongoose.Schema.Types.ObjectId, // Assuming a reference to a User model
-      ref: 'User',
+      ref: 'Tourist',
       required: true
     },
     comment: {
