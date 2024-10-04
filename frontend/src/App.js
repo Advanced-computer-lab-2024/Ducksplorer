@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Signup from './Pages/Signup';
 import CreateItinerary from './Pages/Itinerary/createItinerary';
 import RUDItinerary from './Pages/Itinerary/RUDItinerary';
+import ViewUpcomingItinerary from './Pages/Itinerary/viewUpcomingItinerary';
 
 
 
@@ -15,7 +16,8 @@ function App() {
         <Routes>
           <Route path="/signUp" element={<Signup />} />
           <Route path="/createItinerary" element={<CreateItinerary />} />
-          <Route path="/rudItinerary" element={<RUDItinerary />} />        
+          <Route path="/rudItinerary" element={<RUDItinerary />} /> 
+          <Route path="/viewUpcomingItinerary" element={<ViewUpcomingItinerary />} />       
         </Routes>
       </BrowserRouter>
     </React.StrictMode>
