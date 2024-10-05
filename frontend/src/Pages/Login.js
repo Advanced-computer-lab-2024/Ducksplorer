@@ -9,7 +9,6 @@ import Stack from '@mui/material/Stack';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
- 
 
 function Login() {
   const [userName, setUserName] = useState('');
@@ -33,13 +32,15 @@ const handleLogin = async () => {
             else if(response.data.role === 'Tourist'){
                 window.location.href = '/editAccount';
             }
+            else if(response.data.role === 'Guide'){
+              window.location.href = 'tourGuideDashboard';
+            }
            localStorage.setItem('user', JSON.stringify(response.data));
         } else if (response.status === 400) {
-            message.error('Failed to Login , Incorrect Username or Password');
-            return;
+           throw new Error(response.error);
         }
     } catch (error) {
-        message.error('Failed to Login , Incorrect credentials');
+      message.error(error.response.data.error);
     }
     finally{
         setLoading(false);
