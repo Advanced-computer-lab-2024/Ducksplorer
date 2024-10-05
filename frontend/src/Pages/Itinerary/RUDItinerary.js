@@ -35,9 +35,13 @@ const RUDItinerary = () => {
 
   // Handle editing an itinerary
   const handleEditClick = (itinerary) => {
-    setFormData(itinerary); // Set form data to the selected itinerary's values
+    setFormData({
+      ...itinerary,
+      activity: itinerary.activity || [], // Ensure activity is an array
+    });
     setEditingItinerary(itinerary);
   };
+  
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -46,13 +50,21 @@ const RUDItinerary = () => {
 
   const handleActivityInputChange = (event, index) => {
     const { name, value } = event.target;
-    const updatedActivities = [...formData.activities];
-    updatedActivities[index] = {
-      ...updatedActivities[index],
-      [name]: value,
-    };
-    setFormData({ ...formData, activities: updatedActivities });
+  
+    setFormData(prevData => {
+      const updatedActivities = [...prevData.activity]; // Copy the activities array
+      updatedActivities[index] = {
+        ...updatedActivities[index], // Spread the current activity object
+        [name]: value, // Update the specific field (name, price, etc.)
+      };
+  
+      return {
+        ...prevData,
+        activity: updatedActivities, // Set the updated activities array
+      };
+    });
   };
+  
 
   //update
   const handleUpdate = (event) => {
@@ -129,6 +141,7 @@ const RUDItinerary = () => {
             Available itineraries
           </Typography>
         </Box>
+
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -207,12 +220,13 @@ const RUDItinerary = () => {
               <div key={index}>
                 <TextField
                   label={`Activity ${index + 1} Name`}
-                  name="name"
+                  name="name" 
                   value={activity.name || ''}
                   onChange={(e) => handleActivityInputChange(e, index)}
                   fullWidth
                   sx={{ mb: 2 }}
                 />
+
                 <TextField
                   label={`Activity ${index + 1} Price`}
                   name="price"

@@ -15,6 +15,12 @@ const itineraryRoutes = require("./Backend/Routes/itineraryRoutes.js")
 app.use("/signUp", signUpRoutes);
 app.use("/itinerary", itineraryRoutes);
 
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+});
+
 
 const connectToMongoDB = async () => {
     try {
