@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { createContext, useState } from "react";
 import { TextField, Button, Stack } from "@mui/material";
 import axios from "axios";
-import { message } from "antd";
-import DropDown from "./DropDown.js";
+import { Flex, message } from "antd";
+import CategoriesDropDown from "./CategoryDropDown";
+import StandAloneToggleButton from "./ToggleButton";
+
+export const TagsContext = createContext();
+let tags = [];
 
 const AddActivityForm = () => {
   //   const { type } = useTypeContext();
@@ -12,9 +16,10 @@ const AddActivityForm = () => {
   const [location, setLocation] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
-  const [tags, setTags] = useState("");
   const [specialDiscount, setSpecialDiscount] = useState("");
   const [duration, setDuration] = useState("");
+  const allTags = JSON.parse(localStorage.getItem("tags"));
+
   const data = {
     name,
     date,
@@ -23,11 +28,10 @@ const AddActivityForm = () => {
     specialDiscount,
     price,
     location,
-    tags,
     category,
+    tags,
   };
-
-  // Additional state variables for conditional fields
+  let isClicked = null;
 
   const validateFields = () => {
     if (!date || !location || !price || !specialDiscount || !duration) {
@@ -42,8 +46,6 @@ const AddActivityForm = () => {
     }
 
     try {
-      console.log("this is the data", data);
-
       await axios.post("http://localhost:8000/activity", data);
       message.success("Activity Created Successfully!");
     } catch (error) {
@@ -74,7 +76,7 @@ const AddActivityForm = () => {
         }}
       >
         <div className="trial-btn text-white cursor-pointer">
-          <span className="text-bold">Welcome To Ducksplorer</span>
+          <span className="text-bold">Add Activity</span>
         </div>
         <TextField
           name="name"
@@ -130,7 +132,10 @@ const AddActivityForm = () => {
         />
         <TextField
           name="date"
-          label="Date"
+          onSelect={() => {
+            isClicked = true;
+          }}
+          label={isClicked ? "Date" : ""} // try this later!
           type={"datetime-local"} // Toggle password visibility
           value={date}
           onChange={(e) => setDate(e.target.value)}
@@ -140,7 +145,10 @@ const AddActivityForm = () => {
           label="Duration"
           type="number" // Toggle password visibility
           value={duration}
-          onChange={(e) => setDuration(e.target.value)}
+          onChange={(e) => {
+            setDuration(e.target.value);
+            setCategory(localStorage.getItem("category").trim());
+          }}
         />
         <TextField
           name="location"
@@ -149,9 +157,28 @@ const AddActivityForm = () => {
           value={location}
           onChange={(e) => setLocation(e.target.value)}
         />
+        <CategoriesDropDown />
+        <div
+          style={{
+            display: "Flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            flexBasis: 10,
+          }}
+        >
+          {allTags.map((element) => {
+            return (
+              <TagsContext.Provider key={element._id} value={tags}>
+                <StandAloneToggleButton key={element._id} name={element.name} />
+              </TagsContext.Provider>
+            );
+          })}
+        </div>
         <Button
           variant="contained"
-          onClick={handleAdd}
+          onClick={() => {
+            handleAdd();
+          }}
           style={{
             width: "580px",
             backgroundColor: "Green",
