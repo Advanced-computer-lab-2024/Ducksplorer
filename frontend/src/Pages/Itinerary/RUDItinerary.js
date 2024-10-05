@@ -51,18 +51,20 @@ const RUDItinerary = () => {
   const handleActivityInputChange = (event, index) => {
     const { name, value } = event.target;
   
-    setFormData(prevData => {
-      const updatedActivities = [...prevData.activity]; // Copy the activities array
-      updatedActivities[index] = {
-        ...updatedActivities[index], // Spread the current activity object
-        [name]: value, // Update the specific field (name, price, etc.)
-      };
-  
-      return {
-        ...prevData,
-        activity: updatedActivities, // Set the updated activities array
-      };
-    });
+    if (event.type === 'change') {
+        setFormData(prevData => {
+        const updatedActivities = [...prevData.activity]; // Copy the activities array
+        updatedActivities[index] = {
+            ...updatedActivities[index], // Spread the current activity object
+            [name]: value, // Update the specific field (name, price, etc.)
+        };
+    
+        return {
+            ...prevData,
+            activity: updatedActivities, // Set the updated activities array
+        };
+        });
+    }
   };
   
 
@@ -92,6 +94,19 @@ const RUDItinerary = () => {
             console.error('There was an error fetching the itineraries!', error);
         });
     }
+  }, []);
+
+
+  useEffect(() => {
+    const handleWheel = (event) => {
+      if (document.activeElement.type === 'number') {
+        document.activeElement.blur();
+      } 
+    }
+    document.addEventListener('wheel', handleWheel, { passive: true });
+    return () => {
+      document.removeEventListener('wheel', handleWheel);
+    };
   }, []);
 
   const handleDelete = (id) => {
@@ -141,7 +156,7 @@ const RUDItinerary = () => {
   return (
     <>
     <Link to="/tourGuideDashboard"> Back </Link>
-      <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'auto', height: '100vh' }}>
+      <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'visible', height: '100vh' }}>
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
           <Typography variant="h4">
             Your Itineraries
