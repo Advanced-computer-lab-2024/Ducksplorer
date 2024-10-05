@@ -48,15 +48,36 @@ const deleteActivity = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+// const searchActivities = async (req, res) => {
+//   const searchParams = req.query;
+//   try {
+//     const activities = await activityService.searchActivities(searchParams);
+//     res.json(activities);
+//   } catch (error) {
+//     res.status(500).json({ message: "Error fetching activities" });
+//   }
+// };
+
 const searchActivities = async (req, res) => {
-  const searchParams = req.query;
-  try {
-    const activities = await activityService.searchActivities(searchParams);
-    res.json(activities);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching activities" });
-  }
-};
+    const { search } = req.query;
+    const filters = {};
+  
+    if (search) {
+      filters.$or = [
+        { name: { $regex: search, $options: 'i' } }, // Search by name (case-insensitive)
+        { category: { $regex: search, $options: 'i' } }, // Search by category (case-insensitive)
+        { tags: { $regex: search, $options: 'i' } } // Search by tags (case-insensitive)
+      ];
+    }
+  
+    try {
+      const activities = await Activity.find(filters);
+      res.status(200).json(activities);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  };
+  
 const viewUpcomingActivities = async (req, res) => {
   try {
     const upcomingActivities = await activityService.viewUpcomingActivities();
@@ -87,8 +108,8 @@ const filterActivity = async (req, res) => {
   const filters = {};
 
   if (price) filters.price = price;
-  if (date) filters.date = language;
-  if (category) filters.category = availableDatesAndTimes;
+  if (date) filters.date = date;
+  if (category) filters.category = category;
   if (rating) filters.rating = rating;
 
   try {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Box, Table, Typography, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, MenuItem, Select, InputLabel, FormControl, Button } from '@mui/material';
 
@@ -8,6 +8,18 @@ const FilterActivities = () => {
   const [date, setDate] = useState('');
   const [category, setCategory] = useState('');
   const [rating, setRating] = useState('');
+  const [categories, setCategories] = useState([]); // Store fetched categories
+
+  // Fetch categories from backend
+  useEffect(() => {
+    axios.get('http://localhost:8000/category')
+      .then(response => {
+        setCategories(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the categories!', error);
+      });
+  }, []);
 
   // Function to fetch filtered activities
   const fetchFilteredActivities = () => {
@@ -59,10 +71,11 @@ const FilterActivities = () => {
               onChange={(e) => setCategory(e.target.value)}
               label="Category"
             >
-              <MenuItem value="sports">Sports</MenuItem>
-              <MenuItem value="music">Music</MenuItem>
-              <MenuItem value="theater">Theater</MenuItem>
-              {/* Add more categories as needed */}
+              {categories.map((cat) => (
+                <MenuItem key={cat._id} value={cat.name}>
+                  {cat.name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <TextField

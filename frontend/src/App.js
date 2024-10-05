@@ -10,11 +10,12 @@ import AddGoverner from './Pages/Admin/AddGovernor.js';
 import CategoriesActions from './Pages/Admin/CategoriesActions.js';
 import PreferenceTags from './Pages/Admin/PreferenceTags.js';
 import Login from './Pages/Login.js';
-import AddActivity from "./pages/AddActivity.js";
-import RUDActivity from "./pages/RUDActivity.js";
-import UpcomingActivities from "./pages/upcomingActivities.js";
-import SortActivities from "./pages/sortActivities.js";
-import FilterActivities from "./pages/filterActivities.js";
+import AddActivity from "./Pages/AddActivity.js";
+import RUDActivity from "./Pages/RUDActivity.js";
+import UpcomingActivities from "./Pages/upcomingActivities.js";
+import SortActivities from "./Pages/sortActivities.js";
+import FilterActivities from "./Pages/filterActivities.js";
+import SearchActivities from './Pages/searchActivity.js';
 
 
 
@@ -37,10 +38,11 @@ function App() {
         <Route path="/categoriesActions" element={<CategoriesActions />} />
         <Route path="/preferenceTags" element={<PreferenceTags />} />
         <Route path="/activity" element={<AddActivity />} />
-          <Route path="/rudActivity" element={<RUDActivity />} />
-          <Route path="/upcoming" element={<UpcomingActivities />} />
-          <Route path="/sorting" element={<SortActivities />} />
-          <Route path="/filter" element={<FilterActivities />} />
+        <Route path="/rudActivity" element={<RUDActivity />} />
+        <Route path="/upcoming" element={<UpcomingActivities />} />
+        <Route path="/sorting" element={<SortActivities />} />
+        <Route path="/filter" element={<FilterActivities />} />
+        <Route path="/search" element={<SearchActivities/>} />
         </Routes>
     </BrowserRouter>
     </React.StrictMode>

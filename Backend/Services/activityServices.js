@@ -71,7 +71,7 @@ const searchActivities = async (searchParams) => {
     query.name = { $regex: name, $options: "i" };
   }
   if (category) {
-    query.category = category;
+    query.category = { $regex: category, $options: "i" };
   }
   if (tag) {
     query.tags = { $in: [tag] };

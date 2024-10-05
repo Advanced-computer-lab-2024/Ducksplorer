@@ -1,7 +1,6 @@
 require("dotenv").config(); //makes us read the env file
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require("cors");
 const app = express(); //el kol fel kol
 const cors = require("cors");
 const PORT = process.env.PORT || 8000; //tells us to get port from env file or law ma3refsh yegebha it's 3000
@@ -16,12 +15,15 @@ const touristAccountRoutes = require("./Backend/Routes/TouristAccountRoutes.js")
 const AdminActivityRoutes = require("./Backend/Routes/Admin/AdminActivityRoutes.js");
 const preferenceTagsRoutes = require("./Backend/Routes/Admin/PreferenceTagsRoutes.js");
 const activityRoutes = require("./Backend/Routes/activityRoutes.js");
+const categoryRoutes = require("./Backend/Routes/categoryRoutes.js")
 
 app.use("/signUp", signUpRoutes);
-app.use("/activity", activityRoutes);app.use("/admin", adminRoutes);
+app.use("/activity", activityRoutes);
+app.use("/admin", adminRoutes);
 app.use("/touristAccount", touristAccountRoutes);
 app.use("/adminActivity", AdminActivityRoutes);
 app.use("/preferenceTags", preferenceTagsRoutes);
+app.use("/category", categoryRoutes)
 
 
 const connectToMongoDB = async () => {
