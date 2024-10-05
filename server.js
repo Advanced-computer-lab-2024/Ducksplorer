@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const app = express(); //el kol fel kol
 const PORT = process.env.PORT || 8000; //tells us to get port from env file or law ma3refsh yegebha it's 3000
+const cors = require("cors");
 
 console.log(process.env.PORT);
 app.use(express.json());

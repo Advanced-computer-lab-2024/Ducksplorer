@@ -47,7 +47,7 @@ const activitySchema = new Schema(
       required: true,
     },
     tags: {
-      type: String, // depends on tags table
+      type: [String], // depends on tags table
       required: true,
     },
     specialDiscount: {
