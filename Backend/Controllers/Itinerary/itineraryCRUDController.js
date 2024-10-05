@@ -1,15 +1,25 @@
 const express = require("express");
 const itineraryModel = require("../../Models/itineraryModel");
 const mongoose = require('mongoose');
+const tourGuideModel = require("../../Models/tourGuideModel");
 
 
 const createItinerary = async (req, res) => { //create
     //add a new itinerary to the database with 
     //activity,locations,timeline,language,price,availableDates,availableTimes,accessibility,pickUpLocation,dropOffLocation
-    const { activity, locations, timeline, language, price, availableDatesAndTimes, accessibility, pickUpLocation, dropOffLocation, tourGuideModel, rating } = req.body;
+    const { activity, locations, timeline, language, price, availableDatesAndTimes, accessibility, pickUpLocation, dropOffLocation, tourGuideUsername, rating } = req.body;
     console.log(req.body);
     try {
-        const itinerary = await itineraryModel.create({ activity, locations, timeline, language, price, availableDatesAndTimes, accessibility, pickUpLocation, dropOffLocation, tourGuideModel, rating });
+        //first get id of tour guide from his username
+        const tourGuide = await tourGuideModel.findOne({ userName: tourGuideUsername });
+        
+        if (!tourGuide) {
+            return res.status(404).json({ error: 'Tour guide not found' });
+        }
+
+        const itinerary = await itineraryModel.create({ activity, locations, timeline, language, price, 
+            availableDatesAndTimes, accessibility, pickUpLocation, dropOffLocation, tourGuideModel: tourGuide._id, rating });
+            
         res.status(200).json(itinerary);
     }
     catch (error) {

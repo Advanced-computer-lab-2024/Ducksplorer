@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
+import { Link } from 'react-router-dom';
 
 const AddItinerary = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const userJson = localStorage.getItem('user'); // Get the 'user' item as a JSON string  
+        const user = JSON.parse(userJson); 
+        const userName = user.username; 
         try {
             const response = await axios.post('http://localhost:8000/itinerary/', {
                 activity: formData.activity,
@@ -17,11 +21,11 @@ const AddItinerary = () => {
                 accessibility: formData.accessibility,
                 pickUpLocation: formData.pickUpLocation,
                 dropOffLocation: formData.dropOffLocation,
+                tourGuideUsername: userName
             });
 
             if (response.status === 200) {
                 message.success('Itinerary added successfully');
-                // Optionally, reset the form
                 setFormData({
                     activity: [],
                     locations: [],
@@ -50,7 +54,7 @@ const AddItinerary = () => {
         availableDatesAndTimes: [],
         accessibility: '',
         pickUpLocation: '',
-        dropOffLocation: '',
+        dropOffLocation: ''
     });
 
     const handleChange = (e) => {
@@ -68,8 +72,9 @@ const AddItinerary = () => {
 
     return (
         <div>
+            <Link to="/tourGuideDashboard"> Back </Link>
             <h1>
-                Available itineraries
+                Create an Itinerary
             </h1>
             <form onSubmit={handleSubmit}>
                 <input
@@ -115,7 +120,7 @@ const AddItinerary = () => {
                     required
                 />
                 <input
-                    type="text"
+                    type="datetime-local"
                     name="availableDatesAndTimes"
                     placeholder="Available Dates and Times (comma separated)"
                     value={formData.availableDatesAndTimes.join(', ')} // Convert array to string for input

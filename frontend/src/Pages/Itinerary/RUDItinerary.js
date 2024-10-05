@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
 import DeleteIcon from '@mui/icons-material/Delete';
-// import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
-import { TextField, IconButton, Box, Button, Table, Typography, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Tooltip } from '@mui/material';
+import { TextField, IconButton, Box, Button, Table, Typography, TableBody, 
+    TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogActions, 
+    DialogContent, DialogContentText, DialogTitle, Tooltip } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const RUDItinerary = () => {
   const [itineraries, setItineraries] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedItinerary, setselectedItinerary] = useState("");
-  const [showTextField, setShowTextField] = useState(false);
-  const [newItinerary, setNewItinerary] = useState('');
   const [editingItinerary, setEditingItinerary] = useState(null);
 
   const [formData, setFormData] = useState({
@@ -80,13 +80,18 @@ const RUDItinerary = () => {
 
   //read
   useEffect(() => {
-    axios.get('http://localhost:8000/itinerary/')
-      .then(response => {
-        setItineraries(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the itineraries!', error);
-      });
+    const userJson = localStorage.getItem('user'); // Get the 'user' item as a JSON string  
+    const user = JSON.parse(userJson); 
+    const userName = user.username; 
+    if(userName){
+        axios.get(`http://localhost:8000/itinerary/myItineraries/${userName}`)
+        .then(response => {
+            setItineraries(response.data);
+        })
+        .catch(error => {
+            console.error('There was an error fetching the itineraries!', error);
+        });
+    }
   }, []);
 
   const handleDelete = (id) => {
@@ -135,10 +140,11 @@ const RUDItinerary = () => {
 
   return (
     <>
+    <Link to="/tourGuideDashboard"> Back </Link>
       <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'auto', height: '100vh' }}>
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
           <Typography variant="h4">
-            Available itineraries
+            Your Itineraries
           </Typography>
         </Box>
 

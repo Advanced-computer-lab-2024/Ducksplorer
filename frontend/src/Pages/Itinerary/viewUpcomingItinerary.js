@@ -9,6 +9,7 @@ import SortIcon from '@mui/icons-material/Sort';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { message } from 'antd';
+import { Link } from 'react-router-dom';
 
 
 const ViewUpcomingItinerary = () => {
@@ -26,7 +27,7 @@ const ViewUpcomingItinerary = () => {
     const [maxPrice, setMaxPrice] = useState('');
     const [language, setLanguage] = useState('');
     const [availableDatesAndTimes, setAvailableDatesAndTimes] = useState(null);
-    const [priceRange, setPriceRange] = useState([0, 500]); 
+    const [priceRange, setPriceRange] = useState([0, 5000]); 
 
     const [filterAnchorEl, setFilterAnchorEl] = useState(null);
 
@@ -115,26 +116,10 @@ const ViewUpcomingItinerary = () => {
         setLanguage(event.target.value);
     };
     
-    const handleDateChange = (newDate) => {
-        setAvailableDatesAndTimes(newDate);
-    };
 
     //for price slider
     const [anchorEl, setAnchorEl] = useState(null);
-    const [selectedRange, setSelectedRange] = useState([20, 60]); // Initial selected range
-    const BIGGER_RANGE = [50, 5000];
 
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-    
-    const handleSelectedRangeChange = (event, newValue) => {
-        setSelectedRange(newValue); // Update the selected range
-    };
     
     //get upcoming itineraries
     useEffect(() => {
@@ -161,7 +146,17 @@ const ViewUpcomingItinerary = () => {
 
     //filter by price, lang, or dates
     const handleFilter = () => {
-        const dateQuery = availableDatesAndTimes ? availableDatesAndTimes.toISOString() : '';
+        let dateQuery = '';
+    
+        if (availableDatesAndTimes) {
+            // Try to convert availableDatesAndTimes to a Date object
+            const selectedDate = new Date(availableDatesAndTimes);
+            
+            // Check if the conversion is successful and the date is valid
+            if (!isNaN(selectedDate.getTime())) {
+                dateQuery = selectedDate.toISOString();
+            }
+        }
         axios.get(`http://localhost:8000/itinerary/filterUpcoming?minPrice=${minPrice}&maxPrice=${maxPrice}&language=${language}&availableDatesAndTimes=${dateQuery}`)
             .then((response) => {
                 setItineraries(response.data); 
@@ -174,6 +169,7 @@ const ViewUpcomingItinerary = () => {
 
     return (
         <div>
+        <Link to="/touristDashboard"> Back </Link>
         <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'auto', height: '100vh' }}>
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
           <Typography variant="h4">
@@ -194,7 +190,6 @@ const ViewUpcomingItinerary = () => {
                 <MenuItem value="rating" onClick={() => { setSortBy('rating'); handleSortByClose(); }}>Rating</MenuItem>
             </Menu>
 
-            {/* Sort Order Icon Button */}
             <IconButton onClick={handleSortOrderClick}>
                 <SwapVertIcon />
             </IconButton>
@@ -203,10 +198,11 @@ const ViewUpcomingItinerary = () => {
                 open={Boolean(sortOrderAnchorEl)}
                 onClose={handleSortOrderClose}
             >
-                <MenuItem value="asc" onClick={() => { setSortOrder('asc'); handleSortOrderClose(); handleSort(); }}>Descending</MenuItem>
-                <MenuItem value="desc" onClick={() => { setSortOrder('desc'); handleSortOrderClose(); handleSort(); }}>Ascending</MenuItem>
+                <MenuItem value="asc" onClick={() => { setSortOrder('asc'); handleSortOrderClose(); handleSort(); }}>Ascending</MenuItem>
+                <MenuItem value="desc" onClick={() => { setSortOrder('desc'); handleSortOrderClose(); handleSort(); }}>Descending</MenuItem>
             </Menu>
 
+            {/* Filtering */}
             <IconButton onClick={handleFilterChoiceClick}>
                 <FilterAltIcon />
             </IconButton>
@@ -219,7 +215,7 @@ const ViewUpcomingItinerary = () => {
                                 // Reset price filters if unchecked
                                 setMinPrice('');
                                 setMaxPrice('');
-                                setPriceRange([0, 500]); // Reset the slider to initial values
+                                setPriceRange([0, 5000]); // Reset the slider to initial values
                             }
                         }} 
                     />
@@ -234,7 +230,7 @@ const ViewUpcomingItinerary = () => {
                             onChange={handlePriceRangeChange}
                             valueLabelDisplay="auto"
                             min={0}
-                            max={1000}
+                            max={5000}
                             sx={{ width: 300, marginLeft: 2 }} // Adjust slider width and margin
                         />
                         </MenuItem>
@@ -247,48 +243,48 @@ const ViewUpcomingItinerary = () => {
                     </Menu>
                 </MenuItem>
 
-            <MenuItem>
-                <Checkbox checked={isFilterSelected('language')} onChange={() => handleFilterToggle('language')} />
-                Language
-                <br />
-                <FormControl sx={{ minWidth: 120, marginTop: 1 }}>
-                    <InputLabel id="language-select-label">Language</InputLabel>
-                    <Select
-                    labelId="language-select-label"
-                    id="language-select"
-                    value={language}
-                    onChange={handleLanguageChange}
-                    >
-                    <MenuItem value="English">English</MenuItem>
-                    <MenuItem value="Arabic">Arabic</MenuItem>
-                    <MenuItem value="German">German</MenuItem>
-                    <MenuItem value="French">French</MenuItem>
-                    <MenuItem value="Spanish">Spanish</MenuItem>
-                    </Select>
-                </FormControl>
-            </MenuItem>
+                <MenuItem>
+                    <Checkbox checked={isFilterSelected('language')} onChange={() => handleFilterToggle('language')} />
+                    Language
+                    <br />
+                    <FormControl sx={{ minWidth: 120, marginTop: 1 }}>
+                        <InputLabel id="language-select-label"> Language </InputLabel>
+                        <Select
+                        labelId="language-select-label"
+                        id="language-select"
+                        value={language}
+                        onChange={handleLanguageChange}
+                        >
+                        <MenuItem value="English">English</MenuItem>
+                        <MenuItem value="Arabic">Arabic</MenuItem>
+                        <MenuItem value="German">German</MenuItem>
+                        <MenuItem value="French">French</MenuItem>
+                        <MenuItem value="Spanish">Spanish</MenuItem>
+                        </Select>
+                    </FormControl>
+                </MenuItem>
 
                 <MenuItem>
                     <Checkbox
                         checked={isFilterSelected('availableDatesAndTimes')}
                         onChange={() => handleFilterToggle('availableDatesAndTimes')}
                     />
-                    Dates
+                    Dates & Times
                     <br />
                     <input
-                        type="date"
+                        type="datetime-local"
                         value={availableDatesAndTimes}
                         onChange={(e) => setAvailableDatesAndTimes(e.target.value)} // Update the state with the selected date
                         style={{ marginTop: '10px' }}
                     />
                 </MenuItem>
-        <MenuItem>
-            <Button onClick={handleFilter}>Apply Filters</Button>
-        </MenuItem>
-        <MenuItem>
-            <Button onClick={handleClearAllFilters}>Clear All Filters</Button>
-        </MenuItem>
-      </Menu>
+                <MenuItem>
+                    <Button onClick={handleFilter}>Apply Filters</Button>
+                </MenuItem>
+                <MenuItem>
+                    <Button onClick={handleClearAllFilters}>Clear All Filters</Button>
+                </MenuItem>
+            </Menu>
 
         </Box>
         <TableContainer component={Paper}>

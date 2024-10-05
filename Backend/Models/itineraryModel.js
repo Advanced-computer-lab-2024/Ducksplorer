@@ -44,7 +44,7 @@ const itinerarySchema = new Schema({
         required: true
     },
     tourGuideModel: {
-        type: mongoose.Schema.Types.ObjectId, // Assuming a reference to a User model
+        type: mongoose.Schema.Types.ObjectId, 
         ref: 'TourGuide',
         required: false
     },

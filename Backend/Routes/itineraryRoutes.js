@@ -20,7 +20,7 @@ router.route("/upcoming").get(getUpcomingItineraries)
 
 router.route("/filterUpcoming").get(filterUpcomingItineraries)
 
-router.route("/myItineraries").get(getAllMyItineraries) 
+router.route("/myItineraries/:userName").get(getAllMyItineraries) 
 
 router.route("/:id").get(getItinerary).put(updateItinerary).delete(deleteItinerary)
 
