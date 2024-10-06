@@ -14,6 +14,7 @@ import {
   Button,
   Rating,
 } from "@mui/material";
+import AdvertiserSidebar from "../Components/AdvertiserSidebar";
 
 const SearchActivities = () => {
   const [activities, setActivities] = useState([]); // Displayed activities
@@ -51,7 +52,16 @@ const SearchActivities = () => {
 
   return (
     <>
-      <Box sx={{ p: 6, maxWidth: 1200, overflowY: "auto", height: "100vh" }}>
+      <AdvertiserSidebar />
+      <Box
+        sx={{
+          p: 6,
+          maxWidth: "120vh",
+          overflowY: "visible",
+          height: "100vh",
+          marginLeft: 40,
+        }}
+      >
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <Typography variant="h4">Search Activities</Typography>
         </Box>
@@ -80,7 +90,7 @@ const SearchActivities = () => {
         </Box>
 
         {/* Activity Table */}
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} style={{ borderRadius: 20 }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -103,8 +113,7 @@ const SearchActivities = () => {
                   <TableCell>{activity.price}</TableCell>
                   <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
                   <TableCell>{activity.category}</TableCell>
-                  <TableCell>{activity.tags.join(", ")}</TableCell>{" "}
-                  {/* Join tags array */}
+                  <TableCell>{activity.tags.join(", ")}</TableCell>
                   <TableCell>{activity.specialDiscount}</TableCell>
                   <TableCell>{activity.date}</TableCell>
                   <TableCell>{activity.duration}</TableCell>

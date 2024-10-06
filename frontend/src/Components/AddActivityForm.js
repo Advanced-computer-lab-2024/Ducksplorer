@@ -24,7 +24,7 @@ const AddActivityForm = () => {
   const data = {
     name,
     isOpen,
-    advertiser : JSON.parse(localStorage.getItem('user')).username,
+    advertiser: JSON.parse(localStorage.getItem("user")).username,
     date,
     location,
     price,
@@ -32,7 +32,6 @@ const AddActivityForm = () => {
     tags,
     specialDiscount,
     duration,
-    
   };
   let isClicked = null;
 

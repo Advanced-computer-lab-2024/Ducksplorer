@@ -28,7 +28,10 @@ import {
   TextField,
 } from "@mui/material";
 
-const MyActivities = ({ userName }) => { // Accept advertiserId as a prop
+import AdvertiserSidebar from "../Components/AdvertiserSidebar.js";
+
+const MyActivities = ({ userName }) => {
+  // Accept advertiserId as a prop
   const [activities, setActivities] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState(null);
@@ -55,7 +58,9 @@ const MyActivities = ({ userName }) => { // Accept advertiserId as a prop
     console.log(userName);
     const fetchActivities = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/activity/${userName}`);
+        const response = await axios.get(
+          `http://localhost:8000/activity/${userName}`
+        );
         setActivities(response.data);
       } catch (error) {
         console.error("There was an error fetching the activities!", error);
@@ -140,179 +145,190 @@ const MyActivities = ({ userName }) => { // Accept advertiserId as a prop
 
   return (
     <>
-      <Box sx={{ p: 6, maxWidth: "135vh", overflowY: "auto", height: "100vh" }}>
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Typography variant="h4">Available activities</Typography>
-        </Box>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Price</TableCell>
-                <TableCell>Is open</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Tags</TableCell>
-                <TableCell>Discount</TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell>Duration</TableCell>
-                <TableCell>Location</TableCell>
-                <TableCell>Rating</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {activities.map((activity) => (
-                <TableRow key={activity._id}>
-                  <TableCell>{activity.name}</TableCell>
-                  <TableCell>{activity.price}</TableCell>
-                  <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
-                  <TableCell>{activity.category}</TableCell>
-                  <TableCell>{activity.tags.join(", ")}</TableCell> {/* Ensure tags are displayed properly */}
-                  <TableCell>{activity.specialDiscount}</TableCell>
-                  <TableCell>{activity.date}</TableCell>
-                  <TableCell>{activity.duration}</TableCell>
-                  <TableCell>{activity.location}</TableCell>
-                  <TableCell>
-                    <Rating
-                      value={calculateAverageRating(activity.ratings)}
-                      precision={0.1}
-                      readOnly
-                    />
-                  </TableCell>
-
-                  <TableCell>
-                    <Tooltip title="Delete Activity">
-                      <IconButton
-                        color="error"
-                        onClick={() => handleClickOpen(activity)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Edit Activity">
-                      <IconButton
-                        color="primary"
-                        onClick={() => handleEditClick(activity)}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
+      <AdvertiserSidebar />
+      <div>
+        <Box
+          sx={{
+            p: 6,
+            maxWidth: "120vh",
+            overflowY: "visible",
+            height: "100vh",
+            marginLeft: "350px",
+          }}
+        >
+          <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+            <Typography variant="h4">Available activities</Typography>
+          </Box>
+          <TableContainer style={{ borderRadius: 20 }} component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Price</TableCell>
+                  <TableCell>Is open</TableCell>
+                  <TableCell>Category</TableCell>
+                  <TableCell>Tags</TableCell>
+                  <TableCell>Discount</TableCell>
+                  <TableCell>Date</TableCell>
+                  <TableCell>Duration</TableCell>
+                  <TableCell>Location</TableCell>
+                  <TableCell>Rating</TableCell>
+                  <TableCell>Actions</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {activities.map((activity) => (
+                  <TableRow key={activity._id}>
+                    <TableCell>{activity.name}</TableCell>
+                    <TableCell>{activity.price}</TableCell>
+                    <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
+                    <TableCell>{activity.category}</TableCell>
+                    <TableCell>{activity.tags.join(", ")}</TableCell>{" "}
+                    {/* Ensure tags are displayed properly */}
+                    <TableCell>{activity.specialDiscount}</TableCell>
+                    <TableCell>{activity.date}</TableCell>
+                    <TableCell>{activity.duration}</TableCell>
+                    <TableCell>{activity.location}</TableCell>
+                    <TableCell>
+                      <Rating
+                        value={calculateAverageRating(activity.ratings)}
+                        precision={0.1}
+                        readOnly
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Tooltip title="Delete Activity">
+                        <IconButton
+                          color="error"
+                          onClick={() => handleClickOpen(activity)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Edit Activity">
+                        <IconButton
+                          color="primary"
+                          onClick={() => handleEditClick(activity)}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
 
-        {editingActivity && (
-          <form
-            onSubmit={handleUpdate}
-            style={{ marginTop: "20px" }}
-            ref={formRef}
-          >
-            <TextField
-              label="Name"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              fullWidth
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              label="Price"
-              name="price"
-              value={formData.price}
-              onChange={handleInputChange}
-              fullWidth
-              sx={{ mb: 2 }}
-              type="number"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={formData.isOpen}
-                  onChange={handleCheckboxChange}
-                  name="isOpen"
-                />
-              }
-              label="Is open"
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              label="Discount"
-              name="specialDiscount"
-              value={formData.specialDiscount}
-              onChange={handleInputChange}
-              fullWidth
-              sx={{ mb: 2 }}
-              type="number"
-            />
-            <TextField
-              label="Date"
-              name="date"
-              value={formData.date}
-              onChange={handleInputChange}
-              fullWidth
-              sx={{ mb: 2 }}
-              type="datetime-local"
-            />
-            <TextField
-              label="Category"
-              name="category"
-              value={formData.category}
-              onChange={handleInputChange}
-              fullWidth
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              label="Tags (comma-separated)"
-              name="tags"
-              value={formData.tags}
-              onChange={handleInputChange}
-              fullWidth
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              label="Duration"
-              name="duration"
-              value={formData.duration}
-              onChange={handleInputChange}
-              fullWidth
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              label="Location"
-              name="location"
-              type="url"
-              value={formData.location}
-              onChange={handleInputChange}
-              fullWidth
-              sx={{ mb: 2 }}
-            />
-            <Button type="submit" variant="contained" color="primary">
-              Update Activity
-            </Button>
-          </form>
-        )}
+          {editingActivity && (
+            <form
+              onSubmit={handleUpdate}
+              style={{ marginTop: "20px" }}
+              ref={formRef}
+            >
+              <TextField
+                label="Name"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                fullWidth
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                label="Price"
+                name="price"
+                value={formData.price}
+                onChange={handleInputChange}
+                fullWidth
+                sx={{ mb: 2 }}
+                type="number"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={formData.isOpen}
+                    onChange={handleCheckboxChange}
+                    name="isOpen"
+                  />
+                }
+                label="Is open"
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                label="Discount"
+                name="specialDiscount"
+                value={formData.specialDiscount}
+                onChange={handleInputChange}
+                fullWidth
+                sx={{ mb: 2 }}
+                type="number"
+              />
+              <TextField
+                label="Date"
+                name="date"
+                value={formData.date}
+                onChange={handleInputChange}
+                fullWidth
+                sx={{ mb: 2 }}
+                type="datetime-local"
+              />
+              <TextField
+                label="Category"
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                fullWidth
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                label="Tags (comma-separated)"
+                name="tags"
+                value={formData.tags}
+                onChange={handleInputChange}
+                fullWidth
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                label="Duration"
+                name="duration"
+                value={formData.duration}
+                onChange={handleInputChange}
+                fullWidth
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                label="Location"
+                name="location"
+                type="url"
+                value={formData.location}
+                onChange={handleInputChange}
+                fullWidth
+                sx={{ mb: 2 }}
+              />
+              <Button type="submit" variant="contained" color="primary">
+                Update Activity
+              </Button>
+            </form>
+          )}
 
-        <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Confirm Deletion</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Are you sure you want to delete this Activity?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleConfirmDelete} color="error">
-              Delete
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Box>
+          <Dialog open={open} onClose={handleClose}>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Are you sure you want to delete this Activity?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={handleConfirmDelete} color="error">
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Box>
+      </div>
     </>
   );
 };
