@@ -4,6 +4,7 @@ import axios from "axios";
 import { message } from "antd";
 import CategoriesDropDown from "./CategoryDropDown";
 import StandAloneToggleButton from "./ToggleButton";
+import AdvertiserSidebar from "./AdvertiserSidebar";
 
 export const TagsContext = createContext();
 let tags = [];
@@ -36,7 +37,16 @@ const AddActivityForm = () => {
   let isClicked = null;
 
   const validateFields = () => {
-    if (!date || !location || !price || !specialDiscount || !duration) {
+    if (
+      !date ||
+      !location ||
+      !price ||
+      !specialDiscount ||
+      !duration ||
+      !name ||
+      !category ||
+      tags.length === 0
+    ) {
       message.error("All fields are required");
       return false;
     }
@@ -68,6 +78,7 @@ const AddActivityForm = () => {
         alignItems: "center",
       }}
     >
+      <AdvertiserSidebar />
       <Stack
         spacing={1}
         sx={{
