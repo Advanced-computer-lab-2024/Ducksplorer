@@ -3,9 +3,13 @@ import axios from 'axios';
 import { message } from 'antd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { TextField, IconButton, Box, Button, Table, Typography, TableBody, 
-    TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogActions, 
-    DialogContent, DialogContentText, DialogTitle, Tooltip } from '@mui/material';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+
+import {
+  TextField, IconButton, Box, Button, Table, Typography, TableBody,
+  TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogActions,
+  DialogContent, DialogContentText, DialogTitle, Tooltip
+} from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const RUDItinerary = () => {
@@ -41,33 +45,63 @@ const RUDItinerary = () => {
     });
     setEditingItinerary(itinerary);
   };
-  
+
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData(prevData => ({ ...prevData, [name]: value }));
   };
 
+  const handleLocationInputChange = (event, index) => {
+    const { value } = event.target;
+    setFormData(prevData => {
+      const updatedLocations = [...prevData.locations];
+      updatedLocations[index] = value; // Update the specific location
+      return { ...prevData, locations: updatedLocations };
+    });
+  };
+
   const handleActivityInputChange = (event, index) => {
     const { name, value } = event.target;
-  
+
     if (event.type === 'change') {
-        setFormData(prevData => {
+      setFormData(prevData => {
         const updatedActivities = [...prevData.activity]; // Copy the activities array
         updatedActivities[index] = {
-            ...updatedActivities[index], // Spread the current activity object
-            [name]: value, // Update the specific field (name, price, etc.)
+          ...updatedActivities[index], // Spread the current activity object
+          [name]: value, // Update the specific field (name, price, etc.)
         };
-    
+
         return {
-            ...prevData,
-            activity: updatedActivities, // Set the updated activities array
+          ...prevData,
+          activity: updatedActivities, // Set the updated activities array
         };
-        });
+      });
     }
   };
-  
 
+  const handleAvailableDatesInputChange = (event, index) => {
+    const { value } = event.target;
+    setFormData(prevData => {
+      const updatedDates = [...prevData.availableDatesAndTimes];
+      updatedDates[index] = value; // Update the specific available date/time
+      return { ...prevData, availableDatesAndTimes: updatedDates };
+    });
+  };
+
+  const handleAddDate = () => {
+    setFormData(prevData => ({
+      ...prevData,
+      availableDatesAndTimes: [...prevData.availableDatesAndTimes, ''], // Add an empty string for a new date/time field
+    }));
+  };
+
+  const handleAddLocation = () => {
+    setFormData(prevData => ({
+      ...prevData,
+      locations: [...prevData.locations, ''], // Add an empty string for a new location field
+    }));
+  };
   //update
   const handleUpdate = (event) => {
     event.preventDefault();
@@ -83,15 +117,15 @@ const RUDItinerary = () => {
   //read
   useEffect(() => {
     const userJson = localStorage.getItem('user'); // Get the 'user' item as a JSON string  
-    const user = JSON.parse(userJson); 
-    const userName = user.username; 
-    if(userName){
-        axios.get(`http://localhost:8000/itinerary/myItineraries/${userName}`)
+    const user = JSON.parse(userJson);
+    const userName = user.username;
+    if (userName) {
+      axios.get(`http://localhost:8000/itinerary/myItineraries/${userName}`)
         .then(response => {
-            setItineraries(response.data);
+          setItineraries(response.data);
         })
         .catch(error => {
-            console.error('There was an error fetching the itineraries!', error);
+          console.error('There was an error fetching the itineraries!', error);
         });
     }
   }, []);
@@ -101,7 +135,7 @@ const RUDItinerary = () => {
     const handleWheel = (event) => {
       if (document.activeElement.type === 'number') {
         document.activeElement.blur();
-      } 
+      }
     }
     document.addEventListener('wheel', handleWheel, { passive: true });
     return () => {
@@ -155,7 +189,7 @@ const RUDItinerary = () => {
 
   return (
     <>
-    <Link to="/tourGuideDashboard"> Back </Link>
+      <Link to="/tourGuideDashboard"> Back </Link>
       <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'visible', height: '100vh' }}>
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
           <Typography variant="h4">
@@ -196,7 +230,19 @@ const RUDItinerary = () => {
                       : 'No activities available'}
                   </TableCell>
 
-                  <TableCell>{itinerary.locations}</TableCell>
+                  <TableCell>
+                    {itinerary.locations && itinerary.locations.length > 0 ? (
+                      itinerary.locations.map((location, index) => (
+                        <div key={index}>
+                          <Typography variant="body1">
+                            Location {index + 1}: {location.trim()}
+                          </Typography>
+                          <br />
+                        </div>
+                      ))
+                    ) : 'No locations available'}
+
+                  </TableCell>
                   <TableCell>{itinerary.timeline}</TableCell>
                   <TableCell>{itinerary.language}</TableCell>
                   <TableCell>{itinerary.price}</TableCell>
@@ -241,7 +287,7 @@ const RUDItinerary = () => {
               <div key={index}>
                 <TextField
                   label={`Activity ${index + 1} Name`}
-                  name="name" 
+                  name="name"
                   value={activity.name || ''}
                   onChange={(e) => handleActivityInputChange(e, index)}
                   fullWidth
@@ -277,11 +323,42 @@ const RUDItinerary = () => {
                 />
               </div>
             ))}
-            <TextField label="Locations" name="locations" value={formData.locations} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} />
+            {formData.locations.map((location, index) => (
+              <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <TextField
+                  value={location}
+                  onChange={(event) => handleLocationInputChange(event, index)}
+                  variant="outlined"
+                  fullWidth
+                  label={`Location ${index + 1}`}
+                />
+                {index === 0 && (
+                  <IconButton onClick={handleAddLocation}>
+                    <AddCircleIcon color="primary" />
+                  </IconButton>
+                )}
+              </Box>
+            ))}
             <TextField label="Timeline" name="timeline" value={formData.timeline} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} />
             <TextField label="Language" name="language" value={formData.language} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} />
             <TextField label="Price" name="price" value={formData.price} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} type="number" min="0.01" step="0.01" />
-            <TextField label="" name="Available Dates and Times" value={formData.availableDatesAndTimes} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} type="datetime-local" />
+            {formData.availableDatesAndTimes.map((dateTime, index) => (
+              <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <TextField
+                  label={`Available Date and Time ${index + 1}`}
+                  value={dateTime || ''}
+                  onChange={(event) => handleAvailableDatesInputChange(event, index)}
+                  fullWidth
+                  type="datetime-local"
+                />
+                {index === 0 && (
+                  <IconButton onClick={handleAddDate}>
+                    <AddCircleIcon color="primary" />
+                  </IconButton>
+                )}
+              </Box>
+            ))}
+
             <TextField label="Accessbility" name="accessibility" value={formData.accessibility} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} />
             <TextField label="Pick Up Location" name="pickUpLocation" value={formData.pickUpLocation} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} />
             <TextField label="Drop Off Location" name="dropOffLocation" value={formData.dropOffLocation} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} />
@@ -304,7 +381,7 @@ const RUDItinerary = () => {
             </Button>
           </DialogActions>
         </Dialog>
-      </Box>
+      </Box >
     </>
   );
 }
