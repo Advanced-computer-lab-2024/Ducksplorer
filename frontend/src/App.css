@@ -16,11 +16,8 @@ body {
 
   padding: 20px;
   height: 120vh;
-  
 
-
-  background-image: url(../public/Images/bg-intro-desktop.png);
-  background-color: hsl(65, 13%, 81%);
+  background-color: hsl(189, 83%, 45%);
 }
 
 .app {
@@ -56,7 +53,6 @@ body {
 .both-sections {
   display: flex;
 }
-
 
 .section-container {
   margin-top: 20px;

@@ -1,9 +1,17 @@
 import './App.css';
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-// import Signup from './Pages/Signup.js';
-// import Login from './Pages/Login.js';
-// import CreateVisit from './Pages/MuseumHistoricalPlace/CreateVisit.js';
+import {BrowserRouter,Routes,Route} from 'react-router-dom';
+import Signup from './Pages/Signup.js';
+import AdminDashboard from './Components/AdminDashboard.js';
+import ApproveUsers from './Pages/Admin/ApproveUsers.js';
+import DeleteUser from './Pages/Admin/DeleteUsers.js';
+import AddAdmin from './Pages/Admin/AddAdmin.js';
+import AddGoverner from './Pages/Admin/AddGovernor.js';
+import CategoriesActions from './Pages/Admin/CategoriesActions.js';
+import PreferenceTags from './Pages/Admin/PreferenceTags.js';
+import Login from './Pages/Login.js';
+import AddActivity from "./Pages/AddActivity.js";
+import TouristEditAccount from './Pages/TouristEditAccount.js';
 import CreateHistoricalPlace from './Pages/MuseumHistoricalPlace/CreateHistoricalPlace.js';
 import CreateMuseum from './Pages/MuseumHistoricalPlace/CreateMuseum.js';
 // import RUDVisit from './Pages/MuseumHistoricalPlace/RUDVisit.js';
@@ -16,14 +24,20 @@ import UpcomingMuseums from './Pages/MuseumHistoricalPlace/UpcomingMuseums.js';
 import CreateTagMuseum from './Pages/MuseumHistoricalPlace/CreateTagMuseum.js';
 import CreateTagHistoricalPlace from './Pages/MuseumHistoricalPlace/CreateTagHistoricalPlace.js';
 
+
+
+   
+
+ 
 function App() {
 
   return (
     <React.StrictMode>
       <BrowserRouter>
         <Routes>
-          {/* <Route path="/signUp" element={<Signup />} />
-          <Route path="/createVisit" element={<CreateVisit />} /> */}
+        <Route path ="/login" element={<Login/>} />
+        <Route path = "/signUp" element=  {<Signup/>} />  
+
           <Route path="/createMuseum" element={<CreateMuseum />} />
           <Route path="/createHistoricalPlace" element={<CreateHistoricalPlace />} />
           <Route path="/RUDMuseum" element={<RUDMuseum />} />
@@ -38,9 +52,21 @@ function App() {
           {/* <Route path ="/login" element={<Login/>} /> */}
 
 
-        </Routes>
+          <Route path ="/AdminDashboard" element = {<AdminDashboard/>} />
+        <Route path ="/pendingusers" element ={<ApproveUsers />} />
+        <Route path ="/deleteusers" element = {<DeleteUser />} />
+        <Route path ="/addAdmin" element = {<AddAdmin />} />
+        <Route path ="/addGovernor" element= {<AddGoverner/>} />
+        <Route path="/categoriesActions" element={<CategoriesActions />} />
+        <Route path="/preferenceTags" element={<PreferenceTags />} />
+        <Route path="/activity" element={<AddActivity />} />
+        <Route path="/editAccount" element={<TouristEditAccount />} />
+      </Routes>
       </BrowserRouter>
     </React.StrictMode>
+    
+      
+    
   );
 }
 
