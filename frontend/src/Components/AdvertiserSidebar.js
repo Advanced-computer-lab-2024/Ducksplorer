@@ -33,25 +33,31 @@ const AdvertiserSidebar = () => {
         </Typography>
         <Divider />
         <List>
-          <ListItem button component={Link} to="/advertiserdashboard">
+          <ListItem component={Link} to="/advertiserdashboard">
             <ListItemIcon>
               <DashboardIcon />
             </ListItemIcon>
             <ListItemText primary="Dashboard" />
           </ListItem>
-          <ListItem button component={Link} to="/activity">
+          <ListItem component={Link} to="/activity/myActivities">
             <ListItemIcon>
               <PeopleIcon />
             </ListItemIcon>
             <ListItemText primary="My Activities" />
           </ListItem>
-          <ListItem button component={Link} to="/activity/sortFilter">
+          <ListItem component={Link} to="/activity/searchActivities">
+            <ListItemIcon>
+              <WidgetsIcon />
+            </ListItemIcon>
+            <ListItemText primary="Search Activities" />
+          </ListItem>
+          <ListItem component={Link} to="/activity/sortFilter">
             <ListItemIcon>
               <WidgetsIcon />
             </ListItemIcon>
             <ListItemText primary="All Activities" />
           </ListItem>
-          <ListItem button component={Link} to="/activity/addActivity">
+          <ListItem component={Link} to="/activity/addActivity">
             <ListItemIcon>
               <AddIcon />
             </ListItemIcon>
