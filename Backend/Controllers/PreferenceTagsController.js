@@ -63,7 +63,6 @@ const getTagsbyName = async (req, res) => {
     try {
       const Tags = await preferenceTags.find();
       res.status(200).json(Tags);
-      console.log(Tags);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

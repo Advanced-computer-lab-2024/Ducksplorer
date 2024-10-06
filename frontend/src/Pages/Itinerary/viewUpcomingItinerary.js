@@ -28,11 +28,27 @@ const ViewUpcomingItinerary = () => {
     const [language, setLanguage] = useState('');
     const [availableDatesAndTimes, setAvailableDatesAndTimes] = useState(null);
     const [priceRange, setPriceRange] = useState([0, 5000]); 
+    const [tags, setTags] = useState([]);  // Tags selected by the user
+    const [allTags, setAllTags] = useState([]);  // All available tags from backend
 
     const [filterAnchorEl, setFilterAnchorEl] = useState(null);
 
     const [selectedFilters, setSelectedFilters] = useState([]);
 
+    //get all pref tags from table
+    useEffect(() => {
+        const fetchTags = async () => {
+            try {
+                const response = await fetch('http://localhost:8000/preferenceTags/');
+                const data = await response.json();
+                setAllTags(data);
+            } catch (error) {
+                console.error('Error fetching tags:', error);
+            }
+        };
+        fetchTags();
+    }, []);
+    
     const isFilterSelected = (filter) => selectedFilters.includes(filter);
 
     // Handlers for Sort By dropdown
@@ -57,6 +73,11 @@ const ViewUpcomingItinerary = () => {
     };
     const handleFilterClose = () => {
         setFilterAnchorEl(null);
+    };
+
+    const handleTagsChange = (event) => {
+        const value = event.target.value;
+        setTags(value);  // Ensure tags is always an array
     };
 
     const handleFilterToggle = (filter) => {
@@ -96,6 +117,7 @@ const ViewUpcomingItinerary = () => {
         setLanguage('');
         setAvailableDatesAndTimes(null);
         setSelectedFilters([]);
+        setTags([]); 
 
         axios.get('http://localhost:8000/itinerary/upcoming')
             .then(response => {
@@ -104,6 +126,8 @@ const ViewUpcomingItinerary = () => {
             .catch(error => {
                 console.error('There was an error fetching the itineraries!', error);
             });
+        
+        handleFilterClose();
     };
 
     const handlePriceRangeChange = (event, newValue) => {
@@ -144,9 +168,18 @@ const ViewUpcomingItinerary = () => {
             });
     }
 
+    //encoding tags
+    const encodeTags = (tags) => {
+        if (Array.isArray(tags)) {
+            return tags.map(tag => encodeURIComponent(tag));
+        }
+        return encodeURIComponent(tags);
+    };
+
     //filter by price, lang, or dates
     const handleFilter = () => {
         let dateQuery = '';
+        const encodedTags = encodeTags(tags).join(',');
     
         if (availableDatesAndTimes) {
             // Try to convert availableDatesAndTimes to a Date object
@@ -157,7 +190,7 @@ const ViewUpcomingItinerary = () => {
                 dateQuery = selectedDate.toISOString();
             }
         }
-        axios.get(`http://localhost:8000/itinerary/filterUpcoming?minPrice=${minPrice}&maxPrice=${maxPrice}&language=${language}&availableDatesAndTimes=${dateQuery}`)
+        axios.get(`http://localhost:8000/itinerary/filterUpcoming?minPrice=${minPrice}&maxPrice=${maxPrice}&language=${language}&availableDatesAndTimes=${dateQuery}&tags=${encodedTags}`)
             .then((response) => {
                 setItineraries(response.data); 
             })
@@ -170,12 +203,12 @@ const ViewUpcomingItinerary = () => {
     return (
         <div>
         <Link to="/touristDashboard"> Back </Link>
-        <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'auto', height: '100vh' }}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
-          <Typography variant="h4">
-            Upcoming Itineraries
-          </Typography>
-        </Box>
+        <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'visible', height: '100vh' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+            <Typography variant="h4">
+                Upcoming Itineraries
+            </Typography>
+            </Box>
         <Box sx={{ display: 'flex', justifyContent: 'normal', mb: 2 }}>
             {/* Sort By Icon Button */}
             <IconButton onClick={handleSortByClick}>
@@ -278,6 +311,32 @@ const ViewUpcomingItinerary = () => {
                         style={{ marginTop: '10px' }}
                     />
                 </MenuItem>
+
+                <MenuItem>
+                    <Checkbox
+                        checked={isFilterSelected('tags')}
+                        onChange={() => handleFilterToggle('tags')}
+                    />
+                    <FormControl sx={{ minWidth: 120, marginTop: 1 }}>
+                        <InputLabel id="tags-select-label">Tags</InputLabel>
+                        <Select
+                            labelId="tags-select-label"
+                            id="tags-select"
+                            multiple
+                            value={tags}  // Ensure it's an array
+                            onChange={handleTagsChange}
+                            renderValue={(selected) => selected.join(', ')}  // Display selected tags
+                        >
+                            {allTags.map((tag) => (
+                                <MenuItem key={tag._id} value={tag.name}>
+                                    <Checkbox checked={tags.indexOf(tag.name) > -1} />
+                                    {tag.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </MenuItem>
+
                 <MenuItem>
                     <Button onClick={handleFilter}>Apply Filters</Button>
                 </MenuItem>

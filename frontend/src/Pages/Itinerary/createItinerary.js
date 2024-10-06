@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { IconButton, Box } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import StandAloneToggleButton from "../../Components/ToggleButton";
@@ -10,6 +10,20 @@ export const TagsContext = createContext();
 let tags = [];
 
 const AddItinerary = () => {
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const handleWheel = (event) => {
+          if (document.activeElement.type === 'number') {
+            document.activeElement.blur();
+          }
+        }
+        document.addEventListener('wheel', handleWheel, { passive: true });
+        return () => {
+          document.removeEventListener('wheel', handleWheel);
+        };
+      }, []);
 
     const [prefTagsOptions, setPrefTagsOptions] = useState([]);
     const [locations, setLocations] = useState(['']);
@@ -126,6 +140,7 @@ const AddItinerary = () => {
                 message.success('Itinerary added successfully');
                 // Reset form data here
                 resetForm();
+                navigate('/tourGuideDashboard');
             } else {
                 message.error('Failed to add itinerary');
             }

@@ -176,7 +176,7 @@ const RUDItinerary = () => {
     };
 
     fetchTags();
-}, []);
+    }, []);
 
   const handleDelete = (id) => {
     fetch(`http://localhost:8000/itinerary/${id}`, {

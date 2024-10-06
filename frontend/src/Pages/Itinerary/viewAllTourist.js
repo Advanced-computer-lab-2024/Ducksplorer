@@ -82,11 +82,6 @@ function SearchItineraries() {
         setFilterAnchorEl(null);
     };
 
-    const handleTagsChange = (event) => {
-        const value = event.target.value;
-        setTags(value);  // Ensure tags is always an array
-    };
-
     const handleFilterToggle = (filter) => {
         const newFilters = [...selectedFilters];
         if (newFilters.includes(filter)) {
@@ -146,17 +141,28 @@ function SearchItineraries() {
     const handleLanguageChange = (event) => {
         setLanguage(event.target.value);
     };
+
+    const handleTagsChange = (event) => {
+        const value = event.target.value;
+        setTags(value);  
+    };
     
 
     //for price slider
     const [anchorEl, setAnchorEl] = useState(null);
 
+    //encoding tags
+    const encodeTags = (tags) => {
+        if (Array.isArray(tags)) {
+            return tags.map(tag => encodeURIComponent(tag));
+        }
+        return encodeURIComponent(tags);
+    };
 
     //filter by price, lang, or dates
     const handleFilter = () => {
-        // const formattedTags = tags.map(tag => tag.toLowerCase()); // Normalizing to lower case
-
         let dateQuery = '';
+        const encodedTags = encodeTags(tags).join(',');
     
         if (availableDatesAndTimes) {
             // Try to convert availableDatesAndTimes to a Date object
@@ -167,7 +173,7 @@ function SearchItineraries() {
                 dateQuery = selectedDate.toISOString();
             }
         }        
-        axios.get(`http://localhost:8000/itinerary/filter?minPrice=${minPrice}&maxPrice=${maxPrice}&language=${language}&availableDatesAndTimes=${dateQuery}&tags=${tags}`)
+        axios.get(`http://localhost:8000/itinerary/filter?minPrice=${minPrice}&maxPrice=${maxPrice}&language=${language}&availableDatesAndTimes=${dateQuery}&tags=${encodedTags}`)
             .then((response) => {
                 setItineraries(response.data); 
             })
@@ -178,7 +184,7 @@ function SearchItineraries() {
     }
 
     return (
-        <div style={{ padding: '20px', maxWidth: '1200px', margin: 'auto', height: '100vh', display: 'flex', flexDirection: 'column', overflowY: 'visible', height:'100vh' }}>
+        <Box sx={{ padding: '20px', maxWidth: '1200px', margin: 'auto', display: 'flex', flexDirection: 'column', overflowY: 'visible', height:'100vh' }}>
         <Link to="/touristDashboard"> Back </Link>
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
           <Typography variant="h4">
@@ -278,15 +284,19 @@ function SearchItineraries() {
                     </MenuItem>
 
                     <MenuItem>
+                        <Checkbox
+                            checked={isFilterSelected('tags')}
+                            onChange={() => handleFilterToggle('tags')}
+                        />
                         <FormControl sx={{ minWidth: 120, marginTop: 1 }}>
                             <InputLabel id="tags-select-label">Tags</InputLabel>
                             <Select
                                 labelId="tags-select-label"
                                 id="tags-select"
                                 multiple
-                                value={tags}  // Ensure it's an array
+                                value={tags}  
                                 onChange={handleTagsChange}
-                                renderValue={(selected) => selected.join(', ')}  // Display selected tags
+                                renderValue={(selected) => selected.join(', ')}  
                             >
                                 {allTags.map((tag) => (
                                     <MenuItem key={tag._id} value={tag.name}>
@@ -310,8 +320,8 @@ function SearchItineraries() {
 
             <div style={{ flex: 1 }}> 
                 {itineraries.length > 0 ? (
-                    <Box>
-                        <TableContainer component={Paper} style={{ maxHeight: '600px' }}> {/* Limit table height and make it scroll */}
+                    <Box >
+                        <TableContainer component={Paper}>
                             <Table stickyHeader> 
                                 <TableHead>
                                     <TableRow>
@@ -388,7 +398,7 @@ function SearchItineraries() {
                     </Typography>
                 )}
             </div>
-        </div>
+        </Box>
     );
 }
 
