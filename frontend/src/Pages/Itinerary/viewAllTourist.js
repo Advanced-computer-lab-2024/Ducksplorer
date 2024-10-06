@@ -18,6 +18,9 @@ function SearchItineraries() {
     const [language, setLanguage] = useState('');
     const [availableDatesAndTimes, setAvailableDatesAndTimes] = useState(null);
     const [priceRange, setPriceRange] = useState([0, 5000]); 
+    const [tags, setTags] = useState([]);  // Tags selected by the user
+    const [allTags, setAllTags] = useState([]);  // All available tags from backend
+
 
     const [filterAnchorEl, setFilterAnchorEl] = useState(null);
 
@@ -55,6 +58,21 @@ function SearchItineraries() {
     };
 
     //filtering handlers
+
+    //get all pref tags from table
+    useEffect(() => {
+        const fetchTags = async () => {
+            try {
+                const response = await fetch('http://localhost:8000/preferenceTags/');
+                const data = await response.json();
+                setAllTags(data);
+            } catch (error) {
+                console.error('Error fetching tags:', error);
+            }
+        };
+        fetchTags();
+    }, []);
+
     const isFilterSelected = (filter) => selectedFilters.includes(filter);
 
     const handleFilterChoiceClick = (event) => {
@@ -62,6 +80,11 @@ function SearchItineraries() {
     };
     const handleFilterClose = () => {
         setFilterAnchorEl(null);
+    };
+
+    const handleTagsChange = (event) => {
+        const value = event.target.value;
+        setTags(value);  // Ensure tags is always an array
     };
 
     const handleFilterToggle = (filter) => {
@@ -101,6 +124,7 @@ function SearchItineraries() {
         setLanguage('');
         setAvailableDatesAndTimes(null);
         setSelectedFilters([]);
+        setTags([]);  
 
         axios.get('http://localhost:8000/itinerary/')
             .then(response => {
@@ -130,6 +154,8 @@ function SearchItineraries() {
 
     //filter by price, lang, or dates
     const handleFilter = () => {
+        // const formattedTags = tags.map(tag => tag.toLowerCase()); // Normalizing to lower case
+
         let dateQuery = '';
     
         if (availableDatesAndTimes) {
@@ -141,7 +167,7 @@ function SearchItineraries() {
                 dateQuery = selectedDate.toISOString();
             }
         }        
-        axios.get(`http://localhost:8000/itinerary/filter?minPrice=${minPrice}&maxPrice=${maxPrice}&language=${language}&availableDatesAndTimes=${dateQuery}`)
+        axios.get(`http://localhost:8000/itinerary/filter?minPrice=${minPrice}&maxPrice=${maxPrice}&language=${language}&availableDatesAndTimes=${dateQuery}&tags=${tags}`)
             .then((response) => {
                 setItineraries(response.data); 
             })
@@ -250,6 +276,28 @@ function SearchItineraries() {
                             style={{ marginTop: '10px' }}
                         />
                     </MenuItem>
+
+                    <MenuItem>
+                        <FormControl sx={{ minWidth: 120, marginTop: 1 }}>
+                            <InputLabel id="tags-select-label">Tags</InputLabel>
+                            <Select
+                                labelId="tags-select-label"
+                                id="tags-select"
+                                multiple
+                                value={tags}  // Ensure it's an array
+                                onChange={handleTagsChange}
+                                renderValue={(selected) => selected.join(', ')}  // Display selected tags
+                            >
+                                {allTags.map((tag) => (
+                                    <MenuItem key={tag._id} value={tag.name}>
+                                        <Checkbox checked={tags.indexOf(tag.name) > -1} />
+                                        {tag.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </MenuItem>
+
                     <MenuItem>
                         <Button onClick={handleFilter}>Apply Filters</Button>
                     </MenuItem>

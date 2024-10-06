@@ -3,8 +3,13 @@ const itineraryModel = require("../../Models/itineraryModel");
 const mongoose = require('mongoose');
 
 const filterItineraries = async (req, res) => {
-    const { minPrice, maxPrice, availableDatesAndTimes, language } = req.query; //missing prefs waiting for wael to create table
+    const { minPrice, maxPrice, availableDatesAndTimes, language, tags } = req.query; //missing prefs waiting for wael to create table
     const filters = {};
+
+    const tagsArray = Array.isArray(tags) ? tags : tags.split(',');
+
+    // Normalize the tags (to lower case)
+    const normalizedTagsArray = tagsArray.map(tag => tag.toLowerCase());
 
     if (minPrice || maxPrice) {
         filters.price = {};
@@ -23,6 +28,9 @@ const filterItineraries = async (req, res) => {
         filters.availableDatesAndTimes = { 
             $elemMatch: { $eq: dateQuery } // Check for exact match of the date
         };
+    }
+    if (tags) {
+        filters.tags = { $in: normalizedTagsArray };
     }
 
     try {
