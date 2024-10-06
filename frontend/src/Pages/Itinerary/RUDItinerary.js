@@ -35,6 +35,9 @@ const RUDItinerary = () => {
     pickUpLocation: '',
     dropOffLocation: '',
     rating: '',
+    tag: {
+      name: ''
+    }
   });
 
   // Handle editing an itinerary
@@ -223,6 +226,7 @@ const RUDItinerary = () => {
                 <TableCell>Pick Up Location</TableCell>
                 <TableCell>Drop Off Location</TableCell>
                 <TableCell>Ratings</TableCell>
+                <TableCell>Tags</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -276,6 +280,18 @@ const RUDItinerary = () => {
                   <TableCell>{itinerary.pickUpLocation}</TableCell>
                   <TableCell>{itinerary.dropOffLocation}</TableCell>
                   <TableCell>{itinerary.rating}</TableCell>
+
+                  <TableCell>
+                    {itinerary.tags && itinerary.tags.length > 0
+                      ? itinerary.tags.map((tags, index) => (
+                        <div key={index}>
+                          {tags.name || 'N/A'}
+                          <br /><br /> 
+                        </div>
+                      ))
+                      : 'No tags available'}
+                  </TableCell>
+
                   <TableCell>
                     <Tooltip title="Delete Itinerary">
                       <IconButton color="error" aria-label="delete category" onClick={() => handleClickOpen(itinerary._id)}>
