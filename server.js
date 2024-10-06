@@ -15,12 +15,21 @@ const touristAccountRoutes = require("./Backend/Routes/TouristAccountRoutes.js")
 const AdminActivityRoutes = require("./Backend/Routes/Admin/AdminActivityRoutes.js");
 const preferenceTagsRoutes = require("./Backend/Routes/Admin/PreferenceTagsRoutes.js");
 const activityRoutes = require("./Backend/Routes/activityRoutes.js");
+const museumRoutes = require('./Backend/Routes/museumRoutes.js')
+const historicalPlaceRoutes = require('./Backend/Routes/historicalPlaceRoutes.js')
+const historicalPlaceTagRoutes = require('./Backend/Routes/historicalPlaceTagRoutes.js')
+const museumTagRoutes = require('./Backend/Routes/museumTagRoutes.js')
+
 
 app.use("/signUp", signUpRoutes);
 app.use("/activity", activityRoutes);app.use("/admin", adminRoutes);
 app.use("/touristAccount", touristAccountRoutes);
 app.use("/adminActivity", AdminActivityRoutes);
 app.use("/preferenceTags", preferenceTagsRoutes);
+app.use("/museum", museumRoutes);
+app.use("/historicalPlace", historicalPlaceRoutes);
+app.use("/historicalPlaceTags", historicalPlaceTagRoutes);
+app.use("/museumTags", museumTagRoutes);
 
 
 const connectToMongoDB = async () => {

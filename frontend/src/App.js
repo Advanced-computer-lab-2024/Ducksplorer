@@ -12,6 +12,18 @@ import PreferenceTags from './Pages/Admin/PreferenceTags.js';
 import Login from './Pages/Login.js';
 import AddActivity from "./Pages/AddActivity.js";
 import TouristEditAccount from './Pages/TouristEditAccount.js';
+import CreateHistoricalPlace from './Pages/MuseumHistoricalPlace/CreateHistoricalPlace.js';
+import CreateMuseum from './Pages/MuseumHistoricalPlace/CreateMuseum.js';
+// import RUDVisit from './Pages/MuseumHistoricalPlace/RUDVisit.js';
+import RUDMuseum from './Pages/MuseumHistoricalPlace/RUDMuseum.js';
+import RUDHistoricalPlace from './Pages/MuseumHistoricalPlace/RUDHistoricalPlace.js';
+import MuseumTouristPov from './Pages/MuseumHistoricalPlace/MuseumTouristPov.js';
+import HistoricalPlaceTouristPov from './Pages/MuseumHistoricalPlace/HistoricalPlaceTouristPov.js';
+import UpcomingHistoricalPlaces from './Pages/MuseumHistoricalPlace/UpcomingHistoricalPlaces.js';
+import UpcomingMuseums from './Pages/MuseumHistoricalPlace/UpcomingMuseums.js';
+import CreateTagMuseum from './Pages/MuseumHistoricalPlace/CreateTagMuseum.js';
+import CreateTagHistoricalPlace from './Pages/MuseumHistoricalPlace/CreateTagHistoricalPlace.js';
+
 
 
    
@@ -21,11 +33,26 @@ function App() {
 
   return (
     <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
+      <BrowserRouter>
+        <Routes>
         <Route path ="/login" element={<Login/>} />
         <Route path = "/signUp" element=  {<Signup/>} />  
-        <Route path ="/AdminDashboard" element = {<AdminDashboard/>} />
+
+          <Route path="/createMuseum" element={<CreateMuseum />} />
+          <Route path="/createHistoricalPlace" element={<CreateHistoricalPlace />} />
+          <Route path="/RUDMuseum" element={<RUDMuseum />} />
+          <Route path="/RUDHistoricalPlace" element={<RUDHistoricalPlace />} />
+          {/* <Route path="/RUDVisit" element={<RUDVisit />} /> */}
+          <Route path="/MuseumTouristPov" element={<MuseumTouristPov />} />
+          <Route path="/HistoricalPlaceTouristPov" element={<HistoricalPlaceTouristPov />} />
+          <Route path="/UpcomingHistoricalPlaces" element={<UpcomingHistoricalPlaces />} />
+          <Route path="/UpcomingMuseums" element={<UpcomingMuseums />} />
+          <Route path="/createTagMuseum" element={<CreateTagMuseum />} />
+          <Route path="/createTagHistoricalPlace" element={<CreateTagHistoricalPlace/>} />
+          {/* <Route path ="/login" element={<Login/>} /> */}
+
+
+          <Route path ="/AdminDashboard" element = {<AdminDashboard/>} />
         <Route path ="/pendingusers" element ={<ApproveUsers />} />
         <Route path ="/deleteusers" element = {<DeleteUser />} />
         <Route path ="/addAdmin" element = {<AddAdmin />} />
@@ -35,7 +62,7 @@ function App() {
         <Route path="/activity" element={<AddActivity />} />
         <Route path="/editAccount" element={<TouristEditAccount />} />
       </Routes>
-    </BrowserRouter>
+      </BrowserRouter>
     </React.StrictMode>
     
       
