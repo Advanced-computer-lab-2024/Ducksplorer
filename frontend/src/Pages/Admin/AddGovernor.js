@@ -23,15 +23,15 @@ function AddGovernor() {
   
 const handleAdd = async () => {
     try {
-        const response = await axios.post('http://localhost:8000/admin/addGoverner', {
+        const response = await axios.post('http://localhost:8000/admin/addGovernor', {
             userName,
             password,
             role: 'Governor',
         });
         if (response.status === 200) {
-            message.success('Admin added successfully');
+            message.success('Governor added successfully');
         } else {
-            message.error('Failed to add admin');
+            message.error('Failed to add Governor');
         }
     } catch (error) {
         message.error('An error occurred: ' + error.message);

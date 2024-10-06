@@ -64,13 +64,13 @@ const handleDelete = (username) => {
   return (
     <>
     <Sidebar/>
-    <Box sx={{ p: 6 }}>
+    <Box sx={{ p: 6 , height: '500px' , transform:'translateX(170px) translateY(-50px)'}}>
       <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
         <Typography variant="h4">
           Active Users
         </Typography>
       </Box>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} >
         <Table>
           <TableHead>
             <TableRow>
