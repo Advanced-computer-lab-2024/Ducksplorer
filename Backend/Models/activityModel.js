@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Tags = require("./preferenceTagsModels")
 
 const activitySchema = new Schema(
   {
@@ -30,11 +31,13 @@ const activitySchema = new Schema(
     },
     category: {
       type: String,
+      ref: "ActivityCategory",
       required: false,
     },
     tags: {
-      type: [String], // depends on tags table
-      required: true,
+      type : Array,
+      schema : [Tags],
+      required: true
     },
     specialDiscount: {
       type: Number,

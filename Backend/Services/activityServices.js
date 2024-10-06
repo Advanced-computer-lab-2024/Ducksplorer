@@ -1,6 +1,8 @@
 const Advertiser = require("../Models/advertiserModel.js");
 const Activity = require("../Models/activityModel.js");
 const { $gte } = require("sift");
+const Category = require("../Models/activityCategory.js");
+const Tags = require("../Models/preferenceTagsModels.js")
 
 const createActivity = async (activityData) => {
   const {
@@ -16,22 +18,46 @@ const createActivity = async (activityData) => {
     duration,
   } = activityData;
 
-  const newActivity = new Activity({
-    name,
-    isOpen,
-    advertiser,
-    date,
-    location,
-    price,
-    category,
-    tags,
-    specialDiscount,
-    duration,
-  });
+  try {
+    // Validate the category: check if it exists in the Category collection
+    const existingCategory = await Category.findOne({ name: category });
+    if (!existingCategory) {
+      throw new Error(`Category '${category}' does not exist.`);
+    }
 
-  await newActivity.save();
-  return newActivity;
+    // Validate the tags: check if each tag exists in the Tags collection
+    const existingTags = await Tags.find({ name: { $in: tags } });
+    const existingTagNames = existingTags.map(tag => tag.name);
+
+    // Check if all provided tags exist
+    if (existingTagNames.length !== tags.length) {
+      const missingTags = tags.filter(tag => !existingTagNames.includes(tag));
+      throw new Error(`The following tags do not exist: ${missingTags.join(', ')}`);
+    }
+
+    // If validation passes, create the new activity
+    const newActivity = new Activity({
+      name,
+      isOpen,
+      advertiser,
+      date,
+      location,
+      price,
+      category: existingCategory.name, // Ensure we use the validated category
+      tags: existingTagNames, // Ensure we use the validated tags
+      specialDiscount,
+      duration,
+    });
+
+    await newActivity.save();
+    return newActivity;
+
+  } catch (error) {
+    // Handle validation or saving errors
+    throw new Error(error.message);
+  }
 };
+
 
 const getAllActivitiesByAdvertiserId = async (advertiserId) => {
   const activities = await Activity.find({ advertiser: advertiserId });
