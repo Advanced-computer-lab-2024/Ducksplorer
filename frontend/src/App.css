@@ -19,8 +19,8 @@ body {
   
 
 
-  background-image: url(../public/Images/bg-intro-mobile.png);
-  background-color: hsl(65, 100%, 74%);
+  background-image: url(../public/Images/bg-intro-desktop.png);
+  background-color: hsl(65, 13%, 81%);
 }
 
 .app {
