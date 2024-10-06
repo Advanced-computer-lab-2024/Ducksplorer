@@ -102,6 +102,18 @@ const RUDItinerary = () => {
       locations: [...prevData.locations, ''], // Add an empty string for a new location field
     }));
   };
+
+  const handleDeleteDate = (index) => {
+    const newDatesAndTimes = formData.availableDatesAndTimes.filter((_, i) => i !== index);
+    setFormData({ ...formData, availableDatesAndTimes: newDatesAndTimes }); // Update state
+  };
+
+  const handleDeleteLocation = (index) => {
+    const newLocations = formData.locations.filter((_, i) => i !== index);
+    setFormData({ ...formData, locations: newLocations }); // Update state
+  };
+
+
   //update
   const handleUpdate = (event) => {
     event.preventDefault();
@@ -332,10 +344,15 @@ const RUDItinerary = () => {
                   fullWidth
                   label={`Location ${index + 1}`}
                 />
+                <IconButton onClick={() => handleDeleteLocation(index)} color="secondary">
+                  <DeleteIcon />
+                </IconButton>
+
                 {index === 0 && (
                   <IconButton onClick={handleAddLocation}>
                     <AddCircleIcon color="primary" />
                   </IconButton>
+
                 )}
               </Box>
             ))}
@@ -351,6 +368,10 @@ const RUDItinerary = () => {
                   fullWidth
                   type="datetime-local"
                 />
+                <IconButton onClick={() => handleDeleteDate(index)} color="secondary">
+                  <DeleteIcon />
+                </IconButton>
+
                 {index === 0 && (
                   <IconButton onClick={handleAddDate}>
                     <AddCircleIcon color="primary" />
