@@ -1,7 +1,7 @@
 import React, { createContext, useState } from "react";
 import { TextField, Button, Stack } from "@mui/material";
 import axios from "axios";
-import { Flex, message } from "antd";
+import { message } from "antd";
 import CategoriesDropDown from "./CategoryDropDown";
 import StandAloneToggleButton from "./ToggleButton";
 
@@ -95,6 +95,7 @@ const AddActivityForm = () => {
           }}
         />
         <div
+          id="isOpenDiv"
           style={{
             display: "flex",
             flexDirection: "row",
@@ -153,7 +154,7 @@ const AddActivityForm = () => {
         <TextField
           name="location"
           label="Location"
-          type="text" // Toggle password visibility
+          type="url" // Toggle password visibility
           value={location}
           onChange={(e) => setLocation(e.target.value)}
         />

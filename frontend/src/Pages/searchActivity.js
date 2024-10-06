@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Box,
   Table,
@@ -13,22 +13,23 @@ import {
   TextField,
   Button,
   Rating,
-} from '@mui/material';
+} from "@mui/material";
 
 const SearchActivities = () => {
   const [activities, setActivities] = useState([]); // Displayed activities
   const [allActivities, setAllActivities] = useState([]); // Store all fetched activities
-  const [searchQuery, setSearchQuery] = useState(''); // Single search input
+  const [searchQuery, setSearchQuery] = useState(""); // Single search input
 
   // Fetch all activities when component mounts
   useEffect(() => {
-    axios.get('http://localhost:8000/activity')
-      .then(response => {
+    axios
+      .get("http://localhost:8000/activity")
+      .then((response) => {
         setAllActivities(response.data);
         setActivities(response.data); // Set initial activities to all fetched activities
       })
-      .catch(error => {
-        console.error('There was an error fetching the activities!', error);
+      .catch((error) => {
+        console.error("There was an error fetching the activities!", error);
       });
   }, []);
 
@@ -38,24 +39,25 @@ const SearchActivities = () => {
       search: searchQuery, // Single search query sent to the backend
     }).toString();
 
-    axios.get(`http://localhost:8000/activity?${query}`)
-      .then(response => {
+    axios
+      .get(`http://localhost:8000/activity?${query}`)
+      .then((response) => {
         setActivities(response.data);
       })
-      .catch(error => {
-        console.error('There was an error fetching the activities!', error);
+      .catch((error) => {
+        console.error("There was an error fetching the activities!", error);
       });
   };
 
   return (
     <>
-      <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'auto', height: '100vh' }}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+      <Box sx={{ p: 6, maxWidth: 1200, overflowY: "auto", height: "100vh" }}>
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <Typography variant="h4">Search Activities</Typography>
         </Box>
 
         {/* Search Form */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
           {/* Single Search Bar */}
           <TextField
             label="Search"
@@ -67,7 +69,12 @@ const SearchActivities = () => {
           />
 
           {/* Search Button */}
-          <Button variant="contained" color="primary" onClick={fetchSearchedActivities} sx={{ ml: 2 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={fetchSearchedActivities}
+            sx={{ ml: 2 }}
+          >
             Search
           </Button>
         </Box>
@@ -94,9 +101,10 @@ const SearchActivities = () => {
                 <TableRow key={activity._id}>
                   <TableCell>{activity.name}</TableCell>
                   <TableCell>{activity.price}</TableCell>
-                  <TableCell>{activity.isOpen ? 'Yes' : 'No'}</TableCell>
+                  <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
                   <TableCell>{activity.category}</TableCell>
-                  <TableCell>{activity.tags.join(', ')}</TableCell> {/* Join tags array */}
+                  <TableCell>{activity.tags.join(", ")}</TableCell>{" "}
+                  {/* Join tags array */}
                   <TableCell>{activity.specialDiscount}</TableCell>
                   <TableCell>{activity.date}</TableCell>
                   <TableCell>{activity.duration}</TableCell>
