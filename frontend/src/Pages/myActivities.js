@@ -27,8 +27,10 @@ import {
   Tooltip,
   TextField,
 } from "@mui/material";
+import AdvertiserSidebar from "../Components/AdvertiserSidebar.js";
 
-const MyActivities = ({ advertiser }) => { // Accept advertiserId as a prop
+const MyActivities = ({ userName }) => {
+  // Accept userNameId as a prop
   const [activities, setActivities] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState(null);
@@ -50,12 +52,14 @@ const MyActivities = ({ advertiser }) => { // Accept advertiserId as a prop
   // Ref to the form for scrolling
   const formRef = useRef(null);
 
-  // Handle fetching activities by advertiser ID
+  // Handle fetching activities by userName ID
   useEffect(() => {
-    console.log(advertiser);
+    console.log(userName);
     const fetchActivities = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/activity/my/${advertiser}`);
+        const response = await axios.get(
+          `http://localhost:8000/activity/my/${userName}`
+        );
         setActivities(response.data);
       } catch (error) {
         console.error("There was an error fetching the activities!", error);
@@ -63,7 +67,7 @@ const MyActivities = ({ advertiser }) => { // Accept advertiserId as a prop
     };
 
     fetchActivities();
-  }, [advertiser]); // Depend on advertiserId
+  }, [userName]); // Depend on userNameId
 
   // Handle edit button click
   const handleEditClick = (activity) => {
@@ -178,8 +182,7 @@ const MyActivities = ({ advertiser }) => { // Accept advertiserId as a prop
                     <TableCell>{activity.price}</TableCell>
                     <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
                     <TableCell>{activity.category}</TableCell>
-                    <TableCell>{activity.tags.join(", ")}</TableCell>{" "}
-                    {/* Ensure tags are displayed properly */}
+                    <TableCell>{activity.tags.join(", ")}</TableCell>
                     <TableCell>{activity.specialDiscount}</TableCell>
                     <TableCell>{activity.date}</TableCell>
                     <TableCell>{activity.duration}</TableCell>
