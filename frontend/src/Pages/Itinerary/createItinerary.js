@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import axios from 'axios';
 import { message, Select } from 'antd';
 import { Link } from 'react-router-dom';
 import { IconButton, Box } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import StandAloneToggleButton from "../../Components/ToggleButton";
+
+export const TagsContext = createContext();
+let tags = [];
 
 const AddItinerary = () => {
-    const [tags, setTags] = useState([]);
+
     const [prefTagsOptions, setPrefTagsOptions] = useState([]);
     const [locations, setLocations] = useState(['']);
     const [availableDatesAndTimes, setAvailableDatesAndTimes] = useState(['']);
@@ -22,6 +26,8 @@ const AddItinerary = () => {
             duration: ''
         }
     ]);
+
+
 
     const [formData, setFormData] = useState({
         locations: [],
@@ -51,17 +57,18 @@ const AddItinerary = () => {
         fetchTags();
     }, []);
 
-    const handleTagChange = (value) => {
-        setTags(value);
-    };
-
     const handleAvailableDateChange = (index, value) => {
         const newDates = [...availableDatesAndTimes];
-        newDates[index] = value; 
+        newDates[index] = value;
         setAvailableDatesAndTimes(newDates);
-        setFormData({ ...formData, availableDatesAndTimes: newDates }); 
+        setFormData({ ...formData, availableDatesAndTimes: newDates });
     };
 
+    const handleTagChange = (index, field, value) => {
+        const updatedTags = tags.map((tag, i) =>
+            i === index ? { ...tag, [field]: value } : tag
+        );
+    };
 
     const handleActivityChange = (index, field, value) => {
         const updatedActivities = activities.map((activity, i) =>
@@ -72,15 +79,15 @@ const AddItinerary = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-            setFormData({ ...formData, [name]: value });
-        
+        setFormData({ ...formData, [name]: value });
+
     };
     const handleAddLocation = () => {
-        setLocations([...locations, '']); 
+        setLocations([...locations, '']);
     };
 
     const handleAddAvailableDate = () => {
-        setAvailableDatesAndTimes([...availableDatesAndTimes, '']); 
+        setAvailableDatesAndTimes([...availableDatesAndTimes, '']);
     };
 
     const handleAddActivity = () => {
@@ -104,6 +111,7 @@ const AddItinerary = () => {
         const userName = user.username;
 
         try {
+            console.log(tags)
             const response = await axios.post('http://localhost:8000/itinerary/', {
                 activity: activities,
                 locations,
@@ -115,8 +123,9 @@ const AddItinerary = () => {
                 pickUpLocation: formData.pickUpLocation,
                 dropOffLocation: formData.dropOffLocation,
                 tourGuideUsername: userName,
-                tags: tags // Make sure to include selected tags here
+                tags // Make sure to include selected tags here
             });
+            console.log(response.data)
 
             if (response.status === 200) {
                 message.success('Itinerary added successfully');
@@ -155,7 +164,6 @@ const AddItinerary = () => {
                 name: ''
             }
         });
-        setTags([]);
     };
 
     return (
@@ -309,7 +317,7 @@ const AddItinerary = () => {
                         onChange={handleChange}
                         required
                     />
-                    <label>Tags:</label>
+                    {/* <label>Tags:</label>
                     <Select
                         mode="multiple"
                         allowClear
@@ -323,7 +331,23 @@ const AddItinerary = () => {
                                 {tag.name}
                             </Select.Option>
                         ))}
-                    </Select>                 
+                    </Select> */}
+                    <div
+                        style={{
+                            display: "Flex",
+                            flexDirection: "row",
+                            flexWrap: "wrap",
+                            flexBasis: 10,
+                        }}
+                    >
+                        {prefTagsOptions.map((element) => {
+                            return (
+                                <TagsContext.Provider key={element._id} value={tags}>
+                                    <StandAloneToggleButton key={element._id} name={element.name} />
+                                </TagsContext.Provider>
+                            );
+                        })}
+                    </div>
                     <button type="submit">Add Itinerary</button>
                 </form>
             </Box>

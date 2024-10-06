@@ -24,12 +24,12 @@ const itinerarySchema = new Schema({
         type: String,
         required: true
     },
-    price: { 
+    price: {
         type: Number,
         required: true
     },
     availableDatesAndTimes: {
-        type: [Date], 
+        type: [Date],
         required: true
     },
     accessibility: { //ehh da ma3lesh?
@@ -45,11 +45,11 @@ const itinerarySchema = new Schema({
         required: true
     },
     tourGuideModel: {
-        type: mongoose.Schema.Types.ObjectId, 
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'TourGuide',
         required: false
     },
-    rating: { 
+    rating: {
         type: Number,
         min: 0,
         max: 5,
@@ -57,8 +57,7 @@ const itinerarySchema = new Schema({
         default: 0
     },
     tags: {
-        type: Array,
-        schema: [Tags],
+        type: [String],
         required: false
     }
 }, { timestamps: true })

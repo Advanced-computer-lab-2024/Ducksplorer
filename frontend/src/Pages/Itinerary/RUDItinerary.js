@@ -283,10 +283,10 @@ const RUDItinerary = () => {
 
                   <TableCell>
                     {itinerary.tags && itinerary.tags.length > 0
-                      ? itinerary.tags.map((tags, index) => (
+                      ? itinerary.tags.map((tag, index) => (
                         <div key={index}>
-                          {tags.name || 'N/A'}
-                          <br /><br /> 
+                          {tag || 'N/A'}
+                          <br /><br />
                         </div>
                       ))
                       : 'No tags available'}
