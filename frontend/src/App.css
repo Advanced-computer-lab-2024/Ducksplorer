@@ -157,3 +157,8 @@ body {
 Menu {
   padding-bottom: 15px;
 }
+
+/* Foudas Styling */
+#isOpenDiv:hover {
+  border-color: black !important;
+}
