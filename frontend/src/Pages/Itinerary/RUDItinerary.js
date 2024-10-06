@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, createContext } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import StandAloneToggleButton from "../../Components/ToggleButton";
 
 import {
   TextField, IconButton, Box, Button, Table, Typography, TableBody,
@@ -12,11 +13,16 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 
+export const TagsContext = createContext();
+let tags = [];
+
 const RUDItinerary = () => {
   const [itineraries, setItineraries] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedItinerary, setselectedItinerary] = useState("");
   const [editingItinerary, setEditingItinerary] = useState(null);
+  const [prefTagsOptions, setPrefTagsOptions] = useState([]);
+
 
   const [formData, setFormData] = useState({
     activity: {
@@ -157,6 +163,20 @@ const RUDItinerary = () => {
       document.removeEventListener('wheel', handleWheel);
     };
   }, []);
+
+  useEffect(() => {
+    const fetchTags = async () => {
+        try {
+            const response = await fetch('http://localhost:8000/preferenceTags/');
+            const data = await response.json();
+            setPrefTagsOptions(data);
+        } catch (error) {
+            console.error('Error fetching tags:', error);
+        }
+    };
+
+    fetchTags();
+}, []);
 
   const handleDelete = (id) => {
     fetch(`http://localhost:8000/itinerary/${id}`, {
@@ -399,6 +419,16 @@ const RUDItinerary = () => {
             <TextField label="Accessbility" name="accessibility" value={formData.accessibility} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} />
             <TextField label="Pick Up Location" name="pickUpLocation" value={formData.pickUpLocation} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} />
             <TextField label="Drop Off Location" name="dropOffLocation" value={formData.dropOffLocation} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} />
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <label>Tags:</label>
+            {prefTagsOptions.map((element) => {
+                return (
+                    <TagsContext.Provider key={element._id} value={tags}>
+                        <StandAloneToggleButton key={element._id} name={element.name} />
+                    </TagsContext.Provider>
+                );
+            })}
+            </div>
             <Button type="submit" variant="contained" color="primary">Update Itinerary</Button>
           </form>
         )}

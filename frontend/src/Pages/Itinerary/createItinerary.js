@@ -229,7 +229,6 @@ const AddItinerary = () => {
                     <IconButton onClick={handleAddActivity}>
                         <AddCircleIcon color="primary" />
                     </IconButton>
-                    {/* Remaining form fields */}
                     <h3>Locations:</h3>
                     {locations.map((location, index) => (
                         <input
@@ -312,21 +311,6 @@ const AddItinerary = () => {
                         onChange={handleChange}
                         required
                     />
-                    {/* <label>Tags:</label>
-                    <Select
-                        mode="multiple"
-                        allowClear
-                        style={{ width: '100%' }}
-                        placeholder="Select Itinerary Tags"
-                        value={tags}
-                        onChange={handleTagChange}
-                    >
-                        {prefTagsOptions.map((tag, index) => (
-                            <Select.Option key={index} value={tag.name}>
-                                {tag.name}
-                            </Select.Option>
-                        ))}
-                    </Select> */}
                     <div
                         style={{
                             display: "Flex",
