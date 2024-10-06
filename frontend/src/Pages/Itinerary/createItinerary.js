@@ -323,7 +323,8 @@ const AddItinerary = () => {
                                 {tag.name}
                             </Select.Option>
                         ))}
-                    </Select>                    <button type="submit">Add Itinerary</button>
+                    </Select>                 
+                    <button type="submit">Add Itinerary</button>
                 </form>
             </Box>
         </div>
