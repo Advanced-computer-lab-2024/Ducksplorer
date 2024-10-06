@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-//defines how the museumHistoricalPlace collection should look like 
+const historicalPlaceTag = require('./historicalPlaceTagModel');
 
-const museumHistoricalPlaceSchema = new Schema({
+const HistoricalPlaceSchema = new Schema({
     description: {
         type: String,
         required: true
@@ -28,35 +28,34 @@ const museumHistoricalPlaceSchema = new Schema({
         type: Number,
         required: true
     },
-    museumHistoricalPlaceDate: {
+    HistoricalPlaceDate: {
         type: Date,
         required: true
     },
 
-    museumHistoricalPlaceName: {
+    HistoricalPlaceName: {
         type: String,
         required: true
     },
-    museumHistoricalPlaceCategory: {
+    HistoricalPlaceCategory: {
         type: String,
         required: true
     },
 
     tags: {
-        type: [String],
+        type:Array,
+        schema:[historicalPlaceTag],
         required: false
     },
     createdBy: {
-        type: String,  // Reference to the User model
-        required: true //msh hanbayeno fel front end
+        type: String,  
+        required: true 
     }
 
 
 }, { timestamps: true })
 
-const museumHistoricalPlace = mongoose.model("museumHistoricalPlace", museumHistoricalPlaceSchema);// write it singular cause it becomes plural
-//this created model will be used in other files to interact with the museumHistoricalPlace collection
+const HistoricalPlace = mongoose.model("HistoricalPlace", HistoricalPlaceSchema);// write it singular cause it becomes plural
+module.exports = HistoricalPlace;
 
-module.exports = museumHistoricalPlace;
-
-//description, pictures, location, opening hours, ticket prices, museumHistoricalPlaceDate, museumHistoricalPlaceName, museumHistoricalPlaceCategory
+//description, pictures, location, opening hours, ticket prices, HistoricalPlaceDate, HistoricalPlace, HistoricalPlaceCategory
