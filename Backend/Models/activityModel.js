@@ -20,10 +20,6 @@ const activitySchema = new Schema(
       type: Date,
       required: true,
     },
-    time: {
-      type: String, //check law fi time data type
-      required: false,
-    },
     location: {
       type: String, //link le google maps masalan
       required: true,
@@ -32,19 +28,9 @@ const activitySchema = new Schema(
       type: Number,
       required: false,
     },
-    minPrice: {
-      //ask noha law el range yetfekes
-      type: Number,
-      required: false,
-    },
-    maxPrice: {
-      //we'll make one of these only required bas fel frontend
-      type: Number,
-      required: false,
-    },
     category: {
       type: String,
-      required: true,
+      required: false,
     },
     tags: {
       type: [String], // depends on tags table
@@ -59,6 +45,14 @@ const activitySchema = new Schema(
       type: Number,
       required: false,
     },
+    ratings: {
+      type: [Number],
+      required: false
+    },
+    averageRating: {
+      type: Number,
+      required: false
+    }
   },
   { timestamps: true }
 );

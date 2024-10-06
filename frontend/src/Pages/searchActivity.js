@@ -1,10 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Table, Typography, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Button } from '@mui/material';
+import {
+  Box,
+  Table,
+  Typography,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  TextField,
+  Button,
+  Rating,
+} from '@mui/material';
 
 const SearchActivities = () => {
-  const [activities, setActivities] = useState([]);
+  const [activities, setActivities] = useState([]); // Displayed activities
+  const [allActivities, setAllActivities] = useState([]); // Store all fetched activities
   const [searchQuery, setSearchQuery] = useState(''); // Single search input
+
+  // Fetch all activities when component mounts
+  useEffect(() => {
+    axios.get('http://localhost:8000/activity')
+      .then(response => {
+        setAllActivities(response.data);
+        setActivities(response.data); // Set initial activities to all fetched activities
+      })
+      .catch(error => {
+        console.error('There was an error fetching the activities!', error);
+      });
+  }, []);
 
   // Function to fetch activities based on search criteria
   const fetchSearchedActivities = () => {
@@ -60,6 +86,7 @@ const SearchActivities = () => {
                 <TableCell>Date</TableCell>
                 <TableCell>Duration</TableCell>
                 <TableCell>Location</TableCell>
+                <TableCell>Rating</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -69,11 +96,18 @@ const SearchActivities = () => {
                   <TableCell>{activity.price}</TableCell>
                   <TableCell>{activity.isOpen ? 'Yes' : 'No'}</TableCell>
                   <TableCell>{activity.category}</TableCell>
-                  <TableCell>{activity.tags}</TableCell>
+                  <TableCell>{activity.tags.join(', ')}</TableCell> {/* Join tags array */}
                   <TableCell>{activity.specialDiscount}</TableCell>
                   <TableCell>{activity.date}</TableCell>
                   <TableCell>{activity.duration}</TableCell>
                   <TableCell>{activity.location}</TableCell>
+                  <TableCell>
+                    <Rating
+                      value={activity.averageRating}
+                      precision={0.1}
+                      readOnly
+                    />
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

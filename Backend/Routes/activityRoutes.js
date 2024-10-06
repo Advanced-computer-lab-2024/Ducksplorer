@@ -12,4 +12,6 @@ router
   .patch(activity.updateActivity)
   .delete(activity.deleteActivity);
 router.get("/:advertiserId", activity.getAllActivitiesByAdvertiserId);
+router.post("/:activityId", activity.rateActivity);
+router.route("/rate/:activityId").patch(activity.rateActivity);
 module.exports = router;

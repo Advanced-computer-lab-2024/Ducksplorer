@@ -1,13 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Table, Typography, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, MenuItem, Select, InputLabel, FormControl, Button } from '@mui/material';
+import {
+  Box,
+  Table,
+  Typography,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  TextField,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  Button,
+  Rating,
+  Slider,
+} from '@mui/material';
 
 const FilterActivities = () => {
   const [activities, setActivities] = useState([]);
+  const [allActivities, setAllActivities] = useState([]); // Store all activities
   const [price, setPrice] = useState('');
   const [date, setDate] = useState('');
   const [category, setCategory] = useState('');
-  const [rating, setRating] = useState('');
+  const [averageRating, setAverageRating] = useState(0); // Set default value to 0
   const [categories, setCategories] = useState([]); // Store fetched categories
 
   // Fetch categories from backend
@@ -19,6 +38,16 @@ const FilterActivities = () => {
       .catch(error => {
         console.error('There was an error fetching the categories!', error);
       });
+
+    // Fetch all activities when component mounts
+    axios.get('http://localhost:8000/activity')
+      .then(response => {
+        setAllActivities(response.data);
+        setActivities(response.data); // Set initial activities to all
+      })
+      .catch(error => {
+        console.error('There was an error fetching the activities!', error);
+      });
   }, []);
 
   // Function to fetch filtered activities
@@ -27,7 +56,7 @@ const FilterActivities = () => {
       price,
       date,
       category,
-      rating,
+      ...(averageRating > 0 && { averageRating }), // Only include averageRating if it's greater than 0
     }).toString();
 
     axios.get(`http://localhost:8000/activity/filter?${query}`)
@@ -71,6 +100,9 @@ const FilterActivities = () => {
               onChange={(e) => setCategory(e.target.value)}
               label="Category"
             >
+              <MenuItem value="">
+                <em>Any</em>
+              </MenuItem>
               {categories.map((cat) => (
                 <MenuItem key={cat._id} value={cat.name}>
                   {cat.name}
@@ -78,13 +110,21 @@ const FilterActivities = () => {
               ))}
             </Select>
           </FormControl>
-          <TextField
-            label="Rating"
-            value={rating}
-            onChange={(e) => setRating(e.target.value)}
-            type="number"
-            sx={{ minWidth: 150 }}
-          />
+
+          {/* Rating Slider */}
+          <Box sx={{ minWidth: 150 }}>
+            <Typography variant="body1">Rating: {averageRating}</Typography>
+            <Slider
+              value={averageRating}
+              onChange={(e, newValue) => setAverageRating(newValue)}
+              step={1}
+              marks={[0, 1, 2, 3, 4, 5].map(value => ({ value, label: value }))}
+              min={0}
+              max={5}
+              valueLabelDisplay="auto"
+            />
+          </Box>
+
           <Button variant="contained" color="primary" onClick={fetchFilteredActivities}>
             Filter
           </Button>
@@ -104,6 +144,7 @@ const FilterActivities = () => {
                 <TableCell>Date</TableCell>
                 <TableCell>Duration</TableCell>
                 <TableCell>Location</TableCell>
+                <TableCell>Rating</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -113,11 +154,18 @@ const FilterActivities = () => {
                   <TableCell>{activity.price}</TableCell>
                   <TableCell>{activity.isOpen ? 'Yes' : 'No'}</TableCell>
                   <TableCell>{activity.category}</TableCell>
-                  <TableCell>{activity.tags}</TableCell>
+                  <TableCell>{activity.tags.join(', ')}</TableCell>
                   <TableCell>{activity.specialDiscount}</TableCell>
                   <TableCell>{activity.date}</TableCell>
                   <TableCell>{activity.duration}</TableCell>
                   <TableCell>{activity.location}</TableCell>
+                  <TableCell>
+                    <Rating
+                      value={activity.averageRating}
+                      precision={0.1}
+                      readOnly
+                    />
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Box, Table, Typography, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, MenuItem, Select, InputLabel, FormControl, Button } from '@mui/material';
+import { Box, Table, Typography, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, MenuItem, Select, InputLabel, FormControl, Button, Rating } from '@mui/material';
 
 const SortActivities = () => {
   const [activities, setActivities] = useState([]);
@@ -47,7 +47,7 @@ const SortActivities = () => {
               <MenuItem value="duration">Duration</MenuItem>
               <MenuItem value="category">Category</MenuItem>
               <MenuItem value="specialDiscount">Discount</MenuItem>
-              
+              <MenuItem value="averageRating">Rating</MenuItem>
             </Select>
           </FormControl>
 
@@ -81,6 +81,7 @@ const SortActivities = () => {
                 <TableCell>Date</TableCell>
                 <TableCell>Duration</TableCell>
                 <TableCell>Location</TableCell>
+                <TableCell>Rating</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -95,6 +96,13 @@ const SortActivities = () => {
                   <TableCell>{activity.date}</TableCell>
                   <TableCell>{activity.duration}</TableCell>
                   <TableCell>{activity.location}</TableCell>
+                  <TableCell>
+                    <Rating
+                      value={activity.averageRating}
+                      precision={0.1}
+                      readOnly
+                    />
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

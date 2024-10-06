@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { Checkbox, FormControlLabel, IconButton, Box, Button, Table, Typography, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Tooltip, TextField } from '@mui/material';
+import { calculateAverageRating } from '../Utilities/averageRating.js';
+import { Rating, Checkbox, FormControlLabel, IconButton, Box, Button, Table, Typography, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Tooltip, TextField } from '@mui/material';
 
 const RUDActivity = () => {
   const [activities, setActivities] = useState([]);
@@ -21,7 +22,11 @@ const RUDActivity = () => {
     date: '',
     duration: '',
     location: '',
+    rating: ''
   });
+
+  // Ref to the form for scrolling
+  const formRef = useRef(null);
 
   // Handle fetching activities
   useEffect(() => {
@@ -39,6 +44,13 @@ const RUDActivity = () => {
     setFormData(activity); // Set form data to the selected activity's values
     setEditingActivity(activity);
   };
+
+  // Scroll to the form whenever editingActivity is set
+  useEffect(() => {
+    if (editingActivity && formRef.current) {
+      formRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [editingActivity]);
 
   // Handle input change in the form
   const handleInputChange = (event) => {
@@ -113,6 +125,7 @@ const RUDActivity = () => {
                 <TableCell>Date</TableCell>
                 <TableCell>Duration</TableCell>
                 <TableCell>Location</TableCell>
+                <TableCell>Rating</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -128,6 +141,14 @@ const RUDActivity = () => {
                   <TableCell>{activity.date}</TableCell>
                   <TableCell>{activity.duration}</TableCell>
                   <TableCell>{activity.location}</TableCell>
+                  <TableCell>
+                    <Rating
+                      value={calculateAverageRating(activity.ratings)}
+                      precision={0.1}
+                      readOnly
+                    />
+                  </TableCell>
+
                   <TableCell>
                     <Tooltip title="Delete Activity">
                       <IconButton color="error" onClick={() => handleClickOpen(activity)}>
@@ -145,8 +166,9 @@ const RUDActivity = () => {
             </TableBody>
           </Table>
         </TableContainer>
+
         {editingActivity && (
-          <form onSubmit={handleUpdate} style={{ marginTop: '20px' }}>
+          <form onSubmit={handleUpdate} style={{ marginTop: '20px' }} ref={formRef}>
             <TextField label="Name" name="name" value={formData.name} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} />
             <TextField label="Price" name="price" value={formData.price} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} type="number" />
             <FormControlLabel
@@ -169,6 +191,7 @@ const RUDActivity = () => {
             <Button type="submit" variant="contained" color="primary">Update Activity</Button>
           </form>
         )}
+
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Confirm Deletion</DialogTitle>
           <DialogContent>

@@ -18,7 +18,7 @@ const AddActivityForm = () => {
   const [category, setCategory] = useState("");
   const [specialDiscount, setSpecialDiscount] = useState("");
   const [duration, setDuration] = useState("");
-  const allTags = JSON.parse(localStorage.getItem("tags"));
+  const allTags = JSON.parse(localStorage.getItem("tags")) || [];
 
   const data = {
     name,
