@@ -3,6 +3,7 @@ const { schema } = require('./activityModel');
 const Activity = require('./activityModel'); //anhy line el sah? 2 or 3 and it will reflect on line9
 const Schema = mongoose.Schema;
 const TourGuide = require('./tourGuideModel');
+const Tags = require('./preferenceTagsModels');
 
 const itinerarySchema = new Schema({
     activity: {
@@ -54,6 +55,11 @@ const itinerarySchema = new Schema({
         max: 5,
         required: false,
         default: 0
+    },
+    tags: {
+        type: Array,
+        schema: [Tags],
+        required: false
     }
 }, { timestamps: true })
 
