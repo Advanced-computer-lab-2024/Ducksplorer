@@ -8,9 +8,6 @@ import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
- 
-
-
 
 
 
@@ -32,6 +29,12 @@ const handleLogin = async () => {
             message.success('Logged in successfully');
             if (response.data.role === 'Admin') {
                 window.location.href = '/AdminDashboard';
+            }
+            else if(response.data.role === 'Tourist'){
+                window.location.href = '/editAccount';
+            }
+            else if(response.data.role === 'Guide'){
+                window.location.href = '/tourGuideDashboard';
             }
            localStorage.setItem('user', JSON.stringify(response.data));
         } else if (response.status === 400) {
@@ -94,76 +97,6 @@ const handleLogin = async () => {
             Dont have an account?
           </p>
           <Link to="/signUp" className='text-sm hover:undrline hover:text-blue-600 mt-2 inline-block'> 
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
                Sign Up  
           </Link>
 

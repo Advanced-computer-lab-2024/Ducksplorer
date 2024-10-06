@@ -28,7 +28,7 @@ const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el 
             await newTourist.save();
             res.status(201).json(newTourist);
         }
-        if(role === "TourGuide"){
+        if(role === "Guide"){
             const mobileNumber = req.body.mobileNumber;
             const yearsOfExperience = req.body.yearsOfExperience;
             const previousWork = req.body.previousWork;
@@ -60,12 +60,9 @@ const login = async (req,res) => {
         const {userName, password} = req.body;
         const user = await User.findOne({userName});
 
-
         if(!user || (user.password !== password)){
             return res.status(400).json({error: "Incorrect UserName or Password"});
         }
-
-        
 
         res.status(200).json({
             _id: user._id,

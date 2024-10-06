@@ -2,7 +2,8 @@ const Advertiser = require("../Models/advertiserModel.js");
 const Activity = require("../Models/activityModel.js");
 const { $gte } = require("sift");
 const Category = require("../Models/activityCategory.js");
-const Tags = require("../Models/preferenceTagsModels.js")
+const Tags = require("../Models/preferenceTagsModels.js");
+const { getAllActivitiesByUsername } = require("../Controllers/activityController.js");
 
 const createActivity = async (activityData) => {
   const {
@@ -59,10 +60,7 @@ const createActivity = async (activityData) => {
 };
 
 
-const getAllActivitiesByAdvertiserId = async (advertiserId) => {
-  const activities = await Activity.find({ advertiser: advertiserId });
-  return activities;
-};
+
 
 const updateActivity = async (activityId, updatedData) => {
   const updatedActivity = await Activity.findByIdAndUpdate(
@@ -108,37 +106,12 @@ const viewUpcomingActivities = async () => {
   return upcomingActivities;
 };
 
-const filterActivities = async (filters) => {
-  const { price, date, category, ratings } = filters;
-  const filter = {};
-  let query = { date: { $gte: new Date() } };
-
-  if (price) {
-    filter.price = { $regex: price };
-  }
-  if (date) {
-    filter.date = date;
-  }
-  if (category) {
-    filter.category = category;
-  }
-  if (ratings) {
-    filter.ratings = { $in: [ratings] };
-  }
-  try {
-    console.log(filters);
-    return await Activity.find(filter); // Return the filtered activities
-  } catch (error) {
-    throw new Error("Error fetching activities");
-  }
-};
 
 module.exports = {
   createActivity,
-  getAllActivitiesByAdvertiserId,
+  getAllActivitiesByUsername,
   updateActivity,
   deleteActivity,
   searchActivities,
-  viewUpcomingActivities,
-  filterActivities,
+  viewUpcomingActivities
 };

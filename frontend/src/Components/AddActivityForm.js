@@ -22,14 +22,16 @@ const AddActivityForm = () => {
 
   const data = {
     name,
-    date,
-    duration,
     isOpen,
-    specialDiscount,
-    price,
+    advertiser : JSON.parse(localStorage.getItem('user')).username,
+    date,
     location,
+    price,
     category,
     tags,
+    specialDiscount,
+    duration,
+    
   };
   let isClicked = null;
 

@@ -13,10 +13,9 @@ import Login from "./Pages/Login.js";
 import AddActivity from "./Pages/AddActivity.js";
 import RUDActivity from "./Pages/RUDActivity.js";
 import UpcomingActivities from "./Pages/upcomingActivities.js";
-import SortActivities from "./Pages/sortActivities.js";
-import FilterActivities from "./Pages/filterActivities.js";
 import SearchActivities from "./Pages/searchActivity.js";
 import SortFilterActivity from "./Pages/SortFilterActivity";
+import MyActivities from "./Pages/myActivities.js";
 
 function App() {
   return (
@@ -37,6 +36,7 @@ function App() {
           <Route path="/activity/upcoming" element={<UpcomingActivities />} />
           <Route path="/activity/search" element={<SearchActivities />} />
           <Route path="/activity/SortFilter" element={<SortFilterActivity />} />
+          <Route path="/activity/myActivities" element={<MyActivities userName = {JSON.parse(localStorage.getItem('user')).username}/>} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

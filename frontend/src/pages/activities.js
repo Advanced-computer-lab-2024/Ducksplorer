@@ -70,8 +70,8 @@ const handleDelete = (id) => {
         });
 };
 
-const handleEdit = (oldName,Name) => {
-    axios.put('http://localhost:8000/adminActivity', { currentName: oldName ,  newName: Name  })
+const handleEdit = (oldName,Name,id) => {
+    axios.put(`http://localhost:8000/activity${id}`, { currentName: oldName ,  newName: Name  })
         .then(response => {
           setCategories(categories.map(category => 
             category.name === editingCategory.name ? { ...category, name: editedCategoryName } : category
@@ -85,6 +85,32 @@ const handleEdit = (oldName,Name) => {
             console.error('There was an error updating the category!', error);
         });
 };
+const handleEditActivity = (oldActivity, updatedActivity) => {
+    axios.put(`http://localhost:8000/activity/${oldActivity.id}`, {
+        name: updatedActivity.name,
+        price: updatedActivity.price,
+        isOpen: updatedActivity.isOpen,
+        discount: updatedActivity.discount,
+        date: updatedActivity.date,
+        duration: updatedActivity.duration,
+        location: updatedActivity.location
+    })
+    .then(response => {
+        // Update the activity in the local state with the new data
+        setActivities(activities.map(activity => 
+            activity.id === oldActivity.id ? { ...activity, ...updatedActivity } : activity
+        ));
+        // Clear editing state
+        setEditingActivity(null);
+        setEditedActivity({});
+        message.success('Activity updated successfully!');
+    })
+    .catch(error => {
+        message.error('There was an error updating the activity!');
+        console.error('There was an error updating the activity!', error);
+    });
+};
+
 
 const handleAdd = (Name) => {
     axios.post('http://localhost:8000/adminActivity', { name: Name })

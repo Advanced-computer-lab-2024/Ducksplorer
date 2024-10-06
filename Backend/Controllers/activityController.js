@@ -12,17 +12,16 @@ const createActivity = async (req, res) => {
   }
 };
 
-const getAllActivitiesByAdvertiserId = async (req, res) => {
-  try {
-    const advertiserId = req.params.advertiserId;
-    const activities = await activityService.getAllActivitiesByAdvertiserId(
-      advertiserId
-    );
-    res.status(200).json(activities);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+const getAllActivitiesByUsername = async (req, res) => {
+    try {
+      const {username}= req.params.userName; // Change to username
+      const activities = await Activity.find({userName:username}); // Update the service method
+      res.status(200).json(activities);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+  
 
 const updateActivity = async (req, res) => {
   try {
@@ -260,7 +259,7 @@ const rateActivity = async (req, res) => {
 
 module.exports = {
   createActivity,
-  getAllActivitiesByAdvertiserId,
+  getAllActivitiesByUsername,
   updateActivity,
   deleteActivity,
   searchActivities,

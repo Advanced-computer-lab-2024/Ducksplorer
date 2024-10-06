@@ -13,7 +13,7 @@ const activitySchema = new Schema(
       required: true,
     },
     advertiser: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Advertiser",
       required: false,
     },
