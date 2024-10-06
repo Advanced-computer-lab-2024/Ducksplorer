@@ -152,7 +152,7 @@ function SearchItineraries() {
     }
 
     return (
-        <div style={{ padding: '20px', maxWidth: '1200px', margin: 'auto', height: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ padding: '20px', maxWidth: '1200px', margin: 'auto', height: '100vh', display: 'flex', flexDirection: 'column', overflowY: 'visible', height:'100vh' }}>
         <Link to="/touristDashboard"> Back </Link>
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
           <Typography variant="h4">
@@ -260,10 +260,10 @@ function SearchItineraries() {
 
             </Stack>
 
-            <div style={{ flex: 1, overflowY: 'auto' }}> 
+            <div style={{ flex: 1 }}> 
                 {itineraries.length > 0 ? (
                     <Box>
-                        <TableContainer component={Paper} style={{ maxHeight: '600px', overflowY: 'scroll' }}> {/* Limit table height and make it scroll */}
+                        <TableContainer component={Paper} style={{ maxHeight: '600px' }}> {/* Limit table height and make it scroll */}
                             <Table stickyHeader> 
                                 <TableHead>
                                     <TableRow>
@@ -277,6 +277,7 @@ function SearchItineraries() {
                                         <TableCell>Pick Up Location</TableCell>
                                         <TableCell>Drop Off Location</TableCell>
                                         <TableCell>Ratings</TableCell>
+                                        <TableCell>Tags</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -317,6 +318,16 @@ function SearchItineraries() {
                                             <TableCell>{itinerary.pickUpLocation}</TableCell>
                                             <TableCell>{itinerary.dropOffLocation}</TableCell>
                                             <TableCell>{itinerary.rating}</TableCell>
+                                            <TableCell>
+                                                {itinerary.tags && itinerary.tags.length > 0
+                                                ? itinerary.tags.map((tag, index) => (
+                                                    <div key={index}>
+                                                    {tag || 'N/A'}
+                                                    <br /><br />
+                                                    </div>
+                                                ))
+                                                : 'No tags available'}
+                                            </TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>

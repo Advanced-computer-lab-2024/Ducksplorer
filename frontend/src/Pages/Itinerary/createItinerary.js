@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createContext } from 'react';
 import axios from 'axios';
-import { message, Select } from 'antd';
+import { message } from 'antd';
 import { Link } from 'react-router-dom';
 import { IconButton, Box } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -64,11 +64,6 @@ const AddItinerary = () => {
         setFormData({ ...formData, availableDatesAndTimes: newDates });
     };
 
-    const handleTagChange = (index, field, value) => {
-        const updatedTags = tags.map((tag, i) =>
-            i === index ? { ...tag, [field]: value } : tag
-        );
-    };
 
     const handleActivityChange = (index, field, value) => {
         const updatedActivities = activities.map((activity, i) =>

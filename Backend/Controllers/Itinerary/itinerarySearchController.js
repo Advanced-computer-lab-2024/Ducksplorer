@@ -14,7 +14,7 @@ const searchItineraries = async (req, res) => {
             searches['$or'] = [
                 { 'activity.name': { $regex: searchTerm, $options: 'i' } },   // Search in activity name
                 { 'activity.category': { $regex: searchTerm, $options: 'i' } }, // Search in activity category
-                { 'tags.name': { $regex: searchTerm, $options: 'i' }}
+                { 'tags': { $regex: searchTerm, $options: 'i' }}
             ];
         }
 

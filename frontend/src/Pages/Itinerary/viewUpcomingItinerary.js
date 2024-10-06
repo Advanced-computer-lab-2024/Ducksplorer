@@ -301,6 +301,7 @@ const ViewUpcomingItinerary = () => {
                 <TableCell>Pick Up Location</TableCell>
                 <TableCell>Drop Off Location</TableCell>
                 <TableCell>Rating</TableCell>
+                <TableCell>Tags</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -341,6 +342,17 @@ const ViewUpcomingItinerary = () => {
                   <TableCell>{itinerary.pickUpLocation}</TableCell>
                   <TableCell>{itinerary.dropOffLocation}</TableCell>
                   <TableCell>{itinerary.rating}</TableCell>
+                  <TableCell>
+                        {itinerary.tags && itinerary.tags.length > 0
+                        ? itinerary.tags.map((tag, index) => (
+                            <div key={index}>
+                            {tag || 'N/A'}
+                            <br /><br />
+                            </div>
+                        ))
+                        : 'No tags available'}
+                  </TableCell>
+
                 </TableRow>
               ))}
             </TableBody>

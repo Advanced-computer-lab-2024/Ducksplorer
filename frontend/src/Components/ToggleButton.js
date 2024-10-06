@@ -2,7 +2,6 @@ import * as React from "react";
 import ToggleButton from "@mui/material/ToggleButton";
 import { useEffect } from "react";
 import axios from "axios";
-import { useState } from "react";
 import { TagsContext } from "../Pages/Itinerary/createItinerary";
 import { useContext } from "react";
 
