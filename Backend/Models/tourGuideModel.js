@@ -8,7 +8,9 @@ const tourGuideSchema = new Schema ({
     },
     userName:{
         type : String,
-        required : true
+        required : true,
+        unique : true,
+        immutable : true
     },
     password :{
         type : String ,

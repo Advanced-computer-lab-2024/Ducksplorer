@@ -8,12 +8,18 @@ const userSchema = new  Schema({
     },
     userName:{
         type : String,
-        required : true
+        required : true,
+        unique : true,
+        immutable : true
     },
     password :{
         type : String ,
         required :true
     },
+    status:{
+        type : String,
+        required : true
+    }
 },{timestamps: true})
 
 
