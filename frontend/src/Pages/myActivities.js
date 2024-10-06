@@ -28,7 +28,7 @@ import {
   TextField,
 } from "@mui/material";
 
-const MyActivities = ({ userName }) => { // Accept advertiserId as a prop
+const MyActivities = ({ advertiser }) => { // Accept advertiserId as a prop
   const [activities, setActivities] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState(null);
@@ -52,10 +52,10 @@ const MyActivities = ({ userName }) => { // Accept advertiserId as a prop
 
   // Handle fetching activities by advertiser ID
   useEffect(() => {
-    console.log(userName);
+    console.log(advertiser);
     const fetchActivities = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/activity/${userName}`);
+        const response = await axios.get(`http://localhost:8000/activity/my/${advertiser}`);
         setActivities(response.data);
       } catch (error) {
         console.error("There was an error fetching the activities!", error);
@@ -63,7 +63,7 @@ const MyActivities = ({ userName }) => { // Accept advertiserId as a prop
     };
 
     fetchActivities();
-  }, [userName]); // Depend on advertiserId
+  }, [advertiser]); // Depend on advertiserId
 
   // Handle edit button click
   const handleEditClick = (activity) => {

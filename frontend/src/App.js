@@ -17,6 +17,7 @@ import SearchActivities from "./Pages/searchActivity.js";
 import SortFilterActivity from "./Pages/SortFilterActivity";
 import MyActivities from "./Pages/myActivities.js";
 import AdvertiserDashboard from "./Pages/AdvertiserDashboard.js";
+import ClinicLocation from "./Pages/location.js";
 
 function App() {
   return (
@@ -37,8 +38,9 @@ function App() {
           <Route path="/activity/upcoming" element={<UpcomingActivities />} />
           <Route path="/activity/search" element={<SearchActivities />} />
           <Route path="/activity/SortFilter" element={<SortFilterActivity />} />
-          <Route path="/activity/myActivities" element={<MyActivities userName = {JSON.parse(localStorage.getItem('user')).username}/>} />
+          <Route path="/activity/myActivities" element={<MyActivities advertiser = {JSON.parse(localStorage.getItem('user')).username}/>} />
           <Route path="/advertiser" element={<AdvertiserDashboard />} />
+          <Route path="/location" element={<ClinicLocation/>} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

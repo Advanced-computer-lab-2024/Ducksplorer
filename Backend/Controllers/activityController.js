@@ -14,8 +14,9 @@ const createActivity = async (req, res) => {
 
 const getAllActivitiesByUsername = async (req, res) => {
     try {
-      const {username}= req.params.userName; // Change to username
-      const activities = await Activity.find({userName:username}); // Update the service method
+      const {advertiser}= req.params; // Change to username
+      console.log(advertiser);
+      const activities = await Activity.find({advertiser}); // Update the service method
       res.status(200).json(activities);
     } catch (error) {
       res.status(500).json({ message: error.message });
