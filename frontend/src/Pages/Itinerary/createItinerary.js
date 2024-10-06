@@ -1,74 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { message } from 'antd';
+import { message, Select } from 'antd';
 import { Link } from 'react-router-dom';
+import { IconButton, Box } from '@mui/material';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 const AddItinerary = () => {
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const userJson = localStorage.getItem('user'); // Get the 'user' item as a JSON string  
-        const user = JSON.parse(userJson);
-        const userName = user.username;
-
-        try {
-            const response = await axios.post('http://localhost:8000/itinerary/', {
-                'activity.name': formData.activity.name, // Use quotes for keys with dots
-                'activity.isOpen': formData.activity.isOpen,
-                'activity.date': formData.activity.date,
-                'activity.location': formData.activity.location,
-                'activity.price': formData.activity.price,
-                'activity.category': formData.activity.category,
-                'activity.tags': formData.activity.tags,
-                'activity.duration': formData.activity.duration,
-                locations: formData.locations,
-                timeline: formData.timeline,
-                language: formData.language,
-                price: formData.price,
-                availableDatesAndTimes: formData.availableDatesAndTimes,
-                accessibility: formData.accessibility,
-                pickUpLocation: formData.pickUpLocation,
-                dropOffLocation: formData.dropOffLocation,
-                tourGuideUsername: userName
-            });
-
-            if (response.status === 200) {
-                message.success('Itinerary added successfully');
-
-                // Reset form data here
-                setFormData({
-                    activity: {
-                        name: '',
-                        isOpen: false,
-                        date: '',
-                        location: '',
-                        price: '',
-                        category: '',
-                        tags: '',
-                        duration: ''
-                    },
-                    activities: [],
-                    locations: [],
-                    timeline: '',
-                    language: '',
-                    price: '',
-                    availableDatesAndTimes: [],
-                    accessibility: '',
-                    pickUpLocation: '',
-                    dropOffLocation: '',
-                    rating: '',
-                });
-            } else {
-                message.error('Failed to add itinerary');
-            }
-        } catch (error) {
-            message.error('An error occurred: ' + error.message);
-        }
-    };
-
-
-    const [formData, setFormData] = useState({
-        activity: {
+    const [tags, setTags] = useState([]);
+    const [prefTagsOptions, setPrefTagsOptions] = useState([]);
+    const [locations, setLocations] = useState(['']);
+    const [availableDatesAndTimes, setAvailableDatesAndTimes] = useState(['']);
+    const [activities, setActivities] = useState([
+        {
             name: '',
             isOpen: false,
             date: '',
@@ -77,7 +20,10 @@ const AddItinerary = () => {
             category: '',
             tags: '',
             duration: ''
-        },
+        }
+    ]);
+
+    const [formData, setFormData] = useState({
         locations: [],
         timeline: '',
         language: '',
@@ -85,131 +31,220 @@ const AddItinerary = () => {
         availableDatesAndTimes: [],
         accessibility: '',
         pickUpLocation: '',
-        dropOffLocation: ''
+        dropOffLocation: '',
+        tag: {
+            name: ''
+        }
     });
 
+    useEffect(() => {
+        const fetchTags = async () => {
+            try {
+                const response = await fetch('http://localhost:8000/preferenceTags/');
+                const data = await response.json();
+                setPrefTagsOptions(data);
+            } catch (error) {
+                console.error('Error fetching tags:', error);
+            }
+        };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+        fetchTags();
+    }, []);
 
-        if (name.startsWith('activity.')) {
-            // Extract the field name after 'activity.' and update nested activity state
-            const field = name.split('.')[1];
-            setFormData({
-                ...formData,
-                activity: {
-                    ...formData.activity,
-                    [field]: value
-                }
-            });
-        } else if (name === 'locations' || name === 'availableDatesAndTimes') {
-            // Handle array fields
-            setFormData({
-                ...formData,
-                [name]: value.split(',').map(item => item.trim())
-            });
-        } else {
-            // Handle other fields
-            setFormData({ ...formData, [name]: value });
-        }
+    const handleTagChange = (value) => {
+        setTags(value);
+    };
+
+    const handleAvailableDateChange = (index, value) => {
+        const newDates = [...availableDatesAndTimes];
+        newDates[index] = value; 
+        setAvailableDatesAndTimes(newDates);
+        setFormData({ ...formData, availableDatesAndTimes: newDates }); 
     };
 
 
+    const handleActivityChange = (index, field, value) => {
+        const updatedActivities = activities.map((activity, i) =>
+            i === index ? { ...activity, [field]: value } : activity
+        );
+        setActivities(updatedActivities);
+    };
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+            setFormData({ ...formData, [name]: value });
+        
+    };
+    const handleAddLocation = () => {
+        setLocations([...locations, '']); 
+    };
+
+    const handleAddAvailableDate = () => {
+        setAvailableDatesAndTimes([...availableDatesAndTimes, '']); 
+    };
+
+    const handleAddActivity = () => {
+        const newActivity = {
+            name: '',
+            isOpen: false,
+            date: '',
+            location: '',
+            price: '',
+            category: '',
+            tags: '',
+            duration: ''
+        };
+        setActivities([...activities, newActivity]);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const userJson = localStorage.getItem('user');
+        const user = JSON.parse(userJson);
+        const userName = user.username;
+
+        try {
+            const response = await axios.post('http://localhost:8000/itinerary/', {
+                activity: activities,
+                locations,
+                timeline: formData.timeline,
+                language: formData.language,
+                price: formData.price,
+                availableDatesAndTimes,
+                accessibility: formData.accessibility,
+                pickUpLocation: formData.pickUpLocation,
+                dropOffLocation: formData.dropOffLocation,
+                tourGuideUsername: userName,
+                tags: tags // Make sure to include selected tags here
+            });
+
+            if (response.status === 200) {
+                message.success('Itinerary added successfully');
+                // Reset form data here
+                resetForm();
+            } else {
+                message.error('Failed to add itinerary');
+            }
+        } catch (error) {
+            message.error('An error occurred: ' + error.message);
+        }
+    };
+
+    const resetForm = () => {
+        setActivities([{
+            name: '',
+            isOpen: false,
+            date: '',
+            location: '',
+            price: '',
+            category: '',
+            tags: '',
+            duration: ''
+        }]);
+        setLocations(['']);
+        setAvailableDatesAndTimes(['']);
+        setFormData({
+            locations: [],
+            timeline: '',
+            language: '',
+            price: '',
+            accessibility: '',
+            pickUpLocation: '',
+            dropOffLocation: '',
+            tag: {
+                name: ''
+            }
+        });
+        setTags([]);
+    };
 
     return (
         <div>
             <Link to="/tourGuideDashboard"> Back </Link>
-            <h1>
-                Create an Itinerary
-            </h1>
-            <box >
+            <Box sx={{ overflowY: 'visible', height: "100vh" }}>
+                <h1>Create an Itinerary</h1>
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                    <input
-                        type="text"
-                        name="activity.name"  // Dot notation to target 'name' inside 'activity'
-                        placeholder="Activity Name"
-                        value={formData.activity.name || ''}
-                        onChange={handleChange}
-                        required
-                        style={{ 
-                            width: '100%',  // Full width of the parent
-                          }} 
-                          InputProps={{
-                            style: { padding: '10px' } // Adding padding to the input
-                          }}
-                    />
-                    <label>Activity Is Open?</label>
-
-                    <input
-                        type="checkbox"  
-                        name="activity.isOpen"  
-                        checked={formData.activity.isOpen || false}  
-                        onChange={(e) => setFormData({
-                            ...formData,
-                            activity: {
-                                ...formData.activity,
-                                isOpen: e.target.checked  
-                            }
-                        })}
-                        required
-                    />
-                    <input
-                        type="datetime-local"
-                        name="activity.date"  // Dot notation to target 'date' inside 'activity'
-                        placeholder="Activity Date"
-                        value={formData.activity.date || ''}
-                        onChange={handleChange}
-                        required
-                    />
-                    <input
-                        type="text"
-                        name="activity.location"
-                        placeholder="Activity Location"
-                        value={formData.activity.location || ''}
-                        onChange={handleChange}
-                        required
-                    />
-                    <input
-                        type="number"
-                        name="activity.price"
-                        placeholder="Activity Price"
-                        value={formData.activity.price || ''}
-                        onChange={handleChange}
-                        required
-                    />
-                    <input
-                        type="text"
-                        name="activity.category"
-                        placeholder="Activity Category"
-                        value={formData.activity.category || ''}
-                        onChange={handleChange}
-                        required
-                    />
-                    <input
-                        type="text"
-                        name="activity.tags"
-                        placeholder="Activity Tags"
-                        value={formData.activity.tags || ''}
-                        onChange={handleChange}
-                        required
-                    />
-                    <input
-                        type="text"
-                        name="activity.duration"
-                        placeholder="Activity Duration"
-                        value={formData.activity.duration || ''}
-                        onChange={handleChange}
-                        required
-                    />
-                    <input
-                        type="text"
-                        name="locations"
-                        placeholder="Locations"
-                        value={formData.locations.join(', ')} // Convert array to string for input
-                        onChange={handleChange}
-                        required
-                    />
+                    {activities.map((activity, index) => (
+                        <div key={index}>
+                            <input
+                                type="text"
+                                placeholder="Activity Name"
+                                value={activity.name}
+                                onChange={(e) => handleActivityChange(index, 'name', e.target.value)}
+                                required
+                            />
+                            <label>Activity Is Open?</label>
+                            <input
+                                type="checkbox"
+                                checked={activity.isOpen}
+                                onChange={(e) => handleActivityChange(index, 'isOpen', e.target.checked)}
+                            />
+                            <input
+                                type="datetime-local"
+                                placeholder="Activity Date"
+                                value={activity.date}
+                                onChange={(e) => handleActivityChange(index, 'date', e.target.value)}
+                                required
+                            />
+                            <input
+                                type="text"
+                                placeholder="Activity Location"
+                                value={activity.location}
+                                onChange={(e) => handleActivityChange(index, 'location', e.target.value)}
+                                required
+                            />
+                            <input
+                                type="number"
+                                placeholder="Activity Price"
+                                value={activity.price}
+                                onChange={(e) => handleActivityChange(index, 'price', e.target.value)}
+                                required
+                            />
+                            <input
+                                type="text"
+                                placeholder="Activity Category"
+                                value={activity.category}
+                                onChange={(e) => handleActivityChange(index, 'category', e.target.value)}
+                                required
+                            />
+                            <input
+                                type="text"
+                                placeholder="Activity Tags"
+                                value={activity.tags}
+                                onChange={(e) => handleActivityChange(index, 'tags', e.target.value)}
+                                required
+                            />
+                            <input
+                                type="text"
+                                placeholder="Activity Duration"
+                                value={activity.duration}
+                                onChange={(e) => handleActivityChange(index, 'duration', e.target.value)}
+                                required
+                            />
+                        </div>
+                    ))}
+                    <IconButton onClick={handleAddActivity}>
+                        <AddCircleIcon color="primary" />
+                    </IconButton>
+                    {/* Remaining form fields */}
+                    <h3>Locations:</h3>
+                    {locations.map((location, index) => (
+                        <input
+                            key={index}
+                            type="text"
+                            placeholder="Location"
+                            value={location}
+                            onChange={(e) => {
+                                const newLocations = [...locations];
+                                newLocations[index] = e.target.value;
+                                setLocations(newLocations);
+                            }}
+                            required
+                        />
+                    ))}
+                    <IconButton onClick={handleAddLocation}>
+                        <AddCircleIcon color="primary" />
+                    </IconButton>
                     <input
                         type="text"
                         name="timeline"
@@ -236,14 +271,20 @@ const AddItinerary = () => {
                         step="0.01"
                         required
                     />
-                    <input
-                        type="datetime-local"
-                        name="availableDatesAndTimes"
-                        placeholder="Available Dates and Times (comma separated)"
-                        value={formData.availableDatesAndTimes.join(', ')} // Convert array to string for input
-                        onChange={handleChange}
-                        required
-                    />
+                    <h3>Available Dates and Times:</h3>
+                    {availableDatesAndTimes.map((dateTime, index) => (
+                        <input
+                            key={index}
+                            type="datetime-local"
+                            placeholder="Available Date and Time"
+                            value={dateTime}
+                            onChange={(e) => handleAvailableDateChange(index, e.target.value)} // Update date/time
+                            required
+                        />
+                    ))}
+                    <IconButton onClick={handleAddAvailableDate}>
+                        <AddCircleIcon color="primary" />
+                    </IconButton>
                     <input
                         type="text"
                         name="accessibility"
@@ -268,9 +309,23 @@ const AddItinerary = () => {
                         onChange={handleChange}
                         required
                     />
-                    <button type="submit">Add Itinerary</button>
+                    <label>Tags:</label>
+                    <Select
+                        mode="multiple"
+                        allowClear
+                        style={{ width: '100%' }}
+                        placeholder="Select Itinerary Tags"
+                        value={tags}
+                        onChange={handleTagChange}
+                    >
+                        {prefTagsOptions.map((tag, index) => (
+                            <Select.Option key={index} value={tag.name}>
+                                {tag.name}
+                            </Select.Option>
+                        ))}
+                    </Select>                    <button type="submit">Add Itinerary</button>
                 </form>
-            </box>
+            </Box>
         </div>
     );
 };

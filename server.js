@@ -11,9 +11,11 @@ app.use(cors()); // Adjust if needed
 
 const signUpRoutes = require("./Backend/Routes/signUpRoutes.js");
 const itineraryRoutes = require("./Backend/Routes/itineraryRoutes.js")
+const preferenceTagsRoutes = require("./Backend/Routes/PreferenceTagsRoutes.js");
 
 app.use("/signUp", signUpRoutes);
 app.use("/itinerary", itineraryRoutes);
+app.use("/preferenceTags", preferenceTagsRoutes);
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*'); // Allow requests from any origin

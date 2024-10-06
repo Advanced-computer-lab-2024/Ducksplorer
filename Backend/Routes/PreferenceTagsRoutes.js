@@ -1,5 +1,5 @@
 const express = require("express");
-const {createTags,deleteTags,updateTags,getTagsbyName,getAllTags } = require("../../Controllers/Admin/PreferenceTags");
+const {createTags,deleteTags,updateTags,getTagsbyName,getAllTags } = require("../Controllers/PreferenceTagsController");
 
 const router = express.Router();
 
