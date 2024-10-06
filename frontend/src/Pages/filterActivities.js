@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Box,
   Table,
@@ -18,35 +18,37 @@ import {
   Button,
   Rating,
   Slider,
-} from '@mui/material';
+} from "@mui/material";
 
 const FilterActivities = () => {
   const [activities, setActivities] = useState([]);
   const [allActivities, setAllActivities] = useState([]); // Store all activities
-  const [price, setPrice] = useState('');
-  const [date, setDate] = useState('');
-  const [category, setCategory] = useState('');
+  const [price, setPrice] = useState("");
+  const [date, setDate] = useState("");
+  const [category, setCategory] = useState("");
   const [averageRating, setAverageRating] = useState(0); // Set default value to 0
   const [categories, setCategories] = useState([]); // Store fetched categories
 
   // Fetch categories from backend
   useEffect(() => {
-    axios.get('http://localhost:8000/category')
-      .then(response => {
+    axios
+      .get("http://localhost:8000/category")
+      .then((response) => {
         setCategories(response.data);
       })
-      .catch(error => {
-        console.error('There was an error fetching the categories!', error);
+      .catch((error) => {
+        console.error("There was an error fetching the categories!", error);
       });
 
     // Fetch all activities when component mounts
-    axios.get('http://localhost:8000/activity')
-      .then(response => {
+    axios
+      .get("http://localhost:8000/activity")
+      .then((response) => {
         setAllActivities(response.data);
         setActivities(response.data); // Set initial activities to all
       })
-      .catch(error => {
-        console.error('There was an error fetching the activities!', error);
+      .catch((error) => {
+        console.error("There was an error fetching the activities!", error);
       });
   }, []);
 
@@ -59,24 +61,27 @@ const FilterActivities = () => {
       ...(averageRating > 0 && { averageRating }), // Only include averageRating if it's greater than 0
     }).toString();
 
-    axios.get(`http://localhost:8000/activity/filter?${query}`)
-      .then(response => {
+    axios
+      .get(`http://localhost:8000/activity/filter?${query}`)
+      .then((response) => {
         setActivities(response.data);
       })
-      .catch(error => {
-        console.error('There was an error fetching the activities!', error);
+      .catch((error) => {
+        console.error("There was an error fetching the activities!", error);
       });
   };
 
   return (
     <>
-      <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'auto', height: '100vh' }}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+      <Box
+        sx={{ p: 6, maxWidth: "120vh", overflowY: "visible", height: "100vh" }}
+      >
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <Typography variant="h4">Filter Activities</Typography>
         </Box>
 
         {/* Filter Form */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
           <TextField
             label="Price"
             value={price}
@@ -118,20 +123,27 @@ const FilterActivities = () => {
               value={averageRating}
               onChange={(e, newValue) => setAverageRating(newValue)}
               step={1}
-              marks={[0, 1, 2, 3, 4, 5].map(value => ({ value, label: value }))}
+              marks={[0, 1, 2, 3, 4, 5].map((value) => ({
+                value,
+                label: value,
+              }))}
               min={0}
               max={5}
               valueLabelDisplay="auto"
             />
           </Box>
 
-          <Button variant="contained" color="primary" onClick={fetchFilteredActivities}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={fetchFilteredActivities}
+          >
             Filter
           </Button>
         </Box>
 
         {/* Activity Table */}
-        <TableContainer component={Paper}>
+        <TableContainer style={{ borderRadius: 20 }} component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
@@ -152,9 +164,9 @@ const FilterActivities = () => {
                 <TableRow key={activity._id}>
                   <TableCell>{activity.name}</TableCell>
                   <TableCell>{activity.price}</TableCell>
-                  <TableCell>{activity.isOpen ? 'Yes' : 'No'}</TableCell>
+                  <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
                   <TableCell>{activity.category}</TableCell>
-                  <TableCell>{activity.tags.join(', ')}</TableCell>
+                  <TableCell>{activity.tags.join(", ")}</TableCell>
                   <TableCell>{activity.specialDiscount}</TableCell>
                   <TableCell>{activity.date}</TableCell>
                   <TableCell>{activity.duration}</TableCell>

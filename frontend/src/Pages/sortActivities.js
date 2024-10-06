@@ -1,20 +1,39 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Box, Table, Typography, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, MenuItem, Select, InputLabel, FormControl, Button, Rating } from '@mui/material';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import {
+  Box,
+  Table,
+  Typography,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  Button,
+  Rating,
+} from "@mui/material";
 
 const SortActivities = () => {
   const [activities, setActivities] = useState([]);
-  const [sortBy, setSortBy] = useState('date'); // Default sorting by date
-  const [order, setOrder] = useState('asc');    // Default ascending order
+  const [sortBy, setSortBy] = useState("date"); // Default sorting by date
+  const [order, setOrder] = useState("asc"); // Default ascending order
 
   // Function to fetch sorted activities
   const fetchSortedActivities = () => {
-    axios.get(`http://localhost:8000/activity/sort?sortBy=${sortBy}&order=${order}`)
-      .then(response => {
+    axios
+      .get(
+        `http://localhost:8000/activity/sort?sortBy=${sortBy}&order=${order}`
+      )
+      .then((response) => {
         setActivities(response.data);
       })
-      .catch(error => {
-        console.error('There was an error fetching the activities!', error);
+      .catch((error) => {
+        console.error("There was an error fetching the activities!", error);
       });
   };
 
@@ -26,13 +45,32 @@ const SortActivities = () => {
 
   return (
     <>
-      <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'auto', height: '100vh' }}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+      <Box
+        sx={{
+          p: 6,
+          maxWidth: "110vh",
+          height: "100vh",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            mb: 3,
+          }}
+        >
           <Typography variant="h4">Upcoming Activities</Typography>
         </Box>
 
         {/* Sorting Controls */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+        <Box
+          sx={{
+            display: "flex",
+            overflowY: "visible",
+            justifyContent: "space-between",
+            mb: 3,
+          }}
+        >
           <FormControl sx={{ minWidth: 150 }}>
             <InputLabel id="sort-by-label">Sort By</InputLabel>
             <Select
@@ -64,11 +102,17 @@ const SortActivities = () => {
             </Select>
           </FormControl>
 
-          <Button variant="contained" color="primary" onClick={fetchSortedActivities}>Sort</Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={fetchSortedActivities}
+          >
+            Sort
+          </Button>
         </Box>
 
         {/* Activity Table */}
-        <TableContainer component={Paper}>
+        <TableContainer style={{ borderRadius: 20 }} component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
@@ -85,13 +129,13 @@ const SortActivities = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {activities.map(activity => (
+              {activities.map((activity) => (
                 <TableRow key={activity._id}>
                   <TableCell>{activity.name}</TableCell>
                   <TableCell>{activity.price}</TableCell>
-                  <TableCell>{activity.isOpen ? 'Yes' : 'No'}</TableCell>
+                  <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
                   <TableCell>{activity.category}</TableCell>
-                  <TableCell>{activity.tags}</TableCell>
+                  <TableCell>{activity.tags.join(", ")}</TableCell>
                   <TableCell>{activity.specialDiscount}</TableCell>
                   <TableCell>{activity.date}</TableCell>
                   <TableCell>{activity.duration}</TableCell>
