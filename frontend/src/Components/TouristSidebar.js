@@ -69,7 +69,7 @@ const TouristSidebar = () => {
             </ListItemIcon>
             <ListItemText primary="View Historical Places" />
           </ListItem>
-          <ListItem button component={Link} to="/viewActivities"> 
+          <ListItem button component={Link} to="/activity/upcoming"> 
             <ListItemIcon>
               <CasinoIcon />
             </ListItemIcon>

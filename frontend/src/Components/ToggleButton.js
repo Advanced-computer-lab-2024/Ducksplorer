@@ -1,16 +1,16 @@
 import * as React from "react";
 import ToggleButton from "@mui/material/ToggleButton";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import axios from "axios";
+import { TagsContext } from "../Pages/Itinerary/createItinerary";
+import { useContext } from "react";
 
 function StandAloneToggleButton(props) {
-  const [selected, setSelected] = React.useState(
-    props.tags.includes(props.name)
-  );
+  const [selected, setSelected] = React.useState(false);
 
-  const [allTags, setAllTags] = useState([]);
-
-  // let tags = useContext(TagsContext);
+  //   const [tags, setTags] = useState([]);
+  let allTags = [];
+  let tags = useContext(TagsContext);
 
   function getTagNames(element) {
     return {
@@ -24,13 +24,13 @@ function StandAloneToggleButton(props) {
       .get("http://localhost:8000/preferenceTags/")
       .then((response) => {
         const data = response.data;
-        setAllTags(data.map(getTagNames));
+        allTags = data.map(getTagNames);
         localStorage.setItem("tags", JSON.stringify(allTags));
       })
       .catch((error) => {
         console.error("There was an error fetching the categories!", error);
       });
-  });
+  }, []);
 
   return (
     <div>
@@ -47,10 +47,10 @@ function StandAloneToggleButton(props) {
         selected={selected}
         onChange={() => {
           setSelected(!selected);
-          props.tags.includes(props.name)
-            ? props.tags.splice(props.tags.indexOf(props.name), 1)
-            : props.tags.push(props.name);
-          console.log(props.tags);
+          tags.includes(props.name)
+            ? tags.splice(tags.indexOf(props.name), 1)
+            : tags.push(props.name);
+          console.log(tags);
         }}
       >
         {props.name}

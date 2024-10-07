@@ -47,6 +47,11 @@ import EditProduct from './Components/EditProduct.js';
 import AdminProducts from './Pages/AdminProducts.js';
 import AdminAllProducts from './Pages/AdminAllProducts.js';
 import TouristAllProducts from './Pages/TouristAllProducts.js';
+import TourGuideEditProfile from './Pages/TourGuideEditAccount';
+import GovernorDashboard from './Pages/GovernorDashboard';
+import AdvertiserEditProfile from './Pages/AdvertiserEditAccount';
+import SellerEditProfile from './Pages/SellerEditAccount';
+import SellerDashboard from './Pages/SellerDashboard';
 
 
 function App() {
@@ -85,6 +90,8 @@ function App() {
             <Route path="/addGovernor" element={<AddGoverner />} />
             <Route path="/categoriesActions" element={<CategoriesActions />} />
             <Route path="/preferenceTags" element={<PreferenceTags />} />
+
+
             <Route path="/activity/addActivity" element={<AddActivity />} />
           <Route path="/activity/rudActivity" element={<RUDActivity />} />
           <Route path="/activity/upcoming" element={<UpcomingActivities />} />
@@ -103,6 +110,8 @@ function App() {
           />
           <Route path="/advertiser" element={<AdvertiserDashboard />} />
           <Route path="/location" element={<ClinicLocation/>} />
+
+
           <Route path = "/products" element= {<Products/>} />
         <Route path = "/AllProducts" element= {<AllProducts/>} />
         <Route path = "/AddProducts" element= {<AddProducts/>} />
@@ -116,9 +125,9 @@ function App() {
         <Route path = "/TouristAllProducts" element= {<TouristAllProducts/>} />
             <Route path="/editAccount" element={<TouristEditAccount />} />
 
+
           <Route path="/advertiserEditAccount" element={< AdvertiserEditProfile />} />
           <Route path="/sellerEditAccount" element={< SellerEditProfile />} />
-
           <Route path="/sellerDashboard" element={<SellerDashboard/>} />
       </Routes>
           </BrowserRouter>
