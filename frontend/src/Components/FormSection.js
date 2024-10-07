@@ -5,6 +5,8 @@ import axios from 'axios';
 import { message } from 'antd';
 import { useTypeContext } from '../context/TypeContext';
 import DropDown from './DropDown.js';
+import { useNavigate } from "react-router-dom";
+
 
 const FormSection = () => {
   const { type } = useTypeContext();
@@ -27,6 +29,8 @@ const FormSection = () => {
   const [companyProfile, setCompanyProfile] = useState('');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+
+  const navigate = useNavigate();
 
   const validateFields = () => {
     if (!userName || !password || !confirmPassword || !email) {
@@ -265,7 +269,9 @@ const FormSection = () => {
             border: 'none',
             borderRadius: '4px',
             fontSize: '16px',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            padding:'10px',
+            justifyContent: 'center'
           }}
         >
           Sign Up

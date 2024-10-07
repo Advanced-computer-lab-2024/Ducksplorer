@@ -1,6 +1,9 @@
 const Advertiser = require("../Models/advertiserModel.js");
 const Activity = require("../Models/activityModel.js");
 const { $gte } = require("sift");
+const Category = require("../Models/activityCategory.js");
+const Tags = require("../Models/preferenceTagsModels.js");
+const getAllActivitiesByUsername = require("../Controllers/activityController.js");
 
 const createActivity = async (activityData) => {
   const {
@@ -8,40 +11,53 @@ const createActivity = async (activityData) => {
     isOpen,
     advertiser,
     date,
-    time,
     location,
     price,
-    minPrice,
-    maxPrice,
     category,
     tags,
     specialDiscount,
     duration,
   } = activityData;
 
-  const newActivity = new Activity({
-    name,
-    isOpen,
-    advertiser,
-    date,
-    time,
-    location,
-    price,
-    minPrice,
-    maxPrice,
-    category,
-    tags,
-    specialDiscount,
-    duration,
-  });
+  try {
+    // Validate the category: check if it exists in the Category collection
+    const existingCategory = await Category.findOne({ name: category });
+    if (!existingCategory) {
+      throw new Error(`Category '${category}' does not exist.`);
+    }
 
-  await newActivity.save();
-  return newActivity;
-};
+    // Validate the tags: check if each tag exists in the Tags collection
+    const existingTags = await Tags.find({ name: { $in: tags } });
+    const existingTagNames = existingTags.map((tag) => tag.name);
 
-const getAllActivitiesByAdvertiserId = async (advertiserId) => {
-  const activities = await Activity.find({ advertiser: advertiserId });
-  return activities;
+    // Check if all provided tags exist
+    if (existingTagNames.length !== tags.length) {
+      const missingTags = tags.filter((tag) => !existingTagNames.includes(tag));
+      throw new Error(
+        `The following tags do not exist: ${missingTags.join(", ")}`
+      );
+    }
+
+    // If validation passes, create the new activity
+    const newActivity = new Activity({
+      name,
+      isOpen,
+      advertiser,
+      date,
+      location,
+      price,
+      category: existingCategory.name, // Ensure we use the validated category
+      tags: existingTagNames, // Ensure we use the validated tags
+      specialDiscount,
+      duration,
+    });
+
+    await newActivity.save();
+    return newActivity;
+  } catch (error) {
+    // Handle validation or saving errors
+    throw new Error(error.message);
+  }
 };
 
 const updateActivity = async (activityId, updatedData) => {
@@ -50,7 +66,6 @@ const updateActivity = async (activityId, updatedData) => {
     updatedData,
     { new: true }
   );
-  console.log(updatedData);
   if (!updatedActivity) {
     throw new Error("Activity not found");
   }
@@ -71,7 +86,7 @@ const searchActivities = async (searchParams) => {
     query.name = { $regex: name, $options: "i" };
   }
   if (category) {
-    query.category = category;
+    query.category = { $regex: category, $options: "i" };
   }
   if (tag) {
     query.tags = { $in: [tag] };
@@ -88,37 +103,11 @@ const viewUpcomingActivities = async () => {
   return upcomingActivities;
 };
 
-const filterActivities = async (filters) => {
-  const { price, date, category, ratings } = filters;
-  const filter = {};
-  let query = { date: { $gte: new Date() } };
-
-  if (price) {
-    filter.price = { $regex: price };
-  }
-  if (date) {
-    filter.date = date;
-  }
-  if (category) {
-    filter.category = category;
-  }
-  if (ratings) {
-    filter.ratings = { $in: [ratings] };
-  }
-  try {
-    console.log(filters);
-    return await Activity.find(filter); // Return the filtered activities
-  } catch (error) {
-    throw new Error("Error fetching activities");
-  }
-};
-
 module.exports = {
   createActivity,
-  getAllActivitiesByAdvertiserId,
+  getAllActivitiesByUsername,
   updateActivity,
   deleteActivity,
   searchActivities,
   viewUpcomingActivities,
-  filterActivities,
 };

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Tags = require("./preferenceTagsModels")
 
 const activitySchema = new Schema(
   {
@@ -12,7 +13,7 @@ const activitySchema = new Schema(
       required: true,
     },
     advertiser: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Advertiser",
       required: false,
     },
@@ -20,11 +21,6 @@ const activitySchema = new Schema(
       type: Date,
       required: true,
     },
-    // time:{
-    //     type : String, //mafeesh time data type bas momken ne match le certain way of writing HH:MM
-    //     //match: [/^([01]\d|2[0-3]):([0-5]\d)$/, 'Invalid time format. Use HH:MM']
-    //     required : true
-    // },
     location: {
         type: String, //link le google maps masalan
         required: true
@@ -33,21 +29,15 @@ const activitySchema = new Schema(
         type: Number,
         required: false
     },
-    // minPrice:{ //ask noha law el range yetfekes
-    //     type : Number, 
-    //     required : false 
-    // },
-    // maxPrice:{ //we'll make one of these only required bas fel frontend
-    //     type : Number, 
-    //     required : false
-    // },
     category: {
-        type: String,
-        required: true
+      type: String,
+      ref: "ActivityCategory",
+      required: false,
     },
-    tags: { //change this later for table prefs
-        type: String,
-        required: true
+    tags: {
+      type : Array,
+      schema : [Tags],
+      required: true
     },
     specialDiscount: {
         type: Number,
@@ -58,6 +48,14 @@ const activitySchema = new Schema(
       type: Number,
       required: false,
     },
+    ratings: {
+      type: [Number],
+      required: false
+    },
+    averageRating: {
+      type: Number,
+      required: false
+    }
   },
   { timestamps: true }
 );

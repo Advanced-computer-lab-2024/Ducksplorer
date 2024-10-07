@@ -254,3 +254,8 @@ button[type="submit"]:hover {
     margin-bottom: 20px;
   }
 }
+
+/* Foudas Styling */
+#isOpenDiv:hover {
+  border-color: black !important;
+}

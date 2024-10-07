@@ -37,7 +37,7 @@ const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el 
         if(role === "Seller"){
             const description = req.body.description;
             const name = req.body.name;
-            const newSeller = new Seller({email, userName, password, description, name});
+            const newSeller = new Seller({email, userName, password,name,description});
             await newSeller.save();
             res.status(201).json(newSeller);
         }
@@ -70,7 +70,7 @@ const login = async (req,res) => {
                 return res.status(400).json({error: "Incorrect UserName or Password"});
             }
 
-            
+        
 
             res.status(200).json({
                 _id: user._id,
@@ -86,6 +86,10 @@ const login = async (req,res) => {
         console.log("Error in Login Controller", error.message)
         res.status(500).json({error:"Error"})
     }
+
 }
+
+
+
 
 module.exports = {signUp, login};

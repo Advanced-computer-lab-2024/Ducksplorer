@@ -1,60 +1,132 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextField, Button, Stack } from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
+import CategoriesDropDown from "./CategoryDropDown";
+import StandAloneToggleButton from "./ToggleButton";
+import AdvertiserSidebar from "./AdvertiserSidebar";
+import { useNavigate } from "react-router-dom";
+
+let tags = [];
 
 const AddActivityForm = () => {
-  //   const { type } = useTypeContext();
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState(""); // Location state
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
-  const [tags, setTags] = useState("");
   const [specialDiscount, setSpecialDiscount] = useState("");
   const [duration, setDuration] = useState("");
+  const allTags = JSON.parse(localStorage.getItem("tags")) || [];
+  const navigate = useNavigate();
+
+  // Fetch location and form data from localStorage after navigating back
+  useEffect(() => {
+    const storedLocation = localStorage.getItem("selectedLocation");
+    if (storedLocation) {
+      setLocation(storedLocation); // Update location state
+    }
+
+    // Retrieve form data from localStorage
+    const storedFormData = localStorage.getItem("addActivityFormData");
+    if (storedFormData) {
+      const {
+        name: storedName,
+        date: storedDate,
+        isOpen: storedIsOpen,
+        price: storedPrice,
+        category: storedCategory,
+        specialDiscount: storedDiscount,
+        duration: storedDuration,
+        tags: storedTags,
+      } = JSON.parse(storedFormData);
+
+      setName(storedName || "");
+      setDate(storedDate || "");
+      setIsOpen(storedIsOpen || false);
+      setPrice(storedPrice || "");
+      setCategory(storedCategory || "");
+      setSpecialDiscount(storedDiscount || "");
+      setDuration(storedDuration || "");
+      tags = storedTags || [];
+    }
+  }, []);
+
   const data = {
     name,
-    date,
-    duration,
     isOpen,
-    specialDiscount,
+    advertiser: JSON.parse(localStorage.getItem("user")).username,
+    date,
+    location, // Use updated location
     price,
-    location,
-    tags,
     category,
+    tags,
+    specialDiscount,
+    duration,
   };
 
-  // Additional state variables for conditional fields
+  let isClicked = null;
 
   const validateFields = () => {
-    if (!date || !location || !price || !specialDiscount || !duration) {
+    if (
+      !date ||
+      !price ||
+      !specialDiscount ||
+      !duration ||
+      !name ||
+      !category ||
+      tags.length === 0
+    ) {
       message.error("All fields are required");
       return false;
     }
     return true;
   };
+
   const handleAdd = async () => {
     if (!validateFields()) {
       return;
     }
 
     try {
-      console.log("this is the data", data);
-
       await axios.post("http://localhost:8000/activity", data);
       message.success("Activity Created Successfully!");
+      console.log(tags);
+      tags = [];
+      console.log(tags);
+
+      // Clear localStorage
+      localStorage.removeItem("addActivityFormData");
+      localStorage.removeItem("selectedLocation");
     } catch (error) {
       message.error("An error occurred: " + error.message);
-      console.error("There was an error creating activity!", error);
+      console.error("There was an error creating the activity!", error);
     }
+  };
+
+  const handleNavigate = () => {
+    // Save all form data in localStorage before navigating
+    localStorage.setItem(
+      "addActivityFormData",
+      JSON.stringify({
+        name,
+        date,
+        isOpen,
+        price,
+        category,
+        specialDiscount,
+        duration,
+        tags,
+      })
+    );
+    navigate("/location"); // Navigate to /location when button is clicked
   };
 
   return (
     <div
       style={{
-        backgroundImage: "url(../../public/Images/bg-intro-desktop.png)", // Update with your image path
+        backgroundImage: "url(../../public/Images/bg-intro-desktop.png)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         height: "100vh",
@@ -63,6 +135,7 @@ const AddActivityForm = () => {
         alignItems: "center",
       }}
     >
+      <AdvertiserSidebar />
       <Stack
         spacing={1}
         sx={{
@@ -73,7 +146,7 @@ const AddActivityForm = () => {
         }}
       >
         <div className="trial-btn text-white cursor-pointer">
-          <span className="text-bold">Welcome To Ducksplorer</span>
+          <span className="text-bold">Add Activity</span>
         </div>
         <TextField
           name="name"
@@ -87,11 +160,10 @@ const AddActivityForm = () => {
           label="Price"
           type="number"
           value={price}
-          onChange={(e) => {
-            setPrice(e.target.value);
-          }}
+          onChange={(e) => setPrice(e.target.value)}
         />
         <div
+          id="isOpenDiv"
           style={{
             display: "flex",
             flexDirection: "row",
@@ -115,39 +187,70 @@ const AddActivityForm = () => {
             label="isOpen"
             type="checkbox"
             checked={isOpen}
-            onChange={() => {
-              isOpen ? setIsOpen(false) : setIsOpen(true);
-            }}
+            onChange={() => setIsOpen(!isOpen)}
           />
         </div>
         <TextField
           name="specialDiscount"
           label="Discount"
-          type="number" // Toggle password visibility
+          type="number"
           value={specialDiscount}
           onChange={(e) => setSpecialDiscount(e.target.value)}
         />
         <TextField
           name="date"
-          label="Date"
-          type={"datetime-local"} // Toggle password visibility
+          onSelect={() => {
+            isClicked = true;
+          }}
+          label={isClicked ? "Date" : ""}
+          type={"datetime-local"}
           value={date}
           onChange={(e) => setDate(e.target.value)}
         />
         <TextField
           name="duration"
           label="Duration"
-          type="number" // Toggle password visibility
+          type="number"
           value={duration}
-          onChange={(e) => setDuration(e.target.value)}
+          onChange={(e) => {
+            setDuration(e.target.value);
+            setCategory(localStorage.getItem("category").trim());
+          }}
         />
         <TextField
           name="location"
           label="Location"
-          type="text" // Toggle password visibility
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
+          type="text"
+          value={location} // Location input
+          disabled // Make it non-editable, coming from the map
         />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleNavigate} // Use the handleNavigate function for routing
+        >
+          Go to Location
+        </Button>
+        <CategoriesDropDown />
+        <div
+          style={{
+            display: "Flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            flexBasis: 10,
+          }}
+        >
+          {allTags.map((element) => {
+            return (
+              <StandAloneToggleButton
+                tags={tags}
+                key={element._id}
+                name={element.name}
+              />
+            );
+          })}
+          {/* {console.log(allTags)}; */}
+        </div>
         <Button
           variant="contained"
           onClick={handleAdd}

@@ -10,6 +10,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 
+
 function Login() {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
@@ -50,6 +51,7 @@ const handleLogin = async () => {
               default:
                 message.error('Unknown role');
             }
+           
            localStorage.setItem('user', JSON.stringify(response.data));
         } else if (response.status === 400) {
            throw new Error(response.error);
