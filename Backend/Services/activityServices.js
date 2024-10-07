@@ -3,7 +3,7 @@ const Activity = require("../Models/activityModel.js");
 const { $gte } = require("sift");
 const Category = require("../Models/activityCategory.js");
 const Tags = require("../Models/preferenceTagsModels.js");
-const { getAllActivitiesByUsername } = require("../Controllers/activityController.js");
+const getAllActivitiesByUsername = require("../Controllers/activityController.js");
 
 const createActivity = async (activityData) => {
   const {
@@ -28,12 +28,14 @@ const createActivity = async (activityData) => {
 
     // Validate the tags: check if each tag exists in the Tags collection
     const existingTags = await Tags.find({ name: { $in: tags } });
-    const existingTagNames = existingTags.map(tag => tag.name);
+    const existingTagNames = existingTags.map((tag) => tag.name);
 
     // Check if all provided tags exist
     if (existingTagNames.length !== tags.length) {
-      const missingTags = tags.filter(tag => !existingTagNames.includes(tag));
-      throw new Error(`The following tags do not exist: ${missingTags.join(', ')}`);
+      const missingTags = tags.filter((tag) => !existingTagNames.includes(tag));
+      throw new Error(
+        `The following tags do not exist: ${missingTags.join(", ")}`
+      );
     }
 
     // If validation passes, create the new activity
@@ -52,15 +54,11 @@ const createActivity = async (activityData) => {
 
     await newActivity.save();
     return newActivity;
-
   } catch (error) {
     // Handle validation or saving errors
     throw new Error(error.message);
   }
 };
-
-
-
 
 const updateActivity = async (activityId, updatedData) => {
   const updatedActivity = await Activity.findByIdAndUpdate(
@@ -68,7 +66,6 @@ const updateActivity = async (activityId, updatedData) => {
     updatedData,
     { new: true }
   );
-  console.log(updatedData);
   if (!updatedActivity) {
     throw new Error("Activity not found");
   }
@@ -106,12 +103,11 @@ const viewUpcomingActivities = async () => {
   return upcomingActivities;
 };
 
-
 module.exports = {
   createActivity,
   getAllActivitiesByUsername,
   updateActivity,
   deleteActivity,
   searchActivities,
-  viewUpcomingActivities
+  viewUpcomingActivities,
 };

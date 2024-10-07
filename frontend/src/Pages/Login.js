@@ -36,6 +36,9 @@ const handleLogin = async () => {
             else if(response.data.role === 'Guide'){
                 window.location.href = '/tourGuideDashboard';
             }
+            else{
+              window.location.href = '/products';
+            }
            localStorage.setItem('user', JSON.stringify(response.data));
         } else if (response.status === 400) {
             message.error('Failed to Login , Incorrect Username or Password');
