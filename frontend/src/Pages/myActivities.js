@@ -28,7 +28,10 @@ import {
   TextField,
 } from "@mui/material";
 
-const MyActivities = ({ advertiser }) => { // Accept advertiserId as a prop
+import AdvertiserSidebar from "../Components/AdvertiserSidebar.js";
+
+const MyActivities = ({ userName }) => {
+  // Accept advertiserId as a prop
   const [activities, setActivities] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState(null);
@@ -50,20 +53,21 @@ const MyActivities = ({ advertiser }) => { // Accept advertiserId as a prop
   // Ref to the form for scrolling
   const formRef = useRef(null);
 
-  // Handle fetching activities by advertiser ID
+  // Handle fetching activities by userName ID
   useEffect(() => {
-    console.log(advertiser);
+    console.log(userName);
     const fetchActivities = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/activity/my/${advertiser}`);
+        const response = await axios.get(
+          `http://localhost:8000/activity/myActivities${userName}`
+        );
         setActivities(response.data);
       } catch (error) {
         console.error("There was an error fetching the activities!", error);
       }
     };
-
     fetchActivities();
-  }, [advertiser]); // Depend on advertiserId
+  }, [userName]); // Depend on advertiserId
 
   // Handle edit button click
   const handleEditClick = (activity) => {
