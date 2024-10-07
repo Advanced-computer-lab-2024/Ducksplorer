@@ -6,9 +6,8 @@ export const TypeContext = createContext();
 export const useTypeContext= ()  => {
     return useContext(TypeContext);
 }
-
 export const TypeContextProvider = ({ children }) => {
-    const [type, setType] = useState("Select User Type");   
+    const [type, setType] = useState("Select User Type");
 
     return (
         <TypeContext.Provider value={{ type, setType }}>

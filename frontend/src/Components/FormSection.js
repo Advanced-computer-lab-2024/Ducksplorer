@@ -98,6 +98,18 @@ const FormSection = () => {
      
       <Stack spacing={1} sx={{ width: '600px', padding: '10px', backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: '10px' }}>
       <div className="trial-btn text-white cursor-pointer" >
+    <div style={{
+      backgroundImage: 'url(../../public/Images/bg-intro-desktop.png)', // Update with your image path
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      height: '100vh',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
+     
+      <Stack spacing={1} sx={{ width: '600px', padding: '10px', backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: '10px' }}>
+      <div className="trial-btn text-white cursor-pointer" >
         <span className="text-bold">Welcome To Ducksplorer</span>
       </div>
         <TextField
@@ -280,6 +292,9 @@ const FormSection = () => {
       </Stack>
     </div>
   );
+};
+
+
 };
 
 

@@ -13,12 +13,10 @@ const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el 
         }
         const role = req.body.role;
         let status = "Approved";
-        if (role === "TourGuide" || role === "Seller" || role === "Advertiser") {
+        if (role === "Guide" || role === "Seller" || role === "Advertiser") {
             status = "Pending";
         }
-        const newuser = new User({role , userName, password , status});
-        await newuser.save();
-
+        
         if(role === "Tourist" ){
             const mobileNumber = req.body.mobileNumber;
             const nationality = req.body.nationality;
@@ -51,6 +49,10 @@ const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el 
             await newAdvertiser.save();
             res.status(201).json(newAdvertiser);
         }
+        const newuser = new User({role , userName, password , status});
+        await newuser.save();
+        res.status(201).json(newuser);
+
     }   catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -60,9 +62,14 @@ const login = async (req,res) => {
         const {userName, password} = req.body;
         const user = await User.findOne({userName});
 
+        if(user.status === "Pending"){
+            return res.status(400).json({error: "Your Account is not approved yet"});
+        }
         if(!user || (user.password !== password)){
             return res.status(400).json({error: "Incorrect UserName or Password"});
         }
+
+        
 
         res.status(200).json({
             _id: user._id,

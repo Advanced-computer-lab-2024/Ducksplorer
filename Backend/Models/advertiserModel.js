@@ -6,11 +6,11 @@ const advertiserSchema = new Schema({
         type: String,
         required: true
     },
-    userName: {
-        type: String,
-        required: true,
-        unique: true,
-        immutable: true
+    userName:{
+        type : String,
+        required : true,
+        unique : true,
+        immutable : true
     },
     password: {
         type: String,

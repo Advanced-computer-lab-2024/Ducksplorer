@@ -1,19 +1,24 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-
-const activitySchema = new Schema({
+const activitySchema = new Schema(
+  {
     name: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     isOpen: {
-        type: Boolean,
-        required: true
+      type: Boolean,
+      required: true,
+    },
+    advertiser: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Advertiser",
+      required: false,
     },
     date: {
-        type: Date,
-        required: true
+      type: Date,
+      required: true,
     },
     // time:{
     //     type : String, //mafeesh time data type bas momken ne match le certain way of writing HH:MM
@@ -48,15 +53,17 @@ const activitySchema = new Schema({
         type: Number,
         required: false //ask noha law msh required
     },
-    duration: { //make it required fel frontend
-        type: Number,
-        required: false
-    }
-}, { timestamps: true })
+    duration: {
+      //make it required fel frontend
+      type: Number,
+      required: false,
+    },
+  },
+  { timestamps: true }
+);
 
 const Activity = mongoose.model("Activity", activitySchema);
 
 module.exports = Activity;
 
 //date, time, location (using Google Maps), price (or price range), category, tags, special discounts, if booking is open
-
