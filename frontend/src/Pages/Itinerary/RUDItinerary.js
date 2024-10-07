@@ -4,7 +4,6 @@ import { message } from 'antd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import StandAloneToggleButton from "../../Components/ToggleButton";
 
 import {
   TextField, IconButton, Box, Button, Table, Typography, TableBody,
@@ -14,15 +13,14 @@ import {
 import { Link } from 'react-router-dom';
 
 export const TagsContext = createContext();
-let tags = [];
 
-const RUDItinerary = () => {
+const RUDItinerary = ({ itinerary }) => {
   const [itineraries, setItineraries] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedItinerary, setselectedItinerary] = useState("");
   const [editingItinerary, setEditingItinerary] = useState(null);
-  const [prefTagsOptions, setPrefTagsOptions] = useState([]);
-
+  const [selectedTags, setSelectedTags] = useState([]); // For storing selected tags
+  const [availableTags, setAvailableTags] = useState([]); // For storing fetched tags
 
   const [formData, setFormData] = useState({
     activity: {
@@ -46,14 +44,16 @@ const RUDItinerary = () => {
     }
   });
 
-  // Handle editing an itinerary
   const handleEditClick = (itinerary) => {
     setFormData({
       ...itinerary,
-      activity: itinerary.activity || [], // Ensure activity is an array
+      activity: itinerary.activity || [],
+      tags: itinerary.tags || [],
     });
+    setSelectedTags(itinerary.tags || []);
     setEditingItinerary(itinerary);
   };
+
 
 
   const handleInputChange = (event) => {
@@ -93,7 +93,7 @@ const RUDItinerary = () => {
     const { value } = event.target;
     setFormData(prevData => {
       const updatedDates = [...prevData.availableDatesAndTimes];
-      updatedDates[index] = value; // Update the specific available date/time
+      updatedDates[index] = value;
       return { ...prevData, availableDatesAndTimes: updatedDates };
     });
   };
@@ -101,14 +101,14 @@ const RUDItinerary = () => {
   const handleAddDate = () => {
     setFormData(prevData => ({
       ...prevData,
-      availableDatesAndTimes: [...prevData.availableDatesAndTimes, ''], // Add an empty string for a new date/time field
+      availableDatesAndTimes: [...prevData.availableDatesAndTimes, ''],
     }));
   };
 
   const handleAddLocation = () => {
     setFormData(prevData => ({
       ...prevData,
-      locations: [...prevData.locations, ''], // Add an empty string for a new location field
+      locations: [...prevData.locations, ''],
     }));
   };
 
@@ -119,18 +119,29 @@ const RUDItinerary = () => {
 
   const handleDeleteLocation = (index) => {
     const newLocations = formData.locations.filter((_, i) => i !== index);
-    setFormData({ ...formData, locations: newLocations }); // Update state
+    setFormData({ ...formData, locations: newLocations });
   };
 
 
   //update
   const handleUpdate = (event) => {
     event.preventDefault();
-    axios.put(`http://localhost:8000/itinerary/${editingItinerary._id}`, formData)
+    
+    // Update the formData to include the selected tags
+    const updatedData = {
+      ...formData,
+      tags: selectedTags // Include selected tags in the update
+    };
+  
+    axios.put(`http://localhost:8000/itinerary/${editingItinerary._id}`, updatedData)
       .then(() => {
-        setItineraries(itineraries.map(itinerary => itinerary._id === editingItinerary._id ? formData : itinerary));
+        // Update the itineraries state to reflect the changes
+        setItineraries(itineraries.map(itinerary => 
+          itinerary._id === editingItinerary._id ? { ...itinerary, ...updatedData } : itinerary
+        ));
         message.success('Itinerary updated successfully!');
         setEditingItinerary(null);
+        setSelectedTags([]); // Clear selected tags after updating
       })
       .catch(error => message.error('Error updating itinerary!'));
   };
@@ -165,18 +176,24 @@ const RUDItinerary = () => {
   }, []);
 
   useEffect(() => {
-    const fetchTags = async () => {
-        try {
-            const response = await fetch('http://localhost:8000/preferenceTags/');
-            const data = await response.json();
-            setPrefTagsOptions(data);
-        } catch (error) {
-            console.error('Error fetching tags:', error);
-        }
+    const fetchAvailableTags = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/preferenceTags/');
+        const data = await response.json();
+        setAvailableTags(data);
+      } catch (error) {
+        console.error('Error fetching available tags:', error);
+      }
     };
 
-    fetchTags();
-    }, []);
+    fetchAvailableTags();
+  }, []);
+
+  useEffect(() => {
+    if (itinerary && itinerary.tags) {
+      setSelectedTags(itinerary.tags); // Set selected tags based on itinerary data
+    }
+  }, [itinerary]);
 
   const handleDelete = (id) => {
     fetch(`http://localhost:8000/itinerary/${id}`, {
@@ -220,6 +237,17 @@ const RUDItinerary = () => {
     }
     handleClose();
   };
+
+  const handleCheckboxChange = (tag) => {
+    setSelectedTags((prevSelectedTags) => {
+      if (prevSelectedTags.includes(tag)) {
+        return prevSelectedTags.filter((t) => t !== tag); // Remove tag if already selected
+      } else {
+        return [...prevSelectedTags, tag]; // Add tag if not already selected
+      }
+    });
+  };
+
 
 
   return (
@@ -285,13 +313,14 @@ const RUDItinerary = () => {
                   <TableCell>
                     {itinerary.availableDatesAndTimes.length > 0
                       ? itinerary.availableDatesAndTimes.map((dateTime, index) => {
-                        const dateObj = new Date(dateTime); // Create a Date object from the string
+                        const dateObj = new Date(dateTime);
                         const date = dateObj.toISOString().split('T')[0]; // YYYY-MM-DD format
                         const time = dateObj.toTimeString().split(' ')[0]; // HH:MM:SS format
                         return (
                           <div key={index}>
                             Date {index + 1}: {date}<br />
-                            Time {index + 1}: {time}                          </div>
+                            Time {index + 1}: {time}
+                          </div>
                         );
                       })
                       : 'No available dates and times'}
@@ -420,14 +449,21 @@ const RUDItinerary = () => {
             <TextField label="Pick Up Location" name="pickUpLocation" value={formData.pickUpLocation} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} />
             <TextField label="Drop Off Location" name="dropOffLocation" value={formData.dropOffLocation} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} />
             <div style={{ display: 'flex', flexDirection: 'row' }}>
-            <label>Tags:</label>
-            {prefTagsOptions.map((element) => {
-                return (
-                    <TagsContext.Provider key={element._id} value={tags}>
-                        <StandAloneToggleButton key={element._id} name={element.name} />
-                    </TagsContext.Provider>
-                );
-            })}
+              {availableTags.length > 0 ? (
+                availableTags.map((tag) => (
+                  <label key={tag.name}>
+                    <input
+                      type="checkbox"
+                      value={tag.name}
+                      checked={selectedTags.includes(tag.name)}
+                      onChange={() => handleCheckboxChange(tag.name)}
+                    />
+                    {tag.name}
+                  </label>
+                ))
+              ) : (
+                <p>Loading tags...</p>
+              )}
             </div>
             <Button type="submit" variant="contained" color="primary">Update Itinerary</Button>
           </form>

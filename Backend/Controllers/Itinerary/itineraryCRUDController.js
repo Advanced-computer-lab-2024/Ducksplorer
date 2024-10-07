@@ -63,7 +63,7 @@ const updateItinerary = async (req, res) => { //update
     console.log(req.body);
     try {
         const { id } = req.params;
-        const { activity, locations, timeline, language, price, availableDatesAndTimes, accessibility, pickUpLocation, dropOffLocation, rating } = req.body;
+        const { activity, locations, timeline, language, price, availableDatesAndTimes, accessibility, pickUpLocation, dropOffLocation, rating, tags } = req.body;
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ error: "ID invalid" });
         }
