@@ -4,6 +4,7 @@ import { message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import MuseumSearch from '../../Components/MuseumHistoricalPlaceComponent/MuseumSearch';
 import MuseumFilterComponent from '../../Components/MuseumHistoricalPlaceComponent/MuseumFilterComponent';
+import { Link } from 'react-router-dom';
 
 import {
   Box,
@@ -51,7 +52,8 @@ const MuseumTouristPov = () => {
 
   return (
     <>
-      <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'auto', height: '100vh' }}>
+      <Link to="/touristDashboard"> Back </Link>
+      <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'visible', height: '100vh' }}>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
           <Typography variant="h4">Available Museum Visits</Typography>

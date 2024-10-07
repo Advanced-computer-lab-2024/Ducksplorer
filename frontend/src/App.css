@@ -157,9 +157,8 @@ body {
   align-items: center;
   padding: 20px;
   height: 120vh;
+  background-color: hsl(189, 83%, 45%);
 
-  background-image: url(../public/Images/bg-intro-mobile.png);
-  background-color: hsl(65, 100%, 74%);
 }
 
 .app {

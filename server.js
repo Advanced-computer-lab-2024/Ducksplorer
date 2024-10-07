@@ -31,7 +31,9 @@ const historicalPlaceRoutes = require('./Backend/Routes/historicalPlaceRoutes.js
 const historicalPlaceTagRoutes = require('./Backend/Routes/historicalPlaceTagRoutes.js')
 const museumTagRoutes = require('./Backend/Routes/museumTagRoutes.js')
 const itineraryRoutes = require("./Backend/Routes/itineraryRoutes.js")
-
+const tourGuideAccountRoutes = require("./Backend/Routes/TourGuideAccountRoutes.js")
+const advertiserAccountRoutes = require("./Backend/Routes/AdvertiserAccountRoutes.js")
+const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js")
 
 
 app.use("/signUp", signUpRoutes);
@@ -48,6 +50,10 @@ app.use("/historicalPlace", historicalPlaceRoutes);
 app.use("/historicalPlaceTags", historicalPlaceTagRoutes);
 app.use("/museumTags", museumTagRoutes);
 app.use("/itinerary", itineraryRoutes);
+app.use("/tourGuideAccount", tourGuideAccountRoutes);
+app.use("/advertiserAccount", advertiserAccountRoutes);
+app.use("/sellerAccount", sellerAccountRoutes);
+
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*'); // Allow requests from any origin

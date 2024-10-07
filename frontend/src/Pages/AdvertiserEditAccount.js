@@ -4,16 +4,14 @@ import axios from 'axios';
 import { message } from 'antd';
 import { Link } from 'react-router-dom';
 
-const EditProfile = () => {
-  const [touristDetails, setTouristDetails] = useState({
+const AdvertiserEditProfile = () => {
+  const [advertiserDetails, setAdvertiserDetails] = useState({
     userName: '',
     email: '',
     password: '',
-    mobileNumber: '',
-    nationality: '',
-    DOB: '', 
-    employmentStatus: '',
-    wallet: 0,
+    websiteLink: '',
+    hotline: '',
+    companyProfile: ''
   });
   const [isEditing, setIsEditing] = useState(false);
 
@@ -23,18 +21,16 @@ const EditProfile = () => {
     const userName = user.username; 
 
     if (userName) {
-      axios.get(`http://localhost:8000/touristAccount/viewaccount/${userName}`)
+      axios.get(`http://localhost:8000/advertiserAccount/viewaccount/${userName}`)
         .then(response => {
-          message.success('Tourist details fetched successfully');
-          const formattedDOB = response.data.DOB.split('T')[0]; // Convert "2004-03-17T00:00:00.000Z" to "2004-03-17"
-          setTouristDetails({
-            ...response.data,
-            DOB: formattedDOB // Ensure DOB is in "yyyy-MM-dd" format
+          message.success('Advertiser details fetched successfully');
+          setAdvertiserDetails({
+            ...response.data
           });
         })
         .catch(error => {
-          message.error('Error fetching tourist details');
-          console.error('Error fetching tourist details:', error);
+          message.error('Error fetching advertiser details');
+          console.error('Error fetching advertiser details:', error);
         });
     }
   }, []);
@@ -44,21 +40,21 @@ const EditProfile = () => {
   };
 
   const handleSaveClick = () => {
-    axios.put('http://localhost:8000/touristAccount/editaccount', touristDetails)
+    axios.put('http://localhost:8000/advertiserAccount/editaccount', advertiserDetails)
       .then(response => {
-        message.success('Tourist details updated successfully');
-        console.log('Tourist details updated successfully:', response.data);
+        message.success('Advertiser details updated successfully');
+        console.log('Advertiser details updated successfully:', response.data);
         setIsEditing(false);
       })
       .catch(error => {
-        message.error('Error updating tourist details');
-        console.error('Error updating tourist details:', error);
+        message.error('Error updating advertiser details');
+        console.error('Error updating advertiser details:', error);
       });
   };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setTouristDetails(prevDetails => ({
+    setAdvertiserDetails(prevDetails => ({
       ...prevDetails,
       [name]: value,
     }));
@@ -66,15 +62,15 @@ const EditProfile = () => {
 
   return (
     <Box sx={{ p: 6 }}>
-      <Link to="/touristDashboard"> Back </Link>
+      <Link to="/advertiserDashboard"> Back </Link>
       <Typography variant="h4" sx={{ mb: 3 }}>
-        Edit Tourist Profile ({touristDetails.userName})
+        Edit Advertiser Profile ({advertiserDetails.userName})
       </Typography>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <TextField
           label="Username"
           name="userName"
-          value={touristDetails.userName}
+          value={advertiserDetails.userName}
           onChange={handleChange}
           InputProps={{
             readOnly: true,
@@ -83,7 +79,7 @@ const EditProfile = () => {
         <TextField
           label="Email"
           name="email"
-          value={touristDetails.email}
+          value={advertiserDetails.email}
           onChange={handleChange}
           InputProps={{
             readOnly: !isEditing,
@@ -93,61 +89,40 @@ const EditProfile = () => {
           label="Password"
           name="password"
           type="password"
-          value={touristDetails.password}
+          value={advertiserDetails.password}
           onChange={handleChange}
           InputProps={{
             readOnly: !isEditing,
           }}
         />
         <TextField
-          label="Mobile Number"
-          name="mobileNumber"
-          value={touristDetails.mobileNumber}
+          label="Website Link"
+          name="websiteLink"
+          value={advertiserDetails.websiteLink}
           onChange={handleChange}
           InputProps={{
             readOnly: !isEditing,
           }}
         />
         <TextField
-          label="Nationality"
-          name="nationality"
-          value={touristDetails.nationality}
+          label="Hotline"
+          name="hotline"
+          value={advertiserDetails.hotline}
+          type="number"
           onChange={handleChange}
           InputProps={{
             readOnly: !isEditing,
           }}
         />
         <TextField
-          label="Date of Birth"
-          name="DOB"
-          type="date"
-          value={touristDetails.DOB}
-          onChange={handleChange}
-          InputProps={{
-            readOnly: true,
-          }}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-        <TextField
-          label="Employment Status"
-          name="employmentStatus"
-          value={touristDetails.employmentStatus}
+          label="Company Profile"
+          name="companyProfile"
+          value={advertiserDetails.companyProfile}
           onChange={handleChange}
           InputProps={{
             readOnly: !isEditing,
           }}
         />
-        <TextField
-            label="Wallet"
-            name="wallet"
-            value={touristDetails.wallet}
-            onChange={handleChange}
-            InputProps={{
-              readOnly: true,
-            }}
-        />    
         {isEditing ? (
           <Button variant="contained" color="success" onClick={handleSaveClick}>
             Save
@@ -162,4 +137,4 @@ const EditProfile = () => {
   );
 };
 
-export default EditProfile;
+export default AdvertiserEditProfile;

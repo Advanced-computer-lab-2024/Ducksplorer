@@ -193,7 +193,7 @@ function SearchItineraries() {
         </Box>            
             <Stack spacing={2} style={{ marginBottom: '20px' }}>
                 <TextField
-                    label="Enter Name or Category"
+                    label="Enter Name or Category or Tag"
                     value={searchTerm} 
                     onChange={(e) => setSearchTerm(e.target.value)}
                     fullWidth
@@ -353,7 +353,19 @@ function SearchItineraries() {
                                                     ))
                                                     : 'No activities available'}
                                             </TableCell>
-                                            <TableCell>{itinerary.locations}</TableCell>
+                                            <TableCell>
+                                                {itinerary.locations && itinerary.locations.length > 0 ? (
+                                                itinerary.locations.map((location, index) => (
+                                                    <div key={index}>
+                                                    <Typography variant="body1">
+                                                        Location {index + 1}: {location.trim()}
+                                                    </Typography>
+                                                    <br />
+                                                    </div>
+                                                ))
+                                                ) : 'No locations available'}
+
+                                            </TableCell>                                            
                                             <TableCell>{itinerary.timeline}</TableCell>
                                             <TableCell>{itinerary.language}</TableCell>
                                             <TableCell>{itinerary.price}</TableCell>

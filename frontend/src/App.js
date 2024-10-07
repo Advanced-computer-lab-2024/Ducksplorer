@@ -62,7 +62,9 @@ function App() {
           <Route path="/viewAllTourist" element={<ViewAllTourist />} />
           <Route path="/tourGuideDashboard" element={<TourGuideDashboard />} />
           <Route path="/touristDashboard" element={<TouristDashboard />} />
+          <Route path="/tourGuideEditAccount" element={<TourGuideEditProfile/>} />
   
+          <Route path="/governorDashboard" element={<GovernorDashboard />} />
           <Route path="/createMuseum" element={<CreateMuseum />} />
           <Route path="/createHistoricalPlace" element={<CreateHistoricalPlace />} />
           <Route path="/RUDMuseum" element={<RUDMuseum />} />
@@ -74,7 +76,6 @@ function App() {
           <Route path="/UpcomingMuseums" element={<UpcomingMuseums />} />
           <Route path="/createTagMuseum" element={<CreateTagMuseum />} />
           <Route path="/createTagHistoricalPlace" element={<CreateTagHistoricalPlace/>} />
-          {/* <Route path ="/login" element={<Login/>} /> */}
 
 
           <Route path="/AdminDashboard" element={<AdminDashboard />} />
@@ -114,6 +115,11 @@ function App() {
         <Route path = "/AdminAllProducts" element= {<AdminAllProducts/>} />
         <Route path = "/TouristAllProducts" element= {<TouristAllProducts/>} />
             <Route path="/editAccount" element={<TouristEditAccount />} />
+
+          <Route path="/advertiserEditAccount" element={< AdvertiserEditProfile />} />
+          <Route path="/sellerEditAccount" element={< SellerEditProfile />} />
+
+          <Route path="/sellerDashboard" element={<SellerDashboard/>} />
       </Routes>
           </BrowserRouter>
     </React.StrictMode>

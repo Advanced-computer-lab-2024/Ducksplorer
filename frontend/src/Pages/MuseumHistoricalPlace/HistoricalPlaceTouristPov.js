@@ -4,6 +4,7 @@ import { message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import HistoricalPlaceSearch from '../../Components/MuseumHistoricalPlaceComponent/HistoricalPlaceSearch';
 import HistoricalPlaceFilterComponent from '../../Components/MuseumHistoricalPlaceComponent/HistoricalPlaceFilterComponent';
+import { Link } from 'react-router-dom';
 
 import {
   Box,
@@ -51,7 +52,9 @@ const HistoricalPlaceTouristPov = () => {
 
   return (
     <>
-      <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'auto', height: '100vh' }}>
+      <Link to="/touristDashboard"> Back </Link>
+
+      <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'visible', height: '100vh' }}>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
           <Typography variant="h4">Available Historical Place Visits</Typography>
