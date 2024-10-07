@@ -66,7 +66,7 @@ const RUDItinerary = ({ itinerary }) => {
     const { value } = event.target;
     setFormData(prevData => {
       const updatedLocations = [...prevData.locations];
-      updatedLocations[index] = value; // Update the specific location
+      updatedLocations[index] = value; 
       return { ...prevData, locations: updatedLocations };
     });
   };
@@ -76,15 +76,15 @@ const RUDItinerary = ({ itinerary }) => {
 
     if (event.type === 'change') {
       setFormData(prevData => {
-        const updatedActivities = [...prevData.activity]; // Copy the activities array
+        const updatedActivities = [...prevData.activity]; 
         updatedActivities[index] = {
-          ...updatedActivities[index], // Spread the current activity object
-          [name]: value, // Update the specific field (name, price, etc.)
+          ...updatedActivities[index], 
+          [name]: value, 
         };
 
         return {
           ...prevData,
-          activity: updatedActivities, // Set the updated activities array
+          activity: updatedActivities, 
         };
       });
     }
@@ -126,7 +126,7 @@ const RUDItinerary = ({ itinerary }) => {
 
   //update
   const handleUpdate = (event) => {
-    event.preventDefault(); // Prevent form submission
+    event.preventDefault(); 
 
     const userJson = localStorage.getItem('user');
     const user = JSON.parse(userJson);
@@ -134,14 +134,13 @@ const RUDItinerary = ({ itinerary }) => {
 
     const updatedData = {
       ...formData,
-      tags: selectedTags, // Include selected tags in the update
+      tags: selectedTags, 
     };
 
-    console.log('Updated Data:', updatedData); // Debug log
+    console.log('Updated Data:', updatedData); 
 
     axios.put(`http://localhost:8000/itinerary/${editingItinerary._id}`, updatedData)
       .then(response => {
-        // Refetch itineraries to reflect changes
         if (userName) {
           return axios.get(`http://localhost:8000/itinerary/myItineraries/${userName}`);
         }
@@ -151,7 +150,7 @@ const RUDItinerary = ({ itinerary }) => {
         setItineraries(response.data);
         message.success('Itinerary updated successfully!');
         setEditingItinerary(null);
-        setSelectedTags([]); // Clear selected tags after updating
+        setSelectedTags([]); 
       })
       .catch(error => {
         console.error('Error updating itinerary or fetching itineraries!', error);
@@ -177,7 +176,7 @@ const RUDItinerary = ({ itinerary }) => {
 
   //read
   useEffect(() => {
-    const userJson = localStorage.getItem('user'); // Get the 'user' item as a JSON string  
+    const userJson = localStorage.getItem('user');
     const user = JSON.parse(userJson);
     const userName = user.username;
     if (userName) {
