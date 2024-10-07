@@ -1,60 +1,59 @@
-// src/Components/AllProducts.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { message } from 'antd';
 import { Typography, Card, CardContent, Grid } from '@mui/material';
 import ProductDashboard from '../Components/ProductDashboard';
+import { TextField, Button, Stack } from '@mui/material';
+import ProductCard from '../Components/ProductCard'; // Import the ProductCard component
 
-const AllProducts = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  <ProductDashboard/>
+function AllProducts() {
+  const [products,setProducts] = useState([]);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get('http://localhost:8000/sellerRoutes/getproducts'); // Make sure this matches your backend endpoint
-        setProducts(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-        setLoading(false);
+  const handleAllProducts = async () =>{
+    try{
+      const response = await axios.get('http://localhost:8000/adminRoutes/getproducts');
+      if (response.status === 200) {
+        message.success('Products fetched successfully');
+        setProducts(response.data); // Store the filtered products
+      } else {
+        message.error('Failed to filter products');
       }
-    };
+    } catch (error) {
+      message.error('An error occurred: ' + error.message);
+    }
+    
+  };
 
-    fetchProducts();
-  }, []);
-
-  if (loading) {
-    return <Typography>Loading...</Typography>;
-  }
 
   return (
-    <div>
-      <Typography variant="h4" gutterBottom>
-        All Products
-      </Typography>
-      <Grid container spacing={3}>
-        {products.map((product) => (
-          <Grid item xs={12} sm={6} md={4} key={product._id}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">{product.name}</Typography>
-                <Typography variant="body2">Price: ${product.price}</Typography>
-                <Typography variant="body2">Description: {product.description}</Typography>
-                <Typography variant="body2">Rating: ${product.rating}</Typography>
-                <Typography variant="body2">availableQuantity: ${product.availableQuantity}</Typography>
-                <Typography variant="body2">Picture: ${product.picture}</Typography>
-                <Typography variant="body2">Seller: ${product.seller}</Typography>
-                <Typography variant="body2">reviews: ${product.reviews}</Typography>
-                {/* Add more product details as needed */}
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+    <div style={{ padding: '20px', maxWidth: '800px', margin: 'auto' }}>
+      <Button
+          variant="contained"
+          color="primary"
+          onClick={handleAllProducts}
+        >
+          Products
+        </Button>
+
+      <div style={{ maxHeight: '400px', overflowY: 'auto', padding: '10px', marginTop: '20px' }}>
+        {/* Render the filtered products using the ProductCard component */}
+        {products.length > 0 ? (
+          products.map((product) => (
+            <ProductCard key={product._id} product={product} />
+          ))
+        ) : (
+          <Typography variant="body1" style={{ marginTop: '20px' }}>
+            No products found.
+          </Typography>
+        )}
+      </div>
     </div>
   );
-};
+
+
+
+}
+
 
 export default AllProducts;

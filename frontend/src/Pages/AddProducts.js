@@ -1,59 +1,102 @@
 // src/Components/AllProducts.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { message } from 'antd';
 import { Typography, Card, CardContent, Grid } from '@mui/material';
 import ProductDashboard from '../Components/ProductDashboard';
+import { TextField, Button, Stack } from '@mui/material';
 
-const AddProducts = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
 
- 
+function AddProducts() {
+  const [name , setName] = useState('');
+  const [price , setPrice] = useState('');
+  const [availableQuantity, setAvailableQuantity] = useState('');
+  const [picture , setPicture]= useState('');
+  const [description, setDescription] = useState('');
+  
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get('/getproducts'); // Make sure this matches your backend endpoint
-        setProducts(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-        setLoading(false);
+  const handleAddProduct = async () => {
+    try{
+      const userJson = localStorage.getItem('user'); // Get the 'user' item as a JSON string  
+      const user = JSON.parse(userJson); 
+      const userName = user.username;
+      const seller = userName;
+      const response = await axios.post('http://localhost:8000/adminRoutes/createProducts' , {
+        name,
+        price,
+        ratings: [],
+        availableQuantity,
+        picture,
+        description,
+        seller,
+        reviews: []
+      });
+      if (response.status === 200){
+        message.success('product added successfully');
+      } else{
+        message.error('failed to add admin');
       }
-    };
+    }catch (error){
+      message.error('an error occured: '+error.message);
+    }
+  };
 
-    fetchProducts();
-  }, []);
-
-  if (loading) {
-    return <Typography>Loading...</Typography>;
-  }
 
   return (
-    <div>
-      <Typography variant="h4" gutterBottom>
-        Add Products     </Typography>
-      <Grid container spacing={3}>
-        {products.map((product) => (
-          <Grid item xs={12} sm={6} md={4} key={product._id}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">{product.name}</Typography>
-                <Typography variant="body2">Price: ${product.price}</Typography>
-                <Typography variant="body2">Description: {product.description}</Typography>
-                <Typography variant="body2">Rating: ${product.rating}</Typography>
-                <Typography variant="body2">availableQuantity: ${product.availableQuantity}</Typography>
-                <Typography variant="body2">Picture: ${product.picture}</Typography>
-                <Typography variant="body2">Seller: ${product.seller}</Typography>
-                <Typography variant="body2">reviews: ${product.reviews}</Typography>
-                {/* Add more product details as needed */}
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+    <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto' }}>
+      <h2>Add Product</h2>
+      <Stack spacing={2}>
+        <TextField
+          label="Product Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          variant="outlined"
+          fullWidth
+        />
+        <TextField
+          label="Price"
+          type="number"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+          variant="outlined"
+          fullWidth
+        />
+        <TextField
+          label="Available Quantity"
+          type="number"
+          value={availableQuantity}
+          onChange={(e) => setAvailableQuantity(e.target.value)}
+          variant="outlined"
+          fullWidth
+        />
+        <TextField
+          label="Picture URL"
+          value={picture}
+          onChange={(e) => setPicture(e.target.value)}
+          variant="outlined"
+          fullWidth
+        />
+        <TextField
+          label="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          variant="outlined"
+          multiline
+          rows={4}
+          fullWidth
+        />
+        
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleAddProduct} // Call function to handle adding the product here
+          style={{ marginTop: '10px' }}
+        >
+          Add Product
+        </Button>
+      </Stack>
     </div>
-  );
-};
+  )
+}
 
 export default AddProducts;

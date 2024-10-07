@@ -2,6 +2,7 @@ const Seller = require('../Models/sellerModel');
 const Tourist = require('../Models/touristModel');
 const mongoose = require('mongoose');
 
+
 const reviewSchema = new mongoose.Schema({
     user: {
       type: String, // Assuming a reference to a User model
@@ -38,7 +39,7 @@ const productSchema = new mongoose.Schema({
     },
     picture: {
       type: String, // what is the type?
-      required: true
+      // required: true
     },
     
     description: {
@@ -47,9 +48,8 @@ const productSchema = new mongoose.Schema({
       trim: true
     },
     seller: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Seller',
-      required: true
+      type: String,
+      required: false
     },
     reviews: [reviewSchema]
   });
