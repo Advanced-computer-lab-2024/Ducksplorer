@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createContext } from 'react';
+import React, { useEffect, useState, createContext, useRef } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -122,6 +122,15 @@ const RUDItinerary = ({ itinerary }) => {
     const newLocations = formData.locations.filter((_, i) => i !== index);
     setFormData({ ...formData, locations: newLocations });
   };
+
+  //for scrolling automatically when we click edit
+  const formRef = useRef(null);
+
+  useEffect(() => {
+    if (editingItinerary && formRef.current) {
+      formRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [editingItinerary]);
 
 
   //update
@@ -389,7 +398,7 @@ const RUDItinerary = ({ itinerary }) => {
           </Table>
         </TableContainer>
         {editingItinerary && (
-          <form onSubmit={handleUpdate} style={{ marginTop: '20px' }}>
+          <form onSubmit={handleUpdate} style={{ marginTop: '20px' }} ref={formRef} >
             {formData.activity && formData.activity.map((activity, index) => (
               <div key={index}>
                 <TextField
