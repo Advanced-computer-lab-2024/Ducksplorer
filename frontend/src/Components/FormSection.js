@@ -5,8 +5,6 @@ import axios from 'axios';
 import { message } from 'antd';
 import { useTypeContext } from '../context/TypeContext';
 import DropDown from './DropDown.js';
-import { useNavigate } from "react-router-dom";
-
 
 const FormSection = () => {
   const { type } = useTypeContext();
@@ -29,8 +27,6 @@ const FormSection = () => {
   const [companyProfile, setCompanyProfile] = useState('');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-
-  const navigate = useNavigate();
 
   const validateFields = () => {
     if (!userName || !password || !confirmPassword || !email) {
@@ -77,8 +73,7 @@ const FormSection = () => {
     try {
       await axios.post('http://localhost:8000/signUp', data);
       message.success('Signed Up successfully!');
-      navigate('/login');
-
+      window.location.href = '/login';
     } catch (error) {
       message.error('An error occurred: ' + error.message);
       console.error('There was an error signing up!', error);
@@ -86,18 +81,6 @@ const FormSection = () => {
   };
 
   return (
-    <div style={{
-      backgroundImage: 'url(../../public/Images/bg-intro-desktop.png)', // Update with your image path
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      height: '100vh',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
-    }}>
-     
-      <Stack spacing={1} sx={{ width: '600px', padding: '10px', backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: '10px' }}>
-      <div className="trial-btn text-white cursor-pointer" >
     <div style={{
       backgroundImage: 'url(../../public/Images/bg-intro-desktop.png)', // Update with your image path
       backgroundSize: 'cover',
@@ -282,9 +265,7 @@ const FormSection = () => {
             border: 'none',
             borderRadius: '4px',
             fontSize: '16px',
-            cursor: 'pointer',
-            padding:'10px',
-            justifyContent: 'center'
+            cursor: 'pointer'
           }}
         >
           Sign Up
@@ -292,9 +273,6 @@ const FormSection = () => {
       </Stack>
     </div>
   );
-};
-
-
 };
 
 

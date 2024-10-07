@@ -1,7 +1,6 @@
 require("dotenv").config(); //makes us read the env file
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require("cors");
 const app = express(); //el kol fel kol
 const PORT = process.env.PORT || 8000; //tells us to get port from env file or law ma3refsh yegebha it's 3000
 const cors = require('cors');
