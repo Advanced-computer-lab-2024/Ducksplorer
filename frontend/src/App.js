@@ -30,8 +30,10 @@ import ViewAllTourist from './Pages/Itinerary/viewAllTourist';
 import TourGuideDashboard from './Pages/TourGuideDashboard';
 import TouristDashboard from './Pages/TouristDashboard';
 import GovernorDashboard from './Pages/GovernorDashboard';
-
-
+import TourGuideEditProfile from './Pages/TourGuideEditAccount';
+import AdvertiserEditProfile from './Pages/AdvertiserEditAccount';
+import SellerEditProfile from './Pages/SellerEditAccount';
+import SellerDashboard from './Pages/SellerDashboard';
    
 
 
@@ -49,6 +51,7 @@ function App() {
           <Route path="/viewAllTourist" element={<ViewAllTourist />} />
           <Route path="/tourGuideDashboard" element={<TourGuideDashboard />} />
           <Route path="/touristDashboard" element={<TouristDashboard />} />
+          <Route path="/tourGuideEditAccount" element={<TourGuideEditProfile/>} />
   
           <Route path="/governorDashboard" element={<GovernorDashboard />} />
           <Route path="/createMuseum" element={<CreateMuseum />} />
@@ -73,6 +76,11 @@ function App() {
           <Route path="/preferenceTags" element={<PreferenceTags />} />
           <Route path="/activity" element={<AddActivity />} />
           <Route path="/editAccount" element={<TouristEditAccount />} />
+
+          <Route path="/advertiserEditAccount" element={< AdvertiserEditProfile />} />
+          <Route path="/sellerEditAccount" element={< SellerEditProfile />} />
+
+          <Route path="/sellerDashboard" element={<SellerDashboard/>} />
       </Routes>
         </BrowserRouter>
     </React.StrictMode>

@@ -11,7 +11,7 @@ import EventNoteIcon from '@mui/icons-material/EventNote';
 // import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 // import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 // import MuseumIcon from '@mui/icons-material/Museum';
-// import PersonIcon from '@mui/icons-material/Person';
+import PersonIcon from '@mui/icons-material/Person';
 // import CasinoIcon from '@mui/icons-material/Casino';
 import AddIcon from '@mui/icons-material/Add';
 
@@ -34,6 +34,12 @@ const TouristSidebar = () => {
         </Typography>
         <Divider />
         <List>
+            <ListItem button component={Link} to="/tourGuideEditAccount">
+                <ListItemIcon>
+                    <PersonIcon />
+                </ListItemIcon>
+                <ListItemText primary="Edit Profile" />
+            </ListItem>
           <ListItem button component={Link} to="/rudItinerary">
             <ListItemIcon>
               <EventNoteIcon />

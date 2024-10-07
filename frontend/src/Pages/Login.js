@@ -18,12 +18,14 @@ function Login() {
 
 const handleLogin = async () => {
     try {
+
         setLoading(true);
         console.log(localStorage.getItem('user'));
         const response = await axios.post('http://localhost:8000/signUp/login', {
             userName,
             password,
         });
+        console.log(response);
         if (response.status === 200) {
             message.success('Logged in successfully');
             switch (response.data.role) {
