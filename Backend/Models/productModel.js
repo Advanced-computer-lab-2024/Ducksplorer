@@ -1,5 +1,5 @@
 const Seller = require('../Models/sellerModel');
-const Tourist = require('../Models/touristModel');
+const User = require('../Models/userModel');
 const mongoose = require('mongoose');
 
 

@@ -13,7 +13,7 @@ const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el 
         }
         const role = req.body.role;
         let status = "Approved";
-        if (role === "TourGuide" || role === "Seller" || role === "Advertiser") {
+        if (role === "Guide" || role === "Seller" || role === "Advertiser") {
             status = "Pending";
         }
         
@@ -62,6 +62,9 @@ const login = async (req,res) => {
         const {userName, password} = req.body;
         const user = await User.findOne({userName});
 
+        if(user.status === "Pending"){
+            return res.status(400).json({error: "Your Account is not approved yet"});
+        }
         if(!user || (user.password !== password)){
             return res.status(400).json({error: "Incorrect UserName or Password"});
         }

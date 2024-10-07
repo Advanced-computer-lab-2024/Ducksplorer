@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const advertiserSchema = new Schema ({
-    email:{
-        type : String,
-        required : true
+const advertiserSchema = new Schema({
+    email: {
+        type: String,
+        required: true
     },
     userName:{
         type : String,
@@ -12,27 +12,27 @@ const advertiserSchema = new Schema ({
         unique : true,
         immutable : true
     },
-    password :{
-        type : String ,
-        required :true
-    },
-    websiteLink :{
+    password: {
         type: String,
-        required :true
+        required: true
     },
-    hotline:{
+    websiteLink: {
+        type: String,
+        required: true
+    },
+    hotline: {
         type: Number,
-        required :true
+        required: true
     },
-    companyProfile:{
+    companyProfile: {
         type: String,
-        required :true
+        required: true
     }
 
 },
-{timestamps: true})
+    { timestamps: true })
 
 
-const Advertiser = mongoose.model("Advertiser",advertiserSchema);
+const Advertiser = mongoose.model("Advertiser", advertiserSchema);
 
 module.exports = Advertiser;

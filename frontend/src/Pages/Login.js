@@ -27,25 +27,35 @@ const handleLogin = async () => {
         });
         if (response.status === 200) {
             message.success('Logged in successfully');
-            if (response.data.role === 'Admin') {
+            switch (response.data.role) {
+              case 'Admin':
                 window.location.href = '/AdminDashboard';
-            }
-            else if(response.data.role === 'Tourist'){
-                window.location.href = '/editAccount';
-            }
-            else if(response.data.role === 'Guide'){
+                break;
+              case 'Tourist':
+                window.location.href = '/touristDashboard';
+                break;
+              case 'Guide':
                 window.location.href = '/tourGuideDashboard';
+                break;
+              case 'Governor':
+                window.location.href = '/governorDashboard';
+                break;
+              case 'Advertiser':
+                window.location.href = '/advertiserDashboard';
+                break;
+              case 'Seller':
+                window.location.href = '/sellerDashboard';
+                break;
+              default:
+                message.error('Unknown role');
             }
-            else{
-              window.location.href = '/products';
-            }
+           
            localStorage.setItem('user', JSON.stringify(response.data));
         } else if (response.status === 400) {
-            message.error('Failed to Login , Incorrect Username or Password');
-            return;
+           throw new Error(response.error);
         }
     } catch (error) {
-        message.error('Failed to Login , Incorrect credentials');
+      message.error(error.response.data.error);
     }
     finally{
         setLoading(false);
@@ -58,10 +68,10 @@ const handleLogin = async () => {
    
    <>
       <div className="text-center">
-          <img src="logo1.png" style={{ width: '300px' , height: '200px', justifyContent: 'center'}} alt="logo" />
+          <img src="logo3.png" style={{ width: '300px' , height: '200px', justifyContent: 'center'}} alt="logo" />
           <h4 className="mt-1 mb-5 pb-1" style={{color: 'orange', textAlign: 'center', fontSize: '24px', fontWeight: 'bold', textShadow: '2px 2px 4px #aaa'}}>
             Login
-          </h4>     
+          </h4>
       </div>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
       <Stack spacing={3}>

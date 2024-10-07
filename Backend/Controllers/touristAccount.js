@@ -2,7 +2,7 @@ const Tourist = require('../Models/touristModel.js');
 
 
  const getTouristDetails = async (req, res) => {
-    const {userName} = req.body;
+    const {userName} = req.params;
     try {
       const tourist = await Tourist.findOne({userName});
   

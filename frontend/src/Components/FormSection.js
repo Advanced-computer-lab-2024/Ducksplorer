@@ -77,8 +77,7 @@ const FormSection = () => {
     try {
       await axios.post('http://localhost:8000/signUp', data);
       message.success('Signed Up successfully!');
-      navigate('/login');
-
+      window.location.href = '/login';
     } catch (error) {
       message.error('An error occurred: ' + error.message);
       console.error('There was an error signing up!', error);

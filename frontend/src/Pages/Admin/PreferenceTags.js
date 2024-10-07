@@ -160,7 +160,7 @@ const handleAdd = (Name) => {
                         autoFocus
                         sx={{ mr: 2 }}
                       />
-                      <Button variant="contained" color="primary" onClick={() => handleEdit(tag.name,editedTagName)}>
+                      <Button variant="contained" color="success" onClick={() => handleEdit(tag.name,editedTagName)}>
                         Confirm
                       </Button>
                     </Box>

@@ -25,7 +25,7 @@ const deleteUser = async (req, res) => {
       case 'Tourist':
         await Tourist.deleteOne({ userName });
         break;
-      case 'Tourguide':
+      case 'Guide':
         await Tourguide.deleteOne({ userName});
         break;
       case 'Seller':
