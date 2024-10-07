@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import AddIcon from "@mui/icons-material/Add";
 import PeopleIcon from "@mui/icons-material/People";
-import WidgetsIcon from "@mui/icons-material/Widgets";
+// import WidgetsIcon from "@mui/icons-material/Widgets";
 import PersonIcon from '@mui/icons-material/Person';
 
 const drawerWidth = 300;
