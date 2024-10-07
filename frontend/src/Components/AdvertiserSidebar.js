@@ -13,6 +13,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import AddIcon from "@mui/icons-material/Add";
 import PeopleIcon from "@mui/icons-material/People";
 import WidgetsIcon from "@mui/icons-material/Widgets";
+import PersonIcon from '@mui/icons-material/Person';
 
 const drawerWidth = 300;
 
@@ -33,11 +34,23 @@ const AdvertiserSidebar = () => {
         </Typography>
         <Divider />
         <List>
-          <ListItem component={Link} to="/advertiserdashboard">
+          <ListItem component={Link} to="/advertiserDashboard">
             <ListItemIcon>
               <DashboardIcon />
             </ListItemIcon>
             <ListItemText primary="Dashboard" />
+          </ListItem>
+          <ListItem component={Link} to="/advertiserEditAccount">
+            <ListItemIcon>
+              <PersonIcon />
+            </ListItemIcon>
+            <ListItemText primary="Edit Account" />
+          </ListItem>
+          <ListItem component={Link} to="/activity/addActivity">
+            <ListItemIcon>
+              <AddIcon />
+            </ListItemIcon>
+            <ListItemText primary="Add Activity" />
           </ListItem>
           <ListItem component={Link} to="/activity/myActivities">
             <ListItemIcon>
@@ -45,23 +58,12 @@ const AdvertiserSidebar = () => {
             </ListItemIcon>
             <ListItemText primary="My Activities" />
           </ListItem>
-          <ListItem component={Link} to="/activity/searchActivities">
-            <ListItemIcon>
-              <WidgetsIcon />
-            </ListItemIcon>
-            <ListItemText primary="Search Activities" />
-          </ListItem>
+        
           <ListItem component={Link} to="/activity/sortFilter">
             <ListItemIcon>
               <WidgetsIcon />
             </ListItemIcon>
             <ListItemText primary="All Activities" />
-          </ListItem>
-          <ListItem component={Link} to="/activity/addActivity">
-            <ListItemIcon>
-              <AddIcon />
-            </ListItemIcon>
-            <ListItemText primary="Add Activity" />
           </ListItem>
         </List>
         <Divider />

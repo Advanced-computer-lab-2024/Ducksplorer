@@ -92,6 +92,7 @@ function App() {
             <Route path="/preferenceTags" element={<PreferenceTags />} />
 
 
+            <Route path="/advertiserDashboard" element={<AdvertiserDashboard/>} />
             <Route path="/activity/addActivity" element={<AddActivity />} />
           <Route path="/activity/rudActivity" element={<RUDActivity />} />
           <Route path="/activity/upcoming" element={<UpcomingActivities />} />
@@ -108,7 +109,6 @@ function App() {
               />
             }
           />
-          <Route path="/advertiser" element={<AdvertiserDashboard />} />
           <Route path="/location" element={<ClinicLocation/>} />
 
 

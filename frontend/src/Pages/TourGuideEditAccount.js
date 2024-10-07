@@ -10,7 +10,7 @@ const TourGuideEditProfile = () => {
     email: '',
     password: '',
     mobileNumber: '',
-    yearsofExperience: '',
+    yearsOfExperience: '',
     previousWork: ''
   });
   const [isEditing, setIsEditing] = useState(false);
@@ -106,8 +106,8 @@ const TourGuideEditProfile = () => {
         />
         <TextField
           label="Years of Experience"
-          name="yearsofExperience"
-          value={tourGuideDetails.yearsofExperience}
+          name="yearsOfExperience"
+          value={tourGuideDetails.yearsOfExperience}
           type="number"
           onChange={handleChange}
           InputProps={{

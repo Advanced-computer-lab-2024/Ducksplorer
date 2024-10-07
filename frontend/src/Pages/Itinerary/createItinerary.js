@@ -4,7 +4,7 @@ import { message } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { IconButton, Box } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import StandAloneToggleButton from "../../Components/ToggleButton";
+import StandAloneToggleButtonIt from "../../Components/ToggleItinerary";
 
 export const TagsContext = createContext();
 let tags = [];
@@ -337,7 +337,7 @@ const AddItinerary = () => {
                         {prefTagsOptions.map((element) => {
                             return (
                                 <TagsContext.Provider key={element._id} value={tags}>
-                                    <StandAloneToggleButton key={element._id} name={element.name} />
+                                    <StandAloneToggleButtonIt key={element._id} name={element.name} />
                                 </TagsContext.Provider>
                             );
                         })}
