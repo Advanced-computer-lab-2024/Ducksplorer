@@ -28,7 +28,7 @@ const sidebarButtonStyle = {
   color: 'white',  // White text for contrast
 };
 
-const ProductActions = () => {
+const TouristAllProducts = () => {
   // State for managing the dropdown menu
   const [anchorEl, setAnchorEl] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -106,14 +106,7 @@ const ProductActions = () => {
           <Typography variant="h6" sx={{ paddingBottom: 2 }}>
             Actions
           </Typography>
-          <Button
-            fullWidth
-            variant="contained"
-            onClick={handleAddProduct}
-            style={sidebarButtonStyle}
-          >
-            Add Product
-          </Button>
+          
           <Button
             fullWidth
             variant="contained"
@@ -147,15 +140,7 @@ const ProductActions = () => {
         >
           Sort Products
         </Button>
-        <Button
-          fullWidth
-          variant="contained"
-          color="primary"
-          onClick={handleViewMyProducts}
-          style={sidebarButtonStyle}
-        >
-          View my Products
-        </Button>
+        
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
@@ -169,4 +154,4 @@ const ProductActions = () => {
   );
 };
 
-export default ProductActions;
+export default TouristAllProducts;

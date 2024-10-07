@@ -28,7 +28,7 @@ const sidebarButtonStyle = {
   color: 'white',  // White text for contrast
 };
 
-const ProductActions = () => {
+const Adminproducts = () => {
   // State for managing the dropdown menu
   const [anchorEl, setAnchorEl] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -53,7 +53,7 @@ const ProductActions = () => {
   };
 
   const handleViewAllProducts = () => {
-    navigate('/AllProducts');
+    navigate('/AdminAllProducts');
   };
 
   const handleSearchProduct = () => {
@@ -64,9 +64,7 @@ const ProductActions = () => {
     navigate('/SortProducts');
   }
 
-  const handleViewMyProducts = ()=> {
-    navigate('/ViewMyProducts');
-  }
+  
 
   return (
     <div style={pageStyle}>
@@ -147,15 +145,7 @@ const ProductActions = () => {
         >
           Sort Products
         </Button>
-        <Button
-          fullWidth
-          variant="contained"
-          color="primary"
-          onClick={handleViewMyProducts}
-          style={sidebarButtonStyle}
-        >
-          View my Products
-        </Button>
+        
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
@@ -169,4 +159,4 @@ const ProductActions = () => {
   );
 };
 
-export default ProductActions;
+export default Adminproducts;
