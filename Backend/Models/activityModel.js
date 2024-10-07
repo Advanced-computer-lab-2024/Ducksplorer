@@ -1,52 +1,67 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Tags = require("./preferenceTagsModels")
 
-const activitySchema = new Schema ({
-    date:{
-        type : Date,
-        required : true
+const activitySchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
     },
-    time:{
-        type : String, //check law fi time data type
-        required : true
+    isOpen: {
+      type: Boolean,
+      required: true,
     },
-    location :{
-        type : String , //link le google maps masalan
-        required :true
+    advertiser: {
+      type: String,
+      ref: "Advertiser",
+      required: false,
     },
-    price:{
-        type : Number, 
-        required : false
+    date: {
+      type: Date,
+      required: true,
     },
-    minPrice:{ //ask noha law el range yetfekes
-        type : Number, 
-        required : false 
+    location: {
+      type: String, //link le google maps masalan
+      required: true,
     },
-    maxPrice:{ //we'll make one of these only required bas fel frontend
-        type : Number, 
-        required : false
+    price: {
+      type: Number,
+      required: false,
     },
-    category:{
-        type : String,
-        required : true
+    category: {
+      type: String,
+      ref: "ActivityCategory",
+      required: false,
     },
-    tags:{
-        type: String,
-        required: true
+    tags: {
+      type : Array,
+      schema : [Tags],
+      required: true
     },
-    specialDiscount:{
-        type: Number,
-        required: false //ask noha law msh required
+    specialDiscount: {
+      type: Number,
+      required: false, //ask noha law msh required
     },
-    duration: { //make it required fel frontend
-        type: Number,
-        required: false
+    duration: {
+      //make it required fel frontend
+      type: Number,
+      required: false,
+    },
+    ratings: {
+      type: [Number],
+      required: false
+    },
+    averageRating: {
+      type: Number,
+      required: false
     }
-},{timestamps: true})
+  },
+  { timestamps: true }
+);
 
-const Activity = mongoose.model("Activity",activitySchema);
+const Activity = mongoose.model("Activity", activitySchema);
 
 module.exports = Activity;
 
 //date, time, location (using Google Maps), price (or price range), category, tags, special discounts, if booking is open
-

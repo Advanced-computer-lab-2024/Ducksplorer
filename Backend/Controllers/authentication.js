@@ -3,6 +3,7 @@ const TourGuide = require("../Models/tourGuideModel.js");
 const Seller = require("../Models/sellerModel.js");
 const Advertiser = require("../Models/advertiserModel");
 const User = require("../Models/userModel.js");
+const User = require("../Models/userModel.js");
 
 const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el signup
     try{
@@ -13,10 +14,12 @@ const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el 
         }
         const role = req.body.role;
         let status = "Approved";
-        if (role === "Guide" || role === "Seller" || role === "Advertiser") {
+        if (role === "TourGuide" || role === "Seller" || role === "Advertiser") {
             status = "Pending";
         }
-        
+        const newuser = new User({role , userName, password , status});
+        await newuser.save();
+
         if(role === "Tourist" ){
             const mobileNumber = req.body.mobileNumber;
             const nationality = req.body.nationality;
@@ -62,14 +65,9 @@ const login = async (req,res) => {
         const {userName, password} = req.body;
         const user = await User.findOne({userName});
 
-        if(user.status === "Pending"){
-            return res.status(400).json({error: "Your Account is not approved yet"});
-        }
         if(!user || (user.password !== password)){
             return res.status(400).json({error: "Incorrect UserName or Password"});
         }
-
-        
 
         res.status(200).json({
             _id: user._id,
