@@ -3,7 +3,6 @@ const TourGuide = require("../Models/tourGuideModel.js");
 const Seller = require("../Models/sellerModel.js");
 const Advertiser = require("../Models/advertiserModel");
 const User = require("../Models/userModel.js");
-const User = require("../Models/userModel.js");
 
 const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el signup
     try{
@@ -17,9 +16,7 @@ const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el 
         if (role === "TourGuide" || role === "Seller" || role === "Advertiser") {
             status = "Pending";
         }
-        const newuser = new User({role , userName, password , status});
-        await newuser.save();
-
+        
         if(role === "Tourist" ){
             const mobileNumber = req.body.mobileNumber;
             const nationality = req.body.nationality;

@@ -3,25 +3,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const app = express(); //el kol fel kol
 const PORT = process.env.PORT || 8000; //tells us to get port from env file or law ma3refsh yegebha it's 3000
-const cors = require("cors");
-const PORT = process.env.PORT || 8000; //tells us to get port from env file or law ma3refsh yegebha it's 8000
 const touristRoutes = require('./Backend/Routes/touristRoutes.js');
 const sellerRoutes = require('./Backend/Routes/sellerRoutes.js');
-const adminRoutes = require('./Backend/Routes/adminRoutes.js');
-const signUpRoutes = require("./Backend/Routes/signUpRoutes.js");
-
-const cors = require('cors');
-app.use(cors());
-
-app.use('/uploads', express.static('uploads'));
-
-const cors = require('cors');
-app.use(cors());
-
-console.log(process.env.PORT);
-app.use(express.json());
-
-
+const adminProductRoutes = require('./Backend/Routes/adminRoutes.js');
 const signUpRoutes = require("./Backend/Routes/signUpRoutes.js");
 const adminRoutes = require("./Backend/Routes/Admin/AdminRoutes.js");
 const touristAccountRoutes = require("./Backend/Routes/TouristAccountRoutes.js");
@@ -30,11 +14,23 @@ const preferenceTagsRoutes = require("./Backend/Routes/Admin/PreferenceTagsRoute
 const activityRoutes = require("./Backend/Routes/activityRoutes.js");
 const categoryRoutes = require("./Backend/Routes/categoryRoutes.js");
 
+const cors = require('cors');
+app.use(cors());
+
+app.use('/uploads', express.static('uploads'));
+
+
+
+console.log(process.env.PORT);
+app.use(express.json());
+
+
+
+
 app.use("/signUp", signUpRoutes);
 app.use("/touristRoutes",touristRoutes);
 app.use("/sellerRoutes", sellerRoutes);
-app.use("/adminRoutes", adminRoutes);
-
+app.use("/adminRoutes", adminProductRoutes);
 app.use("/activity", activityRoutes);
 app.use("/admin", adminRoutes);
 app.use("/touristAccount", touristAccountRoutes);
