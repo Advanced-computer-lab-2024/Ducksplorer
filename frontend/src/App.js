@@ -18,6 +18,18 @@ import SortFilterActivity from "./Pages/SortFilterActivity";
 import MyActivities from "./Pages/myActivities.js";
 import AdvertiserDashboard from "./Pages/AdvertiserDashboard.js";
 import ClinicLocation from "./Pages/location.js";
+import Products from './Components/ProductDashboard.js';
+import AllProducts from './Pages/AllProducts.js';
+import AddProducts from './Pages/AddProducts.js';
+import FilterProducts from './Pages/FilterProducts.js';
+import SearchProducts from './Pages/SearchProducts.js';
+import SortProducts from './Pages/SortProducts.js' ; 
+import ViewMyProducts from './Pages/ViewMyProducts.js'
+import EditProduct from './Components/EditProduct.js';
+import AdminProducts from './Pages/AdminProducts.js';
+import AdminAllProducts from './Pages/AdminAllProducts.js';
+import TouristAllProducts from './Pages/TouristAllProducts.js';
+
 
 function App() {
   return (
@@ -51,6 +63,17 @@ function App() {
           />
           <Route path="/advertiser" element={<AdvertiserDashboard />} />
           <Route path="/location" element={<ClinicLocation/>} />
+          <Route path = "/products" element= {<Products/>} />
+        <Route path = "/AllProducts" element= {<AllProducts/>} />
+        <Route path = "/AddProducts" element= {<AddProducts/>} />
+        <Route path = "/FilterProducts" element= {<FilterProducts/>} />
+        <Route path = "/SearchProducts" element= {<SearchProducts/>} />
+        <Route path = "/SortProducts" element = {<SortProducts/>} />
+        <Route path = "/ViewMyProducts" element = {<ViewMyProducts/>} />
+        <Route path = "/editProduct/:productId" element={<EditProduct/>} />
+        <Route path = "/Adminproducts" element= {<AdminProducts/>} />
+        <Route path = "/AdminAllProducts" element= {<AdminAllProducts/>} />
+        <Route path = "/TouristAllProducts" element= {<TouristAllProducts/>} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

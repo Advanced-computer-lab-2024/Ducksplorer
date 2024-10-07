@@ -3,6 +3,7 @@ const TourGuide = require("../Models/tourGuideModel.js");
 const Seller = require("../Models/sellerModel.js");
 const Advertiser = require("../Models/advertiserModel");
 const User = require("../Models/userModel.js");
+const User = require("../Models/userModel.js");
 
 const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el signup
     try{
@@ -39,7 +40,7 @@ const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el 
         if(role === "Seller"){
             const description = req.body.description;
             const name = req.body.name;
-            const newSeller = new Seller({email, userName, password, description, name});
+            const newSeller = new Seller({email, userName, password,name,description});
             await newSeller.save();
             res.status(201).json(newSeller);
         }
@@ -51,6 +52,10 @@ const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el 
             await newAdvertiser.save();
             res.status(201).json(newAdvertiser);
         }
+        const newuser = new User({role , userName, password , status});
+        await newuser.save();
+        res.status(201).json(newuser);
+
     }   catch (error) {
         res.status(500).json({ message: error.message });
     }
