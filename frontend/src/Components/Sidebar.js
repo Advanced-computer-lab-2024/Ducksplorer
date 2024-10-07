@@ -28,7 +28,7 @@ const Sidebar = () => {
         </Typography>
         <Divider />
         <List>
-          <ListItem button component={Link} to="/dashboard">
+          <ListItem button component={Link} to="/AdminDashboard">
             <ListItemIcon>
               <DashboardIcon />
             </ListItemIcon>

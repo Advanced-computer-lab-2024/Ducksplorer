@@ -29,6 +29,7 @@ import ViewUpcomingItinerary from './Pages/Itinerary/viewUpcomingItinerary';
 import ViewAllTourist from './Pages/Itinerary/viewAllTourist';
 import TourGuideDashboard from './Pages/TourGuideDashboard';
 import TouristDashboard from './Pages/TouristDashboard';
+import GovernorDashboard from './Pages/GovernorDashboard';
 
 
    
@@ -49,6 +50,7 @@ function App() {
           <Route path="/tourGuideDashboard" element={<TourGuideDashboard />} />
           <Route path="/touristDashboard" element={<TouristDashboard />} />
   
+          <Route path="/governorDashboard" element={<GovernorDashboard />} />
           <Route path="/createMuseum" element={<CreateMuseum />} />
           <Route path="/createHistoricalPlace" element={<CreateHistoricalPlace />} />
           <Route path="/RUDMuseum" element={<RUDMuseum />} />

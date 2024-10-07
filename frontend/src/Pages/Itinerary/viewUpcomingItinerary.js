@@ -158,7 +158,7 @@ const ViewUpcomingItinerary = () => {
 
 
     //get itineraries based on the sorting criteria
-    const handleSort = () => {
+    const handleSort = (sortBy, sortOrder) => {
         axios.get(`http://localhost:8000/itinerary/sort?sortBy=${sortBy}&sortOrder=${sortOrder}`)
             .then((response) => {
                 setItineraries(response.data); 
@@ -219,8 +219,8 @@ const ViewUpcomingItinerary = () => {
                 open={Boolean(sortByAnchorEl)}
                 onClose={handleSortByClose}
             >
-                <MenuItem value="price" onClick={() => { setSortBy('price'); handleSortByClose(); }}>Price</MenuItem>
-                <MenuItem value="rating" onClick={() => { setSortBy('rating'); handleSortByClose(); }}>Rating</MenuItem>
+                <MenuItem value="price" onClick={() => { setSortBy('price'); handleSort('price', sortOrder); handleSortByClose(); }}>Price</MenuItem>
+                <MenuItem value="rating" onClick={() => { setSortBy('rating');  handleSort('rating', sortOrder); handleSortByClose(); }}>Rating</MenuItem>
             </Menu>
 
             <IconButton onClick={handleSortOrderClick}>
@@ -231,8 +231,8 @@ const ViewUpcomingItinerary = () => {
                 open={Boolean(sortOrderAnchorEl)}
                 onClose={handleSortOrderClose}
             >
-                <MenuItem value="asc" onClick={() => { setSortOrder('asc'); handleSortOrderClose(); handleSort(); }}>Ascending</MenuItem>
-                <MenuItem value="desc" onClick={() => { setSortOrder('desc'); handleSortOrderClose(); handleSort(); }}>Descending</MenuItem>
+                <MenuItem value="asc" onClick={() => { setSortOrder('asc'); handleSort(sortBy, 'asc'); handleSortOrderClose();  }}>Ascending</MenuItem>
+                <MenuItem value="desc" onClick={() => { setSortOrder('desc'); handleSort(sortBy, 'desc'); handleSortOrderClose(); }}>Descending</MenuItem>
             </Menu>
 
             {/* Filtering */}

@@ -31,7 +31,7 @@ const UpcomingMuseums = () => {
 
 
     return (
-        <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'auto', height: '100vh' }}>
+        <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'visible', height: '100vh' }}>
         <Link to="/MuseumTouristPov"> Back </Link>
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
                 <Typography variant="h4">Upcoming Museum Visits</Typography>

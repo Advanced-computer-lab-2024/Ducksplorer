@@ -62,24 +62,29 @@ const login = async (req,res) => {
         const {userName, password} = req.body;
         const user = await User.findOne({userName});
 
-        if(user.status === "Pending"){
-            return res.status(400).json({error: "Your Account is not approved yet"});
-        }
-        if(!user || (user.password !== password)){
-            return res.status(400).json({error: "Incorrect UserName or Password"});
-        }
+        if(user){
+            if(user.status === "Pending"){
+                return res.status(400).json({error: "Your Account is not approved yet"});
+            }
+            if(!user || (user.password !== password)){
+                return res.status(400).json({error: "Incorrect UserName or Password"});
+            }
 
-        
+            
 
-        res.status(200).json({
-            _id: user._id,
-            username: user.userName,
-            role : user.role
-        })
+            res.status(200).json({
+                _id: user._id,
+                username: user.userName,
+                role : user.role
+            })
+        }
+        else{
+            return res.status(400).json({error: "Account does not exist"});
+        }
 
     }catch(error){
         console.log("Error in Login Controller", error.message)
-        res.status(500).json({error:"Internal Server Error"})
+        res.status(500).json({error:"Error"})
     }
 }
 
