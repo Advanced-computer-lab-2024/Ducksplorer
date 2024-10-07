@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { TextField, Button, Stack } from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
@@ -7,7 +7,6 @@ import StandAloneToggleButton from "./ToggleButton";
 import AdvertiserSidebar from "./AdvertiserSidebar";
 import { useNavigate } from "react-router-dom";
 
-export const TagsContext = createContext();
 let tags = [];
 
 const AddActivityForm = () => {
@@ -93,6 +92,9 @@ const AddActivityForm = () => {
     try {
       await axios.post("http://localhost:8000/activity", data);
       message.success("Activity Created Successfully!");
+      console.log(tags);
+      tags = [];
+      console.log(tags);
 
       // Clear localStorage
       localStorage.removeItem("addActivityFormData");
@@ -105,16 +107,19 @@ const AddActivityForm = () => {
 
   const handleNavigate = () => {
     // Save all form data in localStorage before navigating
-    localStorage.setItem('addActivityFormData', JSON.stringify({
-      name,
-      date,
-      isOpen,
-      price,
-      category,
-      specialDiscount,
-      duration,
-      tags,
-    }));
+    localStorage.setItem(
+      "addActivityFormData",
+      JSON.stringify({
+        name,
+        date,
+        isOpen,
+        price,
+        category,
+        specialDiscount,
+        duration,
+        tags,
+      })
+    );
     navigate("/location"); // Navigate to /location when button is clicked
   };
 
@@ -130,7 +135,6 @@ const AddActivityForm = () => {
         alignItems: "center",
       }}
     >
-   
       <AdvertiserSidebar />
       <Stack
         spacing={1}
@@ -238,9 +242,11 @@ const AddActivityForm = () => {
         >
           {allTags.map((element) => {
             return (
-              <TagsContext.Provider key={element._id} value={tags}>
-                <StandAloneToggleButton key={element._id} name={element.name} />
-              </TagsContext.Provider>
+              <StandAloneToggleButton
+                tags={tags}
+                key={element._id}
+                name={element.name}
+              />
             );
           })}
           {/* {console.log(allTags)}; */}

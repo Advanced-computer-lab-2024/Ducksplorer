@@ -4,6 +4,7 @@ import { message } from "antd";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { calculateAverageRating } from "../Utilities/averageRating.js";
+import StandAloneToggleButton from "../Components/ToggleButton.js";
 import {
   Rating,
   Checkbox,
@@ -35,6 +36,7 @@ const MyActivities = ({ userName }) => {
   const [open, setOpen] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [editingActivity, setEditingActivity] = useState(null);
+  let allTags = JSON.parse(localStorage.getItem("tags"));
 
   const [formData, setFormData] = useState({
     name: "",
@@ -278,14 +280,31 @@ const MyActivities = ({ userName }) => {
                 fullWidth
                 sx={{ mb: 2 }}
               />
-              <TextField
+              {/* <TextField
                 label="Tags (comma-separated)"
                 name="tags"
                 value={formData.tags}
                 onChange={handleInputChange}
                 fullWidth
                 sx={{ mb: 2 }}
-              />
+              /> */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                }}
+              >
+                {allTags.map((element) => {
+                  return (
+                    <StandAloneToggleButton
+                      key={element._id}
+                      name={element.name}
+                      tags={formData.tags}
+                    />
+                  );
+                })}
+              </div>
               <TextField
                 label="Duration"
                 name="duration"
@@ -297,7 +316,6 @@ const MyActivities = ({ userName }) => {
               <TextField
                 label="Location"
                 name="location"
-                type="url"
                 value={formData.location}
                 onChange={handleInputChange}
                 fullWidth
