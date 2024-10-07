@@ -23,21 +23,32 @@ import UpcomingHistoricalPlaces from './Pages/MuseumHistoricalPlace/UpcomingHist
 import UpcomingMuseums from './Pages/MuseumHistoricalPlace/UpcomingMuseums.js';
 import CreateTagMuseum from './Pages/MuseumHistoricalPlace/CreateTagMuseum.js';
 import CreateTagHistoricalPlace from './Pages/MuseumHistoricalPlace/CreateTagHistoricalPlace.js';
-
+import CreateItinerary from './Pages/Itinerary/createItinerary';
+import RUDItinerary from './Pages/Itinerary/RUDItinerary';
+import ViewUpcomingItinerary from './Pages/Itinerary/viewUpcomingItinerary';
+import ViewAllTourist from './Pages/Itinerary/viewAllTourist';
+import TourGuideDashboard from './Pages/TourGuideDashboard';
+import TouristDashboard from './Pages/TouristDashboard';
 
 
    
 
- 
+
 function App() {
 
   return (
     <React.StrictMode>
-      <BrowserRouter>
-        <Routes>
-        <Route path ="/login" element={<Login/>} />
-        <Route path = "/signUp" element=  {<Signup/>} />  
-
+        <BrowserRouter>
+          <Routes>
+          <Route path ="/login" element={<Login/>} />
+          <Route path = "/signUp" element=  {<Signup/>} />  
+          <Route path="/createItinerary" element={<CreateItinerary />} />
+          <Route path="/rudItinerary" element={<RUDItinerary />} />
+          <Route path="/viewUpcomingItinerary" element={<ViewUpcomingItinerary />} />
+          <Route path="/viewAllTourist" element={<ViewAllTourist />} />
+          <Route path="/tourGuideDashboard" element={<TourGuideDashboard />} />
+          <Route path="/touristDashboard" element={<TouristDashboard />} />
+  
           <Route path="/createMuseum" element={<CreateMuseum />} />
           <Route path="/createHistoricalPlace" element={<CreateHistoricalPlace />} />
           <Route path="/RUDMuseum" element={<RUDMuseum />} />
@@ -62,7 +73,7 @@ function App() {
           <Route path="/activity" element={<AddActivity />} />
           <Route path="/editAccount" element={<TouristEditAccount />} />
       </Routes>
-      </BrowserRouter>
+        </BrowserRouter>
     </React.StrictMode>
     
       

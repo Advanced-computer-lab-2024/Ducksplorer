@@ -20,39 +20,38 @@ const activitySchema = new Schema(
       type: Date,
       required: true,
     },
-    time: {
-      type: String, //check law fi time data type
-      required: false,
-    },
+    // time:{
+    //     type : String, //mafeesh time data type bas momken ne match le certain way of writing HH:MM
+    //     //match: [/^([01]\d|2[0-3]):([0-5]\d)$/, 'Invalid time format. Use HH:MM']
+    //     required : true
+    // },
     location: {
-      type: String, //link le google maps masalan
-      required: true,
+        type: String, //link le google maps masalan
+        required: true
     },
     price: {
-      type: Number,
-      required: false,
+        type: Number,
+        required: false
     },
-    minPrice: {
-      //ask noha law el range yetfekes
-      type: Number,
-      required: false,
-    },
-    maxPrice: {
-      //we'll make one of these only required bas fel frontend
-      type: Number,
-      required: false,
-    },
+    // minPrice:{ //ask noha law el range yetfekes
+    //     type : Number, 
+    //     required : false 
+    // },
+    // maxPrice:{ //we'll make one of these only required bas fel frontend
+    //     type : Number, 
+    //     required : false
+    // },
     category: {
-      type: String,
-      required: false,
+        type: String,
+        required: true
     },
-    tags: {
-      type: String, // depends on tags table
-      required: false,
+    tags: { //change this later for table prefs
+        type: String,
+        required: true
     },
     specialDiscount: {
-      type: Number,
-      required: false, //ask noha law msh required
+        type: Number,
+        required: false //ask noha law msh required
     },
     duration: {
       //make it required fel frontend
