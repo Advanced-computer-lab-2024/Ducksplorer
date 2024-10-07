@@ -57,11 +57,17 @@ const TouristSidebar = () => {
             </ListItemIcon>
             <ListItemText primary="View All Products" />
           </ListItem>
-          <ListItem button component={Link} to="/viewHistoricalPlaces"> 
+          <ListItem button component={Link} to="/MuseumTouristPov"> 
             <ListItemIcon>
               <MuseumIcon />
             </ListItemIcon>
-            <ListItemText primary="View Museums & Historical Places" />
+            <ListItemText primary="View Museums" />
+          </ListItem>
+          <ListItem button component={Link} to="/HistoricalPlaceTouristPov"> 
+            <ListItemIcon>
+              <MuseumIcon />
+            </ListItemIcon>
+            <ListItemText primary="View Historical Places" />
           </ListItem>
           <ListItem button component={Link} to="/viewActivities"> 
             <ListItemIcon>

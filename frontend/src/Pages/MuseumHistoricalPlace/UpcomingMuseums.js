@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
+import { Link } from 'react-router-dom';
 
 import {
     Box,
@@ -31,7 +32,8 @@ const UpcomingMuseums = () => {
 
     return (
         <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'auto', height: '100vh' }}>
-            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+        <Link to="/MuseumTouristPov"> Back </Link>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
                 <Typography variant="h4">Upcoming Museum Visits</Typography>
             </Box>
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Button, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import { message } from 'antd';
+import { Link } from 'react-router-dom';
 
 const EditProfile = () => {
   const [touristDetails, setTouristDetails] = useState({
@@ -65,6 +66,7 @@ const EditProfile = () => {
 
   return (
     <Box sx={{ p: 6 }}>
+      <Link to="/touristDashboard"> Back </Link>
       <Typography variant="h4" sx={{ mb: 3 }}>
         Edit Tourist Profile ({touristDetails.userName})
       </Typography>

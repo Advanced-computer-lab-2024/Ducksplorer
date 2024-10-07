@@ -60,7 +60,6 @@ function App() {
           <Route path="/UpcomingMuseums" element={<UpcomingMuseums />} />
           <Route path="/createTagMuseum" element={<CreateTagMuseum />} />
           <Route path="/createTagHistoricalPlace" element={<CreateTagHistoricalPlace/>} />
-          {/* <Route path ="/login" element={<Login/>} /> */}
 
 
           <Route path ="/AdminDashboard" element = {<AdminDashboard/>} />
