@@ -42,6 +42,10 @@ const EditProduct =  () =>{
 
   };
 
+  const handleBackButtonClick = () => {
+    window.history.back();
+  };
+
   return (
     <div style={{
       backgroundImage: 'url(../../public/Images/bg-intro-desktop.png)', // Update with your image path
@@ -52,6 +56,7 @@ const EditProduct =  () =>{
       justifyContent: 'center',
       alignItems: 'center'
     }}>
+      <Button onClick={handleBackButtonClick}>Back</Button>
      
       <Stack spacing={1} sx={{ width: '600px', padding: '10px', backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: '10px' }}>
       <div className="trial-btn text-white cursor-pointer" >

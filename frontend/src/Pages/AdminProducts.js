@@ -64,11 +64,16 @@ const Adminproducts = () => {
     navigate('/SortProducts');
   }
 
+  const handleBackClick = () => {
+    window.history.back();
+  }
+
   
 
   return (
     <div style={pageStyle}>
       {/* Search Container at the Top */}
+      <Button onClick={handleBackClick}> Back </Button>
       <div style={searchContainerStyle}>
         <TextField
           label="Search for a product"

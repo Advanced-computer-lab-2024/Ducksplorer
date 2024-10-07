@@ -8,7 +8,7 @@ function StandAloneToggleButton(props) {
     props.tags.includes(props.name)
   );
 
-  const [allTags, setAllTags] = useState([]);
+  let allTags = [];
 
   // let tags = useContext(TagsContext);
 
@@ -24,7 +24,9 @@ function StandAloneToggleButton(props) {
       .get("http://localhost:8000/preferenceTags/")
       .then((response) => {
         const data = response.data;
-        setAllTags(data.map(getTagNames));
+        console.log(data);
+        allTags = data.map(getTagNames);
+        console.log(allTags);
         localStorage.setItem("tags", JSON.stringify(allTags));
       })
       .catch((error) => {

@@ -68,9 +68,15 @@ const ProductActions = () => {
     navigate('/ViewMyProducts');
   }
 
+  const handleBackButtonClick = () => {
+    window.history.back();
+  };
+
+
   return (
     <div style={pageStyle}>
       {/* Search Container at the Top */}
+      <Button onClick={handleBackButtonClick}>Back</Button>
       <div style={searchContainerStyle}>
         <TextField
           label="Search for a product"

@@ -4,7 +4,7 @@ import SortActivities from "./sortActivities";
 import { Button } from "@mui/material";
 import { useState } from "react";
 import FilterActivities from "./filterActivities";
-import AdvertiserSidebar from "../Components/AdvertiserSidebar";
+import TouristSidebar from "../Components/TouristSidebar";
 
 function SortFilterActivity() {
   const [sort, setSort] = useState(true);
@@ -12,7 +12,7 @@ function SortFilterActivity() {
 
   return (
     <div>
-      <AdvertiserSidebar />
+      <TouristSidebar/>
       <div style={{ marginLeft: 300 }}>
         <Button
           style={{

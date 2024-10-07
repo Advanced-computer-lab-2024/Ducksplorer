@@ -58,13 +58,6 @@ const AdvertiserSidebar = () => {
             </ListItemIcon>
             <ListItemText primary="My Activities" />
           </ListItem>
-        
-          <ListItem component={Link} to="/activity/sortFilter">
-            <ListItemIcon>
-              <WidgetsIcon />
-            </ListItemIcon>
-            <ListItemText primary="All Activities" />
-          </ListItem>
         </List>
         <Divider />
       </div>

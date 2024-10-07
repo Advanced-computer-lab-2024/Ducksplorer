@@ -7,6 +7,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import PersonAddIcon from '@mui/icons-material/PersonAdd'; 
 import CategoryIcon from '@mui/icons-material/Category';
 import LabelIcon from '@mui/icons-material/Label';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+
 
 
 const drawerWidth = 300;
@@ -70,6 +72,12 @@ const Sidebar = () => {
           </ListItemIcon>
           <ListItemText primary="Tags" />
         </ListItem>
+        <ListItem button component={Link} to="/Adminproducts">
+            <ListItemIcon>
+              <ShoppingCartIcon />
+            </ListItemIcon>
+            <ListItemText primary="Products Management" />
+         </ListItem>
         </List>
         <Divider />
       </div>

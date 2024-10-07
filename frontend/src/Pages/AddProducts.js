@@ -41,10 +41,15 @@ function AddProducts() {
     }
   };
 
+  const handleBackClick = () => {
+    window.history.back();
+  }
 
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto' }}>
+
       <h2>Add Product</h2>
+      <button onClick={handleBackClick}>Back</button>      
       <Stack spacing={2}>
         <TextField
           label="Product Name"

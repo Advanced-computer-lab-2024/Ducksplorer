@@ -39,6 +39,12 @@ const SellerSidebar = () => {
             </ListItemIcon>
             <ListItemText primary="Edit Profile" />
           </ListItem>
+          <ListItem button component={Link} to="/products">
+            <ListItemIcon>
+              <PersonIcon />
+            </ListItemIcon>
+            <ListItemText primary="Manage Products" />
+          </ListItem>
         </List>
         <Divider />
       </div>

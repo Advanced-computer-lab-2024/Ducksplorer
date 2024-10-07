@@ -44,9 +44,13 @@ function SortProducts() {
     }
   };
 
+  const handleBackButtonClick = () => {
+    window.history.back();
+  };
 
   return (
     <div style={{ padding: '20px', maxWidth: '800px', margin: 'auto' }}>
+      <Button onClick={handleBackButtonClick}>Back</Button>
       <h2>Sort Products</h2>
       <Stack spacing={2}>
         

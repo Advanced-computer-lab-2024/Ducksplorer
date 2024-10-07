@@ -13,6 +13,9 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import MuseumIcon from '@mui/icons-material/Museum';
 import PersonIcon from '@mui/icons-material/Person';
 import CasinoIcon from '@mui/icons-material/Casino';
+import WidgetsIcon from "@mui/icons-material/Widgets";
+import SearchIcon from '@mui/icons-material/Search';
+
 
 const drawerWidth = 300;
 
@@ -51,11 +54,11 @@ const TouristSidebar = () => {
             </ListItemIcon>
             <ListItemText primary="View Upcoming Itineraries" />
           </ListItem>
-          <ListItem button component={Link} to="/viewProducts"> 
+          <ListItem button component={Link} to="/TouristAllProducts"> 
             <ListItemIcon>
               <ShoppingCartIcon />
             </ListItemIcon>
-            <ListItemText primary="View All Products" />
+            <ListItemText primary="Products Actions" />
           </ListItem>
           <ListItem button component={Link} to="/MuseumTouristPov"> 
             <ListItemIcon>
@@ -69,11 +72,17 @@ const TouristSidebar = () => {
             </ListItemIcon>
             <ListItemText primary="View Historical Places" />
           </ListItem>
-          <ListItem button component={Link} to="/activity/upcoming"> 
+          <ListItem button component={Link} to="/activity/sortFilter">
             <ListItemIcon>
-              <CasinoIcon />
+              <WidgetsIcon />
             </ListItemIcon>
-            <ListItemText primary="View All Activities" />
+            <ListItemText primary="Upcoming Activities" />
+          </ListItem>
+          <ListItem button component={Link} to="/activity/searchActivities">
+            <ListItemIcon>
+              <SearchIcon />
+            </ListItemIcon>
+            <ListItemText primary="Search Activities" />
           </ListItem>
         </List>
         <Divider />

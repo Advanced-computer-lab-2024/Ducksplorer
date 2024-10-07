@@ -14,7 +14,7 @@ import {
   Button,
   Rating,
 } from "@mui/material";
-import AdvertiserSidebar from "../Components/AdvertiserSidebar";
+import TouristSidebar from "../Components/TouristSidebar";
 
 const SearchActivities = () => {
   const [activities, setActivities] = useState([]); // Displayed activities
@@ -52,7 +52,7 @@ const SearchActivities = () => {
 
   return (
     <>
-      <AdvertiserSidebar />
+      <TouristSidebar />
       <Box
         sx={{
           p: 6,

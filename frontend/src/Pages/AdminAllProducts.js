@@ -34,8 +34,13 @@ function AdminAllProducts() {
     navigate(`/editProduct/${productId}`);
   };
 
+  const handleBackButtonClick = () => {
+    window.history.back();
+  };
+  
   return (
     <div style={{ padding: '20px', maxWidth: '800px', margin: 'auto' }}>
+      <Button onClick={handleBackButtonClick}>Back</Button>
       <Button
         variant="contained"
         color="primary"

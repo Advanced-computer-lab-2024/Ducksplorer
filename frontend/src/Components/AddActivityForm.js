@@ -28,6 +28,7 @@ const AddActivityForm = () => {
       setLocation(storedLocation); // Update location state
     }
 
+
     // Retrieve form data from localStorage
     const storedFormData = localStorage.getItem("addActivityFormData");
     if (storedFormData) {
@@ -75,8 +76,7 @@ const AddActivityForm = () => {
       !specialDiscount ||
       !duration ||
       !name ||
-      !category ||
-      tags.length === 0
+      !category 
     ) {
       message.error("All fields are required");
       return false;
@@ -86,12 +86,14 @@ const AddActivityForm = () => {
 
   const handleAdd = async () => {
     if (!validateFields()) {
+      localStorage.removeItem("selectedLocation");
       return;
     }
 
     try {
       await axios.post("http://localhost:8000/activity", data);
       message.success("Activity Created Successfully!");
+      localStorage.removeItem("addActivityFormData");
       console.log(tags);
       tags = [];
       console.log(tags);
@@ -214,7 +216,7 @@ const AddActivityForm = () => {
           value={duration}
           onChange={(e) => {
             setDuration(e.target.value);
-            setCategory(localStorage.getItem("category").trim());
+            setCategory(localStorage.getItem("category").trim());          
           }}
         />
         <TextField
@@ -240,7 +242,9 @@ const AddActivityForm = () => {
             flexBasis: 10,
           }}
         >
+          {console.log(allTags)}
           {allTags.map((element) => {
+            console.log(element)
             return (
               <StandAloneToggleButton
                 tags={tags}
