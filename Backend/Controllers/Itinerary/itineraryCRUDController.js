@@ -67,7 +67,7 @@ const updateItinerary = async (req, res) => { //update
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ error: "ID invalid" });
         }
-        const itinerary = await itineraryModel.findByIdAndUpdate(id, { activity, locations, timeline, language, price, availableDatesAndTimes, accessibility, pickUpLocation, dropOffLocation, rating });
+        const itinerary = await itineraryModel.findByIdAndUpdate(id, { activity, locations, timeline, language, price, availableDatesAndTimes, accessibility, pickUpLocation, dropOffLocation, rating, tags });
         if (!itinerary) {
             return res.status(404).json({ error: "Itinerary not found" });
         }

@@ -21,6 +21,7 @@ const RUDItinerary = ({ itinerary }) => {
   const [editingItinerary, setEditingItinerary] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]); // For storing selected tags
   const [availableTags, setAvailableTags] = useState([]); // For storing fetched tags
+  const [loading, setLoading] = useState(true);
 
   const [formData, setFormData] = useState({
     activity: {
@@ -48,9 +49,9 @@ const RUDItinerary = ({ itinerary }) => {
     setFormData({
       ...itinerary,
       activity: itinerary.activity || [],
-      tags: itinerary.tags || [],
+      locations: itinerary.locations || [],
     });
-    setSelectedTags(itinerary.tags || []);
+    setSelectedTags(itinerary.tags || []); // Ensure selected tags are set from the itinerary
     setEditingItinerary(itinerary);
   };
 
@@ -125,26 +126,54 @@ const RUDItinerary = ({ itinerary }) => {
 
   //update
   const handleUpdate = (event) => {
-    event.preventDefault();
-    
-    // Update the formData to include the selected tags
+    event.preventDefault(); // Prevent form submission
+
+    const userJson = localStorage.getItem('user');
+    const user = JSON.parse(userJson);
+    const userName = user.username;
+
     const updatedData = {
       ...formData,
-      tags: selectedTags // Include selected tags in the update
+      tags: selectedTags, // Include selected tags in the update
     };
-  
+
+    console.log('Updated Data:', updatedData); // Debug log
+
     axios.put(`http://localhost:8000/itinerary/${editingItinerary._id}`, updatedData)
-      .then(() => {
-        // Update the itineraries state to reflect the changes
-        setItineraries(itineraries.map(itinerary => 
-          itinerary._id === editingItinerary._id ? { ...itinerary, ...updatedData } : itinerary
-        ));
+      .then(response => {
+        // Refetch itineraries to reflect changes
+        if (userName) {
+          return axios.get(`http://localhost:8000/itinerary/myItineraries/${userName}`);
+        }
+        throw new Error('User not found!');
+      })
+      .then(response => {
+        setItineraries(response.data);
         message.success('Itinerary updated successfully!');
         setEditingItinerary(null);
         setSelectedTags([]); // Clear selected tags after updating
       })
-      .catch(error => message.error('Error updating itinerary!'));
+      .catch(error => {
+        console.error('Error updating itinerary or fetching itineraries!', error);
+        message.error(`Error updating itinerary: ${error.response ? error.response.data.message : error.message}`);
+      });
   };
+
+
+
+
+  useEffect(() => {
+    const storedTags = localStorage.getItem('selectedTags');
+    if (storedTags) {
+      setSelectedTags(JSON.parse(storedTags));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('selectedTags', JSON.stringify(selectedTags));
+  }, [selectedTags]);
+
+
 
   //read
   useEffect(() => {
@@ -177,23 +206,25 @@ const RUDItinerary = ({ itinerary }) => {
 
   useEffect(() => {
     const fetchAvailableTags = async () => {
+      setLoading(true);
       try {
         const response = await fetch('http://localhost:8000/preferenceTags/');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
         const data = await response.json();
-        setAvailableTags(data);
+        console.log('Fetched Tags:', data);
+        setAvailableTags(data); // Adjust based on data structure
       } catch (error) {
         console.error('Error fetching available tags:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchAvailableTags();
   }, []);
 
-  useEffect(() => {
-    if (itinerary && itinerary.tags) {
-      setSelectedTags(itinerary.tags); // Set selected tags based on itinerary data
-    }
-  }, [itinerary]);
 
   const handleDelete = (id) => {
     fetch(`http://localhost:8000/itinerary/${id}`, {
