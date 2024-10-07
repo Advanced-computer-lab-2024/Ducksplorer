@@ -53,14 +53,14 @@ function App() {
 
 
           <Route path ="/AdminDashboard" element = {<AdminDashboard/>} />
-        <Route path ="/pendingusers" element ={<ApproveUsers />} />
-        <Route path ="/deleteusers" element = {<DeleteUser />} />
-        <Route path ="/addAdmin" element = {<AddAdmin />} />
-        <Route path ="/addGovernor" element= {<AddGoverner/>} />
-        <Route path="/categoriesActions" element={<CategoriesActions />} />
-        <Route path="/preferenceTags" element={<PreferenceTags />} />
-        <Route path="/activity" element={<AddActivity />} />
-        <Route path="/editAccount" element={<TouristEditAccount />} />
+          <Route path ="/pendingusers" element ={<ApproveUsers />} />
+          <Route path ="/deleteusers" element = {<DeleteUser />} />
+          <Route path ="/addAdmin" element = {<AddAdmin />} />
+          <Route path ="/addGovernor" element= {<AddGoverner/>} />
+          <Route path="/categoriesActions" element={<CategoriesActions />} />
+          <Route path="/preferenceTags" element={<PreferenceTags />} />
+          <Route path="/activity" element={<AddActivity />} />
+          <Route path="/editAccount" element={<TouristEditAccount />} />
       </Routes>
       </BrowserRouter>
     </React.StrictMode>

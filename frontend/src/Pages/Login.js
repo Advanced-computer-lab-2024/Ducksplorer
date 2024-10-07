@@ -26,14 +26,27 @@ const handleLogin = async () => {
         });
         if (response.status === 200) {
             message.success('Logged in successfully');
-            if (response.data.role === 'Admin') {
+            switch (response.data.role) {
+              case 'Admin':
                 window.location.href = '/AdminDashboard';
-            }
-            else if(response.data.role === 'Tourist'){
-                window.location.href = '/editAccount';
-            }
-            else if(response.data.role === 'Guide'){
-              window.location.href = 'tourGuideDashboard';
+                break;
+              case 'Tourist':
+                window.location.href = '/touristDashboard';
+                break;
+              case 'Guide':
+                window.location.href = '/tourGuideDashboard';
+                break;
+              case 'Governor':
+                window.location.href = '/governorDashboard';
+                break;
+              case 'Advertiser':
+                window.location.href = '/advertiserDashboard';
+                break;
+              case 'Seller':
+                window.location.href = '/sellerDashboard';
+                break;
+              default:
+                message.error('Unknown role');
             }
            localStorage.setItem('user', JSON.stringify(response.data));
         } else if (response.status === 400) {
