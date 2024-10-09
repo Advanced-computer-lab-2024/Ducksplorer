@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 
 export const TagsContext = createContext();
 
-const RUDItinerary = ({ itinerary }) => {
+const RUDItinerary = () => {
   const [itineraries, setItineraries] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedItinerary, setselectedItinerary] = useState("");

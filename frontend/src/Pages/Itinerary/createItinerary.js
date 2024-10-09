@@ -13,17 +13,18 @@ const AddItinerary = () => {
 
     const navigate = useNavigate();
 
+    //prevents changing numbers lama bena3mel scroll bel mouse
     useEffect(() => {
         const handleWheel = (event) => {
-          if (document.activeElement.type === 'number') {
-            document.activeElement.blur();
-          }
+            if (document.activeElement.type === 'number') {
+                document.activeElement.blur();
+            }
         }
         document.addEventListener('wheel', handleWheel, { passive: true });
         return () => {
-          document.removeEventListener('wheel', handleWheel);
+            document.removeEventListener('wheel', handleWheel);
         };
-      }, []);
+    }, []);
 
     const [prefTagsOptions, setPrefTagsOptions] = useState([]);
     const [locations, setLocations] = useState(['']);
@@ -57,6 +58,7 @@ const AddItinerary = () => {
         }
     });
 
+    //fetch all tags from the server
     useEffect(() => {
         const fetchTags = async () => {
             try {
@@ -71,6 +73,7 @@ const AddItinerary = () => {
         fetchTags();
     }, []);
 
+    //changes the value of the datetime when creating from default value to the value entered
     const handleAvailableDateChange = (index, value) => {
         const newDates = [...availableDatesAndTimes];
         newDates[index] = value;
@@ -78,7 +81,7 @@ const AddItinerary = () => {
         setFormData({ ...formData, availableDatesAndTimes: newDates });
     };
 
-
+    //changes the values of attributes inside the activity when when creating from default value to the value entered
     const handleActivityChange = (index, field, value) => {
         const updatedActivities = activities.map((activity, i) =>
             i === index ? { ...activity, [field]: value } : activity
@@ -86,19 +89,24 @@ const AddItinerary = () => {
         setActivities(updatedActivities);
     };
 
+    //changes the value of any general attribute when creating and the new value is added to the formData
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
 
     };
+
+    //to append a new location in the array of locations
     const handleAddLocation = () => {
         setLocations([...locations, '']);
     };
 
+    //to append a new available date and time in the array of dates
     const handleAddAvailableDate = () => {
         setAvailableDatesAndTimes([...availableDatesAndTimes, '']);
     };
 
+    //to append a new activity in the array of activities
     const handleAddActivity = () => {
         const newActivity = {
             name: '',
@@ -149,6 +157,7 @@ const AddItinerary = () => {
         }
     };
 
+    //restests all the values of attributes when needed (ex. adding new input) before adding the new values
     const resetForm = () => {
         setActivities([{
             name: '',
