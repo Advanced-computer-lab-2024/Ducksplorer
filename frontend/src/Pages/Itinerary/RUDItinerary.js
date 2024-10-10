@@ -15,13 +15,13 @@ import { Link } from 'react-router-dom';
 export const TagsContext = createContext();
 
 const RUDItinerary = () => {
-  const [itineraries, setItineraries] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [selectedItinerary, setselectedItinerary] = useState("");
-  const [editingItinerary, setEditingItinerary] = useState(null);
+  const [itineraries, setItineraries] = useState([]); //holds the list of itineraries
+  const [open, setOpen] = useState(false); //controls the confirmation message before deletion
+  const [selectedItinerary, setselectedItinerary] = useState(""); //stores the currently selected itinerary for deletion
+  const [editingItinerary, setEditingItinerary] = useState(null); //stores the currently selected itinerary for editing
   const [selectedTags, setSelectedTags] = useState([]); // For storing selected tags
   const [availableTags, setAvailableTags] = useState([]); // For storing fetched tags
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); //indicates if data is fetched
 
   const [formData, setFormData] = useState({
     activity: {
@@ -45,6 +45,7 @@ const RUDItinerary = () => {
     }
   });
 
+  //Prepares the form for editing by populating it with the selected itinerary's data.
   const handleEditClick = (itinerary) => {
     setFormData({
       ...itinerary,
@@ -55,41 +56,56 @@ const RUDItinerary = () => {
     setEditingItinerary(itinerary);
   };
 
-
-
+  //updates general input fields based on user input
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData(prevData => ({ ...prevData, [name]: value }));
   };
 
+  //updates location in formData based on input change 
   const handleLocationInputChange = (event, index) => {
     const { value } = event.target;
     setFormData(prevData => {
       const updatedLocations = [...prevData.locations];
-      updatedLocations[index] = value; 
+      updatedLocations[index] = value;
       return { ...prevData, locations: updatedLocations };
     });
   };
 
+  //updates activity in formData based on input change 
   const handleActivityInputChange = (event, index) => {
     const { name, value } = event.target;
-
-    if (event.type === 'change') {
-      setFormData(prevData => {
-        const updatedActivities = [...prevData.activity]; 
-        updatedActivities[index] = {
-          ...updatedActivities[index], 
-          [name]: value, 
-        };
-
-        return {
-          ...prevData,
-          activity: updatedActivities, 
-        };
-      });
-    }
+    setFormData(prevData => {
+      const updatedActivities = [...prevData.activity];
+      updatedActivities[index] = {
+        ...updatedActivities[index],
+        [name]: value,
+      };
+      return {
+        ...prevData,
+        activity: updatedActivities,
+      };
+    });
   };
 
+  //adds a new activity object to the formData
+  const addActivity = () => {
+    setFormData(prevData => ({
+      ...prevData,
+      activity: [...prevData.activity, { name: '', price: '', category: '', location: '' }],
+    }));
+  };
+
+  //deletes an activity based on its index
+  const deleteActivity = (index) => {
+    const updatedActivities = formData.activity.filter((_, i) => i !== index);
+    setFormData(prevData => ({
+      ...prevData,
+      activity: updatedActivities,
+    }));
+  };
+
+  //updates available dates in formData based on input change 
   const handleAvailableDatesInputChange = (event, index) => {
     const { value } = event.target;
     setFormData(prevData => {
@@ -134,8 +150,9 @@ const RUDItinerary = () => {
 
 
   //update
+  //submit the updated itinerary data.
   const handleUpdate = (event) => {
-    event.preventDefault(); 
+    event.preventDefault();
 
     const userJson = localStorage.getItem('user');
     const user = JSON.parse(userJson);
@@ -143,10 +160,10 @@ const RUDItinerary = () => {
 
     const updatedData = {
       ...formData,
-      tags: selectedTags, 
+      tags: selectedTags,
     };
 
-    console.log('Updated Data:', updatedData); 
+    console.log('Updated Data:', updatedData);
 
     axios.put(`http://localhost:8000/itinerary/${editingItinerary._id}`, updatedData)
       .then(response => {
@@ -159,7 +176,7 @@ const RUDItinerary = () => {
         setItineraries(response.data);
         message.success('Itinerary updated successfully!');
         setEditingItinerary(null);
-        setSelectedTags([]); 
+        setSelectedTags([]);
       })
       .catch(error => {
         console.error('Error updating itinerary or fetching itineraries!', error);
@@ -277,6 +294,7 @@ const RUDItinerary = () => {
     handleClose();
   };
 
+  //Updates the selectedTags state based on the user’s checkbox selections.
   const handleCheckboxChange = (tag) => {
     setSelectedTags((prevSelectedTags) => {
       if (prevSelectedTags.includes(tag)) {
@@ -401,15 +419,24 @@ const RUDItinerary = () => {
           <form onSubmit={handleUpdate} style={{ marginTop: '20px' }} ref={formRef} >
             {formData.activity && formData.activity.map((activity, index) => (
               <div key={index}>
-                <TextField
-                  label={`Activity ${index + 1} Name`}
-                  name="name"
-                  value={activity.name || ''}
-                  onChange={(e) => handleActivityInputChange(e, index)}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                />
-
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                  <TextField
+                    label={`Activity ${index + 1} Name`}
+                    name="name"
+                    value={activity.name || ''}
+                    onChange={(e) => handleActivityInputChange(e, index)}
+                    fullWidth
+                    sx={{ mb: 2 }}
+                  />
+                  {index === 0 && (
+                    <IconButton onClick={addActivity}>
+                      <AddCircleIcon color="primary" />
+                    </IconButton>
+                  )}
+                  <IconButton onClick={() => deleteActivity(index)} color="secondary">
+                    <DeleteIcon />
+                  </IconButton>
+                </div>
                 <TextField
                   label={`Activity ${index + 1} Price`}
                   name="price"
@@ -448,16 +475,14 @@ const RUDItinerary = () => {
                   fullWidth
                   label={`Location ${index + 1}`}
                 />
-                <IconButton onClick={() => handleDeleteLocation(index)} color="secondary">
-                  <DeleteIcon />
-                </IconButton>
-
                 {index === 0 && (
                   <IconButton onClick={handleAddLocation}>
                     <AddCircleIcon color="primary" />
                   </IconButton>
-
                 )}
+                <IconButton onClick={() => handleDeleteLocation(index)} color="secondary">
+                  <DeleteIcon />
+                </IconButton>
               </Box>
             ))}
             <TextField label="Timeline" name="timeline" value={formData.timeline} onChange={handleInputChange} fullWidth sx={{ mb: 2 }} />
@@ -472,15 +497,14 @@ const RUDItinerary = () => {
                   fullWidth
                   type="datetime-local"
                 />
-                <IconButton onClick={() => handleDeleteDate(index)} color="secondary">
-                  <DeleteIcon />
-                </IconButton>
-
                 {index === 0 && (
                   <IconButton onClick={handleAddDate}>
                     <AddCircleIcon color="primary" />
                   </IconButton>
                 )}
+                <IconButton onClick={() => handleDeleteDate(index)} color="secondary">
+                  <DeleteIcon />
+                </IconButton>
               </Box>
             ))}
 

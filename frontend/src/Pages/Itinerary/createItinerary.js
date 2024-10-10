@@ -81,7 +81,7 @@ const AddItinerary = () => {
         setFormData({ ...formData, availableDatesAndTimes: newDates });
     };
 
-    //changes the values of attributes inside the activity when when creating from default value to the value entered
+    //changes the values of attributes inside the activity when creating from default value to the value entered
     const handleActivityChange = (index, field, value) => {
         const updatedActivities = activities.map((activity, i) =>
             i === index ? { ...activity, [field]: value } : activity
