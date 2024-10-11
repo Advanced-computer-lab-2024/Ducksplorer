@@ -1,7 +1,7 @@
-// #Task route solution
-const historicalPlaceModel = require('../../Models/historicalPlaceModel');//to get out of our folder then out of the controller folder
-const { default: mongoose } = require('mongoose');//allows us to do the check of the id ta7t
 // file created to contain all functions that the routes will reference instead of hard coding them in the routes folder
+const historicalPlaceModel = require('../../Models/museumHistoricalPlaceModels/historicalPlaceModel');//to get out of our folder then out of the controller folder
+const { default: mongoose } = require('mongoose');//allows us to do the check of the id ta7t
+
 
 
 // const addMuseumHistoricalPlace = async (req, res) => {
@@ -19,9 +19,7 @@ const { default: mongoose } = require('mongoose');//allows us to do the check of
 //     }
 // }
 
-
-
-
+// Create a new historical place
 const addHistoricalPlace = async (req, res) => {
     try {
         const { description, location, ticketPrices, openingTime, closingTime, HistoricalPlaceDate, HistoricalPlaceName, HistoricalPlaceCategory, tags, createdBy } = req.body;
@@ -53,9 +51,8 @@ const addHistoricalPlace = async (req, res) => {
     }
 }
 
-
+//Retrieve ONLY ONE  Historical Place from the database
 const getHistoricalPlace = async (req, res) => {
-    //retrieve ONLY one Historical Place from the database
     try {
         const { id } = req.params;
         if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -72,73 +69,55 @@ const getHistoricalPlace = async (req, res) => {
     }
 }
 
+// Retrieve all Historical Places of SPECIFIC tourism governor from the database
 const getAllMyHistoricalPlaces = async (req, res) => {
-    // Retrieve all Historical Places of SPECIFIC tourism governor from the database
     try {
-        const { userName } = req.params; // Extracting _id from request parameters
-
-        // Use findById directly with the extracted _id
+        const { userName } = req.params;
         const HistoricalPlace = await historicalPlaceModel.find({ createdBy: userName });
 
         if (!HistoricalPlace) {
             return res.status(404).json({ message: "Historical Place not found" });
         }
-
-        // res.status(200).json({ message: "Museum and Historical Place found successfully", museumHistoricalPlace });
         res.status(200).json(HistoricalPlace);
     } catch (error) {
         res.status(500).json({ message: "Error retrieving Historical Place", error: error.message });
     }
 };
 
+// Retrieve all Historical Places from the database
 const getAllHistoricalPlaces = async (req, res) => {
-    // Retrieve all Historical Places from the database
     try {
-
-        // Use findById directly with the extracted _id
         const HistoricalPlace = await historicalPlaceModel.find();
-
         if (!HistoricalPlace) {
             return res.status(404).json({ message: "Historical Place not found" });
         }
-
-        // res.status(200).json({ message: "Museum and Historical Place found successfully", museumHistoricalPlace });
         res.status(200).json(HistoricalPlace);
     } catch (error) {
         res.status(500).json({ message: "Error retrieving Historical Place", error: error.message });
     }
 };
 
-
-
+// Update a Historical Place from the database
 const updateHistoricalPlace = async (req, res) => {
-    //update a Historical Place in the database
     try {
         const { id } = req.params;
         const { description, pictures, location, ticketPrices, openingTime, closingTime, HistoricalPlaceDate, HistoricalPlaceName, HistoricalPlaceCategory, tags, createdBy } = req.body;
-
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid Historical Place ID" });
         }
-
         const updatedHistoricalPlace = await historicalPlaceModel.findByIdAndUpdate(id, { description, pictures, location, ticketPrices, openingTime, closingTime, HistoricalPlaceDate, HistoricalPlaceName, HistoricalPlaceCategory, tags, createdBy }, { new: true, runValidators: true });
-
         if (!updatedHistoricalPlace) {
             return res.status(404).json({ message: "Historical Place not found" });
         }
-
-        //res.status(200).json({ message: "Museum and Historical Place updated successfully", MuseumHistoricalPlace: updatedMuseumHistoricalPlace })
         res.status(200).json(updatedHistoricalPlace)
-
     }
-
     catch (error) {
         res.status(400).json({ message: "Error updating Historical Place", error: error.message })
     }
 }
 
+//Delete a Historical Place from the database
 const deleteHistoricalPlace = async (req, res) => {
-    //delete a Historical Place from the database
     try {
         const { id } = req.params;
         const deletedHistoricalPlace = await historicalPlaceModel.findByIdAndDelete(id);
@@ -157,14 +136,10 @@ const deleteHistoricalPlace = async (req, res) => {
     }
 }
 
-
-
-// Method to get ALL upcoming visits
+// Get ALL upcoming historical place visits
 const getAllUpcomingHistoricalPlaces = async (req, res) => {
     try {
-        // Get the current date and time
         const currentDate = new Date();
-
         // Query for all visits where the date is in the future
         const upcomingHistoricalPlaces = await historicalPlaceModel.find({
             HistoricalPlaceDate: { $gt: currentDate } // Compare activityDate with current date
@@ -180,6 +155,7 @@ const getAllUpcomingHistoricalPlaces = async (req, res) => {
     }
 };
 
+//Search for a Historical Place by name,category or tag from the database
 const searchHistoricalPlace = async (req, res) => {
     console.log("Request received for searchHistoricalPlace");
     try {
@@ -211,46 +187,40 @@ const searchHistoricalPlace = async (req, res) => {
         // Perform the MongoDB query using the built 'query' object.
         const results = await historicalPlaceModel.find(query);
 
-        // If no results are found, return a 404 (Not Found) response with a message.
         if (results.length === 0) {
             return res.status(404).json({ message: "No matching Historical Place found" });
         }
-
-        // If results are found, return a 200 (OK) response with the search results.
         res.status(200).json({ message: "Search results found", results });
+
     } catch (error) {
-        // If any error occurs during the search process, catch the error and return a 500 (Internal Server Error) response.
-        // The error message is sent along with the response for debugging.
         res.status(500).json({ message: "Error searching for Historical Place", error: error.message });
     }
 };
 
-const createTags = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { tags } = req.body;  // Ensure tags are coming from req.body
+//We don't use this anymore we use the method inside the controller of the historical place tag
+// const createTags = async (req, res) => {
+//     try {
+//         const { id } = req.params;
+//         const { tags } = req.body;
+//         if (!mongoose.Types.ObjectId.isValid(id)) {
+//             return res.status(400).json({ message: "Invalid Historical Place ID" });
+//         }
+//         const HistoricalPlace = await historicalPlaceModel.findById(id);
+//         if (!HistoricalPlace) {
+//             return res.status(404).json({ message: "Historical Place not found" });
+//         }
 
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ message: "Invalid Historical Place ID" });
-        }
+//         // Concatenate the existing tags with the new ones
+//         const updatedTags = HistoricalPlace.tags.concat(tags);
 
-        const HistoricalPlace = await historicalPlaceModel.findById(id);
+//         // Update only the 'tags' field
+//         const updatedHistoricalPlace = await historicalPlaceModel.findByIdAndUpdate(id, { tags: updatedTags }, { new: true, runValidators: false });
 
-        if (!HistoricalPlace) {
-            return res.status(404).json({ message: "Historical Place not found" });
-        }
-
-        // Concatenate the existing tags with the new ones
-        const updatedTags = HistoricalPlace.tags.concat(tags);
-
-        // Update only the 'tags' field
-        const updatedHistoricalPlace = await historicalPlaceModel.findByIdAndUpdate(id, { tags: updatedTags }, { new: true, runValidators: false });
-
-        res.status(200).json({ message: "Tags updated successfully", updatedHistoricalPlace });
-    } catch (error) {
-        res.status(400).json({ message: "Error updating tags", error: error.message });
-    }
-};
+//         res.status(200).json({ message: "Tags updated successfully", updatedHistoricalPlace });
+//     } catch (error) {
+//         res.status(400).json({ message: "Error updating tags", error: error.message });
+//     }
+// };
 
 // const filterByTags = async (req, res) => {
 //     try {
@@ -282,6 +252,8 @@ const createTags = async (req, res) => {
 //     }
 // };
 
+
+//Filter by attribute tags in Database
 const filterByTags = async (req, res) => {
     try {
         // Get tags from request query
@@ -312,8 +284,5 @@ const filterByTags = async (req, res) => {
     }
 };
 
-module.exports = filterByTags;
-
-
-module.exports = { addHistoricalPlace, getHistoricalPlace, getAllMyHistoricalPlaces,getAllHistoricalPlaces, updateHistoricalPlace, deleteHistoricalPlace, getAllUpcomingHistoricalPlaces, searchHistoricalPlace, filterByTags, createTags };
+module.exports = { addHistoricalPlace, getHistoricalPlace, getAllMyHistoricalPlaces, getAllHistoricalPlaces, updateHistoricalPlace, deleteHistoricalPlace, getAllUpcomingHistoricalPlaces, searchHistoricalPlace, filterByTags };
 //must export so that we can reference them inside the routes folder

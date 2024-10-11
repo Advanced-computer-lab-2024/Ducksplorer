@@ -1,3 +1,4 @@
+//This file contains everything related to what the tourism governor can do with the historical places: see his created historical visits, create tags, update and delete his visits
 import { IconButton, DialogContentText } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -48,7 +49,7 @@ const RUDHistoricalPlace = () => {
   // const [createdBy, setCreatedBy] = useState("alya");
 
   useEffect(() => {
-    const userJson = localStorage.getItem('user'); // Get the 'user' item as a JSON string  
+    const userJson = localStorage.getItem('user'); // Get the 'user' item as a JSON string to get the currently logged in user
     const user = JSON.parse(userJson); 
     const userName = user.username;
     if (userName){
@@ -62,7 +63,7 @@ const RUDHistoricalPlace = () => {
     }
   }, []);
 
-  useEffect(() => {
+  useEffect(() => { //fetching all the tags because they will be used in the dropdown that appears when we try to  edit the tags of a particular historical visit
     const fetchTags = async () => {
         try {
             const response = await fetch('http://localhost:8000/historicalPlaceTags/getAllHistoricalPlaceTags');
@@ -77,11 +78,13 @@ const RUDHistoricalPlace = () => {
     fetchTags();
   }, []);
 
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData(prevData => ({ ...prevData, [name]: value }));
   };
 
+  // Responsible for when the user clicks on edit icon
   const handleEditClick = (historicalPlace) => {
     setFormData({
       ...historicalPlace,
@@ -90,22 +93,42 @@ const RUDHistoricalPlace = () => {
     setEditingHistoricalPlace(historicalPlace);
   };
 
+  // When the edit icon is clicked the handleUpdate method calls the backend to execute this update
   const handleUpdate = (event) => {
     event.preventDefault();
     axios.put(`http://localhost:8000/historicalPlace/updateHistoricalPlace/${editingHistoricalPlace._id}`, formData)
       .then(() => {
-        setHistoricalPlaces(historicalPlaces.map(historicalPlace => (historicalPlace._id === historicalPlace._id ? formData : historicalPlace)));
+        setHistoricalPlaces(historicalPlaces.map(historicalPlace => (historicalPlace._id === editingHistoricalPlace._id? formData : historicalPlace)));
         message.success('Historical Place updated successfully!');
         setEditingHistoricalPlace(null);
       })
       .catch(error => message.error('Error updating Historical Place!', error));
   };
 
-  const handleClickOpen = (historicalPlace) => {
+  const handleCancelEdit = () => {
+    setEditingHistoricalPlace(null); // Reset the editing state
+    setFormData({ // Reset form data
+      description: '',
+      pictures: '',
+      location: '',
+      ticketPrices: '',
+      openingTime: '',
+      closingTime: '',
+      HistoricalPlaceDate: '',
+      HistoricalPlaceName: '',
+      HistoricalPlaceCategory: '',
+      tags: [],
+      // createdBy: ''
+    });
+  };
+
+  // When the delete icon is clicked a popup saying are you sure appears, this method opens it
+  const handleClickOpen = (historicalPlace) => { 
     setSelectedHistoricalPlace(historicalPlace);
     setOpen(true);
   };
 
+  //Calls the backend to actually delete
   const handleDelete = (id) => {
     axios.delete(`http://localhost:8000/historicalPlace/deleteHistoricalPlace/${id}`)
       .then(() => {
@@ -130,22 +153,7 @@ const RUDHistoricalPlace = () => {
     handleClose();
   };
 
-  const handleCancelEdit = () => {
-    setEditingHistoricalPlace(null); // Reset the editing state
-    setFormData({ // Reset form data
-      description: '',
-      pictures: '',
-      location: '',
-      ticketPrices: '',
-      openingTime: '',
-      closingTime: '',
-      HistoricalPlaceDate: '',
-      HistoricalPlaceName: '',
-      HistoricalPlaceCategory: '',
-      tags: [],
-      // createdBy: ''
-    });
-  };
+
 
   // Navigate to page to add a tag for historical places
   const goToUpcomingPage = () => {

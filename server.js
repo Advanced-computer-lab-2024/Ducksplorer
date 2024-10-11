@@ -26,10 +26,10 @@ app.use(express.json());
 
 
 
-const museumRoutes = require('./Backend/Routes/museumRoutes.js')
-const historicalPlaceRoutes = require('./Backend/Routes/historicalPlaceRoutes.js')
-const historicalPlaceTagRoutes = require('./Backend/Routes/historicalPlaceTagRoutes.js')
-const museumTagRoutes = require('./Backend/Routes/museumTagRoutes.js')
+const museumRoutes = require('./Backend/Routes/museumHistoricalPlaceRoutes/museumRoutes.js')
+const historicalPlaceRoutes = require('./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceRoutes.js')
+const historicalPlaceTagRoutes = require('./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceTagRoutes.js')
+const museumTagRoutes = require('./Backend/Routes/museumHistoricalPlaceRoutes/museumTagRoutes.js')
 const itineraryRoutes = require("./Backend/Routes/itineraryRoutes.js")
 const tourGuideAccountRoutes = require("./Backend/Routes/TourGuideAccountRoutes.js")
 const advertiserAccountRoutes = require("./Backend/Routes/AdvertiserAccountRoutes.js")
@@ -37,7 +37,7 @@ const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js")
 
 
 app.use("/signUp", signUpRoutes);
-app.use("/touristRoutes",touristRoutes);
+app.use("/touristRoutes", touristRoutes);
 app.use("/sellerRoutes", sellerRoutes);
 app.use("/adminRoutes", adminProductRoutes);
 app.use("/activity", activityRoutes);
@@ -45,7 +45,7 @@ app.use("/admin", adminRoutes);
 app.use("/touristAccount", touristAccountRoutes);
 app.use("/adminActivity", AdminActivityRoutes);
 app.use("/preferenceTags", preferenceTagsRoutes);
-app.use("/category", categoryRoutes);app.use("/museum", museumRoutes);
+app.use("/category", categoryRoutes); app.use("/museum", museumRoutes);
 app.use("/historicalPlace", historicalPlaceRoutes);
 app.use("/historicalPlaceTags", historicalPlaceTagRoutes);
 app.use("/museumTags", museumTagRoutes);
@@ -56,9 +56,9 @@ app.use("/sellerAccount", sellerAccountRoutes);
 
 
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    next();
+  res.header('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
 });
 
 
@@ -72,7 +72,7 @@ const connectToMongoDB = async () => {
 };
 
 app.listen(PORT, () => {
-    connectToMongoDB();
-    console.log(`Server Running on Port ${PORT}`)
+  connectToMongoDB();
+  console.log(`Server Running on Port ${PORT}`)
 });
 

@@ -1,5 +1,6 @@
+// This file works with the museumTagModel table
 const express = require("express");
-const { addMuseumTag,getAllMuseumTags} = require("../Controllers/MuseumAndHistoricalPlace/museumTagController.js")
+const { addMuseumTag,getAllMuseumTags} = require("../../Controllers/MuseumAndHistoricalPlace/museumTagController.js")
 //must import all needed ftns here
 const router = express.Router(); //creates an instance of the Router which is inside the Express library
 

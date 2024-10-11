@@ -1,11 +1,11 @@
-const museumTagModel = require('../../Models/museumTagModel');//to get out of our folder then out of the controller folder
+const museumTagModel = require('../../Models/museumHistoricalPlaceModels/museumTagModel');//to get out of our folder then out of the controller folder
 // file created to contain all functions that the routes will reference instead of hard coding them in the routes folder
 
 const addMuseumTag = async (req, res) => {
     try {
         const { museumTag } = req.body;
         const newMuseumTag = new museumTagModel({
-            museumTag 
+            museumTag
         });
 
         await newMuseumTag.save();

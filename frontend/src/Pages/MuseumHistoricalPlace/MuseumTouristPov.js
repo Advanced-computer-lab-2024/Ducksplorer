@@ -1,3 +1,4 @@
+// This file contains everything the tourist should see : all museums of all tourism governors, search filter, and see upcoming museum visits
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
@@ -131,3 +132,4 @@ const MuseumTouristPov = () => {
 };
 
 export default MuseumTouristPov;
+

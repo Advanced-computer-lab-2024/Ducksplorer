@@ -14,7 +14,6 @@ import AddActivity from "./Pages/Activities/AddActivity.js";
 import TouristEditAccount from './Pages/EditAccount/TouristEditAccount.js';
 import CreateHistoricalPlace from './Pages/MuseumHistoricalPlace/CreateHistoricalPlace.js';
 import CreateMuseum from './Pages/MuseumHistoricalPlace/CreateMuseum.js';
-// import RUDVisit from './Pages/MuseumHistoricalPlace/RUDVisit.js';
 import RUDMuseum from './Pages/MuseumHistoricalPlace/RUDMuseum.js';
 import RUDHistoricalPlace from './Pages/MuseumHistoricalPlace/RUDHistoricalPlace.js';
 import MuseumTouristPov from './Pages/MuseumHistoricalPlace/MuseumTouristPov.js';

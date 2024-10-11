@@ -1,10 +1,9 @@
-const historicalPlaceTagModel = require('../../Models/historicalPlaceTagModel');//to get out of our folder then out of the controller folder
-// file created to contain all functions that the routes will reference instead of hard coding them in the routes folder
+const historicalPlaceTagModel = require('../../Models/museumHistoricalPlaceModels/historicalPlaceTagModel');//to get out of our folder then out of the controller folder
 
 const addHistoricalPlaceTag = async (req, res) => {
     try {
         const { historicalPlaceTag } = req.body;
-        const newHistoricalPlaceTag = new historicalPlaceTagModel ({
+        const newHistoricalPlaceTag = new historicalPlaceTagModel({
             historicalPlaceTag
         });
 
@@ -32,4 +31,3 @@ const getAllHistoricalPlaceTags = async (req, res) => {
 
 
 module.exports = { addHistoricalPlaceTag, getAllHistoricalPlaceTags };
-//must export so that we can reference them inside the routes folder

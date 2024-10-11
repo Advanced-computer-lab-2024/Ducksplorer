@@ -1,3 +1,4 @@
+// This file contains everything the tourist should see : all historical places of all tourism governors, search filter, and see upcoming historical visits
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { message } from 'antd';

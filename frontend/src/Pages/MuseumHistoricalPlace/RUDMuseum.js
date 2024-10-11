@@ -1,10 +1,10 @@
+//This file contains everything related to what the tourism governor can do with the museums: see his created museum visits, create tags, update and delete his visits
 import { IconButton, DialogContentText } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { message, Tooltip, Select } from 'antd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-// import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
@@ -33,7 +33,6 @@ const RUDMuseum = () => {
     const [open, setOpen] = useState(false);
     const [selectedMuseum, setSelectedMuseum] = useState(null);
     const [editingMuseum, setEditingMuseum] = useState(null);
-    const [tagMuseum, setTagMuseum] = useState(null);
     const [museumTagsOptions, setMuseumTagsOptions] = useState([]); // State to store fetched museum tags
     const [formData, setFormData] = useState({
         description: '',
@@ -52,7 +51,7 @@ const RUDMuseum = () => {
 
     // Fetch museums on component mount
     useEffect(() => {
-        const userJson = localStorage.getItem('user'); // Get the 'user' item as a JSON string  
+        const userJson = localStorage.getItem('user'); // Get the 'user' item as a JSON string  to get the currently logged in user
         const user = JSON.parse(userJson); 
         const userName = user.username;
         console.log(userName);
@@ -68,7 +67,7 @@ const RUDMuseum = () => {
         }
     }, []);
 
-    useEffect(() => {
+    useEffect(() => {//fetching all the tags because they will be used in the dropdown that appears when we try to  edit the tags of a particular museum visit
         const fetchMuseumTags = async () => {
             try {
                 const response = await fetch('http://localhost:8000/museumTags/getAllMuseumTags');
@@ -91,11 +90,13 @@ const RUDMuseum = () => {
         setFormData(prevData => ({ ...prevData, [name]: value }));
     };
 
+// Responsible for when the user clicks on edit icon
     const handleEditClick = (museum) => {
         setFormData(museum);
         setEditingMuseum(museum);
     };
 
+// When the edit icon is clicked the handleUpdate method calls the backend to execute this update
     const handleUpdate = (event) => {
         event.preventDefault();
         axios.put(`http://localhost:8000/museum/updateMuseum/${editingMuseum._id}`, formData)
@@ -107,33 +108,14 @@ const RUDMuseum = () => {
             .catch(error => message.error('Error updating museum!', error));
     };
 
-    const handleAddTagClick = (museum) => {
-        setFormData(museum);
-        setTagMuseum(museum);
-    };
 
-    const handleAddTag = (event) => {
-        event.preventDefault();
-        const tagsPayload = { tags: formData.tags };
-        axios.patch(`http://localhost:8000/museum/createTags/${tagMuseum._id}`, tagsPayload)
-            .then(response => {
-                const updatedMuseum = response.data.updatedMuseum;
-                setMuseums(museums.map(museum =>
-                    museum._id === tagMuseum._id ? updatedMuseum : museum
-                ));
-                message.success('Tag for museum added successfully!');
-                setTagMuseum(null);  
-            })
-            .catch(error => {
-                message.error('Error adding tag for museum!', error);
-            });
-    };
-
+ // When the delete icon is clicked a popup saying are you sure appears, this method opens it
     const handleClickOpen = (museum) => {
         setSelectedMuseum(museum);
         setOpen(true);
     };
 
+//Calls the backend to actually delete
     const handleDelete = (id) => {
         axios.delete(`http://localhost:8000/museum/deleteMuseum/${id}`)
             .then(() => {
@@ -158,7 +140,7 @@ const RUDMuseum = () => {
         handleClose();
     };
 
-    // New function to reset editing state and form data
+// New function to reset editing state and form data
     const handleCancelEdit = () => {
         setEditingMuseum(null);
         setFormData({
@@ -176,22 +158,9 @@ const RUDMuseum = () => {
         });
     };
 
-    // New function to reset tag input
-    const handleCancelAddTag = () => {
-        setTagMuseum(null);
-        setFormData(prev => ({
-            ...prev,
-            tags: []
-        }));
-    };
-
     // Navigate to page to add a tag for museums
     const goToUpcomingPage = () => {
         navigate('/CreateTagMuseum');
-    };
-
-    const handleTagChange = (value) => {
-        setTagMuseum(value); // Update selected tags
     };
 
     return (
@@ -259,11 +228,6 @@ const RUDMuseum = () => {
                                                 <EditIcon />
                                             </IconButton>
                                         </Tooltip>
-                                        {/* <Tooltip title="Add Tag for Museum">
-                                            <IconButton color="primary" onClick={() => handleAddTagClick(museum)}>
-                                                <AddIcon />
-                                            </IconButton>
-                                        </Tooltip> */}
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -383,25 +347,6 @@ const RUDMuseum = () => {
             </Box>
           </form>
                 )}
-
-                {/* Adding a tag */}
-                {/* {tagMuseum && (
-                    <form onSubmit={handleAddTag} style={{ marginTop: '20px' }}>
-                        <Typography variant="h6">Add Tag for a Museum</Typography>
-                        <TextField
-                            label="Tags (comma separated)"
-                            name="tags"
-                            value={formData.tags.join(', ')}
-                            onChange={e => handleInputChange({ target: { name: 'tags', value: e.target.value.split(', ') } })}
-                            fullWidth
-                            sx={{ mb: 2 }}
-                        />
-                        <Button type="submit" variant="contained" color="primary">Add Tag for Museum</Button>
-                        <Button type="button" onClick={handleCancelAddTag} variant="outlined" color="secondary" sx={{ ml: 2 }}>
-                            Cancel
-                        </Button>
-                    </form>
-                )} */}
 
                 {/* Confirmation dialog for delete */}
                 <Dialog open={open} onClose={handleClose}>

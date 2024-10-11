@@ -1,4 +1,4 @@
-// UpcomingHistoricalPlaces.js
+//This page from inside RUDHistoricalPlace
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { message } from 'antd';

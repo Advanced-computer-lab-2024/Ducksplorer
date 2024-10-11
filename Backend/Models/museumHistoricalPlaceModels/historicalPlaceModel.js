@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const museumTag = require('./museumTagModel');
+const historicalPlaceTag = require('./historicalPlaceTagModel');
 
-const museumSchema = new Schema({
+const HistoricalPlaceSchema = new Schema({
     description: {
         type: String,
         required: true
@@ -21,37 +21,32 @@ const museumSchema = new Schema({
         required: false
     },
     openingTime: {
-        type: Number, //check law fi type time
+        type: Number,
         required: true
     },
     closingTime: {
         type: Number,
         required: true
     },
-    museumDate: {
+    HistoricalPlaceDate: {
         type: Date,
         required: true
     },
 
-    museumName: {
+    HistoricalPlaceName: {
         type: String,
         required: true
     },
-    museumCategory: {
+    HistoricalPlaceCategory: {
         type: String,
         required: true
     },
 
     tags: {
         type: Array,
-        schema:[museumTag],
-        required: false
+        schema: [historicalPlaceTag], //this is an array of objects of type historicalPlaceTag created using the model of historicalPlaceTagModel
+        required: false //because a historical place is not obliged to have tags
     },
-    // tags: [{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'museumTagModel' // Reference to the museumTagModel
-    // }],
-    
     createdBy: {
         type: String,
         required: true
@@ -60,9 +55,6 @@ const museumSchema = new Schema({
 
 }, { timestamps: true })
 
-const museumModel = mongoose.model("museumModel", museumSchema);// write it singular cause it becomes plural
+const HistoricalPlace = mongoose.model("HistoricalPlace", HistoricalPlaceSchema);// write it singular cause it becomes plural
+module.exports = HistoricalPlace;
 
-
-module.exports = museumModel;
-
-//description, pictures, location, opening hours, ticket prices, museumDate, museumName, museumCategory

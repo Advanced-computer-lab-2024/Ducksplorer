@@ -1,3 +1,4 @@
+//This is a component we import inside the CreateTagHistoricalPlace page
 import React, { useState } from 'react';
 import { message } from 'antd';
 

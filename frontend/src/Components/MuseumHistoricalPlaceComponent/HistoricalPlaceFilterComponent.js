@@ -1,3 +1,4 @@
+//This is a filter component which we import inside the historicalPlaceTouristPov page
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { message } from 'antd';
@@ -11,7 +12,7 @@ const HistoricalPlaceFilterComponent = ({ onFilter }) => {
     const [allTags, setAllTags] = useState([]);  // All available tags from backend
     const [filterAnchorEl, setFilterAnchorEl] = useState(null);
 
-    // Fetch all tags from the backend when component mounts
+// Fetch all tags from the backend 
     useEffect(() => {
         axios.get('http://localhost:8000/historicalPlaceTags/getAllHistoricalPlaceTags')
             .then(response => {
@@ -22,6 +23,8 @@ const HistoricalPlaceFilterComponent = ({ onFilter }) => {
             });
     }, []);
 
+//When handleFilterChoiceClick is invoked (e.g., when the user clicks the filter icon), it sets the filterAnchorEl to the filter icon button. 
+// This action triggers the Menu component to open, anchored to the filter icon.
     const handleFilterChoiceClick = (event) => {
         setFilterAnchorEl(event.currentTarget);
     };
@@ -30,13 +33,13 @@ const HistoricalPlaceFilterComponent = ({ onFilter }) => {
         setFilterAnchorEl(null);
     };
 
-    // Handle tag selection change
+// Handle tag selection change
     const handleTagsChange = (event) => {
         const value = event.target.value;
-        setTags(value);  // Ensure tags is always an array
+        setTags(value);  // Puts the selected tags inside the array of tags created fel awel
     };
 
-    // Apply the selected filters
+// Apply the selected filters by calling the backend
     const handleFilter = () => {
         // Ensure all tags are strings
         const formattedTags = tags.map(tag => tag.toLowerCase()); // Normalizing to lower case
@@ -60,7 +63,7 @@ const HistoricalPlaceFilterComponent = ({ onFilter }) => {
         handleFilterClose();
     };
 
-    // Clear all filters
+// Clear all filters
     const handleClearAllFilters = () => {
         setTags([]);  // Clear selected tags
 
