@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, CssBaseline } from '@mui/material';
-import Sidebar from './Sidebar';
+import Sidebar from '../../Components/Sidebars/Sidebar';
 import { Outlet } from 'react-router-dom';
 
 const AdminDashboard = () => {

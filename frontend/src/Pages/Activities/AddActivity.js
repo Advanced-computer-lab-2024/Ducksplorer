@@ -1,5 +1,5 @@
 import React from "react";
-import AddActivityForm from "../Components/AddActivityForm";
+import AddActivityForm from "../../Components/AddActivityForm";
 const AddActivity = () => {
   return (
     <div>

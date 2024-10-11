@@ -14,7 +14,7 @@ import {
   Button,
   Rating,
 } from "@mui/material";
-import TouristSidebar from "../Components/TouristSidebar";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 
 const SearchActivities = () => {
   const [activities, setActivities] = useState([]); // Displayed activities

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, CssBaseline } from '@mui/material';
-import SellerSidebar from '../Components/SellerSidebar';
+import SellerSidebar from '../../Components/Sidebars/SellerSidebar';
 import { Outlet } from 'react-router-dom';
 
 const SellerDashboard = () => {

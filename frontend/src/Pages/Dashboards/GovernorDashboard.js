@@ -1,13 +1,13 @@
 import React from 'react';
 import { Box, CssBaseline } from '@mui/material';
-import TouristSidebar from '../Components/TouristSidebar';
+import GovernorSidebar from '../../Components/Sidebars/GovernorSidebar';
 import { Outlet } from 'react-router-dom';
 
-const TouristDashboard = () => {
+const GovernorDashboard = () => {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <TouristSidebar />
+      <GovernorSidebar />
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Outlet />
       </Box>
@@ -15,4 +15,4 @@ const TouristDashboard = () => {
   );
 };
 
-export default TouristDashboard;
+export default GovernorDashboard;

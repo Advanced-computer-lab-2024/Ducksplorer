@@ -1,4 +1,4 @@
-import AdvertiserSidebar from "../Components/AdvertiserSidebar";
+import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar";
 import React from "react";
 
 function AdvertiserDashboard() {

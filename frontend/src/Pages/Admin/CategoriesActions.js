@@ -5,7 +5,7 @@ import {TextField, IconButton,Box, Button, Table, Typography, TableBody, TableCe
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
-import Sidebar from '../../Components/Sidebar.js';
+import Sidebar from '../../Components/Sidebars/Sidebar.js';
 
 
 const DeleteCategory = () => {

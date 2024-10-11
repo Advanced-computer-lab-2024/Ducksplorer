@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {Tooltip, Box, IconButton, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { message } from 'antd';
-import Sidebar from '../../Components/Sidebar';
+import Sidebar from '../../Components/Sidebars/Sidebar';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const ApproveUsers = () => {

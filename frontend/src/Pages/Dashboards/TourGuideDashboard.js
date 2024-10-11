@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, CssBaseline } from '@mui/material';
 import { Outlet } from 'react-router-dom';
-import TourGuideSidebar from '../Components/TourGuideSidebar';
+import TourGuideSidebar from '../../Components/Sidebars/TourGuideSidebar';
 
 const TourGuideDashboard = () => {
     return (

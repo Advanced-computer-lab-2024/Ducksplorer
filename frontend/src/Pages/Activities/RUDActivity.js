@@ -3,7 +3,7 @@ import axios from "axios";
 import { message } from "antd";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { calculateAverageRating } from "../Utilities/averageRating.js";
+import { calculateAverageRating } from "../../Utilities/averageRating.js";
 import {
   Rating,
   Checkbox,
@@ -27,7 +27,7 @@ import {
   Tooltip,
   TextField,
 } from "@mui/material";
-import StandAloneToggleButton from "../Components/ToggleButton.js";
+import StandAloneToggleButton from "../../Components/ToggleButton.js";
 
 const RUDActivity = () => {
   const [activities, setActivities] = useState([]);

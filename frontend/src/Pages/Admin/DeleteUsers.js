@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
 import { Box, Button, Table, Typography, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Tooltip} from '@mui/material';
-import Sidebar from '../../Components/Sidebar';
+import Sidebar from '../../Components/Sidebars/Sidebar';
 import DeleteIcon from '@mui/icons-material/Delete';
 const DeleteUser = () => {
   const [users, setUsers] = useState([]);

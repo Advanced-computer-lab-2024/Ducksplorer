@@ -4,7 +4,7 @@ import SortActivities from "./sortActivities";
 import { Button } from "@mui/material";
 import { useState } from "react";
 import FilterActivities from "./filterActivities";
-import TouristSidebar from "../Components/TouristSidebar";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 
 function SortFilterActivity() {
   const [sort, setSort] = useState(true);

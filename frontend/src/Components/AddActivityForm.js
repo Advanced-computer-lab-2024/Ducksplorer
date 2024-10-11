@@ -4,7 +4,7 @@ import axios from "axios";
 import { message } from "antd";
 import CategoriesDropDown from "./CategoryDropDown";
 import StandAloneToggleButton from "./ToggleButton";
-import AdvertiserSidebar from "./AdvertiserSidebar";
+import AdvertiserSidebar from "./Sidebars/AdvertiserSidebar";
 import { useNavigate } from "react-router-dom";
 
 let tags = [];

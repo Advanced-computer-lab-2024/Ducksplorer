@@ -7,7 +7,7 @@ import Iconify from '../../Components/TopNav/iconify.js';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import axios from 'axios';
-import Sidebar from '../../Components/Sidebar.js';
+import Sidebar from '../../Components/Sidebars/Sidebar.js';
 
 
 

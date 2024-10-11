@@ -3,8 +3,8 @@ import axios from "axios";
 import { message } from "antd";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { calculateAverageRating } from "../Utilities/averageRating.js";
-import StandAloneToggleButton from "../Components/ToggleButton.js";
+import { calculateAverageRating } from "../../Utilities/averageRating.js";
+import StandAloneToggleButton from "../../Components/ToggleButton.js";
 import {
   Rating,
   Checkbox,
@@ -28,7 +28,7 @@ import {
   Tooltip,
   TextField,
 } from "@mui/material";
-import AdvertiserSidebar from "../Components/AdvertiserSidebar.js";
+import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar.js";
 
 const MyActivities = ({ userName }) => {
   // Accept userNameId as a prop
