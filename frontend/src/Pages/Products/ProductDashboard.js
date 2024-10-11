@@ -27,7 +27,7 @@ const sidebarStyle = {
 
 const sidebarButtonStyle = {
   marginBottom: '10px',
-  backgroundColor: 'blue',  // Orange color for better visibility
+  backgroundColor: 'blue',  
   color: 'white',  // White text for contrast
 };
 
