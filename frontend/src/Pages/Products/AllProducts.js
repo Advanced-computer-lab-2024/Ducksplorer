@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
 import { Typography, Card, CardContent, Grid } from '@mui/material';
-import ProductDashboard from '../Components/ProductDashboard';
+import ProductDashboard from '../../Pages/Products/ProductDashboard';
 import { TextField, Button, Stack } from '@mui/material';
-import ProductCard from '../Components/ProductCard'; // Import the ProductCard component
+import ProductCard from '../../Components/Products/ProductCard'; // Import the ProductCard component
 
 
 function AllProducts() {

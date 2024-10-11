@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
 import { Typography, Card, CardContent, Grid } from '@mui/material';
-import ProductDashboard from '../Components/ProductDashboard';
+import ProductDashboard from '../../Pages/Products/ProductDashboard';
 import { TextField, Button, Stack } from '@mui/material';
 
 
@@ -49,7 +49,7 @@ function AddProducts() {
     <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto' }}>
 
       <h2>Add Product</h2>
-      <button onClick={handleBackClick}>Back</button>      
+      <Button  onClick={handleBackClick}>Back</Button>      
       <Stack spacing={2}>
         <TextField
           label="Product Name"

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
 import { Button, Stack, TextField, Typography } from '@mui/material';
-import ProductCard from '../Components/ProductCard'; // Import the ProductCard component
+import ProductCard from '../../Components/Products/ProductCard'; // Import the ProductCard component
 
 function SortProducts() {
   const [products, setProducts] = useState([]);

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { TextField, IconButton, InputAdornment, Button, Stack } from '@mui/material';
-import Iconify from './TopNav/iconify.js'; 
+import Iconify from '../TopNav/iconify.js'; 
 import axios from 'axios';
 import { message } from 'antd';
-import { useTypeContext } from '../context/TypeContext';
-import DropDown from './DropDown.js';
+import { useTypeContext } from '../../context/TypeContext.js';
+import DropDown from '../DropDown.js';
  
 const EditProduct =  () =>{
   const {productId} = useParams();

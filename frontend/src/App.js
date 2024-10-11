@@ -36,17 +36,17 @@ import SortFilterActivity from "./Pages/SortFilterActivity";
 import MyActivities from "./Pages/myActivities.js";
 import AdvertiserDashboard from "./Pages/AdvertiserDashboard.js";
 import ClinicLocation from "./Pages/location.js";
-import Products from './Components/ProductDashboard.js';
-import AllProducts from './Pages/AllProducts.js';
-import AddProducts from './Pages/AddProducts.js';
-import FilterProducts from './Pages/FilterProducts.js';
-import SearchProducts from './Pages/SearchProducts.js';
-import SortProducts from './Pages/SortProducts.js' ; 
-import ViewMyProducts from './Pages/ViewMyProducts.js'
-import EditProduct from './Components/EditProduct.js';
-import AdminProducts from './Pages/AdminProducts.js';
-import AdminAllProducts from './Pages/AdminAllProducts.js';
-import TouristAllProducts from './Pages/TouristAllProducts.js';
+import ProductDashboard from './Pages/Products/ProductDashboard.js';
+import AllProducts from './Pages/Products/AllProducts.js';
+import AddProducts from './Pages/Products/AddProducts.js';
+import FilterProducts from './Pages/Products/FilterProducts.js';
+import SearchProducts from './Pages/Products/SearchProducts.js';
+import SortProducts from './Pages/Products/SortProducts.js' ; 
+import ViewMyProducts from './Pages/Products/ViewMyProducts.js'
+import EditProduct from './Components/Products/EditProduct.js';
+import AdminProducts from './Pages/Products/AdminProducts.js';
+import AdminAllProducts from './Pages/Products/AdminAllProducts.js';
+import TouristAllProducts from './Pages/Products/TouristAllProducts.js';
 import TourGuideEditProfile from './Pages/TourGuideEditAccount';
 import GovernorDashboard from './Pages/GovernorDashboard';
 import AdvertiserEditProfile from './Pages/AdvertiserEditAccount';
@@ -112,7 +112,7 @@ function App() {
           <Route path="/location" element={<ClinicLocation/>} />
 
 
-          <Route path = "/products" element= {<Products/>} />
+          <Route path = "/ProductDashboard" element= {<ProductDashboard/>} />
         <Route path = "/AllProducts" element= {<AllProducts/>} />
         <Route path = "/AddProducts" element= {<AddProducts/>} />
         <Route path = "/FilterProducts" element= {<FilterProducts/>} />

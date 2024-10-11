@@ -1,28 +1,29 @@
+// FilterProducts.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
 import { Button, Stack, TextField, Typography } from '@mui/material';
-import ProductCard from '../Components/ProductCard'; // Import the ProductCard component
+import ProductCard from '../../Components/Products/ProductCard'; // Import the ProductCard component
 
-function FilterProducts() {
-  const [minPrice, setMinPrice] = useState(''); // State for minimum price
-  const [maxPrice, setMaxPrice] = useState(''); // State for maximum price
+function SearchProducts() {
+  const [name, setName] = useState('');
   const [products, setProducts] = useState([]);
 
-  const handleFilterProducts = async () => {
+  const handleSearchProducts = async () => {
+    // console.log(price);
     try {
-      const response = await axios.get('http://localhost:8000/adminRoutes/filterProducts', {
+      
+      const response = await axios.get('http://localhost:8000/sellerRoutes/findProduct', {
         params: {
-          minPrice, // Send minPrice as a query parameter
-          maxPrice, // Send maxPrice as a query parameter
+          name, // Send price as a query parameter
         },
       });
 
       if (response.status === 200) {
-        message.success('Products filtered successfully');
+        message.success('Products viewed successfully');
         setProducts(response.data); // Store the filtered products
       } else {
-        message.error('Failed to filter products');
+        message.error('Failed to search products');
       }
     } catch (error) {
       message.error('An error occurred: ' + error.message);
@@ -35,29 +36,22 @@ function FilterProducts() {
 
   return (
     <div style={{ padding: '20px', maxWidth: '800px', margin: 'auto' }}>
-        <Button onClick={handleBackButtonClick}>Back</Button>
-      <h2>Filter Products by Price Range</h2>
+      <Button onClick={handleBackButtonClick}>Back</Button>
+      <h2>Search Products</h2>
       <Stack spacing={2}>
         <TextField
-          label="Enter Minimum Price"
-          type="number" // Ensure it's a number field
-          value={minPrice}
-          onChange={(e) => setMinPrice(e.target.value)}
-          fullWidth
-        />
-        <TextField
-          label="Enter Maximum Price"
-          type="number"
-          value={maxPrice}
-          onChange={(e) => setMaxPrice(e.target.value)}
+          label="Enter Name"
+          // type="number"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           fullWidth
         />
         <Button
           variant="contained"
           color="primary"
-          onClick={handleFilterProducts}
+          onClick={handleSearchProducts}
         >
-          Filter Products
+          Search Products
         </Button>
       </Stack>
 
@@ -69,7 +63,7 @@ function FilterProducts() {
           ))
         ) : (
           <Typography variant="body1" style={{ marginTop: '20px' }}>
-            No products found in the specified price range.
+            No products found under the specified name.
           </Typography>
         )}
       </div>
@@ -77,4 +71,4 @@ function FilterProducts() {
   );
 }
 
-export default FilterProducts;
+export default SearchProducts;
