@@ -39,7 +39,7 @@ const SellerSidebar = () => {
             </ListItemIcon>
             <ListItemText primary="Edit Profile" />
           </ListItem>
-          <ListItem button component={Link} to="/products">
+          <ListItem button component={Link} to="/ProductDashboard">
             <ListItemIcon>
               <PersonIcon />
             </ListItemIcon>
