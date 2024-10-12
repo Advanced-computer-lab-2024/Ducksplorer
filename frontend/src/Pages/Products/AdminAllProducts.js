@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { message } from 'antd';
-import { Typography, Card, CardContent, Grid } from '@mui/material';
-import ProductDashboard from '../../Pages/Products/ProductDashboard';
-import { TextField, Button, Stack } from '@mui/material';
-import ProductCard from '../../Components/Products/ProductCard'; // Import the ProductCard component
-import { useNavigate } from 'react-router-dom'; // Import to navigate to the edit page
-import EditProduct from '../../Components/Products/EditProduct';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { message } from "antd";
+import { Typography, Card, CardContent, Grid } from "@mui/material";
+import ProductDashboard from "../../Pages/Products/ProductDashboard";
+import { TextField, Button, Stack } from "@mui/material";
+import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
+import { useNavigate } from "react-router-dom"; // Import to navigate to the edit page
+import EditProduct from "../../Components/Products/EditProduct";
 
 function AdminAllProducts() {
   const [products, setProducts] = useState([]);
@@ -14,18 +14,17 @@ function AdminAllProducts() {
 
   const handleViewAdminProducts = async () => {
     try {
-      
-
-
-      const response = await axios.get("http://localhost:8000/adminRoutes/getproducts");
+      const response = await axios.get(
+        "http://localhost:8000/adminRoutes/getproducts"
+      );
       if (response.status === 200) {
-        message.success('Products fetched successfully');
+        message.success("Products fetched successfully");
         setProducts(response.data); // Store the filtered products
       } else {
-        message.error('Failed to fetch products');
+        message.error("Failed to fetch products");
       }
     } catch (error) {
-      message.error('An error occurred: ' + error.message);
+      message.error("An error occurred: " + error.message);
     }
   };
 
@@ -37,9 +36,9 @@ function AdminAllProducts() {
   const handleBackButtonClick = () => {
     window.history.back();
   };
-  
+
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: 'auto' }}>
+    <div style={{ padding: "20px", maxWidth: "800px", margin: "auto" }}>
       <Button onClick={handleBackButtonClick}>Back</Button>
       <Button
         variant="contained"
@@ -49,24 +48,36 @@ function AdminAllProducts() {
         My Products
       </Button>
 
-      <div style={{ maxHeight: '400px', overflowY: 'visible', padding: '10px', marginTop: '20px' }}>
+      <div
+        style={{
+          maxHeight: "400px",
+          overflowY: "visible",
+          padding: "10px",
+          marginTop: "20px",
+          height: "80vh",
+          transform: "translateX(125px)",
+        }}
+      >
         {/* Render the filtered products using the ProductCard component */}
         {products.length > 0 ? (
           products.map((product) => (
-            <div key={product._id} style={{ position: 'relative', marginBottom: '20px' }}>
+            <div
+              key={product._id}
+              style={{ position: "relative", marginBottom: "20px" }}
+            >
               <ProductCard product={product} />
               <Button
                 variant="contained"
                 color="secondary"
                 onClick={() => handleEditProduct(product._id)}
-                style={{ position: 'absolute', right: '10px', top: '10px' }} // Place the button at the top-right corner
+                style={{ position: "absolute", right: "10px", top: "10px" }} // Place the button at the top-right corner
               >
                 Edit
               </Button>
             </div>
           ))
         ) : (
-          <Typography variant="body1" style={{ marginTop: '20px' }}>
+          <Typography variant="body1" style={{ marginTop: "20px" }}>
             No products found.
           </Typography>
         )}

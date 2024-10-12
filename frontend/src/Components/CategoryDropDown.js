@@ -54,6 +54,7 @@ export default function CategoriesDropDown() {
                   key={element._id}
                   onClick={() => {
                     selectCategory(`${element.name}`, popupState);
+                    console.log(element.name);
                     localStorage.setItem("category", element.name);
                   }}
                 >

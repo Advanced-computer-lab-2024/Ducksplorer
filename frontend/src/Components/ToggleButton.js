@@ -1,6 +1,6 @@
 import * as React from "react";
 import ToggleButton from "@mui/material/ToggleButton";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import axios from "axios";
 
 function StandAloneToggleButton(props) {
@@ -24,9 +24,7 @@ function StandAloneToggleButton(props) {
       .get("http://localhost:8000/preferenceTags/")
       .then((response) => {
         const data = response.data;
-        console.log(data);
         allTags = data.map(getTagNames);
-        console.log(allTags);
         localStorage.setItem("tags", JSON.stringify(allTags));
       })
       .catch((error) => {
@@ -46,7 +44,7 @@ function StandAloneToggleButton(props) {
           fontSize: 12,
         }}
         value=""
-        selected={selected}
+        selected={props.tags.includes(props.name)}
         onChange={() => {
           setSelected(!selected);
           props.tags.includes(props.name)
