@@ -40,7 +40,7 @@ const touristSchema = new Schema(
         type: Number,
         required: true,
         default: 0,
-        immutable: true // This makes the field read-only
+        immutable: false // This makes the field read-only
     },
     level:{
       type: Number,
