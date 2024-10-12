@@ -161,31 +161,39 @@ const searchHistoricalPlace = async (req, res) => {
     try {
         // Destructuring 'name', 'category', and 'tag' from the query parameters in the URL.
         // These parameters are optional and will be used to search for museums or historical places.
-        const { name, category, tag } = req.query;
+        const { searchTerm } = req.query;
 
         // Initialize an empty 'query' object that will be used to build the MongoDB query.
-        let query = {};
+        const searches = {};
+
+        if(searchTerm){
+            searches['$or'] = [
+                { HistoricalPlaceName : { $regex: searchTerm, $options: 'i' }},
+                { HistoricalPlaceCategory : { $regex: searchTerm, $options: 'i' }},
+                { tags : { $regex: searchTerm, $options: 'i' }}
+            ];
+        }
 
         // If a 'name' is provided in the query parameters, add a search condition for the name.
         // We use $regex to perform a partial match and $options: 'i' to make the search case-insensitive.
-        if (name) {
-            query.HistoricalPlaceName = { $regex: name, $options: 'i' };
-        }
+        // if (name) {
+        //     query.HistoricalPlaceName = { $regex: name, $options: 'i' };
+        // }
 
-        // If a 'category' is provided, add a search condition for the category.
-        // Similar to the name, we use $regex and case-insensitive search to find partial matches in the category field.
-        if (category) {
-            query.HistoricalPlaceCategory = { $regex: category, $options: 'i' };
-        }
+        // // If a 'category' is provided, add a search condition for the category.
+        // // Similar to the name, we use $regex and case-insensitive search to find partial matches in the category field.
+        // if (category) {
+        //     query.HistoricalPlaceCategory = { $regex: category, $options: 'i' };
+        // }
 
-        // If a 'tag' is provided, add a search condition for the 'tags' field.
-        // It will search for partial matches in the 'tags' array field, also using case-insensitivity.
-        if (tag) {
-            query.tags = { $regex: tag, $options: 'i' };
-        }
+        // // If a 'tag' is provided, add a search condition for the 'tags' field.
+        // // It will search for partial matches in the 'tags' array field, also using case-insensitivity.
+        // if (tag) {
+        //     query.tags = { $regex: tag, $options: 'i' };
+        // }
 
         // Perform the MongoDB query using the built 'query' object.
-        const results = await historicalPlaceModel.find(query);
+        const results = await historicalPlaceModel.find(searches);
 
         if (results.length === 0) {
             return res.status(404).json({ message: "No matching Historical Place found" });

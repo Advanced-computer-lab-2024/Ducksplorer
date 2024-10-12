@@ -1,5 +1,5 @@
 const express = require("express");
-const {getProducts,findProduct,filterProducts,sortProducts}= require('../Controllers/TAScontroller');
+const {getProducts,findProduct,filterProducts,sortProducts}= require('../Controllers/Products/TAScontroller');
 
 const router = express.Router();
 

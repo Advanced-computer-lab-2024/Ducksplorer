@@ -138,11 +138,12 @@ const AddActivityForm = () => {
           backgroundImage: "url(../../public/Images/bg-intro-desktop.png)",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          height: "80vh",
+          height: "110vh",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           transform: "translateY(-10px)",
+          overflowY: 'visible'
         }}
       >
         <div style={{ transform: "translateY(-100px)" }}>

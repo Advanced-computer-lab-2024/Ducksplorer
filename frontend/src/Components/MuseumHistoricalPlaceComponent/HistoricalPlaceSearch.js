@@ -1,28 +1,28 @@
 //This is a search component which we import in the historicalPlaceTouristPov
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button, TextField, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import { message } from 'antd';
 
 function HistoricalPlaceSearch({ onSearch }) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchBy, setSearchBy] = useState('name'); // New state for search criteria
+  // const [searchBy, setSearchBy] = useState('name'); // New state for search criteria
 
   const handleHistoricalPlaceSearch = async () => {
     // Ensure at least one field is filled
-    if (!searchTerm) {
-      message.error('Please enter a search criterion (Name, Category, or Tags).'); // Alert for no input
-      return;
-    }
+    // if (!searchTerm) {
+    //   message.error('Please enter a search criterion (Name, Category, or Tags).'); // Alert for no input
+    //   return;
+    // }
 
     // Log the search term and criteria being sent to the backend
     console.log("Search term:", searchTerm);
-    console.log("Search by:", searchBy);
+    // console.log("Search by:", searchBy);
 
     try {
       const response = await axios.get('http://localhost:8000/historicalPlace/searchHistoricalPlace', {
         params: {
-          [searchBy]: searchTerm, // Send the search term based on selected criteria
+          searchTerm, // Send the search term based on selected criteria
         },
       });
 
@@ -45,14 +45,14 @@ function HistoricalPlaceSearch({ onSearch }) {
     <div style={{ padding: '20px', maxWidth: '800px', margin: 'auto' }}>
       <h2>Search Historical Places</h2>
 
-      <FormControl component="fieldset">
+      {/* <FormControl component="fieldset">
         <FormLabel component="legend">Search By</FormLabel>
         <RadioGroup row value={searchBy} onChange={(e) => setSearchBy(e.target.value)}>
           <FormControlLabel value="name" control={<Radio />} label="Name" />
           <FormControlLabel value="category" control={<Radio />} label="Category" />
           <FormControlLabel value="tag" control={<Radio />} label="Tags" />
         </RadioGroup>
-      </FormControl>
+      </FormControl> */}
 
       <TextField
         label="Enter Search Term"

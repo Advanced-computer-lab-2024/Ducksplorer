@@ -1,7 +1,7 @@
-const Activity = require("../Models/activityModel.js");
-const activityService = require("../Services/activityServices.js");
-const Tags = require("../Models/preferenceTagsModels.js");
-const Category = require("../Models/activityCategory.js");
+const Activity = require("../../Models/activityModel.js");
+const activityService = require("../../Services/activityServices.js");
+const Tags = require("../../Models/preferenceTagsModels.js");
+const Category = require("../../Models/activityCategory.js");
 
 const createActivity = async (req, res) => {
   try {

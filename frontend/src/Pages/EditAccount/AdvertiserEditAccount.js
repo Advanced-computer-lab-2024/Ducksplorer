@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
-import { Link } from "react-router-dom";
 import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar";
 
 const AdvertiserEditProfile = () => {

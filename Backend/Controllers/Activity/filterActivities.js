@@ -1,4 +1,4 @@
-const Activity = require("../Models/activityModel");
+const Activity = require("../../Models/activityModel");
 
 const filterActivities = async (req, res) => {
   const { price, date, rating, category } = req.body;

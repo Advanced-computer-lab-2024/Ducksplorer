@@ -3,7 +3,7 @@ const Activity = require("../Models/activityModel.js");
 const { $gte } = require("sift");
 const Category = require("../Models/activityCategory.js");
 const Tags = require("../Models/preferenceTagsModels.js");
-const getAllActivitiesByUsername = require("../Controllers/activityController.js");
+const getAllActivitiesByUsername = require("../Controllers/Activity/activityController.js");
 
 const createActivity = async (activityData) => {
   const {

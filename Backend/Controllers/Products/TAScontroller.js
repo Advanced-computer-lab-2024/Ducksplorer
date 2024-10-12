@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const productModel = require('../Models/productModel');
+const productModel = require('../../Models/productModel');
 const { $regex } = require('sift');
 
 const getProducts  = async (req, res) => { //view all products
