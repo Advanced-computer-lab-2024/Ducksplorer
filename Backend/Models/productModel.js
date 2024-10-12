@@ -40,17 +40,21 @@ const productSchema = new mongoose.Schema({
     picture: {
       type: String, // what is the type?
       // required: true
-    },
-    
+    },    
     description: {
       type: String,
       required: true,
       trim: true
     },
+    sales: {
+      type: Number,
+      required: false
+    },
     seller: {
       type: String,
       required: false
     },
+    
     reviews: [reviewSchema]
   });
 
