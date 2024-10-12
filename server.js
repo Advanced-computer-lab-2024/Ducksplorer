@@ -34,6 +34,7 @@ const itineraryRoutes = require("./Backend/Routes/itineraryRoutes.js")
 const tourGuideAccountRoutes = require("./Backend/Routes/TourGuideAccountRoutes.js")
 const advertiserAccountRoutes = require("./Backend/Routes/AdvertiserAccountRoutes.js")
 const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js")
+const complaintRoutes = require("./Backend/Routes/complaintRoutes.js")
 
 
 app.use("/signUp", signUpRoutes);
@@ -53,6 +54,7 @@ app.use("/itinerary", itineraryRoutes);
 app.use("/tourGuideAccount", tourGuideAccountRoutes);
 app.use("/advertiserAccount", advertiserAccountRoutes);
 app.use("/sellerAccount", sellerAccountRoutes);
+app.use("/complaint", complaintRoutes);
 
 
 app.use((req, res, next) => {
