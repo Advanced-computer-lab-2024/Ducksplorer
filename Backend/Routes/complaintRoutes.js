@@ -6,13 +6,12 @@ const router = express.Router();
 
 router.route("/").post(createComplaint).get(getAllComplaints) //create, get all
 
-router.route("/:id").get(getComplaintByID).put(updateComplaints) //update, get one
-
 router.route("/sort").get(sortComplaints)
 
 router.route("/filter").get(filterComplaints)
 
 router.route("/myComplaints/:touristName").get(getMyComplaints) 
 
+router.route("/:id").get(getComplaintByID).put(updateComplaints) //update, get one
 
-module.exports = router
+module.exports = router;

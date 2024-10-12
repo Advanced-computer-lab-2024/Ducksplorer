@@ -16,12 +16,13 @@ const complaintSchema = new Schema(
       required: true,
     },
     status: {
-        type: Boolean,  //true means it has been resolved else pending resolution
-        required: false
+      type: Boolean,  //true means resolved, false pending resolution //therefore default is false
+      default: false,
+      required: false
     },
     response: {
-        type:String,
-        required:false
+      type: String,
+      required:false
     },
     tourist: {
       type: String,

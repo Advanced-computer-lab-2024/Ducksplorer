@@ -1,9 +1,10 @@
 const complaint = require("../../Models/complaintModel");
+const mongoose = require("mongoose");
 
 const createComplaint = async (req, res) => {
-  const { title, body, date } = req.body;
+  const { title, body, date, tourist } = req.body;
   try {
-    const newComplaint = new complaint({ title, body, date });
+    const newComplaint = new complaint({ title, body, date, tourist });
     await newComplaint.save();
     res.status(201).json(newComplaint);
   } catch (error) {
@@ -47,11 +48,11 @@ const getComplaintByID = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: "ID invalid" });
     }
-    const complaint = await complaint.findById(id);
-    if (!complaint) {
+    const targetComplaint = await complaint.findById(id);
+    if (!targetComplaint) {
       return res.status(404).json({ error: "Complaint not found" });
     }
-    res.status(200).json(complaint);
+    res.status(200).json(targetComplaint);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -60,13 +61,13 @@ const getComplaintByID = async (req, res) => {
 const getMyComplaints = async (req, res) => {
   try {
     const { touristName } = req.params;
-    const complaint = await complaint.find({ tourist: touristName });
+    const complaints = await complaint.find({ tourist: touristName });
 
-    if(!complaint) {
-      return res.status(404).json({ message: "Complaint not found" });
+    if(!complaints) {
+      return res.status(404).json({ message: "No complaints found" });
     }
 
-    res.status(200).json(complaint);
+    res.status(200).json(complaints);
 
   } catch (error) {
     res.status(500).json({ message: error.message });

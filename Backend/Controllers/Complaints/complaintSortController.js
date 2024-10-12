@@ -10,11 +10,7 @@ const sortComplaints = async (req, res) => {
       sortOption.date = sortOrder === "desc" ? -1 : 1; //make the default asc
       // 1 for ascending, -1 for descending
     }
-    const complaints = await complaint
-      .find({
-        date,
-      })
-      .sort(sortOption);
+    const complaints = await complaint.find({}).sort(sortOption);
 
     if (!complaints.length) {
       return res.status(404).json({ error: "No complaints found" });
