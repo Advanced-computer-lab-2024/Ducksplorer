@@ -41,6 +41,14 @@ const touristSchema = new Schema(
         required: true,
         default: 0,
         immutable: true // This makes the field read-only
+    },
+    level:{
+      type: Number,
+      default: 1
+    },
+    points:{
+      type: Number,
+      default:0
     }
 },{timestamps: true})
 
