@@ -6,7 +6,7 @@ import { message } from 'antd';
 import { useTypeContext } from '../context/TypeContext';
 import DropDown from './DropDown.js';
 import { useNavigate } from "react-router-dom";
-
+import FileUpload from './FileUpload';
 
 const FormSection = () => {
   const { type } = useTypeContext();
@@ -16,6 +16,7 @@ const FormSection = () => {
   const [email, setEmail] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [nationalId, setnationalId] = useState(null);
 
   // Additional state variables for conditional fields
   const [mobileNumber, setMobileNumber] = useState('');
@@ -29,11 +30,15 @@ const FormSection = () => {
   const [companyProfile, setCompanyProfile] = useState('');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [taxationRegisteryCard, setTaxationRegisteryCard] = useState(null);
+  //const [logo, setLogo] = useState('');
+  const [certificates, setCertificates] = useState(null);
+  //const [photo, setPhoto] = useState('');
 
   const navigate = useNavigate();
 
   const validateFields = () => {
-    if (!userName || !password || !confirmPassword || !email) {
+    if (!userName || !password || !confirmPassword || !email || !nationalId) {
       message.error('All fields are required');
       return false;
     }
@@ -45,20 +50,22 @@ const FormSection = () => {
       message.error('All fields are required for Tourist');
       return false;
     }
-    if (type === 'Guide' && (!mobileNumber || !yearsOfExperience || !previousWork)) {
+    if (type === 'Guide' && (!mobileNumber || !yearsOfExperience || !previousWork || !certificates)) {
       message.error('All fields are required for Guide');
       return false;
     }
-    if (type === 'Advertiser' && (!websiteLink || !hotline || !companyProfile)) {
+    if (type === 'Advertiser' && (!websiteLink || !hotline || !companyProfile || !taxationRegisteryCard)) {
       message.error('All fields are required for Advertiser');
       return false;
     }
-    if (type === 'Seller' && (!name || !description)) {
+    if (type === 'Seller' && (!name || !description || !taxationRegisteryCard)) {
       message.error('All fields are required for Seller');
       return false;
     }
     return true;
   };
+
+  
   const handleAdd = async () => {
     if (!validateFields()) {
       return;
@@ -67,15 +74,19 @@ const FormSection = () => {
       userName,
       password,
       email,
+      nationalId,
       role: type,
       ...(type === 'Tourist' && { mobileNumber, nationality, DOB, employmentStatus }),
-      ...(type === 'Guide' && { mobileNumber, yearsOfExperience, previousWork }),
-      ...(type === 'Advertiser' && { websiteLink, hotline, companyProfile }),
-      ...(type === 'Seller' && { name, description }),
+      ...(type === 'Guide' && { mobileNumber, yearsOfExperience, previousWork, certificates }),
+      ...(type === 'Advertiser' && { websiteLink, hotline, companyProfile, taxationRegisteryCard }),
+      ...(type === 'Seller' && { name, description, taxationRegisteryCard }),
     };
 
     try {
-      await axios.post('http://localhost:8000/signUp', data);
+      await axios.post('http://localhost:8000/signUp', data,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
       message.success('Signed Up successfully!');
       window.location.href = '/login';
     } catch (error) {
@@ -89,10 +100,12 @@ const FormSection = () => {
       backgroundImage: 'url(../../public/Images/bg-intro-desktop.png)', // Update with your image path
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      height: '100vh',
+      minHeight: '100vh',
       display: 'flex',
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
+      overflowY: 'auto',
+      margin: 0,
     }}>
      
       <Stack spacing={1} sx={{ width: '600px', padding: '10px', backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: '10px' }}>
@@ -157,6 +170,15 @@ const FormSection = () => {
             ),
           }}
         />
+        {/* <TextField
+          name="nationalId"
+          label=""
+          type="text"
+          value={nationalId}
+          onChange={(e) => setnationalId(e.target.value)}
+        /> */}
+        <lable>National ID</lable>
+        <FileUpload />
         {type === 'Tourist' && (
           <>
             <TextField
@@ -199,6 +221,16 @@ const FormSection = () => {
               value={mobileNumber}
               onChange={(e) => setMobileNumber(e.target.value)}
             />
+            {/* <TextField
+              name="certificates"
+              label=" (URL)"
+              type="text"
+              value={certificates}
+              onChange={(e) => setCertificates(e.target.value)}
+              required
+            /> */}
+            <lable>Certificates</lable>
+            <FileUpload />
             <TextField
               name="yearsOfExperience"
               label="Years of Experience"
@@ -231,6 +263,16 @@ const FormSection = () => {
               value={hotline}
               onChange={(e) => setHotline(e.target.value)}
             />
+            {/* <TextField
+              name="taxationRegisteryCard"
+              label="Taxation Registery Card (URL)"
+              type="text"
+              value={taxationRegisteryCard}
+              onChange={(e) => setTaxationRegisteryCard(e.target.value)}
+              required
+            /> */}
+            <lable>Taxation Registery Card</lable>
+            <FileUpload />
             <TextField
               name="companyProfile"
               label="Company Profile"
@@ -249,6 +291,16 @@ const FormSection = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
+            {/* <TextField
+              name="taxationRegisteryCard"
+              label="Taxation Registery Card (URL)"
+              type="text"
+              value={taxationRegisteryCard}
+              onChange={(e) => setTaxationRegisteryCard(e.target.value)}
+              required
+            /> */}
+            <lable>Taxation Registery Card</lable>
+            <FileUpload />
             <TextField
               name="description"
               label="Description"

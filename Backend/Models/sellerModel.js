@@ -16,6 +16,10 @@ const sellerSchema = new Schema({
         type: String,
         required: true
     },
+    nationalId: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         required: true
@@ -23,6 +27,13 @@ const sellerSchema = new Schema({
     description: {
         type: String,
         required: true
+    },
+    taxationRegisteryCard:{
+        type: String,
+        required: true
+    },
+    logo:{
+        type: String,
     }
 },
     { timestamps: true })

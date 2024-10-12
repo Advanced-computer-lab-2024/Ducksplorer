@@ -3,15 +3,19 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import { message } from 'antd';
 import { Link } from 'react-router-dom';
+import FileUpload from '../../Components/FileUpload';
 
 const TourGuideEditProfile = () => {
   const [tourGuideDetails, setTourGuideDetails] = useState({
     userName: '',
     email: '',
     password: '',
+    //nationalId: '',
     mobileNumber: '',
     yearsOfExperience: '',
-    previousWork: ''
+    previousWork: '',
+    certificates: '',
+    photo: ''
   });
   const [isEditing, setIsEditing] = useState(false);
 
@@ -123,6 +127,28 @@ const TourGuideEditProfile = () => {
             readOnly: !isEditing,
           }}
         />
+        <lable>Certificates</lable>
+        <FileUpload />
+        {/* <TextField
+          label="certificates" // Singular label
+          name="certificates" // This should match the updated state field
+          value={tourGuideDetails.certificates} // Access the pictures string directly
+          onChange={handleChange}
+          InputProps={{
+            readOnly: !isEditing,
+          }}
+         /> */}
+         <lable>Photo</lable>
+         <FileUpload />
+         {/* <TextField
+          label="photo" // Singular label
+          name="photo" // This should match the updated state field
+          value={tourGuideDetails.photo} // Access the pictures string directly
+          onChange={handleChange}
+          InputProps={{
+            readOnly: !isEditing,
+          }}
+         /> */}
         {isEditing ? (
           <Button variant="contained" color="success" onClick={handleSaveClick}>
             Save

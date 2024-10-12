@@ -16,6 +16,10 @@ const tourGuideSchema = new Schema({
         type: String,
         required: true
     },
+    nationalId:{
+        type: String,
+        required: true
+    },
     mobileNumber: {
         type: Number,
         required: true
@@ -27,6 +31,13 @@ const tourGuideSchema = new Schema({
     previousWork: {
         type: String,
         required: false
+    }, 
+    certificates: {
+        type: String,
+        required: true
+    },
+    photo:{
+        type: String,
     }
 }, { timestamps: true })
 

@@ -16,6 +16,10 @@ const advertiserSchema = new Schema({
         type: String,
         required: true
     },
+    nationalId:{
+        type: String,
+        required: true
+    },
     websiteLink: {
         type: String,
         required: true
@@ -27,8 +31,14 @@ const advertiserSchema = new Schema({
     companyProfile: {
         type: String,
         required: true
+    },
+    taxationRegisteryCard:{
+        type: String,
+        required: true
+    },
+    logo:{
+        type: String,
     }
-
 },
     { timestamps: true })
 
