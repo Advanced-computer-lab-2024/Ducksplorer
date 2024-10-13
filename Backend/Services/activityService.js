@@ -14,6 +14,7 @@ const createActivity = async (activityData) => {
     tags,
     specialDiscount,
     duration,
+    flag,
   } = activityData;
 
   const newActivity = new Activity({
@@ -27,6 +28,7 @@ const createActivity = async (activityData) => {
     tags,
     specialDiscount,
     duration,
+    flag,
   });
 
   await newActivity.save();

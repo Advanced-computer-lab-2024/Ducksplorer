@@ -42,12 +42,14 @@ const TouristSidebar = () => {
             </ListItemIcon>
             <ListItemText primary="Edit Profile" />
           </ListItem>
+          
           <ListItem button component={Link} to="/viewAllTourist">
             <ListItemIcon>
               <EventNoteIcon />
             </ListItemIcon>
             <ListItemText primary="View All Itineraries" />
           </ListItem>
+
           <ListItem button component={Link} to="/viewUpcomingItinerary">
             <ListItemIcon>
               <EventAvailableIcon />

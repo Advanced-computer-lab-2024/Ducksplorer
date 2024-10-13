@@ -1,3 +1,4 @@
+////This is the page that gets called when the sort activities button is clicked
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -129,27 +130,26 @@ const SortActivities = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {activities.map((activity) => (
-                <TableRow key={activity._id}>
-                  <TableCell>{activity.name}</TableCell>
-                  <TableCell>{activity.price}</TableCell>
-                  <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
-                  <TableCell>{activity.category}</TableCell>
-                  <TableCell>{activity.tags.join(", ")}</TableCell>
-                  <TableCell>{activity.specialDiscount}</TableCell>
-                  <TableCell>{activity.date}</TableCell>
-                  <TableCell>{activity.duration}</TableCell>
-                  <TableCell>{activity.location}</TableCell>
-                  <TableCell>
-                    <Rating
-                      value={activity.averageRating}
-                      precision={0.1}
-                      readOnly
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
+              {activities.map((activity) =>
+                !activity.flag && (
+                  <TableRow key={activity._id}>
+                    <TableCell>{activity.name}</TableCell>
+                    <TableCell>{activity.price}</TableCell>
+                    <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
+                    <TableCell>{activity.category}</TableCell>
+                    <TableCell>{activity.tags.join(", ")}</TableCell>
+                    <TableCell>{activity.specialDiscount}</TableCell>
+                    <TableCell>{new Date(activity.date).toLocaleDateString()}</TableCell>
+                    <TableCell>{activity.duration}</TableCell>
+                    <TableCell>{activity.location}</TableCell>
+                    <TableCell>
+                      <Rating value={activity.averageRating} precision={0.1} readOnly />
+                    </TableCell>
+                  </TableRow>
+                )
+              )}
             </TableBody>
+
           </Table>
         </TableContainer>
       </Box>

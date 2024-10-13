@@ -1,3 +1,4 @@
+////This is the page that gets called for the advertiser to see HIS activities ONLY 
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { message } from "antd";
@@ -5,6 +6,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { calculateAverageRating } from "../../Utilities/averageRating.js";
 import StandAloneToggleButton from "../../Components/ToggleButton.js";
+import WarningIcon from '@mui/icons-material/Warning';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+
 import {
   Rating,
   Checkbox,
@@ -173,6 +177,7 @@ const MyActivities = ({ userName }) => {
                   <TableCell>Duration</TableCell>
                   <TableCell>Location</TableCell>
                   <TableCell>Rating</TableCell>
+                  <TableCell>Flag</TableCell>
                   <TableCell>Actions</TableCell>
                 </TableRow>
               </TableHead>
@@ -195,6 +200,19 @@ const MyActivities = ({ userName }) => {
                         readOnly
                       />
                     </TableCell>
+
+                    <TableCell> {activity.flag ? (
+                      <span style={{ color: 'red', display: 'flex', alignItems: 'center' }}>
+                        <WarningIcon style={{ marginRight: '4px' }} />
+                        Inappropriate
+                      </span>
+                    ) : (
+                      <span style={{ color: 'green', display: 'flex', alignItems: 'center' }}>
+                        <CheckCircleIcon style={{ marginRight: '4px' }} />
+                        Appropriate
+                      </span>
+                    )}</TableCell>
+
                     <TableCell>
                       <Tooltip title="Delete Activity">
                         <IconButton

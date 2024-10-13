@@ -4,6 +4,9 @@ import { message } from 'antd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import WarningIcon from '@mui/icons-material/Warning';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+
 
 import {
   TextField, IconButton, Box, Button, Table, Typography, TableBody,
@@ -21,7 +24,7 @@ const RUDItinerary = () => {
   const [editingItinerary, setEditingItinerary] = useState(null); //stores the currently selected itinerary for editing
   const [selectedTags, setSelectedTags] = useState([]); // For storing selected tags
   const [availableTags, setAvailableTags] = useState([]); // For storing fetched tags
-  const [loading, setLoading] = useState(true); //indicates if data is fetched
+  // const [loading, setLoading] = useState(true); //indicates if data is fetched
 
   const [formData, setFormData] = useState({
     activity: {
@@ -231,7 +234,7 @@ const RUDItinerary = () => {
 
   useEffect(() => {
     const fetchAvailableTags = async () => {
-      setLoading(true);
+      //setLoading(true);
       try {
         const response = await fetch('http://localhost:8000/preferenceTags/');
         if (!response.ok) {
@@ -243,7 +246,7 @@ const RUDItinerary = () => {
       } catch (error) {
         console.error('Error fetching available tags:', error);
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     };
 
@@ -332,6 +335,7 @@ const RUDItinerary = () => {
                 <TableCell>Drop Off Location</TableCell>
                 <TableCell>Ratings</TableCell>
                 <TableCell>Tags</TableCell>
+                <TableCell>Flag</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -342,7 +346,7 @@ const RUDItinerary = () => {
                     {itinerary.activity && itinerary.activity.length > 0
                       ? itinerary.activity.map((activity, index) => (
                         <div key={index}>
-                          {activity.name || 'N/A'}- Price: {activity.price !== undefined ? activity.price : 'N/A'},<br />
+                          {activity.name || 'N/A'} - Price: {activity.price !== undefined ? activity.price : 'N/A'},<br />
                           Location: {activity.location || 'N/A'},<br />
                           Category: {activity.category || 'N/A'}
                           <br /><br /> {/* Adds an extra line break between activities */}
@@ -362,11 +366,12 @@ const RUDItinerary = () => {
                         </div>
                       ))
                     ) : 'No locations available'}
-
                   </TableCell>
+
                   <TableCell>{itinerary.timeline}</TableCell>
                   <TableCell>{itinerary.language}</TableCell>
                   <TableCell>{itinerary.price}</TableCell>
+
                   <TableCell>
                     {itinerary.availableDatesAndTimes.length > 0
                       ? itinerary.availableDatesAndTimes.map((dateTime, index) => {
@@ -382,6 +387,7 @@ const RUDItinerary = () => {
                       })
                       : 'No available dates and times'}
                   </TableCell>
+
                   <TableCell>{itinerary.accessibility}</TableCell>
                   <TableCell>{itinerary.pickUpLocation}</TableCell>
                   <TableCell>{itinerary.dropOffLocation}</TableCell>
@@ -396,6 +402,20 @@ const RUDItinerary = () => {
                         </div>
                       ))
                       : 'No tags available'}
+                  </TableCell>
+
+                  <TableCell>
+                    {itinerary.flag ? (
+                      <span style={{ color: 'red', display: 'flex', alignItems: 'center' }}>
+                        <WarningIcon style={{ marginRight: '4px' }} />
+                        Inappropriate
+                      </span>
+                    ) : (
+                      <span style={{ color: 'green', display: 'flex', alignItems: 'center' }}>
+                        <CheckCircleIcon style={{ marginRight: '4px' }} />
+                        Appropriate
+                      </span>
+                    )}
                   </TableCell>
 
                   <TableCell>
@@ -415,6 +435,8 @@ const RUDItinerary = () => {
             </TableBody>
           </Table>
         </TableContainer>
+
+
         {editingItinerary && (
           <form onSubmit={handleUpdate} style={{ marginTop: '20px' }} ref={formRef} >
             {formData.activity && formData.activity.map((activity, index) => (

@@ -22,12 +22,12 @@ const activitySchema = new Schema(
       required: true,
     },
     location: {
-        type: String, //link le google maps masalan
-        required: true
+      type: String, //link le google maps masalan
+      required: true
     },
     price: {
-        type: Number,
-        required: false
+      type: Number,
+      required: false
     },
     category: {
       type: String,
@@ -35,13 +35,13 @@ const activitySchema = new Schema(
       required: false,
     },
     tags: {
-      type : Array,
-      schema : [Tags],
+      type: Array,
+      schema: [Tags],
       required: true
     },
     specialDiscount: {
-        type: Number,
-        required: false //ask noha law msh required
+      type: Number,
+      required: false //ask noha law msh required
     },
     duration: {
       //make it required fel frontend
@@ -55,8 +55,15 @@ const activitySchema = new Schema(
     averageRating: {
       type: Number,
       required: false
-    }
+    },
+    flag: {
+      type: Boolean,
+      required: false
+    },
   },
+
+
+
   { timestamps: true }
 );
 

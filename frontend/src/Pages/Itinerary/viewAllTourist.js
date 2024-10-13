@@ -339,7 +339,7 @@ function SearchItineraries() {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {itineraries.map(itinerary => (
+                                    {itineraries.map(itinerary => !itinerary.flag ?(
                                         <TableRow key={itinerary._id}>
                                             <TableCell>
                                                 {itinerary.activity && itinerary.activity.length > 0
@@ -399,7 +399,7 @@ function SearchItineraries() {
                                                 : 'No tags available'}
                                             </TableCell>
                                         </TableRow>
-                                    ))}
+                                    ): null)}
                                 </TableBody>
                             </Table>
                         </TableContainer>

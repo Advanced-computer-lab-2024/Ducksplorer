@@ -1,5 +1,6 @@
 const express = require("express");
 const activity = require("../Controllers/Activity/activityController.js");
+const { toggleFlagActivity } = require('../Controllers/Activity/activityController');
 
 const router = express.Router();
 
@@ -12,6 +13,9 @@ router
   .patch(activity.updateActivity)
   .delete(activity.deleteActivity);
 router.get("/my/:advertiser", activity.getAllActivitiesByUsername);
+router.get("/myAppropriate", activity.getAppropriateActivities);
 router.post("/:activityId", activity.rateActivity);
 router.route("/rate/:activityId").patch(activity.rateActivity);
+router.route("/toggleFlagActivity/:id").put(toggleFlagActivity)
+
 module.exports = router;

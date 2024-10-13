@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import DeleteIcon from '@mui/icons-material/Delete';
-import PersonAddIcon from '@mui/icons-material/PersonAdd'; 
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import CategoryIcon from '@mui/icons-material/Category';
 import LabelIcon from '@mui/icons-material/Label';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-
-
+import EventNoteIcon from '@mui/icons-material/EventNote';
+import WidgetsIcon from "@mui/icons-material/Widgets";
 
 const drawerWidth = 300;
 
@@ -24,7 +24,7 @@ const Sidebar = () => {
       }}
     >
       <div>
-      {/* <img src="logo1.png" style={{ width: '120px' , height: '120px' , padding: '10px', marginLeft: '50px'}} alt="logo" /> */}
+        {/* <img src="logo1.png" style={{ width: '120px' , height: '120px' , padding: '10px', marginLeft: '50px'}} alt="logo" /> */}
         <Typography variant="h6" noWrap sx={{ padding: 2 }}>
           Admin Dashboard
         </Typography>
@@ -48,13 +48,13 @@ const Sidebar = () => {
             </ListItemIcon>
             <ListItemText primary="Delete Users" />
           </ListItem>
-          <ListItem button component={Link} to="/addAdmin"> 
+          <ListItem button component={Link} to="/addAdmin">
             <ListItemIcon>
               <PersonAddIcon />
             </ListItemIcon>
             <ListItemText primary="Add Admin" />
           </ListItem>
-          <ListItem button component={Link} to="/addGovernor"> 
+          <ListItem button component={Link} to="/addGovernor">
             <ListItemIcon>
               <PersonAddIcon />
             </ListItemIcon>
@@ -65,19 +65,34 @@ const Sidebar = () => {
               <CategoryIcon />
             </ListItemIcon>
             <ListItemText primary="Categories" />
-         </ListItem>
-         <ListItem button component={Link} to="/preferenceTags">
-          <ListItemIcon>
-            <LabelIcon />
-          </ListItemIcon>
-          <ListItemText primary="Tags" />
-        </ListItem>
-        <ListItem button component={Link} to="/Adminproducts">
+          </ListItem>
+          <ListItem button component={Link} to="/preferenceTags">
+            <ListItemIcon>
+              <LabelIcon />
+            </ListItemIcon>
+            <ListItemText primary="Tags" />
+          </ListItem>
+          <ListItem button component={Link} to="/Adminproducts">
             <ListItemIcon>
               <ShoppingCartIcon />
             </ListItemIcon>
             <ListItemText primary="Products Management" />
-         </ListItem>
+          </ListItem>
+
+          <ListItem button component={Link} to="/ViewAllActivities">
+            <ListItemIcon>
+            <WidgetsIcon />
+            </ListItemIcon>
+            <ListItemText primary="View all Activities " />
+          </ListItem>
+
+          <ListItem button component={Link} to="/ViewAllItineraries">
+            <ListItemIcon>
+            <EventNoteIcon />
+            </ListItemIcon>
+            <ListItemText primary="View All Itineraries " />
+          </ListItem>
+
         </List>
         <Divider />
       </div>

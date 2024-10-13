@@ -59,7 +59,11 @@ const itinerarySchema = new Schema({
     tags: {
         type: [String],
         required: false
-    }
+    },
+    flag: {
+        type: Boolean,
+        required: false
+      },
 }, { timestamps: true })
 
 const Itinerary = mongoose.model("Itinerary", itinerarySchema);

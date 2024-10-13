@@ -1,8 +1,12 @@
+//This is no longer used 
+
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { message } from "antd";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import WarningIcon from '@mui/icons-material/Warning';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { calculateAverageRating } from "../../Utilities/averageRating.js";
 import {
   Rating,
@@ -156,6 +160,7 @@ const RUDActivity = () => {
                 <TableCell>Duration</TableCell>
                 <TableCell>Location</TableCell>
                 <TableCell>Rating</TableCell>
+                <TableCell>Flag</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -178,6 +183,18 @@ const RUDActivity = () => {
                       readOnly
                     />
                   </TableCell>
+
+                  <TableCell> {activity.flag ? (
+                    <span style={{ color: 'red', display: 'flex', alignItems: 'center' }}>
+                      <WarningIcon style={{ marginRight: '4px' }} />
+                      Inappropriate
+                    </span>
+                  ) : (
+                    <span style={{ color: 'green', display: 'flex', alignItems: 'center' }}>
+                      <CheckCircleIcon style={{ marginRight: '4px' }} />
+                      Appropriate
+                    </span>
+                  )}</TableCell>
 
                   <TableCell>
                     <Tooltip title="Delete Activity">

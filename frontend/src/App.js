@@ -40,7 +40,7 @@ import AllProducts from './Pages/Products/AllProducts.js';
 import AddProducts from './Pages/Products/AddProducts.js';
 import FilterProducts from './Pages/Products/FilterProducts.js';
 import SearchProducts from './Pages/Products/SearchProducts.js';
-import SortProducts from './Pages/Products/SortProducts.js' ; 
+import SortProducts from './Pages/Products/SortProducts.js';
 import ViewMyProducts from './Pages/Products/ViewMyProducts.js'
 import EditProduct from './Components/Products/EditProduct.js';
 import AdminProducts from './Pages/Products/AdminProducts.js';
@@ -51,84 +51,89 @@ import GovernorDashboard from './Pages/Dashboards/GovernorDashboard';
 import AdvertiserEditProfile from './Pages/EditAccount/AdvertiserEditAccount.js';
 import SellerEditProfile from './Pages/EditAccount/SellerEditAccount.js';
 import SellerDashboard from './Pages/Dashboards/SellerDashboard';
+import ViewAllItineraries from "./Pages/Admin/ViewAllItineraries.js";
+import ViewAllActivities from "./Pages/Admin/ViewAllActivities.js";
+
 
 
 function App() {
   return (
     <React.StrictMode>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signUp" element={<Signup />} />
-            <Route path="/createItinerary" element={<CreateItinerary />} />
-            <Route path="/rudItinerary" element={<RUDItinerary />} />
-            <Route path="/viewUpcomingItinerary" element={<ViewUpcomingItinerary />} />
-            <Route path="/viewAllTourist" element={<ViewAllTourist />} />
-            <Route path="/tourGuideDashboard" element={<TourGuideDashboard />} />
-            <Route path="/touristDashboard" element={<TouristDashboard />} />
-            <Route path="/tourGuideEditAccount" element={<TourGuideEditProfile/>} />
-    
-            <Route path="/governorDashboard" element={<GovernorDashboard />} />
-            <Route path="/createMuseum" element={<CreateMuseum />} />
-            <Route path="/createHistoricalPlace" element={<CreateHistoricalPlace />} />
-            <Route path="/RUDMuseum" element={<RUDMuseum />} />
-            <Route path="/RUDHistoricalPlace" element={<RUDHistoricalPlace />} />
-            {/* <Route path="/RUDVisit" element={<RUDVisit />} /> */}
-            <Route path="/MuseumTouristPov" element={<MuseumTouristPov />} />
-            <Route path="/HistoricalPlaceTouristPov" element={<HistoricalPlaceTouristPov />} />
-            <Route path="/UpcomingHistoricalPlaces" element={<UpcomingHistoricalPlaces />} />
-            <Route path="/UpcomingMuseums" element={<UpcomingMuseums />} />
-            <Route path="/createTagMuseum" element={<CreateTagMuseum />} />
-            <Route path="/createTagHistoricalPlace" element={<CreateTagHistoricalPlace/>} />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signUp" element={<Signup />} />
+          <Route path="/createItinerary" element={<CreateItinerary />} />
+          <Route path="/rudItinerary" element={<RUDItinerary />} />
+          <Route path="/viewUpcomingItinerary" element={<ViewUpcomingItinerary />} />
+          <Route path="/viewAllTourist" element={<ViewAllTourist />} />
+          <Route path="/tourGuideDashboard" element={<TourGuideDashboard />} />
+          <Route path="/touristDashboard" element={<TouristDashboard />} />
+          <Route path="/tourGuideEditAccount" element={<TourGuideEditProfile />} />
+
+          <Route path="/governorDashboard" element={<GovernorDashboard />} />
+          <Route path="/createMuseum" element={<CreateMuseum />} />
+          <Route path="/createHistoricalPlace" element={<CreateHistoricalPlace />} />
+          <Route path="/RUDMuseum" element={<RUDMuseum />} />
+          <Route path="/RUDHistoricalPlace" element={<RUDHistoricalPlace />} />
+          {/* <Route path="/RUDVisit" element={<RUDVisit />} /> */}
+          <Route path="/MuseumTouristPov" element={<MuseumTouristPov />} />
+          <Route path="/HistoricalPlaceTouristPov" element={<HistoricalPlaceTouristPov />} />
+          <Route path="/UpcomingHistoricalPlaces" element={<UpcomingHistoricalPlaces />} />
+          <Route path="/UpcomingMuseums" element={<UpcomingMuseums />} />
+          <Route path="/createTagMuseum" element={<CreateTagMuseum />} />
+          <Route path="/createTagHistoricalPlace" element={<CreateTagHistoricalPlace />} />
 
 
-            <Route path="/AdminDashboard" element={<AdminDashboard />} />
-            <Route path="/pendingusers" element={<ApproveUsers />} />
-            <Route path="/deleteusers" element={<DeleteUser />} />
-            <Route path="/addAdmin" element={<AddAdmin />} />
-            <Route path="/addGovernor" element={<AddGoverner />} />
-            <Route path="/categoriesActions" element={<CategoriesActions />} />
-            <Route path="/preferenceTags" element={<PreferenceTags />} />
+          <Route path="/AdminDashboard" element={<AdminDashboard />} />
+          <Route path="/pendingusers" element={<ApproveUsers />} />
+          <Route path="/deleteusers" element={<DeleteUser />} />
+          <Route path="/addAdmin" element={<AddAdmin />} />
+          <Route path="/addGovernor" element={<AddGoverner />} />
+          <Route path="/categoriesActions" element={<CategoriesActions />} />
+          <Route path="/viewAllItineraries" element={<ViewAllItineraries />} />
+          <Route path="/viewAllActivities" element={<ViewAllActivities />} />
+          <Route path="/preferenceTags" element={<PreferenceTags />} />
 
 
-            <Route path="/advertiserDashboard" element={<AdvertiserDashboard/>} />
-            <Route path="/activity/addActivity" element={<AddActivity />} />
-            <Route path="/activity/rudActivity" element={<RUDActivity />} />
-            <Route path="/activity/upcoming" element={<UpcomingActivities />} />
-            <Route
-              path="/activity/searchActivities"
-              element={<SearchActivities />}
-            />
-            <Route path="/activity/SortFilter" element={<SortFilterActivity />} />
-            <Route
-              path="/activity/myActivities"
-              element={
-                <MyActivities
-                  userName={JSON.parse(localStorage.getItem("user")).username}
-                />
-              }
-            />
-            <Route path="/location" element={<ClinicLocation/>} />
+          <Route path="/advertiserDashboard" element={<AdvertiserDashboard />} />
+          <Route path="/activity/addActivity" element={<AddActivity />} />
+          <Route path="/activity/rudActivity" element={<RUDActivity />} />
+          <Route path="/activity/upcoming" element={<UpcomingActivities />} />
+          <Route
+            path="/activity/searchActivities"
+            element={<SearchActivities />}
+          />
+          <Route path="/activity/SortFilter" element={<SortFilterActivity />} />
+          <Route
+            path="/activity/myActivities"
+            element={
+              <MyActivities
+                userName={JSON.parse(localStorage.getItem("user")).username}
+              />
+            }
+          />
+          <Route path="/location" element={<ClinicLocation />} />
 
 
-            <Route path = "/ProductDashboard" element= {<ProductDashboard/>} />
-            <Route path = "/AllProducts" element= {<AllProducts/>} />
-            <Route path = "/AddProducts" element= {<AddProducts/>} />
-            <Route path = "/FilterProducts" element= {<FilterProducts/>} />
-            <Route path = "/SearchProducts" element= {<SearchProducts/>} />
-            <Route path = "/SortProducts" element = {<SortProducts/>} />
-            <Route path = "/ViewMyProducts" element = {<ViewMyProducts/>} />
-            <Route path = "/editProduct/:productId" element={<EditProduct/>} />
-            <Route path = "/Adminproducts" element= {<AdminProducts/>} />
-            <Route path = "/AdminAllProducts" element= {<AdminAllProducts/>} />
-            <Route path = "/TouristAllProducts" element= {<TouristAllProducts/>} />
-            <Route path="/editAccount" element={<TouristEditAccount />} />
+          <Route path="/ProductDashboard" element={<ProductDashboard />} />
+          <Route path="/AllProducts" element={<AllProducts />} />
+          <Route path="/AddProducts" element={<AddProducts />} />
+          <Route path="/FilterProducts" element={<FilterProducts />} />
+          <Route path="/SearchProducts" element={<SearchProducts />} />
+          <Route path="/SortProducts" element={<SortProducts />} />
+          <Route path="/ViewMyProducts" element={<ViewMyProducts />} />
+          <Route path="/editProduct/:productId" element={<EditProduct />} />
+          <Route path="/Adminproducts" element={<AdminProducts />} />
+          <Route path="/AdminAllProducts" element={<AdminAllProducts />} />
+          <Route path="/TouristAllProducts" element={<TouristAllProducts />} />
+          <Route path="/editAccount" element={<TouristEditAccount />} />
 
 
-            <Route path="/advertiserEditAccount" element={< AdvertiserEditProfile />} />
-            <Route path="/sellerEditAccount" element={< SellerEditProfile />} />
-            <Route path="/sellerDashboard" element={<SellerDashboard/>} />
-          </Routes>
+          <Route path="/advertiserEditAccount" element={< AdvertiserEditProfile />} />
+          <Route path="/sellerEditAccount" element={< SellerEditProfile />} />
+          <Route path="/sellerDashboard" element={<SellerDashboard />} />
+        </Routes>
       </BrowserRouter>
     </React.StrictMode>
   );

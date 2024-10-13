@@ -127,5 +127,5 @@ module.exports = {
     addGovernor,
     approveUser,
     getPendingUsers,
-    getUsers
+    getUsers,
 };

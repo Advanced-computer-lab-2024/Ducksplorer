@@ -1,3 +1,4 @@
+// This is the file that gets all the activities for the tourist
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
@@ -107,27 +108,30 @@ const SearchActivities = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {activities.map((activity) => (
-                <TableRow key={activity._id}>
-                  <TableCell>{activity.name}</TableCell>
-                  <TableCell>{activity.price}</TableCell>
-                  <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
-                  <TableCell>{activity.category}</TableCell>
-                  <TableCell>{activity.tags.join(", ")}</TableCell>
-                  <TableCell>{activity.specialDiscount}</TableCell>
-                  <TableCell>{activity.date}</TableCell>
-                  <TableCell>{activity.duration}</TableCell>
-                  <TableCell>{activity.location}</TableCell>
-                  <TableCell>
-                    <Rating
-                      value={activity.averageRating}
-                      precision={0.1}
-                      readOnly
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
+              {activities.map((activity) => {
+                if (!activity.flag) {
+                  return (
+                    <TableRow key={activity._id}>
+                      <TableCell>{activity.name}</TableCell>
+                      <TableCell>{activity.price}</TableCell>
+                      <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
+                      <TableCell>{activity.category}</TableCell>
+                      <TableCell>{activity.tags.join(", ")}</TableCell>
+                      <TableCell>{activity.specialDiscount}</TableCell>
+                      <TableCell>{new Date(activity.date).toLocaleDateString()}</TableCell>
+                      <TableCell>{activity.duration}</TableCell>
+                      <TableCell>{activity.location}</TableCell>
+                      <TableCell>
+                        <Rating value={activity.averageRating} precision={0.1} readOnly />
+                      </TableCell>
+                    </TableRow>
+                  );
+                }
+                // Return null or nothing for cases where `activity.flag` is true
+                return null;
+              })}
             </TableBody>
+
           </Table>
         </TableContainer>
       </Box>
