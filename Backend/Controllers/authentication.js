@@ -17,17 +17,17 @@ const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el 
         if (role === "Guide" || role === "Seller" || role === "Advertiser") {
             status = "Pending";
         }
-        
-        if(role === "Tourist" ){
+
+        if (role === "Tourist") {
             const mobileNumber = req.body.mobileNumber;
             const nationality = req.body.nationality;
             const DOB = req.body.DOB;
             const employmentStatus = req.body.employmentStatus;
-            const newTourist = new Tourist({email, userName, password, mobileNumber, nationality, DOB, employmentStatus});
+            const newTourist = new Tourist({ email, userName, password, mobileNumber, nationality, DOB, employmentStatus });
             await newTourist.save();
             res.status(201).json(newTourist);
         }
-        if(role === "Guide"){
+        if (role === "Guide") {
             const mobileNumber = req.body.mobileNumber;
             const yearsOfExperience = req.body.yearsOfExperience;
             const previousWork = req.body.previousWork;
@@ -37,7 +37,7 @@ const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el 
             await newTourGuide.save();
             res.status(201).json(newTourGuide);
         }
-        if(role === "Seller"){
+        if (role === "Seller") {
             const description = req.body.description;
             const name = req.body.name;
             // const taxationRegisteryCard = req.body.taxationRegisteryCard;
@@ -46,7 +46,7 @@ const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el 
             await newSeller.save();
             res.status(201).json(newSeller);
         }
-        if(role === "Advertiser"){
+        if (role === "Advertiser") {
             const websiteLink = req.body.websiteLink;
             const hotline = req.body.hotline;
             const companyProfile = req.body.companyProfile;
@@ -58,40 +58,39 @@ const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el 
         }
         const newuser = new User({role , userName, password, nationalId , status});
         await newuser.save();
-        res.status(201).json(newuser);
 
-    }   catch (error) {
+    } catch (error) {
         res.status(500).json({ message: error.message });
     }
 }
-const login = async (req,res) => {
-    try{
-        const {userName, password} = req.body;
-        const user = await User.findOne({userName});
+const login = async (req, res) => {
+    try {
+        const { userName, password } = req.body;
+        const user = await User.findOne({ userName });
 
-        if(user){
-            if(user.status === "Pending"){
-                return res.status(400).json({error: "Your Account is not approved yet"});
+        if (user) {
+            if (user.status === "Pending") {
+                return res.status(400).json({ error: "Your Account is not approved yet" });
             }
-            if(!user || (user.password !== password)){
-                return res.status(400).json({error: "Incorrect UserName or Password"});
+            if (!user || (user.password !== password)) {
+                return res.status(400).json({ error: "Incorrect UserName or Password" });
             }
 
-        
+
 
             res.status(200).json({
                 _id: user._id,
                 username: user.userName,
-                role : user.role
+                role: user.role
             })
         }
-        else{
-            return res.status(400).json({error: "Account does not exist"});
+        else {
+            return res.status(400).json({ error: "Account does not exist" });
         }
 
-    }catch(error){
+    } catch (error) {
         console.log("Error in Login Controller", error.message)
-        res.status(500).json({error:"Error"})
+        res.status(500).json({ error: "Error" })
     }
 
 }
@@ -99,4 +98,4 @@ const login = async (req,res) => {
 
 
 
-module.exports = {signUp, login};
+module.exports = { signUp, login };
