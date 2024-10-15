@@ -51,6 +51,7 @@ import GovernorDashboard from './Pages/Dashboards/GovernorDashboard';
 import AdvertiserEditProfile from './Pages/EditAccount/AdvertiserEditAccount.js';
 import SellerEditProfile from './Pages/EditAccount/SellerEditAccount.js';
 import SellerDashboard from './Pages/Dashboards/SellerDashboard';
+import CurrencyConvertor from "./Components/CurrencyConvertor.js";
 
 
 function App() {
@@ -58,6 +59,7 @@ function App() {
     <React.StrictMode>
         <BrowserRouter>
           <Routes>
+            <Route path="/" element={<CurrencyConvertor />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signUp" element={<Signup />} />
             <Route path="/createItinerary" element={<CreateItinerary />} />
