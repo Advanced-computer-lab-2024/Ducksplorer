@@ -3,10 +3,11 @@ const express = require("express");
 const mongoose = require("mongoose");
 const app = express(); //el kol fel kol
 const PORT = process.env.PORT || 8000; //tells us to get port from env file or law ma3refsh yegebha it's 3000
-const cors = require('cors');
-const touristRoutes = require('./Backend/Routes/touristRoutes.js');
-const sellerRoutes = require('./Backend/Routes/sellerRoutes.js');
-const adminProductRoutes = require('./Backend/Routes/adminRoutes.js');
+const cors = require("cors");
+const multer = require("multer");
+const touristRoutes = require("./Backend/Routes/touristRoutes.js");
+const sellerRoutes = require("./Backend/Routes/sellerRoutes.js");
+const adminProductRoutes = require("./Backend/Routes/adminRoutes.js");
 const signUpRoutes = require("./Backend/Routes/signUpRoutes.js");
 const adminRoutes = require("./Backend/Routes/Admin/AdminRoutes.js");
 const touristAccountRoutes = require("./Backend/Routes/TouristAccountRoutes.js");
@@ -17,25 +18,48 @@ const categoryRoutes = require("./Backend/Routes/categoryRoutes.js");
 
 app.use(cors());
 
-app.use('/uploads', express.static('uploads'));
-
-
-
 console.log(process.env.PORT);
 app.use(express.json());
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Folder where images will be stored
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Generate a unique filename with the correct extension
+  },
+});
 
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+}).single("image");
 
-const museumRoutes = require('./Backend/Routes/museumHistoricalPlaceRoutes/museumRoutes.js')
-const historicalPlaceRoutes = require('./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceRoutes.js')
-const historicalPlaceTagRoutes = require('./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceTagRoutes.js')
-const museumTagRoutes = require('./Backend/Routes/museumHistoricalPlaceRoutes/museumTagRoutes.js')
-const itineraryRoutes = require("./Backend/Routes/itineraryRoutes.js")
-const tourGuideAccountRoutes = require("./Backend/Routes/TourGuideAccountRoutes.js")
-const advertiserAccountRoutes = require("./Backend/Routes/AdvertiserAccountRoutes.js")
-const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js")
-const complaintRoutes = require("./Backend/Routes/complaintRoutes.js")
+app.post("/upload", (req, res) => {
+  upload(req, res, (err) => {
+    if (err) {
+      return res.status(400).json({ error: err.message });
+    }
+    if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
+    res
+      .status(200)
+      .json({ message: "Image uploaded successfully", file: req.file });
+  });
+});
 
+app.use("/uploads", express.static("uploads"));
+
+const museumRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/museumRoutes.js");
+const historicalPlaceRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceRoutes.js");
+const historicalPlaceTagRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceTagRoutes.js");
+const museumTagRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/museumTagRoutes.js");
+const itineraryRoutes = require("./Backend/Routes/itineraryRoutes.js");
+const tourGuideAccountRoutes = require("./Backend/Routes/TourGuideAccountRoutes.js");
+const advertiserAccountRoutes = require("./Backend/Routes/AdvertiserAccountRoutes.js");
+const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js");
+const complaintRoutes = require("./Backend/Routes/complaintRoutes.js");
 
 app.use("/signUp", signUpRoutes);
 app.use("/touristRoutes", touristRoutes);
@@ -46,7 +70,8 @@ app.use("/admin", adminRoutes);
 app.use("/touristAccount", touristAccountRoutes);
 app.use("/adminActivity", AdminActivityRoutes);
 app.use("/preferenceTags", preferenceTagsRoutes);
-app.use("/category", categoryRoutes); app.use("/museum", museumRoutes);
+app.use("/category", categoryRoutes);
+app.use("/museum", museumRoutes);
 app.use("/historicalPlace", historicalPlaceRoutes);
 app.use("/historicalPlaceTags", historicalPlaceTagRoutes);
 app.use("/museumTags", museumTagRoutes);
@@ -56,13 +81,14 @@ app.use("/advertiserAccount", advertiserAccountRoutes);
 app.use("/sellerAccount", sellerAccountRoutes);
 app.use("/complaint", complaintRoutes);
 
-
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header("Access-Control-Allow-Origin", "*"); // Allow requests from any origin
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
   next();
 });
-
 
 const connectToMongoDB = async () => {
   try {
@@ -75,6 +101,5 @@ const connectToMongoDB = async () => {
 
 app.listen(PORT, () => {
   connectToMongoDB();
-  console.log(`Server Running on Port ${PORT}`)
+  console.log(`Server Running on Port ${PORT}`);
 });
-

@@ -1,55 +1,56 @@
 // src/Components/AllProducts.js
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { message } from 'antd';
-import { Typography, Card, CardContent, Grid } from '@mui/material';
-import ProductDashboard from '../../Pages/Products/ProductDashboard';
-import { TextField, Button, Stack } from '@mui/material';
-
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { message } from "antd";
+import { Typography, Card, CardContent, Grid } from "@mui/material";
+import ProductDashboard from "../../Pages/Products/ProductDashboard";
+import { TextField, Button, Stack } from "@mui/material";
 
 function AddProducts() {
-  const [name , setName] = useState('');
-  const [price , setPrice] = useState('');
-  const [availableQuantity, setAvailableQuantity] = useState('');
-  const [picture , setPicture]= useState('');
-  const [description, setDescription] = useState('');
-  
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [availableQuantity, setAvailableQuantity] = useState("");
+  const [picture, setPicture] = useState("");
+  const [description, setDescription] = useState("");
 
   const handleAddProduct = async () => {
-    try{
-      const userJson = localStorage.getItem('user'); // Get the 'user' item as a JSON string  
-      const user = JSON.parse(userJson); 
-      const userName = user.username;
+    try {
+      const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
+      const user = JSON.parse(userJson);
+      const userName = user.username;
       const seller = userName;
-      const response = await axios.post('http://localhost:8000/adminRoutes/createProducts' , {
-        name,
-        price,
-        ratings: [],
-        availableQuantity,
-        picture,
-        description,
-        seller,
-        reviews: []
-      });
-      if (response.status === 200){
-        message.success('product added successfully');
-      } else{
-        message.error('failed to add admin');
+      const response = await axios.post(
+        "http://localhost:8000/adminRoutes/createProducts",
+        {
+          name,
+          price,
+          ratings: [],
+          availableQuantity,
+          picture,
+          description,
+          seller,
+          reviews: [],
+        }
+      );
+      if (response.status === 200) {
+        console.log("i am posting");
+        message.success("product added successfully");
+      } else {
+        message.error("failed to add admin");
       }
-    }catch (error){
-      message.error('an error occured: '+error.message);
+    } catch (error) {
+      message.error("an error occured: " + error.message);
     }
   };
 
   const handleBackClick = () => {
     window.history.back();
-  }
+  };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto' }}>
-
+    <div style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
       <h2>Add Product</h2>
-      <Button  onClick={handleBackClick}>Back</Button>      
+      <Button onClick={handleBackClick}>Back</Button>
       <Stack spacing={2}>
         <TextField
           label="Product Name"
@@ -74,13 +75,28 @@ function AddProducts() {
           variant="outlined"
           fullWidth
         />
-        <TextField
+        {/* <TextField
           label="Picture URL"
           value={picture}
           onChange={(e) => setPicture(e.target.value)}
           variant="outlined"
           fullWidth
-        />
+        /> */}
+        <form>
+          <input type="file" name="image" />
+          <button
+            type="button"
+            onClick={(e) => {
+              setPicture(e.target.value);
+              if (picture) {
+                console.log("a picture exists");
+              }
+            }}
+          >
+            Upload Image
+          </button>
+        </form>
+
         <TextField
           label="Description"
           value={description}
@@ -90,18 +106,18 @@ function AddProducts() {
           rows={4}
           fullWidth
         />
-        
+
         <Button
           variant="contained"
           color="primary"
           onClick={handleAddProduct} // Call function to handle adding the product here
-          style={{ marginTop: '10px' }}
+          style={{ marginTop: "10px" }}
         >
           Add Product
         </Button>
       </Stack>
     </div>
-  )
+  );
 }
 
 export default AddProducts;

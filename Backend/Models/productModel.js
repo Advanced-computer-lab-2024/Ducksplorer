@@ -50,6 +50,10 @@ const productSchema = new mongoose.Schema({
       type: Number,
       required: false
     },
+    isArchived: {
+      type: Boolean,
+      required: false
+    },
     seller: {
       type: String,
       required: false

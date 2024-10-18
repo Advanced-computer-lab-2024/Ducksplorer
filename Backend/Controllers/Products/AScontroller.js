@@ -4,15 +4,10 @@ const sellerModel = require("../../Models/sellerModel");
 const { $options } = require("sift");
 const multer = require("multer");
 const path = require("path");
+const { DataArray } = require("@mui/icons-material");
 
-const storage = multer.diskStorage({
-  destination: "./uploads", // Directory to store uploaded images
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
 
-const upload = multer({ storage });
+const upload = multer({ dest: 'uploads/' });
 
 const createProduct = async (req, res) => {
   //add new products
@@ -26,6 +21,7 @@ const createProduct = async (req, res) => {
     seller,
     reviews,
     sales,
+    isArchived
   } = req.body;
 
   try {
@@ -33,12 +29,13 @@ const createProduct = async (req, res) => {
       name,
       price,
       ratings,
-      picture,
+      picture: req.file ? `/uploads/${req.file.filename}` : null,
       availableQuantity,
       description,
       seller,
       reviews,
       sales,
+      isArchived
     });
     res.status(200).json(product);
   } catch (error) {
@@ -67,6 +64,9 @@ const editProduct = async (req, res) => {
   }
   if (data.sales !== "") {
     editedData.sales = data.sales;
+  }
+  if (data.isArchived !== "") {
+    editedData.isArchived = data.isArchived;
   }
   console.log(data);
   console.log(editedData);
