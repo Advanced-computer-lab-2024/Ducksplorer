@@ -17,7 +17,7 @@ const sellerSchema = new Schema({
         required: true
     },
     nationalId: {
-        type: String,
+        type: Buffer,
         required: true
     },
     name: {
@@ -29,7 +29,7 @@ const sellerSchema = new Schema({
         required: true
     },
     taxationRegisteryCard:{
-        type: String,
+        type: Buffer,
         required: true
     },
     logo:{

@@ -17,7 +17,7 @@ const advertiserSchema = new Schema({
         required: true
     },
     nationalId:{
-        type: String,
+        type: Buffer,
         required: true
     },
     websiteLink: {
@@ -33,7 +33,7 @@ const advertiserSchema = new Schema({
         required: true
     },
     taxationRegisteryCard:{
-        type: String,
+        type: Buffer,
         required: true
     },
     logo:{

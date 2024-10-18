@@ -17,7 +17,7 @@ const tourGuideSchema = new Schema({
         required: true
     },
     nationalId:{
-        type: String,
+        type: Buffer,
         required: true
     },
     mobileNumber: {
@@ -33,7 +33,7 @@ const tourGuideSchema = new Schema({
         required: false
     }, 
     certificates: {
-        type: String,
+        type: Buffer,
         required: true
     },
     photo:{

@@ -85,6 +85,21 @@ const addGovernor = async (req, res) => {
   }
 };
 
+const rejectUser = async (req, res) => {
+  const { userName } = req.body;
+  try {
+    const user = await User.findOne({ userName });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    await User.deleteOne({ userName });
+    return res.status(200).json({ message: 'User rejected successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 const approveUser = async (req, res) => {
   const { userName } = req.body;
   try {
@@ -101,6 +116,26 @@ const approveUser = async (req, res) => {
   }
 };
 
+const getPendingUserDetails = async (req, res) => {
+  try{
+    const user = req.body;
+    if (user.role === 'Guide') {
+      const guide = await Tourguide.findOne({ userName: user.userName });
+      return res.status(200).json({ guide });
+    } 
+    if (user.role === 'Seller') {
+      const seller = await Seller.findOne({ userName: user.userName });
+      return res.status(200).json({ seller });
+    }
+    if (user.role === 'Advertiser') {
+      const advertiser = await Advertiser.findOne({ userName: user.userName });
+      return res.status(200).json({ advertiser });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+}
 const getPendingUsers = async (req, res) => {
 try {
   const users = await User.find({ status: 'Pending' });
@@ -127,5 +162,7 @@ module.exports = {
     addGovernor,
     approveUser,
     getPendingUsers,
-    getUsers
+    getUsers,
+    rejectUser,
+    getPendingUserDetails
 };
