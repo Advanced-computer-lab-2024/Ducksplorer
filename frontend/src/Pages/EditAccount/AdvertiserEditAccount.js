@@ -3,15 +3,19 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
 import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar";
+import FileUpload from '../../Components/FileUpload';
 
 const AdvertiserEditProfile = () => {
   const [advertiserDetails, setAdvertiserDetails] = useState({
     userName: "",
     email: "",
     password: "",
+    //nationalId: '',
     websiteLink: "",
     hotline: "",
     companyProfile: "",
+    taxationRegisteryCard: '',
+    logo: ''
   });
   const [isEditing, setIsEditing] = useState(false);
 
@@ -135,6 +139,28 @@ const AdvertiserEditProfile = () => {
               readOnly: !isEditing,
             }}
           />
+          <lable>Taxation Registery Card</lable>
+          <FileUpload />
+          {/* <TextField
+          label="taxationRegisteryCard" // Singular label
+          name="taxationRegisteryCard" // This should match the updated state field
+          value={advertiserDetails.taxationRegisteryCard} // Access the pictures string directly
+          onChange={handleChange}
+          InputProps={{
+            readOnly: !isEditing,
+          }}
+         /> */}
+         <lable>Logo</lable>
+         <FileUpload />
+         {/* <TextField
+          label="logo" // Singular label
+          name="logo" // This should match the updated state field
+          value={advertiserDetails.logo} // Access the pictures string directly
+          onChange={handleChange}
+          InputProps={{
+            readOnly: !isEditing,
+          }}
+         /> */}
           {isEditing ? (
             <Button
               variant="contained"
