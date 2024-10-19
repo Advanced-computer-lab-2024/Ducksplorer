@@ -14,13 +14,7 @@ const AdminActivityRoutes = require("./Backend/Routes/Admin/AdminActivityRoutes.
 const preferenceTagsRoutes = require("./Backend/Routes/Admin/PreferenceTagsRoutes.js");
 const activityRoutes = require("./Backend/Routes/activityRoutes.js");
 const categoryRoutes = require("./Backend/Routes/categoryRoutes.js");
-const multer = require('multer');
-const path = require('path');
-const Grid = require('gridfs-stream');
-const crypto = require('crypto');
-// const GridFsStorage = require('multer-gridfs-storage').GridFsStorage;
-const { GridFSBucket } = require('mongodb'); // Import GridFSBucket
-
+const fileRoutes = require("./Backend/Routes/fileRoutes.js")
 
 app.use(cors());
 
@@ -40,7 +34,8 @@ const museumTagRoutes = require('./Backend/Routes/museumHistoricalPlaceRoutes/mu
 const itineraryRoutes = require("./Backend/Routes/itineraryRoutes.js")
 const tourGuideAccountRoutes = require("./Backend/Routes/TourGuideAccountRoutes.js")
 const advertiserAccountRoutes = require("./Backend/Routes/AdvertiserAccountRoutes.js")
-const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js")
+const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js");
+const { DriveFileRenameOutlineSharp } = require("@mui/icons-material");
 
 
 app.use("/signUp", signUpRoutes);
@@ -60,6 +55,7 @@ app.use("/itinerary", itineraryRoutes);
 app.use("/tourGuideAccount", tourGuideAccountRoutes);
 app.use("/advertiserAccount", advertiserAccountRoutes);
 app.use("/sellerAccount", sellerAccountRoutes);
+app.use('/file', fileRoutes);
 
 
 app.use((req, res, next) => {
@@ -77,58 +73,9 @@ const connectToMongoDB = async () => {
     console.log("Error Connecting to MongoDB", error.message);
   }
 };
-///////
-const conn = mongoose.connection;
-let gfs, gfsBucket;
 
-// Initialize GridFS when MongoDB connection is open
-conn.once('open', () => {
-  gfs = Grid(conn.db, mongoose.mongo);
-  gfs.collection('uploads');
-
-  // Set up GridFSBucket
-  gfsBucket = new GridFSBucket(conn.db, {
-    bucketName: 'uploads'
-  });
-});
-
-// Set up Multer to temporarily store files in memory
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
-
-// Route to handle file uploads
-app.post('/upload', upload.single('file'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).send('No file uploaded.');
-  }
-
-  // Generate a random filename
-  crypto.randomBytes(16, (err, buf) => {
-    if (err) {
-      return res.status(500).send('Error generating file name.');
-    }
-
-    const filename = buf.toString('hex') + path.extname(req.file.originalname);
-
-    // Create an upload stream for GridFS
-    const uploadStream = gfsBucket.openUploadStream(filename, {
-      contentType: req.file.mimetype,
-    });
-
-    // Pipe the file buffer to GridFSBucket
-    uploadStream.end(req.file.buffer);
-
-    uploadStream.on('finish', () => {
-      res.status(200).send({ message: 'File uploaded successfully.', filename });
-    });
-
-    uploadStream.on('error', (error) => {
-      res.status(500).send('Error uploading file to GridFS.');
-    });
-  });
-});
-///////
 app.listen(PORT, () => {
   connectToMongoDB();
   console.log(`Server Running on Port ${PORT}`)
 });
+
