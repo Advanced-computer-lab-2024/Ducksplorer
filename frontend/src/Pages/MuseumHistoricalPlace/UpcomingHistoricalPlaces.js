@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
 import { Link } from 'react-router-dom';
+import CurrencyConvertor from '../../Components/CurrencyConvertor';
 
 import {
     Box,
@@ -18,7 +19,9 @@ import {
 
 const UpcomingHistoricalPlaces = () => {
     const [upcomingHistoricalPlaces, setUpcomingHistoricalPlaces] = useState([]);
-
+    
+    const [exchangeRates, setExchangeRates] = useState({});
+    const [currency, setCurrency] = useState('EGP');
     useEffect(() => {
         axios.get(`http://localhost:8000/historicalPlace/getAllUpcomingHistoricalPlaces`)
             .then(response => {
@@ -30,6 +33,10 @@ const UpcomingHistoricalPlaces = () => {
             });
     }, []);
 
+    const handleCurrencyChange = (rates, selectedCurrency) => {
+        setExchangeRates(rates);
+        setCurrency(selectedCurrency);
+      };
 
     return (
         <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'visible', height: '100vh' }}>
@@ -45,7 +52,9 @@ const UpcomingHistoricalPlaces = () => {
                             <TableCell>Description</TableCell>
                             <TableCell>Location</TableCell>
                             <TableCell>Pictures</TableCell>
-                            <TableCell>Ticket Price</TableCell>
+                            <TableCell>Ticket Price
+                            <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                            </TableCell>
                             <TableCell>Opening Time</TableCell>
                             <TableCell>Closing Time</TableCell>
                             <TableCell>Date</TableCell>
@@ -68,7 +77,9 @@ const UpcomingHistoricalPlaces = () => {
                                         style={{ width: '100px', height: 'auto', objectFit: 'cover' }}
                                     />
                                 </TableCell>
-                                <TableCell>{upcomingHistoricalPlace.ticketPrices}</TableCell>
+                                <TableCell>                    
+                                    {(upcomingHistoricalPlace.ticketPrices * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                                </TableCell>
                                 <TableCell>{upcomingHistoricalPlace.openingTime}</TableCell>
                                 <TableCell>{upcomingHistoricalPlace.closingTime}</TableCell>
                                 <TableCell>{upcomingHistoricalPlace.HistoricalPlaceDate}</TableCell>

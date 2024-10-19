@@ -1,4 +1,5 @@
 const Amadeus = require ('amadeus');
+const Tourist = require("../../Models/touristModel.js");
 const amadeus = new Amadeus({
     clientId: 'mQWkCSAT4GpgFsRaesWzWkPgnlKRDP9S',
     clientSecret: 'tnCMwPiJgwqiD5an',
@@ -70,4 +71,23 @@ response.result.data[0].price.currency
 response.result.data[0].itineraries[0].segments[0].carrierCode
 */
 
-module.exports = {getCityCode, getFlights};
+const touristBooking =async(req, res) => {
+    const {price} = req.body.price;
+    const {tourist} = Tourist.findOne({userName: req.body.userName});
+    const {wallet} = tourist.wallet;
+
+    if(wallet >= price){
+        const newWallet = wallet - price;
+        const updatedTourist = await Tourist.findOneAndUpdate({userName: req.params.userName}, {wallet: newWallet});
+        res.status(200).send(updatedTourist);
+    } else {
+        res.status(400).send({
+            status: 400,
+            code: 426,
+            title: "INSUFFICIENT FUNDS",
+            detail: "The tourist does not have enough funds for the booking"
+        });
+    }
+}
+
+module.exports = {getCityCode, getFlights,touristBooking};

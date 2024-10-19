@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
 import { Link } from 'react-router-dom';
+import CurrencyConvertor from '../../Components/CurrencyConvertor';
 
 import {
     Box,
@@ -18,6 +19,14 @@ import {
 
 const UpcomingMuseums = () => {
     const [upcomingMuseums, setUpcomingMuseums] = useState([]);
+    
+    const [exchangeRates, setExchangeRates] = useState({});
+    const [currency, setCurrency] = useState('EGP');
+
+    const handleCurrencyChange = (rates, selectedCurrency) => {
+        setExchangeRates(rates);
+        setCurrency(selectedCurrency);
+      };
 
     useEffect(() => {
         axios.get(`http://localhost:8000/museum/getAllUpcomingMuseums`)
@@ -45,7 +54,9 @@ const UpcomingMuseums = () => {
                             <TableCell>Description</TableCell>
                             <TableCell>Location</TableCell>
                             <TableCell>Pictures</TableCell>
-                            <TableCell>Ticket Price</TableCell>
+                            <TableCell>Ticket Price
+                                <CurrencyConvertor exchangeRates={exchangeRates} currency={currency} onCurrencyChange={handleCurrencyChange} />
+                            </TableCell>
                             <TableCell>Opening Time</TableCell>
                             <TableCell>Closing Time</TableCell>
                             <TableCell>Date</TableCell>
@@ -68,7 +79,9 @@ const UpcomingMuseums = () => {
                                         style={{ width: '100px', height: 'auto', objectFit: 'cover' }}
                                     />
                                 </TableCell>
-                                <TableCell>{upcomingMuseum.ticketPrices}</TableCell>
+                                <TableCell>                    
+                                    {(upcomingMuseum.ticketPrices * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                                </TableCell>
                                 <TableCell>{upcomingMuseum.openingTime}</TableCell>
                                 <TableCell>{upcomingMuseum.closingTime}</TableCell>
                                 <TableCell>{upcomingMuseum.museumDate}</TableCell>

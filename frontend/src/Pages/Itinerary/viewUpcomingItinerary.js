@@ -10,7 +10,7 @@ import SwapVertIcon from '@mui/icons-material/SwapVert';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { message } from 'antd';
 import { Link } from 'react-router-dom';
-
+import CurrencyConvertor from "../../Components/CurrencyConvertor";
 
 const ViewUpcomingItinerary = () => {
     const [itineraries, setItineraries] = useState([]);
@@ -30,7 +30,9 @@ const ViewUpcomingItinerary = () => {
     const [priceRange, setPriceRange] = useState([0, 5000]); 
     const [tags, setTags] = useState([]);  // Tags selected by the user
     const [allTags, setAllTags] = useState([]);  // All available tags from backend
-
+    
+    const [exchangeRates, setExchangeRates] = useState({});
+    const [currency, setCurrency] = useState('EGP');
     const [filterAnchorEl, setFilterAnchorEl] = useState(null);
 
     const [selectedFilters, setSelectedFilters] = useState([]);
@@ -51,6 +53,10 @@ const ViewUpcomingItinerary = () => {
     
     const isFilterSelected = (filter) => selectedFilters.includes(filter);
 
+    const handleCurrencyChange = (rates, selectedCurrency) => {
+        setExchangeRates(rates);
+        setCurrency(selectedCurrency);
+      };
     // Handlers for Sort By dropdown
     const handleSortByClick = (event) => {
         setSortByAnchorEl(event.currentTarget);
@@ -354,7 +360,9 @@ const ViewUpcomingItinerary = () => {
                 <TableCell>Locations</TableCell>
                 <TableCell>Timeline</TableCell>
                 <TableCell>Language</TableCell>
-                <TableCell>Price</TableCell>
+                <TableCell>Price
+                <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                </TableCell>
                 <TableCell>Available Dates And Times</TableCell>
                 <TableCell>Accessibility</TableCell>
                 <TableCell>Pick Up Location</TableCell>
@@ -393,7 +401,9 @@ const ViewUpcomingItinerary = () => {
                   </TableCell>               
                      <TableCell>{itinerary.timeline}</TableCell>
                   <TableCell>{itinerary.language}</TableCell>
-                  <TableCell>{itinerary.price}</TableCell>
+                  <TableCell> 
+                    {(itinerary.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                  </TableCell>
                   <TableCell>
                       {itinerary.availableDatesAndTimes.length > 0
                       ? itinerary.availableDatesAndTimes.map((dateTime, index) => {

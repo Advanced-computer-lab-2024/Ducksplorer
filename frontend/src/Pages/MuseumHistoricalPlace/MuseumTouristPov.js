@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import MuseumSearch from '../../Components/MuseumHistoricalPlaceComponent/MuseumSearch';
 import MuseumFilterComponent from '../../Components/MuseumHistoricalPlaceComponent/MuseumFilterComponent';
 import { Link } from 'react-router-dom';
-
+import CurrencyConvertor from '../../Components/CurrencyConvertor';
 import {
   Box,
   Button,
@@ -22,6 +22,10 @@ import {
 
 const MuseumTouristPov = () => {
   const [Museums, setMuseums] = useState([]);
+  
+  const [exchangeRates, setExchangeRates] = useState({});
+  const [currency, setCurrency] = useState('EGP');
+
   const navigate = useNavigate();
 
   // Fetch all museums on component mount
@@ -35,6 +39,11 @@ const MuseumTouristPov = () => {
         message.error('Error fetching museums!');
       });
   }, []);
+
+  const handleCurrencyChange = (rates, selectedCurrency) => {
+    setExchangeRates(rates);
+    setCurrency(selectedCurrency);
+  };
 
   // Callback to handle search results
   const handleSearchResults = (searchResults) => {
@@ -84,7 +93,9 @@ const MuseumTouristPov = () => {
                 <TableCell>Description</TableCell>
                 <TableCell>Location</TableCell>
                 <TableCell>Pictures</TableCell>
-                <TableCell>Ticket Price</TableCell>
+                <TableCell>Ticket Price
+                <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                </TableCell>
                 <TableCell>Opening Time</TableCell>
                 <TableCell>Closing Time</TableCell>
                 <TableCell>Date</TableCell>
@@ -108,7 +119,9 @@ const MuseumTouristPov = () => {
                         style={{ width: '100px', height: 'auto', objectFit: 'cover' }} // Adjust as needed
                       />
                     </TableCell>
-                    <TableCell>{museum.ticketPrices}</TableCell>
+                    <TableCell>                    
+                      {(museum.ticketPrices * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                    </TableCell>
                     <TableCell>{museum.openingTime}</TableCell>
                     <TableCell>{museum.closingTime}</TableCell>
                     <TableCell>{museum.museumDate}</TableCell>

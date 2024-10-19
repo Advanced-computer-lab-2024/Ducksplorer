@@ -7,6 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import CurrencyConvertor from '../../Components/CurrencyConvertor';
 
 import {
   Box,
@@ -33,6 +34,10 @@ const RUDHistoricalPlace = () => {
   const [selectedHistoricalPlace, setSelectedHistoricalPlace] = useState(null);
   const [editingHistoricalPlace, setEditingHistoricalPlace] = useState(null);
   const [historicalPlaceTagsOptions, setHistoricalPlaceTagsOptions] = useState([]);
+  
+  const [exchangeRates, setExchangeRates] = useState({});
+  const [currency, setCurrency] = useState('EGP');
+
   const [formData, setFormData] = useState({
     description: '',
     pictures: '',
@@ -47,6 +52,11 @@ const RUDHistoricalPlace = () => {
     // createdBy: ''
   });
   // const [createdBy, setCreatedBy] = useState("alya");
+  const handleCurrencyChange = (rates, selectedCurrency) => {
+    setExchangeRates(rates);
+    setCurrency(selectedCurrency);
+  };
+
 
   useEffect(() => {
     const userJson = localStorage.getItem('user'); // Get the 'user' item as a JSON string to get the currently logged in user
@@ -182,7 +192,9 @@ const RUDHistoricalPlace = () => {
                 <TableCell>Description</TableCell>
                 <TableCell>Location</TableCell>
                 <TableCell>Pictures</TableCell>
-                <TableCell>Ticket Price</TableCell>
+                <TableCell>Ticket Price
+                <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                </TableCell>
                 <TableCell>Opening Time</TableCell>
                 <TableCell>Closing Time</TableCell>
                 <TableCell>Date</TableCell>
@@ -205,7 +217,9 @@ const RUDHistoricalPlace = () => {
                       style={{ width: '100px', height: 'auto', objectFit: 'cover' }}
                     />
                   </TableCell>
-                  <TableCell>{historicalPlace.ticketPrices}</TableCell>
+                  <TableCell>                    
+                    {(historicalPlace.ticketPrices * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                </TableCell>
                   <TableCell>{historicalPlace.openingTime}</TableCell>
                   <TableCell>{historicalPlace.closingTime}</TableCell>
                   <TableCell>{historicalPlace.HistoricalPlaceDate}</TableCell>
