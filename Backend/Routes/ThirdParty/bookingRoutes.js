@@ -5,7 +5,7 @@ const router = express.Router();
 const  {getCityCode , getFlights, touristBooking}  = require("../../Controllers/ThirdParty/bookings.js");
 
 router.get(`/city-and-airport-search/:city`, getCityCode);
-router.get("/flight-search", getFlights);
+router.post("/flight-search", getFlights);
 
 router.put("/tourist-booking", touristBooking);
 

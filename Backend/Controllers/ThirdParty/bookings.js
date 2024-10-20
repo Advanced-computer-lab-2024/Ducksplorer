@@ -44,11 +44,11 @@ const getFlights = async (req, res) => {
         destinationLocationCode: destinationCode,
         departureDate: dateOfDeparture,
         adults: '1',
-        max: '7',
+        max: '6',
     }).then(function (response) {
         res.send(JSON.stringify(response.result));
     }).catch(function (response) {
-        res.status(500).json({error : response.result});
+        res.status(500).json({error : response.error});
     });
 };
 /*get number of bookable seats:

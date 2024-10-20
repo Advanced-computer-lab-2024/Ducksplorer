@@ -51,7 +51,7 @@ import GovernorDashboard from './Pages/Dashboards/GovernorDashboard';
 import AdvertiserEditProfile from './Pages/EditAccount/AdvertiserEditAccount.js';
 import SellerEditProfile from './Pages/EditAccount/SellerEditAccount.js';
 import SellerDashboard from './Pages/Dashboards/SellerDashboard';
-import Homepage from "./Pages/ToruistHomePage.js";
+import FlightsBooking from "./Pages/FlightsBooking.js";
 // import CurrencyConvertor from "./Components/CurrencyConvertor.js";
 // import Hotels from "./Components/ThirdParty/Hotels.js";
 //import Cards from "./Components/Card.js";
@@ -61,7 +61,6 @@ function App() {
     <React.StrictMode>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Homepage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signUp" element={<Signup />} />
             <Route path="/createItinerary" element={<CreateItinerary />} />
@@ -132,6 +131,7 @@ function App() {
             <Route path="/advertiserEditAccount" element={< AdvertiserEditProfile />} />
             <Route path="/sellerEditAccount" element={< SellerEditProfile />} />
             <Route path="/sellerDashboard" element={<SellerDashboard/>} />
+            <Route path="/flights" element={<FlightsBooking />} />
           </Routes>
       </BrowserRouter>
     </React.StrictMode>
