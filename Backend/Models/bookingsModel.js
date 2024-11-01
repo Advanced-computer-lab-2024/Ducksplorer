@@ -5,18 +5,17 @@ const {itinerarySchema} = require('./itineraryModel.js');
 
 const bookingsSchema = new Schema({
     user: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: 'Tourist',
       required: true
     },
     activities: {
         type: Array,
-        schema: [activitySchema],//this is an array of objects of type museumTag created using the model of museumTagModel
-        required: false
+        schema: [activitySchema],
     },
     itineraries: {
         type: Array,
-        schema: [itinerarySchema],//this is an array of objects of type museumTag created using the model of museumTagModel
+        schema: [itinerarySchema],
         required: false
     }
   }, { timestamps: true });

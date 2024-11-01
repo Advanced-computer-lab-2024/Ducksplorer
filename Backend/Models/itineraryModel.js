@@ -49,6 +49,11 @@ const itinerarySchema = new Schema({
         ref: 'TourGuide',
         required: false
     },
+    bookedCount: {
+        type: Number,
+        default: 0,
+        required: false
+    },
     rating: {
         type: Number,
         min: 0,

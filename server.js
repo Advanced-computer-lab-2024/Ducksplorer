@@ -15,6 +15,7 @@ const preferenceTagsRoutes = require("./Backend/Routes/Admin/PreferenceTagsRoute
 const activityRoutes = require("./Backend/Routes/activityRoutes.js");
 const categoryRoutes = require("./Backend/Routes/categoryRoutes.js");
 const fileRoutes = require("./Backend/Routes/fileRoutes.js")
+const paymentRoutes = require('./Backend/Routes/paymentRoutes.js');
 
 app.use(cors());
 
@@ -56,6 +57,7 @@ app.use("/tourGuideAccount", tourGuideAccountRoutes);
 app.use("/advertiserAccount", advertiserAccountRoutes);
 app.use("/sellerAccount", sellerAccountRoutes);
 app.use('/file', fileRoutes);
+app.use('/payment', paymentRoutes);
 
 
 app.use((req, res, next) => {

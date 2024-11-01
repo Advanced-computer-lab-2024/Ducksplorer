@@ -5,65 +5,62 @@ const Bookings = require("../Models/bookingsModel.js");
 const Itinerary = require("../Models/itineraryModel.js");
 
 const createBooking = async (req, res) => {
-    const { user } = req.params;  // Get the user from the URL parameters
-    const { activityIds, itineraryIds } = req.body;  // Get the activity and itinerary IDs from the request body
+    const { user } = req.params;  // URL parameter for user
+    const { activityId, itineraryId} = req.body;
 
     try {
-        // Find the tourist by userName
-        const tourist = await Tourist.findOne({ userName: user });
-
+        const tourist = await Tourist.findOne({userName : user });
         if (!tourist) {
             return res.status(404).json({ message: "Tourist not found" });
         }
 
-        if (!Array.isArray(activityIds) || !Array.isArray(itineraryIds)) {
-            return res.status(400).json({ message: "Activity IDs and Itinerary IDs must be arrays" });
-        }
+        const activity = activityId ? await Activity.findById(activityId) : null;
+        const itinerary = itineraryId ? await Itinerary.findById(itineraryId) : null;
 
-        // Fetch the activities and itineraries by their IDs
-        const activities = await Activity.find({ _id: { $in: activityIds } });
-        const itineraries = await Itinerary.find({ _id: { $in: itineraryIds } });
+        console.log(activityId, itineraryId);
 
-        if (activities.length !== activityIds.length) {
-            return res.status(404).json({ message: "One or more activities not found" });
-        }
+        // if (!activity) {
+        //     return res.status(404).json({ message: "Activity not found" });
+        // }
 
-        if (itineraries.length !== itineraryIds.length) {
-            return res.status(404).json({ message: "One or more itineraries not found" });
-        }
+        // if (!itinerary) {
+        //     return res.status(404).json({ message: "Itinerary not found" });
+        // }
 
-        // Check if the user already has a booking
-        let booking = await Bookings.findOne({ user: tourist._id });
+        let booking = await Bookings.findOne({ user });  // Adjusted to use tourist's ID
 
         if (booking) {
-            // If booking exists, update the activities and itineraries arrays
-            const updatedActivities = [
-                ...booking.activities,
-                ...activities.filter(a => !booking.activities.some(existingActivity => existingActivity._id.equals(a._id))) // Avoid duplicates
-            ];
-
-            const updatedItineraries = [
-                ...booking.itineraries,
-                ...itineraries.filter(i => !booking.itineraries.some(existingItinerary => existingItinerary._id.equals(i._id))) // Avoid duplicates
-            ];
-
-            booking.activities = updatedActivities;
-            booking.itineraries = updatedItineraries;
-
-            await booking.save(); // Save the updated booking
-
+            if (activityId) {
+                const activityExists = booking.activities.includes(activityId);
+                if (!activityExists) {
+                    booking.activities.push(activity);
+                    activity.bookedCount += 1;
+                } else{
+                    return res.status(400).json({ message: "Activity already exists in the booking" });
+                }
+            }
+        
+            // Check if itineraryId is valid and not null, then add it to the itineraries array
+            if (itineraryId) {
+                const itineraryExists = booking.itineraries.includes(itineraryId);
+                if (!itineraryExists) {
+                    booking.itineraries.push(itinerary);
+                    itinerary.bookedCount += 1;
+                } else{
+                    return res.status(400).json({ message: "Itinerary already exists in the booking" });
+                }
+            }
+            activityId ? await activity.save(): null;
+            itineraryId ? await itinerary.save(): null;
+            await booking.save();
             return res.status(200).json({ message: "Booking updated successfully", booking });
-
         } else {
-            // If no booking exists, create a new one
             const newBooking = new Bookings({
-                user: tourist._id,  
-                activities,         
-                itineraries       
+                user,
+                activities: activityId ? [activity] : [], // Start with an array
+                itineraries: itineraryId ? [itinerary] : []
             });
-
-            await newBooking.save(); // Save the new booking
-
+            await newBooking.save();
             return res.status(201).json(newBooking);
         }
 
@@ -71,6 +68,7 @@ const createBooking = async (req, res) => {
         return res.status(500).json({ message: err.message });
     }
 };
+
 
 
 
@@ -157,84 +155,78 @@ const getMyBookings = async (req, res) => {
 };
 
 const cancelMyBooking = async (req, res) => {
-    const { user } = req.params; // User from the URL parameters
+    const { user } = req.params;
+    const { type, itemId } = req.body;
     const currentDate = new Date();
-    const { bookingId, type, itemId } = req.body; // Take bookingId, type, and itemId from the body
 
     try {
-        // Find the tourist by their ID
-        const tourist = await Tourist.findOne({ _id: user });
-
+        const tourist = await Tourist.findOne({ userName: user });
         if (!tourist) {
             return res.status(404).json({ message: 'Tourist not found' });
         }
 
-        // Find the booking by ID and user
-        const booking = await Bookings.findOne({ _id: bookingId, user });
-
+        const booking = await Bookings.findOne({ user });
         if (!booking) {
             return res.status(404).json({ message: 'Booking not found or does not belong to the user' });
         }
 
-        const timeDifference = (new Date(booking.date) - currentDate) / (1000 * 60 * 60); // Convert milliseconds to hours
-
-        if (timeDifference <= 48) {
-            return res.status(400).json({ message: 'Cannot cancel within 48 hours of the activity/itinerary' });
-        }
-
-        // Convert itemId to ObjectId for comparison
         const itemObjectId = new mongoose.Types.ObjectId(itemId);
+        let itemDate;
 
-        // Handle cancellation of activity or itinerary
-        let updatedBooking;
         if (type === 'activity') {
-            // Check if the activity exists in the booking by checking each activity's _id
-            const activityExists = booking.activities.some(activity => activity._id.equals(itemObjectId));
+            const activity = booking.activities.find(activity => activity._id.equals(itemObjectId));
+            console.log(activity._id);
+            console.log(itemObjectId);
+            console.log(activity);
+            if (!activity) return res.status(404).json({ message: 'Activity not found in the booking' });
+            itemDate = activity.date;
 
-            if (!activityExists) {
-                return res.status(404).json({ message: 'Activity not found in the booking' });
+            // Check time difference for activity
+            const timeDifference = (new Date(itemDate) - currentDate) / (1000 * 60 * 60);
+            if (timeDifference <= 48) {
+                return res.status(400).json({ message: 'Cannot cancel within 48 hours of the activity' });
             }
-
+            activity.bookedCount -= 1;
             // Remove the activity from the booking
-            updatedBooking = await Bookings.findOneAndUpdate(
-                { _id: bookingId, user },
-                { $pull: { activities: { _id: itemObjectId } } },
-                { new: true }
+            await Bookings.updateOne(
+                { user },
+                { $pull: { activities: { _id: itemObjectId } } }
             );
 
         } else if (type === 'itinerary') {
-            // Check if the itinerary exists in the booking by checking each itinerary's _id
-            const itineraryExists = booking.itineraries.some(itinerary => itinerary._id.equals(itemObjectId));
+            const itinerary = booking.itineraries.find(itinerary => itinerary._id.equals(itemObjectId));
+            if (!itinerary) return res.status(404).json({ message: 'Itinerary not found in the booking' });
+            itemDate = itinerary.date;
 
-            if (!itineraryExists) {
-                return res.status(404).json({ message: 'Itinerary not found in the booking' });
+            // Check time difference for itinerary
+            const timeDifference = (new Date(itemDate) - currentDate) / (1000 * 60 * 60);
+            if (timeDifference <= 48) {
+                return res.status(400).json({ message: 'Cannot cancel within 48 hours of the itinerary' });
             }
-
+            itinerary.bookedCount -= 1;
             // Remove the itinerary from the booking
-            updatedBooking = await Bookings.findOneAndUpdate(
-                { _id: bookingId, user },
-                { $pull: { itineraries: { _id: itemObjectId } } },
-                { new: true }
+            await Bookings.updateOne(
+                { user },
+                { $pull: { itineraries: { _id: itemObjectId } } }
             );
 
         } else {
             return res.status(400).json({ message: 'Invalid type for cancellation. Must be "activity" or "itinerary".' });
         }
 
-        // After updating, check if the booking has any activities or itineraries left
+        // Check if booking is empty and delete if no items remain
+        const updatedBooking = await Bookings.findOne({ user });
         if (updatedBooking.activities.length === 0 && updatedBooking.itineraries.length === 0) {
-            // If no activities or itineraries are left, delete the entire booking
-            await Bookings.deleteOne({ _id: bookingId });
-            return res.status(200).json({ message: 'Booking successfully canceled and deleted', updatedBooking });
+            await Bookings.deleteOne({ user });
+            return res.status(200).json({ message: 'Booking successfully canceled and deleted' });
         }
 
-        res.status(200).json({ message: 'Booking successfully canceled', updatedBooking });
-
+        res.status(200).json({ message: 'Booking item successfully canceled', updatedBooking });
+        
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
-
 
 
 const receiveLoyaltyPoints = async (req, res) => {
