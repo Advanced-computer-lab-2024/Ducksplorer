@@ -5,6 +5,7 @@ const { filterItineraries, filterUpcomingItineraries } = require('../Controllers
 const { getUpcomingItineraries } = require('../Controllers/Itinerary/itineraryViewUpcomingController');
 const { searchItineraries } = require('../Controllers/Itinerary/itinerarySearchController');
 const { getAllMyItineraries } = require('../Controllers/Itinerary/itineraryGetMyController');
+const { rateItinerary } = require('../Controllers/Itinerary/itineraryRateController')
 const router = express.Router();
 
 router.route("/").post(createItinerary).get(getAllItineraries)
@@ -26,5 +27,6 @@ router.route("/:id").get(getItinerary).put(updateItinerary).delete(deleteItinera
 
 router.route("/toggleFlagItinerary/:id").put(toggleFlagItinerary)
 
+router.route("/rate/:itineraryId").patch(rateItinerary);
 
 module.exports = router

@@ -1,41 +1,58 @@
 const Tourist = require('../Models/touristModel.js');
 
 
- const getTouristDetails = async (req, res) => {
-    const {userName} = req.params;
-    try {
-      const tourist = await Tourist.findOne({userName});
-  
-      if (!tourist){
-        return res.status(404).json({ message: 'Tourist not found' });
-      }
+const getTouristDetails = async (req, res) => {
+  const { userName } = req.params;
+  try {
+    const tourist = await Tourist.findOne({ userName });
 
-      return res.status(200).json(tourist);
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Internal server error' });
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found' });
     }
-  };
 
-   const updateTouristDetails = async (req, res) => {
-    const userName = req.body.userName;
-    const updateData = req.body;
-  
-    try {
-      const tourist = await Tourist.findOneAndUpdate({userName }, updateData, { new: true });
-  
-      if (!tourist) {
-        return res.status(404).json({ message: 'Tourist not found' });
-      }
-  
-      return res.status(200).json(tourist);
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Internal server error' });
+    return res.status(200).json(tourist);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+const updateTouristDetails = async (req, res) => {
+  const userName = req.body.userName;
+  const updateData = req.body;
+
+  try {
+    const tourist = await Tourist.findOneAndUpdate({ userName }, updateData, { new: true });
+
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found' });
     }
-  };
 
-  module.exports = {
-    getTouristDetails,
-    updateTouristDetails
-  };
+    return res.status(200).json(tourist);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+//Used for when a tourist decides to delete his account 
+const deleteTourist = async (req, res) => {
+  try {
+    const { userName } = req.params;
+
+    const deletedTourist = await Tourist.findByIdAndDelete(userName);
+    if (!deletedTourist) {
+      return res.status(404).json({ message: "Tourist not found" });
+    }
+    res.status(200).json(deletedTourist)
+  }
+  catch (error) {
+    res.status(400).json({ message: "Error deleting Tourist " })
+  }
+}
+
+module.exports = {
+  getTouristDetails,
+  updateTouristDetails,
+  deleteTourist
+};

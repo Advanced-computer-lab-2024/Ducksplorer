@@ -28,6 +28,15 @@ const tourGuideSchema = new Schema({
         type: String,
         required: false
     }
+    ,
+    ratings: {
+        type: [Number],
+        required: false
+    },
+    averageRating: {
+        type: Number,
+        required: false
+    },
 }, { timestamps: true })
 
 const TourGuide = mongoose.model("TourGuide", tourGuideSchema);

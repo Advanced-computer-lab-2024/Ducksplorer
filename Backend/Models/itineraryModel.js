@@ -63,8 +63,17 @@ const itinerarySchema = new Schema({
     flag: {
         type: Boolean,
         required: false
+    },
+    ratings: {
+        type: [Number],
+        required: false
       },
-}, { timestamps: true })
+      averageRating: {
+        type: Number,
+        required: false
+      },
+    timestamps: true
+})
 
 const Itinerary = mongoose.model("Itinerary", itinerarySchema);
 
