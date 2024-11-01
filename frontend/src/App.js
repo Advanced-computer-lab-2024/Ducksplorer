@@ -67,6 +67,7 @@ function App() {
           <Route path="/rudItinerary" element={<RUDItinerary />} />
           <Route path="/viewUpcomingItinerary" element={<ViewUpcomingItinerary />} />
           <Route path="/viewAllTourist" element={<ViewAllTourist />} />
+          <Route path="/viewAllTourist/:id" element={<ViewAllTourist />} />
           <Route path="/tourGuideDashboard" element={<TourGuideDashboard />} />
           <Route path="/touristDashboard" element={<TouristDashboard />} />
           <Route path="/tourGuideEditAccount" element={<TourGuideEditProfile />} />
@@ -79,6 +80,8 @@ function App() {
           {/* <Route path="/RUDVisit" element={<RUDVisit />} /> */}
           <Route path="/MuseumTouristPov" element={<MuseumTouristPov />} />
           <Route path="/HistoricalPlaceTouristPov" element={<HistoricalPlaceTouristPov />} />
+          <Route path="/MuseumTouristPov/:id" element={<MuseumTouristPov />} />
+          <Route path="/HistoricalPlaceTouristPov/:id" element={<HistoricalPlaceTouristPov />} />
           <Route path="/UpcomingHistoricalPlaces" element={<UpcomingHistoricalPlaces />} />
           <Route path="/UpcomingMuseums" element={<UpcomingMuseums />} />
           <Route path="/createTagMuseum" element={<CreateTagMuseum />} />
@@ -102,6 +105,10 @@ function App() {
           <Route path="/activity/upcoming" element={<UpcomingActivities />} />
           <Route
             path="/activity/searchActivities"
+            element={<SearchActivities />}
+          />
+          <Route
+            path="/activity/searchActivities/:id"
             element={<SearchActivities />}
           />
           <Route path="/activity/SortFilter" element={<SortFilterActivity />} />
