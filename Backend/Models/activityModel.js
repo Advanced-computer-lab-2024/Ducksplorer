@@ -55,6 +55,11 @@ const activitySchema = new Schema(
     averageRating: {
       type: Number,
       required: false
+    },
+    bookedCount: {
+      type: Number,
+      default: 0,
+      required: false
     }
   },
   { timestamps: true }

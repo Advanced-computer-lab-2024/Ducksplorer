@@ -51,6 +51,7 @@ import GovernorDashboard from './Pages/Dashboards/GovernorDashboard';
 import AdvertiserEditProfile from './Pages/EditAccount/AdvertiserEditAccount.js';
 import SellerEditProfile from './Pages/EditAccount/SellerEditAccount.js';
 import SellerDashboard from './Pages/Dashboards/SellerDashboard';
+import BookingDetails from "./Pages/Bookings/myBookings.js";
 
 
 function App() {
@@ -106,7 +107,7 @@ function App() {
             />
             <Route path="/location" element={<ClinicLocation/>} />
 
-
+            <Route path="/myBookings" element={<BookingDetails userName={JSON.parse(localStorage.getItem("user")).username}/>}/>
             <Route path = "/ProductDashboard" element= {<ProductDashboard/>} />
             <Route path = "/AllProducts" element= {<AllProducts/>} />
             <Route path = "/AddProducts" element= {<AddProducts/>} />
