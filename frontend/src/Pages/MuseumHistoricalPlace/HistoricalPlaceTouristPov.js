@@ -5,7 +5,7 @@ import { message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import HistoricalPlaceSearch from '../../Components/MuseumHistoricalPlaceComponent/HistoricalPlaceSearch';
 import HistoricalPlaceFilterComponent from '../../Components/MuseumHistoricalPlaceComponent/HistoricalPlaceFilterComponent';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import {
   Box,
@@ -21,6 +21,9 @@ import {
 } from '@mui/material';
 
 const HistoricalPlaceTouristPov = () => {
+
+  const { id } = useParams();
+
   const [HistoricalPlaces, setHistoricalPlaces] = useState([]);
   const navigate = useNavigate();
 
@@ -28,7 +31,13 @@ const HistoricalPlaceTouristPov = () => {
   useEffect(() => {
     axios.get(`http://localhost:8000/historicalPlace/getAllHistoricalPlaces`)
       .then(response => {
+        if (id == undefined) {
         setHistoricalPlaces(response.data);
+        }
+        else {
+          const tempHistoricalPlaces = response.data.filter((historicalPlace) => historicalPlace._id == id);
+          setHistoricalPlaces(tempHistoricalPlaces);
+        }
       })
       .catch(error => {
         console.error('There was an error fetching the Historical Places!', error);
@@ -50,6 +59,26 @@ const HistoricalPlaceTouristPov = () => {
   const goToUpcomingPage = () => {
     navigate('/UpcomingHistoricalPlaces');
   };
+
+
+
+  // Share historical place functionality
+  const handleShareLink = (HistoricalPlaceId) => {
+    const link = `${window.location.origin}/HistoricalPlaceTouristPov/${HistoricalPlaceId}`; // Update with your actual route
+    navigator.clipboard.writeText(link)
+        .then(() => {
+            message.success('Link copied to clipboard!');
+        })
+        .catch(() => {
+            message.error('Failed to copy link.');
+        });
+};
+
+const handleShareEmail = (HistoricalPlaceId) => {
+    const link = `${window.location.origin}/HistoricalPlaceTouristPov/${HistoricalPlaceId}`; // Update with your actual route
+    window.location.href = `mailto:?subject=Check out this historical place&body=Here is the link to the historical place: ${link}`;
+};
+
 
   return (
     <>
@@ -117,6 +146,14 @@ const HistoricalPlaceTouristPov = () => {
                     <TableCell>{historicalPlace.HistoricalPlaceCategory}</TableCell>
                     <TableCell>{historicalPlace.tags.join(', ')}</TableCell>
                     <TableCell>{historicalPlace.createdBy}</TableCell>
+                    {id == undefined ? (<TableCell>
+                        <Button variant="outlined" onClick={() => handleShareLink(historicalPlace._id)}>
+                            Share Via Link
+                        </Button>
+                        <Button variant="outlined" onClick={() => handleShareEmail(historicalPlace._id)}>
+                            Share Via Email
+                        </Button>
+                    </TableCell>) : null}
                   </TableRow>
                 ))
               ) : (

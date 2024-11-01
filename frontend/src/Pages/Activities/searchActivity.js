@@ -1,6 +1,7 @@
 // This is the file that gets all the activities for the tourist
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { message } from 'antd';
 import {
   Box,
   Table,
@@ -15,9 +16,15 @@ import {
   Button,
   Rating,
 } from "@mui/material";
+
+import { Link, useParams } from 'react-router-dom';
+
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 
 const SearchActivities = () => {
+
+  const { id } = useParams();
+
   const [activities, setActivities] = useState([]); // Displayed activities
   const [allActivities, setAllActivities] = useState([]); // Store all fetched activities
   const [searchQuery, setSearchQuery] = useState(""); // Single search input
@@ -27,8 +34,16 @@ const SearchActivities = () => {
     axios
       .get("http://localhost:8000/activity")
       .then((response) => {
+        if (id == undefined) {
         setAllActivities(response.data);
         setActivities(response.data); // Set initial activities to all fetched activities
+        }
+        else {
+          const tempActivities = response.data.filter((activity) => activity._id == id);
+          setAllActivities(tempActivities);
+          setActivities(tempActivities);
+        }
+      
       })
       .catch((error) => {
         console.error("There was an error fetching the activities!", error);
@@ -50,6 +65,23 @@ const SearchActivities = () => {
         console.error("There was an error fetching the activities!", error);
       });
   };
+
+  // Share itinerary functionality
+  const handleShareLink = (activityId) => {
+    const link = `${window.location.origin}/activity/searchActivities/${activityId}`; // Update with your actual route
+    navigator.clipboard.writeText(link)
+        .then(() => {
+            message.success('Link copied to clipboard!');
+        })
+        .catch(() => {
+            message.error('Failed to copy link.');
+        });
+};
+
+const handleShareEmail = (activityId) => {
+    const link = `${window.location.origin}/activity/searchActivities/${activityId}`; // Update with your actual route
+    window.location.href = `mailto:?subject=Check out this activity&body=Here is the link to the activity: ${link}`;
+};
 
   return (
     <>
@@ -124,6 +156,15 @@ const SearchActivities = () => {
                       <TableCell>
                         <Rating value={activity.averageRating} precision={0.1} readOnly />
                       </TableCell>
+                      {id == undefined ? (<TableCell>
+                          <Button variant="outlined" onClick={() => handleShareLink(activity._id)}>
+                            Share Via Link
+                          </Button>
+                          <Button variant="outlined" onClick={() => handleShareEmail(activity._id)}>
+                            Share Via Email
+                          </Button>
+                      </TableCell>) : null
+                      }
                     </TableRow>
                   );
                 }

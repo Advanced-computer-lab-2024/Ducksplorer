@@ -5,7 +5,7 @@ import { message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import MuseumSearch from '../../Components/MuseumHistoricalPlaceComponent/MuseumSearch';
 import MuseumFilterComponent from '../../Components/MuseumHistoricalPlaceComponent/MuseumFilterComponent';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import {
   Box,
@@ -21,6 +21,9 @@ import {
 } from '@mui/material';
 
 const MuseumTouristPov = () => {
+
+  const { id } = useParams();
+
   const [Museums, setMuseums] = useState([]);
   const navigate = useNavigate();
 
@@ -28,7 +31,13 @@ const MuseumTouristPov = () => {
   useEffect(() => {
     axios.get(`http://localhost:8000/museum/getAllMuseums`)
       .then(response => {
+        if (id == undefined){
         setMuseums(response.data);
+        }
+        else {
+          const tempMuseums = response.data.filter((museum) => museum._id == id);
+          setMuseums(tempMuseums);
+        }
       })
       .catch(error => {
         console.error('There was an error fetching the museums!', error);
@@ -49,6 +58,23 @@ const MuseumTouristPov = () => {
   // Navigate to the upcoming museums page
   const goToUpcomingPage = () => {
     navigate('/UpcomingMuseums');
+  };
+
+    // Share museum functionality
+    const handleShareLink = (MuseumId) => {
+      const link = `${window.location.origin}/MuseumTouristPov/${MuseumId}`; // Update with your actual route
+      navigator.clipboard.writeText(link)
+          .then(() => {
+              message.success('Link copied to clipboard!');
+          })
+          .catch(() => {
+              message.error('Failed to copy link.');
+          });
+  };
+  
+  const handleShareEmail = (MuseumId) => {
+      const link = `${window.location.origin}/MuseumTouristPov/${MuseumId}`; // Update with your actual route
+      window.location.href = `mailto:?subject=Check out this museum&body=Here is the link to the museum: ${link}`;
   };
 
   return (
@@ -116,6 +142,14 @@ const MuseumTouristPov = () => {
                     <TableCell>{museum.museumCategory}</TableCell>
                     <TableCell>{museum.tags.join(', ')}</TableCell>
                     <TableCell>{museum.createdBy}</TableCell>
+                    {id == undefined ? (<TableCell>
+                        <Button variant="outlined" onClick={() => handleShareLink(museum._id)}>
+                            Share Via Link
+                        </Button>
+                        <Button variant="outlined" onClick={() => handleShareEmail(museum._id)}>
+                            Share Via Email
+                        </Button>
+                    </TableCell>) : null}
                   </TableRow>
                 ))
               ) : (
