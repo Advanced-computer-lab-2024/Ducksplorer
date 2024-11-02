@@ -34,7 +34,6 @@ const sidebarButtonStyle = {
 const TouristAllProducts = () => {
   // State for managing the dropdown menu
   const [anchorEl, setAnchorEl] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate(); 
 
   const handleFilterClick = (event) => {
@@ -43,16 +42,6 @@ const TouristAllProducts = () => {
 
   const handleFilterClose = () => {
     navigate('/FilterProducts');
-  };
-
-  // Handler for search input change
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
-  // Placeholder functions for button actions
-  const handleAddProduct = () => {
-    navigate('/AddProducts');
   };
 
   const handleViewAllProducts = () => {
@@ -90,10 +79,6 @@ const TouristAllProducts = () => {
     navigate('/SortProducts');
   }
 
-  const handleViewMyProducts = ()=> {
-    navigate('/ViewMyProducts');
-  }
-
   const handleBackButtonClick = () => {
     window.history.back();
   };
@@ -120,7 +105,7 @@ const TouristAllProducts = () => {
           Search
         </Button>
         
-        <div style={{ maxHeight: '400px', overflowY: 'auto', padding: '10px', marginTop: '20px' }}>
+        <div style={{ maxHeight: '400px', overflowY: 'visible', padding: '10px', marginTop: '20px' }}>
         {/* Render the filtered products using the ProductCard component */}
         {products.length > 0 ? (
           products.map((product) => (

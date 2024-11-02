@@ -123,10 +123,10 @@ const Adminproducts = () => {
           <div
             style={{
               maxHeight: "400px",
-              overflowY: "auto",
+              overflowY: "visible",
               padding: "10px",
               marginTop: "20px",
-              height: "80vh",
+              height: "100vh",
               transform: "translateX(125px)",
             }}
           >

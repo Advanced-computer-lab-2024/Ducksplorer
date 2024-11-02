@@ -1,7 +1,10 @@
 import React from 'react';
 import { Card, CardContent, Typography, CardMedia } from '@mui/material';
+import useUserRole from '../getRole';
 
 const ProductCard = ({ product }) => {
+  const role = useUserRole();
+  console.log(role);
   return (
     <Card style={{ marginBottom: '20px', maxWidth: '500px' }}>
       <CardMedia
@@ -15,6 +18,8 @@ const ProductCard = ({ product }) => {
         <Typography variant="h5">{product.name}</Typography>
         <Typography variant="body1">Price: ${product.price}</Typography>
         <Typography variant="body1">Available Quantity: {product.availableQuantity}</Typography>
+        {role === 'Admin' && <Typography variant="body1">Sales: {product.sales}</Typography>}
+        {role === 'Seller' && <Typography variant="body1">Sales: {product.sales}</Typography>}
         <Typography variant="body1">Description: {product.description}</Typography>
         <Typography variant="body1">Seller: {product.seller}</Typography>
         <Typography variant="body1">Ratings: {product.ratings.length > 0 ? product.ratings.join(', ') : 'No ratings yet'}</Typography>

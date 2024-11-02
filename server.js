@@ -19,6 +19,7 @@ const AdminActivityRoutes = require("./Backend/Routes/Admin/AdminActivityRoutes.
 const preferenceTagsRoutes = require("./Backend/Routes/Admin/PreferenceTagsRoutes.js");
 const activityRoutes = require("./Backend/Routes/activityRoutes.js");
 const categoryRoutes = require("./Backend/Routes/categoryRoutes.js");
+const userRoutes = require("./Backend/Routes/userRoutes.js");
 const multer = require("multer");
 
 app.use(cors());
@@ -96,6 +97,7 @@ app.use("/tourGuideAccount", tourGuideAccountRoutes);
 app.use("/advertiserAccount", advertiserAccountRoutes);
 app.use("/sellerAccount", sellerAccountRoutes);
 app.use("/complaint", complaintRoutes);
+app.use("/users", userRoutes);
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*"); // Allow requests from any origin

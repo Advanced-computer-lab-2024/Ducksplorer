@@ -5,17 +5,15 @@ const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
     user: {
-      type: String, // Assuming a reference to a User model
-      ref: 'Tourist',
+      type: String, 
       required: true
     },
     comment: {
       type: String,
-
       required: true
     },
     date: {
-      type: Date,
+      type: Date
     }
   });
 

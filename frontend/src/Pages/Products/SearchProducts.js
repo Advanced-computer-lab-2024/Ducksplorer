@@ -55,7 +55,7 @@ function SearchProducts() {
         </Button>
       </Stack>
 
-      <div style={{ maxHeight: '400px', overflowY: 'auto', padding: '10px', marginTop: '20px' }}>
+      <div style={{ maxHeight: '400px', overflowY: 'visible', padding: '10px', marginTop: '20px' }}>
         {/* Render the filtered products using the ProductCard component */}
         {products.length > 0 ? (
           products.map((product) => (
