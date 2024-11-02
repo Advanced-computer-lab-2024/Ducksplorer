@@ -52,6 +52,11 @@ import AdvertiserEditProfile from './Pages/EditAccount/AdvertiserEditAccount.js'
 import SellerEditProfile from './Pages/EditAccount/SellerEditAccount.js';
 import SellerDashboard from './Pages/Dashboards/SellerDashboard';
 import BookingDetails from "./Pages/Bookings/myBookings.js";
+import CheckoutForm from "./Pages/Payment/checkout.js";
+import Completion from "./Pages/Payment/completion.js";
+import Payment from "./Pages/Payment/payment2.js";
+import PaymentPage from "./Pages/Payment/mailAmount.js";
+//import Payment from "./Pages/Payment/payment.js";
 
 
 function App() {
@@ -111,7 +116,17 @@ function App() {
             />
             <Route path="/location" element={<ClinicLocation/>} />
 
+            
+            
+            
+            
             <Route path="/myBookings" element={<BookingDetails userName={JSON.parse(localStorage.getItem("user")).username}/>}/>
+            
+            <Route path="/payment" element={<PaymentPage />} />
+            <Route path="/checkout" element={<Payment/>} />
+            <Route path="/completion" element={<Completion />} />
+            
+            
             <Route path = "/ProductDashboard" element= {<ProductDashboard/>} />
             <Route path = "/AllProducts" element= {<AllProducts/>} />
             <Route path = "/AddProducts" element= {<AddProducts/>} />
