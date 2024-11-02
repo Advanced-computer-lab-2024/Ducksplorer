@@ -37,6 +37,10 @@ const tourGuideSchema = new Schema({
         type: Number,
         required: false
     },
+    comments: {
+        type: [String],
+        required: false,
+    }
 }, { timestamps: true })
 
 const TourGuide = mongoose.model("TourGuide", tourGuideSchema);

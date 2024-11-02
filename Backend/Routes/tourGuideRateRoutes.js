@@ -3,6 +3,6 @@ const { rateTourGuide } = require('../Controllers/tourGuideRateController')
 const router = express.Router();
 
 
-router.route("/rate/:tourGuideId").patch(rateTourGuide);
+router.route("/rateTourGuide/:tourGuideId").patch(rateTourGuide);
 
 module.exports = router

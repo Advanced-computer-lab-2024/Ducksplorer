@@ -60,6 +60,10 @@ const activitySchema = new Schema(
       type: Boolean,
       required: false
     },
+    comments: {
+      type: [String],
+      required: false,
+    }
   },
 
 

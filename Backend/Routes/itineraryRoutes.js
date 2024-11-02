@@ -5,7 +5,10 @@ const { filterItineraries, filterUpcomingItineraries } = require('../Controllers
 const { getUpcomingItineraries } = require('../Controllers/Itinerary/itineraryViewUpcomingController');
 const { searchItineraries } = require('../Controllers/Itinerary/itinerarySearchController');
 const { getAllMyItineraries } = require('../Controllers/Itinerary/itineraryGetMyController');
-const { rateItinerary } = require('../Controllers/Itinerary/itineraryRateController')
+const { rateItinerary } = require('../Controllers/Itinerary/itineraryRateController');
+const { toggleActiveFlagItinerary } = require('../Controllers/Itinerary/itineraryFlagsController')
+const { commentItinerary } = require('../Controllers/Itinerary/itineraryCommentController');
+
 const router = express.Router();
 
 router.route("/").post(createItinerary).get(getAllItineraries)
@@ -27,6 +30,10 @@ router.route("/:id").get(getItinerary).put(updateItinerary).delete(deleteItinera
 
 router.route("/toggleFlagItinerary/:id").put(toggleFlagItinerary)
 
-router.route("/rate/:itineraryId").patch(rateItinerary);
+router.route("/rateItinerary/:itineraryId").patch(rateItinerary)
+
+router.route("/toggleActiveFlagItinerary/:id").put(toggleActiveFlagItinerary)
+
+router.route("/commentItinerary/:itineraryId").patch(commentItinerary);
 
 module.exports = router

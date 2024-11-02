@@ -35,6 +35,8 @@ const tourGuideAccountRoutes = require("./Backend/Routes/TourGuideAccountRoutes.
 const advertiserAccountRoutes = require("./Backend/Routes/AdvertiserAccountRoutes.js")
 const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js")
 const tourGuideRateRoutes = require("./Backend/Routes/tourGuideRateRoutes.js")
+const tourGuideCommentRoutes = require("./Backend/Routes/tourGuideCommentRoutes.js")
+
 
 app.use("/signUp", signUpRoutes);
 app.use("/touristRoutes", touristRoutes);
@@ -54,6 +56,7 @@ app.use("/tourGuideAccount", tourGuideAccountRoutes);
 app.use("/advertiserAccount", advertiserAccountRoutes);
 app.use("/sellerAccount", sellerAccountRoutes);
 app.use("/tourGuideRate", tourGuideRateRoutes);
+app.use("/tourGuideComment", tourGuideCommentRoutes);
 
 
 app.use((req, res, next) => {
