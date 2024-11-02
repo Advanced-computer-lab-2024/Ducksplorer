@@ -27,11 +27,13 @@ const Help = () => {
         return;
     }
 
+    const currentDate = new Date().toISOString();
+
     try {
       const response = await axios.post("http://localhost:8000/complaint/", {
         title: formData.title,
         body: formData.body,
-        date: formData.date,
+        date: currentDate,
         tourist: userName,
       });
       console.log(response.data);
@@ -110,7 +112,7 @@ const Help = () => {
                 onChange={handleChange}
               />
             </label>
-            <label>
+            {/* <label>
               Date:
               <input
                 type="date"
@@ -119,7 +121,7 @@ const Help = () => {
                 value={formData.date}
                 onChange={handleChange}
               />
-            </label>
+            </label> */}
             <button type="submit">Submit</button>
           </form>
         </div>
