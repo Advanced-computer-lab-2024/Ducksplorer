@@ -368,7 +368,7 @@ function SearchItineraries() {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {itineraries.map(itinerary => !itinerary.flag ? (
+                                    {itineraries.map(itinerary => !itinerary.flag && itinerary.isActive == true ? (
                                         <TableRow key={itinerary._id}>
                                             <TableCell>
                                                 {itinerary.activity && itinerary.activity.length > 0
