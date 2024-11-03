@@ -7,7 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-
+import CurrencyConvertor from '../../Components/CurrencyConvertor';
 
 import {
     Box,
@@ -34,6 +34,9 @@ const RUDMuseum = () => {
     const [selectedMuseum, setSelectedMuseum] = useState(null);
     const [editingMuseum, setEditingMuseum] = useState(null);
     const [museumTagsOptions, setMuseumTagsOptions] = useState([]); // State to store fetched museum tags
+    
+    const [exchangeRates, setExchangeRates] = useState({});
+    const [currency, setCurrency] = useState('EGP');
     const [formData, setFormData] = useState({
         description: '',
         pictures: '', // Changed to a string for link input
@@ -66,6 +69,11 @@ const RUDMuseum = () => {
                 });
         }
     }, []);
+
+    const handleCurrencyChange = (rates, selectedCurrency) => {
+        setExchangeRates(rates);
+        setCurrency(selectedCurrency);
+      };
 
     useEffect(() => {//fetching all the tags because they will be used in the dropdown that appears when we try to  edit the tags of a particular museum visit
         const fetchMuseumTags = async () => {
@@ -186,7 +194,9 @@ const RUDMuseum = () => {
                                 <TableCell>Description</TableCell>
                                 <TableCell>Location</TableCell>
                                 <TableCell>Pictures</TableCell>
-                                <TableCell>Ticket Price</TableCell>
+                                <TableCell>Ticket Price
+                                <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                                </TableCell>
                                 <TableCell>Opening Time</TableCell>
                                 <TableCell>Closing Time</TableCell>
                                 <TableCell>Date</TableCell>
@@ -209,7 +219,9 @@ const RUDMuseum = () => {
                                             style={{ width: '100px', height: 'auto', objectFit: 'cover' }} 
                                         />
                                     </TableCell>
-                                    <TableCell>{museum.ticketPrices}</TableCell>
+                                    <TableCell>                    
+                                        {(museum.ticketPrices * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                                    </TableCell>
                                     <TableCell>{museum.openingTime}</TableCell>
                                     <TableCell>{museum.closingTime}</TableCell>
                                     <TableCell>{museum.museumDate}</TableCell>

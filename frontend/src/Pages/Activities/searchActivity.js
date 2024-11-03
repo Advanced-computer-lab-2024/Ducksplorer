@@ -15,12 +15,20 @@ import {
   Rating,
 } from "@mui/material";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
+import CurrencyConvertor from "../../Components/CurrencyConvertor";
 
 const SearchActivities = () => {
   const [activities, setActivities] = useState([]); // Displayed activities
   const [allActivities, setAllActivities] = useState([]); // Store all fetched activities
   const [searchQuery, setSearchQuery] = useState(""); // Single search input
+  
+  const [exchangeRates, setExchangeRates] = useState({});
+  const [currency, setCurrency] = useState('EGP');
 
+  const handleCurrencyChange = (rates, selectedCurrency) => {
+    setExchangeRates(rates);
+    setCurrency(selectedCurrency);
+  }
   // Fetch all activities when component mounts
   useEffect(() => {
     axios
@@ -95,7 +103,9 @@ const SearchActivities = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell>Price</TableCell>
+                <TableCell>Price
+                <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                </TableCell>
                 <TableCell>Is Open</TableCell>
                 <TableCell>Category</TableCell>
                 <TableCell>Tags</TableCell>
@@ -110,7 +120,9 @@ const SearchActivities = () => {
               {activities.map((activity) => (
                 <TableRow key={activity._id}>
                   <TableCell>{activity.name}</TableCell>
-                  <TableCell>{activity.price}</TableCell>
+                  <TableCell>                    
+                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                  </TableCell>
                   <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
                   <TableCell>{activity.category}</TableCell>
                   <TableCell>{activity.tags.join(", ")}</TableCell>

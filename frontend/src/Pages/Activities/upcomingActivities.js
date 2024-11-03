@@ -2,10 +2,18 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
 import { Box, Button, Table, Typography, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-
+import CurrencyConvertor from '../../Components/CurrencyConvertor';
 const UpcomingActivities = () => {
   const [activities, setActivities] = useState([]);
+  
+  const [exchangeRates, setExchangeRates] = useState({});
+  const [currency, setCurrency] = useState('EGP');
 
+  const handleCurrencyChange = (rates, selectedCurrency) => {
+    setExchangeRates(rates);
+    setCurrency(selectedCurrency);
+  };
+  
   // Handle fetching upcoming activities
   useEffect(() => {
     axios.get('http://localhost:8000/activity/upcoming')
@@ -56,7 +64,9 @@ const UpcomingActivities = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell>Price</TableCell>
+                <TableCell>Price
+                <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                </TableCell>
                 <TableCell>Is open</TableCell>
                 <TableCell>Category</TableCell>
                 <TableCell>Tags</TableCell>
@@ -71,7 +81,9 @@ const UpcomingActivities = () => {
               {activities.map(activity => (
                 <TableRow key={activity._id}>
                   <TableCell>{activity.name}</TableCell>
-                  <TableCell>{activity.price}</TableCell>
+                  <TableCell>                                            
+                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                  </TableCell>
                   <TableCell>{activity.isOpen ? 'Yes' : 'No'}</TableCell>
                   <TableCell>{activity.category}</TableCell>
                   <TableCell>{activity.tags}</TableCell>

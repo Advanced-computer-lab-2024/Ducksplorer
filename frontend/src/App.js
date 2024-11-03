@@ -51,7 +51,10 @@ import GovernorDashboard from './Pages/Dashboards/GovernorDashboard';
 import AdvertiserEditProfile from './Pages/EditAccount/AdvertiserEditAccount.js';
 import SellerEditProfile from './Pages/EditAccount/SellerEditAccount.js';
 import SellerDashboard from './Pages/Dashboards/SellerDashboard';
-import BookingDetails from "./Pages/Bookings/myBookings.js";
+import FlightsBooking from "./Pages/ThirdParty/FlightsBooking.js";
+import HotelsBooking from "./Pages/ThirdParty/HotelsBooking.js";
+import HotelCardV2 from "./Components/ThirdParty/HotelCardV2.js";
+import TouristNavBar from "./Components/TouristNavBar.js";import BookingDetails from "./Pages/Bookings/myBookings.js";
 import CheckoutForm from "./Pages/Payment/checkout.js";
 import Completion from "./Pages/Payment/completion.js";
 import Payment from "./Pages/Payment/payment2.js";
@@ -63,30 +66,32 @@ import PastBookingDetails from "./Pages/Bookings/myPastBookings.js";
 function App() {
   return (
     <React.StrictMode>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signUp" element={<Signup />} />
-          <Route path="/createItinerary" element={<CreateItinerary />} />
-          <Route path="/rudItinerary" element={<RUDItinerary />} />
-          <Route path="/viewUpcomingItinerary" element={<ViewUpcomingItinerary />} />
-          <Route path="/viewAllTourist" element={<ViewAllTourist />} />
-          <Route path="/tourGuideDashboard" element={<TourGuideDashboard />} />
-          <Route path="/touristDashboard" element={<TouristDashboard />} />
-          <Route path="/tourGuideEditAccount" element={<TourGuideEditProfile />} />
-
-          <Route path="/governorDashboard" element={<GovernorDashboard />} />
-          <Route path="/createMuseum" element={<CreateMuseum />} />
-          <Route path="/createHistoricalPlace" element={<CreateHistoricalPlace />} />
-          <Route path="/RUDMuseum" element={<RUDMuseum />} />
-          <Route path="/RUDHistoricalPlace" element={<RUDHistoricalPlace />} />
-          {/* <Route path="/RUDVisit" element={<RUDVisit />} /> */}
-          <Route path="/MuseumTouristPov" element={<MuseumTouristPov />} />
-          <Route path="/HistoricalPlaceTouristPov" element={<HistoricalPlaceTouristPov />} />
-          <Route path="/UpcomingHistoricalPlaces" element={<UpcomingHistoricalPlaces />} />
-          <Route path="/UpcomingMuseums" element={<UpcomingMuseums />} />
-          <Route path="/createTagMuseum" element={<CreateTagMuseum />} />
-          <Route path="/createTagHistoricalPlace" element={<CreateTagHistoricalPlace />} />
+        <BrowserRouter>
+          <Routes>
+            {/* <Route index element={<Hotels />} /> */}
+            <Route path="/" element={<TouristNavBar />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signUp" element={<Signup />} />
+            <Route path="/createItinerary" element={<CreateItinerary />} />
+            <Route path="/rudItinerary" element={<RUDItinerary />} />
+            <Route path="/viewUpcomingItinerary" element={<ViewUpcomingItinerary />} />
+            <Route path="/viewAllTourist" element={<ViewAllTourist />} />
+            <Route path="/tourGuideDashboard" element={<TourGuideDashboard />} />
+            <Route path="/touristDashboard" element={<TouristDashboard />} />
+            <Route path="/tourGuideEditAccount" element={<TourGuideEditProfile/>} />
+    
+            <Route path="/governorDashboard" element={<GovernorDashboard />} />
+            <Route path="/createMuseum" element={<CreateMuseum />} />
+            <Route path="/createHistoricalPlace" element={<CreateHistoricalPlace />} />
+            <Route path="/RUDMuseum" element={<RUDMuseum />} />
+            <Route path="/RUDHistoricalPlace" element={<RUDHistoricalPlace />} />
+            {/* <Route path="/RUDVisit" element={<RUDVisit />} /> */}
+            <Route path="/MuseumTouristPov" element={<MuseumTouristPov />} />
+            <Route path="/HistoricalPlaceTouristPov" element={<HistoricalPlaceTouristPov />} />
+            <Route path="/UpcomingHistoricalPlaces" element={<UpcomingHistoricalPlaces />} />
+            <Route path="/UpcomingMuseums" element={<UpcomingMuseums />} />
+            <Route path="/createTagMuseum" element={<CreateTagMuseum />} />
+            <Route path="/createTagHistoricalPlace" element={<CreateTagHistoricalPlace/>} />
 
 
           <Route path="/AdminDashboard" element={<AdminDashboard />} />
@@ -135,10 +140,12 @@ function App() {
           <Route path="/editAccount" element={<TouristEditAccount />} />
 
 
-          <Route path="/advertiserEditAccount" element={< AdvertiserEditProfile />} />
-          <Route path="/sellerEditAccount" element={< SellerEditProfile />} />
-          <Route path="/sellerDashboard" element={<SellerDashboard />} />
-        </Routes>
+            <Route path="/advertiserEditAccount" element={< AdvertiserEditProfile />} />
+            <Route path="/sellerEditAccount" element={< SellerEditProfile />} />
+            <Route path="/sellerDashboard" element={<SellerDashboard/>} />
+            <Route path="/flights" element={<FlightsBooking />} />
+            <Route path="hotels" element={<HotelsBooking/>}/>
+          </Routes>
       </BrowserRouter>
     </React.StrictMode>
   );

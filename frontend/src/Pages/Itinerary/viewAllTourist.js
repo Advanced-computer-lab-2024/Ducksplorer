@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { Link } from 'react-router-dom';
+import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
 
 
 function SearchItineraries() {
@@ -23,6 +24,9 @@ function SearchItineraries() {
     const [tags, setTags] = useState([]);  // Tags selected by the user
     const [allTags, setAllTags] = useState([]);  // All available tags from backend
 
+
+    const [exchangeRates, setExchangeRates] = useState({});
+    const [currency, setCurrency] = useState('EGP');
 
     const [filterAnchorEl, setFilterAnchorEl] = useState(null);
 
@@ -114,6 +118,10 @@ function SearchItineraries() {
         setSelectedFilters(newFilters);
     };
 
+    const handleCurrencyChange = (rates, selectedCurrency) => {
+        setExchangeRates(rates);
+        setCurrency(selectedCurrency);
+      };
     //clear all filters
     const handleClearAllFilters = () => {
         setMinPrice('');
@@ -331,7 +339,9 @@ function SearchItineraries() {
                                         <TableCell>Locations</TableCell>
                                         <TableCell>Timeline</TableCell>
                                         <TableCell>Language</TableCell>
-                                        <TableCell>Price</TableCell>
+                                        <TableCell>Price                 
+                                            <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                                        </TableCell>
                                         <TableCell>Available Dates and Times</TableCell>
                                         <TableCell>Accessibility</TableCell>
                                         <TableCell>Pick Up Location</TableCell>
@@ -370,7 +380,9 @@ function SearchItineraries() {
                                             </TableCell>
                                             <TableCell>{itinerary.timeline}</TableCell>
                                             <TableCell>{itinerary.language}</TableCell>
-                                            <TableCell>{itinerary.price}</TableCell>
+                                            <TableCell>
+                                            {(itinerary.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                                            </TableCell>
                                             <TableCell>
                                                 {itinerary.availableDatesAndTimes.length > 0
                                                     ? itinerary.availableDatesAndTimes.map((dateTime, index) => {

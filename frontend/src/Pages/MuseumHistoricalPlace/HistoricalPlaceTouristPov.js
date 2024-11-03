@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import HistoricalPlaceSearch from '../../Components/MuseumHistoricalPlaceComponent/HistoricalPlaceSearch';
 import HistoricalPlaceFilterComponent from '../../Components/MuseumHistoricalPlaceComponent/HistoricalPlaceFilterComponent';
 import { Link } from 'react-router-dom';
+import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
 
 import {
   Box,
@@ -24,6 +25,15 @@ const HistoricalPlaceTouristPov = () => {
   const [HistoricalPlaces, setHistoricalPlaces] = useState([]);
   const navigate = useNavigate();
 
+
+  const [exchangeRates, setExchangeRates] = useState({});
+  const [currency, setCurrency] = useState('EGP');
+
+  const handleCurrencyChange = (rates, selectedCurrency) => {
+    setExchangeRates(rates);
+    setCurrency(selectedCurrency);
+  };
+
   // Fetch all museums on component mount
   useEffect(() => {
     axios.get(`http://localhost:8000/historicalPlace/getAllHistoricalPlaces`)
@@ -35,6 +45,8 @@ const HistoricalPlaceTouristPov = () => {
         message.error('Error fetching Historical Places!');
       });
   }, []);
+  
+  
 
   // Callback to handle search results
   const handleSearchResults = (searchResults) => {
@@ -85,7 +97,9 @@ const HistoricalPlaceTouristPov = () => {
                 <TableCell>Description</TableCell>
                 <TableCell>Location</TableCell>
                 <TableCell>Pictures</TableCell>
-                <TableCell>Ticket Price</TableCell>
+                <TableCell>Ticket Price
+                <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                </TableCell>
                 <TableCell>Opening Time</TableCell>
                 <TableCell>Closing Time</TableCell>
                 <TableCell>Date</TableCell>
@@ -109,7 +123,9 @@ const HistoricalPlaceTouristPov = () => {
                         style={{ width: '100px', height: 'auto', objectFit: 'cover' }} // Adjust as needed
                       />
                     </TableCell>
-                    <TableCell>{historicalPlace.ticketPrices}</TableCell>
+                    <TableCell>
+                    {(historicalPlace.ticketPrices * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                    </TableCell>                   
                     <TableCell>{historicalPlace.openingTime}</TableCell>
                     <TableCell>{historicalPlace.closingTime}</TableCell>
                     <TableCell>{historicalPlace.HistoricalPlaceDate}</TableCell>

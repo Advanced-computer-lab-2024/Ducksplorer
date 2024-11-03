@@ -3,12 +3,11 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import { message } from 'antd';
 import { Link } from 'react-router-dom';
-
+import TouristNavBar from '../../Components/TouristNavBar.js';
 const EditProfile = () => {
   const [touristDetails, setTouristDetails] = useState({
     userName: '',
     email: '',
-    password: '',
     mobileNumber: '',
     nationality: '',
     DOB: '', 
@@ -65,8 +64,9 @@ const EditProfile = () => {
   };
 
   return (
+    <>
+    <TouristNavBar />
     <Box sx={{ p: 6 }}>
-      <Link to="/touristDashboard"> Back </Link>
       <Typography variant="h4" sx={{ mb: 3 }}>
         Edit Tourist Profile ({touristDetails.userName})
       </Typography>
@@ -84,16 +84,6 @@ const EditProfile = () => {
           label="Email"
           name="email"
           value={touristDetails.email}
-          onChange={handleChange}
-          InputProps={{
-            readOnly: !isEditing,
-          }}
-        />
-        <TextField
-          label="Password"
-          name="password"
-          type="password"
-          value={touristDetails.password}
           onChange={handleChange}
           InputProps={{
             readOnly: !isEditing,
@@ -159,6 +149,7 @@ const EditProfile = () => {
         )}
       </Box>
     </Box>
+    </>
   );
 };
 
