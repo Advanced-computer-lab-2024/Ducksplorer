@@ -240,6 +240,8 @@ const sortActivities = async (req, res) => {
     res.status(500).json({ message: "Error sorting activities" });
   }
 };
+
+
 const rateActivity = async (req, res) => {
   const { activityId } = req.params;
   const { rating } = req.body;

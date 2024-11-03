@@ -12,11 +12,9 @@ router.patch("/loyalty/:name/:userName",receiveLoyaltyPoints);
 router.patch("/redeemPoints/:userName", redeemPoints);
 router.route("/booking/:user").post(createBooking).get(getMyBookings).patch(cancelMyBooking);
 router.route("/myUpcomingBookings").get(viewMyUpcomingBookings);
-router.route("/myPastBookings").get(viewMyPastBookings);
+router.route("/myPastBookings/:user").get(viewMyPastBookings);
 router.route("/viewDesiredActivity/:activityId").get(viewDesiredActivity);
 router.route("/viewDesiredItinerary/:itineraryId").get(viewDesiredItinerary);
-
-
 
 
 module.exports = router;

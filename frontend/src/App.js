@@ -53,6 +53,7 @@ import SellerEditProfile from './Pages/EditAccount/SellerEditAccount.js';
 import SellerDashboard from './Pages/Dashboards/SellerDashboard';
 import ViewAllItineraries from "./Pages/Admin/ViewAllItineraries.js";
 import ViewAllActivities from "./Pages/Admin/ViewAllActivities.js";
+import PastBookingDetails from "./Pages/Bookings/myPastBookings.js";
 
 
 
@@ -122,7 +123,7 @@ function App() {
           />
           <Route path="/location" element={<ClinicLocation />} />
 
-
+          <Route path="/myPastBookings" element={<PastBookingDetails userName={JSON.parse(localStorage.getItem("user")).username}/>}/>
           <Route path="/ProductDashboard" element={<ProductDashboard />} />
           <Route path="/AllProducts" element={<AllProducts />} />
           <Route path="/AddProducts" element={<AddProducts />} />
