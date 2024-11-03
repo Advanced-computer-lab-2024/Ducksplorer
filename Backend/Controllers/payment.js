@@ -22,28 +22,28 @@ const transporter = nodemailer.createTransport({
 
 
 const createPayment = async (req, res) =>{
-    const itemId = req.params;
+    //const itemId = req.params;
     const { amount, currency, email, type } = req.body;
-    let itemPrice = 0;
-    switch (type) {
-        case 'Activity':
-            itemPrice = await Activity.findOne({ _id: itemId }).select('price -_id');
-            break;
-        case 'Itinerary':
-            itemPrice = await Itinerary.findOne({ _id: itemId }).select('price -_id');
-            break;
-        case 'Product':
-            itemPrice = await Product.findOne({ _id: itemId }).select('price -_id');
-            break;
-        case 'Hotel':
-            itemPrice = hotel.price;
-            break;
-        case 'Flight':
-            itemPrice = flight.price;
-            break;
-        default:
-            return res.status(400).json({ message: 'Invalid booking type' });
-    }
+    // let itemPrice = 0;
+    // switch (type) {
+    //     case 'Activity':
+    //         itemPrice = await Activity.findOne({ _id: itemId }).select('price -_id');
+    //         break;
+    //     case 'Itinerary':
+    //         itemPrice = await Itinerary.findOne({ _id: itemId }).select('price -_id');
+    //         break;
+    //     case 'Product':
+    //         itemPrice = await Product.findOne({ _id: itemId }).select('price -_id');
+    //         break;
+    //     case 'Hotel':
+    //         itemPrice = hotel.price;
+    //         break;
+    //     case 'Flight':
+    //         itemPrice = flight.price;
+    //         break;
+    //     default:
+    //         return res.status(400).json({ message: 'Invalid booking type' });
+    // }
     try {
         const paymentIntent = await stripe.paymentIntents.create({
             amount: amount * 100, // Convert to smallest currency unit
