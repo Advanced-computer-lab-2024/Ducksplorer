@@ -19,14 +19,6 @@ const createBooking = async (req, res) => {
 
         console.log(activityId, itineraryId);
 
-        // if (!activity) {
-        //     return res.status(404).json({ message: "Activity not found" });
-        // }
-
-        // if (!itinerary) {
-        //     return res.status(404).json({ message: "Itinerary not found" });
-        // }
-
         let booking = await Bookings.findOne({ user });  // Adjusted to use tourist's ID
 
         if (booking) {
@@ -68,9 +60,6 @@ const createBooking = async (req, res) => {
         return res.status(500).json({ message: err.message });
     }
 };
-
-
-
 
 
 const viewMyUpcomingBookings = async (req, res) => {

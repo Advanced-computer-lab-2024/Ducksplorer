@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { message } from 'antd';
 import {
   Box,
   Table,
@@ -42,6 +43,34 @@ const SortActivities = () => {
     // Fetch initial activities if needed
     fetchSortedActivities(); // Optional: Remove this line if you only want to load activities after clicking Sort
   }, []);
+
+  const handleBooking = async (activityId) => {
+    try {
+      const userJson = localStorage.getItem('user');
+      if (!userJson) {
+        message.error("User is not logged in.");
+        return null;
+      }
+      const user = JSON.parse(userJson);
+      if (!user || !user.username) {
+        message.error("User information is missing.");
+        return null;
+      }
+      const userName = user.username;
+
+      const response = await axios.get(`http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}`);
+
+      console.log(response);
+      if (response.status == 200) {
+        message.success("Booking successful!");
+      } else {
+        message.error("Booking failed.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      message.error("An error occurred while booking.");
+    }
+  };
 
   return (
     <>
@@ -126,6 +155,7 @@ const SortActivities = () => {
                 <TableCell>Duration</TableCell>
                 <TableCell>Location</TableCell>
                 <TableCell>Rating</TableCell>
+                <TableCell>Booking</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -146,6 +176,11 @@ const SortActivities = () => {
                       precision={0.1}
                       readOnly
                     />
+                  </TableCell>
+                  <TableCell>
+                    <Button onClick={() => handleBooking(activity._id)}>
+                      Book Now
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}

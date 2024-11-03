@@ -17,8 +17,6 @@ router.route("/viewDesiredActivity/:activityId").get(viewDesiredActivity);
 router.route("/viewDesiredItinerary/:itineraryId").get(viewDesiredItinerary);
 
 
-
-
 module.exports = router;
 
 
