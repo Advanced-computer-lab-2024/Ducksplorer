@@ -10,9 +10,9 @@ router.put("/sortProducts",sortProducts);
 router.get("/filterProducts",filterProducts);
 router.patch("/loyalty/:name/:userName",receiveLoyaltyPoints);
 router.patch("/redeemPoints/:userName", redeemPoints);
+router.get("/myPastBookings/:user", viewMyPastBookings);
 router.route("/booking/:user").post(createBooking).get(getMyBookings).patch(cancelMyBooking);
 router.route("/myUpcomingBookings").get(viewMyUpcomingBookings);
-router.route("/myPastBookings").get(viewMyPastBookings);
 router.route("/viewDesiredActivity/:activityId").get(viewDesiredActivity);
 router.route("/viewDesiredItinerary/:itineraryId").get(viewDesiredItinerary);
 

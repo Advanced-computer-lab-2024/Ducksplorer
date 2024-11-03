@@ -93,25 +93,40 @@ const viewMyUpcomingBookings = async (req, res) => {
     }
   };
 
-const viewMyPastBookings = async (req, res) => {
+  const viewMyPastBookings = async (req, res) => {
     try {
-        const { tourist } = req.query;
+        const { user } = req.params;
     
-        if (!tourist) {
-          return res.status(400).json({ message: "Tourist query parameter is required." });
+        if (!user) {
+          return res.status(400).json({ message: "user parameter is required." });
         }
     
-        const bookings = await Bookings.find({ user: tourist, date: { $lt: new Date() } });
+        // Find bookings for the user
+        const bookings = await Bookings.find({ user });
     
         if (!bookings.length) {
-          return res.status(404).json({ message: "No upcoming bookings found." });
+          return res.status(404).json({ message: "No bookings found." });
         }
     
-        res.status(200).json(bookings);
+        // Filter each booking's activities to include only those with past dates
+        const pastBookings = bookings.map(booking => {
+          const pastActivities = booking.activities.filter(activity => new Date(activity.date) < new Date());
+          return {
+            ...booking.toObject(), // Spread the booking object properties
+            activities: pastActivities // Replace activities with filtered past activities
+          };
+        }).filter(booking => booking.activities.length > 0); // Only include bookings with past activities
+    
+        if (!pastBookings.length) {
+          return res.status(404).json({ message: "No past activities found." });
+        }
+    
+        res.status(200).json(pastBookings);
       } catch (error) {
         res.status(500).json({ message: error.message });
       }
-}
+};
+
 
 const viewDesiredActivity = async (req, res) => {
     try {

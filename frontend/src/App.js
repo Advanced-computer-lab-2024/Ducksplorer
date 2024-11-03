@@ -56,6 +56,7 @@ import CheckoutForm from "./Pages/Payment/checkout.js";
 import Completion from "./Pages/Payment/completion.js";
 import Payment from "./Pages/Payment/payment2.js";
 import PaymentPage from "./Pages/Payment/mailAmount.js";
+import PastBookingDetails from "./Pages/Bookings/myPastBookings.js";
 //import Payment from "./Pages/Payment/payment.js";
 
 
@@ -115,7 +116,7 @@ function App() {
             
             
             
-            
+            <Route path="/myPastBookings" element={<PastBookingDetails userName={JSON.parse(localStorage.getItem("user")).username}/>}/>
             <Route path="/myBookings" element={<BookingDetails userName={JSON.parse(localStorage.getItem("user")).username}/>}/>
             
             <Route path="/payment" element={<PaymentPage />} />
