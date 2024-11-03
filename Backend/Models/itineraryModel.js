@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { schema } = require('./activityModel'); // This line is correct
-const Activity = require('./activityModel'); 
+const Activity = require('./activityModel');
 const Schema = mongoose.Schema;
 const TourGuide = require('./tourGuideModel');
 const Tags = require('./preferenceTagsModels');
@@ -17,7 +17,7 @@ const itinerarySchema = new Schema({
         required: true
     },
     timeline: {
-        type: String, 
+        type: String,
         required: true
     },
     language: {
@@ -32,15 +32,15 @@ const itinerarySchema = new Schema({
         type: [Date],
         required: true
     },
-    accessibility: { 
+    accessibility: {
         type: String,
         required: true
     },
-    pickUpLocation: { 
+    pickUpLocation: {
         type: String,
         required: true
     },
-    dropOffLocation: { 
+    dropOffLocation: {
         type: String,
         required: true
     },
@@ -66,12 +66,12 @@ const itinerarySchema = new Schema({
     },
     isActive: {
         type: Boolean,
-        required: true
+        required: false
     },
     ratings: {
         type: [Number],
         required: false
-      },
+    },
     averageRating: {
         type: Number,
         required: false

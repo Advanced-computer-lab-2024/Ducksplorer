@@ -308,6 +308,32 @@ const RUDItinerary = () => {
     });
   };
 
+  async function toggleItineraryActiveStatus(itineraryId) {
+    try {
+      const response = await fetch(`http://localhost:8000/itinerary/toggleActiveFlagItinerary/${itineraryId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to toggle active status');
+      }
+
+      const data = await response.json();
+      console.log(`New isActive status after toggle: ${data.itinerary.isActive}`);
+      setItineraries(prevItineraries =>
+        prevItineraries.map(itinerary =>
+          itinerary._id === itineraryId ? { ...itinerary, isActive: !itinerary.isActive } : itinerary
+        )
+      );
+      return data.itinerary;
+    } catch (error) {
+      console.error('Error toggling itinerary active status:', error);
+
+    }
+  }
 
 
   return (
@@ -336,6 +362,7 @@ const RUDItinerary = () => {
                 <TableCell>Ratings</TableCell>
                 <TableCell>Tags</TableCell>
                 <TableCell>Flag</TableCell>
+                <TableCell>Active Status</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -416,6 +443,19 @@ const RUDItinerary = () => {
                         Appropriate
                       </span>
                     )}
+                  </TableCell>
+
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      color={itinerary.isActive ? 'error' : 'success'}
+                      onClick={() => {
+                        console.log(`Button clicked for itinerary ID: ${itinerary._id}`); //For debugging
+                        toggleItineraryActiveStatus(itinerary._id);
+                      }}
+                    >
+                      {itinerary.isActive ? 'Deactivate' : 'Activate'}
+                    </Button>
                   </TableCell>
 
                   <TableCell>
