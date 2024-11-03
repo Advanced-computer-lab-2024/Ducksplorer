@@ -88,12 +88,12 @@ const findProduct = async (req, res) => {
 };
 
 const touristUpdateProduct = async (req, res) => {
-  const productId = req.params.productId;
+  const productId = req.params.id;
   const { rating, review } = req.body;
   try {
     const updatedProduct = await productModel.findByIdAndUpdate(
-      productId,
-      { rating: rating, review: review },
+      { _id: productId },
+      { $push: { rating: rating }, $push: { reviews: review } },
       {
         new: true,
       }

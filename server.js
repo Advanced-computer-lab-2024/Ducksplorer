@@ -16,7 +16,6 @@ const preferenceTagsRoutes = require("./Backend/Routes/Admin/PreferenceTagsRoute
 const activityRoutes = require("./Backend/Routes/activityRoutes.js");
 const categoryRoutes = require("./Backend/Routes/categoryRoutes.js");
 const userRoutes = require("./Backend/Routes/userRoutes.js");
-const multer = require("multer");
 
 app.use(cors());
 

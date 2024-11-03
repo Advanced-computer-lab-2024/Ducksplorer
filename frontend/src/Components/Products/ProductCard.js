@@ -9,14 +9,38 @@ import {
 import useUserRole from "../getRole";
 import { message } from "antd";
 import axios from "axios";
+import { Rating } from "@mui/material";
+import StarIcon from "@mui/icons-material/Star";
+import StarOutlineIcon from "@mui/icons-material/StarOutline";
 
-const ProductCard = ({ product, showArchive, showUnarchive }) => {
+const ProductCard = ({ product, showArchive, showUnarchive, productID }) => {
   const role = useUserRole();
   const [archived, setArchived] = useState(product.isArchived);
+  const [rating, setRating] = useState(product.rating || 0);
 
   useEffect(() => {
-    setArchived(product.isArchived); 
+    setArchived(product.isArchived);
   }, [product.isArchived]);
+
+  const handleRatingChange = async (event, newValue) => {
+    setRating(newValue);
+    console.log("i have been clicked");
+    try {
+      console.log(newValue);
+      console.log("product", product);
+      const response = await axios.put(
+        `http://localhost:8000/touristRoutes/updateProducts/${productID}`,
+        { rating: newValue }
+      );
+      if (response.status === 200) {
+        message.success("Rating updated successfully");
+      } else {
+        message.error("Failed to submit rating");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleArchive = async () => {
     const data = { isArchived: true };
@@ -102,10 +126,24 @@ const ProductCard = ({ product, showArchive, showUnarchive }) => {
         ) : (
           <Typography variant="body2">No reviews available.</Typography>
         )}
-        {(role === "Admin" || role === "Seller") && showArchive && !archived && (
-          <Button onClick={handleArchive}> Archive </Button>
+        {(role === "Admin" || role === "Seller") &&
+          showArchive &&
+          !archived && <Button onClick={handleArchive}> Archive </Button>}
+        {archived && showUnarchive && (
+          <Button onClick={handleUnarchive}> Unarchive </Button>
         )}
-        {archived && showUnarchive && <Button onClick={handleUnarchive}> Unarchive </Button>}
+        {role === "Tourist" && (
+          <div key={product._id}>
+            <Rating
+              value={rating}
+              onChange={handleRatingChange}
+              icon={<StarIcon sx={{ color: "orange" }} />}
+              emptyIcon={<StarOutlineIcon />}
+              readOnly={false}
+              precision={0.5}
+            />
+          </div>
+        )}
       </CardContent>
     </Card>
   );

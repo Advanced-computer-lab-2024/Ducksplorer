@@ -52,6 +52,7 @@ import AdvertiserEditProfile from "./Pages/EditAccount/AdvertiserEditAccount.js"
 import SellerEditProfile from "./Pages/EditAccount/SellerEditAccount.js";
 import SellerDashboard from "./Pages/Dashboards/SellerDashboard";
 import TouristProducts from "./Pages/Products/TouristProducts.js";
+import MyPurchases from "./Pages/Products/MyPurchases.js";
 
 function App() {
   return (
@@ -142,6 +143,7 @@ function App() {
           />
           <Route path="/sellerEditAccount" element={<SellerEditProfile />} />
           <Route path="/sellerDashboard" element={<SellerDashboard />} />
+          <Route path="/myPurchases" element={<MyPurchases />} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

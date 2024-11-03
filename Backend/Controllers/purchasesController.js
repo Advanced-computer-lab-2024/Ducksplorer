@@ -3,28 +3,43 @@ const productModel = require("../Models/productModel");
 
 const getMyPurchases = async (req, res) => {
   try {
-    const purchases = await purchases.find({ buyer: req.params.buyer });
-    res.status(200).json(purchases);
+    const myPurchases = await purchases.find({ buyer: req.params.buyer });
+    res.status(200).json(myPurchases);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-const updatePurchase = async (req, res) => {
+const addPurchase = async (req, res) => {
   const { products } = req.body;
   try {
-    const buyer = await purchases.findOneAndUpdate(
+    const newPurchase = new purchases({
+      buyer: req.params.buyer,
+      products: products,
+    });
+    const savedPurchase = await newPurchase.save();
+    res.status(200).json(savedPurchase);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+const updatePurchase = async (req, res) => {
+  const buyer = req.params.buyer;
+  const { products } = req.body;
+  try {
+    const myPurchases = await purchases.findOneAndUpdate(
       {
-        buyer: req.params.buyer,
+        buyer: buyer,
       },
-      { products: products },
+      { $push: { products: { $each: products } } },
       { new: true }
     );
-    if (!buyer) {
-      return res.status(404).json({ message: "Buyer not found" });
+    if (!myPurchases) {
+      addPurchase(req, res);
+      return; // Exit the function
     }
-    const product = await productModel.findOneAndUpdate({ name: product.name });
-    res.status(200).json(updatedTag);
+    res.status(200).json(myPurchases);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
