@@ -7,11 +7,6 @@ const cors = require("cors");
 const touristRoutes = require("./Backend/Routes/touristRoutes.js");
 const sellerRoutes = require("./Backend/Routes/sellerRoutes.js");
 const adminProductRoutes = require("./Backend/Routes/adminRoutes.js");
-const cors = require("cors");
-const multer = require("multer");
-const touristRoutes = require("./Backend/Routes/touristRoutes.js");
-const sellerRoutes = require("./Backend/Routes/sellerRoutes.js");
-const adminProductRoutes = require("./Backend/Routes/adminRoutes.js");
 const signUpRoutes = require("./Backend/Routes/signUpRoutes.js");
 const adminRoutes = require("./Backend/Routes/Admin/AdminRoutes.js");
 const touristAccountRoutes = require("./Backend/Routes/TouristAccountRoutes.js");
@@ -67,16 +62,6 @@ app.post("/upload", (req, res) => {
 });
 
 app.use("/uploads", express.static("uploads"));
-
-const museumRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/museumRoutes.js");
-const historicalPlaceRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceRoutes.js");
-const historicalPlaceTagRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceTagRoutes.js");
-const museumTagRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/museumTagRoutes.js");
-const itineraryRoutes = require("./Backend/Routes/itineraryRoutes.js");
-const tourGuideAccountRoutes = require("./Backend/Routes/TourGuideAccountRoutes.js");
-const advertiserAccountRoutes = require("./Backend/Routes/AdvertiserAccountRoutes.js");
-const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js");
-const complaintRoutes = require("./Backend/Routes/complaintRoutes.js");
 
 app.use("/signUp", signUpRoutes);
 app.use("/touristRoutes", touristRoutes);

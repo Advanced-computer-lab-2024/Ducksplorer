@@ -1,6 +1,6 @@
 const express = require("express");
 const {getProducts, sortProducts, filterProducts, findProduct}= require('../Controllers/Products/TAScontroller');
-const {createProduct, editProduct,}= require('../Controllers/Products/AScontroller');
+const {createProduct, editProduct}= require('../Controllers/Products/AScontroller');
 
 const upload = require('../Controllers/uploadMiddleware');
 

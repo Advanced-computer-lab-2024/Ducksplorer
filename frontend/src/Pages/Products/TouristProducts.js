@@ -6,7 +6,7 @@ import {  Button } from '@mui/material';
 import ProductCard from '../../Components/Products/ProductCard'; // Import the ProductCard component
 
 
-function AllProducts() {
+function TouristProducts() {
   const [products,setProducts] = useState([]);
 
   useEffect(() => {
@@ -32,13 +32,20 @@ function AllProducts() {
 
       <div style={{ maxHeight: '400px', overflowY: 'visible', padding: '10px', marginTop: '20px' }}>
         {/* Render the filtered products using the ProductCard component */}
-        {products.length > 0 ? (
-          products.map((product) => (
-            <ProductCard key={product._id} product={product} />
+        {products.filter(product => product.isArchived !== true).length > 0 ? (
+        products
+          .filter(product => product.isArchived !== true)
+          .map((product) => (
+            <div
+              key={product._id}
+              style={{ position: "relative", marginBottom: "20px" }}
+            >
+              <ProductCard product={product} />
+            </div>
           ))
         ) : (
           <Typography variant="body1" style={{ marginTop: "20px" }}>
-            No products found under the specified name.
+            No products found.
           </Typography>
         )}
       </div>
@@ -48,4 +55,4 @@ function AllProducts() {
 }
 
 
-export default AllProducts;
+export default TouristProducts;

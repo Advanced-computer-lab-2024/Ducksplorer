@@ -51,7 +51,7 @@ function AdminAllProducts() {
               key={product._id}
               style={{ position: "relative", marginBottom: "20px" }}
             >
-              <ProductCard product={product} />
+              <ProductCard product={product} showArchive={true} showUnarchive={true}/>
               <Button
                 variant="contained"
                 color="secondary"
@@ -67,6 +67,7 @@ function AdminAllProducts() {
             No products found.
           </Typography>
         )}
+
       </div>
     </div>
   );

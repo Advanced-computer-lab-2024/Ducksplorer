@@ -94,6 +94,10 @@ const Adminproducts = () => {
     navigate("/SortProducts");
   };
 
+  const handleViewMyProducts = ()=> {
+    navigate('/ViewMyProducts');
+  }
+
   const handleBackClick = () => {
     window.history.back();
   };
@@ -176,6 +180,15 @@ const Adminproducts = () => {
             style={sidebarButtonStyle}
           >
             View All Products
+          </Button>
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            onClick={handleViewMyProducts}
+            style={sidebarButtonStyle}
+          >
+            View My Products
           </Button>
           <Button
             fullWidth
