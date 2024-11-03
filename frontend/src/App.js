@@ -51,16 +51,18 @@ import GovernorDashboard from './Pages/Dashboards/GovernorDashboard';
 import AdvertiserEditProfile from './Pages/EditAccount/AdvertiserEditAccount.js';
 import SellerEditProfile from './Pages/EditAccount/SellerEditAccount.js';
 import SellerDashboard from './Pages/Dashboards/SellerDashboard';
-import FlightsBooking from "./Pages/FlightsBooking.js";
-// import CurrencyConvertor from "./Components/CurrencyConvertor.js";
-// import Hotels from "./Components/ThirdParty/Hotels.js";
-//import Cards from "./Components/Card.js";
+import FlightsBooking from "./Pages/ThirdParty/FlightsBooking.js";
+import HotelsBooking from "./Pages/ThirdParty/HotelsBooking.js";
+import HotelCardV2 from "./Components/ThirdParty/HotelCardV2.js";
+import TouristNavBar from "./Components/TouristNavBar.js";
 
 function App() {
   return (
     <React.StrictMode>
         <BrowserRouter>
           <Routes>
+            {/* <Route index element={<Hotels />} /> */}
+            <Route path="/" element={<TouristNavBar />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signUp" element={<Signup />} />
             <Route path="/createItinerary" element={<CreateItinerary />} />
@@ -132,6 +134,7 @@ function App() {
             <Route path="/sellerEditAccount" element={< SellerEditProfile />} />
             <Route path="/sellerDashboard" element={<SellerDashboard/>} />
             <Route path="/flights" element={<FlightsBooking />} />
+            <Route path="hotels" element={<HotelsBooking/>}/>
           </Routes>
       </BrowserRouter>
     </React.StrictMode>

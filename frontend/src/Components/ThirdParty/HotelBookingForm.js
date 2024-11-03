@@ -4,7 +4,7 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import axios from 'axios';
 import { message } from 'antd';
-import FlightsCards from './FlightsCards';
+import HotelCards from './HotelCard';
 
 const cities = [
   { label: 'New York', code: 'NYC', country: 'USA' },
@@ -40,7 +40,6 @@ const cities = [
   { label: 'Berlin', code: 'BER', country: 'Germany' },
   { label: 'Amsterdam', code: 'AMS', country: 'Netherlands' },
   { label: 'Zurich', code: 'ZRH', country: 'Switzerland' },
-  { label: 'Vienna', code: 'VIE', country: 'Austria' },
   { label: 'Athens', code: 'ATH', country: 'Greece' },
   { label: 'Lisbon', code: 'LIS', country: 'Portugal' },
   { label: 'Dublin', code: 'DUB', country: 'Ireland' },
@@ -68,43 +67,70 @@ const cities = [
   { label: 'Guangzhou', code: 'CAN', country: 'China' },
   { label: 'Cairo', code: 'CAI', country: 'Egypt' },
   { label: 'Alexandria', code: 'ALY', country: 'Egypt' },
-  { label: 'Hurghada', code: 'HRG', country: 'Egypt' },
-  { label: 'Sharm Al-Sheikh', code: 'SSH', country: 'Egypt' }
+  { label: 'Hurghada ', code: 'HRG', country: 'Egypt' },
+  { label: 'Sharm El Sheikh', code: 'SSH', country: 'Egypt'},
+  { label: 'Luxor', code: 'LXR', country: 'Egypt' },
+  { label: 'Monaco', code: 'MCM', country: 'Monaco' },
 ];
 
-const FlightBookingForm = () => {
-  const [flights, setFlights] = useState([]);
-  const [departureDate, setDepartureDate] = useState(null);
-  const [origin, setOrigin] = useState(null);
-  const [destination, setDestination] = useState(null);
-  const [seats, setSeats] = useState('');
+const HotelBookingForm = () => {
+  const [hotels, setHotels] = useState([]);
+  const [checkInDate, setCheckInDate] = useState(null);
+  const [city, setCity] = useState(null);
+  const [checkOutDate, setCheckOutDate] = useState(null);
+  const [adults, setAdults] = useState('');
 
   const handleSearch = async () => {
     if (validateFields()) {
-      const formattedDepartureDate = departureDate.toISOString().split('T')[0]; // Format date as yyyy-mm-dd
-      const requestBody = {
-        originCode: origin.code,
-        destinationCode: destination.code,
-        dateOfDeparture: formattedDepartureDate,
-      };
+      const formattedCheckInDate = checkInDate.toISOString().split('T')[0]; // Format date as yyyy-mm-dd
+      const formattedCheckOutDate = checkOutDate.toISOString().split('T')[0]; // Format date as yyyy-mm-dd
 
       try {
-        const response = await axios.post('http://localhost:8000/flight-search', requestBody);
-        const flightsData = response.data.data;
-        console.log(flightsData);
+        const query = `${city.label},${city.country}`; // Outputs 'Cairo,Egypt'
+        const encodedQuery = encodeURIComponent(query); // Outputs 'Cairo%2CEgypt'
+        console.log(encodedQuery);
+        const locationResponse = await axios.get(`https://tripadvisor16.p.rapidapi.com/api/v1/hotels/searchLocation?query=${encodedQuery}`, {
+          headers: {
+            'x-rapidapi-key': 'fd830a92bemsh170577a13a24378p19b572jsn351826216193',
+            'x-rapidapi-host': 'tripadvisor16.p.rapidapi.com'
+          }
+        });
+        console.log(locationResponse);
 
-      if (flightsData && flightsData.length > 0) {
-        setFlights(flightsData);
-        console.log(flightsData[0].itineraries[0]);
-        console.log(flightsData[0].itineraries[0].segments[0].arrival.at);
-      } else {
-        message.error('No flights found.');
-      }
-        
+        if (locationResponse.status === 200 && locationResponse.data.data.length > 0) {
+          const geoId = locationResponse.data.data[0].geoId;
+
+          const hotelsResponse = await axios.get(`https://tripadvisor16.p.rapidapi.com/api/v1/hotels/searchHotels`, {
+            params: {
+              geoId: geoId,
+              checkIn: formattedCheckInDate,
+              checkOut: formattedCheckOutDate,
+              adults: adults
+            },
+            headers: {
+              'x-rapidapi-key': 'fd830a92bemsh170577a13a24378p19b572jsn351826216193',
+              'x-rapidapi-host': 'tripadvisor16.p.rapidapi.com'
+            }
+          });
+
+          if (hotelsResponse.status === 200) {
+            const hotelsData = hotelsResponse.data.data.data;
+            console.log(hotelsData);
+
+            if (hotelsData && hotelsData.length > 0) {
+              setHotels(hotelsData);
+            } else {
+              message.error('No Hotels found.');
+            }
+          } else {
+            message.error('Failed to fetch Hotels. Please try again.');
+          }
+        } else {
+          message.error('No hotels found in the specified location. Please try again.');
+        }
       } catch (error) {
-        console.error('Error fetching flights:', error);
-        message.error('Response data:', error.response.data.error);
-        message.error('Failed to fetch flights. Please try again.');
+        console.error('Error fetching Hotels:', error);
+        message.error('Failed to fetch Hotels. Please try again.');
       }
     } else {
       message.error('Error in the Form');
@@ -112,17 +138,17 @@ const FlightBookingForm = () => {
   };
 
   const validateFields = () => {
-    if (!departureDate || !origin || !destination || !seats) {
+    if (!checkInDate || !checkOutDate || !city || !adults) {
       message.error('Please fill in all required fields');
       return false;
-    } else if (departureDate < new Date()) {
-      message.error('Departure date cannot be in the past');
+    } else if (checkInDate < new Date()) {
+      message.error('Check-in date cannot be in the past');
       return false;
-    } else if (origin === destination) {
-      message.error('Origin and destination cannot be the same');
+    } else if (checkOutDate < checkInDate) {
+      message.error('Check-out date cannot be before check-in date');
       return false;
-    } else if (seats < 1) {
-      message.error('Number of seats must be greater than 0');
+    } else if (adults < 1) {
+      message.error('Number of adults must be greater than 0');
       return false;
     }
     return true;
@@ -133,15 +159,25 @@ const FlightBookingForm = () => {
     <Container maxWidth="sm">
       <Box sx={{ mt: 4 }}>
         <Typography variant="h4" style={{textAlign: 'center'}} gutterBottom>
-          Flight Booking
+          Hotel Booking
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
-                label="Departure Date"
-                value={departureDate}
-                onChange={(newValue) => setDepartureDate(newValue)}
+                label="Check-in Date"
+                value={checkInDate}
+                onChange={(newValue) => setCheckInDate(newValue)}
+                renderInput={(params) => <TextField {...params} fullWidth />}
+              />
+            </LocalizationProvider>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                label="Check-out Date"
+                value={checkOutDate}
+                onChange={(newValue) => setCheckOutDate(newValue)}
                 renderInput={(params) => <TextField {...params} fullWidth />}
               />
             </LocalizationProvider>
@@ -150,26 +186,17 @@ const FlightBookingForm = () => {
             <Autocomplete
               options={cities}
               getOptionLabel={(option) => `${option.country}, ${option.label}, ${option.code}`}
-              value={origin}
-              onChange={(event, newValue) => setOrigin(newValue)}
-              renderInput={(params) => <TextField {...params} label="Origin" fullWidth />}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Autocomplete
-              options={cities}
-              getOptionLabel={(option) => `${option.country}, ${option.label}, ${option.code}`}
-              value={destination}
-              onChange={(event, newValue) => setDestination(newValue)}
-              renderInput={(params) => <TextField {...params} label="Destination" fullWidth />}
+              value={city}
+              onChange={(event, newValue) => setCity(newValue)}
+              renderInput={(params) => <TextField {...params} label="City" fullWidth />}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
-              label="Number of Seats"
+              label="Number of Adults"
               type="number"
-              value={seats}
-              onChange={(e) => setSeats(e.target.value)}
+              value={adults}
+              onChange={(e) => setAdults(e.target.value)}
               fullWidth
             />
           </Grid>
@@ -181,9 +208,9 @@ const FlightBookingForm = () => {
         </Grid>
       </Box>
     </Container>
-    {flights.length > 0 && <FlightsCards sx={{overflowY: 'auto'}}flights={flights} origin={origin} destination={destination} departureDate={departureDate} />}
+    {hotels.length > 0 && <HotelCards sx={{overflowY: 'auto'}} hotels={hotels} />}
     </Container>
   );
 };
 
-export default FlightBookingForm;
+export default HotelBookingForm;
