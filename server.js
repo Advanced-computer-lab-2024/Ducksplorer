@@ -7,6 +7,7 @@ const cors = require("cors");
 const touristRoutes = require("./Backend/Routes/touristRoutes.js");
 const sellerRoutes = require("./Backend/Routes/sellerRoutes.js");
 const adminProductRoutes = require("./Backend/Routes/adminRoutes.js");
+const multer = require("multer");
 const signUpRoutes = require("./Backend/Routes/signUpRoutes.js");
 const adminRoutes = require("./Backend/Routes/Admin/AdminRoutes.js");
 const touristAccountRoutes = require("./Backend/Routes/TouristAccountRoutes.js");
@@ -33,6 +34,13 @@ const tourGuideAccountRoutes = require("./Backend/Routes/TourGuideAccountRoutes.
 const advertiserAccountRoutes = require("./Backend/Routes/AdvertiserAccountRoutes.js");
 const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js");
 const complaintRoutes = require("./Backend/Routes/complaintRoutes.js");
+
+app.use(cors());
+
+app.use("/uploads", express.static("uploads"));
+
+console.log(process.env.PORT);
+app.use(express.json());
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/"); // Folder where images will be stored
@@ -47,18 +55,30 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 },
 }).single("image");
 
-app.post("/upload", (req, res) => {
-  upload(req, res, (err) => {
-    if (err) {
-      return res.status(400).json({ error: err.message });
-    }
-    if (!req.file) {
-      return res.status(400).json({ error: "No file uploaded" });
-    }
+// Image upload endpoint using UploadThing
+app.post("/upload", async (req, res) => {
+  const { image } = req.body;
+  if (!image) return res.status(400).send("No image provided");
+
+  try {
+    const response = await axios.post(
+      "https://api.uploadthing.com/upload",
+      { file: image },
+      {
+        headers: { Authorization: `Bearer ${process.env.UPLOADTHING_API_KEY}` },
+      }
+    );
+
+    res.status(200).json({
+      message: "Image uploaded successfully",
+      imageUrl: response.data.url,
+    });
+    console.log(response.data);
+  } catch (error) {
     res
-      .status(200)
-      .json({ message: "Image uploaded successfully", file: req.file });
-  });
+      .status(500)
+      .json({ error: "Failed to upload image", details: error.message });
+  }
 });
 
 app.use("/uploads", express.static("uploads"));

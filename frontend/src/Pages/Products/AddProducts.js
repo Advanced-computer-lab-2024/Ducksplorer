@@ -1,5 +1,5 @@
 // src/Components/AllProducts.js
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { message } from "antd";
 import { Typography, Card, CardContent, Grid } from "@mui/material";
@@ -10,8 +10,9 @@ function AddProducts() {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [availableQuantity, setAvailableQuantity] = useState("");
-  const [picture, setPicture] = useState("");
   const [description, setDescription] = useState("");
+  const [picture, setPicture] = useState(null);
+  const fileInputRef = useRef(null); // Use a ref to access the file input
 
   const handleAddProduct = async () => {
     try {
@@ -33,7 +34,8 @@ function AddProducts() {
         }
       );
       if (response.status === 200) {
-        console.log("i am posting");
+        console.log("i am posting", response.data);
+        console.log(picture);
         message.success("product added successfully");
       } else {
         message.error("failed to add admin");
@@ -83,18 +85,17 @@ function AddProducts() {
           fullWidth
         /> */}
         <form>
-          <input type="file" name="image" />
-          <button
-            type="button"
-            onClick={(e) => {
-              setPicture(e.target.value);
-              if (picture) {
-                console.log("a picture exists");
-              }
+          <input
+            type="file"
+            id="image"
+            name="image"
+            accept="image/*"
+            required
+            onChange={() => {
+              const file = fileInputRef.current.files[0];
+              setPicture(file);
             }}
-          >
-            Upload Image
-          </button>
+          />
         </form>
 
         <TextField

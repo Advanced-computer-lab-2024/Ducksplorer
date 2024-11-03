@@ -1,18 +1,19 @@
-const mongoose = require('mongoose');
-const productModel = require('../../Models/productModel');
-const { $regex } = require('sift');
+const mongoose = require("mongoose");
+const productModel = require("../../Models/productModel");
+const { $regex } = require("sift");
 
-const getProducts  = async (req, res) => { //view all products
-  try{
-    const products = await productModel.find({}).sort({createdAt: -1})
-    if(! products){
+const getProducts = async (req, res) => {
+  //view all products
+  try {
+    const products = await productModel.find({}).sort({ createdAt: -1 });
+    if (!products) {
       res.status(404).json("product not found");
     }
-    res.status(200).json(products)
-  }catch(err){
-    res.status(400).json({err: err.message}); //400 ashan error aady
+    res.status(200).json(products);
+  } catch (err) {
+    res.status(400).json({ err: err.message }); //400 ashan error aady
   }
-}
+};
 
 const sortProducts = async (req, res) => {
   const sortingDecider = req.query.sortingDecider; // Get the sortingDecider from the query params
@@ -21,13 +22,15 @@ const sortProducts = async (req, res) => {
     const products = await productModel.find({}); // Fetch all products
 
     // Calculate average rating for each product
-    products.forEach(product => {
-      product.averageRating = product.ratings.length > 0 
-        ? (product.ratings.reduce((sum, num) => sum + num, 0) / product.ratings.length)
-        : 0;
+    products.forEach((product) => {
+      product.averageRating =
+        product.ratings.length > 0
+          ? product.ratings.reduce((sum, num) => sum + num, 0) /
+            product.ratings.length
+          : 0;
     });
 
-    if (sortingDecider === '1') {
+    if (sortingDecider === "1") {
       // Sort by average rating in descending order
       products.sort((a, b) => b.averageRating - a.averageRating);
     } else {
@@ -41,20 +44,24 @@ const sortProducts = async (req, res) => {
   }
 };
 
-const filterProducts = async (req, res) => { 
+const filterProducts = async (req, res) => {
   const minPrice = parseFloat(req.query.minPrice);
   const maxPrice = parseFloat(req.query.maxPrice);
-  if(maxPrice < minPrice){
+  if (maxPrice < minPrice) {
     return res.send("maximum is smaller than minimum");
   }
 
   try {
-    const products = await productModel.find({
-      price: { $gte: minPrice, $lte: maxPrice } // gte means greater than or equal, lte means less than or equal
-    }).sort({ price: 1 }); // Sort by price in ascending order
+    const products = await productModel
+      .find({
+        price: { $gte: minPrice, $lte: maxPrice }, // gte means greater than or equal, lte means less than or equal
+      })
+      .sort({ price: 1 }); // Sort by price in ascending order
 
     if (!products || products.length === 0) {
-      return res.status(400).send("No products were found in the given price range.");
+      return res
+        .status(400)
+        .send("No products were found in the given price range.");
     }
 
     res.status(200).send(products);
@@ -63,20 +70,44 @@ const filterProducts = async (req, res) => {
   }
 };
 
-
-const findProduct  = async (req, res) => { //search based on products name
+const findProduct = async (req, res) => {
+  //search based on products name
   const name = req.query.name;
   console.log(name);
-  if(!name){
-    res.status(400).json('please provide the name');
+  if (!name) {
+    res.status(400).json("please provide the name");
   }
-  try{
-    const products = await productModel.find({name : {$regex : name , $options : 'i'}}); //i means case insensitive, case-insensitive search for products by name
+  try {
+    const products = await productModel.find({
+      name: { $regex: name, $options: "i" },
+    }); //i means case insensitive, case-insensitive search for products by name
     res.json(products);
-  }catch(err){
+  } catch (err) {
     res.status(400).json(err.message);
   }
-}
+};
 
+const touristUpdateProduct = async (req, res) => {
+  const productId = req.params.productId;
+  const { rating, review } = req.body;
+  try {
+    const updatedProduct = await productModel.findByIdAndUpdate(
+      productId,
+      { rating: rating, review: review },
+      {
+        new: true,
+      }
+    );
+    res.status(200).json(updatedProduct);
+  } catch (err) {
+    res.status(400).json(err.message);
+  }
+};
 
-module.exports = {getProducts,findProduct,filterProducts,sortProducts};
+module.exports = {
+  getProducts,
+  findProduct,
+  filterProducts,
+  sortProducts,
+  touristUpdateProduct,
+};
