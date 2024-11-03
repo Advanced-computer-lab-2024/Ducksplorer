@@ -95,37 +95,44 @@ const viewMyUpcomingBookings = async (req, res) => {
 
   const viewMyPastBookings = async (req, res) => {
     try {
-        const { user } = req.params;
-    
-        if (!user) {
-          return res.status(400).json({ message: "user parameter is required." });
-        }
-    
-        // Find bookings for the user
-        const bookings = await Bookings.find({ user });
-    
-        if (!bookings.length) {
-          return res.status(404).json({ message: "No bookings found." });
-        }
-    
-        // Filter each booking's activities to include only those with past dates
-        const pastBookings = bookings.map(booking => {
-          const pastActivities = booking.activities.filter(activity => new Date(activity.date) < new Date());
-          return {
-            ...booking.toObject(), // Spread the booking object properties
-            activities: pastActivities // Replace activities with filtered past activities
-          };
-        }).filter(booking => booking.activities.length > 0); // Only include bookings with past activities
-    
-        if (!pastBookings.length) {
-          return res.status(404).json({ message: "No past activities found." });
-        }
-    
-        res.status(200).json(pastBookings);
-      } catch (error) {
-        res.status(500).json({ message: error.message });
+      const { user } = req.params;
+  
+      if (!user) {
+        return res.status(400).json({ message: "user parameter is required." });
       }
-};
+  
+      // Find bookings for the user
+      const bookings = await Bookings.find({ user });
+  
+      if (!bookings.length) {
+        return res.status(404).json({ message: "No bookings found." });
+      }
+  
+      // Filter each booking's activities and itineraries for past dates
+      const pastBookings = bookings.map(booking => {
+        const pastActivities = booking.activities.filter(activity => new Date(activity.date) < new Date());
+        
+        const pastItineraries = booking.itineraries.filter(itinerary => 
+          itinerary.availableDatesAndTimes.some(date => new Date(date) < new Date())
+        );
+  
+        return {
+          ...booking.toObject(), // Spread the booking object properties
+          activities: pastActivities, // Replace activities with filtered past activities
+          itineraries: pastItineraries // Replace itineraries with filtered past itineraries
+        };
+      }).filter(booking => booking.activities.length > 0 || booking.itineraries.length > 0); // Only include bookings with past activities or itineraries
+  
+      if (!pastBookings.length) {
+        return res.status(404).json({ message: "No past activities or itineraries found." });
+      }
+  
+      res.status(200).json(pastBookings);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+  
 
 
 const viewDesiredActivity = async (req, res) => {
@@ -190,9 +197,6 @@ const cancelMyBooking = async (req, res) => {
 
         if (type === 'activity') {
             const activity = booking.activities.find(activity => activity._id.equals(itemObjectId));
-            console.log(activity._id);
-            console.log(itemObjectId);
-            console.log(activity);
             if (!activity) return res.status(404).json({ message: 'Activity not found in the booking' });
             itemDate = activity.date;
 
@@ -211,18 +215,22 @@ const cancelMyBooking = async (req, res) => {
         } else if (type === 'itinerary') {
             const itinerary = booking.itineraries.find(itinerary => itinerary._id.equals(itemObjectId));
             if (!itinerary) return res.status(404).json({ message: 'Itinerary not found in the booking' });
-            itemDate = itinerary.date;
 
-            // Check time difference for itinerary
-            const timeDifference = (new Date(itemDate) - currentDate) / (1000 * 60 * 60);
-            if (timeDifference <= 48) {
+            // Check time difference for itineraries
+            const cannotCancel = itinerary.availableDatesAndTimes.some(date => {
+                const timeDifference = (new Date(date) - currentDate) / (1000 * 60 * 60);
+                return timeDifference <= 48; // Return true if any date is within 48 hours
+            });
+
+            if (cannotCancel) {
                 return res.status(400).json({ message: 'Cannot cancel within 48 hours of the itinerary' });
             }
+
+            // Update booked count and remove the itinerary from the booking
             itinerary.bookedCount -= 1;
-            // Remove the itinerary from the booking
             await Bookings.updateOne(
                 { user },
-                { $pull: { itineraries: { _id: itemObjectId } } }
+                { $pull: { itineraries: { _id : itemObjectId} } }
             );
 
         } else {
@@ -237,11 +245,12 @@ const cancelMyBooking = async (req, res) => {
         }
 
         res.status(200).json({ message: 'Booking item successfully canceled', updatedBooking });
-        
+
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 
 const receiveLoyaltyPoints = async (req, res) => {
