@@ -101,13 +101,9 @@ function App() {
             <Route path="/activity/addActivity" element={<AddActivity />} />
             <Route path="/activity/rudActivity" element={<RUDActivity />} />
             <Route path="/activity/upcoming" element={<UpcomingActivities />} />
-            <Route
-              path="/activity/searchActivities"
-              element={<SearchActivities />}
-            />
+            <Route path="/activity/searchActivities" element={<SearchActivities />} />
             <Route path="/activity/SortFilter" element={<SortFilterActivity />} />
-            <Route
-              path="/activity/myActivities"
+            <Route path="/activity/myActivities"
               element={
                 <MyActivities
                   userName={JSON.parse(localStorage.getItem("user")).username}

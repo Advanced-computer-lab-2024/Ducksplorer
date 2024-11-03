@@ -3,37 +3,67 @@ import axios from 'axios';
 import './FileUpload.css';
 
 const FileUpload = () => {
-    const [file, setFile] = useState(null);
+    const [files, setFiles] = useState([null]); // Initialize with one null entry
 
-    const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
+    const handleFileChange = (e, index) => {
+        const newFiles = [...files];
+        newFiles[index] = e.target.files[0];
+        setFiles(newFiles);
+    };
+
+    const addFileInput = () => {
+        setFiles([...files, null]);
+    };
+
+    const removeFileInput = (index) => {
+        const newFiles = files.filter((_, i) => i !== index);
+        setFiles(newFiles);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData();
-        formData.append('file', file);
+        files.forEach((file, index) => {
+            if (file) {
+                formData.append(`file${index}`, file);
+            }
+        });
+
         try {
-            await axios.post('http://localhost:8000/file/upload', formData, 
-              {
+            await axios.post('http://localhost:8000/file/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
-              });
-            alert('File uploaded successfully');
+            });
+            alert('Files uploaded successfully');
         } catch (error) {
-            console.error('Error uploading file:', error);
-            alert('Failed to upload file');
+            console.error('Error uploading files:', error);
+            alert('Failed to upload files');
         }
     };
 
     return (
         <div className="file-upload-container">
-            {/* <h1 className="upload-heading">GFG File Uploads</h1> */}
             <form className="file-upload-form" onSubmit={handleSubmit}>
-                <input type="file" 
-                    onChange={handleFileChange} 
-                    className="file-input" />
+                {files.map((file, index) => (
+                    <div key={index} className="file-input-container">
+                        <input
+                            type="file"
+                            onChange={(e) => handleFileChange(e, index)}
+                            className="file-input"
+                        />
+                        <button
+                            type="button"
+                            onClick={() => removeFileInput(index)}
+                            className="remove-button"
+                        >
+                            Remove
+                        </button>
+                    </div>
+                ))}
+                <button type="button" onClick={addFileInput} className="add-button">
+                    +
+                </button>
                 <button type="submit" className="upload-button">
                     Upload
                 </button>
