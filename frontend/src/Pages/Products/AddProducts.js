@@ -1,9 +1,7 @@
 // src/Components/AllProducts.js
-import React, { useEffect, useState, useRef } from "react";
+import React, {  useState, useRef } from "react";
 import axios from "axios";
 import { message } from "antd";
-import { Typography, Card, CardContent, Grid } from "@mui/material";
-import ProductDashboard from "../../Pages/Products/ProductDashboard";
 import { TextField, Button, Stack } from "@mui/material";
 
 function AddProducts() {

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const productModel = require("../../Models/productModel");
 const { $regex } = require("sift");
+const purchases = require("../../Models/purchasesModel");
 
 const getProducts = async (req, res) => {
   //view all products
@@ -89,16 +90,35 @@ const findProduct = async (req, res) => {
 
 const touristUpdateProduct = async (req, res) => {
   const productId = req.params.id;
-  const { rating, review } = req.body;
+  const { rating, review, buyer } = req.body;
+  console.log(req.body);
   try {
-    const updatedProduct = await productModel.findByIdAndUpdate(
-      { _id: productId },
-      { $push: { rating: rating }, $push: { reviews: review } },
+    const productUpdate = productModel.findByIdAndUpdate(
+      productId,
+      {
+        $push: { ratings: rating, reviews: review },
+      },
       {
         new: true,
       }
     );
-    res.status(200).json(updatedProduct);
+
+    const purchaseUpdate = purchases.findOneAndUpdate(
+      { buyer: buyer, "products._id": productId },
+      { $push: { "products.$.ratings": rating, "products.$.reviews": review } },
+      { new: true }
+    );
+
+    const [updatedProduct, updatedPurchase] = await Promise.all([
+      productUpdate,
+      purchaseUpdate,
+    ]);
+
+    if (!updatedPurchase) {
+      return res.status(404).json({ message: "Purchase not found for this buyer" });
+    }
+
+    res.status(200).json({ updatedProduct, updatedPurchase });
   } catch (err) {
     res.status(400).json(err.message);
   }

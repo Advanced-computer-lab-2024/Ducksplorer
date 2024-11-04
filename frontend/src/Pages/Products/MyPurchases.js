@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { message } from "antd";
-import { Typography, Rating, Button } from "@mui/material";
+import { Typography, Button } from "@mui/material";
 import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
-import StarIcon from "@mui/icons-material/Star";
-import StarOutlineIcon from "@mui/icons-material/StarOutline";
 function MyPurchases() {
   const [products, setProducts] = useState([]);
-  const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
-  const user = JSON.parse(userJson);
-  const username = user.username;
-  const [selectedProduct, setSelectedProduct] = useState("");
-  const [formData, setFormData] = useState({
-    rating: [],
-    review: [],
-  });
 
-  console.log(username);
   useEffect(() => {
+    const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
+    const user = JSON.parse(userJson);
+    const username = user.username;
     axios
       .get(`http://localhost:8000/touristRoutes/myPurchases/${username}`)
       .then((response) => {
@@ -63,6 +55,7 @@ function MyPurchases() {
                 key={product._id}
                 product={product}
                 productID={product._id}
+                showRating={true}
               />
               <Button
                 variant="contained"

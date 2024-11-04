@@ -13,7 +13,7 @@ import { Rating } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 
-const ProductCard = ({ product, showArchive, showUnarchive, productID }) => {
+const ProductCard = ({ product, showArchive, showUnarchive, productID, showRating }) => {
   const role = useUserRole();
   const [archived, setArchived] = useState(product.isArchived);
   const [rating, setRating] = useState(product.rating || 0);
@@ -25,12 +25,18 @@ const ProductCard = ({ product, showArchive, showUnarchive, productID }) => {
   const handleRatingChange = async (event, newValue) => {
     setRating(newValue);
     console.log("i have been clicked");
+    const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
+    const user = JSON.parse(userJson);
+    const userName = user.username;
     try {
       console.log(newValue);
       console.log("product", product);
       const response = await axios.put(
         `http://localhost:8000/touristRoutes/updateProducts/${productID}`,
-        { rating: newValue }
+        { 
+          rating: newValue,
+          buyer: userName
+        }
       );
       if (response.status === 200) {
         message.success("Rating updated successfully");
@@ -132,7 +138,7 @@ const ProductCard = ({ product, showArchive, showUnarchive, productID }) => {
         {archived && showUnarchive && (
           <Button onClick={handleUnarchive}> Unarchive </Button>
         )}
-        {role === "Tourist" && (
+        {role === "Tourist" && showRating && (
           <div key={product._id}>
             <Rating
               value={rating}

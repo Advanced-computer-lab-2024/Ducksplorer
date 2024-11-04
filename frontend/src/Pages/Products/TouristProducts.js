@@ -25,6 +25,25 @@ function TouristProducts() {
     window.history.back();
   };
 
+  const handlePurchase = async (product) => {
+    const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
+    const user = JSON.parse(userJson);
+    const userName = user.username;
+    try{
+        const response = await axios.put(`http://localhost:8000/touristRoutes/updatePurchases/${userName}`, {
+            products: [product]
+        });
+        if (response.status === 200) {
+            message.success("Product purchased successfully!");
+        } else {
+            message.error("Failed to purchase product.");
+        }
+    }
+    catch(error){
+        message.error("An error occurred while purchasing the product.");
+    }
+  };
+
 
   return (
     <div style={{ padding: '20px', maxWidth: '800px', margin: 'auto' }}>
@@ -40,7 +59,15 @@ function TouristProducts() {
               key={product._id}
               style={{ position: "relative", marginBottom: "20px" }}
             >
-              <ProductCard product={product} />
+              <ProductCard product={product} showRating={false}/>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => handlePurchase(product)}
+                style={{ position: "absolute", right: "10px", bottom: "10px" }} // Place the button at the bottom-right corner
+              >
+                Purchase
+              </Button>
             </div>
           ))
         ) : (
