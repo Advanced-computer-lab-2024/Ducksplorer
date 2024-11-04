@@ -1,6 +1,6 @@
 import React from 'react';
 import TouristNavBar from '../../Components/TouristNavBar';
-import FlightBookingForm from '../../Components/ThirdParty/FlightBookingForm';
+import FlightBookingForm from '../../Components/ThirdParty/flightBookingForm';
 
 
 
