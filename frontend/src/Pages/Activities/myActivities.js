@@ -34,7 +34,8 @@ import {
 } from "@mui/material";
 import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar.js";
 
-const MyActivities = ({ userName }) => {
+const MyActivities = () => {
+  const userName=JSON.parse(localStorage.getItem("user")).username;
   // Accept userNameId as a prop
   const [activities, setActivities] = useState([]);
   const [open, setOpen] = useState(false);
