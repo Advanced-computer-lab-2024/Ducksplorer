@@ -281,7 +281,19 @@ const receiveLoyaltyPoints = async (req, res) => {
         res.status(500).json({ success: false, message: 'An error occurred', error });
     }
 };
-
+const getLevel = async (req,res) => {
+    const {userName} = req.params;
+    try {
+        const user = await Tourist.findOne( {userName} );
+        if (!user) {
+            console.error('User not found');
+            return;
+        }
+        res.status(200).json(user.level);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
 const updateLevel = async (userName, points) => {
     try {
         const user = await Tourist.findOne({ userName });
@@ -295,6 +307,8 @@ const updateLevel = async (userName, points) => {
             user.level = 2;
         } else if (points >= 50000) {
             user.level = 3;
+        } else{
+            user.level = 1;
         }
         
         await user.save();
@@ -325,6 +339,7 @@ const redeemPoints = async (req,res) =>{
         } else {
             res.status(400).json({ message: "Not enough points to redeem" });
         }
+        updateLevel(tourist.userName, myPoints);
 
     } catch {
         res.status(500).json({ message: "An error occurred", error });
@@ -333,5 +348,5 @@ const redeemPoints = async (req,res) =>{
 
 
 module.exports = {
-    receiveLoyaltyPoints, updateLevel, redeemPoints, createBooking, getMyBookings, cancelMyBooking, viewMyUpcomingBookings, viewMyPastBookings, viewDesiredActivity, viewDesiredItinerary
+    receiveLoyaltyPoints, updateLevel, redeemPoints, createBooking, getMyBookings, cancelMyBooking, viewMyUpcomingBookings, viewMyPastBookings, viewDesiredActivity, viewDesiredItinerary, getLevel
 }

@@ -20,17 +20,38 @@ import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import LockIcon from "@mui/icons-material/Lock";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import axios from "axios";
+
 function TouristNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-
+  const [image , setImage] = React.useState("");
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
+//call the getImage in a useEffect
+const userName = JSON.parse(localStorage.getItem("user")).username;
+React.useEffect(() => {
+  getImage(userName);
+  console.log("image",image);
+})
+const getImage = async (userName) => {
+  const res = await axios.get(`http://localhost:8000/touristRoutes/getLevel/${userName}`);
+  console.log("level",res.data);
+  if (res.data==1) {
+    setImage("level1.png");
+  }
+  else if (res.data==2) {
+    setImage("level2.png");
+  }
 
+  else if (res.data==3) {
+    setImage("level3.png");
+  }
+}
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
@@ -54,6 +75,14 @@ function TouristNavBar() {
     <AppBar position="fixed" sx={{ backgroundColor: "#FFD700", width: "100%" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+        <Tooltip title="Badge">
+        <img
+            src={image}
+            alt="Avatar"
+            style={{ width: 70, height: 70, borderRadius: "50%" , marginRight: 10}}
+        />
+        </Tooltip>
+          <Tooltip title="Ducksplorer Home Page">
           <TravelExploreIcon
             sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
           />
@@ -74,6 +103,7 @@ function TouristNavBar() {
           >
             Ducksplorer
           </Typography>
+          </Tooltip>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -219,6 +249,7 @@ function TouristNavBar() {
                 </Typography>
               </IconButton>
             </Tooltip>
+            
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open Account settings">

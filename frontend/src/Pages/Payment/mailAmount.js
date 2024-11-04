@@ -15,6 +15,7 @@ function PaymentPage() {
         body: JSON.stringify({ amount, currency: "usd", email }),
       });
       const data = await response.json();
+      console.log(data);
       if (data.clientSecret) {
         // Store email and clientSecret in localStorage
         localStorage.setItem("paymentEmail", email);
