@@ -13,7 +13,13 @@ import { Rating } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 
-const ProductCard = ({ product, showArchive, showUnarchive, productID, showRating }) => {
+const ProductCard = ({
+  product,
+  showArchive,
+  showUnarchive,
+  productID,
+  showRating,
+}) => {
   const role = useUserRole();
   const [archived, setArchived] = useState(product.isArchived);
   const [rating, setRating] = useState(product.rating || 0);
@@ -31,11 +37,17 @@ const ProductCard = ({ product, showArchive, showUnarchive, productID, showRatin
     try {
       console.log(newValue);
       console.log("product", product);
+      console.log("user", userName);
+      console.log(typeof newValue);
+      console.log("this is the data", {
+        buyer: userName,
+        rating: newValue,
+      });
       const response = await axios.put(
         `http://localhost:8000/touristRoutes/updateProducts/${productID}`,
-        { 
+        {
+          buyer: userName,
           rating: newValue,
-          buyer: userName
         }
       );
       if (response.status === 200) {
@@ -114,12 +126,12 @@ const ProductCard = ({ product, showArchive, showUnarchive, productID, showRatin
           Description: {product.description}
         </Typography>
         <Typography variant="body1">Seller: {product.seller}</Typography>
-        <Typography variant="body1">
+        {/* <Typography variant="body1">
           Ratings:{" "}
           {product.ratings.length > 0
             ? product.ratings.join(", ")
             : "No ratings yet"}
-        </Typography>
+        </Typography> */}
         <h4>Reviews:</h4>
         {Object.entries(product.reviews).length > 0 ? (
           Object.entries(product.reviews).map(([user, review]) => (

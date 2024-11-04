@@ -16,7 +16,9 @@ const preferenceTagsRoutes = require("./Backend/Routes/Admin/PreferenceTagsRoute
 const activityRoutes = require("./Backend/Routes/activityRoutes.js");
 const categoryRoutes = require("./Backend/Routes/categoryRoutes.js");
 const userRoutes = require("./Backend/Routes/userRoutes.js");
+const bodyParser = require("body-parser");
 
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use("/uploads", express.static("uploads"));

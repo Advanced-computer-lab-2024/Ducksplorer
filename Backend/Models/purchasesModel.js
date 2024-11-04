@@ -11,7 +11,7 @@ const purchasesSchema = new Schema(
     products: {
       type: Array,
       schema: [products],
-      required: true,
+      required: false,
     },
   },
   { timestamps: true }
