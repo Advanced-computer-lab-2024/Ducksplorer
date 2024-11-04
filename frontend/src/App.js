@@ -51,6 +51,9 @@ import GovernorDashboard from './Pages/Dashboards/GovernorDashboard';
 import AdvertiserEditProfile from './Pages/EditAccount/AdvertiserEditAccount.js';
 import SellerEditProfile from './Pages/EditAccount/SellerEditAccount.js';
 import SellerDashboard from './Pages/Dashboards/SellerDashboard';
+import FlightsBooking from "./Pages/Products/FlightsBooking.js";
+import TransportationBooking from "./Pages/Products/TransportationBooking.js";
+
 
 
 function App() {
@@ -123,6 +126,10 @@ function App() {
             <Route path = "/AdminAllProducts" element= {<AdminAllProducts/>} />
             <Route path = "/TouristAllProducts" element= {<TouristAllProducts/>} />
             <Route path="/editAccount" element={<TouristEditAccount />} />
+            <Route path="/flights" element={<FlightsBooking />} />
+            <Route path="/transportation" element={<TransportationBooking />} />
+
+
 
 
             <Route path="/advertiserEditAccount" element={< AdvertiserEditProfile />} />

@@ -41,6 +41,10 @@ const touristSchema = new Schema(
         required: true,
         default: 0,
         immutable: true // This makes the field read-only
+    },
+    favCategory: {
+      type: String,
+      required: false
     }
 },{timestamps: true})
 

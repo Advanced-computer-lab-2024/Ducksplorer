@@ -35,6 +35,11 @@ const Tourist = require('../Models/touristModel.js');
     }
   };
 
+  const setTouristFavCategory = async (req,res) => {
+    const favCategory = req.body;
+    
+  }
+
   module.exports = {
     getTouristDetails,
     updateTouristDetails

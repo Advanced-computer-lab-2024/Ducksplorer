@@ -3,6 +3,8 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import { message } from 'antd';
 import { Link } from 'react-router-dom';
+import CategoriesDropDown from "Ducksplorer/frontend/src/Components/CategoryDropDown";
+
 
 const EditProfile = () => {
   const [touristDetails, setTouristDetails] = useState({
@@ -147,7 +149,8 @@ const EditProfile = () => {
             InputProps={{
               readOnly: true,
             }}
-        />    
+        />
+        <CategoriesDropDown />    
         {isEditing ? (
           <Button variant="contained" color="success" onClick={handleSaveClick}>
             Save

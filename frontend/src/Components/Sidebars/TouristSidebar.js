@@ -40,7 +40,7 @@ const TouristSidebar = () => {
             <ListItemIcon>
               <PersonIcon />
             </ListItemIcon>
-            <ListItemText primary="Edit Profile" />
+            <ListItemText primary="Profile" />
           </ListItem>
           <ListItem button component={Link} to="/viewAllTourist">
             <ListItemIcon>
