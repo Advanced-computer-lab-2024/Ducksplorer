@@ -88,9 +88,9 @@ const findProduct = async (req, res) => {
   }
 };
 
-const touristUpdateProduct = async (req, res) => {
+const touristUpdateProductRating = async (req, res) => {
   const productId = req.params.id;
-  const { rating, review, buyer } = req.body;
+  const { rating, buyer } = req.body;
   console.log("this is the req body", req.body);
   try {
     const product = await productModel.findById(productId);
@@ -98,8 +98,6 @@ const touristUpdateProduct = async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const ratingIndex = product.ratings.findIndex((r) => r.buyer === buyer);
 
     if (ratingIndex !== -1) {
@@ -112,14 +110,13 @@ const touristUpdateProduct = async (req, res) => {
     await product.save();
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    const purchase = await purchases.findOne({ buyer: buyer });
+    const purchase = await purchases.findOne({ buyer: buyer }).populate("products");
 
     if (!purchase) {
       return res.status(404).json({ message: "Purchase record not found." });
     }
 
     console.log("Purchase Record:", purchase);
-    // const productIndex = purchase.products.findIndex(prod => prod.productId.toString() === productId);
     const productIndex = purchase.products.findIndex((prod) => {
       console.log("Checking productId:", prod._id); // Log each productId for debugging
       return prod._id.toString() === productId; // Ensure productId is valid
@@ -130,76 +127,86 @@ const touristUpdateProduct = async (req, res) => {
         .json({ message: "Product not found in purchase record." });
     }
 
-    console.log("product index is", productIndex);
-    console.log(purchase.products[productIndex].ratings);
-    const purchaseRatingIndex = purchase.products[
-      productIndex
-    ].ratings.findIndex((r) => r.buyer === buyer);
+    purchase.products[productIndex] = product;
+    await purchase.save();
 
-    console.log("index is", purchaseRatingIndex);
-    if (purchaseRatingIndex !== -1) {
-      // Update existing rating
-      purchase.products[productIndex].ratings[purchaseRatingIndex].rating =
-        rating;
-    } else {
-      // Add new rating
-      console.log("dakhalt hena");
-      console.log("product index: ", productIndex);
-      purchase.products[productIndex].ratings.push({ buyer, rating });
-      console.log(purchase.products[productIndex].ratings);
-    }
-    console.log(await purchase.save());
-    console.log(purchase.products[productIndex].ratings);
-
-    // const updatedPurchases = await purchases.findOneAndUpdate(
-    //   { buyer }, // Find the purchases document for the given buyer
-    //   {
-    //     $set: {
-    //       "products.$[prod].ratings.$[rate]": { buyer: buyer, rating: rating }, // Update the specific rating for the buyer
-    //     },
-    //   },
-    //   {
-    //     arrayFilters: [
-    //       { "prod.productId": productId }, // Filter to match the specific product
-    //       { "rate.buyer": buyer } // Filter to match the specific buyer's rating
-    //     ],
-    //     new: true, // Return the modified document
-    //   }
-    // );
-    // await updatedPurchases.save();
-
-    // if (!updatedPurchases) {
-    //   return res
-    //     .status(404)
-    //     .json({ message: "Purchases not found for this buyer" });
-    // }
-
-    res.status(200).json({ product, purchase });
-    // const purchaseUpdate = purchases.findOneAndUpdate(
-    //   { buyer: buyer, "products._id": productId },
-    //   { $push: { "products.$.ratings": rating, "products.$.reviews": review } },
-    //   { new: true }
-    // );
-
-    // const [updatedProduct, updatedPurchase] = await Promise.all([
-    //   productUpdate,
-    //   purchaseUpdate,
-    // ]);
-
-    // if (!updatedPurchase) {
-    //   return res.status(404).json({ message: "Purchase not found for this buyer" });
-    // }
-
-    //res.status(200).json({ updatedProduct, updatedPurchase });
+    return purchase;
   } catch (err) {
     res.status(400).json(err.message);
   }
 };
+
+const getProductRating = async (req,res) => {
+  const productId = req.params.id;
+  const buyer = req.params.buyer;
+  try {
+    const product = await productModel.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    const buyerRating = product.ratings.find((rating) => rating.buyer === buyer);
+
+    if (buyerRating) {
+      res.status(200).json({ rating: buyerRating.rating });
+    } else {
+      res.status(404).json({ message: "Rating not found for this buyer" });
+    }
+  }
+  catch(error){
+    console.error("Error fetching rating:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+
+}
+
+const touristUpdateProductReview = async (req, res) => {
+  const productId = req.params.id;
+  const { review, buyer } = req.body;
+  console.log("this is the req body", req.body);
+  try {
+    const product = await productModel.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    product.reviews.push({buyer, review});
+    await product.save();
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    const purchase = await purchases.findOne({ buyer: buyer }).populate("products");
+
+    if (!purchase) {
+      return res.status(404).json({ message: "Purchase record not found." });
+    }
+
+    const productIndex = purchase.products.findIndex((prod) => {
+      console.log("Checking productId:", prod._id); // Log each productId for debugging
+      return prod._id.toString() === productId; // Ensure productId is valid
+    });
+    if (productIndex === -1) {
+      return res
+        .status(404)
+        .json({ message: "Product not found in purchase record." });
+    }
+
+    purchase.products[productIndex] = product;
+    await purchase.save();
+    res.status(200).json({product, purchase});
+    return purchase;
+  } catch (err) {
+    res.status(400).json(err.message);
+  }
+};
+
 
 module.exports = {
   getProducts,
   findProduct,
   filterProducts,
   sortProducts,
-  touristUpdateProduct,
+  touristUpdateProductRating,
+  getProductRating,
+  touristUpdateProductReview
 };
