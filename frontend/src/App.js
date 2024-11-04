@@ -54,6 +54,8 @@ import SellerDashboard from './Pages/Dashboards/SellerDashboard';
 import FlightsBooking from "./Pages/ThirdParty/FlightsBooking.js";
 import HotelsBooking from "./Pages/ThirdParty/HotelsBooking.js";
 import TouristNavBar from "./Components/TouristNavBar.js";
+import TransportationBooking from "./Pages/Products/TransportationBooking.js";
+
 
 
 function App() {
@@ -127,6 +129,10 @@ function App() {
             <Route path = "/AdminAllProducts" element= {<AdminAllProducts/>} />
             <Route path = "/TouristAllProducts" element= {<TouristAllProducts/>} />
             <Route path="/editAccount" element={<TouristEditAccount />} />
+            <Route path="/flights" element={<FlightsBooking />} />
+            <Route path="/transportation" element={<TransportationBooking />} />
+
+
 
 
             <Route path="/advertiserEditAccount" element={< AdvertiserEditProfile />} />

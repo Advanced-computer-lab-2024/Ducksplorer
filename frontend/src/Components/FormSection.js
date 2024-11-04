@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { TextField, IconButton, InputAdornment, Button, Stack } from '@mui/material';
+import { TextField, IconButton, InputAdornment, Button, Stack, Typography} from '@mui/material';
 import Iconify from './TopNav/iconify.js'; 
 import axios from 'axios';
 import { message } from 'antd';
 import { useTypeContext } from '../context/TypeContext';
 import DropDown from './DropDown.js';
 import { useNavigate } from "react-router-dom";
+import { Checkbox, FormControlLabel, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
 
 const FormSection = () => {
@@ -29,6 +30,8 @@ const FormSection = () => {
   const [companyProfile, setCompanyProfile] = useState('');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [acceptTerms, setAcceptTerms] = useState(false);
+  const [openTerms, setOpenTerms] = useState(false);
 
   const navigate = useNavigate();
 
@@ -57,8 +60,22 @@ const FormSection = () => {
       message.error('All fields are required for Seller');
       return false;
     }
+    if (!acceptTerms){
+      message.error('You must Accept Terms & Conditions');
+      return false;
+    }
     return true;
   };
+
+  const handleOpenTerms = () => {
+    setOpenTerms(true);
+  };
+
+  const handleCloseTerms = () => {
+    setOpenTerms(false);
+  };
+
+
   const handleAdd = async () => {
     if (!validateFields()) {
       return;
@@ -259,6 +276,67 @@ const FormSection = () => {
           </>
         )}
         <DropDown />
+        <FormControlLabel
+          control={
+            <Checkbox
+             checked={acceptTerms}
+              onChange={(e) => setAcceptTerms(e.target.checked)}
+              color="primary"
+            />
+          }
+          label={
+            <span>
+              I accept the{' '}
+              <a href="#" onClick={handleOpenTerms} style={{ textDecoration: 'underline', cursor: 'pointer' }}>
+               Terms & Conditions
+              </a>
+            </span>
+         }
+        />
+        <Dialog open={openTerms} onClose={handleCloseTerms}>
+          <DialogTitle>Terms and Conditions</DialogTitle>
+          <DialogContent>
+  <Typography variant="h6" gutterBottom>
+    1. Acceptance of Terms
+  </Typography>
+  <Typography paragraph>
+    By using our Site, you affirm that you are at least 18 years old and capable of entering into a legally binding agreement. If you are using the Site on behalf of a company or other legal entity, you represent that you have the authority to bind that entity to these Terms.
+  </Typography>
+  
+  <Typography variant="h6" gutterBottom>
+    2. Changes to Terms
+  </Typography>
+  <Typography paragraph>
+    We reserve the right to modify or replace these Terms at any time. If we make material changes, we will provide notice on our Site. Your continued use of the Site after any such changes constitutes your acceptance of the new Terms.
+  </Typography>
+  
+  <Typography variant="h6" gutterBottom>
+    3. Services Offered
+  </Typography>
+  <Typography paragraph>
+    Ducksplorer provides trip planning services, including but not limited to travel itineraries, booking information, and destination recommendations. We do not act as a travel agent, and we do not provide travel services directly.
+  </Typography>
+  
+  <Typography variant="h6" gutterBottom>
+    4. User Responsibilities
+  </Typography>
+  <Typography paragraph>
+    When using our Site, you agree to:
+  </Typography>
+  <ul>
+    <li><Typography>Provide accurate and complete information when creating an account or making bookings.</Typography></li>
+    <li><Typography>Maintain the confidentiality of your account and password.</Typography></li>
+    <li><Typography>Notify us immediately of any unauthorized use of your account.</Typography></li>
+    <li><Typography>Use the Site only for lawful purposes and in accordance with these Terms.</Typography></li>
+  </ul>
+</DialogContent>
+
+          <DialogActions>
+            <Button onClick={handleCloseTerms} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
         <Button
           variant="contained"
           onClick={handleAdd}
