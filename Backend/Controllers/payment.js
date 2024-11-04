@@ -53,7 +53,7 @@ const createPayment = async (req, res) =>{
                 enabled: true,
             },
         });
-        res.send({clientSecret: paymentIntent.client_secret});
+        res.send({ clientSecret: paymentIntent.client_secret });
 
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -61,30 +61,30 @@ const createPayment = async (req, res) =>{
 };
 
 const createPaymentIntent = async (req, res) => {
-    const {email} = req.body;
-    
-    try{
+    const { email } = req.body;
+
+    try {
         // Generate OTP
-    const OTP = Math.floor(100000 + Math.random() * 900000);
-    OTPStore[email] = OTP;
+        const OTP = Math.floor(100000 + Math.random() * 900000);
+        OTPStore[email] = OTP;
 
-    // Send OTP via email
-    const mailOptions = {
-        from: process.env.SMTP_USER,
-        to: email,
-        subject: 'Your OTP for Payment Verification',
-        text: `Your OTP is: ${OTP}`
-    };
+        // Send OTP via email
+        const mailOptions = {
+            from: process.env.SMTP_USER,
+            to: email,
+            subject: 'Your OTP for Payment Verification',
+            text: `Your OTP is: ${OTP}`
+        };
 
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            return res.status(500).json({ error: 'Error sending OTP email' });
-        }
-        res.status(200).json({
-            sent: true,
-            message: 'Payment intent created, OTP sent via email'
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                return res.status(500).json({ error: 'Error sending OTP email' });
+            }
+            res.status(200).json({
+                sent: true,
+                message: 'Payment intent created, OTP sent via email'
+            });
         });
-    });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -92,9 +92,9 @@ const createPaymentIntent = async (req, res) => {
 
 const getConfig = (req, res) => {
     res.send({
-      publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
+        publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
     });
-  };
+};
 
 const confirmOTP = async (req, res) => {
     const { email, otp } = req.body;
@@ -129,7 +129,7 @@ const sendConfirmation = async (req, res) => {
         case 'Flight':
             booking = flight;
             break;
-        case 'Transporation':  
+        case 'Transporation':
             booking = transporation;
             break;
         default:
@@ -187,4 +187,3 @@ const sendConfirmation = async (req, res) => {
 };
 
 module.exports = { createPayment, confirmOTP, sendConfirmation, getConfig, createPaymentIntent };
-        

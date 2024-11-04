@@ -6,10 +6,10 @@ const Itinerary = require("../Models/itineraryModel.js");
 
 const createBooking = async (req, res) => {
     const { user } = req.params;  // URL parameter for user
-    const { activityId, itineraryId} = req.body;
+    const { activityId, itineraryId } = req.body;
 
     try {
-        const tourist = await Tourist.findOne({userName : user });
+        const tourist = await Tourist.findOne({ userName: user });
         if (!tourist) {
             return res.status(404).json({ message: "Tourist not found" });
         }
@@ -27,23 +27,23 @@ const createBooking = async (req, res) => {
                 if (!activityExists) {
                     booking.activities.push(activity);
                     activity.bookedCount += 1;
-                } else{
+                } else {
                     return res.status(400).json({ message: "Activity already exists in the booking" });
                 }
             }
-        
+
             // Check if itineraryId is valid and not null, then add it to the itineraries array
             if (itineraryId) {
                 const itineraryExists = booking.itineraries.includes(itineraryId);
                 if (!itineraryExists) {
                     booking.itineraries.push(itinerary);
                     itinerary.bookedCount += 1;
-                } else{
+                } else {
                     return res.status(400).json({ message: "Itinerary already exists in the booking" });
                 }
             }
-            activityId ? await activity.save(): null;
-            itineraryId ? await itinerary.save(): null;
+            activityId ? await activity.save() : null;
+            itineraryId ? await itinerary.save() : null;
             await booking.save();
             return res.status(200).json({ message: "Booking updated successfully", booking });
         } else {
@@ -64,94 +64,93 @@ const createBooking = async (req, res) => {
 
 const viewMyUpcomingBookings = async (req, res) => {
     try {
-      const { tourist } = req.query;
-  
-      if (!tourist) {
-        return res.status(400).json({ message: "Tourist query parameter is required." });
-      }
-  
-      const bookings = await Bookings.find({ user: tourist, date: { $gte: new Date() } });
-  
-      if (!bookings.length) {
-        return res.status(404).json({ message: "No upcoming bookings found." });
-      }
-  
-      res.status(200).json(bookings);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  };
+        const { tourist } = req.query;
 
-  const viewMyPastBookings = async (req, res) => {
+        if (!tourist) {
+            return res.status(400).json({ message: "Tourist query parameter is required." });
+        }
+
+        const bookings = await Bookings.find({ user: tourist, date: { $gte: new Date() } });
+
+        if (!bookings.length) {
+            return res.status(404).json({ message: "No upcoming bookings found." });
+        }
+
+        res.status(200).json(bookings);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const viewMyPastBookings = async (req, res) => {
     try {
-      const { user } = req.params;
-  
-      if (!user) {
-        return res.status(400).json({ message: "user parameter is required." });
-      }
-  
-      // Find bookings for the user
-      const bookings = await Bookings.find({ user });
-  
-      if (!bookings.length) {
-        return res.status(404).json({ message: "No bookings found." });
-      }
-  
-      // Filter each booking's activities and itineraries for past dates
-      const pastBookings = bookings.map(booking => {
-        const pastActivities = booking.activities.filter(activity => new Date(activity.date) < new Date());
-        
-        const pastItineraries = booking.itineraries.filter(itinerary => 
-          itinerary.availableDatesAndTimes.some(date => new Date(date) < new Date())
-        );
-  
-        return {
-          ...booking.toObject(), // Spread the booking object properties
-          activities: pastActivities, // Replace activities with filtered past activities
-          itineraries: pastItineraries // Replace itineraries with filtered past itineraries
-        };
-      }).filter(booking => booking.activities.length > 0 || booking.itineraries.length > 0); // Only include bookings with past activities or itineraries
-  
-      if (!pastBookings.length) {
-        return res.status(404).json({ message: "No past activities or itineraries found." });
-      }
-  
-      res.status(200).json(pastBookings);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  };
-  
+        const { user } = req.params;
 
+        if (!user) {
+            return res.status(400).json({ message: "user parameter is required." });
+        }
+
+        // Find bookings for the user
+        const bookings = await Bookings.find({ user });
+
+        if (!bookings.length) {
+            return res.status(404).json({ message: "No bookings found." });
+        }
+
+        // Filter each booking's activities and itineraries for past dates
+        const pastBookings = bookings.map(booking => {
+            const pastActivities = booking.activities.filter(activity => new Date(activity.date) < new Date());
+
+            const pastItineraries = booking.itineraries.filter(itinerary =>
+                itinerary.availableDatesAndTimes.some(date => new Date(date) < new Date())
+            );
+
+            return {
+                ...booking.toObject(), // Spread the booking object properties
+                activities: pastActivities, // Replace activities with filtered past activities
+                itineraries: pastItineraries // Replace itineraries with filtered past itineraries
+            };
+        }).filter(booking => booking.activities.length > 0 || booking.itineraries.length > 0); // Only include bookings with past activities or itineraries
+
+        if (!pastBookings.length) {
+            return res.status(404).json({ message: "No past activities or itineraries found." });
+        }
+
+        res.status(200).json(pastBookings);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
 const viewDesiredActivity = async (req, res) => {
     try {
-        const {activityId} = req.params;
-        const result = await Activity.find({_id : activityId});
+        const { activityId } = req.params;
+        const result = await Activity.findOne({ _id: activityId });
         if (!result) {
             return res.status(404).json({ message: "Activity not found" });
-          }
-        res.status(200).json(result);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+        }
+        res.status(200).json(result); 
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 };
 
-const viewDesiredItinerary = async (req,res) => {
+
+const viewDesiredItinerary = async (req, res) => {
     try {
         //console.log(req.params);
         const { itineraryId } = req.params;
-        const result = await Itinerary.findOne({_id : itineraryId});
+        const result = await Itinerary.findOne({ _id: itineraryId });
         console.log(itineraryId);
         if (!result) {
             return res.status(404).json({ message: "Itinerary not found" });
-          }
+        }
         res.status(200).json(result);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 }
-  
+
 const getMyBookings = async (req, res) => {
     try {
         const { user } = req.params;
@@ -219,7 +218,7 @@ const cancelMyBooking = async (req, res) => {
             itinerary.bookedCount -= 1;
             await Bookings.updateOne(
                 { user },
-                { $pull: { itineraries: { _id : itemObjectId} } }
+                { $pull: { itineraries: { _id: itemObjectId } } }
             );
 
         } else {
@@ -270,7 +269,7 @@ const receiveLoyaltyPoints = async (req, res) => {
             default:
                 loyaltyPoints = 0;
         }
-        
+
         tourist.points += loyaltyPoints;
 
         await tourist.save();
@@ -310,7 +309,7 @@ const updateLevel = async (userName, points) => {
         } else{
             user.level = 1;
         }
-        
+
         await user.save();
 
     } catch (error) {
@@ -318,14 +317,14 @@ const updateLevel = async (userName, points) => {
     }
 };
 
-const redeemPoints = async (req,res) =>{
-    try{
-        const {userName} = req.params;
+const redeemPoints = async (req, res) => {
+    try {
+        const { userName } = req.params;
         const addPoints = Number(req.query.addPoints);
         const tourist = await Tourist.findOne({ userName });
         let myPoints = tourist.points;
         let myWallet = tourist.wallet;
-        if (myPoints > addPoints){
+        if (myPoints > addPoints) {
             myPoints -= addPoints;
             myWallet = addPoints / 100;
             tourist.points = myPoints;
