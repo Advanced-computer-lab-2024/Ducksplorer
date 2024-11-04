@@ -51,7 +51,6 @@ const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el 
         }
         const newuser = new User({role , userName, password , status});
         await newuser.save();
-        res.status(201).json(newuser);
 
     }   catch (error) {
         res.status(500).json({ message: error.message });

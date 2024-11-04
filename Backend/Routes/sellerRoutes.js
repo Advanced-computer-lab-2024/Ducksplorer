@@ -1,6 +1,6 @@
 const express = require("express");
-const {getProducts, sortProducts, filterProducts, findProduct}= require('../Controllers/TAScontroller');
-const {createProduct, editProduct, ViewMyProducts}= require('../Controllers/AScontroller');
+const {getProducts, sortProducts, filterProducts, findProduct}= require('../Controllers/Products/TAScontroller');
+const {createProduct, editProduct, ViewMyProducts}= require('../Controllers/Products/AScontroller');
 const sellerModel = require('../Models/sellerModel')
 
 const addSeller = async (req,res) => {

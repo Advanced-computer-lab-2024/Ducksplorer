@@ -14,6 +14,7 @@ const AdminActivityRoutes = require("./Backend/Routes/Admin/AdminActivityRoutes.
 const preferenceTagsRoutes = require("./Backend/Routes/Admin/PreferenceTagsRoutes.js");
 const activityRoutes = require("./Backend/Routes/activityRoutes.js");
 const categoryRoutes = require("./Backend/Routes/categoryRoutes.js");
+const bookingThirdPartyRoutes = require("./Backend/Routes/ThirdParty/bookingRoutes.js");
 
 app.use(cors());
 

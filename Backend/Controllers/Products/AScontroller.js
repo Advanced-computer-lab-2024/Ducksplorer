@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const productModel = require('../Models/productModel');
-const sellerModel = require('../Models/sellerModel')
+const productModel = require('../../Models/productModel');
+const sellerModel = require('../../Models/sellerModel')
 const { $options } = require('sift');
 const multer = require('multer');
 const path = require('path');
