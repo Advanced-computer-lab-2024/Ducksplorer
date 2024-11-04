@@ -34,7 +34,6 @@ const sidebarButtonStyle = {
 const TouristAllProducts = () => {
   // State for managing the dropdown menu
   const [anchorEl, setAnchorEl] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate(); 
 
   const handleFilterClick = (event) => {
@@ -45,18 +44,8 @@ const TouristAllProducts = () => {
     navigate('/FilterProducts');
   };
 
-  // Handler for search input change
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
-  // Placeholder functions for button actions
-  const handleAddProduct = () => {
-    navigate('/AddProducts');
-  };
-
   const handleViewAllProducts = () => {
-    navigate('/AllProducts');
+    navigate('/touristProducts');
   };
 
   const handleSearchProduct = () => {
@@ -90,10 +79,6 @@ const TouristAllProducts = () => {
     navigate('/SortProducts');
   }
 
-  const handleViewMyProducts = ()=> {
-    navigate('/ViewMyProducts');
-  }
-
   const handleBackButtonClick = () => {
     window.history.back();
   };
@@ -120,15 +105,22 @@ const TouristAllProducts = () => {
           Search
         </Button>
         
-        <div style={{ maxHeight: '400px', overflowY: 'auto', padding: '10px', marginTop: '20px' }}>
+        <div style={{ maxHeight: '400px', overflowY: 'visible', padding: '10px', marginTop: '20px' }}>
         {/* Render the filtered products using the ProductCard component */}
-        {products.length > 0 ? (
-          products.map((product) => (
-            <ProductCard key={product._id} product={product} />
+        {products.filter(product => product.isArchived !== true).length > 0 ? (
+        products
+          .filter(product => product.isArchived !== true)
+          .map((product) => (
+            <div
+              key={product._id}
+              style={{ position: "relative", marginBottom: "20px" }}
+            >
+              <ProductCard product={product} />
+            </div>
           ))
         ) : (
-          <Typography variant="body1" style={{ marginTop: '20px' }}>
-            No products found under the specified name.
+          <Typography variant="body1" style={{ marginTop: "20px" }}>
+            No products found.
           </Typography>
         )}
       </div>

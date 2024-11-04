@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { TextField, IconButton, InputAdornment, Button, Stack } from '@mui/material';
-import Iconify from '../TopNav/iconify.js'; 
+import { TextField, Button, Stack } from '@mui/material';
 import axios from 'axios';
 import { message } from 'antd';
-import { useTypeContext } from '../../context/TypeContext.js';
-import DropDown from '../DropDown.js';
+
  
 const EditProduct =  () =>{
   const {productId} = useParams();
@@ -15,9 +13,6 @@ const EditProduct =  () =>{
   const [picture, setPicture] = useState('');
   const [description, setDescription] = useState('');
   
-
-
-
   const handleEdit = async () =>{
     const data = {};
 

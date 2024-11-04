@@ -24,7 +24,6 @@ const AdvertiserEditProfile = () => {
       axios
         .get(`http://localhost:8000/advertiserAccount/viewaccount/${userName}`)
         .then((response) => {
-          message.success("Advertiser details fetched successfully");
           setAdvertiserDetails({
             ...response.data,
           });
@@ -48,7 +47,7 @@ const AdvertiserEditProfile = () => {
       )
       .then((response) => {
         message.success("Advertiser details updated successfully");
-        console.log("Advertiser details updated successfully:", response.data);
+        // console.log("Advertiser details updated successfully:", response.data);
         setIsEditing(false);
       })
       .catch((error) => {
