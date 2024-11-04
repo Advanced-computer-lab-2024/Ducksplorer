@@ -4,7 +4,7 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import axios from 'axios';
 import { message } from 'antd';
-import flightsCards from './flightsCards';
+import FlightsCards from './FlightsCards';
 
 const cities = [
   { label: 'New York', code: 'NYC', country: 'USA' },
@@ -91,6 +91,7 @@ const FlightBookingForm = () => {
       try {
         const response = await axios.post('http://localhost:8000/flight-search', requestBody);
         const flightsData = response.data.data;
+        console.log(flightsData);
 
       if (flightsData && flightsData.length > 0) {
         setFlights(flightsData);
@@ -102,6 +103,7 @@ const FlightBookingForm = () => {
         
       } catch (error) {
         console.error('Error fetching flights:', error);
+        message.error('Response data:', error.response.data.error);
         message.error('Failed to fetch flights. Please try again.');
       }
     } else {
@@ -179,7 +181,7 @@ const FlightBookingForm = () => {
         </Grid>
       </Box>
     </Container>
-    {flights.length > 0 && <flightsCards sx={{overflowY: 'auto'}}flights={flights} origin={origin} destination={destination} departureDate={departureDate} />}
+    {flights.length > 0 && <FlightsCards sx={{overflowY: 'auto'}}flights={flights} origin={origin} destination={destination} departureDate={departureDate} />}
     </Container>
   );
 };
