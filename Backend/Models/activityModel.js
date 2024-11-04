@@ -63,6 +63,11 @@ const activitySchema = new Schema(
     comments: {
       type: [String],
       required: false,
+    },
+    bookedCount: {
+      type: Number,
+      default: 0,
+      required: false
     }
   },
 

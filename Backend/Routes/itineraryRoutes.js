@@ -8,6 +8,7 @@ const { getAllMyItineraries } = require('../Controllers/Itinerary/itineraryGetMy
 const { rateItinerary } = require('../Controllers/Itinerary/itineraryRateController');
 const { toggleActiveFlagItinerary } = require('../Controllers/Itinerary/itineraryFlagsController')
 const { commentItinerary } = require('../Controllers/Itinerary/itineraryCommentController');
+const { deleteOnlyNotBookedItinerary } = require('../Controllers/Itinerary/itineraryDeleteOnlyNotBookedController');
 
 const router = express.Router();
 
@@ -34,6 +35,8 @@ router.route("/rateItinerary/:itineraryId").patch(rateItinerary)
 
 router.route("/toggleActiveFlagItinerary/:id").put(toggleActiveFlagItinerary)
 
-router.route("/commentItinerary/:itineraryId").patch(commentItinerary);
+router.route("/commentItinerary/:itineraryId").patch(commentItinerary)
+
+router.route("/deleteOnlyNotBookedItinerary/:id").delete(deleteOnlyNotBookedItinerary)
 
 module.exports = router

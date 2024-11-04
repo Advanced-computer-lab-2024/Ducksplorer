@@ -35,23 +35,31 @@ const updateSellerDetails = async (req, res) => {
   }
 };
 
-//Used for when a seller decides to delete his account 
-const deleteSeller = async (req, res) => {
+const deleteMySellerAccount = async (req, res) => {
   try {
+    // Get seller username from the route parameters
     const { userName } = req.params;
 
-    const deletedSeller = await Seller.findByIdAndDelete(userName);
-    if (!deletedSeller) {
-      return res.status(404).json({ message: "Seller not found" });
+    //Find the seller by his username which is given as a parameter
+    const seller = await Seller.findOne({ userName: userName });
+
+    if (!seller) {
+      return res.status(404).json({ error: 'Seller not found' });
     }
-    res.status(200).json(deletedSeller)
+    //IMPORTANT For sprint 3: This method is missing the process of deleting the unpurchased products associated with this seller
+
+    // Delete the seller account
+    await Seller.findByIdAndDelete(seller._id);
+
+    // Respond with a success message
+    res.status(200).json({ message: "Seller account deleted successfully." });
+
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
-  catch (error) {
-    res.status(400).json({ message: "Error deleting Seller " })
-  }
-}
+};
 module.exports = {
   getSellerDetails,
   updateSellerDetails,
-  deleteSeller
+  deleteMySellerAccount
 };
