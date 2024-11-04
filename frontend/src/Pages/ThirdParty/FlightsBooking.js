@@ -2,13 +2,7 @@ import React from 'react';
 import TouristNavBar from '../../Components/TouristNavBar';
 import FlightBookingForm from '../../Components/ThirdParty/flightBookingForm';
 
-
-
-
-
 const FlightsBooking = () => {
- 
-
   return (
     <>
         <TouristNavBar/>
