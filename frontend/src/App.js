@@ -51,6 +51,11 @@ import GovernorDashboard from './Pages/Dashboards/GovernorDashboard';
 import AdvertiserEditProfile from './Pages/EditAccount/AdvertiserEditAccount.js';
 import SellerEditProfile from './Pages/EditAccount/SellerEditAccount.js';
 import SellerDashboard from './Pages/Dashboards/SellerDashboard';
+import ComplaintsDashboard from './Components/Complaints/ComplaintDashboard.js';
+import ComplaintDetails from './Components/Complaints/ComplaintDetails.js';
+import MyComplaints from './Components/Complaints/MyComplaints.js';
+
+
 
 
 function App() {
@@ -89,6 +94,11 @@ function App() {
             <Route path="/addGovernor" element={<AddGoverner />} />
             <Route path="/categoriesActions" element={<CategoriesActions />} />
             <Route path="/preferenceTags" element={<PreferenceTags />} />
+            <Route path="/admin/complaints" element={<ComplaintsDashboard />} />
+            <Route path="/admin/complaints" element={<ComplaintsDashboard />} />
+            <Route path="/admin/complaints/:id" element={<ComplaintDetails />} />
+            <Route path="/myComplaints" element={<MyComplaints />} />
+
 
 
             <Route path="/advertiserDashboard" element={<AdvertiserDashboard/>} />
@@ -100,14 +110,16 @@ function App() {
               element={<SearchActivities />}
             />
             <Route path="/activity/SortFilter" element={<SortFilterActivity />} />
-            <Route
-              path="/activity/myActivities"
+           {/* <Route
+              path="/activity/
+              import MyComplaints from './Components/MyComplaints';
+Activities"
               element={
                 <MyActivities
                   userName={JSON.parse(localStorage.getItem("user")).username}
                 />
               }
-            />
+            /> */}
             <Route path="/location" element={<ClinicLocation/>} />
 
 

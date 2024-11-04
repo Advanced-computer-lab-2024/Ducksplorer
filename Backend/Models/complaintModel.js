@@ -16,18 +16,30 @@ const complaintSchema = new Schema(
       required: true,
     },
     status: {
-      type: Boolean,  //true means resolved, false pending resolution //therefore default is false
+      type: Boolean,  // true means resolved, false means pending resolution
       default: false,
       required: false
     },
     response: {
       type: String,
-      required:false
+      required: false
     },
     tourist: {
       type: String,
       required: false
-    }
+    },
+    replies: [
+      {
+        text: {
+          type: String,
+          required: true
+        },
+        date: {
+          type: Date,
+          default: Date.now
+        }
+      }
+    ]
   },
   { timestamps: true }
 );
@@ -35,5 +47,3 @@ const complaintSchema = new Schema(
 const Complaint = mongoose.model("Complaint", complaintSchema);
 
 module.exports = Complaint;
-
-//title, body, date
