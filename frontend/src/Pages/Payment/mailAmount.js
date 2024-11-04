@@ -17,7 +17,7 @@ function PaymentPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const amountInCents = price * 100
+    const amountInCents = price
     try {
       const response = await fetch("http://localhost:8000/payment/pay", {
         method: "POST",
@@ -142,7 +142,7 @@ function PaymentPage() {
                   <p><strong>Accessibility:</strong> {itineraryData.accessibility}</p>
                   <p><strong>Pick Up Location:</strong> {itineraryData.pickUpLocation}</p>
                   <p><strong>Drop Off Location:</strong> {itineraryData.dropOffLocation}</p>
-                  <p><strong>Rating:</strong> {itineraryData.rating}</p>
+                  <p><strong>Rating:</strong> {itineraryData.rating}/5</p>
                   <p><strong>Tags:</strong> {itineraryData.tags}</p>
                 </Space>
               </div>
@@ -168,7 +168,7 @@ function PaymentPage() {
                   : 'No available date and time'}</p>
                 <p><strong>Duration:</strong> {activityData.duration}</p>
                 <p><strong>Location:</strong> {activityData.location}</p>
-                <p><strong>Ratings:</strong> {activityData.averageRating}</p>
+                <p><strong>Ratings:</strong> {activityData.averageRating}/5</p>
               </div>
             ) : null}
           </Card>

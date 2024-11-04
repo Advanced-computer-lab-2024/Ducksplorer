@@ -8,14 +8,12 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Typography
+  Typography,
+  Rating
 } from "@mui/material";
 
-//const userId = localStorage.getItem("user"); // Replace "userId" with the actual key you used to store the user ID
-
-
 const BookingDetails = () => {
-  const userName = JSON.parse(localStorage.getItem("user")).username 
+  const userName = JSON.parse(localStorage.getItem("user")).username
   const [booking, setBooking] = useState(null);
 
   useEffect(() => {
@@ -114,7 +112,11 @@ const BookingDetails = () => {
                 <TableCell>{itinerary.pickUpLocation}</TableCell>
                 <TableCell>{itinerary.dropOffLocation}</TableCell>
                 <TableCell>{itinerary.tourGuideModel?.name || "N/A"}</TableCell>
-                <TableCell>{itinerary.rating}/5</TableCell>
+                <TableCell><Rating
+                  value={itinerary.rating}
+                  precision={0.1}
+                  readOnly
+                /></TableCell>
                 <TableCell>{itinerary.tags.join(", ")}</TableCell>
               </TableRow>
             ))}

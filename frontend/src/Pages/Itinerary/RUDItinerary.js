@@ -8,7 +8,7 @@ import CurrencyConvertor from '../../Components/CurrencyConvertor';
 import {
   TextField, IconButton, Box, Button, Table, Typography, TableBody,
   TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogActions,
-  DialogContent, DialogContentText, DialogTitle, Tooltip
+  DialogContent, DialogContentText, DialogTitle, Tooltip, Rating
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 
@@ -333,7 +333,7 @@ const RUDItinerary = () => {
                 <TableCell>Timeline</TableCell>
                 <TableCell>Language</TableCell>
                 <TableCell>Price
-                <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                  <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
                 </TableCell>
                 <TableCell>Available Dates And Times</TableCell>
                 <TableCell>Accessibility</TableCell>
@@ -365,7 +365,7 @@ const RUDItinerary = () => {
                       itinerary.locations.map((location, index) => (
                         <div key={index}>
                           <Typography variant="body1">
-                           {index + 1}: {location.trim()}
+                            {index + 1}: {location.trim()}
                           </Typography>
                           <br />
                         </div>
@@ -375,7 +375,7 @@ const RUDItinerary = () => {
                   </TableCell>
                   <TableCell>{itinerary.timeline}</TableCell>
                   <TableCell>{itinerary.language}</TableCell>
-                  <TableCell>                                            
+                  <TableCell>
                     {(itinerary.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
                   </TableCell>
                   <TableCell>
@@ -396,7 +396,11 @@ const RUDItinerary = () => {
                   <TableCell>{itinerary.accessibility}</TableCell>
                   <TableCell>{itinerary.pickUpLocation}</TableCell>
                   <TableCell>{itinerary.dropOffLocation}</TableCell>
-                  <TableCell>{itinerary.rating}</TableCell>
+                  <TableCell><Rating
+                    value={itinerary.rating}
+                    precision={0.1}
+                    readOnly
+                  /></TableCell>
 
                   <TableCell>
                     {itinerary.tags && itinerary.tags.length > 0

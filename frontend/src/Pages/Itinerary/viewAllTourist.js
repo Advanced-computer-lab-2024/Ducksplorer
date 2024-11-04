@@ -4,7 +4,7 @@ import { message } from 'antd';
 import {
     Button, Stack, TextField, Typography, Box, TableContainer, Menu, MenuItem,
     Checkbox, Slider, Select, Paper, Table, TableHead, TableRow, TableCell,
-    TableBody, IconButton, FormControl, InputLabel
+    TableBody, IconButton, FormControl, InputLabel, Rating
 } from '@mui/material';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { Link } from 'react-router-dom';
@@ -121,7 +121,7 @@ function SearchItineraries() {
     const handleCurrencyChange = (rates, selectedCurrency) => {
         setExchangeRates(rates);
         setCurrency(selectedCurrency);
-      };
+    };
     //clear all filters
     const handleClearAllFilters = () => {
         setMinPrice('');
@@ -339,7 +339,7 @@ function SearchItineraries() {
                                         <TableCell>Locations</TableCell>
                                         <TableCell>Timeline</TableCell>
                                         <TableCell>Language</TableCell>
-                                        <TableCell>Price                 
+                                        <TableCell>Price
                                             <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
                                         </TableCell>
                                         <TableCell>Available Dates and Times</TableCell>
@@ -381,7 +381,7 @@ function SearchItineraries() {
                                             <TableCell>{itinerary.timeline}</TableCell>
                                             <TableCell>{itinerary.language}</TableCell>
                                             <TableCell>
-                                            {(itinerary.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                                                {(itinerary.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
                                             </TableCell>
                                             <TableCell>
                                                 {itinerary.availableDatesAndTimes.length > 0
@@ -401,7 +401,11 @@ function SearchItineraries() {
                                             <TableCell>{itinerary.accessibility}</TableCell>
                                             <TableCell>{itinerary.pickUpLocation}</TableCell>
                                             <TableCell>{itinerary.dropOffLocation}</TableCell>
-                                            <TableCell>{itinerary.rating}</TableCell>
+                                            <TableCell><Rating
+                                                value={itinerary.rating}
+                                                precision={0.1}
+                                                readOnly
+                                            /></TableCell>
                                             <TableCell>
                                                 {itinerary.tags && itinerary.tags.length > 0
                                                     ? itinerary.tags.map((tag, index) => (
