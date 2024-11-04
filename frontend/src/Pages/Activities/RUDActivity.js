@@ -156,7 +156,7 @@ const RUDActivity = () => {
                 <TableCell>Category</TableCell>
                 <TableCell>Tags</TableCell>
                 <TableCell>Discount</TableCell>
-                <TableCell>Date</TableCell>
+                <TableCell>Dates and Times </TableCell>
                 <TableCell>Duration</TableCell>
                 <TableCell>Location</TableCell>
                 <TableCell>Rating</TableCell>
@@ -173,7 +173,17 @@ const RUDActivity = () => {
                   <TableCell>{activity.category}</TableCell>
                   <TableCell>{activity.tags}</TableCell>
                   <TableCell>{activity.specialDiscount}</TableCell>
-                  <TableCell>{activity.date}</TableCell>
+                  <TableCell>{activity.date ? (() => {
+                    const dateObj = new Date(activity.date);
+                    const date = dateObj.toISOString().split('T')[0];
+                    const time = dateObj.toTimeString().split(' ')[0];
+                    return (
+                      <div>
+                        {date} at {time}
+                      </div>
+                    );
+                  })()
+                    : 'No available date and time'}</TableCell>
                   <TableCell>{activity.duration}</TableCell>
                   <TableCell>{activity.location}</TableCell>
                   <TableCell>

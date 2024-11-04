@@ -1,5 +1,18 @@
-import React from 'react';
-import { Drawer, Typography, Divider, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import React, { useState } from 'react';
+import {
+  Drawer,
+  Typography,
+  Divider,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button
+} from "@mui/material";
 import { Link } from 'react-router-dom';
 // import DashboardIcon from '@mui/icons-material/Dashboard';
 // import PeopleIcon from '@mui/icons-material/People';
@@ -15,11 +28,38 @@ import PersonIcon from '@mui/icons-material/Person';
 // import CasinoIcon from '@mui/icons-material/Casino';
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import SearchIcon from '@mui/icons-material/Search';
-
-
+import DeleteIcon from '@mui/icons-material/Delete';
+import axios from 'axios';
 const drawerWidth = 300;
 
 const TouristSidebar = () => {
+  const [open, setOpen] = useState(false); // State for the dialog
+  const [userName, setUserName] = useState('');
+
+  const handleDeleteClick = () => {
+    const userJson = localStorage.getItem('user');
+    const user = JSON.parse(userJson);
+    setUserName(user.username);
+    setOpen(true); // Open the confirmation dialog
+  };
+
+  const handleClose = () => {
+    setOpen(false); // Close the dialog
+  };
+
+  const handleDeleteAccount = async () => {
+    if (userName) {
+      try {
+        const response = await axios.delete(`http://localhost:8000/touristAccount/deleteMyTouristAccount/${userName}`);
+        alert(response.data.message); // Show success message
+      } catch (error) {
+        console.error("Error deleting account:", error);
+        alert("Failed to delete account. Please try again.");
+      }
+    }
+    handleClose(); // Close the dialog after deletion
+  };
+
   return (
     <Drawer
       variant="permanent"
@@ -30,19 +70,27 @@ const TouristSidebar = () => {
       }}
     >
       <div>
-      {/* <img src="logo1.png" style={{ width: '120px' , height: '120px' , padding: '10px', marginLeft: '50px'}} alt="logo" /> */}
+        {/* <img src="logo1.png" style={{ width: '120px' , height: '120px' , padding: '10px', marginLeft: '50px'}} alt="logo" /> */}
         <Typography variant="h6" noWrap sx={{ padding: 2 }}>
           Tourist Dashboard
         </Typography>
         <Divider />
         <List>
+
+          <ListItem button onClick={handleDeleteClick}>
+            <ListItemIcon>
+              <DeleteIcon />
+            </ListItemIcon>
+            <ListItemText primary="Delete My Account" />
+          </ListItem>
+
           <ListItem button component={Link} to="/editAccount">
             <ListItemIcon>
               <PersonIcon />
             </ListItemIcon>
             <ListItemText primary="Edit Profile" />
           </ListItem>
-          
+
           <ListItem button component={Link} to="/viewAllTourist">
             <ListItemIcon>
               <EventNoteIcon />
@@ -56,19 +104,19 @@ const TouristSidebar = () => {
             </ListItemIcon>
             <ListItemText primary="View Upcoming Itineraries" />
           </ListItem>
-          <ListItem button component={Link} to="/TouristAllProducts"> 
+          <ListItem button component={Link} to="/TouristAllProducts">
             <ListItemIcon>
               <ShoppingCartIcon />
             </ListItemIcon>
             <ListItemText primary="Products Actions" />
           </ListItem>
-          <ListItem button component={Link} to="/MuseumTouristPov"> 
+          <ListItem button component={Link} to="/MuseumTouristPov">
             <ListItemIcon>
               <MuseumIcon />
             </ListItemIcon>
             <ListItemText primary="View Museums" />
           </ListItem>
-          <ListItem button component={Link} to="/HistoricalPlaceTouristPov"> 
+          <ListItem button component={Link} to="/HistoricalPlaceTouristPov">
             <ListItemIcon>
               <MuseumIcon />
             </ListItemIcon>
@@ -89,6 +137,25 @@ const TouristSidebar = () => {
         </List>
         <Divider />
       </div>
+
+      {/* Confirmation Dialog */}
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete your account?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary" variant="outlined">Cancel</Button>
+          <Button
+            onClick={handleDeleteAccount}
+            sx={{ color: 'white', backgroundColor: 'error.main' }} // Set red background
+            variant="contained"
+          >
+            Yes, Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </Drawer>
   );
 };

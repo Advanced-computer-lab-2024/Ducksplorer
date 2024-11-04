@@ -117,13 +117,13 @@ function App() {
             path="/activity/myActivities"
             element={
               <MyActivities
-                userName={JSON.parse(localStorage.getItem("user")).username}
+              //userName={JSON.parse(localStorage.getItem("user")).username}
               />
             }
           />
           <Route path="/location" element={<ClinicLocation />} />
 
-          <Route path="/myPastBookings" element={<PastBookingDetails userName={JSON.parse(localStorage.getItem("user")).username}/>}/>
+          <Route path="/myPastBookings" element={<PastBookingDetails userName={JSON.parse(localStorage.getItem("user")).username} />} />
           <Route path="/ProductDashboard" element={<ProductDashboard />} />
           <Route path="/AllProducts" element={<AllProducts />} />
           <Route path="/AddProducts" element={<AddProducts />} />

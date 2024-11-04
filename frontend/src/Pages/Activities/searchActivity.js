@@ -35,15 +35,15 @@ const SearchActivities = () => {
       .get("http://localhost:8000/activity")
       .then((response) => {
         if (id == undefined) {
-        setAllActivities(response.data);
-        setActivities(response.data); // Set initial activities to all fetched activities
+          setAllActivities(response.data);
+          setActivities(response.data); // Set initial activities to all fetched activities
         }
         else {
           const tempActivities = response.data.filter((activity) => activity._id == id);
           setAllActivities(tempActivities);
           setActivities(tempActivities);
         }
-      
+
       })
       .catch((error) => {
         console.error("There was an error fetching the activities!", error);
@@ -70,18 +70,18 @@ const SearchActivities = () => {
   const handleShareLink = (activityId) => {
     const link = `${window.location.origin}/activity/searchActivities/${activityId}`; // Update with your actual route
     navigator.clipboard.writeText(link)
-        .then(() => {
-            message.success('Link copied to clipboard!');
-        })
-        .catch(() => {
-            message.error('Failed to copy link.');
-        });
-};
+      .then(() => {
+        message.success('Link copied to clipboard!');
+      })
+      .catch(() => {
+        message.error('Failed to copy link.');
+      });
+  };
 
-const handleShareEmail = (activityId) => {
+  const handleShareEmail = (activityId) => {
     const link = `${window.location.origin}/activity/searchActivities/${activityId}`; // Update with your actual route
     window.location.href = `mailto:?subject=Check out this activity&body=Here is the link to the activity: ${link}`;
-};
+  };
 
   return (
     <>
@@ -133,7 +133,7 @@ const handleShareEmail = (activityId) => {
                 <TableCell>Category</TableCell>
                 <TableCell>Tags</TableCell>
                 <TableCell>Discount</TableCell>
-                <TableCell>Date</TableCell>
+                <TableCell>Dates and Times</TableCell>
                 <TableCell>Duration</TableCell>
                 <TableCell>Location</TableCell>
                 <TableCell>Rating</TableCell>
@@ -150,19 +150,29 @@ const handleShareEmail = (activityId) => {
                       <TableCell>{activity.category}</TableCell>
                       <TableCell>{activity.tags.join(", ")}</TableCell>
                       <TableCell>{activity.specialDiscount}</TableCell>
-                      <TableCell>{new Date(activity.date).toLocaleDateString()}</TableCell>
+                      <TableCell>{activity.date ? (() => {
+                        const dateObj = new Date(activity.date);
+                        const date = dateObj.toISOString().split('T')[0];
+                        const time = dateObj.toTimeString().split(' ')[0];
+                        return (
+                          <div>
+                            {date} at {time}
+                          </div>
+                        );
+                      })()
+                        : 'No available date and time'}</TableCell>
                       <TableCell>{activity.duration}</TableCell>
                       <TableCell>{activity.location}</TableCell>
                       <TableCell>
                         <Rating value={activity.averageRating} precision={0.1} readOnly />
                       </TableCell>
                       {id == undefined ? (<TableCell>
-                          <Button variant="outlined" onClick={() => handleShareLink(activity._id)}>
-                            Share Via Link
-                          </Button>
-                          <Button variant="outlined" onClick={() => handleShareEmail(activity._id)}>
-                            Share Via Email
-                          </Button>
+                        <Button variant="outlined" onClick={() => handleShareLink(activity._id)}>
+                          Share Via Link
+                        </Button>
+                        <Button variant="outlined" onClick={() => handleShareEmail(activity._id)}>
+                          Share Via Email
+                        </Button>
                       </TableCell>) : null
                       }
                     </TableRow>
