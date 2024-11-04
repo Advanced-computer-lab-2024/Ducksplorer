@@ -53,8 +53,8 @@ import SellerEditProfile from './Pages/EditAccount/SellerEditAccount.js';
 import SellerDashboard from './Pages/Dashboards/SellerDashboard';
 import FlightsBooking from "./Pages/ThirdParty/FlightsBooking.js";
 import HotelsBooking from "./Pages/ThirdParty/HotelsBooking.js";
-import HotelCardV2 from "./Components/ThirdParty/HotelCardV2.js";
 import TouristNavBar from "./Components/TouristNavBar.js";
+
 
 function App() {
   return (
@@ -72,7 +72,6 @@ function App() {
             <Route path="/tourGuideDashboard" element={<TourGuideDashboard />} />
             <Route path="/touristDashboard" element={<TouristDashboard />} />
             <Route path="/tourGuideEditAccount" element={<TourGuideEditProfile/>} />
-    
             <Route path="/governorDashboard" element={<GovernorDashboard />} />
             <Route path="/createMuseum" element={<CreateMuseum />} />
             <Route path="/createHistoricalPlace" element={<CreateHistoricalPlace />} />

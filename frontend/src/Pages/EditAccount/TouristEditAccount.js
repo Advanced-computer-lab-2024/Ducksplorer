@@ -4,7 +4,10 @@ import axios from 'axios';
 import { message } from 'antd';
 import { Link } from 'react-router-dom';
 import TouristNavBar from '../../Components/TouristNavBar.js';
+import CategoriesDropDown from '../../Components/CategoryDropDown.js';
+import StandAloneToggleButton from '../../Components/ToggleButton.js';
 const EditProfile = () => {
+ 
   const [touristDetails, setTouristDetails] = useState({
     userName: '',
     email: '',
@@ -13,7 +16,11 @@ const EditProfile = () => {
     DOB: '', 
     employmentStatus: '',
     wallet: 0,
+    tagPreferences: [],
+    favouriteCategory: '',
+
   });
+  let allTags = JSON.parse(localStorage.getItem('tags')) || [];
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
@@ -37,6 +44,26 @@ const EditProfile = () => {
         });
     }
   }, []);
+
+  function getTagNames(element) {
+    return {
+      _id: element._id,
+      name: element.name,
+    };
+  }
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/preferenceTags/")
+      .then((response) => {
+        const data = response.data;
+        allTags = data.map(getTagNames);
+        localStorage.setItem("tags", JSON.stringify(allTags));
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the categories!", error);
+      });
+  });
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -65,71 +92,71 @@ const EditProfile = () => {
 
   return (
     <>
-    <TouristNavBar />
-    <Box sx={{ p: 6 }}>
-      <Typography variant="h4" sx={{ mb: 3 }}>
-        Edit Tourist Profile ({touristDetails.userName})
-      </Typography>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <TextField
-          label="Username"
-          name="userName"
-          value={touristDetails.userName}
-          onChange={handleChange}
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-        <TextField
-          label="Email"
-          name="email"
-          value={touristDetails.email}
-          onChange={handleChange}
-          InputProps={{
-            readOnly: !isEditing,
-          }}
-        />
-        <TextField
-          label="Mobile Number"
-          name="mobileNumber"
-          value={touristDetails.mobileNumber}
-          onChange={handleChange}
-          InputProps={{
-            readOnly: !isEditing,
-          }}
-        />
-        <TextField
-          label="Nationality"
-          name="nationality"
-          value={touristDetails.nationality}
-          onChange={handleChange}
-          InputProps={{
-            readOnly: !isEditing,
-          }}
-        />
-        <TextField
-          label="Date of Birth"
-          name="DOB"
-          type="date"
-          value={touristDetails.DOB}
-          onChange={handleChange}
-          InputProps={{
-            readOnly: true,
-          }}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-        <TextField
-          label="Employment Status"
-          name="employmentStatus"
-          value={touristDetails.employmentStatus}
-          onChange={handleChange}
-          InputProps={{
-            readOnly: !isEditing,
-          }}
-        />
-        <TextField
+      <TouristNavBar />
+      <Box sx={{ p: 6 }}>
+        <Typography variant="h4" sx={{ mb: 3 }}>
+          Edit Tourist Profile ({touristDetails.userName})
+        </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <TextField
+            label="Username"
+            name="userName"
+            value={touristDetails.userName}
+            onChange={handleChange}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <TextField
+            label="Email"
+            name="email"
+            value={touristDetails.email}
+            onChange={handleChange}
+            InputProps={{
+              readOnly: !isEditing,
+            }}
+          />
+          <TextField
+            label="Mobile Number"
+            name="mobileNumber"
+            value={touristDetails.mobileNumber}
+            onChange={handleChange}
+            InputProps={{
+              readOnly: !isEditing,
+            }}
+          />
+          <TextField
+            label="Nationality"
+            name="nationality"
+            value={touristDetails.nationality}
+            onChange={handleChange}
+            InputProps={{
+              readOnly: !isEditing,
+            }}
+          />
+          <TextField
+            label="Date of Birth"
+            name="DOB"
+            type="date"
+            value={touristDetails.DOB}
+            onChange={handleChange}
+            InputProps={{
+              readOnly: true,
+            }}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            label="Employment Status"
+            name="employmentStatus"
+            value={touristDetails.employmentStatus}
+            onChange={handleChange}
+            InputProps={{
+              readOnly: !isEditing,
+            }}
+          />
+          <TextField
             label="Wallet"
             name="wallet"
             value={touristDetails.wallet}
@@ -137,18 +164,39 @@ const EditProfile = () => {
             InputProps={{
               readOnly: true,
             }}
-        />    
-        {isEditing ? (
-          <Button variant="contained" color="success" onClick={handleSaveClick}>
-            Save
-          </Button>
-        ) : (
-          <Button variant="contained" style={{ backdropFiltercolor: '#FFA07A' }} onClick={handleEditClick}>
-            Edit
-          </Button>
-        )}
+          />
+           <Typography variant="h6" sx={{ mt: 2 }}>
+            Choose Favourite Category
+          </Typography>
+          <CategoriesDropDown />
+          
+          <Typography variant="h6" sx={{ mt: 2 }}>
+            Choose Preference Tags
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            {allTags.map((element, index) => {
+              return (
+                <Box key={element._id} sx={{ flex: '1 1 calc(25% - 16px)' }}>
+                  <StandAloneToggleButton 
+                    tags={touristDetails.tagPreferences}
+                    name={element.name}
+                  />
+                </Box>
+              );
+            })}
+          </Box>
+
+          {isEditing ? (
+            <Button variant="contained" color="success" onClick={handleSaveClick}>
+              Save
+            </Button>
+          ) : (
+            <Button variant="contained" style={{ backdropFiltercolor: '#FFA07A' }} onClick={handleEditClick}>
+              Edit
+            </Button>
+          )}
+        </Box>
       </Box>
-    </Box>
     </>
   );
 };
