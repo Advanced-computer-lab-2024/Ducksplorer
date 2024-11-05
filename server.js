@@ -35,7 +35,6 @@ const itineraryRoutes = require("./Backend/Routes/itineraryRoutes.js")
 const tourGuideAccountRoutes = require("./Backend/Routes/TourGuideAccountRoutes.js")
 const advertiserAccountRoutes = require("./Backend/Routes/AdvertiserAccountRoutes.js")
 const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js")
-const bookingThirdPartyRoutes = require("./Backend/Routes/ThirdParty/bookingRoutes.js");
 const transportationBookingThirdPartyRoutes = require("./Backend/Routes/ThirdParty/transportationBookingRoutes.js");
 
 

@@ -4,7 +4,7 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import axios from 'axios';
 import { message } from 'antd';
-import FlightsCards from './FlightsCards';
+import FlightsCards from './flightsCards';
 
 const cities = [
   { label: 'New York', code: 'NYC', country: 'USA' },

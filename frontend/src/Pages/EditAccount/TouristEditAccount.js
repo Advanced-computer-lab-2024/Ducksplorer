@@ -4,8 +4,8 @@ import axios from 'axios';
 import { message } from 'antd';
 import { Link } from 'react-router-dom';
 import TouristNavBar from '../../Components/TouristNavBar.js';
-import CategoriesDropDown from '../../Components/CategoryDropDown.js';
 import StandAloneToggleButton from '../../Components/ToggleButton.js';
+import TouristCategoryDropDown from '../../Components/TouristComponents/TouristCategoryDropDown.js';
 const EditProfile = () => {
  
   const [touristDetails, setTouristDetails] = useState({
@@ -17,7 +17,7 @@ const EditProfile = () => {
     employmentStatus: '',
     wallet: 0,
     tagPreferences: [],
-    favouriteCategory: '',
+    favouriteCategory:  localStorage.getItem("category"),
 
   });
   let allTags = JSON.parse(localStorage.getItem('tags')) || [];
@@ -29,6 +29,7 @@ const EditProfile = () => {
     const userName = user.username; 
 
     if (userName) {
+      console.log("B4" , touristDetails);
       axios.get(`http://localhost:8000/touristAccount/viewaccount/${userName}`)
         .then(response => {
           message.success('Tourist details fetched successfully');
@@ -37,6 +38,7 @@ const EditProfile = () => {
             ...response.data,
             DOB: formattedDOB // Ensure DOB is in "yyyy-MM-dd" format
           });
+          console.log('Tourist details fetched successfully:', touristDetails); 
         })
         .catch(error => {
           message.error('Error fetching tourist details');
@@ -70,11 +72,12 @@ const EditProfile = () => {
   };
 
   const handleSaveClick = () => {
-    axios.put('http://localhost:8000/touristAccount/editaccount', touristDetails)
+    axios.put('http://localhost:8000/touristAccount/editaccount', touristDetails )
       .then(response => {
         message.success('Tourist details updated successfully');
         console.log('Tourist details updated successfully:', response.data);
         setIsEditing(false);
+        console.log("editing",touristDetails);
       })
       .catch(error => {
         message.error('Error updating tourist details');
@@ -87,6 +90,21 @@ const EditProfile = () => {
     setTouristDetails(prevDetails => ({
       ...prevDetails,
       [name]: value,
+    }));
+  };
+
+  const handleCategoryChange = (category) => {
+    console.log("Category is ", localStorage.getItem("category"));
+    setTouristDetails(prevDetails => ({
+      ...prevDetails,
+      favouriteCategory: category,
+    }));
+  };
+
+  const handleTagsChange = (tags) => {
+    setTouristDetails(prevDetails => ({
+      ...prevDetails,
+      tagPreferences: tags,
     }));
   };
 
@@ -165,27 +183,32 @@ const EditProfile = () => {
               readOnly: true,
             }}
           />
-           <Typography variant="h6" sx={{ mt: 2 }}>
-            Choose Favourite Category
-          </Typography>
-          <CategoriesDropDown />
-          
-          <Typography variant="h6" sx={{ mt: 2 }}>
-            Choose Preference Tags
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            {allTags.map((element, index) => {
-              return (
-                <Box key={element._id} sx={{ flex: '1 1 calc(25% - 16px)' }}>
-                  <StandAloneToggleButton 
-                    tags={touristDetails.tagPreferences}
-                    name={element.name}
-                  />
-                </Box>
-              );
-            })}
-          </Box>
+          {isEditing && (
+            <>
+              <Typography variant="h6" sx={{ mt: 2 }}>
+                Choose Favourite Category
+              </Typography>
+              <TouristCategoryDropDown category={touristDetails.favouriteCategory} disabled={!isEditing} onChange={handleCategoryChange} />
 
+              <Typography variant="h6" sx={{ mt: 2 }}>
+                Choose Preference Tags
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                {allTags.map((element, index) => {
+                  return (
+                    <Box key={element._id} sx={{ flex: '1 1 calc(25% - 16px)' }}>
+                      <StandAloneToggleButton
+                        tags={touristDetails.tagPreferences}
+                        name={element.name}
+                        onChange={handleTagsChange}
+                        disabled={!isEditing}
+                      />
+                    </Box>
+                  );
+                })}
+              </Box>
+            </>
+          )}
           {isEditing ? (
             <Button variant="contained" color="success" onClick={handleSaveClick}>
               Save

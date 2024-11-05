@@ -68,7 +68,7 @@ const getFlights = async (req, res) => {
         destinationLocationCode: destinationCode,
         departureDate: dateOfDeparture,
         adults: '1',
-        max: '6',
+        max: '18',
     }).then(function (response) {
         res.send(JSON.stringify(response.result));
     }).catch(function (response) {

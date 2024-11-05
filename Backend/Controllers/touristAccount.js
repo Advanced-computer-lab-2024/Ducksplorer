@@ -20,6 +20,7 @@ const Tourist = require('../Models/touristModel.js');
    const updateTouristDetails = async (req, res) => {
     const userName = req.body.userName;
     const updateData = req.body;
+    console.log(updateData);
   
     try {
       const tourist = await Tourist.findOneAndUpdate({userName }, updateData, { new: true });
