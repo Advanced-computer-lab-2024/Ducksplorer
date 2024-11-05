@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const fileModel = require('./fileModel');
 
 const tourGuideSchema = new Schema({
     email: {
@@ -17,16 +16,6 @@ const tourGuideSchema = new Schema({
         type: String,
         required: true
     },
-    nationalId:
-    {
-        type: Array,
-        schema: [fileModel],
-        required: true
-    },
-    // {
-    //     type: Buffer,
-    //     required: true
-    // },
     mobileNumber: {
         type: Number,
         required: true
@@ -39,16 +28,16 @@ const tourGuideSchema = new Schema({
         type: String,
         required: false
     }, 
+    nationalId:
+    {
+        type: String,
+
+    },
     certificates:
     {
-        type: Array,
-        schema: [fileModel],
-        required: true
+        type: String,
+
     },
-    // {
-    //     type: Buffer,
-    //     required: true
-    // },
     photo:{
         type: String,
     }

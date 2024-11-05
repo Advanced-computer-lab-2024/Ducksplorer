@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { TextField, IconButton, InputAdornment, Button, Stack } from '@mui/material';
-import Iconify from './TopNav/iconify.js'; 
+import Iconify from './TopNav/iconify.js';
 import axios from 'axios';
 import { message } from 'antd';
 import { useTypeContext } from '../context/TypeContext';
 import DropDown from './DropDown.js';
 import { useNavigate } from "react-router-dom";
-import FileUpload from './FileUpload';
+// import FileUpload from './FileUpload';
 
 const FormSection = () => {
   const { type } = useTypeContext();
@@ -16,7 +16,11 @@ const FormSection = () => {
   const [email, setEmail] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [nationalId, setnationalId] = useState(null);
+
+  // File states
+  const [nationalId, setNationalId] = useState(null);
+  const [certificates, setCertificates] = useState(null);
+  const [taxationRegisteryCard, setTaxationRegisteryCard] = useState(null);
 
   // Additional state variables for conditional fields
   const [mobileNumber, setMobileNumber] = useState('');
@@ -30,15 +34,11 @@ const FormSection = () => {
   const [companyProfile, setCompanyProfile] = useState('');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [taxationRegisteryCard, setTaxationRegisteryCard] = useState(null);
-  //const [logo, setLogo] = useState('');
-  const [certificates, setCertificates] = useState(null);
-  //const [photo, setPhoto] = useState('');
 
   const navigate = useNavigate();
 
   const validateFields = () => {
-    if (!userName || !password || !confirmPassword || !email || !nationalId) {
+    if (!userName || !password || !confirmPassword || !email ) {
       message.error('All fields are required');
       return false;
     }
@@ -50,47 +50,66 @@ const FormSection = () => {
       message.error('All fields are required for Tourist');
       return false;
     }
-    if (type === 'Guide' && (!mobileNumber || !yearsOfExperience || !previousWork || !certificates)) {
+    if (type === 'Guide' && (!mobileNumber || !yearsOfExperience || !previousWork )) {
       message.error('All fields are required for Guide');
       return false;
     }
-    if (type === 'Advertiser' && (!websiteLink || !hotline || !companyProfile || !taxationRegisteryCard)) {
+    if (type === 'Advertiser' && (!websiteLink || !hotline || !companyProfile )) {
       message.error('All fields are required for Advertiser');
       return false;
     }
-    if (type === 'Seller' && (!name || !description || !taxationRegisteryCard)) {
+    if (type === 'Seller' && (!name || !description )) {
       message.error('All fields are required for Seller');
       return false;
     }
     return true;
   };
 
-  
   const handleAdd = async () => {
     if (!validateFields()) {
       return;
     }
-    const data = {
-      userName,
-      password,
-      email,
-      nationalId,
-      role: type,
-      ...(type === 'Tourist' && { mobileNumber, nationality, DOB, employmentStatus }),
-      ...(type === 'Guide' && { mobileNumber, yearsOfExperience, previousWork, certificates }),
-      ...(type === 'Advertiser' && { websiteLink, hotline, companyProfile, taxationRegisteryCard }),
-      ...(type === 'Seller' && { name, description, taxationRegisteryCard }),
-    };
+
+    const formData = new FormData();
+    formData.append('userName', userName);
+    formData.append('password', password);
+    formData.append('email', email);
+    formData.append('role', type);
+    
+
+    // Append conditional fields and documents based on role
+    if (type === 'Tourist') {
+      formData.append('mobileNumber', mobileNumber);
+      formData.append('nationality', nationality);
+      formData.append('DOB', DOB);
+      formData.append('employmentStatus', employmentStatus);
+    } else if (type === 'Guide') {
+      formData.append('mobileNumber', mobileNumber);
+      formData.append('yearsOfExperience', yearsOfExperience);
+      formData.append('previousWork', previousWork);
+      //formData.append('certificates', certificates);
+      //formData.append('nationalId', nationalId);
+    } else if (type === 'Advertiser') {
+      formData.append('websiteLink', websiteLink);
+      formData.append('hotline', hotline);
+      formData.append('companyProfile', companyProfile);
+      //formData.append('taxationRegisteryCard', taxationRegisteryCard);
+      //formData.append('nationalId', nationalId);
+    } else if (type === 'Seller') {
+      formData.append('name', name);
+      formData.append('description', description);
+    //  formData.append('taxationRegisteryCard', taxationRegisteryCard);
+      //formData.append('nationalId', nationalId);
+    }
 
     try {
-      await axios.post('http://localhost:8000/signUp', data,
-        {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
+      const response = await axios.post('http://localhost:8000/signUp', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
       message.success('Signed Up successfully!');
-      window.location.href = '/login';
+      navigate('/login');
     } catch (error) {
-      message.error('An error occurred: ' + error.message);
+      message.error('An error occurred: ' + error.response.data.error);
       console.error('There was an error signing up!', error);
     }
   };
@@ -170,15 +189,7 @@ const FormSection = () => {
             ),
           }}
         />
-        {/* <TextField
-          name="nationalId"
-          label=""
-          type="text"
-          value={nationalId}
-          onChange={(e) => setnationalId(e.target.value)}
-        /> */}
-        <lable>National ID</lable>
-        <FileUpload />
+        
         {type === 'Tourist' && (
           <>
             <TextField
@@ -228,9 +239,20 @@ const FormSection = () => {
               value={certificates}
               onChange={(e) => setCertificates(e.target.value)}
               required
+            />
+            <label>National ID</label>
+            <FileUpload 
+              onFileSelect={(file) => setNationalId(file)} 
+              label="National ID" 
+              inputId="national-id-upload" 
+            />
+
+            <label>Certificates</label>
+            <FileUpload 
+              onFileSelect={(file) => setCertificates(file)} 
+              label="Certificates" 
+              inputId="certificates-upload" 
             /> */}
-            <lable>Certificates</lable>
-            <FileUpload />
             <TextField
               name="yearsOfExperience"
               label="Years of Experience"
@@ -263,16 +285,17 @@ const FormSection = () => {
               value={hotline}
               onChange={(e) => setHotline(e.target.value)}
             />
-            {/* <TextField
-              name="taxationRegisteryCard"
-              label="Taxation Registery Card (URL)"
-              type="text"
-              value={taxationRegisteryCard}
-              onChange={(e) => setTaxationRegisteryCard(e.target.value)}
-              required
+            {/* <FileUpload 
+              onFileSelect={(file) => setNationalId(file)} 
+              label="National ID" 
+              inputId="national-id-upload" 
+            />
+            <label>Taxation Registry Card</label>
+            <FileUpload 
+              onFileSelect={(file) => setTaxationRegisteryCard(file)} 
+              label="Taxation Registry Card" 
+              inputId="taxation-card-upload" 
             /> */}
-            <lable>Taxation Registery Card</lable>
-            <FileUpload />
             <TextField
               name="companyProfile"
               label="Company Profile"
@@ -291,17 +314,19 @@ const FormSection = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-            {/* <TextField
-              name="taxationRegisteryCard"
-              label="Taxation Registery Card (URL)"
-              type="text"
-              value={taxationRegisteryCard}
-              onChange={(e) => setTaxationRegisteryCard(e.target.value)}
-              required
+            
+            {/* <FileUpload 
+              onFileSelect={(file) => setNationalId(file)} 
+              label="National ID" 
+              inputId="national-id-upload" 
+            />
+            <label>Taxation Registry Card</label>
+            <FileUpload 
+              onFileSelect={(file) => setTaxationRegisteryCard(file)} 
+              label="Taxation Registry Card" 
+              inputId="taxation-card-upload" 
             /> */}
-            <lable>Taxation Registery Card</lable>
-            <FileUpload />
-            <TextField
+             <TextField
               name="description"
               label="Description"
               type="text"

@@ -14,14 +14,15 @@ const AdminActivityRoutes = require("./Backend/Routes/Admin/AdminActivityRoutes.
 const preferenceTagsRoutes = require("./Backend/Routes/Admin/PreferenceTagsRoutes.js");
 const activityRoutes = require("./Backend/Routes/activityRoutes.js");
 const categoryRoutes = require("./Backend/Routes/categoryRoutes.js");
-const fileRoutes = require("./Backend/Routes/fileRoutes.js")
-const paymentRoutes = require('./Backend/Routes/paymentRoutes.js');
-
-app.use(cors());
+// const fileRoutes = require("./Backend/Routes/fileRoutes.js")
+// const paymentRoutes = require('./Backend/Routes/paymentRoutes.js');
+// // const documentRoutes = require('./Backend/Routes/documentRoutes');
+// //const bodyParser = require('body-parser');
+// app.use(cors());
 
 app.use('/uploads', express.static('uploads'));
 
-
+//app.use(bodyParser.json());
 
 console.log(process.env.PORT);
 app.use(express.json());
@@ -56,9 +57,9 @@ app.use("/itinerary", itineraryRoutes);
 app.use("/tourGuideAccount", tourGuideAccountRoutes);
 app.use("/advertiserAccount", advertiserAccountRoutes);
 app.use("/sellerAccount", sellerAccountRoutes);
-app.use('/file', fileRoutes);
+// app.use('/file', fileRoutes);
 app.use('/payment', paymentRoutes);
-
+// app.use('/api/documents', documentRoutes);
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
@@ -80,4 +81,3 @@ app.listen(PORT, () => {
   connectToMongoDB();
   console.log(`Server Running on Port ${PORT}`)
 });
-
