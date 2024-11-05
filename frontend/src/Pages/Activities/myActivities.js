@@ -30,7 +30,8 @@ import {
 } from "@mui/material";
 import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar.js";
 
-const MyActivities = ({ userName }) => {
+const MyActivities = () => {
+  const userName = JSON.parse(localStorage.getItem("user")).username
   // Accept userNameId as a prop
   const [activities, setActivities] = useState([]);
   const [open, setOpen] = useState(false);
@@ -169,7 +170,7 @@ const MyActivities = ({ userName }) => {
                   <TableCell>Category</TableCell>
                   <TableCell>Tags</TableCell>
                   <TableCell>Discount</TableCell>
-                  <TableCell>Date</TableCell>
+                  <TableCell>Dates and Times</TableCell>
                   <TableCell>Duration</TableCell>
                   <TableCell>Location</TableCell>
                   <TableCell>Rating</TableCell>
@@ -185,7 +186,17 @@ const MyActivities = ({ userName }) => {
                     <TableCell>{activity.category}</TableCell>
                     <TableCell>{activity.tags.join(", ")}</TableCell>
                     <TableCell>{activity.specialDiscount}</TableCell>
-                    <TableCell>{activity.date}</TableCell>
+                    <TableCell>{activity.date ? (() => {
+                      const dateObj = new Date(activity.date);
+                      const date = dateObj.toISOString().split('T')[0];
+                      const time = dateObj.toTimeString().split(' ')[0];
+                      return (
+                        <div>
+                          {date} at {time}
+                        </div>
+                      );
+                    })()
+                      : 'No available date and time'}</TableCell>
                     <TableCell>{activity.duration}</TableCell>
                     <TableCell>{activity.location}</TableCell>
                     <TableCell>

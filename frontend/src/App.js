@@ -40,7 +40,7 @@ import AllProducts from './Pages/Products/AllProducts.js';
 import AddProducts from './Pages/Products/AddProducts.js';
 import FilterProducts from './Pages/Products/FilterProducts.js';
 import SearchProducts from './Pages/Products/SearchProducts.js';
-import SortProducts from './Pages/Products/SortProducts.js' ; 
+import SortProducts from './Pages/Products/SortProducts.js';
 import ViewMyProducts from './Pages/Products/ViewMyProducts.js'
 import EditProduct from './Components/Products/EditProduct.js';
 import AdminProducts from './Pages/Products/AdminProducts.js';
@@ -51,7 +51,16 @@ import GovernorDashboard from './Pages/Dashboards/GovernorDashboard';
 import AdvertiserEditProfile from './Pages/EditAccount/AdvertiserEditAccount.js';
 import SellerEditProfile from './Pages/EditAccount/SellerEditAccount.js';
 import SellerDashboard from './Pages/Dashboards/SellerDashboard';
-import BookingDetails from "./Pages/Bookings/myBookings.js";
+import FlightsBooking from "./Pages/ThirdParty/FlightsBooking.js";
+import HotelsBooking from "./Pages/ThirdParty/HotelsBooking.js";
+import HotelCardV2 from "./Components/ThirdParty/HotelCardV2.js";
+import TouristNavBar from "./Components/TouristNavBar.js";import BookingDetails from "./Pages/Bookings/myBookings.js";
+import CheckoutForm from "./Pages/Payment/checkout.js";
+import Completion from "./Pages/Payment/completion.js";
+import Payment from "./Pages/Payment/payment2.js";
+import PaymentPage from "./Pages/Payment/mailAmount.js";
+import PastBookingDetails from "./Pages/Bookings/myPastBookings.js";
+//import Payment from "./Pages/Payment/payment.js";
 
 
 function App() {
@@ -59,6 +68,8 @@ function App() {
     <React.StrictMode>
         <BrowserRouter>
           <Routes>
+            {/* <Route index element={<Hotels />} /> */}
+            <Route path="/" element={<TouristNavBar />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signUp" element={<Signup />} />
             <Route path="/createItinerary" element={<CreateItinerary />} />
@@ -83,48 +94,57 @@ function App() {
             <Route path="/createTagHistoricalPlace" element={<CreateTagHistoricalPlace/>} />
 
 
-            <Route path="/AdminDashboard" element={<AdminDashboard />} />
-            <Route path="/pendingusers" element={<ApproveUsers />} />
-            <Route path="/deleteusers" element={<DeleteUser />} />
-            <Route path="/addAdmin" element={<AddAdmin />} />
-            <Route path="/addGovernor" element={<AddGoverner />} />
-            <Route path="/categoriesActions" element={<CategoriesActions />} />
-            <Route path="/preferenceTags" element={<PreferenceTags />} />
+          <Route path="/AdminDashboard" element={<AdminDashboard />} />
+          <Route path="/pendingusers" element={<ApproveUsers />} />
+          <Route path="/deleteusers" element={<DeleteUser />} />
+          <Route path="/addAdmin" element={<AddAdmin />} />
+          <Route path="/addGovernor" element={<AddGoverner />} />
+          <Route path="/categoriesActions" element={<CategoriesActions />} />
+          <Route path="/preferenceTags" element={<PreferenceTags />} />
 
 
-            <Route path="/advertiserDashboard" element={<AdvertiserDashboard/>} />
-            <Route path="/activity/addActivity" element={<AddActivity />} />
-            <Route path="/activity/rudActivity" element={<RUDActivity />} />
-            <Route path="/activity/upcoming" element={<UpcomingActivities />} />
-            <Route path="/activity/searchActivities" element={<SearchActivities />} />
-            <Route path="/activity/SortFilter" element={<SortFilterActivity />} />
-            <Route path="/activity/myActivities"
-              element={
-                <MyActivities
-                  userName={JSON.parse(localStorage.getItem("user")).username}
-                />
-              }
-            />
-            <Route path="/location" element={<ClinicLocation/>} />
+          <Route path="/advertiserDashboard" element={<AdvertiserDashboard />} />
+          <Route path="/activity/addActivity" element={<AddActivity />} />
+          <Route path="/activity/rudActivity" element={<RUDActivity />} />
+          <Route path="/activity/upcoming" element={<UpcomingActivities />} />
+          <Route path="/activity/searchActivities" element={<SearchActivities />} />
+          <Route path="/activity/SortFilter" element={<SortFilterActivity />} />
+          <Route path="/activity/myActivities"
+            element={
+              <MyActivities />
+            } />
+          <Route path="/location" element={<ClinicLocation />} />
 
-            <Route path="/myBookings" element={<BookingDetails userName={JSON.parse(localStorage.getItem("user")).username}/>}/>
-            <Route path = "/ProductDashboard" element= {<ProductDashboard/>} />
-            <Route path = "/AllProducts" element= {<AllProducts/>} />
-            <Route path = "/AddProducts" element= {<AddProducts/>} />
-            <Route path = "/FilterProducts" element= {<FilterProducts/>} />
-            <Route path = "/SearchProducts" element= {<SearchProducts/>} />
-            <Route path = "/SortProducts" element = {<SortProducts/>} />
-            <Route path = "/ViewMyProducts" element = {<ViewMyProducts/>} />
-            <Route path = "/editProduct/:productId" element={<EditProduct/>} />
-            <Route path = "/Adminproducts" element= {<AdminProducts/>} />
-            <Route path = "/AdminAllProducts" element= {<AdminAllProducts/>} />
-            <Route path = "/TouristAllProducts" element= {<TouristAllProducts/>} />
-            <Route path="/editAccount" element={<TouristEditAccount />} />
+
+
+
+          <Route path="/myPastBookings" element={<PastBookingDetails />} />
+          <Route path="/myBookings" element={<BookingDetails />} />
+
+          <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/checkout" element={<Payment />} />
+          <Route path="/completion" element={<Completion />} />
+
+
+          <Route path="/ProductDashboard" element={<ProductDashboard />} />
+          <Route path="/AllProducts" element={<AllProducts />} />
+          <Route path="/AddProducts" element={<AddProducts />} />
+          <Route path="/FilterProducts" element={<FilterProducts />} />
+          <Route path="/SearchProducts" element={<SearchProducts />} />
+          <Route path="/SortProducts" element={<SortProducts />} />
+          <Route path="/ViewMyProducts" element={<ViewMyProducts />} />
+          <Route path="/editProduct/:productId" element={<EditProduct />} />
+          <Route path="/Adminproducts" element={<AdminProducts />} />
+          <Route path="/AdminAllProducts" element={<AdminAllProducts />} />
+          <Route path="/TouristAllProducts" element={<TouristAllProducts />} />
+          <Route path="/editAccount" element={<TouristEditAccount />} />
 
 
             <Route path="/advertiserEditAccount" element={< AdvertiserEditProfile />} />
             <Route path="/sellerEditAccount" element={< SellerEditProfile />} />
             <Route path="/sellerDashboard" element={<SellerDashboard/>} />
+            <Route path="/flights" element={<FlightsBooking />} />
+            <Route path="hotels" element={<HotelsBooking/>}/>
           </Routes>
       </BrowserRouter>
     </React.StrictMode>

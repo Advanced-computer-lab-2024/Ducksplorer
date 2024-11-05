@@ -16,6 +16,7 @@ const activityRoutes = require("./Backend/Routes/activityRoutes.js");
 const categoryRoutes = require("./Backend/Routes/categoryRoutes.js");
 // const fileRoutes = require("./Backend/Routes/fileRoutes.js")
 // const paymentRoutes = require('./Backend/Routes/paymentRoutes.js');
+const bookingThirdPartyRoutes = require("./Backend/Routes/ThirdParty/bookingRoutes.js");
 // // const documentRoutes = require('./Backend/Routes/documentRoutes');
 // //const bodyParser = require('body-parser');
 // app.use(cors());
@@ -59,7 +60,8 @@ app.use("/advertiserAccount", advertiserAccountRoutes);
 app.use("/sellerAccount", sellerAccountRoutes);
 // app.use('/file', fileRoutes);
 app.use('/payment', paymentRoutes);
-// app.use('/api/documents', documentRoutes);
+// app.use('/api/documents', documentRoutes);app.use("/", bookingThirdPartyRoutes);
+
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*'); // Allow requests from any origin

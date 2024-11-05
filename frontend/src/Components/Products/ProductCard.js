@@ -1,7 +1,16 @@
 import React from 'react';
 import { Card, CardContent, Typography, CardMedia } from '@mui/material';
-
+import  CurrencyConvertor from '../CurrencyConvertor';
+import { useState } from 'react';
 const ProductCard = ({ product }) => {
+
+  const [exchangeRates, setExchangeRates] = useState({});
+  const [currency, setCurrency] = useState('EGP');
+
+  const handleCurrencyChange = (rates, selectedCurrency) => {
+    setExchangeRates(rates);
+    setCurrency(selectedCurrency);
+  };
   return (
     <Card style={{ marginBottom: '20px', maxWidth: '500px' }}>
       <CardMedia
@@ -13,7 +22,8 @@ const ProductCard = ({ product }) => {
       />
       <CardContent>
         <Typography variant="h5">{product.name}</Typography>
-        <Typography variant="body1">Price: ${product.price}</Typography>
+        <Typography variant="body1">Price <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />:{(product.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+        </Typography>
         <Typography variant="body1">Available Quantity: {product.availableQuantity}</Typography>
         <Typography variant="body1">Description: {product.description}</Typography>
         <Typography variant="body1">Seller: {product.seller}</Typography>

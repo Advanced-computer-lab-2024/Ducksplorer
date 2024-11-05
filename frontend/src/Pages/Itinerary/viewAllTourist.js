@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
-import { Button, Stack, TextField, Typography, Box, TableContainer, Menu, MenuItem, 
-    Checkbox, Slider, Select, Paper, Table, TableHead, TableRow, TableCell, 
-    TableBody, IconButton, FormControl, InputLabel } from '@mui/material';
+import {
+    Button, Stack, TextField, Typography, Box, TableContainer, Menu, MenuItem,
+    Checkbox, Slider, Select, Paper, Table, TableHead, TableRow, TableCell,
+    TableBody, IconButton, FormControl, InputLabel
+} from '@mui/material';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { Link } from 'react-router-dom';
+import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
 
 
 function SearchItineraries() {
@@ -17,10 +20,13 @@ function SearchItineraries() {
     const [maxPrice, setMaxPrice] = useState('');
     const [language, setLanguage] = useState('');
     const [availableDatesAndTimes, setAvailableDatesAndTimes] = useState(null);
-    const [priceRange, setPriceRange] = useState([0, 5000]); 
+    const [priceRange, setPriceRange] = useState([0, 5000]);
     const [tags, setTags] = useState([]);  // Tags selected by the user
     const [allTags, setAllTags] = useState([]);  // All available tags from backend
 
+
+    const [exchangeRates, setExchangeRates] = useState({});
+    const [currency, setCurrency] = useState('EGP');
 
     const [filterAnchorEl, setFilterAnchorEl] = useState(null);
 
@@ -29,12 +35,12 @@ function SearchItineraries() {
     //default rendering of all itineraries
     useEffect(() => {
         axios.get('http://localhost:8000/itinerary/')
-          .then(response => {
-            setItineraries(response.data);
-          })
-          .catch(error => {
-            console.error('There was an error fetching the itineraries!', error);
-          });
+            .then(response => {
+                setItineraries(response.data);
+            })
+            .catch(error => {
+                console.error('There was an error fetching the itineraries!', error);
+            });
     }, []);
 
     //search handler
@@ -42,13 +48,13 @@ function SearchItineraries() {
         try {
             const response = await axios.get('http://localhost:8000/itinerary/search', {
                 params: {
-                    searchTerm 
+                    searchTerm
                 },
             });
 
             if (response.status === 200) {
                 message.success('Itineraries viewed successfully'); //might remove this 
-                setItineraries(response.data); 
+                setItineraries(response.data);
             } else {
                 message.error('Failed to search itineraries');
             }
@@ -89,7 +95,7 @@ function SearchItineraries() {
             const index = newFilters.indexOf(filter);
             newFilters.splice(index, 1);
 
-            switch(filter) {
+            switch (filter) {
                 case 'minPrice':
                     setMinPrice('');
                     break;
@@ -112,6 +118,10 @@ function SearchItineraries() {
         setSelectedFilters(newFilters);
     };
 
+    const handleCurrencyChange = (rates, selectedCurrency) => {
+        setExchangeRates(rates);
+        setCurrency(selectedCurrency);
+      };
     //clear all filters
     const handleClearAllFilters = () => {
         setMinPrice('');
@@ -119,7 +129,7 @@ function SearchItineraries() {
         setLanguage('');
         setAvailableDatesAndTimes(null);
         setSelectedFilters([]);
-        setTags([]);  
+        setTags([]);
 
         axios.get('http://localhost:8000/itinerary/')
             .then(response => {
@@ -144,9 +154,9 @@ function SearchItineraries() {
 
     const handleTagsChange = (event) => {
         const value = event.target.value;
-        setTags(value);  
+        setTags(value);
     };
-    
+
 
     //for price slider
     const [anchorEl, setAnchorEl] = useState(null);
@@ -163,19 +173,19 @@ function SearchItineraries() {
     const handleFilter = () => {
         let dateQuery = '';
         const encodedTags = encodeTags(tags).join(',');
-    
+
         if (availableDatesAndTimes) {
             // Try to convert availableDatesAndTimes to a Date object
             const selectedDate = new Date(availableDatesAndTimes);
-            
+
             // Check if the conversion is successful and the date is valid
             if (!isNaN(selectedDate.getTime())) {
                 dateQuery = selectedDate.toISOString();
             }
-        }        
+        }
         axios.get(`http://localhost:8000/itinerary/filter?minPrice=${minPrice}&maxPrice=${maxPrice}&language=${language}&availableDatesAndTimes=${dateQuery}&tags=${encodedTags}`)
             .then((response) => {
-                setItineraries(response.data); 
+                setItineraries(response.data);
             })
             .catch(error => {
                 message.error('Error fetching itineraries!')
@@ -184,17 +194,17 @@ function SearchItineraries() {
     }
 
     return (
-        <Box sx={{ padding: '20px', maxWidth: '1200px', margin: 'auto', display: 'flex', flexDirection: 'column', overflowY: 'visible', height:'100vh' }}>
-        <Link to="/touristDashboard"> Back </Link>
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
-          <Typography variant="h4">
-            Available itineraries
-          </Typography>
-        </Box>            
+        <Box sx={{ padding: '20px', maxWidth: '1200px', margin: 'auto', display: 'flex', flexDirection: 'column', overflowY: 'visible', height: '100vh' }}>
+            <Link to="/touristDashboard"> Back </Link>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+                <Typography variant="h4">
+                    Available itineraries
+                </Typography>
+            </Box>
             <Stack spacing={2} style={{ marginBottom: '20px' }}>
                 <TextField
                     label="Enter Name or Category or Tag"
-                    value={searchTerm} 
+                    value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     fullWidth
                 />
@@ -221,22 +231,22 @@ function SearchItineraries() {
                                     setMaxPrice('');
                                     setPriceRange([0, 5000]); // Reset the slider to initial values
                                 }
-                            }} 
+                            }}
                         />
                         Price
                         <br />
                         <Button onClick={(e) => setAnchorEl(e.currentTarget)}>Select Price Range</Button>
                         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
                             <MenuItem>
-                            <Typography variant="subtitle1">Select Range:</Typography>
-                            <Slider
-                                value={priceRange}
-                                onChange={handlePriceRangeChange}
-                                valueLabelDisplay="auto"
-                                min={0}
-                                max={5000}
-                                sx={{ width: 300, marginLeft: 2, marginTop: '10px' }} // Adjust slider width and margin
-                            />
+                                <Typography variant="subtitle1">Select Range:</Typography>
+                                <Slider
+                                    value={priceRange}
+                                    onChange={handlePriceRangeChange}
+                                    valueLabelDisplay="auto"
+                                    min={0}
+                                    max={5000}
+                                    sx={{ width: 300, marginLeft: 2, marginTop: '10px' }} // Adjust slider width and margin
+                                />
                             </MenuItem>
                             <MenuItem>
                                 <Typography variant="body1">Selected Min: {priceRange[0]}</Typography>
@@ -254,16 +264,16 @@ function SearchItineraries() {
                         <FormControl sx={{ minWidth: 120, marginTop: 1 }}>
                             <InputLabel id="language-select-label">Language</InputLabel>
                             <Select
-                            labelId="language-select-label"
-                            id="language-select"
-                            value={language}
-                            onChange={handleLanguageChange}
+                                labelId="language-select-label"
+                                id="language-select"
+                                value={language}
+                                onChange={handleLanguageChange}
                             >
-                            <MenuItem value="English">English</MenuItem>
-                            <MenuItem value="Arabic">Arabic</MenuItem>
-                            <MenuItem value="German">German</MenuItem>
-                            <MenuItem value="French">French</MenuItem>
-                            <MenuItem value="Spanish">Spanish</MenuItem>
+                                <MenuItem value="English">English</MenuItem>
+                                <MenuItem value="Arabic">Arabic</MenuItem>
+                                <MenuItem value="German">German</MenuItem>
+                                <MenuItem value="French">French</MenuItem>
+                                <MenuItem value="Spanish">Spanish</MenuItem>
                             </Select>
                         </FormControl>
                     </MenuItem>
@@ -294,9 +304,9 @@ function SearchItineraries() {
                                 labelId="tags-select-label"
                                 id="tags-select"
                                 multiple
-                                value={tags}  
+                                value={tags}
                                 onChange={handleTagsChange}
-                                renderValue={(selected) => selected.join(', ')}  
+                                renderValue={(selected) => selected.join(', ')}
                             >
                                 {allTags.map((tag) => (
                                     <MenuItem key={tag._id} value={tag.name}>
@@ -318,18 +328,20 @@ function SearchItineraries() {
 
             </Stack>
 
-            <div style={{ flex: 1 }}> 
+            <div style={{ flex: 1 }}>
                 {itineraries.length > 0 ? (
                     <Box >
                         <TableContainer component={Paper}>
-                            <Table stickyHeader> 
+                            <Table stickyHeader>
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>Activities</TableCell>
                                         <TableCell>Locations</TableCell>
                                         <TableCell>Timeline</TableCell>
                                         <TableCell>Language</TableCell>
-                                        <TableCell>Price</TableCell>
+                                        <TableCell>Price                 
+                                            <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                                        </TableCell>
                                         <TableCell>Available Dates and Times</TableCell>
                                         <TableCell>Accessibility</TableCell>
                                         <TableCell>Pick Up Location</TableCell>
@@ -355,20 +367,22 @@ function SearchItineraries() {
                                             </TableCell>
                                             <TableCell>
                                                 {itinerary.locations && itinerary.locations.length > 0 ? (
-                                                itinerary.locations.map((location, index) => (
-                                                    <div key={index}>
-                                                    <Typography variant="body1">
-                                                        Location {index + 1}: {location.trim()}
-                                                    </Typography>
-                                                    <br />
-                                                    </div>
-                                                ))
+                                                    itinerary.locations.map((location, index) => (
+                                                        <div key={index}>
+                                                            <Typography variant="body1">
+                                                                {index + 1}: {location.trim()}
+                                                            </Typography>
+                                                            <br />
+                                                        </div>
+                                                    ))
                                                 ) : 'No locations available'}
 
-                                            </TableCell>                                            
+                                            </TableCell>
                                             <TableCell>{itinerary.timeline}</TableCell>
                                             <TableCell>{itinerary.language}</TableCell>
-                                            <TableCell>{itinerary.price}</TableCell>
+                                            <TableCell>
+                                            {(itinerary.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                                            </TableCell>
                                             <TableCell>
                                                 {itinerary.availableDatesAndTimes.length > 0
                                                     ? itinerary.availableDatesAndTimes.map((dateTime, index) => {
@@ -390,13 +404,13 @@ function SearchItineraries() {
                                             <TableCell>{itinerary.rating}</TableCell>
                                             <TableCell>
                                                 {itinerary.tags && itinerary.tags.length > 0
-                                                ? itinerary.tags.map((tag, index) => (
-                                                    <div key={index}>
-                                                    {tag || 'N/A'}
-                                                    <br /><br />
-                                                    </div>
-                                                ))
-                                                : 'No tags available'}
+                                                    ? itinerary.tags.map((tag, index) => (
+                                                        <div key={index}>
+                                                            {tag || 'N/A'}
+                                                            <br /><br />
+                                                        </div>
+                                                    ))
+                                                    : 'No tags available'}
                                             </TableCell>
                                         </TableRow>
                                     ))}

@@ -4,7 +4,7 @@ import { message } from 'antd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-
+import CurrencyConvertor from '../../Components/CurrencyConvertor';
 import {
   TextField, IconButton, Box, Button, Table, Typography, TableBody,
   TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogActions,
@@ -23,6 +23,8 @@ const RUDItinerary = () => {
   const [availableTags, setAvailableTags] = useState([]); // For storing fetched tags
   const [loading, setLoading] = useState(true); //indicates if data is fetched
 
+  const [exchangeRates, setExchangeRates] = useState({});
+  const [currency, setCurrency] = useState('EGP');
   const [formData, setFormData] = useState({
     activity: {
       name: '',
@@ -54,6 +56,11 @@ const RUDItinerary = () => {
     });
     setSelectedTags(itinerary.tags || []); // Ensure selected tags are set from the itinerary
     setEditingItinerary(itinerary);
+  };
+
+  const handleCurrencyChange = (rates, selectedCurrency) => {
+    setExchangeRates(rates);
+    setCurrency(selectedCurrency);
   };
 
   //updates general input fields based on user input
@@ -325,7 +332,9 @@ const RUDItinerary = () => {
                 <TableCell>Locations</TableCell>
                 <TableCell>Timeline</TableCell>
                 <TableCell>Language</TableCell>
-                <TableCell>Price</TableCell>
+                <TableCell>Price
+                <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                </TableCell>
                 <TableCell>Available Dates And Times</TableCell>
                 <TableCell>Accessibility</TableCell>
                 <TableCell>Pick Up Location</TableCell>
@@ -356,7 +365,7 @@ const RUDItinerary = () => {
                       itinerary.locations.map((location, index) => (
                         <div key={index}>
                           <Typography variant="body1">
-                            Location {index + 1}: {location.trim()}
+                           {index + 1}: {location.trim()}
                           </Typography>
                           <br />
                         </div>
@@ -366,7 +375,9 @@ const RUDItinerary = () => {
                   </TableCell>
                   <TableCell>{itinerary.timeline}</TableCell>
                   <TableCell>{itinerary.language}</TableCell>
-                  <TableCell>{itinerary.price}</TableCell>
+                  <TableCell>                                            
+                    {(itinerary.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                  </TableCell>
                   <TableCell>
                     {itinerary.availableDatesAndTimes.length > 0
                       ? itinerary.availableDatesAndTimes.map((dateTime, index) => {
