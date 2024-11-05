@@ -205,7 +205,7 @@ const PastBookingDetails = ({ userName }) => {
     setTourGuideComment(event.target.value);
   };
 
-  const handleTourGuideSubmit = async () => {
+  const handleTourGuideRateSubmit = async () => {
     try {
       console.log("This is the tourguide id:", tourGuideId)
       const response = await axios.patch(
@@ -215,13 +215,33 @@ const PastBookingDetails = ({ userName }) => {
         }
       );
       alert("Tour Guide rated successfully!");
-      setOpenDialog(false);
       setTourGuideRating(0);
-      setTourGuideComment("");
     } catch (error) {
       console.error("Error rating tour guide:", error.message);
       alert("Failed to submit rating. Please try again.");
     }
+  };
+
+  const handleTourGuideCommentSubmit = async () => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:8000/tourGuideComment/commentTourGuide/${tourGuideId}`,
+        {
+          comment: tourGuideComment,
+        }
+      );
+      alert("Comment submitted successfully!");
+      setTourGuideComment("");
+    } catch (error) {
+      console.error("Error submitting comment:", error.message);
+      alert("Failed to submit comment. Please try again.");
+    }
+  };
+
+  const handleTourGuideSubmit = async () => {
+    await handleTourGuideRateSubmit();
+    await handleTourGuideCommentSubmit();
+    setOpenDialog(false);
   };
 
   const getTourGuideId = async (id) => {
@@ -306,18 +326,18 @@ const PastBookingDetails = ({ userName }) => {
                     variant="contained"
                     color="primary"
                     size="small"
-                  style={{ marginLeft: '0px', marginTop: '5px' }}
+                    style={{ marginLeft: '0px', marginTop: '5px' }}
                   >
-                  Submit
-                </Button>
-              </TableCell>
+                    Submit
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-      {/* Itineraries Table */ }
+      {/* Itineraries Table */}
       <Typography variant="h5" gutterBottom>Itineraries</Typography>
       <TableContainer component={Paper}>
         <Table>
@@ -379,7 +399,7 @@ const PastBookingDetails = ({ userName }) => {
                     }}
                   />
                 </TableCell>
-                <TableCell style={{width:"9%"}}>
+                <TableCell style={{ width: "9%" }}>
                   <TextField
                     variant="outlined"
                     size="small"
@@ -388,16 +408,16 @@ const PastBookingDetails = ({ userName }) => {
                     value={itineraryComments[itinerary._id] || ""}
                     onChange={(e) => handleItineraryCommentChange(itinerary._id, e.target.value)}
                     placeholder="Comment"
-                    
+
                   />
                   <Button
                     onClick={() => handleItineraryCommentSubmit(itinerary._id)}
                     variant="contained"
                     color="primary"
                     size="small"
-                    
+
                     style={{ marginLeft: '0px', marginTop: '5px' }}
-                    >
+                  >
                     Submit
                   </Button>
                 </TableCell>
@@ -406,35 +426,35 @@ const PastBookingDetails = ({ userName }) => {
           </TableBody>
         </Table>
       </TableContainer>
-  {/* Rating and Comment Dialog */ }
-  <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-    <DialogTitle>Rate Tour Guide</DialogTitle>
-    <DialogContent>
-      <Rating
-        name="tour-guide-rating"
-        value={tourGuideRating}
-        onChange={handleTourGuideRatingChange}
-        precision={1}
-      />
-      <TextField
-        margin="dense"
-        label="Comment"
-        fullWidth
-        multiline
-        rows={3}
-        value={tourGuideComment}
-        onChange={handleTourGuideCommentChange}
-      />
-    </DialogContent>
-    <DialogActions>
-      <Button onClick={() => setOpenDialog(false)} color="secondary">
-        Cancel
-      </Button>
-      <Button onClick={handleTourGuideSubmit} color="primary">
-        Submit
-      </Button>
-    </DialogActions>
-  </Dialog>
+      {/* Rating and Comment Dialog */}
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>Rate Tour Guide</DialogTitle>
+        <DialogContent>
+          <Rating
+            name="tour-guide-rating"
+            value={tourGuideRating}
+            onChange={handleTourGuideRatingChange}
+            precision={1}
+          />
+          <TextField
+            margin="dense"
+            label="Comment"
+            fullWidth
+            multiline
+            rows={3}
+            value={tourGuideComment}
+            onChange={handleTourGuideCommentChange}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handleTourGuideSubmit} color="primary">
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div >
   );
 };
