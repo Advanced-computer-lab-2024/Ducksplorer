@@ -27,10 +27,10 @@ const PastBookingDetails = ({ userName }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [tourGuideRating, setTourGuideRating] = useState(0);
   const [tourGuideComment, setTourGuideComment] = useState("");
-  // const [selectedTourGuideId, setSelectedTourGuideId] = useState(null);
   const [tourGuideId, setSelectedTourGuideId] = useState(null);
+  const [tourGuideNames, setTourGuideNames] = useState({});
 
-
+  // Fetch tour guide names for each itinerary in the booking
   useEffect(() => {
     const fetchBooking = async () => {
       try {
@@ -51,6 +51,11 @@ const PastBookingDetails = ({ userName }) => {
           initialItineraryRatings[itinerary._id] = itinerary.averageRating || 0;
         });
         setSelectedItineraryRatings(initialItineraryRatings);
+
+        // Fetch tour guide names for all itineraries
+        for (const itinerary of response.data[0].itineraries) {
+          await fetchTourGuideName(itinerary.tourGuideModel);
+        }
       } catch (error) {
         console.error(
           "Error fetching booking details:",
@@ -61,6 +66,29 @@ const PastBookingDetails = ({ userName }) => {
     fetchBooking();
   }, [userName]);
 
+  const fetchTourGuideName = async (id) => {
+    if (!id || tourGuideNames[id]) return;
+
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/tourGuideRate/getUserNameById/${id}`
+      );
+      setTourGuideNames((prevNames) => ({
+        ...prevNames,
+        [id]: response.data.userName,
+      }));
+    } catch (error) {
+      console.error(
+        "Error fetching tour guide name:",
+        error.response ? error.response.data : error.message
+      );
+      setTourGuideNames((prevNames) => ({
+        ...prevNames,
+        [id]: "N/A",
+      }));
+    }
+  };
+
   if (!booking) return <p>Loading...</p>;
   if (!Array.isArray(booking.activities) || !Array.isArray(booking.itineraries)) {
     return <p>No booking details available.</p>;
@@ -70,17 +98,17 @@ const PastBookingDetails = ({ userName }) => {
     console.log(`Submitting rating for activity ${activityId}:`, newRating);
     try {
       const response = await axios.patch(
-        `http://localhost:8000/activity/rate/${activityId}`, 
+        `http://localhost:8000/activity/rate/${activityId}`,
         { rating: newRating }
       );
       console.log("Rating response:", response.data);
       alert("Activity rating submitted successfully!");
-  
+
       setSelectedActivityRatings((prevRatings) => ({
         ...prevRatings,
         [activityId]: newRating,
       }));
-  
+
       setBooking((prevBooking) => ({
         ...prevBooking,
         activities: prevBooking.activities.map((activity) =>
@@ -102,17 +130,17 @@ const PastBookingDetails = ({ userName }) => {
     console.log(`Submitting rating for itinerary ${itineraryId}:`, newRating);
     try {
       const response = await axios.patch(
-        `http://localhost:8000/itinerary/rateItinerary/${itineraryId}`, 
+        `http://localhost:8000/itinerary/rateItinerary/${itineraryId}`,
         { rating: newRating }
       );
       console.log("Rating response:", response.data);
       alert("Itinerary rating submitted successfully!");
-  
+
       setSelectedItineraryRatings((prevRatings) => ({
         ...prevRatings,
         [itineraryId]: newRating,
       }));
-  
+
       setBooking((prevBooking) => ({
         ...prevBooking,
         itineraries: prevBooking.itineraries.map((itinerary) =>
@@ -177,11 +205,10 @@ const PastBookingDetails = ({ userName }) => {
     setTourGuideComment(event.target.value);
   };
 
-  console.log("This is the tourguide id:", tourGuideId)
-
   const handleTourGuideSubmit = async () => {
     try {
-      await axios.patch(
+      console.log("This is the tourguide id:", tourGuideId)
+      const response = await axios.patch(
         `http://localhost:8000/tourGuideRate/rateTourGuide/${tourGuideId}`,
         {
           rating: tourGuideRating,
@@ -196,6 +223,24 @@ const PastBookingDetails = ({ userName }) => {
       alert("Failed to submit rating. Please try again.");
     }
   };
+
+  const getTourGuideId = async (id) => {
+    try {
+      if (!id) {
+        return false;
+      }
+      const response = await axios.get(
+        `http://localhost:8000/tourGuideRate/getTourGuideById/${id}`
+      );
+      console.log("Tour Guide Id Response:", response.data.present);
+      return response.data.present;
+    } catch (error) {
+      console.error(
+        "Error fetching tour guide id:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  }
 
   return (
     <div>
@@ -254,25 +299,25 @@ const PastBookingDetails = ({ userName }) => {
                     size="small"
                     value={activityComments[activity._id] || ""}
                     onChange={(e) => handleActivityCommentChange(activity._id, e.target.value)}
-                    placeholder="Leave a comment"
+                    placeholder="Comment"
                   />
                   <Button
                     onClick={() => handleActivityCommentSubmit(activity._id)}
                     variant="contained"
                     color="primary"
                     size="small"
-                    style={{ marginLeft: '5px' }}
+                  style={{ marginLeft: '0px', marginTop: '5px' }}
                   >
-                    Submit
-                  </Button>
-                </TableCell>
+                  Submit
+                </Button>
+              </TableCell>
               </TableRow>
             ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+        </TableBody>
+      </Table>
+    </TableContainer>
 
-      {/* Itineraries Table */}
+      {/* Itineraries Table */ }
       <Typography variant="h5" gutterBottom>Itineraries</Typography>
       <TableContainer component={Paper}>
         <Table>
@@ -287,11 +332,11 @@ const PastBookingDetails = ({ userName }) => {
               <TableCell>Accessibility</TableCell>
               <TableCell>Pick-Up Location</TableCell>
               <TableCell>Drop-Off Location</TableCell>
+              <TableCell>Tags</TableCell>
               <TableCell>Tour Guide</TableCell>
               <TableCell>Average Rating</TableCell>
               <TableCell>Rate</TableCell>
               <TableCell>Comment</TableCell>
-              <TableCell>Tags</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -306,9 +351,10 @@ const PastBookingDetails = ({ userName }) => {
                 <TableCell>{itinerary.accessibility}</TableCell>
                 <TableCell>{itinerary.pickUpLocation}</TableCell>
                 <TableCell>{itinerary.dropOffLocation}</TableCell>
+                <TableCell>{itinerary.tags.join(", ")}</TableCell>
                 <TableCell>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span>{itinerary.tourGuideModel? itinerary.tourGuideModel : "N/A"}</span>
+                    <span>{tourGuideNames[itinerary.tourGuideModel] || "N/A"}</span>
                     <Button
                       onClick={() => handleOpenDialog(itinerary.tourGuideModel)}
                       variant="contained"
@@ -319,7 +365,7 @@ const PastBookingDetails = ({ userName }) => {
                       Rate/Comment
                     </Button>
                   </div>
-                </TableCell>                
+                </TableCell>
                 <TableCell>{itinerary.averageRating}/5</TableCell>
                 <TableCell>
                   <Rating
@@ -333,60 +379,63 @@ const PastBookingDetails = ({ userName }) => {
                     }}
                   />
                 </TableCell>
-                <TableCell>
+                <TableCell style={{width:"9%"}}>
                   <TextField
                     variant="outlined"
                     size="small"
+                    marginright="0px"
+                    fullWidth={true}
                     value={itineraryComments[itinerary._id] || ""}
                     onChange={(e) => handleItineraryCommentChange(itinerary._id, e.target.value)}
-                    placeholder="Leave a comment"
+                    placeholder="Comment"
+                    
                   />
                   <Button
                     onClick={() => handleItineraryCommentSubmit(itinerary._id)}
                     variant="contained"
                     color="primary"
                     size="small"
-                    style={{ marginLeft: '5px' }}
-                  >
+                    
+                    style={{ marginLeft: '0px', marginTop: '5px' }}
+                    >
                     Submit
                   </Button>
                 </TableCell>
-                <TableCell>{itinerary.tags.join(", ")}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      {/* Rating and Comment Dialog */}
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>Rate Tour Guide</DialogTitle>
-        <DialogContent>
-          <Rating
-            name="tour-guide-rating"
-            value={tourGuideRating}
-            onChange={handleTourGuideRatingChange}
-            precision={1}
-          />
-          <TextField
-            margin="dense"
-            label="Comment"
-            fullWidth
-            multiline
-            rows={3}
-            value={tourGuideComment}
-            onChange={handleTourGuideCommentChange}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDialog(false)} color="secondary">
-            Cancel
-          </Button>
-          <Button onClick={handleTourGuideSubmit} color="primary">
-            Submit
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+  {/* Rating and Comment Dialog */ }
+  <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+    <DialogTitle>Rate Tour Guide</DialogTitle>
+    <DialogContent>
+      <Rating
+        name="tour-guide-rating"
+        value={tourGuideRating}
+        onChange={handleTourGuideRatingChange}
+        precision={1}
+      />
+      <TextField
+        margin="dense"
+        label="Comment"
+        fullWidth
+        multiline
+        rows={3}
+        value={tourGuideComment}
+        onChange={handleTourGuideCommentChange}
+      />
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={() => setOpenDialog(false)} color="secondary">
+        Cancel
+      </Button>
+      <Button onClick={handleTourGuideSubmit} color="primary">
+        Submit
+      </Button>
+    </DialogActions>
+  </Dialog>
+    </div >
   );
 };
 

@@ -1,4 +1,6 @@
 const TourGuide = require('../Models/tourGuideModel.js');
+const UserModels = require('../Models/userModel.js');
+const mongoose = require('mongoose');
 
 const rateTourGuide = async (req, res) => {
     const { tourGuideId } = req.params;
@@ -27,6 +29,39 @@ const rateTourGuide = async (req, res) => {
     }
 };
 
+const getUserNameById = async (req,res) => {
+    if(!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)){
+        return res.status(200).json({userName : "N/A"});
+    }
+    else{
+    const {id } = req.params;
+    
+    const tourGuide = await TourGuide.findById(id);
+    if (!tourGuide) {
+      res.status(200).json({ userName: "Tour Guide not found"});
+    }
+    else{
+     res.status(200).json({userName:tourGuide.userName});
+    }
+}
+}
+
+//check if tourGuide is found using his id
+const getTourGuideById = async (req , res) => {
+    if (!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(200).json({ present: false, message: "Invalid ID format" });
+    }
+    else{
+    const {id} = req.params;
+    const tourGuide = await TourGuide.findById(id);
+    if (!tourGuide) {
+        res.status(200).json({present : false});
+    }
+    else{
+    res.status(200).json({present : true});
+    }
+}
+}
 module.exports = {
-    rateTourGuide,
+    rateTourGuide,getUserNameById,getTourGuideById
 };
