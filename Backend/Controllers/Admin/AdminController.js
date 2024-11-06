@@ -109,6 +109,20 @@ const approveUser = async (req, res) => {
     }
     user.status = 'Approved';
     await user.save();
+    switch (user.role) {
+      case 'Tourist':
+        await Tourist.findOneAndUpdate({ userName }, { status: 'Approved' });
+        break;
+      case 'Guide':
+        await Tourguide.findOneAndUpdate({ userName }, { status: 'Approved' });
+        break;
+      case 'Seller':
+        await Seller.findOneAndUpdate({ userName }, { status: 'Approved' });
+        break;
+      case 'Advertiser':
+        await Advertiser.findOneAndUpdate({ userName }, { status: 'Approved' });
+        break;
+    }
     return res.status(200).json({ message: 'User approved successfully' });
   } catch (error) {
     console.error(error);

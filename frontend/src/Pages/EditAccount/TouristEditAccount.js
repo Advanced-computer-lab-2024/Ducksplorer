@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, TextField, Typography, Avatar } from '@mui/material';
 import axios from 'axios';
 import { message } from 'antd';
-import { Link } from 'react-router-dom';
 import TouristNavBar from '../../Components/TouristNavBar.js';
+import ProfilePictureUpload from '../../Components/pp.js'; // Import ProfilePictureUpload component
+
 const EditProfile = () => {
   const [touristDetails, setTouristDetails] = useState({
     userName: '',
@@ -17,7 +18,7 @@ const EditProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    const userJson = localStorage.getItem('user'); // Get the 'user' item as a JSON string  
+    const userJson = localStorage.getItem('user');  
     const user = JSON.parse(userJson); 
     const userName = user.username; 
 
@@ -25,10 +26,10 @@ const EditProfile = () => {
       axios.get(`http://localhost:8000/touristAccount/viewaccount/${userName}`)
         .then(response => {
           message.success('Tourist details fetched successfully');
-          const formattedDOB = response.data.DOB.split('T')[0]; // Convert "2004-03-17T00:00:00.000Z" to "2004-03-17"
+          const formattedDOB = response.data.DOB.split('T')[0];
           setTouristDetails({
             ...response.data,
-            DOB: formattedDOB // Ensure DOB is in "yyyy-MM-dd" format
+            DOB: formattedDOB 
           });
         })
         .catch(error => {
@@ -38,10 +39,8 @@ const EditProfile = () => {
     }
   }, []);
 
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
-
+  const handleEditClick = () => setIsEditing(true);
+  
   const handleSaveClick = () => {
     axios.put('http://localhost:8000/touristAccount/editaccount', touristDetails)
       .then(response => {
@@ -65,71 +64,77 @@ const EditProfile = () => {
 
   return (
     <>
-    <TouristNavBar />
-    <Box sx={{ p: 6 }}>
-      <Typography variant="h4" sx={{ mb: 3 }}>
-        Edit Tourist Profile ({touristDetails.userName})
-      </Typography>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <TextField
-          label="Username"
-          name="userName"
-          value={touristDetails.userName}
-          onChange={handleChange}
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-        <TextField
-          label="Email"
-          name="email"
-          value={touristDetails.email}
-          onChange={handleChange}
-          InputProps={{
-            readOnly: !isEditing,
-          }}
-        />
-        <TextField
-          label="Mobile Number"
-          name="mobileNumber"
-          value={touristDetails.mobileNumber}
-          onChange={handleChange}
-          InputProps={{
-            readOnly: !isEditing,
-          }}
-        />
-        <TextField
-          label="Nationality"
-          name="nationality"
-          value={touristDetails.nationality}
-          onChange={handleChange}
-          InputProps={{
-            readOnly: !isEditing,
-          }}
-        />
-        <TextField
-          label="Date of Birth"
-          name="DOB"
-          type="date"
-          value={touristDetails.DOB}
-          onChange={handleChange}
-          InputProps={{
-            readOnly: true,
-          }}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-        <TextField
-          label="Employment Status"
-          name="employmentStatus"
-          value={touristDetails.employmentStatus}
-          onChange={handleChange}
-          InputProps={{
-            readOnly: !isEditing,
-          }}
-        />
-        <TextField
+      <TouristNavBar />
+      <Box sx={{ p: 6 }}>
+        {/* Profile Picture Section */}
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3 }}>
+          <ProfilePictureUpload username={touristDetails.userName} />
+        </Box>
+
+        <Typography variant="h4" sx={{ mb: 3, textAlign: 'center' }}>
+          Edit Tourist Profile ({touristDetails.userName})
+        </Typography>
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <TextField
+            label="Username"
+            name="userName"
+            value={touristDetails.userName}
+            onChange={handleChange}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <TextField
+            label="Email"
+            name="email"
+            value={touristDetails.email}
+            onChange={handleChange}
+            InputProps={{
+              readOnly: !isEditing,
+            }}
+          />
+          <TextField
+            label="Mobile Number"
+            name="mobileNumber"
+            value={touristDetails.mobileNumber}
+            onChange={handleChange}
+            InputProps={{
+              readOnly: !isEditing,
+            }}
+          />
+          <TextField
+            label="Nationality"
+            name="nationality"
+            value={touristDetails.nationality}
+            onChange={handleChange}
+            InputProps={{
+              readOnly: !isEditing,
+            }}
+          />
+          <TextField
+            label="Date of Birth"
+            name="DOB"
+            type="date"
+            value={touristDetails.DOB}
+            onChange={handleChange}
+            InputProps={{
+              readOnly: true,
+            }}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            label="Employment Status"
+            name="employmentStatus"
+            value={touristDetails.employmentStatus}
+            onChange={handleChange}
+            InputProps={{
+              readOnly: !isEditing,
+            }}
+          />
+          <TextField
             label="Wallet"
             name="wallet"
             value={touristDetails.wallet}
@@ -137,18 +142,18 @@ const EditProfile = () => {
             InputProps={{
               readOnly: true,
             }}
-        />    
-        {isEditing ? (
-          <Button variant="contained" color="success" onClick={handleSaveClick}>
-            Save
-          </Button>
-        ) : (
-          <Button variant="contained" style={{ backdropFiltercolor: '#FFA07A' }} onClick={handleEditClick}>
-            Edit
-          </Button>
-        )}
+          />    
+          {isEditing ? (
+            <Button variant="contained" color="success" onClick={handleSaveClick}>
+              Save
+            </Button>
+          ) : (
+            <Button variant="contained" color="primary" onClick={handleEditClick}>
+              Edit
+            </Button>
+          )}
+        </Box>
       </Box>
-    </Box>
     </>
   );
 };
