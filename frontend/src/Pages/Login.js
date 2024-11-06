@@ -21,7 +21,7 @@ function Login() {
     try {
 
       setLoading(true);
-      console.log(localStorage.getItem('user'));
+      //console.log(localStorage.getItem('user'));
       const response = await axios.post('http://localhost:8000/signUp/login', {
         userName,
         password,

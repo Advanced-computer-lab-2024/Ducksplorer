@@ -15,11 +15,11 @@ const preferenceTagsRoutes = require("./Backend/Routes/Admin/PreferenceTagsRoute
 const activityRoutes = require("./Backend/Routes/activityRoutes.js");
 const categoryRoutes = require("./Backend/Routes/categoryRoutes.js");
 // const fileRoutes = require("./Backend/Routes/fileRoutes.js")
-// const paymentRoutes = require('./Backend/Routes/paymentRoutes.js');
+const paymentRoutes = require('./Backend/Routes/paymentRoutes.js');
 const bookingThirdPartyRoutes = require("./Backend/Routes/ThirdParty/bookingRoutes.js");
 // // const documentRoutes = require('./Backend/Routes/documentRoutes');
 // //const bodyParser = require('body-parser');
-// app.use(cors());
+ app.use(cors());
 
 app.use('/uploads', express.static('uploads'));
 
