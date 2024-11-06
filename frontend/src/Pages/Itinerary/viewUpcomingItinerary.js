@@ -9,10 +9,11 @@ import SortIcon from '@mui/icons-material/Sort';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { message } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 
 const ViewUpcomingItinerary = () => {
+    const navigate = useNavigate();
     const [itineraries, setItineraries] = useState([]);
 
     //sorting consts
@@ -219,12 +220,15 @@ const ViewUpcomingItinerary = () => {
                 return null;
             }
             const userName = user.username;
+            const type = 'itinerary';
+
+            localStorage.setItem('itineraryId', itineraryId);
+            localStorage.setItem('type', type);
 
             const response = await axios.get(`http://localhost:8000/touristRoutes/viewDesiredItinerary/${itineraryId}`);
 
-            console.log(response);
             if (response.status == 200) {
-                message.success("Booking successful!");
+                navigate('/payment');
             } else {
                 message.error("Booking failed.");
             }

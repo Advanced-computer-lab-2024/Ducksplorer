@@ -112,20 +112,20 @@ function App() {
           <Route path="/activity/myActivities"
             element={
               <MyActivities />
-            }/>
+            } />
           <Route path="/location" element={<ClinicLocation />} />
 
-            
-            
-            
-            <Route path="/myPastBookings" element={<PastBookingDetails userName={JSON.parse(localStorage.getItem("user")).username}/>}/>
+
+
+
+          <Route path="/myPastBookings" element={<PastBookingDetails />} />
           <Route path="/myBookings" element={<BookingDetails />} />
-            
-            <Route path="/payment" element={<PaymentPage />} />
-            <Route path="/checkout" element={<Payment/>} />
-            <Route path="/completion" element={<Completion />} />
-            
-            
+
+          <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/checkout" element={<Payment />} />
+          <Route path="/completion" element={<Completion />} />
+
+
           <Route path="/ProductDashboard" element={<ProductDashboard />} />
           <Route path="/AllProducts" element={<AllProducts />} />
           <Route path="/AddProducts" element={<AddProducts />} />

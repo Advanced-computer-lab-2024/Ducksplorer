@@ -15,16 +15,17 @@ const AdminActivityRoutes = require("./Backend/Routes/Admin/AdminActivityRoutes.
 const preferenceTagsRoutes = require("./Backend/Routes/Admin/PreferenceTagsRoutes.js");
 const activityRoutes = require("./Backend/Routes/activityRoutes.js");
 const categoryRoutes = require("./Backend/Routes/categoryRoutes.js");
-const fileRoutes = require("./Backend/Routes/fileRoutes.js")
-const paymentRoutes = require('./Backend/Routes/paymentRoutes.js');
+// const fileRoutes = require("./Backend/Routes/fileRoutes.js")
+// const paymentRoutes = require('./Backend/Routes/paymentRoutes.js');
 const bookingThirdPartyRoutes = require("./Backend/Routes/ThirdParty/bookingRoutes.js");
-
-app.use(cors());
+// // const documentRoutes = require('./Backend/Routes/documentRoutes');
+// //const bodyParser = require('body-parser');
+// app.use(cors());
 
 //__dirname = path.dirname(fileURLToPath(import.meta.url)); // Set __dirname
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-
+//app.use(bodyParser.json());
 
 console.log(process.env.PORT);
 app.use(express.json());
@@ -59,9 +60,9 @@ app.use("/itinerary", itineraryRoutes);
 app.use("/tourGuideAccount", tourGuideAccountRoutes);
 app.use("/advertiserAccount", advertiserAccountRoutes);
 app.use("/sellerAccount", sellerAccountRoutes);
-app.use('/file', fileRoutes);
+// app.use('/file', fileRoutes);
 app.use('/payment', paymentRoutes);
-app.use("/", bookingThirdPartyRoutes);
+// app.use('/api/documents', documentRoutes);app.use("/", bookingThirdPartyRoutes);
 
 
 app.use((req, res, next) => {
@@ -84,4 +85,3 @@ app.listen(PORT, () => {
   connectToMongoDB();
   console.log(`Server Running on Port ${PORT}`)
 });
-

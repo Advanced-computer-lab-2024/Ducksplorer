@@ -18,8 +18,10 @@ import {
   Button,
   Rating,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 const SortActivities = () => {
+  const navigate = useNavigate();
   const [activities, setActivities] = useState([]);
   const [sortBy, setSortBy] = useState("date"); // Default sorting by date
   const [order, setOrder] = useState("asc"); // Default ascending order
@@ -63,13 +65,16 @@ const SortActivities = () => {
         message.error("User information is missing.");
         return null;
       }
-      const userName = user.username;
+
+      const type = 'activity';
+
+      localStorage.setItem('activityId', activityId);
+      localStorage.setItem('type', type);
 
       const response = await axios.get(`http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}`);
 
-      console.log(response);
-      if (response.status == 200) {
-        message.success("Booking successful!");
+      if (response.status === 200) {
+        navigate('/payment');
       } else {
         message.error("Booking failed.");
       }
@@ -149,7 +154,7 @@ const SortActivities = () => {
 
         {/* Activity Table */}
         <TableContainer style={{ borderRadius: 20 }} component={Paper}>
-          <Table>
+          <Table style={{ width: '100%', textAlign: 'center', borderSpacing: '10px 5px' }}>
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
@@ -160,7 +165,7 @@ const SortActivities = () => {
                 <TableCell>Category</TableCell>
                 <TableCell>Tags</TableCell>
                 <TableCell>Discount</TableCell>
-                <TableCell>Date</TableCell>
+                <TableCell>Dates and Times</TableCell>
                 <TableCell>Duration</TableCell>
                 <TableCell>Location</TableCell>
                 <TableCell>Rating</TableCell>
@@ -178,7 +183,18 @@ const SortActivities = () => {
                   <TableCell>{activity.category}</TableCell>
                   <TableCell>{activity.tags.join(", ")}</TableCell>
                   <TableCell>{activity.specialDiscount}</TableCell>
-                  <TableCell>{activity.date}</TableCell>
+                  <TableCell>{activity.date ? (() => {
+                    const dateObj = new Date(activity.date);
+                    const date = dateObj.toISOString().split('T')[0];
+                    const time = dateObj.toTimeString().split(' ')[0];
+                    return (
+                      <div>
+                        {date} at {time}
+                      </div>
+                    );
+                  })()
+                    : 'No available date and time'}</TableCell>
+
                   <TableCell>{activity.duration}</TableCell>
                   <TableCell>{activity.location}</TableCell>
                   <TableCell>

@@ -14,4 +14,4 @@ router.put("/user/upload/picture", upload.single('file'), uploadProfilePicture);
 router.get('/user/files/:userName', getUploadedFiles);
 router.get('/user/profile/picture/:userName', getProfilePicture);
 
-module.exports = router;
+// module.exports = router;

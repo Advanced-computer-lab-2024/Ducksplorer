@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
 import { Box, Button, Table, Typography, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import CurrencyConvertor from '../../Components/CurrencyConvertor';
 const UpcomingActivities = () => {
   const [activities, setActivities] = useState([]);
-  
+  const navigate = useNavigate();  
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState('EGP');
 
@@ -37,13 +38,16 @@ const UpcomingActivities = () => {
         message.error("User information is missing.");
         return null;
       }
-      const userName = user.username;
 
-      const response = await axios.get(`http://localhost:8000/touristRoutes/viewDesiredItinerary/${activityId}`);
+      const type = 'activity';
 
-      console.log(response);
-      if (response.status == 200) {
-        message.success("Booking successful!");
+      localStorage.setItem('activityId', activityId);
+      localStorage.setItem('type', type);
+
+      const response = await axios.get(`http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}`);
+
+      if (response.status === 200) {
+        navigate('/payment');
       } else {
         message.error("Booking failed.");
       }
@@ -52,7 +56,6 @@ const UpcomingActivities = () => {
       message.error("An error occurred while booking.");
     }
   };
-
   return (
     <>
       <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'auto', height: '100vh' }}>
@@ -71,7 +74,7 @@ const UpcomingActivities = () => {
                 <TableCell>Category</TableCell>
                 <TableCell>Tags</TableCell>
                 <TableCell>Discount</TableCell>
-                <TableCell>Date</TableCell>
+                <TableCell>Dates and Times</TableCell>
                 <TableCell>Duration</TableCell>
                 <TableCell>Location</TableCell>
                 <TableCell>Bookings</TableCell>
