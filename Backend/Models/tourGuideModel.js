@@ -16,6 +16,16 @@ const tourGuideSchema = new Schema({
         type: String,
         required: true
     },
+    // nationalId:
+    // {
+    //     type: Array,
+    //     schema: [fileModel],
+    //     required: false
+    // },
+    // {
+    //     type: Buffer,
+    //     required: true
+    // },
     mobileNumber: {
         type: Number,
         required: true
@@ -33,14 +43,27 @@ const tourGuideSchema = new Schema({
         type: String,
 
     },
-    certificates:
-    {
-        type: String,
-
-    },
+    // certificates:
+    // {
+    //     type: Array,
+    //     schema: [fileModel],
+    //     required: false
+    // },
     photo:{
         type: String,
-    }
+    },
+    profilePicture: {
+        filename: { type: String },
+        filepath: { type: String },
+        uploadedAt: { type: Date },
+      },
+    files: [
+        {
+          filename: String,
+          filepath: String,
+          uploadedAt: { type: Date, default: Date.now },
+        },
+      ],
 }, { timestamps: true })
 
 const TourGuide = mongoose.model("TourGuide", tourGuideSchema);
