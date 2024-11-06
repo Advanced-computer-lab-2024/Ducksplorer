@@ -8,6 +8,14 @@ import TransportationsCards from './transportationsCards';
 import { format } from 'date-fns';
 
 
+
+function isDatePassed(enteredDate) {
+  const currentDate = new Date(); // Get the current date and time
+  const inputDate = new Date(enteredDate); // Convert the entered date to a Date object
+
+  return inputDate < currentDate; // Returns true if the entered date is in the past
+}
+
 const cities = [
   { label: 'New York', code: 'NYC', country: 'USA' },
   { label: 'Los Angeles', code: 'LAX', country: 'USA' },
@@ -76,18 +84,23 @@ const cities = [
 
 const TransportationBookingForm = () => {
   const[transportations, setTransportations] = useState([]);
-  const[startLocationCode, setStartLocationCode] = useState([]);
-  const[endAddressLine, setEndAddressLine] = useState([]);
-  const[endCountryCode, setEndCountryCode] = useState([]);
-  const[transferType, setTransferType] = useState([]);
-  const[startDate, setStartDate] = useState([]);
-  const[startTime, setStartTime] = useState([]);
+  const[startLocationCode, setStartLocationCode] = useState(null);
+  const[endAddressLine, setEndAddressLine] = useState(null);
+  const[endCountryCode, setEndCountryCode] = useState(null);
+  const[transferType, setTransferType] = useState(null);
+  const[startDate, setStartDate] = useState(null);
+  const[startTime, setStartTime] = useState(null);
 
   const validateFields = () => {
     if (!startLocationCode || !endAddressLine || !endCountryCode || !transferType || !startTime || !startDate) {
       message.error('Please fill in all required fields');
       return false;
     }
+    if(isDatePassed(startDate)){
+      message.error('This date has passed');
+      return false;
+    }
+    
     return true;
   };
 
@@ -100,9 +113,8 @@ const TransportationBookingForm = () => {
 
 
   const handleSearch = async () =>{
-    if(validateFields){
+    if(validateFields()){
       const dateTime = startDate+"T"+startTime;
-      console.log(dateTime);
       const requestBody ={
         startLocationCode : startLocationCode,
         endAddressLine : endAddressLine,
@@ -123,8 +135,8 @@ const TransportationBookingForm = () => {
         }
 
       }catch(error){
-        console.error('Error fetching flights:', error);
-        message.error('Failed to fetch flights. Please try again.');
+        console.error('Error fetching transportation:', error);
+        message.error('Failed to fetch transportations. Please try again.');
       }
     }else {
       message.error('Error in the Form');

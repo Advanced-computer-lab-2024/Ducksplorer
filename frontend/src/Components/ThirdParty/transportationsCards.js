@@ -8,6 +8,8 @@ import axios from 'axios';
 
 const TransportationsCards = ({transportations}) => {
 
+  
+
   const handleBooking = async(transportation) => {
     try {
       const response = await axios.post('http://localhost:8000/transportBook/transportation-booking', { transportation });
@@ -71,7 +73,7 @@ const TransportationsCards = ({transportations}) => {
                             {/* Price */}
                             {transportation.quotation && transportation.quotation.monetaryAmount && (
                                 <Typography variant="subtitle1" color="text.secondary" sx={{ textAlign: 'center', padding: 1 }}>
-                                    Price: {transportation.quotation.monetaryAmount}
+                                    Price: {transportation.quotation.monetaryAmount}$
                                 </Typography>
                             )}
 
