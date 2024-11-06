@@ -382,7 +382,7 @@ const PastBookingDetails = ({ userName }) => {
                       size="small"
                       style={{ marginTop: '5px' }}
                     >
-                      Rate/Comment
+                      Rate&Comment
                     </Button>
                   </div>
                 </TableCell>
