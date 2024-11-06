@@ -24,19 +24,6 @@ const sellerSchema = new Schema({
         type: String,
         required: true
     },
-    taxationRegisteryCard:
-    {
-        type: String,
-
-    }, 
-    nationalId: 
-    {
-        type: String,
-
-    },
-    logo:{
-        type: String,
-    },
     profilePicture: {
         filename: { type: String },
         filepath: { type: String },

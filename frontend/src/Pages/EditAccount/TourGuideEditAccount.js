@@ -10,14 +10,14 @@ const TourGuideEditProfile = () => {
     userName: '',
     email: '',
     password: '',
-    //nationalId: '',
     mobileNumber: '',
     yearsOfExperience: '',
     previousWork: '',
-    certificates: '',
-    photo: ''
+    profilePicture: '',
+    files:[]
   });
   const [isEditing, setIsEditing] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState([]);
 
   useEffect(() => {
     const userJson = localStorage.getItem('user'); // Get the 'user' item as a JSON string  
@@ -25,6 +25,7 @@ const TourGuideEditProfile = () => {
     const userName = user.username; 
 
     if (userName) {
+      try{
       axios.get(`http://localhost:8000/tourGuideAccount/viewaccount/${userName}`)
         .then(response => {
           message.success('Tour Guide details fetched successfully');
@@ -32,11 +33,33 @@ const TourGuideEditProfile = () => {
             ...response.data
           });
         })
-        .catch(error => {
+      }
+      catch(error){
           message.error('Error fetching tour guide details');
           console.error('Error fetching tour guide details:', error);
-        });
+        }
+        if (selectedFiles.length > 0) {
+          const fileUploadData = new FormData();
+          fileUploadData.append('userName', userName);
+         selectedFiles.forEach(file => fileUploadData.append('files', file));  // Append each file object directly
+         // Log each file appended for document upload
+           for (let pair of fileUploadData.entries()) {
+               console.log(`${pair[0]}: ${pair[1].name || pair[1]}`);
+           }
+
+           try {
+               axios.post('http://localhost:8000/file/user/upload/documents', fileUploadData, {
+                   headers: { 'Content-Type': 'multipart/form-data' },
+               });
+               message.success('Documents uploaded successfully!');
+           } catch (error) {
+               console.error('Error uploading documents:', error);
+               message.error('Document upload failed: ' + (error.response?.data?.message || error.message));
+           }
+       }
     }
+
+
   }, []);
 
   const handleEditClick = () => {
@@ -127,28 +150,8 @@ const TourGuideEditProfile = () => {
             readOnly: !isEditing,
           }}
         />
-        <lable>Certificates</lable>
-        <FileUpload />
-        {/* <TextField
-          label="certificates" // Singular label
-          name="certificates" // This should match the updated state field
-          value={tourGuideDetails.certificates} // Access the pictures string directly
-          onChange={handleChange}
-          InputProps={{
-            readOnly: !isEditing,
-          }}
-         /> */}
-         <lable>Photo</lable>
-         <FileUpload />
-         {/* <TextField
-          label="photo" // Singular label
-          name="photo" // This should match the updated state field
-          value={tourGuideDetails.photo} // Access the pictures string directly
-          onChange={handleChange}
-          InputProps={{
-            readOnly: !isEditing,
-          }}
-         /> */}
+        <FileUpload value={tourGuideDetails.files} onFileSelect={(files) => setSelectedFiles(files)} inputId="document-upload" />
+
         {isEditing ? (
           <Button variant="contained" color="success" onClick={handleSaveClick}>
             Save
