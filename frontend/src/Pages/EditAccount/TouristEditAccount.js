@@ -14,6 +14,7 @@ const EditProfile = () => {
     DOB: '', 
     employmentStatus: '',
     wallet: 0,
+    points: 0
   });
   const [isEditing, setIsEditing] = useState(false);
 
@@ -39,8 +40,47 @@ const EditProfile = () => {
     }
   }, []);
 
-  const handleEditClick = () => setIsEditing(true);
-  
+  const handleEditClick = async () => setIsEditing(true);
+  const handleRedeemClick = () => {
+    const redeemPoints = async () => {
+    try {
+      const userJson = localStorage.getItem('user');
+      const user = JSON.parse(userJson);
+      const userName = user.username;
+
+      const response = await axios.patch(`http://localhost:8000/touristRoutes/redeemPoints/${userName}?addPoints=10000`);
+      console.log('Redeem successful:', response.data);
+      // Display success message or update wallet UI based on response
+    if (response.data) {
+      message.success('Redeem successful!');
+      // Update the tourist details with new wallet and points values
+      // setTouristDetails(prevDetails => ({
+      //   ...prevDetails,
+      //   wallet: response.data.updatedWallet,  // Assuming backend sends updated wallet balance
+      //   points: response.data.updatedPoints   // Assuming backend sends updated points
+      // }));
+      axios.get(`http://localhost:8000/touristAccount/viewaccount/${userName}`)
+        .then(response => {
+          message.success('Tourist details fetched successfully');
+          const formattedDOB = response.data.DOB.split('T')[0];
+          setTouristDetails({
+            ...response.data,
+            DOB: formattedDOB 
+          });
+        })
+        .catch(error => {
+          message.error('Error fetching tourist details');
+          console.error('Error fetching tourist details:', error);
+        });
+    }
+    }
+   catch (error) {
+    message.error('No enought points to redeem !');
+    console.error('Error redeeming points:', error.response?.data?.error || error.message);
+  }
+  }
+  redeemPoints();
+};
   const handleSaveClick = () => {
     axios.put('http://localhost:8000/touristAccount/editaccount', touristDetails)
       .then(response => {
@@ -52,7 +92,8 @@ const EditProfile = () => {
         message.error('Error updating tourist details');
         console.error('Error updating tourist details:', error);
       });
-  };
+    };
+
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -142,7 +183,17 @@ const EditProfile = () => {
             InputProps={{
               readOnly: true,
             }}
-          />    
+          />  
+          <TextField
+            label="Points"
+            name="points"
+            value={touristDetails.points}
+            onChange={handleChange}
+            InputProps={{
+              readOnly: true,
+            }}
+          />  
+          <Button variant="outlined" onClick={handleRedeemClick}>Redeem points</Button>  
           {isEditing ? (
             <Button variant="contained" color="success" onClick={handleSaveClick}>
               Save
