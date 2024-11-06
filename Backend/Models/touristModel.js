@@ -50,6 +50,10 @@ const touristSchema = new Schema(
     tagPreferences : {
         type : Array,
         required : false
+    },
+    historicalPlacestags : {
+        type : Array,
+        required : false
     }
   
 },{timestamps: true})
