@@ -20,7 +20,7 @@ const paymentRoutes = require('./Backend/Routes/paymentRoutes.js');
 const bookingThirdPartyRoutes = require("./Backend/Routes/ThirdParty/bookingRoutes.js");
 // // const documentRoutes = require('./Backend/Routes/documentRoutes');
 // //const bodyParser = require('body-parser');
-// app.use(cors());
+ app.use(cors());
 
 //__dirname = path.dirname(fileURLToPath(import.meta.url)); // Set __dirname
 app.use("/uploads", (req, res, next) => {

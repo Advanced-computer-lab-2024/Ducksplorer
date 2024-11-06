@@ -34,12 +34,6 @@ const AdvertiserSidebar = () => {
         </Typography>
         <Divider />
         <List>
-          <ListItem component={Link} to="/advertiserDashboard">
-            <ListItemIcon>
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" />
-          </ListItem>
           <ListItem component={Link} to="/advertiserEditAccount">
             <ListItemIcon>
               <PersonIcon />
