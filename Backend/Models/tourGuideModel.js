@@ -16,12 +16,12 @@ const tourGuideSchema = new Schema({
         type: String,
         required: true
     },
-    nationalId:
-    {
-        type: Array,
-        schema: [fileModel],
-        required: false
-    },
+    // nationalId:
+    // {
+    //     type: Array,
+    //     schema: [fileModel],
+    //     required: false
+    // },
     // {
     //     type: Buffer,
     //     required: true
@@ -43,12 +43,12 @@ const tourGuideSchema = new Schema({
         type: String,
 
     },
-    certificates:
-    {
-        type: Array,
-        schema: [fileModel],
-        required: false
-    },
+    // certificates:
+    // {
+    //     type: Array,
+    //     schema: [fileModel],
+    //     required: false
+    // },
     photo:{
         type: String,
     },
