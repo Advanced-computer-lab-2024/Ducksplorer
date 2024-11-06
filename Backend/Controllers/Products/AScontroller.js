@@ -5,9 +5,7 @@ const { $options } = require("sift");
 const multer = require("multer");
 const path = require("path");
 const { DataArray } = require("@mui/icons-material");
-
-
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: "uploads/" });
 
 const createProduct = async (req, res) => {
   //add new products
@@ -21,7 +19,7 @@ const createProduct = async (req, res) => {
     seller,
     reviews,
     sales,
-    isArchived
+    isArchived,
   } = req.body;
 
   try {
@@ -29,13 +27,13 @@ const createProduct = async (req, res) => {
       name,
       price,
       ratings,
-      picture: req.file ? `/uploads/${req.file.filename}` : null,
+      picture,
       availableQuantity,
       description,
       seller,
       reviews,
       sales,
-      isArchived
+      isArchived,
     });
     res.status(200).json(product);
   } catch (error) {

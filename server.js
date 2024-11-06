@@ -20,6 +20,8 @@ const bodyParser = require("body-parser");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+app.use(express.json({ limit: "25mb" }));
+app.use(express.urlencoded({ limit: "25mb" }));
 
 app.use("/uploads", express.static("uploads"));
 
@@ -35,6 +37,7 @@ const tourGuideAccountRoutes = require("./Backend/Routes/TourGuideAccountRoutes.
 const advertiserAccountRoutes = require("./Backend/Routes/AdvertiserAccountRoutes.js");
 const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js");
 const complaintRoutes = require("./Backend/Routes/complaintRoutes.js");
+const uploadImage = require("./Backend/Middleware/uploadImageMW.js");
 
 app.use(cors());
 
@@ -51,35 +54,10 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 },
-}).single("image");
-
-// Image upload endpoint using UploadThing
-app.post("/upload", async (req, res) => {
-  const { image } = req.body;
-  if (!image) return res.status(400).send("No image provided");
-
-  try {
-    const response = await axios.post(
-      "https://api.uploadthing.com/upload",
-      { file: image },
-      {
-        headers: { Authorization: `Bearer ${process.env.UPLOADTHING_API_KEY}` },
-      }
-    );
-
-    res.status(200).json({
-      message: "Image uploaded successfully",
-      imageUrl: response.data.url,
-    });
-    console.log(response.data);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Failed to upload image", details: error.message });
-  }
+app.post("/uploadImage", (req, res) => {
+  uploadImage(req.body.image)
+    .then((url) => res.send(url))
+    .catch((err) => res.status(500).send(err.message));
 });
 
 app.use("/uploads", express.static("uploads"));

@@ -110,7 +110,9 @@ const touristUpdateProductRating = async (req, res) => {
     await product.save();
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    const purchase = await purchases.findOne({ buyer: buyer }).populate("products");
+    const purchase = await purchases
+      .findOne({ buyer: buyer })
+      .populate("products");
 
     if (!purchase) {
       return res.status(404).json({ message: "Purchase record not found." });
@@ -136,7 +138,7 @@ const touristUpdateProductRating = async (req, res) => {
   }
 };
 
-const getProductRating = async (req,res) => {
+const getProductRating = async (req, res) => {
   const productId = req.params.id;
   const buyer = req.params.buyer;
   try {
@@ -146,60 +148,69 @@ const getProductRating = async (req,res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    const buyerRating = product.ratings.find((rating) => rating.buyer === buyer);
+    const buyerRating = product.ratings.find(
+      (rating) => rating.buyer === buyer
+    );
 
     if (buyerRating) {
       res.status(200).json({ rating: buyerRating.rating });
     } else {
-      res.status(404).json({ message: "Rating not found for this buyer" });
+      // Add new rating
+      console.log("dakhalt hena");
+      console.log("product index: ", productIndex);
+      purchase.products[productIndex].ratings.push({ buyer, rating });
+      console.log(
+        "these are the ratings before saving",
+        purchase.products[productIndex].ratings
+      );
     }
-  }
-  catch(error){
-    console.error("Error fetching rating:", error);
-    res.status(500).json({ message: "Server error" });
-  }
-
-}
-
-const touristUpdateProductReview = async (req, res) => {
-  const productId = req.params.id;
-  const { review, buyer } = req.body;
-  console.log("this is the req body", req.body);
-  try {
-    const product = await productModel.findById(productId);
-
-    if (!product) {
-      return res.status(404).json({ message: "Product not found" });
-    }
-    product.reviews.push({buyer, review});
-    await product.save();
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    const purchase = await purchases.findOne({ buyer: buyer }).populate("products");
-
-    if (!purchase) {
-      return res.status(404).json({ message: "Purchase record not found." });
-    }
-
-    const productIndex = purchase.products.findIndex((prod) => {
-      console.log("Checking productId:", prod._id); // Log each productId for debugging
-      return prod._id.toString() === productId; // Ensure productId is valid
-    });
-    if (productIndex === -1) {
-      return res
-        .status(404)
-        .json({ message: "Product not found in purchase record." });
-    }
-
-    purchase.products[productIndex] = product;
     await purchase.save();
-    res.status(200).json({product, purchase});
-    return purchase;
+    console.log(purchase.products[productIndex].ratings);
+
+    // const updatedPurchases = await purchases.findOneAndUpdate(
+    //   { buyer }, // Find the purchases document for the given buyer
+    //   {
+    //     $set: {
+    //       "products.$[prod].ratings.$[rate]": { buyer: buyer, rating: rating }, // Update the specific rating for the buyer
+    //     },
+    //   },
+    //   {
+    //     arrayFilters: [
+    //       { "prod.productId": productId }, // Filter to match the specific product
+    //       { "rate.buyer": buyer } // Filter to match the specific buyer's rating
+    //     ],
+    //     new: true, // Return the modified document
+    //   }
+    // );
+    // await updatedPurchases.save();
+
+    // if (!updatedPurchases) {
+    //   return res
+    //     .status(404)
+    //     .json({ message: "Purchases not found for this buyer" });
+    // }
+
+    res.status(200).json({ product, purchase });
+    // const purchaseUpdate = purchases.findOneAndUpdate(
+    //   { buyer: buyer, "products._id": productId },
+    //   { $push: { "products.$.ratings": rating, "products.$.reviews": review } },
+    //   { new: true }
+    // );
+
+    // const [updatedProduct, updatedPurchase] = await Promise.all([
+    //   productUpdate,
+    //   purchaseUpdate,
+    // ]);
+
+    // if (!updatedPurchase) {
+    //   return res.status(404).json({ message: "Purchase not found for this buyer" });
+    // }
+
+    //res.status(200).json({ updatedProduct, updatedPurchase });
   } catch (err) {
     res.status(400).json(err.message);
   }
 };
-
 
 module.exports = {
   getProducts,
@@ -208,5 +219,5 @@ module.exports = {
   sortProducts,
   touristUpdateProductRating,
   getProductRating,
-  touristUpdateProductReview
+  touristUpdateProductReview,
 };
