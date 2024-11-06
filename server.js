@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const app = express(); //el kol fel kol
 const PORT = process.env.PORT || 8000; //tells us to get port from env file or law ma3refsh yegebha it's 3000
 const cors = require('cors');
+const path = require('path');
 const touristRoutes = require('./Backend/Routes/touristRoutes.js');
 const sellerRoutes = require('./Backend/Routes/sellerRoutes.js');
 const adminProductRoutes = require('./Backend/Routes/adminRoutes.js');
@@ -20,7 +21,8 @@ const bookingThirdPartyRoutes = require("./Backend/Routes/ThirdParty/bookingRout
 
 app.use(cors());
 
-app.use('/uploads', express.static('uploads'));
+//__dirname = path.dirname(fileURLToPath(import.meta.url)); // Set __dirname
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 
 
