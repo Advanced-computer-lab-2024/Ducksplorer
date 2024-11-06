@@ -40,7 +40,6 @@ app.use(express.json());
 
 
 
-
 app.use("/signUp", signUpRoutes);
 app.use("/touristRoutes", touristRoutes);
 app.use("/sellerRoutes", sellerRoutes);

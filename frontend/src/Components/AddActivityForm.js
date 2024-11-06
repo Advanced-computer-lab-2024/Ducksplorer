@@ -45,7 +45,7 @@ const AddActivityForm = () => {
       setDate(storedDate || "");
       setIsOpen(storedIsOpen || false);
       setPrice(storedPrice || "");
-      // setCategory(storedCategory || ""); what the fuck is this?
+      // setCategory(storedCategory || ""); 
       setCategory(localStorage.getItem("category") || "");
       setSpecialDiscount(storedDiscount || "");
       setDuration(storedDuration || "");
