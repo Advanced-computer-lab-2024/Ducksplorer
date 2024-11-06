@@ -15,7 +15,7 @@ const AdminActivityRoutes = require("./Backend/Routes/Admin/AdminActivityRoutes.
 const preferenceTagsRoutes = require("./Backend/Routes/Admin/PreferenceTagsRoutes.js");
 const activityRoutes = require("./Backend/Routes/activityRoutes.js");
 const categoryRoutes = require("./Backend/Routes/categoryRoutes.js");
-// const fileRoutes = require("./Backend/Routes/fileRoutes.js")
+const fileRoutes = require("./Backend/Routes/fileRoutes.js")
 const paymentRoutes = require('./Backend/Routes/paymentRoutes.js');
 const bookingThirdPartyRoutes = require("./Backend/Routes/ThirdParty/bookingRoutes.js");
 // // const documentRoutes = require('./Backend/Routes/documentRoutes');
@@ -23,7 +23,10 @@ const bookingThirdPartyRoutes = require("./Backend/Routes/ThirdParty/bookingRout
 // app.use(cors());
 
 //__dirname = path.dirname(fileURLToPath(import.meta.url)); // Set __dirname
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", (req, res, next) => {
+  console.log("Static file request:", req.url);
+  next();
+}, express.static(path.join(__dirname, "uploads")));
 
 //app.use(bodyParser.json());
 
@@ -52,7 +55,8 @@ app.use("/admin", adminRoutes);
 app.use("/touristAccount", touristAccountRoutes);
 app.use("/adminActivity", AdminActivityRoutes);
 app.use("/preferenceTags", preferenceTagsRoutes);
-app.use("/category", categoryRoutes); app.use("/museum", museumRoutes);
+app.use("/category", categoryRoutes); 
+app.use("/museum", museumRoutes);
 app.use("/historicalPlace", historicalPlaceRoutes);
 app.use("/historicalPlaceTags", historicalPlaceTagRoutes);
 app.use("/museumTags", museumTagRoutes);
@@ -60,7 +64,7 @@ app.use("/itinerary", itineraryRoutes);
 app.use("/tourGuideAccount", tourGuideAccountRoutes);
 app.use("/advertiserAccount", advertiserAccountRoutes);
 app.use("/sellerAccount", sellerAccountRoutes);
-// app.use('/file', fileRoutes);
+app.use('/file', fileRoutes);
 app.use('/payment', paymentRoutes);
 // app.use('/api/documents', documentRoutes);app.use("/", bookingThirdPartyRoutes);
 
