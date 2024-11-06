@@ -6,7 +6,8 @@ import { message } from 'antd';
 import { useTypeContext } from '../context/TypeContext';
 import DropDown from './DropDown.js';
 import { useNavigate } from "react-router-dom";
-// import FileUpload from './FileUpload';
+// import { FileUpload } from '@mui/icons-material';
+import FileUpload from './FileUpload';
 
 const FormSection = () => {
   const { type } = useTypeContext();
@@ -16,11 +17,9 @@ const FormSection = () => {
   const [email, setEmail] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  // File states
-  const [nationalId, setNationalId] = useState(null);
-  const [certificates, setCertificates] = useState(null);
-  const [taxationRegisteryCard, setTaxationRegisteryCard] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [acceptTerms, setAcceptTerms] = useState(false);
+  const [openTerms, setOpenTerms] = useState(false);
 
   // Additional state variables for conditional fields
   const [mobileNumber, setMobileNumber] = useState('');
@@ -38,7 +37,7 @@ const FormSection = () => {
   const navigate = useNavigate();
 
   const validateFields = () => {
-    if (!userName || !password || !confirmPassword || !email ) {
+    if (!userName || !password || !confirmPassword || !email) {
       message.error('All fields are required');
       return false;
     }
@@ -50,69 +49,82 @@ const FormSection = () => {
       message.error('All fields are required for Tourist');
       return false;
     }
-    if (type === 'Guide' && (!mobileNumber || !yearsOfExperience || !previousWork )) {
+    if (type === 'Guide' && (!mobileNumber || !yearsOfExperience || !previousWork)) {
       message.error('All fields are required for Guide');
       return false;
     }
-    if (type === 'Advertiser' && (!websiteLink || !hotline || !companyProfile )) {
+    if (type === 'Advertiser' && (!websiteLink || !hotline || !companyProfile)) {
       message.error('All fields are required for Advertiser');
       return false;
     }
-    if (type === 'Seller' && (!name || !description )) {
+    if (type === 'Seller' && (!name || !description)) {
       message.error('All fields are required for Seller');
       return false;
     }
+    
     return true;
   };
+
+  const handleOpenTerms = () => {
+    setOpenTerms(true);
+  };
+
+  const handleCloseTerms = () => {
+    setOpenTerms(false);
+  };
+
 
   const handleAdd = async () => {
     if (!validateFields()) {
       return;
     }
-
-    const formData = new FormData();
-    formData.append('userName', userName);
-    formData.append('password', password);
-    formData.append('email', email);
-    formData.append('role', type);
-    
-
-    // Append conditional fields and documents based on role
-    if (type === 'Tourist') {
-      formData.append('mobileNumber', mobileNumber);
-      formData.append('nationality', nationality);
-      formData.append('DOB', DOB);
-      formData.append('employmentStatus', employmentStatus);
-    } else if (type === 'Guide') {
-      formData.append('mobileNumber', mobileNumber);
-      formData.append('yearsOfExperience', yearsOfExperience);
-      formData.append('previousWork', previousWork);
-      //formData.append('certificates', certificates);
-      //formData.append('nationalId', nationalId);
-    } else if (type === 'Advertiser') {
-      formData.append('websiteLink', websiteLink);
-      formData.append('hotline', hotline);
-      formData.append('companyProfile', companyProfile);
-      //formData.append('taxationRegisteryCard', taxationRegisteryCard);
-      //formData.append('nationalId', nationalId);
-    } else if (type === 'Seller') {
-      formData.append('name', name);
-      formData.append('description', description);
-    //  formData.append('taxationRegisteryCard', taxationRegisteryCard);
-      //formData.append('nationalId', nationalId);
-    }
+    const data = {
+      userName,
+      password,
+      email,
+      role: type,
+      ...(type === 'Tourist' && { mobileNumber, nationality, DOB, employmentStatus }),
+      ...(type === 'Guide' && { mobileNumber, yearsOfExperience, previousWork }),
+      ...(type === 'Advertiser' && { websiteLink, hotline, companyProfile }),
+      ...(type === 'Seller' && { name, description }),
+    };
 
     try {
-      const response = await axios.post('http://localhost:8000/signUp', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      try{
+      await axios.post('http://localhost:8000/signUp', data);
       message.success('Signed Up successfully!');
-      navigate('/login');
+      }
+      catch(error){
+        message.error('An error occurred: ' + error.message);
+        console.error('There was an sigining up!', error);
+      }
+      if (selectedFiles.length > 0) {
+           const fileUploadData = new FormData();
+           fileUploadData.append('userName', userName);
+          selectedFiles.forEach(file => fileUploadData.append('files', file));  // Append each file object directly
+          // Log each file appended for document upload
+            for (let pair of fileUploadData.entries()) {
+                console.log(`${pair[0]}: ${pair[1].name || pair[1]}`);
+            }
+
+            try {
+                await axios.post('http://localhost:8000/file/user/upload/documents', fileUploadData, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                });
+                message.success('Documents uploaded successfully!');
+            } catch (error) {
+                console.error('Error uploading documents:', error);
+                message.error('Document upload failed: ' + (error.response?.data?.message || error.message));
+            }
+        }
+      window.location.href = '/login';
     } catch (error) {
-      message.error('An error occurred: ' + error.response.data.error);
-      console.error('There was an error signing up!', error);
+      message.error('An error occurred: ' + error.message);
+      console.error('There was an error uploading document!', error);
     }
   };
+
+
 
   return (
     <div style={{
@@ -232,27 +244,9 @@ const FormSection = () => {
               value={mobileNumber}
               onChange={(e) => setMobileNumber(e.target.value)}
             />
-            {/* <TextField
-              name="certificates"
-              label=" (URL)"
-              type="text"
-              value={certificates}
-              onChange={(e) => setCertificates(e.target.value)}
-              required
-            />
-            <label>National ID</label>
-            <FileUpload 
-              onFileSelect={(file) => setNationalId(file)} 
-              label="National ID" 
-              inputId="national-id-upload" 
-            />
-
-            <label>Certificates</label>
-            <FileUpload 
-              onFileSelect={(file) => setCertificates(file)} 
-              label="Certificates" 
-              inputId="certificates-upload" 
-            /> */}
+            
+            <FileUpload onFileSelect={(files) => setSelectedFiles(files)} inputId="document-upload" />
+            
             <TextField
               name="yearsOfExperience"
               label="Years of Experience"
@@ -285,17 +279,8 @@ const FormSection = () => {
               value={hotline}
               onChange={(e) => setHotline(e.target.value)}
             />
-            {/* <FileUpload 
-              onFileSelect={(file) => setNationalId(file)} 
-              label="National ID" 
-              inputId="national-id-upload" 
-            />
-            <label>Taxation Registry Card</label>
-            <FileUpload 
-              onFileSelect={(file) => setTaxationRegisteryCard(file)} 
-              label="Taxation Registry Card" 
-              inputId="taxation-card-upload" 
-            /> */}
+            
+            <FileUpload onFileSelect={(files) => setSelectedFiles(files)} inputId="document-upload" />
             <TextField
               name="companyProfile"
               label="Company Profile"
@@ -314,18 +299,8 @@ const FormSection = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
+            <FileUpload onFileSelect={(files) => setSelectedFiles(files)} inputId="document-upload" />
             
-            {/* <FileUpload 
-              onFileSelect={(file) => setNationalId(file)} 
-              label="National ID" 
-              inputId="national-id-upload" 
-            />
-            <label>Taxation Registry Card</label>
-            <FileUpload 
-              onFileSelect={(file) => setTaxationRegisteryCard(file)} 
-              label="Taxation Registry Card" 
-              inputId="taxation-card-upload" 
-            /> */}
              <TextField
               name="description"
               label="Description"

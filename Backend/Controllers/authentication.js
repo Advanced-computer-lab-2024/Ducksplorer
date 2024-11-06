@@ -6,7 +6,7 @@ const User = require("../Models/userModel.js");
 const path = require('path');
 const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el signup
     try{
-        const {email,userName,password,nationalId} = req.body;
+        const {email,userName,password} = req.body;
         const user = await User.findOne({userName});
 
         if(user){
@@ -31,18 +31,14 @@ const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el 
             const mobileNumber = req.body.mobileNumber;
             const yearsOfExperience = req.body.yearsOfExperience;
             const previousWork = req.body.previousWork;
-            const certificates = req.body.certificates;
-            //const filepath = path.join(__dirname, 'getpending', req.params.filename);
-            const newTourGuide = new TourGuide({ email, userName, password, nationalId, mobileNumber, yearsOfExperience, previousWork, certificates});
+            const newTourGuide = new TourGuide({ email, userName, password, mobileNumber, yearsOfExperience, previousWork});
             await newTourGuide.save();
             res.status(201).json(newTourGuide);
         }
         if (role === "Seller") {
             const description = req.body.description;
             const name = req.body.name;
-            const taxationRegisteryCard = req.body.taxationRegisteryCard;
-            //const filepath = path.join(__dirname, 'getpending', req.params.filename);
-            const newSeller = new Seller({email, userName, password, nationalId,name,description,taxationRegisteryCard});
+            const newSeller = new Seller({email, userName, password, name,description});
             await newSeller.save();
             res.status(201).json(newSeller);
         }
@@ -50,9 +46,7 @@ const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el 
             const websiteLink = req.body.websiteLink;
             const hotline = req.body.hotline;
             const companyProfile = req.body.companyProfile;
-            const taxationRegisteryCard = req.body.taxationRegisteryCard;
-            //const filepath = path.join(__dirname, 'getpending', req.params.filename);
-            const newAdvertiser = new Advertiser({email, userName, password, nationalId, websiteLink, hotline, companyProfile,taxationRegisteryCard});
+            const newAdvertiser = new Advertiser({email, userName, password,  websiteLink, hotline, companyProfile});
             await newAdvertiser.save();
             res.status(201).json(newAdvertiser);
         }
