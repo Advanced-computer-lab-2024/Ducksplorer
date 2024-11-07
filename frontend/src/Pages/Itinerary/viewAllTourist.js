@@ -7,11 +7,14 @@ import {
     TableBody, IconButton, FormControl, InputLabel, Rating
 } from '@mui/material';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
 
 
 function SearchItineraries() {
+
+    const { id } = useParams();
+
     const [searchTerm, setSearchTerm] = useState(''); // Single search term
     const [itineraries, setItineraries] = useState([]);
 
@@ -36,12 +39,18 @@ function SearchItineraries() {
     useEffect(() => {
         axios.get('http://localhost:8000/itinerary/')
             .then(response => {
-                setItineraries(response.data);
+                if (id === undefined) {
+                    setItineraries(response.data);
+                }
+                else {
+                    const tempItineraries = response.data.filter((itinerary) => itinerary._id === id);
+                    setItineraries(tempItineraries);
+                }
             })
             .catch(error => {
                 console.error('There was an error fetching the itineraries!', error);
             });
-    }, []);
+    }, [id]);
 
     //search handler
     const handleSearchItineraries = async () => {
@@ -192,6 +201,24 @@ function SearchItineraries() {
             });
         handleFilterClose();
     }
+
+
+    // Share itinerary functionality
+    const handleShareLink = (itineraryId) => {
+        const link = `${window.location.origin}/viewAllTourist/${itineraryId}`; // Update with your actual route
+        navigator.clipboard.writeText(link)
+            .then(() => {
+                message.success('Link copied to clipboard!');
+            })
+            .catch(() => {
+                message.error('Failed to copy link.');
+            });
+    };
+
+    const handleShareEmail = (itineraryId) => {
+        const link = `${window.location.origin}/viewAllTourist/${itineraryId}`; // Update with your actual route
+        window.location.href = `mailto:?subject=Check out this itinerary&body=Here is the link to the itinerary: ${link}`;
+    };
 
     return (
         <Box sx={{ padding: '20px', maxWidth: '1200px', margin: 'auto', display: 'flex', flexDirection: 'column', overflowY: 'visible', height: '100vh' }}>
@@ -351,7 +378,7 @@ function SearchItineraries() {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {itineraries.map(itinerary => (
+                                    {itineraries.map(itinerary => !itinerary.flag && itinerary.isActive === true ? (
                                         <TableRow key={itinerary._id}>
                                             <TableCell>
                                                 {itinerary.activity && itinerary.activity.length > 0
@@ -370,7 +397,7 @@ function SearchItineraries() {
                                                     itinerary.locations.map((location, index) => (
                                                         <div key={index}>
                                                             <Typography variant="body1">
-                                                                {index + 1}: {location.trim()}
+                                                                Location {index + 1}: {location.trim()}
                                                             </Typography>
                                                             <br />
                                                         </div>
@@ -416,8 +443,17 @@ function SearchItineraries() {
                                                     ))
                                                     : 'No tags available'}
                                             </TableCell>
+                                            {id === undefined ? (<TableCell>
+                                                <Button variant="outlined" onClick={() => handleShareLink(itinerary._id)}>
+                                                    Share Via Link
+                                                </Button>
+                                                <Button variant="outlined" onClick={() => handleShareEmail(itinerary._id)}>
+                                                    Share Via Email
+                                                </Button>
+                                            </TableCell>) : null
+                                            }
                                         </TableRow>
-                                    ))}
+                                    ) : null)}
                                 </TableBody>
                             </Table>
                         </TableContainer>

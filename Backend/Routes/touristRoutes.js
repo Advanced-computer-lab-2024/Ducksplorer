@@ -18,9 +18,7 @@ router.route("/viewDesiredActivity/:activityId").get(viewDesiredActivity);
 router.route("/viewDesiredItinerary/:itineraryId").get(viewDesiredItinerary);
 router.patch("/payWallet/:userName", payWallet);
 router.patch("/payVisa/:userName", payVisa);
+//router.patch("/loyalty/:name/:userName",receiveLoyaltyPoints);
+
 
 module.exports = router;
-
-
-
-

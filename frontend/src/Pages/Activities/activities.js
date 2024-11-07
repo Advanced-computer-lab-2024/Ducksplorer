@@ -1,3 +1,4 @@
+// Di bet delete activity category
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { message } from 'antd';

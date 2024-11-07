@@ -123,4 +123,4 @@ const UpcomingActivities = () => {
   );
 };
 
-export default UpcomingActivities;
+// export default UpcomingActivities;

@@ -406,6 +406,7 @@ const ViewUpcomingItinerary = () => {
                         </TableHead>
                         <TableBody>
                             {itineraries.map(itinerary => (
+                                !itinerary.flag ? (
                                 <TableRow key={itinerary._id}>
                                     <TableCell>
                                         {itinerary.activity && itinerary.activity.length > 0
@@ -424,7 +425,7 @@ const ViewUpcomingItinerary = () => {
                                             itinerary.locations.map((location, index) => (
                                                 <div key={index}>
                                                     <Typography variant="body1">
-                                                        {index + 1}: {location.trim()}
+                                                    Location  {index + 1}: {location.trim()}
                                                     </Typography>
                                                     <br />
                                                 </div>
@@ -476,6 +477,7 @@ const ViewUpcomingItinerary = () => {
                                         </Button>
                                     </TableCell>
                                 </TableRow>
+                                 ) : null
                             ))}
                         </TableBody>
                     </Table>

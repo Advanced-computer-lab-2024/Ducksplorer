@@ -41,6 +41,19 @@ const tourGuideSchema = new Schema({
           uploadedAt: { type: Date, default: Date.now },
         },
       ],
+    ,
+    ratings: {
+        type: [Number],
+        required: false
+    },
+    averageRating: {
+        type: Number,
+        required: false
+    },
+    comments: {
+        type: [String],
+        required: false,
+    }
 }, { timestamps: true })
 
 const TourGuide = mongoose.model("TourGuide", tourGuideSchema);

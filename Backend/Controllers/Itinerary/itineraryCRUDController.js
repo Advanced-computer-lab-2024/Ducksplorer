@@ -7,7 +7,7 @@ const tourGuideModel = require("../../Models/tourGuideModel");
 const createItinerary = async (req, res) => { //create
     //add a new itinerary to the database with 
     //activity,locations,timeline,language,price,availableDates,availableTimes,accessibility,pickUpLocation,dropOffLocation
-    const { activity, locations, timeline, language, price, availableDatesAndTimes, accessibility, pickUpLocation, dropOffLocation, tourGuideUsername, rating, tags } = req.body;
+    const { activity, locations, timeline, language, price, availableDatesAndTimes, accessibility, pickUpLocation, dropOffLocation, tourGuideUsername, rating, tags, flag } = req.body;
     console.log(req.body);
     try {
         //first get id of tour guide from his username
@@ -19,7 +19,7 @@ const createItinerary = async (req, res) => { //create
 
         const itinerary = await itineraryModel.create({
             activity, locations, timeline, language, price,
-            availableDatesAndTimes, accessibility, pickUpLocation, dropOffLocation, tourGuideModel: tourGuide._id, rating, tags
+            availableDatesAndTimes, accessibility, pickUpLocation, dropOffLocation, tourGuideModel: tourGuide._id, rating, tags, flag
         });
 
         res.status(200).json(itinerary);
@@ -98,6 +98,38 @@ const updateChosenDateItinerary = async (req, res) => { //update
     }
 }
 
+const toggleFlagItinerary = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+     
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ error: "Invalid ID" });
+        }
+
+        const itinerary = await itineraryModel.findById(id);
+
+        if (!itinerary) {
+            return res.status(404).json({ error: "Itinerary not found" });
+        }
+
+        // Toggle the flag status
+        itinerary.flag = !itinerary.flag; // Set flag to the opposite of its current value
+
+        // Save the updated itinerary because it is not just changed in memory not on server
+        const updatedItinerary = await itinerary.save();
+
+        res.status(200).json({
+            itinerary: updatedItinerary,
+            message: `Itinerary flagged as ${updatedItinerary.flag ? "inappropriate" : "appropriate"}`,
+        });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+
+
 const deleteItinerary = async (req, res) => { //delete
     //delete an itinerary from the database
     try {
@@ -118,4 +150,4 @@ const deleteItinerary = async (req, res) => { //delete
 }
 
 
-module.exports = { createItinerary, getItinerary, deleteItinerary, updateItinerary, updateChosenDateItinerary, getAllItineraries };
+module.exports = { createItinerary, getItinerary, deleteItinerary, updateItinerary, updateChosenDateItinerary, getAllItineraries, toggleFlagItinerary };
