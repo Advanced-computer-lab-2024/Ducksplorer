@@ -27,12 +27,33 @@ const SortActivities = () => {
   const [currency, setCurrency] = useState('EGP');
   // Function to fetch sorted activities
   const fetchSortedActivities = () => {
+    const showPreferences = localStorage.getItem("showPreferences");
+    const favCategory = localStorage.getItem("category");
+    console.log(showPreferences);
     axios
       .get(
         `http://localhost:8000/activity/sort?sortBy=${sortBy}&order=${order}`
       )
       .then((response) => {
-        setActivities(response.data);
+        console.log(showPreferences,"before if");
+        if(showPreferences){
+          console.log(showPreferences,"inside if");
+          let Activities = response.data;
+        Activities = Activities.sort((a, b) => {
+          if (a.category === favCategory && b.category !== favCategory) {
+            return -1; // "restaurant" category comes first
+          } else if (b.category === favCategory && a.category !== favCategory) {
+            return 1; // Move other categories after "restaurant"
+          } else {
+            return 0; // If both have the same category, retain their relative order
+          }
+        });
+        setActivities(Activities);
+
+        }else{
+          setActivities(response.data);
+        }
+        
       })
       .catch((error) => {
         console.error("There was an error fetching the activities!", error);

@@ -33,6 +33,7 @@ const SearchActivities = () => {
   useEffect(() => {
     const showPreferences = localStorage.getItem("showPreferences");
     const favCategory = localStorage.getItem("category");
+    console.log(showPreferences, favCategory);
     axios
     .get("http://localhost:8000/activity/", {
       params: {

@@ -80,7 +80,6 @@ const deleteActivity = async (req, res) => {
 const searchActivities = async (req, res) => {
   const { search, showPreferences, favCategory} = req.query;
   const filters = {};
-  console.log(showPreferences , favCategory , search);
    
   if(!showPreferences){
     try {
@@ -118,7 +117,6 @@ const searchActivities = async (req, res) => {
           filters.$or.push({ tags: { $in: matchingTagNames } }); // Search by matching preference tags
         }
       }
-  
       // Fetch the activities based on the search filters
       const activities = await Activity.find(filters);
       res.status(200).json(activities);
@@ -291,6 +289,7 @@ const sortActivities = async (req, res) => {
   const { sortBy, order } = req.query;
   const currentDate = new Date();
 
+  
   let sortCriteria = {};
   if (sortBy) {
     sortCriteria[sortBy] = order === "desc" ? -1 : 1;
