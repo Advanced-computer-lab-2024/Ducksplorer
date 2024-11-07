@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, TextField, Typography, Paper, Avatar, Avatar } from '@mui/material';
+import { Box, Button, TextField, Typography, Paper, Avatar } from '@mui/material';
 import axios from 'axios';
 import { message } from 'antd';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -8,6 +8,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Iconify from '../../Components/TopNav/iconify.js';
 import TouristNavBar from '../../Components/TouristNavBar.js';
 import ProfilePictureUpload from '../../Components/pp.js'; // Import ProfilePictureUpload component
+import { Link } from "react-router-dom";
 
 
 const EditProfile = () => {
@@ -36,7 +37,6 @@ const EditProfile = () => {
         .then(response => {
           message.success('Tourist details fetched successfully');
           const formattedDOB = response.data.DOB.split('T')[0];
-          const formattedDOB = response.data.DOB.split('T')[0];
           setTouristDetails({
             ...response.data,
             DOB: formattedDOB,
@@ -52,44 +52,44 @@ const EditProfile = () => {
   const handleEditClick = async () => setIsEditing(true);
   const handleRedeemClick = () => {
     const redeemPoints = async () => {
-    try {
-      const userJson = localStorage.getItem('user');
-      const user = JSON.parse(userJson);
-      const userName = user.username;
+      try {
+        const userJson = localStorage.getItem('user');
+        const user = JSON.parse(userJson);
+        const userName = user.username;
 
-      const response = await axios.patch(`http://localhost:8000/touristRoutes/redeemPoints/${userName}?addPoints=10000`);
-      console.log('Redeem successful:', response.data);
-      // Display success message or update wallet UI based on response
-    if (response.data) {
-      message.success('Redeem successful!');
-      // Update the tourist details with new wallet and points values
-      // setTouristDetails(prevDetails => ({
-      //   ...prevDetails,
-      //   wallet: response.data.updatedWallet,  // Assuming backend sends updated wallet balance
-      //   points: response.data.updatedPoints   // Assuming backend sends updated points
-      // }));
-      axios.get(`http://localhost:8000/touristAccount/viewaccount/${userName}`)
-        .then(response => {
-          message.success('Tourist details fetched successfully');
-          const formattedDOB = response.data.DOB.split('T')[0];
-          setTouristDetails({
-            ...response.data,
-            DOB: formattedDOB 
-          });
-        })
-        .catch(error => {
-          message.error('Error fetching tourist details');
-          console.error('Error fetching tourist details:', error);
-        });
+        const response = await axios.patch(`http://localhost:8000/touristRoutes/redeemPoints/${userName}?addPoints=10000`);
+        console.log('Redeem successful:', response.data);
+        // Display success message or update wallet UI based on response
+        if (response.data) {
+          message.success('Redeem successful!');
+          // Update the tourist details with new wallet and points values
+          // setTouristDetails(prevDetails => ({
+          //   ...prevDetails,
+          //   wallet: response.data.updatedWallet,  // Assuming backend sends updated wallet balance
+          //   points: response.data.updatedPoints   // Assuming backend sends updated points
+          // }));
+          axios.get(`http://localhost:8000/touristAccount/viewaccount/${userName}`)
+            .then(response => {
+              message.success('Tourist details fetched successfully');
+              const formattedDOB = response.data.DOB.split('T')[0];
+              setTouristDetails({
+                ...response.data,
+                DOB: formattedDOB
+              });
+            })
+            .catch(error => {
+              message.error('Error fetching tourist details');
+              console.error('Error fetching tourist details:', error);
+            });
+        }
+      }
+      catch (error) {
+        message.error('No enought points to redeem !');
+        console.error('Error redeeming points:', error.response?.data?.error || error.message);
+      }
     }
-    }
-   catch (error) {
-    message.error('No enought points to redeem !');
-    console.error('Error redeeming points:', error.response?.data?.error || error.message);
-  }
-  }
-  redeemPoints();
-};
+    redeemPoints();
+  };
   const handleSaveClick = () => {
     axios
       .put('http://localhost:8000/touristAccount/editaccount', touristDetails)
@@ -101,7 +101,7 @@ const EditProfile = () => {
         message.error('Error updating tourist details');
         console.error('Error updating tourist details:', error);
       });
-    };
+  };
 
 
   const handleChange = (event) => {
@@ -114,6 +114,7 @@ const EditProfile = () => {
 
   return (
     <Box sx={{ display: 'flex' }}>
+      <TouristNavBar />
       <Box sx={{ p: 3 }}>
         <Link to="/touristDashboard">Back to Dashboard</Link>
       </Box>

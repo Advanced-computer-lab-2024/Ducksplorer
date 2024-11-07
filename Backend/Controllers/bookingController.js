@@ -406,9 +406,10 @@ const cancelMyBooking = async (req, res) => {
 // };
 
 
-const receiveLoyaltyPoints = async (req, res) => {
-    let { price, userName } = req.params;
-    
+const receiveLoyaltyPoints = async (price, userName) => {
+    console.log("inside receiveLoyaltyPoints");
+    //let { price, userName } = req.params;
+
     console.log('Received price:', price);  // Debugging line to inspect the value of price
 
     // Validate that price is a valid number
@@ -416,15 +417,17 @@ const receiveLoyaltyPoints = async (req, res) => {
     const priceNumber = parseFloat(price);
 
     if (isNaN(priceNumber) || priceNumber <= 0) {
-        return res.status(400).json({ success: false, message: 'Invalid price value' });
+        console.log("inValid price")
+        //return res.status(400).json({ success: false, message: 'Invalid price value' });
     }
 
     try {
         const tourist = await Tourist.findOne({ userName });
         if (!tourist) {
-            return res.status(404).json({ success: false, message: 'Tourist not found' });
+            console.log("Tourist not found")
+            //return res.status(404).json({ success: false, message: 'Tourist not found' });
         }
-
+        console.log("")
         let loyaltyPoints = 0;
         switch (tourist.level) {
             case 1:
@@ -442,14 +445,20 @@ const receiveLoyaltyPoints = async (req, res) => {
 
         tourist.points += loyaltyPoints;
 
-        await tourist.save();
+        console.log("Before Tourist.save working inside the receiveLoyaltyPoints")
+        // await tourist.save();
+        console.log("Tourist.save working inside the receiveLoyaltyPoints");
         await updateLevel(tourist.userName, tourist.points);
+        console.log("updateLevel working inside the receiveLoyaltyPoints");
 
-        res.status(200).json({ success: true, points: tourist.points });
+        console.log("Tourist Added Successfully")
+        //res.status(200).json({ success: true, points: tourist.points });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'An error occurred', error });
+        //res.status(500).json({ success: false, message: 'An error occurred', error });
     }
 };
+
+
 const getLevel = async (req, res) => {
     const { userName } = req.params;
     try {
@@ -513,6 +522,72 @@ const redeemPoints = async (req, res) => {
 
     } catch {
         res.status(500).json({ message: "An error occurred", error });
+    }
+};
+
+const payVisa = async (req, res) => {
+    try {
+        const { userName } = req.params;
+        const { price } = req.body;
+        const tourist = await Tourist.findOne({ userName });
+
+        await receiveLoyaltyPoints(price, userName);
+        await tourist.save();
+        res.status(200).json({
+            status: 200,
+            message: "Points updated successfully",
+            wallet: tourist.wallet,
+            points: tourist.points
+        });
+    } catch {
+        res.status(500).json({ message: "An error occurred", error });
+    }
+};
+
+const payWallet = async (req, res) => {
+    try {
+        const { userName } = req.params;
+        const { price } = req.body;
+        const tourist = await Tourist.findOne({ userName });
+        const level = tourist.level;
+        console.log(tourist);
+        let myWallet = tourist.wallet;
+        if (myWallet >= price) {
+            console.log("inside");
+            myWallet -= price;
+            tourist.wallet = myWallet;
+            await tourist.save();
+            console.log("Tourist.save working")
+            if (tourist.level === 1) {
+                tourist.points += (price * 0.5)
+            }
+            else if (tourist.level === 2) {
+                tourist.points += (price * 1.0)
+            }
+            else if (tourist.level === 3) {
+                tourist.points += (price * 1.5)
+            }
+            if (tourist.points >= 10000 && tourist.points < 50000) {
+                tourist.level = 2;
+            } else if (tourist.points >= 50000) {
+                tourist.level = 3;
+            } else {
+                tourist.level = 1;
+            }
+            console.log("Tourist.recieveLoyaltyPoints working")
+            await tourist.save();
+            console.log("Tourist.save 2 is working")
+            res.status(200).json({
+                status: 200,
+                message: "Activity/Itinerary payed successfully",
+                wallet: myWallet,
+                points: tourist.points
+            });
+        } else {
+            res.status(400).json({ message: "Not enough money in the wallet" });
+        }
+    } catch (error) {
+        return res.status(500).json({ message: "An error occurred", error });
     }
 };
 

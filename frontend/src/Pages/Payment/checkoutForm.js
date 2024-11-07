@@ -91,16 +91,17 @@ export default function CheckoutForm() {
         });
 
         if (error) {
-          setMessage(error.message);
+          setMessage1(error.message);
         } else {
-          setMessage("Payment succeeded!");
+          setMessage1("Payment succeeded!");
           // Trigger loyalty points update after payment is successful
           handleLoyaltyPointsUpdate();
         }
 
         setShowOtpPopup(false);
       } else {
-        setMessage("Invalid OTP.");
+        setMessage1("Invalid OTP.");
+      }
       // if (result.message === "OTP verified") {
       //   const { error } = await stripe.confirmPayment({
       //     elements,
@@ -162,7 +163,7 @@ export default function CheckoutForm() {
 
       }
     } catch (error) {
-      setMessage("Failed to confirm OTP.");
+      setMessage1("Failed to confirm OTP.");
       console.error("Error:", error);
     }
   };
@@ -172,7 +173,7 @@ export default function CheckoutForm() {
     const userName = localStorage.getItem("userName");
 
     if (!price || !userName) {
-      setMessage("Price or user name not found.");
+      setMessage1("Price or user name not found.");
       return;
     }
 
@@ -191,14 +192,14 @@ export default function CheckoutForm() {
 
         // Display the final message after animation
         setTimeout(() => {
-          setMessage(`You have earned ${response.data.points} loyalty points. You now have ${response.data.points} total points.`);
+          setMessage1(`You have earned ${response.data.points} loyalty points. You now have ${response.data.points} total points.`);
           setShowPointsAnimation(false);
         }, 3000);  // Delay message until after animation
       } else {
-        setMessage("Failed to update loyalty points.");
+        setMessage1("Failed to update loyalty points.");
       }
     } catch (error) {
-      setMessage("Error updating loyalty points.");
+      setMessage1("Error updating loyalty points.");
       console.error("Error:", error);
     }
   };
