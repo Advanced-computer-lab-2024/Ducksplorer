@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
+
 const SortActivities = () => {
   const navigate = useNavigate();
   const [activities, setActivities] = useState([]);

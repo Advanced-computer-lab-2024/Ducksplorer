@@ -64,6 +64,10 @@ const itinerarySchema = new Schema({
     tags: {
         type: [String],
         required: false
+    },
+    chosenDate: {
+        type: Date,
+        required: false
     }
 }, { timestamps: true })
 

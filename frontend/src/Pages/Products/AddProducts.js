@@ -1,27 +1,25 @@
 // src/Components/AllProducts.js
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
-import { Typography, Card, CardContent, Grid } from '@mui/material';
-import ProductDashboard from '../../Pages/Products/ProductDashboard';
 import { TextField, Button, Stack } from '@mui/material';
 
 
 function AddProducts() {
-  const [name , setName] = useState('');
-  const [price , setPrice] = useState('');
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState('');
   const [availableQuantity, setAvailableQuantity] = useState('');
-  const [picture , setPicture]= useState('');
+  const [picture, setPicture] = useState('');
   const [description, setDescription] = useState('');
-  
+
 
   const handleAddProduct = async () => {
-    try{
+    try {
       const userJson = localStorage.getItem('user'); // Get the 'user' item as a JSON string  
-      const user = JSON.parse(userJson); 
-      const userName = user.username;
+      const user = JSON.parse(userJson);
+      const userName = user.username;
       const seller = userName;
-      const response = await axios.post('http://localhost:8000/adminRoutes/createProducts' , {
+      const response = await axios.post('http://localhost:8000/adminRoutes/createProducts', {
         name,
         price,
         ratings: [],
@@ -31,13 +29,13 @@ function AddProducts() {
         seller,
         reviews: []
       });
-      if (response.status === 200){
+      if (response.status === 200) {
         message.success('product added successfully');
-      } else{
+      } else {
         message.error('failed to add admin');
       }
-    }catch (error){
-      message.error('an error occured: '+error.message);
+    } catch (error) {
+      message.error('an error occured: ' + error.message);
     }
   };
 
@@ -49,7 +47,7 @@ function AddProducts() {
     <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto' }}>
 
       <h2>Add Product</h2>
-      <Button  onClick={handleBackClick}>Back</Button>      
+      <Button onClick={handleBackClick}>Back</Button>
       <Stack spacing={2}>
         <TextField
           label="Product Name"
@@ -90,7 +88,7 @@ function AddProducts() {
           rows={4}
           fullWidth
         />
-        
+
         <Button
           variant="contained"
           color="primary"

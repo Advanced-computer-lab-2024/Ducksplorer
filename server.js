@@ -43,8 +43,6 @@ const itineraryRoutes = require("./Backend/Routes/itineraryRoutes.js")
 const tourGuideAccountRoutes = require("./Backend/Routes/TourGuideAccountRoutes.js")
 const advertiserAccountRoutes = require("./Backend/Routes/AdvertiserAccountRoutes.js")
 const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js");
-const { DriveFileRenameOutlineSharp } = require("@mui/icons-material");
-
 
 app.use("/signUp", signUpRoutes);
 app.use("/touristRoutes", touristRoutes);

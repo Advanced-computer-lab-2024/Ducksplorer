@@ -227,7 +227,7 @@ const ViewUpcomingItinerary = () => {
 
             const response = await axios.get(`http://localhost:8000/touristRoutes/viewDesiredItinerary/${itineraryId}`);
 
-            if (response.status == 200) {
+            if (response.status === 200) {
                 navigate('/payment');
             } else {
                 message.error("Booking failed.");

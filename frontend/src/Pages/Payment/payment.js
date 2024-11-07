@@ -38,33 +38,33 @@ function Payment() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, otp }),
     });
-  
+
     console.log(response);
     const data = await response.json();
-  
+
     if (data.message === "OTP verified") {
       alert("OTP verified. You can now proceed with the payment.");
-      
+
       // Send confirmation after OTP verification
       const confirmationResponse = await fetch("http://localhost:8000/payment/send-confirmation", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-      
+
       const confirmationData = await confirmationResponse.json();
-      
+
       if (confirmationData.message === "Confirmation sent") {
         alert("Confirmation email sent successfully.");
       } else {
         alert("Failed to send confirmation email. Please try again.");
       }
-      
+
     } else {
       alert("Invalid OTP. Please try again.");
     }
   };
-  
+
 
   return (
     <>

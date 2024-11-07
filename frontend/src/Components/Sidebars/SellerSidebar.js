@@ -7,12 +7,7 @@ import { Link } from 'react-router-dom';
 // import PersonAddIcon from '@mui/icons-material/PersonAdd'; 
 // import CategoryIcon from '@mui/icons-material/Category';
 // import LabelIcon from '@mui/icons-material/Label';
-import EventNoteIcon from '@mui/icons-material/EventNote';
-import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import MuseumIcon from '@mui/icons-material/Museum';
 import PersonIcon from '@mui/icons-material/Person';
-import CasinoIcon from '@mui/icons-material/Casino';
 
 const drawerWidth = 300;
 
@@ -27,7 +22,7 @@ const SellerSidebar = () => {
       }}
     >
       <div>
-      {/* <img src="logo1.png" style={{ width: '120px' , height: '120px' , padding: '10px', marginLeft: '50px'}} alt="logo" /> */}
+        {/* <img src="logo1.png" style={{ width: '120px' , height: '120px' , padding: '10px', marginLeft: '50px'}} alt="logo" /> */}
         <Typography variant="h6" noWrap sx={{ padding: 2 }}>
           Seller Dashboard
         </Typography>

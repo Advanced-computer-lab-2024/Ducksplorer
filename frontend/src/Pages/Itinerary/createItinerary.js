@@ -274,7 +274,7 @@ const AddItinerary = () => {
                     <input
                         type="text"
                         name="timeline"
-                        placeholder="Timeline"
+                        placeholder="Timeline in days"
                         value={formData.timeline}
                         onChange={handleChange}
                         required

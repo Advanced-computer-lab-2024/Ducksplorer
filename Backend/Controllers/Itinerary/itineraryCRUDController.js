@@ -78,6 +78,26 @@ const updateItinerary = async (req, res) => { //update
     }
 }
 
+const updateChosenDateItinerary = async (req, res) => { //update
+    //update an itinerary in the database
+    console.log(req.body);
+    try {
+        const { id } = req.params;
+        const { chosenDate } = req.body;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ error: "ID invalid" });
+        }
+        const itinerary = await itineraryModel.findByIdAndUpdate(id, { chosenDate });
+        if (!itinerary) {
+            return res.status(404).json({ error: "Itinerary not found" });
+        }
+        res.status(200).json({ itinerary, x: "Chosen date of the itinerary updated" });
+    }
+    catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
 const deleteItinerary = async (req, res) => { //delete
     //delete an itinerary from the database
     try {
@@ -98,4 +118,4 @@ const deleteItinerary = async (req, res) => { //delete
 }
 
 
-module.exports = { createItinerary, getItinerary, deleteItinerary, updateItinerary, getAllItineraries };
+module.exports = { createItinerary, getItinerary, deleteItinerary, updateItinerary, updateChosenDateItinerary, getAllItineraries };

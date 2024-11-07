@@ -1,24 +1,19 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { TextField, IconButton, InputAdornment, Button, Stack } from '@mui/material';
-import Iconify from '../TopNav/iconify.js'; 
+import { TextField, Button, Stack } from '@mui/material';
 import axios from 'axios';
 import { message } from 'antd';
-import { useTypeContext } from '../../context/TypeContext.js';
-import DropDown from '../DropDown.js';
- 
-const EditProduct =  () =>{
-  const {productId} = useParams();
+
+
+const EditProduct = () => {
+  const { productId } = useParams();
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [availableQuantity, setAvailableQuantity] = useState('');
   const [picture, setPicture] = useState('');
   const [description, setDescription] = useState('');
-  
 
-
-
-  const handleEdit = async () =>{
+  const handleEdit = async () => {
     const data = {};
 
     if (name !== '') data.name = name;
@@ -28,14 +23,14 @@ const EditProduct =  () =>{
     if (description !== '') data.description = description;
 
 
-    try{
+    try {
       const response = await axios.put(`http://localhost:8000/sellerRoutes/editProduct/${productId}`, data);
       if (response.status === 200) {
         message.success('Product edited');
       } else {
         message.error('Failed to edit products');
       }
-    }catch(error){
+    } catch (error) {
       message.error('An error occurred: ' + error.message);
     }
 
@@ -57,11 +52,11 @@ const EditProduct =  () =>{
       alignItems: 'center'
     }}>
       <Button onClick={handleBackButtonClick}>Back</Button>
-     
+
       <Stack spacing={1} sx={{ width: '600px', padding: '10px', backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: '10px' }}>
-      <div className="trial-btn text-white cursor-pointer" >
-        <span className="text-bold"></span>
-      </div>
+        <div className="trial-btn text-white cursor-pointer" >
+          <span className="text-bold"></span>
+        </div>
         <TextField
           name="name"
           label="product"
@@ -105,8 +100,8 @@ const EditProduct =  () =>{
         >
           Edit Product
         </Button>
-        </Stack>
-        </div>
+      </Stack>
+    </div>
   )
 }
 
