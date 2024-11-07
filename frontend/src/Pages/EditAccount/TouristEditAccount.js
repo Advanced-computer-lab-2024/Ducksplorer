@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, TextField, Typography } from '@mui/material';
 import axios from 'axios';
-import { message } from 'antd';
+import { message, Tag } from 'antd';
 import { Link } from 'react-router-dom';
 import TouristNavBar from '../../Components/TouristNavBar.js';
 import StandAloneToggleButton from '../../Components/ToggleButton.js';
 import TouristCategoryDropDown from '../../Components/TouristComponents/TouristCategoryDropDown.js';
+import TagsToggleButtons from '../../Components/MuseumHistoricalPlaceComponent/TagsToggleButtons.js';
+
 const EditProfile = () => {
  
   const [touristDetails, setTouristDetails] = useState({
@@ -18,9 +20,10 @@ const EditProfile = () => {
     wallet: 0,
     tagPreferences: [],
     favouriteCategory:  localStorage.getItem("category"),
-
+    historicalPlacestags: [],
   });
   let allTags = JSON.parse(localStorage.getItem('tags')) || [];
+  let allHistoricalPlacesTags = JSON.parse(localStorage.getItem('MuseumTags')) || [];
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
@@ -54,6 +57,13 @@ const EditProfile = () => {
     };
   }
 
+  function getHistoricalPlaceTagNames(element) {
+    return {
+      _id: element._id,
+      name: element.historicalPlaceTag,
+    };
+  }
+
   useEffect(() => {
     axios
       .get("http://localhost:8000/preferenceTags/")
@@ -65,7 +75,17 @@ const EditProfile = () => {
       .catch((error) => {
         console.error("There was an error fetching the categories!", error);
       });
-  });
+
+    axios.get("http://localhost:8000/historicalPlaceTags/getAllHistoricalPlaceTags")
+      .then((response) => {
+        const data = response.data;
+        allHistoricalPlacesTags = data.map(getHistoricalPlaceTagNames);
+        localStorage.setItem("MuseumTags", JSON.stringify(allHistoricalPlacesTags));
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the Museum Tags!", error);
+      })
+    });
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -105,6 +125,13 @@ const EditProfile = () => {
     setTouristDetails(prevDetails => ({
       ...prevDetails,
       tagPreferences: tags,
+    }));
+  };
+
+  const handleHistoricalPlacesTagsChange = (tags) => {
+    setTouristDetails(prevDetails => ({
+      ...prevDetails,
+      historicalPlacestags: tags,
     }));
   };
 
@@ -191,7 +218,7 @@ const EditProfile = () => {
               <TouristCategoryDropDown category={touristDetails.favouriteCategory} disabled={!isEditing} onChange={handleCategoryChange} />
 
               <Typography variant="h6" sx={{ mt: 2 }}>
-                Choose Preference Tags
+                Choose Itineraries' Preference Tags
               </Typography>
               <Box sx={{ display: 'flex', gap: 1 }}>
                 {allTags.map((element, index) => {
@@ -207,7 +234,25 @@ const EditProfile = () => {
                   );
                 })}
               </Box>
+              <Typography variant="h6" sx={{ mt: 2 }}>
+                Choose Museum & Historical Places' Preference Tags
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                {allHistoricalPlacesTags.map((element, index) => {
+                  return (
+                    <Box key={element._id} sx={{ flex: '1 1 calc(25% - 16px)' }}>
+                      <TagsToggleButtons
+                        tags={touristDetails.historicalPlacestags}
+                        name={element.name}
+                        onChange={handleHistoricalPlacesTagsChange}
+                        disabled={!isEditing}
+                      />
+                    </Box>
+                  );
+                })}
+              </Box>
             </>
+
           )}
           {isEditing ? (
             <Button variant="contained" color="success" onClick={handleSaveClick}>
