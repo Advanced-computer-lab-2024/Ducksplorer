@@ -8,7 +8,7 @@ router.get("/getproducts",getProducts);
 router.get("/findProduct", findProduct);
 router.put("/sortProducts",sortProducts);
 router.get("/filterProducts",filterProducts);
-router.patch("/loyalty/:name/:userName",receiveLoyaltyPoints);
+router.patch("/loyalty/:price/:userName",receiveLoyaltyPoints);
 router.patch("/redeemPoints/:userName", redeemPoints);
 router.get("/myPastBookings/:user", viewMyPastBookings);
 router.get("/getLevel/:userName", getLevel);

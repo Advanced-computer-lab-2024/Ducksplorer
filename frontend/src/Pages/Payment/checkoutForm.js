@@ -1,6 +1,7 @@
 import { PaymentElement } from "@stripe/react-stripe-js";
 import { useState, useEffect } from "react";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
+import axios from "axios";
 
 export default function CheckoutForm() {
   const stripe = useStripe();
@@ -11,6 +12,9 @@ export default function CheckoutForm() {
   const [otp, setOtp] = useState("");
   const [clientSecret, setClientSecret] = useState("");
   const [showOtpPopup, setShowOtpPopup] = useState(false);
+  const [showPointsAnimation, setShowPointsAnimation] = useState(false);
+  const [loyaltyPoints, setLoyaltyPoints] = useState(0);
+  const [totalPoints, setTotalPoints] = useState(0);
 
   useEffect(() => {
     const storedClientSecret = localStorage.getItem("clientSecret");
@@ -80,12 +84,15 @@ export default function CheckoutForm() {
           confirmParams: {
             return_url: `${window.location.origin}/completion`,
           },
+          redirect: "if_required",
         });
 
         if (error) {
           setMessage(error.message);
         } else {
           setMessage("Payment succeeded!");
+          // Trigger loyalty points update after payment is successful
+          handleLoyaltyPointsUpdate();
         }
 
         setShowOtpPopup(false);
@@ -94,6 +101,42 @@ export default function CheckoutForm() {
       }
     } catch (error) {
       setMessage("Failed to confirm OTP.");
+      console.error("Error:", error);
+    }
+  };
+
+  const handleLoyaltyPointsUpdate = async () => {
+    const price = localStorage.getItem("price");
+    const userName = localStorage.getItem("userName");
+
+    if (!price || !userName) {
+      setMessage("Price or user name not found.");
+      return;
+    }
+
+    try {
+      const response = await axios.get(`http://localhost:8000/touristRoutes/loyalty/${userName}`, {
+        params: { price }
+      });
+
+      if (response.data.success) {
+        // Start the animation
+        setShowPointsAnimation(true);
+
+        // Update loyalty points
+        setLoyaltyPoints(response.data.points);
+        setTotalPoints(response.data.points);
+
+        // Display the final message after animation
+        setTimeout(() => {
+          setMessage(`You have earned ${response.data.points} loyalty points. You now have ${response.data.points} total points.`);
+          setShowPointsAnimation(false);
+        }, 3000);  // Delay message until after animation
+      } else {
+        setMessage("Failed to update loyalty points.");
+      }
+    } catch (error) {
+      setMessage("Error updating loyalty points.");
       console.error("Error:", error);
     }
   };
@@ -197,6 +240,23 @@ export default function CheckoutForm() {
             >
               Submit OTP
             </button>
+          </div>
+        )}
+
+        {/* Loyalty points animation */}
+        {showPointsAnimation && (
+          <div style={{
+            marginTop: "20px",
+            padding: "10px",
+            backgroundColor: "#d4edda",
+            color: "#155724",
+            borderRadius: "8px",
+            textAlign: "center",
+            fontSize: "18px",
+            fontWeight: "bold",
+          }}>
+            <p>Points increasing...</p>
+            <div style={{ fontSize: "30px", fontWeight: "bold" }}>{loyaltyPoints} points</div>
           </div>
         )}
       </div>

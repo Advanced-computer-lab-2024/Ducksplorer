@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Tooltip, Box, IconButton, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, List, ListItem, Link } from '@mui/material';
+import {
+  Tooltip, Box, IconButton, Typography, Table, TableBody, TableCell,
+  TableContainer, TableHead, TableRow, Paper, Button, List, ListItem, Link,
+  CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle
+} from '@mui/material';
 import { message } from 'antd';
 import Sidebar from '../../Components/Sidebars/Sidebar';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -9,8 +13,10 @@ import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 
 const ApproveUsers = () => {
   const [pendingUsers, setPendingUsers] = useState([]);
-  const [userFiles, setUserFiles] = useState([]); // State to hold files of the selected user
-  const [selectedUser, setSelectedUser] = useState(null); // State to hold selected user
+  const [userFiles, setUserFiles] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [confirmDialog, setConfirmDialog] = useState({ open: false, action: null, userName: '' });
 
   useEffect(() => {
     axios.get('http://localhost:8000/admin/getpending')
@@ -26,19 +32,23 @@ const ApproveUsers = () => {
   }, []);
 
   const handleApprove = (username) => {
-    axios.put('http://localhost:8000/admin/approveuser', { userName: username })
-      .then(response => {
-        setPendingUsers(pendingUsers.filter(user => user.userName !== username));
-        message.success('User approved successfully!');
+    setLoading(true);
+    axios
+      .put('http://localhost:8000/admin/acceptReject', { userName: username })
+      .then((response) => {
+        setPendingUsers((prevUsers) => prevUsers.filter((user) => user.userName !== username));
+        message.success(response.data.message || 'User approved successfully!');
       })
-      .catch(error => {
-        message.error('There was an error approving the user!');
-        console.error('There was an error approving the user!', error);
-      });
+      .catch((error) => {
+        message.error(error.response?.data?.error || 'There was an error approving the user!');
+        console.error('Error approving user:', error);
+      })
+      .finally(() => setLoading(false));
   };
 
   const handleReject = (username) => {
-    axios.put('http://localhost:8000/admin/rejectuser', { userName: username })
+    setLoading(true);
+    axios.delete('http://localhost:8000/admin/acceptReject', { data: { userName: username } })
       .then(response => {
         setPendingUsers(pendingUsers.filter(user => user.userName !== username));
         message.success('User rejected successfully!');
@@ -46,18 +56,42 @@ const ApproveUsers = () => {
       .catch(error => {
         message.error('There was an error rejecting the user!');
         console.error('There was an error rejecting the user!', error);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   const handleDetails = async (username) => {
     try {
+      setLoading(true);
       const response = await axios.get(`http://localhost:8000/file/user/files/${username}`);
-      setUserFiles(response.data);  // Set user files to display
-      setSelectedUser(username);    // Set selected user to display files for
+      
+      if (response.data.length === 0) {
+        message.info('No documents available for this user');
+      } else {
+        setUserFiles(response.data);
+        setSelectedUser(username);
+      }
     } catch (error) {
       message.error('Error fetching files');
-      console.error(error);
+      console.error('Error fetching files:', error);
+    } finally {
+      setLoading(false);
     }
+  };
+  
+
+  const openConfirmDialog = (action, userName) => {
+    setConfirmDialog({ open: true, action, userName });
+  };
+
+  const handleConfirmAction = () => {
+    const { action, userName } = confirmDialog;
+    if (action === 'approve') {
+      handleApprove(userName);
+    } else if (action === 'reject') {
+      handleReject(userName);
+    }
+    setConfirmDialog({ open: false, action: null, userName: '' });
   };
 
   return (
@@ -87,21 +121,21 @@ const ApproveUsers = () => {
                   <TableCell>{user.status}</TableCell>
                   <TableCell>
                     <Tooltip title="Approve User">
-                      <IconButton color="success" aria-label="Approve user" onClick={() => handleApprove(user.userName)}>
+                      <IconButton color="success" aria-label="Approve user" onClick={() => openConfirmDialog('approve', user.userName)} disabled={loading}>
                         <CheckCircleIcon />
                       </IconButton>
                     </Tooltip>
                   </TableCell>
                   <TableCell>
                     <Tooltip title="Reject User">
-                      <IconButton color="error" aria-label="Reject user" onClick={() => handleReject(user.userName)}>
+                      <IconButton color="error" aria-label="Reject user" onClick={() => openConfirmDialog('reject', user.userName)} disabled={loading}>
                         <CancelIcon />
                       </IconButton>
                     </Tooltip>
                   </TableCell>
                   <TableCell>
                     <Tooltip title="View Files">
-                      <IconButton color="primary" onClick={() => handleDetails(user.userName)}>
+                      <IconButton color="primary" onClick={() => handleDetails(user.userName)} disabled={loading}>
                         <FolderOpenIcon />
                       </IconButton>
                     </Tooltip>
@@ -128,6 +162,30 @@ const ApproveUsers = () => {
             </List>
           </Box>
         )}
+
+        {/* Loading Spinner */}
+        {loading && <CircularProgress sx={{ mt: 2 }} />}
+
+        {/* Confirmation Dialog */}
+        <Dialog
+          open={confirmDialog.open}
+          onClose={() => setConfirmDialog({ ...confirmDialog, open: false })}
+        >
+          <DialogTitle>{`Confirm ${confirmDialog.action === 'approve' ? 'Approval' : 'Rejection'}`}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to {confirmDialog.action} this user?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setConfirmDialog({ ...confirmDialog, open: false })} color="secondary">
+              Cancel
+            </Button>
+            <Button onClick={handleConfirmAction} color="primary">
+              Confirm
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </>
   );

@@ -26,6 +26,7 @@ function TouristNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [image , setImage] = React.useState("");
+  const [storedPicture, setStoredPicture] = React.useState(localStorage.getItem('profilePicture'));
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -35,6 +36,7 @@ function TouristNavBar() {
 //call the getImage in a useEffect
 const userName = JSON.parse(localStorage.getItem("user")).username;
 React.useEffect(() => {
+  const storedPicture = localStorage.getItem('profilePicture');
   getImage(userName);
   console.log("image",image);
 })
@@ -253,16 +255,17 @@ const getImage = async (userName) => {
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open Account settings">
-              <IconButton
-                onClick={handleOpenUserMenu}
-                sx={{ p: 0, ml: 4, width: 40, height: 40 }}
-              >
-                <img
-                  src="duckAvatar.png"
-                  alt="Avatar"
-                  style={{ width: 40, height: 40, borderRadius: "50%" }}
-                />
-              </IconButton>
+            <IconButton
+  onClick={handleOpenUserMenu}
+  sx={{ p: 0, ml: 4, width: 40, height: 40 }}
+>
+  <img
+    src={storedPicture || "duckAvatar.png"}  // Check if profilePicture exists, else use default
+    alt="Avatar"
+    style={{ width: 40, height: 40, borderRadius: "50%" }}
+  />
+</IconButton>
+
             </Tooltip>
             <Menu
               sx={{ mt: "45px" }}

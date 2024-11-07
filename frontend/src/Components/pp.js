@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Avatar, IconButton, Dialog, DialogTitle, DialogActions, DialogContent, Button, Typography } from '@mui/material';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
@@ -8,6 +8,14 @@ const ProfilePictureUpload = ({ username }) => {
   const [profilePicture, setProfilePicture] = useState('/default-profile.png');  // Default profile picture URL
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+
+  // Retrieve profile picture from localStorage on mount
+  useEffect(() => {
+    const storedPicture = localStorage.getItem('profilePicture');
+    if (storedPicture) {
+      setProfilePicture(storedPicture);
+    }
+  }, []);
 
   const handleClickOpen = () => setOpenDialog(true);
   const handleClose = () => setOpenDialog(false);
@@ -27,13 +35,15 @@ const ProfilePictureUpload = ({ username }) => {
     formData.append('file', selectedFile);
 
     try {
-      const response = await axios.post('http://localhost:8000/file/user/upload/picture', formData, {
+      const response = await axios.put('http://localhost:8000/file/user/upload/picture', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
 
-      setProfilePicture(URL.createObjectURL(selectedFile));  // Update profile picture
+      const newProfilePicture = URL.createObjectURL(selectedFile);
+      setProfilePicture(newProfilePicture);  // Update profile picture
+      localStorage.setItem('profilePicture', newProfilePicture);  // Save to localStorage
       message.success(response.data.message);
       handleClose();
     } catch (error) {
@@ -47,6 +57,7 @@ const ProfilePictureUpload = ({ username }) => {
       const response = await axios.get(`http://localhost:8000/file/user/profile/picture/${username}`);
       if (response.data && response.data.url) {
         setProfilePicture(response.data.url);  // Update profile picture with the fetched URL
+        localStorage.setItem('profilePicture', response.data.url);  // Save to localStorage
         message.success("Profile picture loaded successfully!");
       }
     } catch (error) {

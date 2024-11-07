@@ -4,6 +4,8 @@ import axios from 'axios';
 import { message } from 'antd';
 import { Link } from 'react-router-dom';
 import FileUpload from '../../Components/FileUpload';
+import pp from '../../Components/pp';
+import ProfilePictureUpload from '../../Components/pp';
 
 const TourGuideEditProfile = () => {
   const [tourGuideDetails, setTourGuideDetails] = useState({
@@ -90,6 +92,9 @@ const TourGuideEditProfile = () => {
   return (
     <Box sx={{ p: 6 }}>
       <Link to="/tourGuideDashboard"> Back </Link>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3 }}>
+          <ProfilePictureUpload username={tourGuideDetails.userName} />
+        </Box>
       <Typography variant="h4" sx={{ mb: 3 }}>
         Edit Tour Guide Profile ({tourGuideDetails.userName})
       </Typography>

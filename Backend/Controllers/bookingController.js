@@ -241,15 +241,61 @@ const cancelMyBooking = async (req, res) => {
 
 
 
+// const receiveLoyaltyPoints = async (req, res) => {
+//     const { name, userName } = req.params;
+//     try {
+//         const activityDetails = await Activity.findOne({ name });
+//         console.log(name)
+//         if (!activityDetails) {
+//             return res.status(404).json({ success: false, message: 'Activity not found' });
+//         }
+//         const activityPrice = activityDetails.price;
+//         const tourist = await Tourist.findOne({ userName });
+//         if (!tourist) {
+//             return res.status(404).json({ success: false, message: 'Tourist not found' });
+//         }
+
+//         let loyaltyPoints = 0;
+//         switch (tourist.level) {
+//             case 1:
+//                 loyaltyPoints = activityPrice * 0.5;
+//                 break;
+//             case 2:
+//                 loyaltyPoints = activityPrice * 1;
+//                 break;
+//             case 3:
+//                 loyaltyPoints = activityPrice * 1.5;
+//                 break;
+//             default:
+//                 loyaltyPoints = 0;
+//         }
+
+//         tourist.points += loyaltyPoints;
+
+//         await tourist.save();
+//         await updateLevel(tourist.userName, tourist.points);
+
+//         res.status(200).json({ success: true, points: tourist.points });
+//     } catch (error) {
+//         res.status(500).json({ success: false, message: 'An error occurred', error });
+//     }
+// };
+
+
 const receiveLoyaltyPoints = async (req, res) => {
-    const { name, userName } = req.params;
+    let { price, userName } = req.params;
+    
+    console.log('Received price:', price);  // Debugging line to inspect the value of price
+
+    // Validate that price is a valid number
+    price = price.trim();  // Trim any whitespace
+    const priceNumber = parseFloat(price);
+
+    if (isNaN(priceNumber) || priceNumber <= 0) {
+        return res.status(400).json({ success: false, message: 'Invalid price value' });
+    }
+
     try {
-        const activityDetails = await Activity.findOne({ name });
-        console.log(name)
-        if (!activityDetails) {
-            return res.status(404).json({ success: false, message: 'Activity not found' });
-        }
-        const activityPrice = activityDetails.price;
         const tourist = await Tourist.findOne({ userName });
         if (!tourist) {
             return res.status(404).json({ success: false, message: 'Tourist not found' });
@@ -258,13 +304,13 @@ const receiveLoyaltyPoints = async (req, res) => {
         let loyaltyPoints = 0;
         switch (tourist.level) {
             case 1:
-                loyaltyPoints = activityPrice * 0.5;
+                loyaltyPoints = priceNumber * 0.5;
                 break;
             case 2:
-                loyaltyPoints = activityPrice * 1;
+                loyaltyPoints = priceNumber * 1;
                 break;
             case 3:
-                loyaltyPoints = activityPrice * 1.5;
+                loyaltyPoints = priceNumber * 1.5;
                 break;
             default:
                 loyaltyPoints = 0;
@@ -280,6 +326,8 @@ const receiveLoyaltyPoints = async (req, res) => {
         res.status(500).json({ success: false, message: 'An error occurred', error });
     }
 };
+
+
 const getLevel = async (req,res) => {
     const {userName} = req.params;
     try {
@@ -326,8 +374,8 @@ const redeemPoints = async (req, res) => {
         let myWallet = tourist.wallet;
         if (myPoints > addPoints) {
             myPoints -= addPoints;
-            // myWallet = addPoints / 100;
-            myWallet = myWallet + 100;
+            myWallet += addPoints / 100;
+            //myWallet = myWallet + 100;
             tourist.points = myPoints;
             tourist.wallet = myWallet;
             await tourist.save();
@@ -341,7 +389,7 @@ const redeemPoints = async (req, res) => {
         }
         updateLevel(tourist.userName, myPoints);
 
-    } catch {
+    } catch (error) {
         res.status(500).json({ message: "An error occurred", error });
     }
 };

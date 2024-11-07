@@ -4,6 +4,7 @@ import axios from "axios";
 import { message } from "antd";
 import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar";
 import FileUpload from '../../Components/FileUpload';
+import ProfilePictureUpload from "../../Components/pp";
 
 const AdvertiserEditProfile = () => {
   const [advertiserDetails, setAdvertiserDetails] = useState({
@@ -79,6 +80,9 @@ const AdvertiserEditProfile = () => {
           width: "600px",
         }}
       >
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3 }}>
+          <ProfilePictureUpload username={advertiserDetails.userName} />
+        </Box>
         <Typography variant="h4" sx={{ mb: 3, textAlign: "center" }}>
           Edit Your Profile
         </Typography>

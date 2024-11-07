@@ -4,6 +4,7 @@ import axios from 'axios';
 import { message } from 'antd';
 import { Link } from 'react-router-dom';
 import FileUpload from '../../Components/FileUpload';
+import ProfilePictureUpload from '../../Components/pp';
 
 const EditProfile = () => {
   const [sellerDetails, setSellerDetails] = useState({
@@ -66,6 +67,9 @@ const EditProfile = () => {
   return (
     <Box sx={{ p: 6 }}>
       <Link to="/sellerDashboard"> Back </Link>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3 }}>
+          <ProfilePictureUpload username={sellerDetails.userName} />
+        </Box>
       <Typography variant="h4" sx={{ mb: 3 }}>
         Edit Seller Profile ({sellerDetails.userName})
       </Typography>
