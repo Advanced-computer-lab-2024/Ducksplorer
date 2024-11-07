@@ -36,22 +36,6 @@ const updateTouristDetails = async (req, res) => {
   }
 };
 
-//Used for when a tourist decides to delete his account 
-const deleteTourist = async (req, res) => {
-  try {
-    const { userName } = req.params;
-
-    const deletedTourist = await Tourist.findByIdAndDelete(userName);
-    if (!deletedTourist) {
-      return res.status(404).json({ message: "Tourist not found" });
-    }
-    res.status(200).json(deletedTourist)
-  }
-  catch (error) {
-    res.status(400).json({ message: "Error deleting Tourist " })
-  }
-}
-
 const deleteMyTouristAccount = async (req, res) => {
   try {
     // Get tourist username from the route parameters
@@ -65,7 +49,7 @@ const deleteMyTouristAccount = async (req, res) => {
     }
 
     // Delete the tourist account from the tourist model
-    await Tourist.findByIdAndDelete(Tourist._id);
+    await Tourist.findByIdAndDelete(tourist._id);
 
     // Delete the tourist from the bookings table
     await Bookings.deleteMany({ user: userName });
