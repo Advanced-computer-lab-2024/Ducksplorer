@@ -19,7 +19,7 @@ import {
   Rating,
   Slider,
 } from "@mui/material";
-
+import CurrencyConvertor from "../../Components/CurrencyConvertor";
 const FilterActivities = () => {
   const [activities, setActivities] = useState([]);
   const [allActivities, setAllActivities] = useState([]); // Store all activities
@@ -28,7 +28,9 @@ const FilterActivities = () => {
   const [category, setCategory] = useState("");
   const [averageRating, setAverageRating] = useState(0); // Set default value to 0
   const [categories, setCategories] = useState([]); // Store fetched categories
-
+  
+  const [exchangeRates, setExchangeRates] = useState({});
+  const [currency, setCurrency] = useState('EGP');
   // Fetch categories from backend
   useEffect(() => {
     axios
@@ -51,6 +53,11 @@ const FilterActivities = () => {
         console.error("There was an error fetching the activities!", error);
       });
   }, []);
+
+  const handleCurrencyChange = (rates, selectedCurrency) => {
+    setExchangeRates(rates);
+    setCurrency(selectedCurrency);
+  };
 
   // Function to fetch filtered activities
   const fetchFilteredActivities = () => {
@@ -148,7 +155,9 @@ const FilterActivities = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell>Price</TableCell>
+                <TableCell>Price
+                <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                </TableCell>
                 <TableCell>Is Open</TableCell>
                 <TableCell>Category</TableCell>
                 <TableCell>Tags</TableCell>
@@ -163,7 +172,9 @@ const FilterActivities = () => {
               {activities.map((activity) => (
                 <TableRow key={activity._id}>
                   <TableCell>{activity.name}</TableCell>
-                  <TableCell>{activity.price}</TableCell>
+                  <TableCell>                    
+                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                  </TableCell>
                   <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
                   <TableCell>{activity.category}</TableCell>
                   <TableCell>{activity.tags.join(", ")}</TableCell>

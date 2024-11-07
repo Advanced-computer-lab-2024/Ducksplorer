@@ -17,8 +17,19 @@ const activityRoutes = require("./Backend/Routes/activityRoutes.js");
 const categoryRoutes = require("./Backend/Routes/categoryRoutes.js");
 const userRoutes = require("./Backend/Routes/userRoutes.js");
 const bodyParser = require("body-parser");
-
 app.use(bodyParser.urlencoded({ extended: true }));
+const bookingThirdPartyRoutes = require("./Backend/Routes/ThirdParty/bookingRoutes.js");
+const museumRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/museumRoutes.js");
+const historicalPlaceRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceRoutes.js");
+const historicalPlaceTagRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceTagRoutes.js");
+const museumTagRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/museumTagRoutes.js");
+const itineraryRoutes = require("./Backend/Routes/itineraryRoutes.js");
+const tourGuideAccountRoutes = require("./Backend/Routes/TourGuideAccountRoutes.js");
+const advertiserAccountRoutes = require("./Backend/Routes/AdvertiserAccountRoutes.js");
+const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js");
+const transportationBookingThirdPartyRoutes = require("./Backend/Routes/ThirdParty/transportationBookingRoutes.js");
+const complaintRoutes = require("./Backend/Routes/complaintRoutes.js");
+const uploadImage = require("./Backend/Middleware/uploadImageMW.js");
 app.use(cors());
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ limit: "25mb" }));
@@ -28,20 +39,9 @@ app.use("/uploads", express.static("uploads"));
 console.log(process.env.PORT);
 app.use(express.json());
 
-const museumRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/museumRoutes.js");
-const historicalPlaceRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceRoutes.js");
-const historicalPlaceTagRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceTagRoutes.js");
-const museumTagRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/museumTagRoutes.js");
-const itineraryRoutes = require("./Backend/Routes/itineraryRoutes.js");
-const tourGuideAccountRoutes = require("./Backend/Routes/TourGuideAccountRoutes.js");
-const advertiserAccountRoutes = require("./Backend/Routes/AdvertiserAccountRoutes.js");
-const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js");
-const complaintRoutes = require("./Backend/Routes/complaintRoutes.js");
-const uploadImage = require("./Backend/Middleware/uploadImageMW.js");
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cors());
-
-app.use("/uploads", express.static("uploads"));
 
 console.log(process.env.PORT);
 app.use(express.json());
@@ -82,6 +82,8 @@ app.use("/advertiserAccount", advertiserAccountRoutes);
 app.use("/sellerAccount", sellerAccountRoutes);
 app.use("/complaint", complaintRoutes);
 app.use("/users", userRoutes);
+app.use("/", bookingThirdPartyRoutes);
+app.use("/transportBook", transportationBookingThirdPartyRoutes);
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*"); // Allow requests from any origin

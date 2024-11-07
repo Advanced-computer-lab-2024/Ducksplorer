@@ -40,12 +40,12 @@ const AddActivityForm = () => {
         duration: storedDuration,
         tags: storedTags,
       } = JSON.parse(storedFormData);
-
+      
       setName(storedName || "");
       setDate(storedDate || "");
       setIsOpen(storedIsOpen || false);
       setPrice(storedPrice || "");
-      // setCategory(storedCategory || ""); what the fuck is this?
+      // setCategory(storedCategory || ""); 
       setCategory(localStorage.getItem("category") || "");
       setSpecialDiscount(storedDiscount || "");
       setDuration(storedDuration || "");
