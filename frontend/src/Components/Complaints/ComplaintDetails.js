@@ -1,82 +1,115 @@
-// src/Components/MyComplaints.js
+// src/Components/ComplaintDetails.js
 import React, { useEffect, useState } from 'react';
-import { Typography, Container,  CircularProgress, Box, Card, CardContent, Grid, Divider } from '@mui/material';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { Typography, Container, Paper, CircularProgress, Box, Divider } from '@mui/material';
+import axios from 'axios';
+import { message } from 'antd';
 
-const MyComplaints = () => {
-  const [complaints, setComplaints] = useState([]);
+const ComplaintDetails = () => {
+  const { id } = useParams(); // Get the complaint ID from the URL
+  const [complaint, setComplaint] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { touristName } = useParams();
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchMyComplaints = async () => {
+    const fetchComplaintDetails = async () => {
       try {
-        const userJson = localStorage.getItem("user");
-        const user = JSON.parse(userJson);
-        const userName = user.username;
-        const response = await axios.get(`http://localhost:8000/complaint/myComplaints/${userName}`);
-        setComplaints(response.data);
-        setLoading(false);
+        const response = await axios.get(`http://localhost:8000/complaint/${id}`);
+        setComplaint(response.data);
       } catch (error) {
-        console.error("Error fetching complaints:", error);
+        setError('Failed to fetch complaint details');
+        if (error.response) {
+          if (error.response.status === 404) {
+            setError('Complaint not found');
+          } else if (error.response.status === 500) {
+            setError('Server error, please try again later');
+          }
+        } else {
+          setError('Network error, please check your connection');
+        }
+      } finally {
         setLoading(false);
       }
     };
-    fetchMyComplaints();
-  }, [touristName]);
+    fetchComplaintDetails();
+  }, [id]);
 
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height="80vh">
         <CircularProgress size={60} thickness={4} />
+        <Typography variant="h6" color="textSecondary" sx={{ ml: 2 }}>
+          Loading complaint details...
+        </Typography>
       </Box>
     );
   }
 
+  if (error) {
+    return <Typography variant="h6" color="error" textAlign="center">{error}</Typography>;
+  }
+
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: 'bold', color: '#00796b' }}>
-        My Complaints
-      </Typography>
-      <Divider sx={{ mb: 3 }} />
-
-      {complaints.length > 0 ? (
-        <Grid container spacing={3}>
-          {complaints.map((complaint) => (
-            <Grid item xs={12} key={complaint._id}>
-              <Card variant="outlined" sx={{ borderRadius: 2, boxShadow: 2, backgroundColor: '#f9f9f9' }}>
-                <CardContent>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333' }}>
-                    {complaint.title}
-                  </Typography>
-                  <Divider sx={{ my: 1 }} />
-                  <Typography variant="body2" color="textSecondary">
-                    <strong>Date:</strong> {new Date(complaint.date).toLocaleDateString()}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
-                    <strong>Status:</strong>{' '}
-                    <span style={{ fontWeight: 'bold', color: complaint.status ? 'green' : 'orange' }}>
-                      {complaint.status ? "Resolved" : "Pending"}
-                    </span>
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>
-                    <strong>Description:</strong> {complaint.body}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      ) : (
-        <Box display="flex" justifyContent="center" alignItems="center" sx={{ mt: 5 }}>
-          <Typography variant="h6" color="textSecondary">
-            No complaints found.
+      <Paper elevation={4} sx={{ p: 4, borderRadius: 2 }}>
+        <Typography variant="h4" gutterBottom sx={{ color: '#00796b', fontWeight: 'bold' }}>
+          Complaint Details
+        </Typography>
+        <Divider sx={{ mb: 2 }} />
+        
+        {/* Title */}
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="h6" color="textPrimary" sx={{ fontWeight: 'bold' }}>
+            Title:
+          </Typography>
+          <Typography variant="body1" color="textSecondary" sx={{ ml: 1 }}>
+            {complaint.title}
           </Typography>
         </Box>
-      )}
+
+        {/* Date */}
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="h6" color="textPrimary" sx={{ fontWeight: 'bold' }}>
+            Date:
+          </Typography>
+          <Typography variant="body1" color="textSecondary" sx={{ ml: 1 }}>
+            {new Date(complaint.date).toLocaleDateString()}
+          </Typography>
+        </Box>
+
+        {/* Status */}
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="h6" color="textPrimary" sx={{ fontWeight: 'bold' }}>
+            Status:
+          </Typography>
+          <Typography variant="body1" sx={{ color: complaint.status ? 'green' : 'orange', ml: 1 }}>
+            {complaint.status ? 'Resolved' : 'Pending'}
+          </Typography>
+        </Box>
+
+        {/* Description */}
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="h6" color="textPrimary" sx={{ fontWeight: 'bold' }}>
+            Description:
+          </Typography>
+          <Typography variant="body1" color="textSecondary" sx={{ ml: 1 }}>
+            {complaint.body}
+          </Typography>
+        </Box>
+
+        {/* Response */}
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="h6" color="textPrimary" sx={{ fontWeight: 'bold' }}>
+            Response:
+          </Typography>
+          <Typography variant="body1" color="textSecondary" sx={{ ml: 1 }}>
+            {complaint.response || 'No response yet'}
+          </Typography>
+        </Box>
+      </Paper>
     </Container>
   );
 };
 
-export default MyComplaints;
+export default ComplaintDetails;
+  
