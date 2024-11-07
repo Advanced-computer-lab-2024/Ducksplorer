@@ -45,7 +45,8 @@ const AddActivityForm = () => {
       setDate(storedDate || "");
       setIsOpen(storedIsOpen || false);
       setPrice(storedPrice || "");
-      setCategory(localStorage.getItem("category") ? localStorage.getItem("category").trim() : "");
+      // setCategory(localStorage.getItem("category") ? localStorage.getItem("category").trim() : "");
+      setCategory(localStorage.getItem("category") || "");
       setSpecialDiscount(storedDiscount || "");
       setDuration(storedDuration || "");
       tags = storedTags || [];
@@ -68,13 +69,13 @@ const AddActivityForm = () => {
   let isClicked = null;
 
   const validateFields = () => {
-    console.log("Validating fields:");
-    console.log("Name:", name);
-    console.log("Date:", date);
-    console.log("Price:", price);
-    console.log("Category:", category);
-    console.log("Special Discount:", specialDiscount);
-    console.log("Duration:", duration);
+    // console.log("Validating fields:");
+    // console.log("Name:", name);
+    // console.log("Date:", date);
+    // console.log("Price:", price);
+    // console.log("Category:", category);
+    // console.log("Special Discount:", specialDiscount);
+    // console.log("Duration:", duration);
 
     if (
       !date ||
@@ -255,7 +256,8 @@ const AddActivityForm = () => {
               value={duration}
               onChange={(e) => {
                 setDuration(e.target.value);
-                setCategory(localStorage.getItem("category") ? localStorage.getItem("category").trim() : "");
+                // setCategory(localStorage.getItem("category") ? localStorage.getItem("category").trim() : "");
+                setCategory(localStorage.getItem("category").trim());
               }}
             />
             <TextField
