@@ -32,7 +32,7 @@ const HistoricalPlaceTouristPov = () => {
     axios.get(`http://localhost:8000/historicalPlace/getAllHistoricalPlaces`)
       .then(response => {
         if (id == undefined) {
-        setHistoricalPlaces(response.data);
+          setHistoricalPlaces(response.data);
         }
         else {
           const tempHistoricalPlaces = response.data.filter((historicalPlace) => historicalPlace._id == id);
@@ -43,7 +43,7 @@ const HistoricalPlaceTouristPov = () => {
         console.error('There was an error fetching the Historical Places!', error);
         message.error('Error fetching Historical Places!');
       });
-  }, []);
+  }, [id]);
 
   // Callback to handle search results
   const handleSearchResults = (searchResults) => {
@@ -60,30 +60,30 @@ const HistoricalPlaceTouristPov = () => {
     navigate('/UpcomingHistoricalPlaces');
   };
 
-
-
   // Share historical place functionality
   const handleShareLink = (HistoricalPlaceId) => {
     const link = `${window.location.origin}/HistoricalPlaceTouristPov/${HistoricalPlaceId}`; // Update with your actual route
     navigator.clipboard.writeText(link)
-        .then(() => {
-            message.success('Link copied to clipboard!');
-        })
-        .catch(() => {
-            message.error('Failed to copy link.');
-        });
-};
+      .then(() => {
+        message.success('Link copied to clipboard!');
+      })
+      .catch(() => {
+        message.error('Failed to copy link.');
+      });
+  };
 
-const handleShareEmail = (HistoricalPlaceId) => {
+  const handleShareEmail = (HistoricalPlaceId) => {
     const link = `${window.location.origin}/HistoricalPlaceTouristPov/${HistoricalPlaceId}`; // Update with your actual route
-    window.location.href = `mailto:?subject=Check out this historical place&body=Here is the link to the historical place: ${link}`;
-};
-
+    const subject = 'Check out this historical place';
+    const body = `Here is the link to the historical place: ${link}`;
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
 
   return (
     <>
-      <Link to="/touristDashboard"> Back </Link>
-
+      <Button component={Link} to="/touristDashboard" variant="contained" color="primary" style={{ marginBottom: '20px' }}>
+        Back to Dashboard
+      </Button>
       <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'visible', height: '100vh' }}>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
@@ -147,12 +147,12 @@ const handleShareEmail = (HistoricalPlaceId) => {
                     <TableCell>{historicalPlace.tags.join(', ')}</TableCell>
                     <TableCell>{historicalPlace.createdBy}</TableCell>
                     {id == undefined ? (<TableCell>
-                        <Button variant="outlined" onClick={() => handleShareLink(historicalPlace._id)}>
-                            Share Via Link
-                        </Button>
-                        <Button variant="outlined" onClick={() => handleShareEmail(historicalPlace._id)}>
-                            Share Via Email
-                        </Button>
+                      <Button variant="outlined" onClick={() => handleShareLink(historicalPlace._id)}>
+                        Share Via Link
+                      </Button>
+                      <Button variant="outlined" onClick={() => handleShareEmail(historicalPlace._id)}>
+                        Share Via Email
+                      </Button>
                     </TableCell>) : null}
                   </TableRow>
                 ))

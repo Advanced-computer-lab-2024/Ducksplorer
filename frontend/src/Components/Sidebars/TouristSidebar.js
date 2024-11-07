@@ -14,22 +14,17 @@ import {
   Button
 } from "@mui/material";
 import { Link } from 'react-router-dom';
-// import DashboardIcon from '@mui/icons-material/Dashboard';
-// import PeopleIcon from '@mui/icons-material/People';
-// import DeleteIcon from '@mui/icons-material/Delete';
-// import PersonAddIcon from '@mui/icons-material/PersonAdd'; 
-// import CategoryIcon from '@mui/icons-material/Category';
-// import LabelIcon from '@mui/icons-material/Label';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import MuseumIcon from '@mui/icons-material/Museum';
 import PersonIcon from '@mui/icons-material/Person';
-// import CasinoIcon from '@mui/icons-material/Casino';
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
+import BookIcon from '@mui/icons-material/Book'; // Import an icon for "My Past Bookings"
 import axios from 'axios';
+
 const drawerWidth = 300;
 
 const TouristSidebar = () => {
@@ -70,16 +65,19 @@ const TouristSidebar = () => {
       }}
     >
       <div>
-        {/* <img src="logo1.png" style={{ width: '120px' , height: '120px' , padding: '10px', marginLeft: '50px'}} alt="logo" /> */}
         <Typography variant="h6" noWrap sx={{ padding: 2 }}>
           Tourist Dashboard
         </Typography>
         <Divider />
         <List>
 
-          <ListItem button onClick={handleDeleteClick}>
+          <ListItem
+            button
+            onClick={handleDeleteClick}
+            sx={{ color: 'red', cursor: 'pointer' }}
+          >
             <ListItemIcon>
-              <DeleteIcon />
+              <DeleteIcon sx={{ color: 'red' }} />
             </ListItemIcon>
             <ListItemText primary="Delete My Account" />
           </ListItem>
@@ -104,35 +102,47 @@ const TouristSidebar = () => {
             </ListItemIcon>
             <ListItemText primary="View Upcoming Itineraries" />
           </ListItem>
+
           <ListItem button component={Link} to="/TouristAllProducts">
             <ListItemIcon>
               <ShoppingCartIcon />
             </ListItemIcon>
             <ListItemText primary="Products Actions" />
           </ListItem>
+
           <ListItem button component={Link} to="/MuseumTouristPov">
             <ListItemIcon>
               <MuseumIcon />
             </ListItemIcon>
             <ListItemText primary="View Museums" />
           </ListItem>
+
           <ListItem button component={Link} to="/HistoricalPlaceTouristPov">
             <ListItemIcon>
               <MuseumIcon />
             </ListItemIcon>
             <ListItemText primary="View Historical Places" />
           </ListItem>
+
           <ListItem button component={Link} to="/activity/sortFilter">
             <ListItemIcon>
               <WidgetsIcon />
             </ListItemIcon>
             <ListItemText primary="Upcoming Activities" />
           </ListItem>
+
           <ListItem button component={Link} to="/activity/searchActivities">
             <ListItemIcon>
               <SearchIcon />
             </ListItemIcon>
             <ListItemText primary="Search Activities" />
+          </ListItem>
+
+          <ListItem button component={Link} to="/myPastBookings">
+            <ListItemIcon>
+              <BookIcon />
+            </ListItemIcon>
+            <ListItemText primary="My Past Bookings" />
           </ListItem>
         </List>
         <Divider />

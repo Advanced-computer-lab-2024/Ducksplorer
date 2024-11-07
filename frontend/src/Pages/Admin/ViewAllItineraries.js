@@ -175,7 +175,7 @@ const ViewAllItineraries = () => {
                                             </TableCell>
                                             
                                             <TableCell>
-                                                <Tooltip title="Set Itinerary as Inappropriate">
+                                                <Tooltip title="Change Itinerary Flag">
                                                     <IconButton
                                                         color="error"
                                                         aria-label="Flag Itinerary"

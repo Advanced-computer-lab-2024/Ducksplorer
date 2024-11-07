@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import {
   Table,
@@ -17,6 +17,7 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
+import { Link } from 'react-router-dom';
 
 const PastBookingDetails = ({ userName }) => {
   const [booking, setBooking] = useState(null);
@@ -30,7 +31,29 @@ const PastBookingDetails = ({ userName }) => {
   const [tourGuideId, setSelectedTourGuideId] = useState(null);
   const [tourGuideNames, setTourGuideNames] = useState({});
 
-  // Fetch tour guide names for each itinerary in the booking
+  const fetchTourGuideName = useCallback(async (id) => {
+    if (!id || tourGuideNames[id]) return;
+
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/tourGuideRate/getUserNameById/${id}`
+      );
+      setTourGuideNames((prevNames) => ({
+        ...prevNames,
+        [id]: response.data.userName,
+      }));
+    } catch (error) {
+      console.error(
+        "Error fetching tour guide name:",
+        error.response ? error.response.data : error.message
+      );
+      setTourGuideNames((prevNames) => ({
+        ...prevNames,
+        [id]: "N/A",
+      }));
+    }
+  }, [tourGuideNames]);
+
   useEffect(() => {
     const fetchBooking = async () => {
       try {
@@ -64,30 +87,7 @@ const PastBookingDetails = ({ userName }) => {
       }
     };
     fetchBooking();
-  }, [userName]);
-
-  const fetchTourGuideName = async (id) => {
-    if (!id || tourGuideNames[id]) return;
-
-    try {
-      const response = await axios.get(
-        `http://localhost:8000/tourGuideRate/getUserNameById/${id}`
-      );
-      setTourGuideNames((prevNames) => ({
-        ...prevNames,
-        [id]: response.data.userName,
-      }));
-    } catch (error) {
-      console.error(
-        "Error fetching tour guide name:",
-        error.response ? error.response.data : error.message
-      );
-      setTourGuideNames((prevNames) => ({
-        ...prevNames,
-        [id]: "N/A",
-      }));
-    }
-  };
+  }, [userName, fetchTourGuideName]);
 
   if (!booking) return <p>Loading...</p>;
   if (!Array.isArray(booking.activities) || !Array.isArray(booking.itineraries)) {
@@ -208,7 +208,7 @@ const PastBookingDetails = ({ userName }) => {
   const handleTourGuideRateSubmit = async () => {
     try {
       console.log("This is the tourguide id:", tourGuideId)
-      const response = await axios.patch(
+      await axios.patch(
         `http://localhost:8000/tourGuideRate/rateTourGuide/${tourGuideId}`,
         {
           rating: tourGuideRating,
@@ -224,7 +224,7 @@ const PastBookingDetails = ({ userName }) => {
 
   const handleTourGuideCommentSubmit = async () => {
     try {
-      const response = await axios.patch(
+      await axios.patch(
         `http://localhost:8000/tourGuideComment/commentTourGuide/${tourGuideId}`,
         {
           comment: tourGuideComment,
@@ -244,26 +244,11 @@ const PastBookingDetails = ({ userName }) => {
     setOpenDialog(false);
   };
 
-  const getTourGuideId = async (id) => {
-    try {
-      if (!id) {
-        return false;
-      }
-      const response = await axios.get(
-        `http://localhost:8000/tourGuideRate/getTourGuideById/${id}`
-      );
-      console.log("Tour Guide Id Response:", response.data.present);
-      return response.data.present;
-    } catch (error) {
-      console.error(
-        "Error fetching tour guide id:",
-        error.response ? error.response.data : error.message
-      );
-    }
-  }
-
   return (
     <div>
+      <Button component={Link} to="/touristDashboard" variant="contained" color="primary" style={{ marginBottom: '20px' }}>
+        Back to Dashboard
+      </Button>
       <Typography variant="h4" gutterBottom>Bookings History</Typography>
 
       {/* Activities Table */}

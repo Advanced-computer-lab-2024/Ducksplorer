@@ -31,8 +31,8 @@ const MuseumTouristPov = () => {
   useEffect(() => {
     axios.get(`http://localhost:8000/museum/getAllMuseums`)
       .then(response => {
-        if (id == undefined){
-        setMuseums(response.data);
+        if (id == undefined) {
+          setMuseums(response.data);
         }
         else {
           const tempMuseums = response.data.filter((museum) => museum._id == id);
@@ -43,7 +43,7 @@ const MuseumTouristPov = () => {
         console.error('There was an error fetching the museums!', error);
         message.error('Error fetching museums!');
       });
-  }, []);
+  }, [id]);
 
   // Callback to handle search results
   const handleSearchResults = (searchResults) => {
@@ -60,26 +60,30 @@ const MuseumTouristPov = () => {
     navigate('/UpcomingMuseums');
   };
 
-    // Share museum functionality
-    const handleShareLink = (MuseumId) => {
-      const link = `${window.location.origin}/MuseumTouristPov/${MuseumId}`; // Update with your actual route
-      navigator.clipboard.writeText(link)
-          .then(() => {
-              message.success('Link copied to clipboard!');
-          })
-          .catch(() => {
-              message.error('Failed to copy link.');
-          });
+  // Share museum functionality
+  const handleShareLink = (MuseumId) => {
+    const link = `${window.location.origin}/MuseumTouristPov/${MuseumId}`; // Update with your actual route
+    navigator.clipboard.writeText(link)
+      .then(() => {
+        message.success('Link copied to clipboard!');
+      })
+      .catch(() => {
+        message.error('Failed to copy link.');
+      });
   };
-  
+
   const handleShareEmail = (MuseumId) => {
-      const link = `${window.location.origin}/MuseumTouristPov/${MuseumId}`; // Update with your actual route
-      window.location.href = `mailto:?subject=Check out this museum&body=Here is the link to the museum: ${link}`;
+    const link = `${window.location.origin}/MuseumTouristPov/${MuseumId}`; // Update with your actual route
+    const subject = 'Check out this museum';
+    const body = `Here is the link to the museum: ${link}`;
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
   return (
     <>
-      <Link to="/touristDashboard"> Back </Link>
+      <Button component={Link} to="/touristDashboard" variant="contained" color="primary" style={{ marginBottom: '20px' }}>
+        Back to Dashboard
+      </Button>
       <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'visible', height: '100vh' }}>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
@@ -143,12 +147,12 @@ const MuseumTouristPov = () => {
                     <TableCell>{museum.tags.join(', ')}</TableCell>
                     <TableCell>{museum.createdBy}</TableCell>
                     {id == undefined ? (<TableCell>
-                        <Button variant="outlined" onClick={() => handleShareLink(museum._id)}>
-                            Share Via Link
-                        </Button>
-                        <Button variant="outlined" onClick={() => handleShareEmail(museum._id)}>
-                            Share Via Email
-                        </Button>
+                      <Button variant="outlined" onClick={() => handleShareLink(museum._id)}>
+                        Share Via Link
+                      </Button>
+                      <Button variant="outlined" onClick={() => handleShareEmail(museum._id)}>
+                        Share Via Email
+                      </Button>
                     </TableCell>) : null}
                   </TableRow>
                 ))
@@ -166,4 +170,3 @@ const MuseumTouristPov = () => {
 };
 
 export default MuseumTouristPov;
-

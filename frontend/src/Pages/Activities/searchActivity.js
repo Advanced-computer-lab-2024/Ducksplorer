@@ -48,7 +48,7 @@ const SearchActivities = () => {
       .catch((error) => {
         console.error("There was an error fetching the activities!", error);
       });
-  }, []);
+  }, [id]);
 
   // Function to fetch activities based on search criteria
   const fetchSearchedActivities = () => {
@@ -80,7 +80,9 @@ const SearchActivities = () => {
 
   const handleShareEmail = (activityId) => {
     const link = `${window.location.origin}/activity/searchActivities/${activityId}`; // Update with your actual route
-    window.location.href = `mailto:?subject=Check out this activity&body=Here is the link to the activity: ${link}`;
+    const subject = 'Check out this activity';
+    const body = `Here is the link to the activity: ${link}`;
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
   return (
@@ -95,6 +97,9 @@ const SearchActivities = () => {
           marginLeft: 40,
         }}
       >
+        <Button component={Link} to="/touristDashboard" variant="contained" color="primary" style={{ marginBottom: '20px' }}>
+          Back to Dashboard
+        </Button>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <Typography variant="h4">Search Activities</Typography>
         </Box>
