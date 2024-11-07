@@ -31,11 +31,11 @@ const MuseumTouristPov = () => {
   useEffect(() => {
     axios.get(`http://localhost:8000/museum/getAllMuseums`)
       .then(response => {
-        if (id == undefined) {
+        if (id === undefined) {
           setMuseums(response.data);
         }
         else {
-          const tempMuseums = response.data.filter((museum) => museum._id == id);
+          const tempMuseums = response.data.filter((museum) => museum._id === id);
           setMuseums(tempMuseums);
         }
       })
@@ -146,7 +146,7 @@ const MuseumTouristPov = () => {
                     <TableCell>{museum.museumCategory}</TableCell>
                     <TableCell>{museum.tags.join(', ')}</TableCell>
                     <TableCell>{museum.createdBy}</TableCell>
-                    {id == undefined ? (<TableCell>
+                    {id === undefined ? (<TableCell>
                       <Button variant="outlined" onClick={() => handleShareLink(museum._id)}>
                         Share Via Link
                       </Button>

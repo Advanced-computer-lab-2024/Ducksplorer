@@ -35,18 +35,18 @@ function SearchItineraries() {
     useEffect(() => {
         axios.get('http://localhost:8000/itinerary/')
             .then(response => {
-                if (id == undefined) {
+                if (id === undefined) {
                     setItineraries(response.data);
                 }
                 else {
-                    const tempItineraries = response.data.filter((itinerary) => itinerary._id == id);
+                    const tempItineraries = response.data.filter((itinerary) => itinerary._id === id);
                     setItineraries(tempItineraries);
                 }
             })
             .catch(error => {
                 console.error('There was an error fetching the itineraries!', error);
             });
-    }, []);
+    }, [id]);
 
     //search handler
     const handleSearchItineraries = async () => {
@@ -368,7 +368,7 @@ function SearchItineraries() {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {itineraries.map(itinerary => !itinerary.flag && itinerary.isActive == true ? (
+                                    {itineraries.map(itinerary => !itinerary.flag && itinerary.isActive === true ? (
                                         <TableRow key={itinerary._id}>
                                             <TableCell>
                                                 {itinerary.activity && itinerary.activity.length > 0
@@ -427,7 +427,7 @@ function SearchItineraries() {
                                                     ))
                                                     : 'No tags available'}
                                             </TableCell>
-                                            {id == undefined ? (<TableCell>
+                                            {id === undefined ? (<TableCell>
                                                 <Button variant="outlined" onClick={() => handleShareLink(itinerary._id)}>
                                                     Share Via Link
                                                 </Button>

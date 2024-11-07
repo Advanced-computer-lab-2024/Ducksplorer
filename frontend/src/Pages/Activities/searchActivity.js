@@ -34,12 +34,12 @@ const SearchActivities = () => {
     axios
       .get("http://localhost:8000/activity")
       .then((response) => {
-        if (id == undefined) {
+        if (id === undefined) {
           setAllActivities(response.data);
           setActivities(response.data); // Set initial activities to all fetched activities
         }
         else {
-          const tempActivities = response.data.filter((activity) => activity._id == id);
+          const tempActivities = response.data.filter((activity) => activity._id === id);
           setAllActivities(tempActivities);
           setActivities(tempActivities);
         }
@@ -171,7 +171,7 @@ const SearchActivities = () => {
                       <TableCell>
                         <Rating value={activity.averageRating} precision={0.1} readOnly />
                       </TableCell>
-                      {id == undefined ? (<TableCell>
+                      {id === undefined ? (<TableCell>
                         <Button variant="outlined" onClick={() => handleShareLink(activity._id)}>
                           Share Via Link
                         </Button>

@@ -101,7 +101,7 @@ const TouristAllProducts = () => {
   return (
     <div >
       {/* Search Container at the Top */}
-      <Button onClick={handleBackButtonClick}>Back to dashboard</Button>
+      <Button onClick={handleBackButtonClick}>Back</Button>
       <div style={searchContainerStyle}>
       <Stack spacing={2}>
         <TextField

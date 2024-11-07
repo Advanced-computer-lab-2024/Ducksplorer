@@ -31,11 +31,11 @@ const HistoricalPlaceTouristPov = () => {
   useEffect(() => {
     axios.get(`http://localhost:8000/historicalPlace/getAllHistoricalPlaces`)
       .then(response => {
-        if (id == undefined) {
+        if (id === undefined) {
           setHistoricalPlaces(response.data);
         }
         else {
-          const tempHistoricalPlaces = response.data.filter((historicalPlace) => historicalPlace._id == id);
+          const tempHistoricalPlaces = response.data.filter((historicalPlace) => historicalPlace._id === id);
           setHistoricalPlaces(tempHistoricalPlaces);
         }
       })
@@ -146,7 +146,7 @@ const HistoricalPlaceTouristPov = () => {
                     <TableCell>{historicalPlace.HistoricalPlaceCategory}</TableCell>
                     <TableCell>{historicalPlace.tags.join(', ')}</TableCell>
                     <TableCell>{historicalPlace.createdBy}</TableCell>
-                    {id == undefined ? (<TableCell>
+                    {id === undefined ? (<TableCell>
                       <Button variant="outlined" onClick={() => handleShareLink(historicalPlace._id)}>
                         Share Via Link
                       </Button>
