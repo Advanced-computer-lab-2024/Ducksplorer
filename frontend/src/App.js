@@ -92,7 +92,6 @@ function App() {
           />
           <Route path="/RUDMuseum" element={<RUDMuseum />} />
           <Route path="/RUDHistoricalPlace" element={<RUDHistoricalPlace />} />
-          {/* <Route path="/RUDVisit" element={<RUDVisit />} /> */}
           <Route path="/MuseumTouristPov" element={<MuseumTouristPov />} />
           <Route
             path="/HistoricalPlaceTouristPov"
@@ -133,14 +132,7 @@ function App() {
             element={<SearchActivities />}
           />
           <Route path="/activity/SortFilter" element={<SortFilterActivity />} />
-          <Route
-            path="/activity/myActivities"
-            element={
-              <MyActivities
-                userName={JSON.parse(localStorage.getItem("user")).username}
-              />
-            }
-          />
+          <Route path="/activity/myActivities" element={<MyActivities />} />
           <Route path="/location" element={<ClinicLocation />} />
 
           <Route path="/ProductDashboard" element={<ProductDashboard />} />
@@ -155,7 +147,6 @@ function App() {
           <Route path="/AdminAllProducts" element={<AdminAllProducts />} />
           <Route path="/TouristAllProducts" element={<TouristAllProducts />} />
           <Route path="/editAccount" element={<TouristEditAccount />} />
-
           <Route
             path="/advertiserEditAccount"
             element={<AdvertiserEditProfile />}

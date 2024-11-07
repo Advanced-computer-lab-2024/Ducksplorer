@@ -1,6 +1,5 @@
 import { React, useState, useEffect } from "react";
 import CurrencyConvertor from "../CurrencyConvertor";
-import { useState } from "react";
 import {
   Card,
   CardContent,

@@ -28,6 +28,8 @@ const tourGuideAccountRoutes = require("./Backend/Routes/TourGuideAccountRoutes.
 const advertiserAccountRoutes = require("./Backend/Routes/AdvertiserAccountRoutes.js");
 const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js");
 const transportationBookingThirdPartyRoutes = require("./Backend/Routes/ThirdParty/transportationBookingRoutes.js");
+const complaintRoutes = require("./Backend/Routes/complaintRoutes.js");
+const uploadImage = require("./Backend/Middleware/uploadImageMW.js");
 app.use(cors());
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ limit: "25mb" }));
@@ -37,29 +39,7 @@ app.use("/uploads", express.static("uploads"));
 console.log(process.env.PORT);
 app.use(express.json());
 
-const museumRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/museumRoutes.js");
-const historicalPlaceRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceRoutes.js");
-const historicalPlaceTagRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceTagRoutes.js");
-const museumTagRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/museumTagRoutes.js");
-const itineraryRoutes = require("./Backend/Routes/itineraryRoutes.js");
-const tourGuideAccountRoutes = require("./Backend/Routes/TourGuideAccountRoutes.js");
-const advertiserAccountRoutes = require("./Backend/Routes/AdvertiserAccountRoutes.js");
-const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js");
-const complaintRoutes = require("./Backend/Routes/complaintRoutes.js");
-const uploadImage = require("./Backend/Middleware/uploadImageMW.js");
-
 app.use(bodyParser.urlencoded({ extended: true }));
-
-const museumRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/museumRoutes.js");
-const historicalPlaceRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceRoutes.js");
-const historicalPlaceTagRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceTagRoutes.js");
-const museumTagRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/museumTagRoutes.js");
-const itineraryRoutes = require("./Backend/Routes/itineraryRoutes.js");
-const tourGuideAccountRoutes = require("./Backend/Routes/TourGuideAccountRoutes.js");
-const advertiserAccountRoutes = require("./Backend/Routes/AdvertiserAccountRoutes.js");
-const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js");
-const complaintRoutes = require("./Backend/Routes/complaintRoutes.js");
-const uploadImage = require("./Backend/Middleware/uploadImageMW.js");
 
 app.use(cors());
 
