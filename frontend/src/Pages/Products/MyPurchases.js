@@ -56,14 +56,8 @@ function MyPurchases() {
                 product={product}
                 productID={product._id}
                 showRating={true}
+                showReview={true}
               />
-              <Button
-                variant="contained"
-                color="primary"
-                style={{ position: "absolute", right: "10px", top: "10px" }} // Place the button at the top-right corner
-              >
-                Add Review
-              </Button>
             </div>
           ))
         ) : (

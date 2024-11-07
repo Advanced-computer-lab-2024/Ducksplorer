@@ -1,15 +1,19 @@
 // src/Components/AllProducts.js
-import React, {  useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 import { message } from "antd";
 import { TextField, Button, Stack } from "@mui/material";
+import UploadFile from "../../Components/FileUpload.js";
+
+let picture = "";
 
 function AddProducts() {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [availableQuantity, setAvailableQuantity] = useState("");
   const [description, setDescription] = useState("");
-  const [picture, setPicture] = useState(null);
+  // const [picture, setPicture] = useState("");
+  const [URL, setURL] = useState("");
   const fileInputRef = useRef(null); // Use a ref to access the file input
 
   const handleAddProduct = async () => {
@@ -18,6 +22,8 @@ function AddProducts() {
       const user = JSON.parse(userJson);
       const userName = user.username;
       const seller = userName;
+      console.log("URL:", typeof URL);
+      console.log("picture", picture);
       const response = await axios.post(
         "http://localhost:8000/adminRoutes/createProducts",
         {
@@ -45,6 +51,11 @@ function AddProducts() {
 
   const handleBackClick = () => {
     window.history.back();
+  };
+
+  const handleUpload = (url) => {
+    setURL(url);
+    picture = url;
   };
 
   return (
@@ -82,7 +93,7 @@ function AddProducts() {
           variant="outlined"
           fullWidth
         /> */}
-        <form>
+        {/* <form>
           <input
             type="file"
             id="image"
@@ -94,7 +105,9 @@ function AddProducts() {
               setPicture(file);
             }}
           />
-        </form>
+        </form> */}
+
+        <UploadFile onUpload={handleUpload} />
 
         <TextField
           label="Description"

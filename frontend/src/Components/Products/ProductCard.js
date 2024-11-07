@@ -5,6 +5,7 @@ import {
   Typography,
   CardMedia,
   Button,
+  TextField
 } from "@mui/material";
 import useUserRole from "../getRole";
 import { message } from "antd";
@@ -19,30 +20,49 @@ const ProductCard = ({
   showUnarchive,
   productID,
   showRating,
+  showReview
 }) => {
   const role = useUserRole();
   const [archived, setArchived] = useState(product.isArchived);
   const [rating, setRating] = useState(product.rating || 0);
+  const [review, setReview] = useState("");
+  const [showReviewBox, setShowReviewBox] = useState(false);
 
   useEffect(() => {
     setArchived(product.isArchived);
   }, [product.isArchived]);
 
+  useEffect(() => {
+    // Fetch the product's rating for this buyer on component mount
+    const fetchRating = async () => {
+      const userJson = localStorage.getItem("user");
+      const user = JSON.parse(userJson);
+      const userName = user.username;
+
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/touristRoutes/getRating/${productID}/rating/${userName}`
+        );
+
+        if (response.status === 200 && response.data.rating !== undefined) {
+          setRating(response.data.rating); // Set the buyer's rating from the database
+        }
+      } catch (error) {
+        console.error("Failed to fetch rating:", error);
+      }
+    };
+
+    fetchRating();
+  }, [productID]);
+
+  const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
+  const user = JSON.parse(userJson);
+  const userName = user.username;
+
   const handleRatingChange = async (event, newValue) => {
     setRating(newValue);
     console.log("i have been clicked");
-    const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
-    const user = JSON.parse(userJson);
-    const userName = user.username;
     try {
-      console.log(newValue);
-      console.log("product", product);
-      console.log("user", userName);
-      console.log(typeof newValue);
-      console.log("this is the data", {
-        buyer: userName,
-        rating: newValue,
-      });
       const response = await axios.put(
         `http://localhost:8000/touristRoutes/updateProducts/${productID}`,
         {
@@ -56,6 +76,26 @@ const ProductCard = ({
         message.error("Failed to submit rating");
       }
     } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleAddReview = async () => {
+    try{
+      const response = await axios.put(
+        `http://localhost:8000/touristRoutes/addReview/${productID}`,
+        {
+          buyer: userName,
+          review: review,
+        }
+      );
+      if (response.status === 200) {
+        message.success("Review added successfully");
+        setShowReviewBox(false);
+      } else {
+        message.error("Failed to submit review");
+      }
+    }catch(error){
       console.error(error);
     }
   };
@@ -160,6 +200,32 @@ const ProductCard = ({
               readOnly={false}
               precision={0.5}
             />
+          </div>
+        )}
+        {role === "Tourist" && showReview && (
+          <Button
+          variant="contained"
+          color="primary"
+          style={{ position: "absolute", right: "10px", bottom: "10px" }} 
+          onClick={() => setShowReviewBox(!showReviewBox)}
+          >
+            {showReviewBox ? "Cancel" : "Add Review"}
+          </Button>
+        )}
+        {showReviewBox && (
+          <div>
+            <TextField
+              label="Write your review"
+              variant="outlined"
+              fullWidth
+              multiline
+              rows={4}
+              value={review}
+              onChange={(e) => setReview(e.target.value)}
+            />
+            <Button onClick={handleAddReview} variant="contained" color="primary">
+              Submit Review
+            </Button>
           </div>
         )}
       </CardContent>

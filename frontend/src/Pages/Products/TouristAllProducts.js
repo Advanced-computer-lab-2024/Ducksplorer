@@ -77,8 +77,12 @@ const TouristAllProducts = () => {
 
   const handleSortProducts = ()=> {
     navigate('/SortProducts');
-  }
+  };
 
+  const handleMyPurchases = () => {
+    navigate('/myPurchases');
+  };
+  
   const handleBackButtonClick = () => {
     window.history.back();
   };
@@ -178,7 +182,14 @@ const TouristAllProducts = () => {
         >
           Sort Products
         </Button>
-        
+        <Button
+            fullWidth
+            variant="contained"
+            onClick={handleMyPurchases}
+            style={sidebarButtonStyle}
+          >
+            My Purchases
+          </Button>
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
