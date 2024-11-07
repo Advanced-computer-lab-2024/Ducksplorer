@@ -1,6 +1,7 @@
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
+import StorefrontIcon from "@mui/icons-material/Storefront";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -20,6 +21,7 @@ import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import LockIcon from "@mui/icons-material/Lock";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+
 function TouristNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -139,6 +141,12 @@ function TouristNavBar() {
                   </IconButton>
                   <Typography textAlign="center">Transportation</Typography>
                 </MenuItem>
+                <MenuItem onClick={() => handleNavigation("products")}>
+                  <IconButton>
+                    <DirectionsCarIcon />
+                  </IconButton>
+                  <Typography textAlign="center">Products</Typography>
+                </MenuItem>
               </Box>
             </Menu>
           </Box>
@@ -211,6 +219,14 @@ function TouristNavBar() {
                 </Typography>
               </IconButton>
             </Tooltip>
+            <Tooltip title="View Products">
+              <IconButton onClick={() => handleNavigation("TouristAllProducts")}>
+                <StorefrontIcon />
+                <Typography textAlign="center" marginRight={1}>
+                  Products
+                </Typography>
+              </IconButton>
+            </Tooltip>
             <Tooltip title="View My Bookings">
               <IconButton onClick={() => handleNavigation("mybookings")}>
                 <BookmarkAddedIcon />
@@ -264,12 +280,12 @@ function TouristNavBar() {
               <MenuItem onClick={handleCloseUserMenu}>
                 <IconButton
                   component="a"
-                  href="/changePassword"
+                  href="/logout"
                   sx={{ textAlign: "center", p: 0.5 }}
                 >
-                  <LockIcon sx={{ fontSize: 20 , color: "gold"}} />
+                  <LockIcon sx={{ fontSize: 20 , color:"blue"}} />
                   <Typography sx={{ ml: 1 }} variant="body2">
-                    Change Password
+                    Logout
                   </Typography>
                 </IconButton>
               </MenuItem>
@@ -294,4 +310,5 @@ function TouristNavBar() {
     </AppBar>
   );
 }
+
 export default TouristNavBar;

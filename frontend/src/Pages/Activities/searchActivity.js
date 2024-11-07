@@ -31,8 +31,15 @@ const SearchActivities = () => {
   }
   // Fetch all activities when component mounts
   useEffect(() => {
+    const showPreferences = localStorage.getItem("showPreferences");
+    const favCategory = localStorage.getItem("category");
     axios
-      .get("http://localhost:8000/activity")
+    .get("http://localhost:8000/activity/", {
+      params: {
+        showPreferences,
+        favCategory
+      }
+    })
       .then((response) => {
         setAllActivities(response.data);
         setActivities(response.data); // Set initial activities to all fetched activities
