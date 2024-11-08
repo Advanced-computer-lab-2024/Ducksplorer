@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const { schema } = require('./activityModel');
-const Activity = require('./activityModel'); //anhy line el sah? 2 or 3 and it will reflect on line9
+const { schema } = require('./activityModel'); // This line is correct
+const Activity = require('./activityModel');
 const Schema = mongoose.Schema;
 const TourGuide = require('./tourGuideModel');
 const Tags = require('./preferenceTagsModels');
@@ -17,7 +17,7 @@ const itinerarySchema = new Schema({
         required: true
     },
     timeline: {
-        type: String, //ask ehh da bezabt el timeline
+        type: String,
         required: true
     },
     language: {
@@ -32,15 +32,15 @@ const itinerarySchema = new Schema({
         type: [Date],
         required: true
     },
-    accessibility: { //ehh da ma3lesh?
+    accessibility: {
         type: String,
         required: true
     },
-    pickUpLocation: { //google maps bardo wala 3ady?
+    pickUpLocation: {
         type: String,
         required: true
     },
-    dropOffLocation: { //google maps bardo wala 3ady?
+    dropOffLocation: {
         type: String,
         required: true
     },
@@ -49,21 +49,46 @@ const itinerarySchema = new Schema({
         ref: 'TourGuide',
         required: false
     },
-    rating: {
+    bookedCount: {
         type: Number,
-        min: 0,
-        max: 5,
-        required: false,
-        default: 0
+        default: 0,
+        required: false
     },
     tags: {
         type: [String],
         required: false
-    }
-}, { timestamps: true })
+    },
+    chosenDate: {
+        type: Date,
+        required: false
+    },
+    flag: {
+        type: Boolean,
+        required: false
+    },
+    isActive: {
+        type: Boolean,
+        required: false
+    },
+    ratings: {
+        type: [Number],
+        required: false
+    },
+    averageRating: {
+        type: Number,
+        required: false
+    },
+    comments: {
+        type: [String],
+        required: false,
+    },
+    bookedCount: {
+        type: Number,
+        default: 0,
+        required: false
+    },
+}, { timestamps: true }); // Moved `timestamps` to schema options here
 
 const Itinerary = mongoose.model("Itinerary", itinerarySchema);
 
 module.exports = Itinerary;
-
-//activities, locations to be visited, timeline, duration of each activity, language of tour, price of tour, available dates and times, accessibility, pick up/ drop off location.

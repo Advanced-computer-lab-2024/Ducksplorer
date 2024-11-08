@@ -2,6 +2,7 @@ const Activity = require("../../Models/activityModel.js");
 const activityService = require("../../Services/activityServices.js");
 const Tags = require("../../Models/preferenceTagsModels.js");
 const Category = require("../../Models/activityCategory.js");
+const mongoose = require("mongoose");
 
 const createActivity = async (req, res) => {
   try {
@@ -16,6 +17,17 @@ const getAllActivitiesByUsername = async (req, res) => {
   try {
     const { advertiser } = req.params; // Change to username
     const activities = await Activity.find({ advertiser }); // Update the service method
+    res.status(200).json(activities);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+//Get activities that have flag false ie they are appropriate
+const getAppropriateActivities = async (req, res) => {
+  try {
+    const activities = await Activity.find({ flag: false });
     res.status(200).json(activities);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -228,6 +240,8 @@ const sortActivities = async (req, res) => {
     res.status(500).json({ message: "Error sorting activities" });
   }
 };
+
+
 const rateActivity = async (req, res) => {
   const { activityId } = req.params;
   const { rating } = req.body;
@@ -255,6 +269,41 @@ const rateActivity = async (req, res) => {
   }
 };
 
+
+const toggleFlagActivity = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid ID" });
+    }
+
+    const activity = await Activity.findById(id);
+
+    if (!activity) {
+      return res.status(404).json({ error: "Activity not found" });
+    }
+    if (activity.flag === undefined) {
+      return res.status(400).json({ messsage: "Doesnt have a flag attribute" });
+    }
+    // Toggle the flag status
+    activity.flag = !activity.flag; // Set flag to the opposite of its current value
+
+    // Save the updated activity because it is not just changed in memory not on server
+    const updatedActivity = await activity.save();
+
+    res.status(200).json({
+      status: 200,
+      activity: updatedActivity,
+      message: `Activity flagged as ${updatedActivity.flag ? "inappropriate" : "appropriate"}`,
+    });
+  } catch (error) {
+    res.status(400).json({ error: error.message + "error in toggleFlag" });
+  }
+};
+
+
 module.exports = {
   createActivity,
   getAllActivitiesByUsername,
@@ -265,4 +314,6 @@ module.exports = {
   filterActivity,
   sortActivities,
   rateActivity,
+  getAppropriateActivities,
+  toggleFlagActivity
 };

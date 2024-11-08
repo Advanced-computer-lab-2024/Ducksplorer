@@ -36,11 +36,31 @@ const touristSchema = new Schema(
       required: true,
       type: String,
     },
+    profilePicture: {
+      filename: { type: String },
+      filepath: { type: String },
+      uploadedAt: { type: Date },
+    },
+    files: [
+      {
+        filename: String,
+        filepath: String,
+        uploadedAt: { type: Date, default: Date.now },
+      },
+    ],
     wallet: {
         type: Number,
         required: true,
         default: 0,
-        immutable: true // This makes the field read-only
+        immutable: false // This makes the field read-only
+    },
+    level:{
+      type: Number,
+      default: 1
+    },
+    points:{
+      type: Number,
+      default:0
     }
 },{timestamps: true})
 

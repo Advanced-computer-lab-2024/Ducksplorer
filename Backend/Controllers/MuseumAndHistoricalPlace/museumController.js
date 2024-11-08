@@ -19,7 +19,8 @@ const { default: mongoose } = require('mongoose');//allows us to do the check of
 //Create a new museum
 const addMuseum = async (req, res) => {
     try {
-        const { description, location, ticketPrices, openingTime, closingTime, museumDate, museumName, museumCategory, tags, createdBy } = req.body;
+        const { description, location, ticketPrices, openingTime, closingTime, museumDate, museumName,
+            museumCategory, tags, createdBy } = req.body;
 
         // Get the file paths from req.files
         //const pictures = req.body.map(file => file.path); // use this if u want file uploads but you will have to modify the frontend
@@ -101,12 +102,14 @@ const getAllMuseums = async (req, res) => {
 const updateMuseum = async (req, res) => {
     try {
         const { id } = req.params;
-        const { description, pictures, location, ticketPrices, openingTime, closingTime, museumDate, museumName, museumCategory, tags, createdBy } = req.body;
+        const { description, pictures, location, ticketPrices, openingTime, closingTime, 
+            museumDate, museumName, museumCategory, tags, createdBy } = req.body;
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid Museum ID" });
         }
-        const updatedMuseum = await museumModel.findByIdAndUpdate(id, { description, pictures, location, ticketPrices, openingTime, closingTime, museumDate, museumName, museumCategory, tags, createdBy }, { new: true, runValidators: true });
+        const updatedMuseum = await museumModel.findByIdAndUpdate(id, { description, pictures, location, 
+            ticketPrices, openingTime, closingTime, museumDate, museumName, museumCategory, tags, createdBy }, { new: true, runValidators: true });
         if (!updatedMuseum) {
             return res.status(404).json({ message: "Museum not found" });
         }

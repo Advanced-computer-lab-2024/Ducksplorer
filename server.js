@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const app = express(); //el kol fel kol
 const PORT = process.env.PORT || 8000; //tells us to get port from env file or law ma3refsh yegebha it's 3000
 const cors = require('cors');
+const path = require('path');
 const touristRoutes = require('./Backend/Routes/touristRoutes.js');
 const sellerRoutes = require('./Backend/Routes/sellerRoutes.js');
 const adminProductRoutes = require('./Backend/Routes/adminRoutes.js');
@@ -14,12 +15,20 @@ const AdminActivityRoutes = require("./Backend/Routes/Admin/AdminActivityRoutes.
 const preferenceTagsRoutes = require("./Backend/Routes/Admin/PreferenceTagsRoutes.js");
 const activityRoutes = require("./Backend/Routes/activityRoutes.js");
 const categoryRoutes = require("./Backend/Routes/categoryRoutes.js");
-
+const fileRoutes = require("./Backend/Routes/fileRoutes.js")
+const paymentRoutes = require('./Backend/Routes/paymentRoutes.js');
+const bookingThirdPartyRoutes = require("./Backend/Routes/ThirdParty/bookingRoutes.js");
+// // const documentRoutes = require('./Backend/Routes/documentRoutes');
+// //const bodyParser = require('body-parser');
 app.use(cors());
 
-app.use('/uploads', express.static('uploads'));
+//__dirname = path.dirname(fileURLToPath(import.meta.url)); // Set __dirname
+app.use("/uploads", (req, res, next) => {
+  console.log("Static file request:", req.url);
+  next();
+}, express.static(path.join(__dirname, "uploads")));
 
-
+//app.use(bodyParser.json());
 
 console.log(process.env.PORT);
 app.use(express.json());
@@ -34,6 +43,8 @@ const itineraryRoutes = require("./Backend/Routes/itineraryRoutes.js")
 const tourGuideAccountRoutes = require("./Backend/Routes/TourGuideAccountRoutes.js")
 const advertiserAccountRoutes = require("./Backend/Routes/AdvertiserAccountRoutes.js")
 const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js")
+const tourGuideRateRoutes = require("./Backend/Routes/tourGuideRateRoutes.js")
+const tourGuideCommentRoutes = require("./Backend/Routes/tourGuideCommentRoutes.js")
 
 
 app.use("/signUp", signUpRoutes);
@@ -45,7 +56,8 @@ app.use("/admin", adminRoutes);
 app.use("/touristAccount", touristAccountRoutes);
 app.use("/adminActivity", AdminActivityRoutes);
 app.use("/preferenceTags", preferenceTagsRoutes);
-app.use("/category", categoryRoutes); app.use("/museum", museumRoutes);
+app.use("/category", categoryRoutes);
+app.use("/museum", museumRoutes);
 app.use("/historicalPlace", historicalPlaceRoutes);
 app.use("/historicalPlaceTags", historicalPlaceTagRoutes);
 app.use("/museumTags", museumTagRoutes);
@@ -53,6 +65,11 @@ app.use("/itinerary", itineraryRoutes);
 app.use("/tourGuideAccount", tourGuideAccountRoutes);
 app.use("/advertiserAccount", advertiserAccountRoutes);
 app.use("/sellerAccount", sellerAccountRoutes);
+app.use('/file', fileRoutes);
+app.use('/payment', paymentRoutes);
+// app.use('/api/documents', documentRoutes);app.use("/", bookingThirdPartyRoutes);
+app.use("/tourGuideRate", tourGuideRateRoutes);
+app.use("/tourGuideComment", tourGuideCommentRoutes);
 
 
 app.use((req, res, next) => {
@@ -75,4 +92,3 @@ app.listen(PORT, () => {
   connectToMongoDB();
   console.log(`Server Running on Port ${PORT}`)
 });
-

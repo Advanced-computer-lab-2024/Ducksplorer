@@ -34,7 +34,6 @@ const sidebarButtonStyle = {
 const ProductDashboard = () => {
   // State for managing the dropdown menu
   const [anchorEl, setAnchorEl] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate(); 
 
   const handleFilterClick = (event) => {
@@ -43,11 +42,6 @@ const ProductDashboard = () => {
 
   const handleFilterClose = () => {
     navigate('/FilterProducts');
-  };
-
-  // Handler for search input change
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
   };
 
   // Placeholder functions for button actions

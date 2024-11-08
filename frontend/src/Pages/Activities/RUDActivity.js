@@ -1,9 +1,15 @@
+//This is no longer used 
+
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { message } from "antd";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import WarningIcon from '@mui/icons-material/Warning';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { calculateAverageRating } from "../../Utilities/averageRating.js";
+import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
+
 import {
   Rating,
   Checkbox,
@@ -27,7 +33,6 @@ import {
   Tooltip,
   TextField,
 } from "@mui/material";
-import StandAloneToggleButton from "../../Components/ToggleButton.js";
 
 const RUDActivity = () => {
   const [activities, setActivities] = useState([]);
@@ -35,6 +40,9 @@ const RUDActivity = () => {
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [editingActivity, setEditingActivity] = useState(null);
 
+  
+  const [exchangeRates, setExchangeRates] = useState({});
+  const [currency, setCurrency] = useState('EGP');
   const [formData, setFormData] = useState({
     name: "",
     price: "",
@@ -50,6 +58,11 @@ const RUDActivity = () => {
 
   // Ref to the form for scrolling
   const formRef = useRef(null);
+
+  const handleCurrencyChange = (rates, selectedCurrency) => {
+    setExchangeRates(rates);
+    setCurrency(selectedCurrency);
+  };
 
   // Handle fetching activities
   useEffect(() => {
@@ -147,15 +160,18 @@ const RUDActivity = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell>Price</TableCell>
+                <TableCell>Price
+                <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                </TableCell>
                 <TableCell>Is open</TableCell>
                 <TableCell>Category</TableCell>
                 <TableCell>Tags</TableCell>
                 <TableCell>Discount</TableCell>
-                <TableCell>Date</TableCell>
+                <TableCell>Dates and Times</TableCell>
                 <TableCell>Duration</TableCell>
                 <TableCell>Location</TableCell>
                 <TableCell>Rating</TableCell>
+                <TableCell>Flag</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -163,12 +179,24 @@ const RUDActivity = () => {
               {activities.map((activity) => (
                 <TableRow key={activity._id}>
                   <TableCell>{activity.name}</TableCell>
-                  <TableCell>{activity.price}</TableCell>
+                  <TableCell>                    
+                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                  </TableCell>
                   <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
                   <TableCell>{activity.category}</TableCell>
                   <TableCell>{activity.tags}</TableCell>
                   <TableCell>{activity.specialDiscount}</TableCell>
-                  <TableCell>{activity.date}</TableCell>
+                  <TableCell>{activity.date ? (() => {
+                    const dateObj = new Date(activity.date);
+                    const date = dateObj.toISOString().split('T')[0];
+                    const time = dateObj.toTimeString().split(' ')[0];
+                    return (
+                      <div>
+                        {date} at {time}
+                      </div>
+                    );
+                  })()
+                    : 'No available date and time'}</TableCell>
                   <TableCell>{activity.duration}</TableCell>
                   <TableCell>{activity.location}</TableCell>
                   <TableCell>
@@ -178,6 +206,18 @@ const RUDActivity = () => {
                       readOnly
                     />
                   </TableCell>
+
+                  <TableCell> {activity.flag ? (
+                    <span style={{ color: 'red', display: 'flex', alignItems: 'center' }}>
+                      <WarningIcon style={{ marginRight: '4px' }} />
+                      Inappropriate
+                    </span>
+                  ) : (
+                    <span style={{ color: 'green', display: 'flex', alignItems: 'center' }}>
+                      <CheckCircleIcon style={{ marginRight: '4px' }} />
+                      Appropriate
+                    </span>
+                  )}</TableCell>
 
                   <TableCell>
                     <Tooltip title="Delete Activity">

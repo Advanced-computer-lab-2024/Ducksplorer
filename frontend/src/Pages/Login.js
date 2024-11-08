@@ -17,74 +17,74 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const [loading, setLoading] = useState(false);
 
-const handleLogin = async () => {
+  const handleLogin = async () => {
     try {
 
-        setLoading(true);
-        console.log(localStorage.getItem('user'));
-        const response = await axios.post('http://localhost:8000/signUp/login', {
-            userName,
-            password,
-        });
-        console.log(response);
-        if (response.status === 200) {
-            message.success('Logged in successfully');
-            switch (response.data.role) {
-              case 'Admin':
-                window.location.href = '/AdminDashboard';
-                break;
-              case 'Tourist':
-                window.location.href = '/touristDashboard';
-                break;
-              case 'Guide':
-                window.location.href = '/tourGuideDashboard';
-                break;
-              case 'Governor':
-                window.location.href = '/governorDashboard';
-                break;
-              case 'Advertiser':
-                window.location.href = '/advertiserDashboard';
-                break;
-              case 'Seller':
-                window.location.href = '/sellerDashboard';
-                break;
-              default:
-                message.error('Unknown role');
-            }
-           
-           localStorage.setItem('user', JSON.stringify(response.data));
-        } else if (response.status === 400) {
-           throw new Error(response.error);
+      setLoading(true);
+      //console.log(localStorage.getItem('user'));
+      const response = await axios.post('http://localhost:8000/signUp/login', {
+        userName,
+        password,
+      });
+      console.log(response);
+      if (response.status === 200) {
+        message.success('Logged in successfully');
+        switch (response.data.role) {
+          case 'Admin':
+            window.location.href = '/AdminDashboard';
+            break;
+          case 'Tourist':
+            window.location.href = '/touristDashboard';
+            break;
+          case 'Guide':
+            window.location.href = '/tourGuideDashboard';
+            break;
+          case 'Governor':
+            window.location.href = '/governorDashboard';
+            break;
+          case 'Advertiser':
+            window.location.href = '/advertiserDashboard';
+            break;
+          case 'Seller':
+            window.location.href = '/sellerDashboard';
+            break;
+          default:
+            message.error('Unknown role');
         }
+
+        localStorage.setItem('user', JSON.stringify(response.data));
+      } else if (response.status === 400) {
+        throw new Error(response.error);
+      }
     } catch (error) {
       message.error(error.response.data.error);
     }
-    finally{
-        setLoading(false);
+    finally {
+      setLoading(false);
     }
-};
+  };
 
-  
+
 
   return (
-   
-   <>
+
+    <>
       <div className="text-center">
-          <img src="logo3.png" style={{ width: '300px' , height: '200px', justifyContent: 'center'}} alt="logo" />
-          <h4 className="mt-1 mb-5 pb-1" style={{color: 'orange', textAlign: 'center', fontSize: '24px', fontWeight: 'bold', textShadow: '2px 2px 4px #aaa'}}>
-            Login
-          </h4>
+        <img src="logo3.png" style={{ width: '300px', height: '200px', justifyContent: 'center' }} alt="logo" />
+        <h4 className="mt-1 mb-5 pb-1" style={{ color: 'orange', textAlign: 'center', fontSize: '24px', fontWeight: 'bold', textShadow: '2px 2px 4px #aaa' }}>
+          Login
+        </h4>
       </div>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <Stack spacing={3}>
-          <TextField 
+        <Stack spacing={3}>
+          <TextField
             name="username"
             label="Username"
             type="text"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
           />
-      
+
           <TextField
             name="password"
             label="Password"
@@ -94,42 +94,42 @@ const handleLogin = async () => {
             width="20"
             onChange={(e) => setPassword(e.target.value)}
             InputProps={{
-            endAdornment:(
-            <InputAdornment position="end">
-              <IconButton
-                onClick={() => setShowPassword(!showPassword)} edge="end"
-              >
-              <Iconify 
-                icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} 
-                style={{ color: '#602b37', fontSize: '40px' }}
-              />        
-            </IconButton>
-            </InputAdornment>
-                         ), 
-                        }}
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)} edge="end"
+                  >
+                    <Iconify
+                      icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'}
+                      style={{ color: '#602b37', fontSize: '40px' }}
+                    />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
           <p className="text-sm hover:undrline hover:text-blue-600 mt-2 inline-block">
             Dont have an account?
           </p>
-          <Link to="/signUp" className='text-sm hover:undrline hover:text-blue-600 mt-2 inline-block'> 
-               Sign Up  
+          <Link to="/signUp" className='text-sm hover:undrline hover:text-blue-600 mt-2 inline-block'>
+            Sign Up
           </Link>
 
 
-          <Button variant="contained" onClick={handleLogin} 
-          style={{
-            width: '300px', 
-            backgroundColor: 'orange', 
-            color: 'white', 
-            border: 'none', 
-            borderRadius: '4px', 
-            padding: '10px 20px',
-            fontSize: '16px',
-            cursor: 'pointer'
+          <Button variant="contained" onClick={handleLogin}
+            style={{
+              width: '300px',
+              backgroundColor: 'orange',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              padding: '10px 20px',
+              fontSize: '16px',
+              cursor: 'pointer'
             }} disabled={loading}>
-             {loading? <span className='loading loading-spinner'></span> : 'Login'}
+            {loading ? <span className='loading loading-spinner'></span> : 'Login'}
           </Button>
-      </Stack>
+        </Stack>
       </div>
     </>
 

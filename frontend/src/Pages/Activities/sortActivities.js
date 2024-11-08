@@ -1,5 +1,7 @@
+////This is the page that gets called when the sort activities button is clicked
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { message } from 'antd';
 import {
   Box,
   Table,
@@ -17,12 +19,17 @@ import {
   Button,
   Rating,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import CurrencyConvertor from "../../Components/CurrencyConvertor";
 
 const SortActivities = () => {
+  const navigate = useNavigate();
   const [activities, setActivities] = useState([]);
   const [sortBy, setSortBy] = useState("date"); // Default sorting by date
   const [order, setOrder] = useState("asc"); // Default ascending order
-
+  
+  const [exchangeRates, setExchangeRates] = useState({});
+  const [currency, setCurrency] = useState('EGP');
   // Function to fetch sorted activities
   const fetchSortedActivities = () => {
     axios
@@ -37,11 +44,47 @@ const SortActivities = () => {
       });
   };
 
+  const handleCurrencyChange = (rates, selectedCurrency) => {
+    setExchangeRates(rates);
+    setCurrency(selectedCurrency);
+  };
+
   // Fetch activities on initial load
   useEffect(() => {
     // Fetch initial activities if needed
     fetchSortedActivities(); // Optional: Remove this line if you only want to load activities after clicking Sort
   }, []);
+
+  const handleBooking = async (activityId) => {
+    try {
+      const userJson = localStorage.getItem('user');
+      if (!userJson) {
+        message.error("User is not logged in.");
+        return null;
+      }
+      const user = JSON.parse(userJson);
+      if (!user || !user.username) {
+        message.error("User information is missing.");
+        return null;
+      }
+
+      const type = 'activity';
+
+      localStorage.setItem('activityId', activityId);
+      localStorage.setItem('type', type);
+
+      const response = await axios.get(`http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}`);
+
+      if (response.status === 200) {
+        navigate('/payment');
+      } else {
+        message.error("Booking failed.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      message.error("An error occurred while booking.");
+    }
+  };
 
   return (
     <>
@@ -113,43 +156,73 @@ const SortActivities = () => {
 
         {/* Activity Table */}
         <TableContainer style={{ borderRadius: 20 }} component={Paper}>
-          <Table>
+          <Table style={{ width: '100%', textAlign: 'center', borderSpacing: '10px 5px' }}>
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell>Price</TableCell>
+                <TableCell>Price
+                <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                </TableCell>
                 <TableCell>Is open</TableCell>
                 <TableCell>Category</TableCell>
                 <TableCell>Tags</TableCell>
                 <TableCell>Discount</TableCell>
-                <TableCell>Date</TableCell>
+                <TableCell>Dates and Times</TableCell>
                 <TableCell>Duration</TableCell>
                 <TableCell>Location</TableCell>
                 <TableCell>Rating</TableCell>
+                <TableCell>Booking</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {activities.map((activity) => (
-                <TableRow key={activity._id}>
-                  <TableCell>{activity.name}</TableCell>
-                  <TableCell>{activity.price}</TableCell>
-                  <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
-                  <TableCell>{activity.category}</TableCell>
-                  <TableCell>{activity.tags.join(", ")}</TableCell>
-                  <TableCell>{activity.specialDiscount}</TableCell>
-                  <TableCell>{activity.date}</TableCell>
-                  <TableCell>{activity.duration}</TableCell>
-                  <TableCell>{activity.location}</TableCell>
-                  <TableCell>
-                    <Rating
-                      value={activity.averageRating}
-                      precision={0.1}
-                      readOnly
-                    />
+              {activities.map((activity) =>
+                !activity.flag && (
+                  <TableRow key={activity._id}>
+                    <TableCell>{activity.name}</TableCell>
+                    <TableCell>                    
+                  {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
                   </TableCell>
-                </TableRow>
-              ))}
+                    <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
+                    <TableCell>{activity.category}</TableCell>
+                    <TableCell>{activity.tags.join(", ")}</TableCell>
+                    <TableCell>{activity.specialDiscount}</TableCell>
+                    <TableCell>{activity.date ? (() => {
+                    const dateObj = new Date(activity.date);
+                    const date = dateObj.toISOString().split('T')[0];
+                    const time = dateObj.toTimeString().split(' ')[0];
+                    return (
+                      <div>
+                        {date} at {time}
+                      </div>
+                    );
+                  })()
+                    : 'No available date and time' ? (() => {
+                      const dateObj = new Date(activity.date);
+                      const date = dateObj.toISOString().split('T')[0];
+                      const time = dateObj.toTimeString().split(' ')[0];
+                      return (
+                        <div>
+                          {date} at {time}
+                        </div>
+                      );
+                    })()
+                      : 'No available date and time'}</TableCell>
+
+                    <TableCell>{activity.duration}</TableCell>
+                    <TableCell>{activity.location}</TableCell>
+                    <TableCell>
+                      <Rating value={activity.averageRating} precision={0.1} readOnly />
+                    </TableCell>
+                  <TableCell>
+                    <Button onClick={() => handleBooking(activity._id)}>
+                      Book Now
+                    </Button>
+                  </TableCell>
+                  </TableRow>
+                )
+              )}
             </TableBody>
+
           </Table>
         </TableContainer>
       </Box>

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { TextField, IconButton, InputAdornment, Button, Stack } from '@mui/material';
-import Iconify from './TopNav/iconify.js'; 
+import Iconify from './TopNav/iconify.js';
 import axios from 'axios';
 import { message } from 'antd';
 import { useTypeContext } from '../context/TypeContext';
 import DropDown from './DropDown.js';
 import { useNavigate } from "react-router-dom";
-
+// import { FileUpload } from '@mui/icons-material';
+import FileUpload from './FileUpload';
 
 const FormSection = () => {
   const { type } = useTypeContext();
@@ -16,6 +17,9 @@ const FormSection = () => {
   const [email, setEmail] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [acceptTerms, setAcceptTerms] = useState(false);
+  const [openTerms, setOpenTerms] = useState(false);
 
   // Additional state variables for conditional fields
   const [mobileNumber, setMobileNumber] = useState('');
@@ -57,8 +61,19 @@ const FormSection = () => {
       message.error('All fields are required for Seller');
       return false;
     }
+    
     return true;
   };
+
+  const handleOpenTerms = () => {
+    setOpenTerms(true);
+  };
+
+  const handleCloseTerms = () => {
+    setOpenTerms(false);
+  };
+
+
   const handleAdd = async () => {
     if (!validateFields()) {
       return;
@@ -75,24 +90,53 @@ const FormSection = () => {
     };
 
     try {
+      try{
       await axios.post('http://localhost:8000/signUp', data);
       message.success('Signed Up successfully!');
+      }
+      catch(error){
+        message.error('An error occurred: ' + error.message);
+        console.error('There was an sigining up!', error);
+      }
+      if (selectedFiles.length > 0) {
+           const fileUploadData = new FormData();
+           fileUploadData.append('userName', userName);
+          selectedFiles.forEach(file => fileUploadData.append('files', file));  // Append each file object directly
+          // Log each file appended for document upload
+            for (let pair of fileUploadData.entries()) {
+                console.log(`${pair[0]}: ${pair[1].name || pair[1]}`);
+            }
+
+            try {
+                await axios.post('http://localhost:8000/file/user/upload/documents', fileUploadData, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                });
+                message.success('Documents uploaded successfully!');
+            } catch (error) {
+                console.error('Error uploading documents:', error);
+                message.error('Document upload failed: ' + (error.response?.data?.message || error.message));
+            }
+        }
       window.location.href = '/login';
     } catch (error) {
       message.error('An error occurred: ' + error.message);
-      console.error('There was an error signing up!', error);
+      console.error('There was an error uploading document!', error);
     }
   };
+
+
 
   return (
     <div style={{
       backgroundImage: 'url(../../public/Images/bg-intro-desktop.png)', // Update with your image path
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      height: '100vh',
+      minHeight: '100vh',
       display: 'flex',
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
+      overflowY: 'auto',
+      margin: 0,
     }}>
      
       <Stack spacing={1} sx={{ width: '600px', padding: '10px', backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: '10px' }}>
@@ -157,6 +201,7 @@ const FormSection = () => {
             ),
           }}
         />
+        
         {type === 'Tourist' && (
           <>
             <TextField
@@ -199,6 +244,9 @@ const FormSection = () => {
               value={mobileNumber}
               onChange={(e) => setMobileNumber(e.target.value)}
             />
+            
+            <FileUpload onFileSelect={(files) => setSelectedFiles(files)} inputId="document-upload" />
+            
             <TextField
               name="yearsOfExperience"
               label="Years of Experience"
@@ -231,6 +279,8 @@ const FormSection = () => {
               value={hotline}
               onChange={(e) => setHotline(e.target.value)}
             />
+            
+            <FileUpload onFileSelect={(files) => setSelectedFiles(files)} inputId="document-upload" />
             <TextField
               name="companyProfile"
               label="Company Profile"
@@ -249,7 +299,9 @@ const FormSection = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-            <TextField
+            <FileUpload onFileSelect={(files) => setSelectedFiles(files)} inputId="document-upload" />
+            
+             <TextField
               name="description"
               label="Description"
               type="text"

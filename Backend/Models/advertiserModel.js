@@ -27,8 +27,19 @@ const advertiserSchema = new Schema({
     companyProfile: {
         type: String,
         required: true
-    }
-
+    },
+    profilePicture: {
+        filename: { type: String },
+        filepath: { type: String },
+        uploadedAt: { type: Date },
+      },
+      files: [
+        {
+          filename: String,
+          filepath: String,
+          uploadedAt: { type: Date, default: Date.now },
+        },
+      ],
 },
     { timestamps: true })
 
