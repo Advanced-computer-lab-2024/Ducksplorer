@@ -36,6 +36,8 @@ const ViewAllActivities = () => {
       });
   }, []);
 
+
+
   const handleSetFlag = (activityId, newFlagState) => {
     axios.put(`http://localhost:8000/activity/toggleFlagActivity/${activityId}`, { flag: newFlagState })
       .then(response => {
@@ -129,7 +131,7 @@ const ViewAllActivities = () => {
 
                       <TableCell>
                         {/* Display Flag icon on a separate line */}
-                        <Tooltip title="Set Activity as Inappropriate">
+                        <Tooltip title="Change Activity Flag">
                           <IconButton
                             color="error"
                             aria-label="Flag Activity"

@@ -429,7 +429,7 @@ function SearchItineraries() {
                                             <TableCell>{itinerary.pickUpLocation}</TableCell>
                                             <TableCell>{itinerary.dropOffLocation}</TableCell>
                                             <TableCell><Rating
-                                                value={itinerary.rating}
+                                                value={itinerary.averageRating}
                                                 precision={0.1}
                                                 readOnly
                                             /></TableCell>

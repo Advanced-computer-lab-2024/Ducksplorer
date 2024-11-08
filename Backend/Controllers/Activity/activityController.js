@@ -269,6 +269,7 @@ const rateActivity = async (req, res) => {
   }
 };
 
+
 const toggleFlagActivity = async (req, res) => {
   try {
     const { id } = req.params;
@@ -283,7 +284,9 @@ const toggleFlagActivity = async (req, res) => {
     if (!activity) {
       return res.status(404).json({ error: "Activity not found" });
     }
-
+    if (activity.flag === undefined) {
+      return res.status(400).json({ messsage: "Doesnt have a flag attribute" });
+    }
     // Toggle the flag status
     activity.flag = !activity.flag; // Set flag to the opposite of its current value
 
@@ -291,11 +294,12 @@ const toggleFlagActivity = async (req, res) => {
     const updatedActivity = await activity.save();
 
     res.status(200).json({
+      status: 200,
       activity: updatedActivity,
       message: `Activity flagged as ${updatedActivity.flag ? "inappropriate" : "appropriate"}`,
     });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error.message + "error in toggleFlag" });
   }
 };
 

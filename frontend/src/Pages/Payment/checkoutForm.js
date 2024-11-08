@@ -101,6 +101,7 @@ export default function CheckoutForm() {
         setShowOtpPopup(false);
       } else {
         setMessage1("Invalid OTP.");
+        message.error("Incorrect OTP")
       }
       // if (result.message === "OTP verified") {
       //   const { error } = await stripe.confirmPayment({
@@ -139,6 +140,8 @@ export default function CheckoutForm() {
 
         if (!bookingResponse.ok) {
           console.error("Booking API error:", await bookingResponse.text());
+          message.error("Booking already created in database")
+
           return;
         }
 
@@ -154,6 +157,7 @@ export default function CheckoutForm() {
 
         if (!pointsResponse.ok) {
           console.error("Points API error:", await bookingResponse.text());
+          message.error("Failed to update points")
           return;
         }
 

@@ -258,7 +258,7 @@ function PaymentPage() {
                   <p><strong>Accessibility:</strong> {itineraryData.accessibility}</p>
                   <p><strong>Pick Up Location:</strong> {itineraryData.pickUpLocation}</p>
                   <p><strong>Drop Off Location:</strong> {itineraryData.dropOffLocation}</p>
-                  <p><strong>Rating:</strong> {itineraryData.rating}/5</p>
+                  <p><strong>Rating:</strong> {itineraryData.averageRating}/5</p>
                   <p><strong>Tags:</strong> {itineraryData.tags}</p>
                 </Space>
               </Card>

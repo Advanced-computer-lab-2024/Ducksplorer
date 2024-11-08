@@ -4,7 +4,7 @@ import { message } from 'antd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import CurrencyConvertor from '../../Components/CurrencyConvertor';import WarningIcon from '@mui/icons-material/Warning';
+import CurrencyConvertor from '../../Components/CurrencyConvertor'; import WarningIcon from '@mui/icons-material/Warning';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 
@@ -429,7 +429,7 @@ const RUDItinerary = () => {
                   <TableCell>{itinerary.pickUpLocation}</TableCell>
                   <TableCell>{itinerary.dropOffLocation}</TableCell>
                   <TableCell><Rating
-                    value={itinerary.rating}
+                    value={itinerary.averageRating}
                     precision={0.1}
                     readOnly
                   /></TableCell>

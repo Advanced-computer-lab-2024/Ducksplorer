@@ -54,13 +54,6 @@ const itinerarySchema = new Schema({
         default: 0,
         required: false
     },
-    rating: {
-        type: Number,
-        min: 0,
-        max: 5,
-        required: false,
-        default: 0
-    },
     tags: {
         type: [String],
         required: false
