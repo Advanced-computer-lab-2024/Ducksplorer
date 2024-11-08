@@ -2,12 +2,14 @@ import { PaymentElement } from "@stripe/react-stripe-js";
 import { useState, useEffect } from "react";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
 import axios from "axios";
+import { message } from "antd";
+
 
 export default function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
 
-  const [message, setMessage] = useState(null);
+  const [message1, setMessage1] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [otp, setOtp] = useState("");
   const [clientSecret, setClientSecret] = useState("");
@@ -42,15 +44,15 @@ export default function CheckoutForm() {
       });
 
       const data = await response.json();
-      console.log(data.clientSecret);
+      console.log(data.clientSecret); //undefined
       if (data.sent) {
         setShowOtpPopup(true);
-        setMessage("OTP sent to your email. Please enter it to confirm.");
+        setMessage1("OTP sent to your email. Please enter it to confirm.");
       } else {
-        setMessage("Failed to create payment intent.");
+        setMessage1("Failed to create payment intent.");
       }
     } catch (error) {
-      setMessage("An error occurred during payment creation.");
+      setMessage1("An error occurred during payment creation.");
       console.error("Error:", error);
     }
 
@@ -59,7 +61,7 @@ export default function CheckoutForm() {
 
   const handleOtpSubmit = async () => {
     if (!otp) {
-      setMessage("Please enter the OTP.");
+      setMessage1("Please enter the OTP.");
       return;
     }
 
@@ -73,6 +75,7 @@ export default function CheckoutForm() {
           email: localStorage.getItem("paymentEmail"),
           otp,
         }),
+
       });
 
       const result = await response.json();
@@ -88,19 +91,83 @@ export default function CheckoutForm() {
         });
 
         if (error) {
-          setMessage(error.message);
+          setMessage1(error.message);
         } else {
-          setMessage("Payment succeeded!");
+          setMessage1("Payment succeeded!");
           // Trigger loyalty points update after payment is successful
           handleLoyaltyPointsUpdate();
         }
 
         setShowOtpPopup(false);
       } else {
-        setMessage("Invalid OTP.");
+        setMessage1("Invalid OTP.");
+        message.error("Incorrect OTP")
+      }
+      // if (result.message === "OTP verified") {
+      //   const { error } = await stripe.confirmPayment({
+      //     elements,
+      //     confirmParams: {
+      //       return_url: `${window.location.origin}/completion`,
+      //     },
+      //  });
+
+      if (true) {
+
+        const userJson = localStorage.getItem('user');
+        if (!userJson) {
+          message.error("User is not logged in.");
+          return null;
+        }
+        const user = JSON.parse(userJson);
+        if (!user || !user.username) {
+          message.error("User information is missing.");
+          return null;
+        }
+        const userName = user.username;
+        const activityId = localStorage.getItem('activityId');
+        const itineraryId = localStorage.getItem('itineraryId');
+        const itineraryOrActivity = localStorage.getItem('type');
+        const amount = localStorage.getItem('price');
+
+        console.log("Creating booking with userName:", userName, "activityId:", activityId, "itineraryId:", itineraryId);
+
+        // Payment succeeded; now create the booking in the backend
+        const bookingResponse = await fetch(`http://localhost:8000/touristRoutes/booking/${userName}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ activityId: activityId, itineraryId: itineraryId, type: itineraryOrActivity }),
+        });
+
+        if (!bookingResponse.ok) {
+          console.error("Booking API error:", await bookingResponse.text());
+          message.error("Booking already created in database")
+
+          return;
+        }
+
+        const bookingResult = await bookingResponse.json();
+        console.log("Booking Result", bookingResult);
+
+        console.log("Booking successfully created:", bookingResult);
+        const pointsResponse = await fetch(`http://localhost:8000/touristRoutes/payVisa/${userName}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ price: amount }),
+        });
+
+        if (!pointsResponse.ok) {
+          console.error("Points API error:", await bookingResponse.text());
+          message.error("Failed to update points")
+          return;
+        }
+
+        const pointsResult = await pointsResponse.json();
+        message.success("Payment completed and loyalty points updated");
+        console.log("Points Result", pointsResult);
+
       }
     } catch (error) {
-      setMessage("Failed to confirm OTP.");
+      setMessage1("Failed to confirm OTP.");
       console.error("Error:", error);
     }
   };
@@ -110,7 +177,7 @@ export default function CheckoutForm() {
     const userName = localStorage.getItem("userName");
 
     if (!price || !userName) {
-      setMessage("Price or user name not found.");
+      setMessage1("Price or user name not found.");
       return;
     }
 
@@ -129,14 +196,14 @@ export default function CheckoutForm() {
 
         // Display the final message after animation
         setTimeout(() => {
-          setMessage(`You have earned ${response.data.points} loyalty points. You now have ${response.data.points} total points.`);
+          setMessage1(`You have earned ${response.data.points} loyalty points. You now have ${response.data.points} total points.`);
           setShowPointsAnimation(false);
         }, 3000);  // Delay message until after animation
       } else {
-        setMessage("Failed to update loyalty points.");
+        setMessage1("Failed to update loyalty points.");
       }
     } catch (error) {
-      setMessage("Error updating loyalty points.");
+      setMessage1("Error updating loyalty points.");
       console.error("Error:", error);
     }
   };
@@ -182,7 +249,7 @@ export default function CheckoutForm() {
           >
             {isProcessing ? "Processing ..." : "Pay now"}
           </button>
-          {message && (
+          {message1 && (
             <div
               id="payment-message"
               style={{
@@ -195,7 +262,7 @@ export default function CheckoutForm() {
                 fontSize: "14px",
               }}
             >
-              {message}
+              {message1}
             </div>
           )}
         </form>

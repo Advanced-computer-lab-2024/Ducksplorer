@@ -5,7 +5,7 @@ import { message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import HistoricalPlaceSearch from '../../Components/MuseumHistoricalPlaceComponent/HistoricalPlaceSearch';
 import HistoricalPlaceFilterComponent from '../../Components/MuseumHistoricalPlaceComponent/HistoricalPlaceFilterComponent';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
 
 import {
@@ -22,6 +22,9 @@ import {
 } from '@mui/material';
 
 const HistoricalPlaceTouristPov = () => {
+
+  const { id } = useParams();
+
   const [HistoricalPlaces, setHistoricalPlaces] = useState([]);
   const navigate = useNavigate();
 
@@ -38,15 +41,19 @@ const HistoricalPlaceTouristPov = () => {
   useEffect(() => {
     axios.get(`http://localhost:8000/historicalPlace/getAllHistoricalPlaces`)
       .then(response => {
-        setHistoricalPlaces(response.data);
+        if (id === undefined) {
+          setHistoricalPlaces(response.data);
+        }
+        else {
+          const tempHistoricalPlaces = response.data.filter((historicalPlace) => historicalPlace._id === id);
+          setHistoricalPlaces(tempHistoricalPlaces);
+        }
       })
       .catch(error => {
         console.error('There was an error fetching the Historical Places!', error);
         message.error('Error fetching Historical Places!');
       });
-  }, []);
-  
-  
+  }, [id]);
 
   // Callback to handle search results
   const handleSearchResults = (searchResults) => {
@@ -63,10 +70,30 @@ const HistoricalPlaceTouristPov = () => {
     navigate('/UpcomingHistoricalPlaces');
   };
 
+  // Share historical place functionality
+  const handleShareLink = (HistoricalPlaceId) => {
+    const link = `${window.location.origin}/HistoricalPlaceTouristPov/${HistoricalPlaceId}`; // Update with your actual route
+    navigator.clipboard.writeText(link)
+      .then(() => {
+        message.success('Link copied to clipboard!');
+      })
+      .catch(() => {
+        message.error('Failed to copy link.');
+      });
+  };
+
+  const handleShareEmail = (HistoricalPlaceId) => {
+    const link = `${window.location.origin}/HistoricalPlaceTouristPov/${HistoricalPlaceId}`; // Update with your actual route
+    const subject = 'Check out this historical place';
+    const body = `Here is the link to the historical place: ${link}`;
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
   return (
     <>
-      <Link to="/touristDashboard"> Back </Link>
-
+      <Button component={Link} to="/touristDashboard" variant="contained" color="primary" style={{ marginBottom: '20px' }}>
+        Back to Dashboard
+      </Button>
       <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'visible', height: '100vh' }}>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
@@ -133,6 +160,14 @@ const HistoricalPlaceTouristPov = () => {
                     <TableCell>{historicalPlace.HistoricalPlaceCategory}</TableCell>
                     <TableCell>{historicalPlace.tags.join(', ')}</TableCell>
                     <TableCell>{historicalPlace.createdBy}</TableCell>
+                    {id === undefined ? (<TableCell>
+                      <Button variant="outlined" onClick={() => handleShareLink(historicalPlace._id)}>
+                        Share Via Link
+                      </Button>
+                      <Button variant="outlined" onClick={() => handleShareEmail(historicalPlace._id)}>
+                        Share Via Email
+                      </Button>
+                    </TableCell>) : null}
                   </TableRow>
                 ))
               ) : (

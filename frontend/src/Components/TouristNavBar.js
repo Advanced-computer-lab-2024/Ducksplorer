@@ -25,7 +25,7 @@ import axios from "axios";
 function TouristNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [image , setImage] = React.useState("");
+  const [image, setImage] = React.useState("");
   const [storedPicture, setStoredPicture] = React.useState(localStorage.getItem('profilePicture'));
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -33,27 +33,27 @@ function TouristNavBar() {
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
-//call the getImage in a useEffect
-const userName = JSON.parse(localStorage.getItem("user")).username;
-React.useEffect(() => {
+  //call the getImage in a useEffect
+  const userName = JSON.parse(localStorage.getItem("user")).username;
+  React.useEffect(() => {
   const storedPicture = localStorage.getItem('profilePicture');
-  getImage(userName);
-  console.log("image",image);
-})
-const getImage = async (userName) => {
-  const res = await axios.get(`http://localhost:8000/touristRoutes/getLevel/${userName}`);
-  console.log("level",res.data);
-  if (res.data==1) {
-    setImage("level1.png");
-  }
-  else if (res.data==2) {
-    setImage("level2.png");
-  }
+    getImage(userName);
+    // console.log("image", image);
+  })
+  const getImage = async (userName) => {
+    const res = await axios.get(`http://localhost:8000/touristRoutes/getLevel/${userName}`);
+    // console.log("level",res.data);
+    if (res.data === 1) {
+      setImage("level1.png");
+    }
+    else if (res.data === 2) {
+      setImage("level2.png");
+    }
 
-  else if (res.data==3) {
-    setImage("level3.png");
+    else if (res.data === 3) {
+      setImage("level3.png");
+    }
   }
-}
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
@@ -77,34 +77,34 @@ const getImage = async (userName) => {
     <AppBar position="fixed" sx={{ backgroundColor: "#FFD700", width: "100%" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-        <Tooltip title="Badge">
-        <img
-            src={image}
-            alt="Avatar"
-            style={{ width: 70, height: 70, borderRadius: "50%" , marginRight: 10}}
-        />
-        </Tooltip>
+          <Tooltip title="Badge">
+            <img
+              src={image}
+              alt="Avatar"
+              style={{ width: 70, height: 70, borderRadius: "50%", marginRight: 10 }}
+            />
+          </Tooltip>
           <Tooltip title="Ducksplorer Home Page">
-          <TravelExploreIcon
-            sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-          />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            Ducksplorer
-          </Typography>
+            <TravelExploreIcon
+              sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+            />
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              href="/"
+              sx={{
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              Ducksplorer
+            </Typography>
           </Tooltip>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -251,7 +251,7 @@ const getImage = async (userName) => {
                 </Typography>
               </IconButton>
             </Tooltip>
-            
+
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open Account settings">
@@ -289,7 +289,7 @@ const getImage = async (userName) => {
                   href="/editAccount"
                   sx={{ textAlign: "center", p: 0.5 }}
                 >
-                  <AccountCircleIcon sx={{ fontSize: 20 , color:"blue"}} />
+                  <AccountCircleIcon sx={{ fontSize: 20, color: "blue" }} />
                   <Typography sx={{ ml: 1 }} variant="body2">
                     Profile
                   </Typography>
@@ -301,7 +301,7 @@ const getImage = async (userName) => {
                   href="/changePassword"
                   sx={{ textAlign: "center", p: 0.5 }}
                 >
-                  <LockIcon sx={{ fontSize: 20 , color: "gold"}} />
+                  <LockIcon sx={{ fontSize: 20, color: "gold" }} />
                   <Typography sx={{ ml: 1 }} variant="body2">
                     Change Password
                   </Typography>
@@ -312,9 +312,9 @@ const getImage = async (userName) => {
                   sx={{ textAlign: "center", p: 0.5 }}
                 >
                   {showPreferences ? (
-                    <VisibilityIcon sx={{ fontSize: 20 , color: "green"}} />
+                    <VisibilityIcon sx={{ fontSize: 20, color: "green" }} />
                   ) : (
-                    <VisibilityOffIcon sx={{ fontSize: 20 , color: "red"}} />
+                    <VisibilityOffIcon sx={{ fontSize: 20, color: "red" }} />
                   )}
                   <Typography sx={{ ml: 1 }} variant="body2">
                     Show Preferences

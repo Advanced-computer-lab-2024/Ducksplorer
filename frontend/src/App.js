@@ -59,39 +59,45 @@ import CheckoutForm from "./Pages/Payment/checkout.js";
 import Completion from "./Pages/Payment/completion.js";
 import Payment from "./Pages/Payment/payment2.js";
 import PaymentPage from "./Pages/Payment/mailAmount.js";
-import PastBookingDetails from "./Pages/Bookings/myPastBookings.js";
 //import Payment from "./Pages/Payment/payment.js";
+import ViewAllItineraries from "./Pages/Admin/ViewAllItineraries.js";
+import ViewAllActivities from "./Pages/Admin/ViewAllActivities.js";
+import PastBookingDetails from "./Pages/Bookings/myPastBookings.js";
+
 
 
 function App() {
   return (
     <React.StrictMode>
-        <BrowserRouter>
-          <Routes>
+      <BrowserRouter>
+        <Routes>
             {/* <Route index element={<Hotels />} /> */}
             <Route path="/" element={<TouristNavBar />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signUp" element={<Signup />} />
-            <Route path="/createItinerary" element={<CreateItinerary />} />
-            <Route path="/rudItinerary" element={<RUDItinerary />} />
-            <Route path="/viewUpcomingItinerary" element={<ViewUpcomingItinerary />} />
-            <Route path="/viewAllTourist" element={<ViewAllTourist />} />
-            <Route path="/tourGuideDashboard" element={<TourGuideDashboard />} />
-            <Route path="/touristDashboard" element={<TouristDashboard />} />
-            <Route path="/tourGuideEditAccount" element={<TourGuideEditProfile/>} />
-    
-            <Route path="/governorDashboard" element={<GovernorDashboard />} />
-            <Route path="/createMuseum" element={<CreateMuseum />} />
-            <Route path="/createHistoricalPlace" element={<CreateHistoricalPlace />} />
-            <Route path="/RUDMuseum" element={<RUDMuseum />} />
-            <Route path="/RUDHistoricalPlace" element={<RUDHistoricalPlace />} />
-            {/* <Route path="/RUDVisit" element={<RUDVisit />} /> */}
-            <Route path="/MuseumTouristPov" element={<MuseumTouristPov />} />
-            <Route path="/HistoricalPlaceTouristPov" element={<HistoricalPlaceTouristPov />} />
-            <Route path="/UpcomingHistoricalPlaces" element={<UpcomingHistoricalPlaces />} />
-            <Route path="/UpcomingMuseums" element={<UpcomingMuseums />} />
-            <Route path="/createTagMuseum" element={<CreateTagMuseum />} />
-            <Route path="/createTagHistoricalPlace" element={<CreateTagHistoricalPlace/>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signUp" element={<Signup />} />
+          <Route path="/createItinerary" element={<CreateItinerary />} />
+          <Route path="/rudItinerary" element={<RUDItinerary />} />
+          <Route path="/viewUpcomingItinerary" element={<ViewUpcomingItinerary />} />
+          <Route path="/viewAllTourist" element={<ViewAllTourist />} />
+          <Route path="/viewAllTourist/:id" element={<ViewAllTourist />} />
+          <Route path="/tourGuideDashboard" element={<TourGuideDashboard />} />
+          <Route path="/touristDashboard" element={<TouristDashboard />} />
+          <Route path="/tourGuideEditAccount" element={<TourGuideEditProfile />} />
+
+          <Route path="/governorDashboard" element={<GovernorDashboard />} />
+          <Route path="/createMuseum" element={<CreateMuseum />} />
+          <Route path="/createHistoricalPlace" element={<CreateHistoricalPlace />} />
+          <Route path="/RUDMuseum" element={<RUDMuseum />} />
+          <Route path="/RUDHistoricalPlace" element={<RUDHistoricalPlace />} />
+          {/* <Route path="/RUDVisit" element={<RUDVisit />} /> */}
+          <Route path="/MuseumTouristPov" element={<MuseumTouristPov />} />
+          <Route path="/HistoricalPlaceTouristPov" element={<HistoricalPlaceTouristPov />} />
+          <Route path="/MuseumTouristPov/:id" element={<MuseumTouristPov />} />
+          <Route path="/HistoricalPlaceTouristPov/:id" element={<HistoricalPlaceTouristPov />} />
+          <Route path="/UpcomingHistoricalPlaces" element={<UpcomingHistoricalPlaces />} />
+          <Route path="/UpcomingMuseums" element={<UpcomingMuseums />} />
+          <Route path="/createTagMuseum" element={<CreateTagMuseum />} />
+          <Route path="/createTagHistoricalPlace" element={<CreateTagHistoricalPlace />} />
 
 
           <Route path="/AdminDashboard" element={<AdminDashboard />} />
@@ -100,6 +106,8 @@ function App() {
           <Route path="/addAdmin" element={<AddAdmin />} />
           <Route path="/addGovernor" element={<AddGoverner />} />
           <Route path="/categoriesActions" element={<CategoriesActions />} />
+          <Route path="/viewAllItineraries" element={<ViewAllItineraries />} />
+          <Route path="/viewAllActivities" element={<ViewAllActivities />} />
           <Route path="/preferenceTags" element={<PreferenceTags />} />
 
 
@@ -114,7 +122,10 @@ function App() {
               <MyActivities />
             } />
           <Route path="/location" element={<ClinicLocation />} />
-
+          <Route
+            path="/activity/searchActivities/:id"
+            element={<SearchActivities />}
+          />
 
 
 

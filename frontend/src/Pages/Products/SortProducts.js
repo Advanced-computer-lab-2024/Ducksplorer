@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
-import { Button, Stack, TextField, Typography } from '@mui/material';
+import { Button, Stack, Typography } from '@mui/material';
 import ProductCard from '../../Components/Products/ProductCard'; // Import the ProductCard component
 
 function SortProducts() {

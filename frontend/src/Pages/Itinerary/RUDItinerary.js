@@ -4,11 +4,14 @@ import { message } from 'antd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import CurrencyConvertor from '../../Components/CurrencyConvertor';
+import CurrencyConvertor from '../../Components/CurrencyConvertor'; import WarningIcon from '@mui/icons-material/Warning';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+
+
 import {
   TextField, IconButton, Box, Button, Table, Typography, TableBody,
   TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogActions,
-  DialogContent, DialogContentText, DialogTitle, Tooltip
+  DialogContent, DialogContentText, DialogTitle, Tooltip, Rating
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 
@@ -21,7 +24,7 @@ const RUDItinerary = () => {
   const [editingItinerary, setEditingItinerary] = useState(null); //stores the currently selected itinerary for editing
   const [selectedTags, setSelectedTags] = useState([]); // For storing selected tags
   const [availableTags, setAvailableTags] = useState([]); // For storing fetched tags
-  const [loading, setLoading] = useState(true); //indicates if data is fetched
+  // const [loading, setLoading] = useState(true); //indicates if data is fetched
 
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState('EGP');
@@ -238,7 +241,7 @@ const RUDItinerary = () => {
 
   useEffect(() => {
     const fetchAvailableTags = async () => {
-      setLoading(true);
+      //setLoading(true);
       try {
         const response = await fetch('http://localhost:8000/preferenceTags/');
         if (!response.ok) {
@@ -250,7 +253,7 @@ const RUDItinerary = () => {
       } catch (error) {
         console.error('Error fetching available tags:', error);
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     };
 
@@ -312,6 +315,32 @@ const RUDItinerary = () => {
     });
   };
 
+  async function toggleItineraryActiveStatus(itineraryId) {
+    try {
+      const response = await fetch(`http://localhost:8000/itinerary/toggleActiveFlagItinerary/${itineraryId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to toggle active status');
+      }
+
+      const data = await response.json();
+      console.log(`New isActive status after toggle: ${data.itinerary.isActive}`);
+      setItineraries(prevItineraries =>
+        prevItineraries.map(itinerary =>
+          itinerary._id === itineraryId ? { ...itinerary, isActive: !itinerary.isActive } : itinerary
+        )
+      );
+      return data.itinerary;
+    } catch (error) {
+      console.error('Error toggling itinerary active status:', error);
+
+    }
+  }
 
 
   return (
@@ -333,7 +362,7 @@ const RUDItinerary = () => {
                 <TableCell>Timeline</TableCell>
                 <TableCell>Language</TableCell>
                 <TableCell>Price
-                <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                  <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
                 </TableCell>
                 <TableCell>Available Dates And Times</TableCell>
                 <TableCell>Accessibility</TableCell>
@@ -341,6 +370,8 @@ const RUDItinerary = () => {
                 <TableCell>Drop Off Location</TableCell>
                 <TableCell>Ratings</TableCell>
                 <TableCell>Tags</TableCell>
+                <TableCell>Flag</TableCell>
+                <TableCell>Active Status</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -351,7 +382,7 @@ const RUDItinerary = () => {
                     {itinerary.activity && itinerary.activity.length > 0
                       ? itinerary.activity.map((activity, index) => (
                         <div key={index}>
-                          {activity.name || 'N/A'}- Price: {activity.price !== undefined ? activity.price : 'N/A'},<br />
+                          {activity.name || 'N/A'} - Price: {activity.price !== undefined ? activity.price : 'N/A'},<br />
                           Location: {activity.location || 'N/A'},<br />
                           Category: {activity.category || 'N/A'}
                           <br /><br /> {/* Adds an extra line break between activities */}
@@ -365,17 +396,17 @@ const RUDItinerary = () => {
                       itinerary.locations.map((location, index) => (
                         <div key={index}>
                           <Typography variant="body1">
-                           {index + 1}: {location.trim()}
+                            {index + 1}: {location.trim()}
                           </Typography>
                           <br />
                         </div>
                       ))
                     ) : 'No locations available'}
-
                   </TableCell>
+
                   <TableCell>{itinerary.timeline}</TableCell>
                   <TableCell>{itinerary.language}</TableCell>
-                  <TableCell>                                            
+                  <TableCell>
                     {(itinerary.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
                   </TableCell>
                   <TableCell>
@@ -393,10 +424,15 @@ const RUDItinerary = () => {
                       })
                       : 'No available dates and times'}
                   </TableCell>
+
                   <TableCell>{itinerary.accessibility}</TableCell>
                   <TableCell>{itinerary.pickUpLocation}</TableCell>
                   <TableCell>{itinerary.dropOffLocation}</TableCell>
-                  <TableCell>{itinerary.rating}</TableCell>
+                  <TableCell><Rating
+                    value={itinerary.averageRating}
+                    precision={0.1}
+                    readOnly
+                  /></TableCell>
 
                   <TableCell>
                     {itinerary.tags && itinerary.tags.length > 0
@@ -407,6 +443,33 @@ const RUDItinerary = () => {
                         </div>
                       ))
                       : 'No tags available'}
+                  </TableCell>
+
+                  <TableCell>
+                    {itinerary.flag ? (
+                      <span style={{ color: 'red', display: 'flex', alignItems: 'center' }}>
+                        <WarningIcon style={{ marginRight: '4px' }} />
+                        Inappropriate
+                      </span>
+                    ) : (
+                      <span style={{ color: 'green', display: 'flex', alignItems: 'center' }}>
+                        <CheckCircleIcon style={{ marginRight: '4px' }} />
+                        Appropriate
+                      </span>
+                    )}
+                  </TableCell>
+
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      color={itinerary.isActive ? 'error' : 'success'}
+                      onClick={() => {
+                        console.log(`Button clicked for itinerary ID: ${itinerary._id}`); //For debugging
+                        toggleItineraryActiveStatus(itinerary._id);
+                      }}
+                    >
+                      {itinerary.isActive ? 'Deactivate' : 'Activate'}
+                    </Button>
                   </TableCell>
 
                   <TableCell>
@@ -426,6 +489,8 @@ const RUDItinerary = () => {
             </TableBody>
           </Table>
         </TableContainer>
+
+
         {editingItinerary && (
           <form onSubmit={handleUpdate} style={{ marginTop: '20px' }} ref={formRef} >
             {formData.activity && formData.activity.map((activity, index) => (

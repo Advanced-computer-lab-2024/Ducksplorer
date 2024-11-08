@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import {
     Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
-    MenuItem, IconButton, Menu, Checkbox, Slider, Button, FormControl, InputLabel, Select
+    MenuItem, IconButton, Menu, Checkbox, Slider, Button, FormControl, InputLabel, Select, Rating
 } from '@mui/material';
 import SortIcon from '@mui/icons-material/Sort';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
@@ -31,7 +31,7 @@ const ViewUpcomingItinerary = () => {
     const [priceRange, setPriceRange] = useState([0, 5000]);
     const [tags, setTags] = useState([]);  // Tags selected by the user
     const [allTags, setAllTags] = useState([]);  // All available tags from backend
-    
+
     const [exchangeRates, setExchangeRates] = useState({});
     const [currency, setCurrency] = useState('EGP');
     const [filterAnchorEl, setFilterAnchorEl] = useState(null);
@@ -57,7 +57,7 @@ const ViewUpcomingItinerary = () => {
     const handleCurrencyChange = (rates, selectedCurrency) => {
         setExchangeRates(rates);
         setCurrency(selectedCurrency);
-      };
+    };
     // Handlers for Sort By dropdown
     const handleSortByClick = (event) => {
         setSortByAnchorEl(event.currentTarget);
@@ -227,7 +227,7 @@ const ViewUpcomingItinerary = () => {
 
             const response = await axios.get(`http://localhost:8000/touristRoutes/viewDesiredItinerary/${itineraryId}`);
 
-            if (response.status == 200) {
+            if (response.status === 200) {
                 navigate('/payment');
             } else {
                 message.error("Booking failed.");
@@ -393,8 +393,8 @@ const ViewUpcomingItinerary = () => {
                                 <TableCell>Timeline</TableCell>
                                 <TableCell>Language</TableCell>
                                 <TableCell>Price
-                <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
-                </TableCell>
+                                    <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                                </TableCell>
                                 <TableCell>Available Dates And Times</TableCell>
                                 <TableCell>Accessibility</TableCell>
                                 <TableCell>Pick Up Location</TableCell>
@@ -406,6 +406,7 @@ const ViewUpcomingItinerary = () => {
                         </TableHead>
                         <TableBody>
                             {itineraries.map(itinerary => (
+                                !itinerary.flag ? (
                                 <TableRow key={itinerary._id}>
                                     <TableCell>
                                         {itinerary.activity && itinerary.activity.length > 0
@@ -424,7 +425,7 @@ const ViewUpcomingItinerary = () => {
                                             itinerary.locations.map((location, index) => (
                                                 <div key={index}>
                                                     <Typography variant="body1">
-                                                        {index + 1}: {location.trim()}
+                                                    Location  {index + 1}: {location.trim()}
                                                     </Typography>
                                                     <br />
                                                 </div>
@@ -434,9 +435,9 @@ const ViewUpcomingItinerary = () => {
                                     </TableCell>
                                     <TableCell>{itinerary.timeline}</TableCell>
                                     <TableCell>{itinerary.language}</TableCell>
-                                    <TableCell> 
-                    {(itinerary.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
-                  </TableCell>
+                                    <TableCell>
+                                        {(itinerary.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                                    </TableCell>
                                     <TableCell>
                                         {itinerary.availableDatesAndTimes.length > 0
                                             ? itinerary.availableDatesAndTimes.map((dateTime, index) => {
@@ -455,7 +456,11 @@ const ViewUpcomingItinerary = () => {
                                     <TableCell>{itinerary.accessibility}</TableCell>
                                     <TableCell>{itinerary.pickUpLocation}</TableCell>
                                     <TableCell>{itinerary.dropOffLocation}</TableCell>
-                                    <TableCell>{itinerary.rating}</TableCell>
+                                    <TableCell><Rating
+                                        value={itinerary.averageRating}
+                                        precision={0.1}
+                                        readOnly
+                                    /></TableCell>
                                     <TableCell>
                                         {itinerary.tags && itinerary.tags.length > 0
                                             ? itinerary.tags.map((tag, index) => (
@@ -472,6 +477,7 @@ const ViewUpcomingItinerary = () => {
                                         </Button>
                                     </TableCell>
                                 </TableRow>
+                                 ) : null
                             ))}
                         </TableBody>
                     </Table>

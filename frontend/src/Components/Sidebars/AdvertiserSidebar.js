@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from 'react';
 import {
   Drawer,
   Typography,
@@ -7,17 +7,51 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import DashboardIcon from "@mui/icons-material/Dashboard";
+// import DashboardIcon from "@mui/icons-material/Dashboard";
 import AddIcon from "@mui/icons-material/Add";
 import PeopleIcon from "@mui/icons-material/People";
 // import WidgetsIcon from "@mui/icons-material/Widgets";
 import PersonIcon from '@mui/icons-material/Person';
-
+import DeleteIcon from '@mui/icons-material/Delete';
+import axios from 'axios';
 const drawerWidth = 300;
 
 const AdvertiserSidebar = () => {
+  const [open, setOpen] = useState(false); // State for the dialog
+  const [userName, setUserName] = useState('');
+
+  const handleDeleteClick = () => {
+    const userJson = localStorage.getItem('user');
+    const user = JSON.parse(userJson);
+    setUserName(user.username);
+    setOpen(true); // Open the confirmation dialog
+  };
+
+  const handleClose = () => {
+    setOpen(false); // Close the dialog
+  };
+
+  const handleDeleteAccount = async () => {
+    if (userName) {
+      try {
+        const response = await axios.delete(`http://localhost:8000/advertiserAccount/deleteMyAdvertiserAccount/${userName}`);
+        alert(response.data.message); // Show success message
+      } catch (error) {
+        console.error("Error deleting account:", error);
+        alert("Failed to delete account. Please try again.");
+      }
+    }
+    handleClose(); // Close the dialog after deletion
+  };
+
+
   return (
     <Drawer
       variant="permanent"
@@ -34,27 +68,63 @@ const AdvertiserSidebar = () => {
         </Typography>
         <Divider />
         <List>
+          {/* <ListItem component={Link} to="/advertiserDashboard">
+            <ListItemIcon>
+              <DashboardIcon />
+            </ListItemIcon>
+            <ListItemText primary="Dashboard" />
+          </ListItem> */}
+
+          <ListItem button onClick={handleDeleteClick}>
+            <ListItemIcon>
+              <DeleteIcon />
+            </ListItemIcon>
+            <ListItemText primary="Delete My Account" />
+          </ListItem>
+
           <ListItem component={Link} to="/advertiserEditAccount">
             <ListItemIcon>
               <PersonIcon />
             </ListItemIcon>
             <ListItemText primary="Edit Account" />
           </ListItem>
+
           <ListItem component={Link} to="/activity/addActivity">
             <ListItemIcon>
               <AddIcon />
             </ListItemIcon>
             <ListItemText primary="Add Activity" />
           </ListItem>
+
           <ListItem component={Link} to="/activity/myActivities">
             <ListItemIcon>
               <PeopleIcon />
             </ListItemIcon>
             <ListItemText primary="My Activities" />
           </ListItem>
+
         </List>
         <Divider />
       </div>
+
+      {/* Confirmation Dialog */}
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete your account?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary" variant="outlined">Cancel</Button>
+          <Button
+            onClick={handleDeleteAccount}
+            sx={{ color: 'white', backgroundColor: 'error.main' }} // Set red background
+            variant="contained"
+          >
+            Yes, Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </Drawer>
   );
 };

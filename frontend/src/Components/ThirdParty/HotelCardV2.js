@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardMedia, CardContent, Typography, Box, Button, Divider, Grid } from '@mui/material';
+import { Card, CardMedia, Typography, Box, Button, Divider } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 

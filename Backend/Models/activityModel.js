@@ -56,12 +56,23 @@ const activitySchema = new Schema(
       type: Number,
       required: false
     },
+    flag: {
+      type: Boolean,
+      required: false
+    },
+    comments: {
+      type: [String],
+      required: false,
+    },
     bookedCount: {
       type: Number,
       default: 0,
       required: false
     }
   },
+
+
+
   { timestamps: true }
 );
 

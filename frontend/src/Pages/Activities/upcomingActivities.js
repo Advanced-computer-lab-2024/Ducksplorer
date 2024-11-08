@@ -4,6 +4,7 @@ import { message } from 'antd';
 import { Box, Button, Table, Typography, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import CurrencyConvertor from '../../Components/CurrencyConvertor';
+
 const UpcomingActivities = () => {
   const [activities, setActivities] = useState([]);
   const navigate = useNavigate();  

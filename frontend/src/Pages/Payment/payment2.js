@@ -2,12 +2,10 @@ import { useEffect, useState } from "react";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./checkoutForm.js";
 import { loadStripe } from "@stripe/stripe-js";
-import { useLocation } from "react-router-dom";
 
 const Payment = () => {
   const [stripePromise, setStripePromise] = useState(null);
   const [clientSecret, setClientSecret] = useState("");
-  const location = useLocation();
 
   useEffect(() => {
     // Fetch the publishable key for Stripe only once

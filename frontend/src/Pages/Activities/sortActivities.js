@@ -1,3 +1,4 @@
+////This is the page that gets called when the sort activities button is clicked
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { message } from 'antd';
@@ -20,6 +21,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
+
 const SortActivities = () => {
   const navigate = useNavigate();
   const [activities, setActivities] = useState([]);
@@ -173,17 +175,18 @@ const SortActivities = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {activities.map((activity) => (
-                <TableRow key={activity._id}>
-                  <TableCell>{activity.name}</TableCell>
-                  <TableCell>                    
+              {activities.map((activity) =>
+                !activity.flag && (
+                  <TableRow key={activity._id}>
+                    <TableCell>{activity.name}</TableCell>
+                    <TableCell>                    
                   {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
                   </TableCell>
-                  <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
-                  <TableCell>{activity.category}</TableCell>
-                  <TableCell>{activity.tags.join(", ")}</TableCell>
-                  <TableCell>{activity.specialDiscount}</TableCell>
-                  <TableCell>{activity.date ? (() => {
+                    <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
+                    <TableCell>{activity.category}</TableCell>
+                    <TableCell>{activity.tags.join(", ")}</TableCell>
+                    <TableCell>{activity.specialDiscount}</TableCell>
+                    <TableCell>{activity.date ? (() => {
                     const dateObj = new Date(activity.date);
                     const date = dateObj.toISOString().split('T')[0];
                     const time = dateObj.toTimeString().split(' ')[0];
@@ -193,25 +196,33 @@ const SortActivities = () => {
                       </div>
                     );
                   })()
-                    : 'No available date and time'}</TableCell>
+                    : 'No available date and time' ? (() => {
+                      const dateObj = new Date(activity.date);
+                      const date = dateObj.toISOString().split('T')[0];
+                      const time = dateObj.toTimeString().split(' ')[0];
+                      return (
+                        <div>
+                          {date} at {time}
+                        </div>
+                      );
+                    })()
+                      : 'No available date and time'}</TableCell>
 
-                  <TableCell>{activity.duration}</TableCell>
-                  <TableCell>{activity.location}</TableCell>
-                  <TableCell>
-                    <Rating
-                      value={activity.averageRating}
-                      precision={0.1}
-                      readOnly
-                    />
-                  </TableCell>
+                    <TableCell>{activity.duration}</TableCell>
+                    <TableCell>{activity.location}</TableCell>
+                    <TableCell>
+                      <Rating value={activity.averageRating} precision={0.1} readOnly />
+                    </TableCell>
                   <TableCell>
                     <Button onClick={() => handleBooking(activity._id)}>
                       Book Now
                     </Button>
                   </TableCell>
-                </TableRow>
-              ))}
+                  </TableRow>
+                )
+              )}
             </TableBody>
+
           </Table>
         </TableContainer>
       </Box>

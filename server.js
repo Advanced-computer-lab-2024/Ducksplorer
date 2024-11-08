@@ -42,8 +42,9 @@ const museumTagRoutes = require('./Backend/Routes/museumHistoricalPlaceRoutes/mu
 const itineraryRoutes = require("./Backend/Routes/itineraryRoutes.js")
 const tourGuideAccountRoutes = require("./Backend/Routes/TourGuideAccountRoutes.js")
 const advertiserAccountRoutes = require("./Backend/Routes/AdvertiserAccountRoutes.js")
-const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js");
-const { DriveFileRenameOutlineSharp } = require("@mui/icons-material");
+const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js")
+const tourGuideRateRoutes = require("./Backend/Routes/tourGuideRateRoutes.js")
+const tourGuideCommentRoutes = require("./Backend/Routes/tourGuideCommentRoutes.js")
 
 
 app.use("/signUp", signUpRoutes);
@@ -55,7 +56,7 @@ app.use("/admin", adminRoutes);
 app.use("/touristAccount", touristAccountRoutes);
 app.use("/adminActivity", AdminActivityRoutes);
 app.use("/preferenceTags", preferenceTagsRoutes);
-app.use("/category", categoryRoutes); 
+app.use("/category", categoryRoutes);
 app.use("/museum", museumRoutes);
 app.use("/historicalPlace", historicalPlaceRoutes);
 app.use("/historicalPlaceTags", historicalPlaceTagRoutes);
@@ -68,6 +69,8 @@ app.use('/file', fileRoutes);
 app.use('/payment', paymentRoutes);
 app.use('/api/documents', documentRoutes);
 // app.use("/", bookingThirdPartyRoutes);
+app.use("/tourGuideRate", tourGuideRateRoutes);
+app.use("/tourGuideComment", tourGuideCommentRoutes);
 
 
 app.use((req, res, next) => {

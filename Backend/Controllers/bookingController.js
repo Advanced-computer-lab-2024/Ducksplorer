@@ -6,60 +6,181 @@ const Itinerary = require("../Models/itineraryModel.js");
 
 const createBooking = async (req, res) => {
     const { user } = req.params;  // URL parameter for user
-    const { activityId, itineraryId } = req.body;
+    const { activityId, itineraryId, type } = req.body;
 
     try {
         const tourist = await Tourist.findOne({ userName: user });
         if (!tourist) {
-            return res.status(404).json({ message: "Tourist not found" });
+            res.status(404).json({ message: "Tourist not found" });
+            return;
         }
 
         const activity = activityId ? await Activity.findById(activityId) : null;
         const itinerary = itineraryId ? await Itinerary.findById(itineraryId) : null;
 
-        console.log(activityId, itineraryId);
+        console.log(activityId, itineraryId, type);
 
-        let booking = await Bookings.findOne({ user });  // Adjusted to use tourist's ID
+        // Look for an existing booking
+        let booking = await Bookings.findOne({ user });
 
         if (booking) {
-            if (activityId) {
-                const activityExists = booking.activities.includes(activityId);
+            // Handle adding activity if it doesn't already exist in the booking
+            if (activityId && type === 'activity') {
+                const activityExists = booking.activities.some(a => a._id.toString() === activityId);
                 if (!activityExists) {
                     booking.activities.push(activity);
                     activity.bookedCount += 1;
+                    await activity.save();  // Save the updated activity
+                    res.status(200).json({
+                        message: "Booking updated successfully", booking,
+                        status: 200,
+                        log: 'Activity booking created',
+                        bookingCount: activity.bookedCount,
+                        price: activity.price,
+                        wallet: tourist.wallet
+                    })
                 } else {
-                    return res.status(400).json({ message: "Activity already exists in the booking" });
+                    res.status(400).json({ message: "Activity already exists in the booking" });
                 }
             }
 
-            // Check if itineraryId is valid and not null, then add it to the itineraries array
-            if (itineraryId) {
-                const itineraryExists = booking.itineraries.includes(itineraryId);
+            // Handle adding itinerary if it doesn't already exist in the booking
+            if (itineraryId && type === 'itinerary') {
+                const itineraryExists = booking.itineraries.some(i => i._id.toString() === itineraryId);
                 if (!itineraryExists) {
                     booking.itineraries.push(itinerary);
                     itinerary.bookedCount += 1;
+                    await itinerary.save();  // Save the updated itinerary
+                    res.status(200).json({
+                        message: "Booking updated successfully", booking,
+                        status: 200,
+                        log: 'Itinerary booking created',
+                        bookingCount: itinerary.bookedCount,
+                        price: itinerary.price,
+                        wallet: tourist.wallet
+                    })
                 } else {
-                    return res.status(400).json({ message: "Itinerary already exists in the booking" });
+                    res.status(400).json({ message: "Itinerary already exists in the booking" });
                 }
             }
-            activityId ? await activity.save() : null;
-            itineraryId ? await itinerary.save() : null;
+
+            // Save the updated booking
             await booking.save();
-            return res.status(200).json({ message: "Booking updated successfully", booking });
+            //res.status(200).json({ message: "Booking updated successfully", booking });
         } else {
+            // If no booking exists, create a new one
             const newBooking = new Bookings({
                 user,
                 activities: activityId ? [activity] : [], // Start with an array
                 itineraries: itineraryId ? [itinerary] : []
             });
+            // Update bookedCount for new activity and itinerary even when it is the 1st booking for the tourist
+            if (activity) {
+                activity.bookedCount += 1;
+                await activity.save();  // Save the updated activity count
+            }
+            if (itinerary) {
+                itinerary.bookedCount += 1;
+                await itinerary.save();  // Save the updated itinerary count
+            }
+
+            // Save the new booking
             await newBooking.save();
-            return res.status(201).json(newBooking);
+            res.status(201).json(newBooking);
         }
 
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
 };
+
+
+// const createBooking = async (req, res) => {
+//     const { user } = req.params;  // URL parameter for user
+//     const { activityId, itineraryId, type } = req.body;
+
+//     if (!activityId && !itineraryId) {
+//         return res.status(400).json({ message: "At least one of activityId or itineraryId must be provided" });
+//     }
+
+//     try {
+//         const tourist = await Tourist.findOne({ userName: user });
+//         if (!tourist) {
+//             return res.status(404).json({ message: "Tourist not found" });
+//         }
+
+//         const activity = activityId ? await Activity.findById(activityId) : null;
+//         const itinerary = itineraryId ? await Itinerary.findById(itineraryId) : null;
+
+//         console.log(activityId, itineraryId);
+
+//         // Look for an existing booking
+//         let booking = await Bookings.findOne({ user });
+
+//         if (booking) {
+//             // Handle adding activity if it doesn't already exist in the booking
+//             if (activityId && type === 'activity') {
+//                 const activityExists = booking.activities.some(a => a._id.toString() === activityId);
+//                 if (!activityExists) {
+//                     booking.activities.push(activity);
+//                     activity.bookedCount += 1;
+//                     await activity.save();  // Save the updated activity
+//                     res.status(200).json({
+//                         message: "Activity booking created",
+//                         type: type,
+//                         points: activity.points,
+//                         bookingCount: activity.bookedCount,
+//                         name: activity.name,
+//                         price: activity.price,
+//                         wallet: user.wallet
+//                     });
+//                 } else {
+//                     return res.status(400).json({
+//                         message: "Activity already exists in the booking",
+//                     });
+//                 }
+//             }
+//             // Handle adding itinerary if it doesn't already exist in the booking
+//             if (itineraryId && type === 'itinerary') {
+//                 const itineraryExists = booking.itineraries.some(i => i._id.toString() === itineraryId);
+//                 if (!itineraryExists) {
+//                     booking.itineraries.push(itinerary);
+//                     itinerary.bookedCount += 1;
+//                     await itinerary.save();  // Save the updated itinerary
+//                     res.status(200).json({
+//                         message: "Itinerary booking created",
+//                         type: type,
+//                         points: activity.points,
+//                         bookingCount: activity.bookedCount,
+//                         name: activity.name,
+//                         price: activity.price,
+//                         wallet: user.wallet
+//                     });
+//                 } else {
+//                     return res.status(400).json({ message: "Itinerary already exists in the booking" });
+//                 }
+//             }
+
+//             // Save the updated booking
+//             await booking.save();
+//             return res.status(200).json({ message: "Booking updated successfully", booking });
+//         } else {
+//             // If no booking exists, create a new one
+//             const newBooking = new Bookings({
+//                 user,
+//                 activities: activityId ? [activity] : [], // Start with an array
+//                 itineraries: itineraryId ? [itinerary] : []
+//             });
+//             await newBooking.save();
+//             return res.status(201).json(newBooking);
+//         }
+
+//     } catch (err) {
+//         return res.status(500).json({ message: err.message });
+
+//     }
+// };
+
 
 
 const viewMyUpcomingBookings = async (req, res) => {
@@ -129,7 +250,7 @@ const viewDesiredActivity = async (req, res) => {
         if (!result) {
             return res.status(404).json({ message: "Activity not found" });
         }
-        res.status(200).json(result); 
+        res.status(200).json(result);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -166,7 +287,7 @@ const getMyBookings = async (req, res) => {
 
 const cancelMyBooking = async (req, res) => {
     const { user } = req.params;
-    const { type, itemId } = req.body;
+    const { type, itemId, price } = req.body;
     const currentDate = new Date();
 
     try {
@@ -185,7 +306,8 @@ const cancelMyBooking = async (req, res) => {
 
         if (type === 'activity') {
             const activity = booking.activities.find(activity => activity._id.equals(itemObjectId));
-            if (!activity) return res.status(404).json({ message: 'Activity not found in the booking' });
+            if (!activity)
+                return res.status(404).json({ message: 'Activity not found in the booking' });
             itemDate = activity.date;
 
             // Check time difference for activity
@@ -194,6 +316,8 @@ const cancelMyBooking = async (req, res) => {
                 return res.status(400).json({ message: 'Cannot cancel within 48 hours of the activity' });
             }
             activity.bookedCount -= 1;
+            tourist.wallet += price;
+            await tourist.save();
             // Remove the activity from the booking
             await Bookings.updateOne(
                 { user },
@@ -203,19 +327,19 @@ const cancelMyBooking = async (req, res) => {
         } else if (type === 'itinerary') {
             const itinerary = booking.itineraries.find(itinerary => itinerary._id.equals(itemObjectId));
             if (!itinerary) return res.status(404).json({ message: 'Itinerary not found in the booking' });
+            itemDate = itinerary.chosenDate;
 
             // Check time difference for itineraries
-            const cannotCancel = itinerary.availableDatesAndTimes.some(date => {
-                const timeDifference = (new Date(date) - currentDate) / (1000 * 60 * 60);
-                return timeDifference <= 48; // Return true if any date is within 48 hours
-            });
-
-            if (cannotCancel) {
+            const timeDifference = (new Date(itemDate) - currentDate) / (1000 * 60 * 60);
+            if (timeDifference <= 48) {
                 return res.status(400).json({ message: 'Cannot cancel within 48 hours of the itinerary' });
             }
 
             // Update booked count and remove the itinerary from the booking
             itinerary.bookedCount -= 1;
+            tourist.wallet += price;
+            await tourist.save();
+
             await Bookings.updateOne(
                 { user },
                 { $pull: { itineraries: { _id: itemObjectId } } }
@@ -232,10 +356,10 @@ const cancelMyBooking = async (req, res) => {
             return res.status(200).json({ message: 'Booking successfully canceled and deleted' });
         }
 
-        res.status(200).json({ message: 'Booking item successfully canceled', updatedBooking });
+        return res.status(200).json({ message: 'Booking item successfully canceled', updatedBooking });
 
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 };
 
@@ -282,9 +406,10 @@ const cancelMyBooking = async (req, res) => {
 // };
 
 
-const receiveLoyaltyPoints = async (req, res) => {
-    let { price, userName } = req.params;
-    
+const receiveLoyaltyPoints = async (price, userName) => {
+    console.log("inside receiveLoyaltyPoints");
+    //let { price, userName } = req.params;
+
     console.log('Received price:', price);  // Debugging line to inspect the value of price
 
     // Validate that price is a valid number
@@ -292,15 +417,17 @@ const receiveLoyaltyPoints = async (req, res) => {
     const priceNumber = parseFloat(price);
 
     if (isNaN(priceNumber) || priceNumber <= 0) {
-        return res.status(400).json({ success: false, message: 'Invalid price value' });
+        console.log("inValid price")
+        //return res.status(400).json({ success: false, message: 'Invalid price value' });
     }
 
     try {
         const tourist = await Tourist.findOne({ userName });
         if (!tourist) {
-            return res.status(404).json({ success: false, message: 'Tourist not found' });
+            console.log("Tourist not found")
+            //return res.status(404).json({ success: false, message: 'Tourist not found' });
         }
-
+        console.log("")
         let loyaltyPoints = 0;
         switch (tourist.level) {
             case 1:
@@ -318,20 +445,24 @@ const receiveLoyaltyPoints = async (req, res) => {
 
         tourist.points += loyaltyPoints;
 
-        await tourist.save();
+        console.log("Before Tourist.save working inside the receiveLoyaltyPoints")
+        // await tourist.save();
+        console.log("Tourist.save working inside the receiveLoyaltyPoints");
         await updateLevel(tourist.userName, tourist.points);
+        console.log("updateLevel working inside the receiveLoyaltyPoints");
 
-        res.status(200).json({ success: true, points: tourist.points });
+        console.log("Tourist Added Successfully")
+        //res.status(200).json({ success: true, points: tourist.points });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'An error occurred', error });
+        //res.status(500).json({ success: false, message: 'An error occurred', error });
     }
 };
 
 
-const getLevel = async (req,res) => {
-    const {userName} = req.params;
+const getLevel = async (req, res) => {
+    const { userName } = req.params;
     try {
-        const user = await Tourist.findOne( {userName} );
+        const user = await Tourist.findOne({ userName });
         if (!user) {
             console.error('User not found');
             return;
@@ -354,7 +485,7 @@ const updateLevel = async (userName, points) => {
             user.level = 2;
         } else if (points >= 50000) {
             user.level = 3;
-        } else{
+        } else {
             user.level = 1;
         }
 
@@ -389,12 +520,78 @@ const redeemPoints = async (req, res) => {
         }
         updateLevel(tourist.userName, myPoints);
 
-    } catch (error) {
+    } catch {
         res.status(500).json({ message: "An error occurred", error });
+    }
+};
+
+const payVisa = async (req, res) => {
+    try {
+        const { userName } = req.params;
+        const { price } = req.body;
+        const tourist = await Tourist.findOne({ userName });
+
+        await receiveLoyaltyPoints(price, userName);
+        await tourist.save();
+        res.status(200).json({
+            status: 200,
+            message: "Points updated successfully",
+            wallet: tourist.wallet,
+            points: tourist.points
+        });
+    } catch {
+        res.status(500).json({ message: "An error occurred", error });
+    }
+};
+
+const payWallet = async (req, res) => {
+    try {
+        const { userName } = req.params;
+        const { price } = req.body;
+        const tourist = await Tourist.findOne({ userName });
+        const level = tourist.level;
+        console.log(tourist);
+        let myWallet = tourist.wallet;
+        if (myWallet >= price) {
+            console.log("inside");
+            myWallet -= price;
+            tourist.wallet = myWallet;
+            await tourist.save();
+            console.log("Tourist.save working")
+            if (tourist.level === 1) {
+                tourist.points += (price * 0.5)
+            }
+            else if (tourist.level === 2) {
+                tourist.points += (price * 1.0)
+            }
+            else if (tourist.level === 3) {
+                tourist.points += (price * 1.5)
+            }
+            if (tourist.points >= 10000 && tourist.points < 50000) {
+                tourist.level = 2;
+            } else if (tourist.points >= 50000) {
+                tourist.level = 3;
+            } else {
+                tourist.level = 1;
+            }
+            console.log("Tourist.recieveLoyaltyPoints working")
+            await tourist.save();
+            console.log("Tourist.save 2 is working")
+            res.status(200).json({
+                status: 200,
+                message: "Activity/Itinerary payed successfully",
+                wallet: myWallet,
+                points: tourist.points
+            });
+        } else {
+            res.status(400).json({ message: "Not enough money in the wallet" });
+        }
+    } catch (error) {
+        return res.status(500).json({ message: "An error occurred", error });
     }
 };
 
 
 module.exports = {
-    receiveLoyaltyPoints, updateLevel, redeemPoints, createBooking, getMyBookings, cancelMyBooking, viewMyUpcomingBookings, viewMyPastBookings, viewDesiredActivity, viewDesiredItinerary, getLevel
+    receiveLoyaltyPoints, updateLevel, redeemPoints, createBooking, getMyBookings, cancelMyBooking, viewMyUpcomingBookings, viewMyPastBookings, viewDesiredActivity, viewDesiredItinerary, getLevel, payWallet, payVisa
 }

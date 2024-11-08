@@ -4,13 +4,13 @@ const Seller = require("../Models/sellerModel.js");
 const Advertiser = require("../Models/advertiserModel");
 const User = require("../Models/userModel.js");
 const path = require('path');
-const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el signup
-    try{
-        const {email,userName,password} = req.body;
-        const user = await User.findOne({userName});
+const signUp = async (req, res) => { //req gai mn el frontend el etmalet wa2t el signup
+    try {
+        const { email, userName, password, nationalId } = req.body;
+        const user = await User.findOne({ userName });
 
-        if(user){
-            return res.status(400).json({error:"Username Already Exists"});
+        if (user) {
+            return res.status(400).json({ error: "Username Already Exists" });
         }
         const role = req.body.role;
         let status = "Approved";
@@ -54,7 +54,7 @@ const signUp = async (req,res) => { //req gai mn el frontend el etmalet wa2t el 
             await newAdvertiser.save();
             res.status(201).json(newAdvertiser);
         }
-        const newuser = new User({role , userName, password , status});
+        const newuser = new User({ role, userName, password, status });
         await newuser.save();
 
     } catch (error) {
@@ -65,6 +65,7 @@ const login = async (req, res) => {
     try {
         const { userName, password } = req.body;
         const user = await User.findOne({ userName });
+        let tourist;
 
         if (user) {
             if (user.status === "Pending") {
@@ -73,13 +74,17 @@ const login = async (req, res) => {
             if (!user || (user.password !== password)) {
                 return res.status(400).json({ error: "Incorrect UserName or Password" });
             }
+            if (user.role == "Tourist") {
+                tourist = await Tourist.findOne({ userName });
+            }
 
 
 
             res.status(200).json({
                 _id: user._id,
                 username: user.userName,
-                role: user.role
+                role: user.role,
+                email: user.role === "Tourist" ? tourist.email : " "
             })
         }
         else {
