@@ -2,6 +2,7 @@ const express = require("express");
 const itineraryModel = require("../../Models/itineraryModel");
 const mongoose = require("mongoose");
 const tourGuideModel = require("../../Models/tourGuideModel");
+const touristModel = require("../../Models/touristModel");
 
 const createItinerary = async (req, res) => {
   //create
@@ -53,16 +54,41 @@ const createItinerary = async (req, res) => {
   }
 };
 
-const getAllItineraries = async (req, res) => {
-  //helper
-  //retrieve all Itineraries from the database
-  try {
-    const itinerary = await itineraryModel.find();
-    res.status(200).json(itinerary);
-  } catch (error) {
-    res.status(400).json({ error: error.message, x: "oops" });
-  }
-};
+const getAllItineraries = async (req, res) => { //helper
+    //retrieve all Itineraries from the database
+    const {showPreferences, username, role} = req.query;
+    if(showPreferences === 'true' && role === 'Tourist'){
+        const tourist =await touristModel.findOne({userName: username});
+        const touristTags = tourist.tagPreferences;
+        try {
+            let itineraries = await itineraryModel.find();
+             // Sort itineraries based on matching tags with the tourist's tags
+             itineraries = itineraries.sort((a, b) => {
+                const aHasMatch = a.tags.some(tag => touristTags.includes(tag));
+                const bHasMatch = b.tags.some(tag => touristTags.includes(tag));
+                
+                if (aHasMatch && !bHasMatch) {
+                    return -1; // If 'a' has a match and 'b' doesn't, 'a' comes first
+                  } else if (!aHasMatch && bHasMatch) {
+                    return 1; // If 'b' has a match and 'a' doesn't, 'b' comes first
+                  } else {
+                    return 0; // If both have matches or both don't, retain their relative order
+                  }            });
+            res.status(200).json(itineraries);
+        }
+        catch (error) {
+            res.status(400).json({ error: error.message, x: "oops" });
+        }
+    }else{
+        try {
+            const itinerary = await itineraryModel.find();
+            res.status(200).json(itinerary);
+        }
+        catch (error) {
+            res.status(400).json({ error: error.message, x: "oops" });
+        }
+    }
+}
 
 const getItinerary = async (req, res) => {
   //read
