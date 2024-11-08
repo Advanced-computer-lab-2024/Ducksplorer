@@ -12,7 +12,6 @@ import axios from "axios";
 import { message } from "antd";
 import { useTypeContext } from "../context/TypeContext";
 import DropDown from "./DropDown.js";
-import { useNavigate } from "react-router-dom";
 import {
   Checkbox,
   FormControlLabel,
@@ -21,6 +20,7 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const FormSection = () => {
   const { type } = useTypeContext();
@@ -132,27 +132,40 @@ const FormSection = () => {
   return (
     <div
       style={{
-        backgroundImage: "url(../../public/Images/bg-intro-desktop.png)", // Update with your image path
+        backgroundImage: "url(airplaneBG.jpg)", // Update with your image path
         backgroundSize: "cover",
         backgroundPosition: "center",
-        height: "100vh",
+        height: "140vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
       }}
     >
+    
       <Stack
         spacing={1}
         sx={{
           width: "600px",
           padding: "10px",
           backgroundColor: "rgba(255, 255, 255, 0.8)",
+          //backgroundSize: "cover",
           borderRadius: "10px",
         }}
       >
-        <div className="trial-btn text-white cursor-pointer">
-          <span className="text-bold">Welcome To Ducksplorer</span>
-        </div>
+         <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }} 
+      >
+        <img
+          src="logo3.png" // Update with your image path
+          alt="logo"
+          style={{ width: "200px", height: "200px" }}
+        />
+        <h1 style={{ color: "Black", fontSize: "40px" }}>Ducksplorer Sign Up form</h1>
+      </div>
         <TextField
           name="username"
           label="Username"
@@ -315,7 +328,7 @@ const FormSection = () => {
           </>
         )}
         <DropDown />
-        <FormControlLabel
+        <FormControlLabel sx={{  justifyContent: "center" }}
           control={
             <Checkbox
               checked={acceptTerms}
@@ -425,6 +438,18 @@ const FormSection = () => {
         >
           Sign Up
         </Button>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "20px",
+          }}
+        >
+          <p style={{ marginRight: "10px" }}>Already have an account? </p>
+          <Link to="/login" style={{ textDecoration: "none" }}>
+            <p style={{ color: "blue", cursor: "pointer" , textDecoration: "underline"}}>Login</p>
+          </Link>
+        </div>
       </Stack>
     </div>
   );

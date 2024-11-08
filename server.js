@@ -17,7 +17,6 @@ const activityRoutes = require("./Backend/Routes/activityRoutes.js");
 const categoryRoutes = require("./Backend/Routes/categoryRoutes.js");
 const userRoutes = require("./Backend/Routes/userRoutes.js");
 const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({ extended: true }));
 const bookingThirdPartyRoutes = require("./Backend/Routes/ThirdParty/bookingRoutes.js");
 const museumRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/museumRoutes.js");
 const historicalPlaceRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceRoutes.js");
@@ -41,8 +40,6 @@ app.use(express.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(cors());
-
 console.log(process.env.PORT);
 app.use(express.json());
 const storage = multer.diskStorage({
@@ -60,7 +57,6 @@ app.post("/uploadImage", (req, res) => {
     .catch((err) => res.status(500).send(err.message));
 });
 
-app.use("/uploads", express.static("uploads"));
 
 app.use("/signUp", signUpRoutes);
 app.use("/touristRoutes", touristRoutes);
