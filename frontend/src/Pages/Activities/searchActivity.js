@@ -37,7 +37,7 @@ const SearchActivities = () => {
     axios
     .get("http://localhost:8000/activity/", {
       params: {
-        showPreferences,
+        showPreferences: showPreferences.toString(),
         favCategory
       }
     })

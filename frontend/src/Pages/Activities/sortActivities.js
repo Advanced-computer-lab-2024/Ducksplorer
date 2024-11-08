@@ -35,9 +35,7 @@ const SortActivities = () => {
         `http://localhost:8000/activity/sort?sortBy=${sortBy}&order=${order}`
       )
       .then((response) => {
-        console.log(showPreferences,"before if");
-        if(showPreferences){
-          console.log(showPreferences,"inside if");
+        if(!showPreferences){
           let Activities = response.data;
         Activities = Activities.sort((a, b) => {
           if (a.category === favCategory && b.category !== favCategory) {

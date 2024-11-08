@@ -81,7 +81,7 @@ const searchActivities = async (req, res) => {
   const { search, showPreferences, favCategory} = req.query;
   const filters = {};
    
-  if(!showPreferences){
+  if(showPreferences === 'false'){
     try {
       // If the user is searching, check both the activity name, category, and related tags in respective schemas
       if (search) {
