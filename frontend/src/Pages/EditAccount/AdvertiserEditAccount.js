@@ -5,20 +5,25 @@ import { message } from "antd";
 import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar";
 import FileUpload from '../../Components/FileUpload';
 import ProfilePictureUpload from "../../Components/pp";
+import DownloadButton from '../../Components/DownloadButton';
 
 const AdvertiserEditProfile = () => {
   const [advertiserDetails, setAdvertiserDetails] = useState({
     userName: "",
     email: "",
     password: "",
-    //nationalId: '',
     websiteLink: "",
     hotline: "",
     companyProfile: "",
-    taxationRegisteryCard: '',
-    logo: ''
+    uploads:"",
   });
   const [isEditing, setIsEditing] = useState(false);
+
+  const handleUploadsSelect = async () => {
+    const uploadsFile = document.getElementById('uploads').files[0];
+    console.log("before the call",uploadsFile);
+    advertiserDetails.uploads = await handleFileUpload(uploadsFile);
+  };
 
   useEffect(() => {
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
@@ -45,6 +50,27 @@ const AdvertiserEditProfile = () => {
     setIsEditing(true);
   };
 
+  const handleFileUpload = async (uploads) => {
+    const formData = new FormData();
+    formData.append('file', uploads);
+    try {
+      message.success("uploading file please wait");
+      const response = await axios.post('http://localhost:8000/api/documents/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      message.success('File uploaded successfully, you can now click save');
+      console.log(response.data.url);
+      console.log('Document uploaded successfully:', response.data);
+      return response.data.url; // Return the file URL
+    } catch (error) {
+      message.error('Error uploading document');
+      console.log("fel catch",error.response.data);
+      console.error('Error uploading document for tourguide:', error);
+      return null; // Return null if upload fails
+    }
+};
   const handleSaveClick = () => {
     axios
       .put(
@@ -69,7 +95,33 @@ const AdvertiserEditProfile = () => {
       [name]: value,
     }));
   };
-
+  const handleFileDelete = async (uploads) => {
+    const userName = advertiserDetails.userName; // assuming userName is stored in AdvertiserDetails
+  
+    if (!userName) {
+      message.error('Username is missing');
+      return;
+    }
+  
+    try {
+      await axios.post(`http://localhost:8000/advertiserAccount/removeFileUrl`, {
+        userName: userName,
+        uploads: uploads // using "uploads" to match the backend parameter
+      });
+      message.success('File deleted successfully');
+  
+      // Remove the file URL from the state
+      setAdvertiserDetails(prevDetails => ({
+        ...prevDetails,
+        [uploads]: '', // clears the correct field in the state
+      }));
+    } catch (error) {
+      message.error('Error deleting file');
+      console.error('Error deleting file:', error);
+    }
+  };
+  
+  
   return (
     <div>
       <AdvertiserSidebar />
@@ -143,28 +195,14 @@ const AdvertiserEditProfile = () => {
               readOnly: !isEditing,
             }}
           />
-          <lable>Taxation Registery Card</lable>
-          <FileUpload />
-          {/* <TextField
-          label="taxationRegisteryCard" // Singular label
-          name="taxationRegisteryCard" // This should match the updated state field
-          value={advertiserDetails.taxationRegisteryCard} // Access the pictures string directly
-          onChange={handleChange}
-          InputProps={{
-            readOnly: !isEditing,
-          }}
-         /> */}
-         <lable>Logo</lable>
-         <FileUpload />
-         {/* <TextField
-          label="logo" // Singular label
-          name="logo" // This should match the updated state field
-          value={advertiserDetails.logo} // Access the pictures string directly
-          onChange={handleChange}
-          InputProps={{
-            readOnly: !isEditing,
-          }}
-         /> */}
+          <Box disabled={!isEditing} sx={{ display: 'flex', gap: 2, mt: 3 }}>
+          <label>Uploads:</label>
+          <DownloadButton fileUrl={advertiserDetails.uploads} label="Download uploaded file" />
+          <Button onClick={() => handleFileDelete('uploads')}>Delete uploaded file</Button>
+          <FileUpload          
+            inputId="uploads"
+            onFileSelect={handleUploadsSelect}            />
+          </Box>
           {isEditing ? (
             <Button
               variant="contained"

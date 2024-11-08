@@ -28,6 +28,9 @@ const advertiserSchema = new Schema({
         type: String,
         required: true
     },
+    uploads: {  
+        type: String,
+    },
     profilePicture: {
         filename: { type: String },
         filepath: { type: String },

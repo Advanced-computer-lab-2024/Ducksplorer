@@ -29,6 +29,14 @@ const tourGuideSchema = new Schema({
         type: String,
         required: false
     }, 
+    nationalId:{
+        type: String,
+        required : false
+    },
+    certificates: {
+        type: String,
+        required : false
+    },
     profilePicture: {
         filename: { type: String },
         filepath: { type: String },

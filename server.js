@@ -18,8 +18,8 @@ const categoryRoutes = require("./Backend/Routes/categoryRoutes.js");
 const fileRoutes = require("./Backend/Routes/fileRoutes.js")
 const paymentRoutes = require('./Backend/Routes/paymentRoutes.js');
 const bookingThirdPartyRoutes = require("./Backend/Routes/ThirdParty/bookingRoutes.js");
-// // const documentRoutes = require('./Backend/Routes/documentRoutes');
-// //const bodyParser = require('body-parser');
+const documentRoutes = require('./Backend/Routes/documentRoutes');
+const bodyParser = require('body-parser');
  app.use(cors());
 
 //__dirname = path.dirname(fileURLToPath(import.meta.url)); // Set __dirname
@@ -28,7 +28,7 @@ app.use("/uploads", (req, res, next) => {
   next();
 }, express.static(path.join(__dirname, "uploads")));
 
-//app.use(bodyParser.json());
+app.use(bodyParser.json());
 
 console.log(process.env.PORT);
 app.use(express.json());
@@ -66,7 +66,8 @@ app.use("/advertiserAccount", advertiserAccountRoutes);
 app.use("/sellerAccount", sellerAccountRoutes);
 app.use('/file', fileRoutes);
 app.use('/payment', paymentRoutes);
-// app.use('/api/documents', documentRoutes);app.use("/", bookingThirdPartyRoutes);
+app.use('/api/documents', documentRoutes);
+// app.use("/", bookingThirdPartyRoutes);
 
 
 app.use((req, res, next) => {

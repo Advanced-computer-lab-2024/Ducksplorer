@@ -46,7 +46,33 @@ const updateAdvertiserDetails = async (req, res) => {
   }
 };
 
+
+const removeFileUrl = async (req, res) => {
+  const { userName, uploads } = req.body;
+
+  if (!userName || !uploads) {
+    return res.status(400).json({ error: 'userName and uploads are required' });
+  }
+
+  try {
+    // Find the tour guide by username
+    const advertiser = await Advertiser.findOne({ userName });
+    if (!advertiser) {
+      return res.status(404).json({ error: 'advertiser not found' });
+    }
+
+    advertiser.uploads = ''; // Clear the uploads field
+    // Save the updated document
+    await advertiser.save();
+    res.status(200).json({ message: 'File URL removed successfully' });
+  } catch (error) {
+    console.error('Error deleting file URL:', error);
+    res.status(500).json({ error: 'An error occurred while deleting the file URL' });
+  }
+};
+
 module.exports = {
   getAdvertiserDetails,
-  updateAdvertiserDetails
+  updateAdvertiserDetails,
+  removeFileUrl
 };
