@@ -8,8 +8,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import CategoryIcon from '@mui/icons-material/Category';
 import LabelIcon from '@mui/icons-material/Label';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-
-
+import ReportIcon from '@mui/icons-material/Report'; // Icon for Complaints
 
 const drawerWidth = 300;
 
@@ -24,7 +23,7 @@ const Sidebar = () => {
       }}
     >
       <div>
-      {/* <img src="logo1.png" style={{ width: '120px' , height: '120px' , padding: '10px', marginLeft: '50px'}} alt="logo" /> */}
+        {/* <img src="logo1.png" style={{ width: '120px' , height: '120px' , padding: '10px', marginLeft: '50px'}} alt="logo" /> */}
         <Typography variant="h6" noWrap sx={{ padding: 2 }}>
           Admin Dashboard
         </Typography>
@@ -65,19 +64,28 @@ const Sidebar = () => {
               <CategoryIcon />
             </ListItemIcon>
             <ListItemText primary="Categories" />
-         </ListItem>
-         <ListItem button component={Link} to="/preferenceTags">
-          <ListItemIcon>
-            <LabelIcon />
-          </ListItemIcon>
-          <ListItemText primary="Tags" />
-        </ListItem>
-        <ListItem button component={Link} to="/Adminproducts">
+          </ListItem>
+          
+          {/* Complaints Button */}
+          <ListItem button component={Link} to="/admin/complaints">
+            <ListItemIcon>
+              <ReportIcon />
+            </ListItemIcon>
+            <ListItemText primary="Complaints" />
+          </ListItem>
+
+          <ListItem button component={Link} to="/preferenceTags">
+            <ListItemIcon>
+              <LabelIcon />
+            </ListItemIcon>
+            <ListItemText primary="Tags" />
+          </ListItem>
+          <ListItem button component={Link} to="/Adminproducts">
             <ListItemIcon>
               <ShoppingCartIcon />
             </ListItemIcon>
             <ListItemText primary="Products Management" />
-         </ListItem>
+          </ListItem>
         </List>
         <Divider />
       </div>

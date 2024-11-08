@@ -2,11 +2,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
-import { Button, Stack, TextField, Typography } from '@mui/material';
+import { Button, Stack, Typography } from '@mui/material';
 import ProductCard from '../../Components/Products/ProductCard'; // Import the ProductCard component
+import useUserRole from '../../Components/getRole';
 
 function SortProducts() {
   const [products, setProducts] = useState([]);
+  const role = useUserRole();
 
   const handleSortAscProducts = async () => {
     // console.log(price);
@@ -71,16 +73,35 @@ function SortProducts() {
         </Button>
       </Stack>
 
-      <div style={{ maxHeight: '400px', overflowY: 'auto', padding: '10px', marginTop: '20px' }}>
+      <div style={{ maxHeight: '400px', overflowY: 'visible', padding: '10px', marginTop: '20px' }}>
         {/* Render the filtered products using the ProductCard component */}
-        {products.length > 0 ? (
-          products.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))
+        {(role === "Admin" || role === "Seller") ? (
+          products.length > 0 ? (
+            products.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))
+          ) : (
+            <Typography variant="body1" style={{ marginTop: "20px" }}>
+              No products found.
+            </Typography>
+          )
         ) : (
-          <Typography variant="body1" style={{ marginTop: '20px' }}>
-            No products yet.
-          </Typography>
+          products.filter(product => product.isArchived !== true).length > 0 ? (
+            products
+              .filter(product => product.isArchived !== true)
+              .map((product) => (
+                <div
+                  key={product._id}
+                  style={{ position: "relative", marginBottom: "20px" }}
+                >
+                  <ProductCard product={product} />
+                </div>
+              ))
+          ) : (
+            <Typography variant="body1" style={{ marginTop: "20px" }}>
+              No products found.
+            </Typography>
+          )
         )}
       </div>
     </div>

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography, Paper, Avatar } from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
 import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const AdvertiserEditProfile = () => {
   const [advertiserDetails, setAdvertiserDetails] = useState({
@@ -16,7 +17,7 @@ const AdvertiserEditProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
+    const userJson = localStorage.getItem("user"); 
     const user = JSON.parse(userJson);
     const userName = user.username;
 
@@ -24,10 +25,7 @@ const AdvertiserEditProfile = () => {
       axios
         .get(`http://localhost:8000/advertiserAccount/viewaccount/${userName}`)
         .then((response) => {
-          message.success("Advertiser details fetched successfully");
-          setAdvertiserDetails({
-            ...response.data,
-          });
+          setAdvertiserDetails({ ...response.data });
         })
         .catch((error) => {
           message.error("Error fetching advertiser details");
@@ -42,13 +40,9 @@ const AdvertiserEditProfile = () => {
 
   const handleSaveClick = () => {
     axios
-      .put(
-        "http://localhost:8000/advertiserAccount/editaccount",
-        advertiserDetails
-      )
-      .then((response) => {
+      .put("http://localhost:8000/advertiserAccount/editaccount", advertiserDetails)
+      .then(() => {
         message.success("Advertiser details updated successfully");
-        console.log("Advertiser details updated successfully:", response.data);
         setIsEditing(false);
       })
       .catch((error) => {
@@ -66,93 +60,95 @@ const AdvertiserEditProfile = () => {
   };
 
   return (
-    <div>
+    <div style={{ display: "flex" }}>
       <AdvertiserSidebar />
-      <Box
-        sx={{
-          p: 6,
-          transform: "translateY(-150px) translateX(125px)",
-          width: "600px",
-        }}
-      >
-        <Typography variant="h4" sx={{ mb: 3, textAlign: "center" }}>
-          Edit Your Profile
-        </Typography>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <TextField
-            label="Username"
-            name="userName"
-            value={advertiserDetails.userName}
-            onChange={handleChange}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            label="Email"
-            name="email"
-            value={advertiserDetails.email}
-            onChange={handleChange}
-            InputProps={{
-              readOnly: !isEditing,
-            }}
-          />
-          <TextField
-            label="Password"
-            name="password"
-            type="password"
-            value={advertiserDetails.password}
-            onChange={handleChange}
-            InputProps={{
-              readOnly: !isEditing,
-            }}
-          />
-          <TextField
-            label="Website Link"
-            name="websiteLink"
-            value={advertiserDetails.websiteLink}
-            onChange={handleChange}
-            InputProps={{
-              readOnly: !isEditing,
-            }}
-          />
-          <TextField
-            label="Hotline"
-            name="hotline"
-            value={advertiserDetails.hotline}
-            type="number"
-            onChange={handleChange}
-            InputProps={{
-              readOnly: !isEditing,
-            }}
-          />
-          <TextField
-            label="Company Profile"
-            name="companyProfile"
-            value={advertiserDetails.companyProfile}
-            onChange={handleChange}
-            InputProps={{
-              readOnly: !isEditing,
-            }}
-          />
-          {isEditing ? (
-            <Button
-              variant="contained"
-              color="success"
-              onClick={handleSaveClick}
-            >
-              Save
-            </Button>
-          ) : (
-            <Button
-              variant="contained"
-              style={{ backdropFiltercolor: "#FFA07A" }}
-              onClick={handleEditClick}
-            >
-              Edit
-            </Button>
-          )}
-        </Box>
+      <Box sx={{ flexGrow: 1, p: 5, display: "flex", justifyContent: "center" }}>
+        <Paper 
+          elevation={4} 
+          sx={{ p: 4, width: "500px", borderRadius: 3, boxShadow: "0px 8px 24px rgba(0,0,0,0.2)" }}
+        >
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 3 }}>
+            <Avatar sx={{ bgcolor: "primary.main", width: 64, height: 64 }}>
+              <AccountCircleIcon fontSize="large" />
+            </Avatar>
+            <Typography variant="h5" sx={{ mt: 2 }}>
+              Edit Profile
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+            <TextField
+              label="Username"
+              name="userName"
+              value={advertiserDetails.userName}
+              onChange={handleChange}
+              InputProps={{ readOnly: true }}
+              variant="outlined"
+              fullWidth
+            />
+            <TextField
+              label="Email"
+              name="email"
+              value={advertiserDetails.email}
+              onChange={handleChange}
+              InputProps={{ readOnly: !isEditing }}
+              variant="outlined"
+              fullWidth
+            />
+            <TextField
+              label="Password"
+              name="password"
+              type="password"
+              value={advertiserDetails.password}
+              onChange={handleChange}
+              InputProps={{ readOnly: !isEditing }}
+              variant="outlined"
+              fullWidth
+            />
+            <TextField
+              label="Website Link"
+              name="websiteLink"
+              value={advertiserDetails.websiteLink}
+              onChange={handleChange}
+              InputProps={{ readOnly: !isEditing }}
+              variant="outlined"
+              fullWidth
+            />
+            <TextField
+              label="Hotline"
+              name="hotline"
+              value={advertiserDetails.hotline}
+              type="number"
+              onChange={handleChange}
+              InputProps={{ readOnly: !isEditing }}
+              variant="outlined"
+              fullWidth
+            />
+            <TextField
+              label="Company Profile"
+              name="companyProfile"
+              value={advertiserDetails.companyProfile}
+              onChange={handleChange}
+              InputProps={{ readOnly: !isEditing }}
+              variant="outlined"
+              fullWidth
+              multiline
+              rows={3}
+            />
+          </Box>
+
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+            {isEditing ? (
+              <Button variant="contained" color="success" onClick={handleSaveClick} fullWidth sx={{ py: 1.5 }}>
+                Save Changes
+              </Button>
+            ) : (
+              <Button variant="contained" color="primary" onClick={handleEditClick} fullWidth sx={{ py: 1.5 }}>
+                Edit Profile
+              </Button>
+            )}
+          </Box>
+        </Paper>
       </Box>
     </div>
   );

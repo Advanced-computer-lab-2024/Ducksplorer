@@ -379,7 +379,7 @@ function SearchItineraries() {
                                                 itinerary.locations.map((location, index) => (
                                                     <div key={index}>
                                                     <Typography variant="body1">
-                                                        Location {index + 1}: {location.trim()}
+                                                     {index + 1}: {location.trim()}
                                                     </Typography>
                                                     <br />
                                                     </div>

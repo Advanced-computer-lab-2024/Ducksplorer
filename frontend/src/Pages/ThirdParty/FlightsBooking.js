@@ -1,12 +1,12 @@
-import React from 'react';
-import TouristNavBar from '../../Components/TouristNavBar';
-import FlightBookingForm from '../../Components/ThirdParty/FlightBookingForm';
+import React from "react";
+import TouristNavBar from "../../Components/TouristNavBar";
+import FlightBookingForm from "../../Components/ThirdParty/FlightBookingForm";
 
 const FlightsBooking = () => {
   return (
     <>
-        <TouristNavBar/>
-      <FlightBookingForm/>
+      <TouristNavBar />
+      <FlightBookingForm />
     </>
   );
 };

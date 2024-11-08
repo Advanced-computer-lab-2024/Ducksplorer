@@ -19,8 +19,8 @@ import TempleBuddhistIcon from "@mui/icons-material/TempleBuddhist";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import LockIcon from "@mui/icons-material/Lock";
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 function TouristNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -220,7 +220,9 @@ function TouristNavBar() {
               </IconButton>
             </Tooltip>
             <Tooltip title="View Products">
-              <IconButton onClick={() => handleNavigation("TouristAllProducts")}>
+              <IconButton
+                onClick={() => handleNavigation("TouristAllProducts")}
+              >
                 <StorefrontIcon />
                 <Typography textAlign="center" marginRight={1}>
                   Products
@@ -271,7 +273,7 @@ function TouristNavBar() {
                   href="/editAccount"
                   sx={{ textAlign: "center", p: 0.5 }}
                 >
-                  <AccountCircleIcon sx={{ fontSize: 20 , color:"blue"}} />
+                  <AccountCircleIcon sx={{ fontSize: 20, color: "blue" }} />
                   <Typography sx={{ ml: 1 }} variant="body2">
                     Profile
                   </Typography>
@@ -283,20 +285,18 @@ function TouristNavBar() {
                   href="/logout"
                   sx={{ textAlign: "center", p: 0.5 }}
                 >
-                  <LockIcon sx={{ fontSize: 20 , color:"blue"}} />
+                  <LockIcon sx={{ fontSize: 20, color: "blue" }} />
                   <Typography sx={{ ml: 1 }} variant="body2">
                     Logout
                   </Typography>
                 </IconButton>
               </MenuItem>
               <MenuItem onClick={handleTogglePreferences}>
-                <IconButton
-                  sx={{ textAlign: "center", p: 0.5 }}
-                >
+                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
                   {showPreferences ? (
-                    <VisibilityIcon sx={{ fontSize: 20 , color: "green"}} />
+                    <VisibilityIcon sx={{ fontSize: 20, color: "green" }} />
                   ) : (
-                    <VisibilityOffIcon sx={{ fontSize: 20 , color: "red"}} />
+                    <VisibilityOffIcon sx={{ fontSize: 20, color: "red" }} />
                   )}
                   <Typography sx={{ ml: 1 }} variant="body2">
                     Show Preferences

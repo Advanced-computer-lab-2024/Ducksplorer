@@ -1,69 +1,89 @@
-import React, { useState } from 'react';
-import { TextField, IconButton, InputAdornment, Button, Stack, Typography} from '@mui/material';
-import Iconify from './TopNav/iconify.js'; 
-import axios from 'axios';
-import { message } from 'antd';
-import { useTypeContext } from '../context/TypeContext';
-import DropDown from './DropDown.js';
+import React, { useState } from "react";
+import {
+  TextField,
+  IconButton,
+  InputAdornment,
+  Button,
+  Stack,
+  Typography,
+} from "@mui/material";
+import Iconify from "./TopNav/iconify.js";
+import axios from "axios";
+import { message } from "antd";
+import { useTypeContext } from "../context/TypeContext";
+import DropDown from "./DropDown.js";
 import { useNavigate } from "react-router-dom";
-import { Checkbox, FormControlLabel, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-
+import {
+  Checkbox,
+  FormControlLabel,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
 
 const FormSection = () => {
   const { type } = useTypeContext();
-  const [userName, setUserName] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [email, setEmail] = useState('');
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Additional state variables for conditional fields
-  const [mobileNumber, setMobileNumber] = useState('');
-  const [nationality, setNationality] = useState('');
-  const [DOB, setDOB] = useState('');
-  const [employmentStatus, setEmploymentStatus] = useState('');
-  const [yearsOfExperience, setYearsOfExperience] = useState('');
-  const [previousWork, setPreviousWork] = useState('');
-  const [websiteLink, setWebsiteLink] = useState('');
-  const [hotline, setHotline] = useState('');
-  const [companyProfile, setCompanyProfile] = useState('');
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [nationality, setNationality] = useState("");
+  const [DOB, setDOB] = useState("");
+  const [employmentStatus, setEmploymentStatus] = useState("");
+  const [yearsOfExperience, setYearsOfExperience] = useState("");
+  const [previousWork, setPreviousWork] = useState("");
+  const [websiteLink, setWebsiteLink] = useState("");
+  const [hotline, setHotline] = useState("");
+  const [companyProfile, setCompanyProfile] = useState("");
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [openTerms, setOpenTerms] = useState(false);
 
-  const navigate = useNavigate();
-
   const validateFields = () => {
     if (!userName || !password || !confirmPassword || !email) {
-      message.error('All fields are required');
+      message.error("All fields are required");
       return false;
     }
     if (password !== confirmPassword) {
-      message.error('Passwords do not match');
+      message.error("Passwords do not match");
       return false;
     }
-    if (type === 'Tourist' && (!mobileNumber || !nationality || !DOB || !employmentStatus)) {
-      message.error('All fields are required for Tourist');
+    if (
+      type === "Tourist" &&
+      (!mobileNumber || !nationality || !DOB || !employmentStatus)
+    ) {
+      message.error("All fields are required for Tourist");
       return false;
     }
-    if (type === 'Guide' && (!mobileNumber || !yearsOfExperience || !previousWork)) {
-      message.error('All fields are required for Guide');
+    if (
+      type === "Guide" &&
+      (!mobileNumber || !yearsOfExperience || !previousWork)
+    ) {
+      message.error("All fields are required for Guide");
       return false;
     }
-    if (type === 'Advertiser' && (!websiteLink || !hotline || !companyProfile)) {
-      message.error('All fields are required for Advertiser');
+    if (
+      type === "Advertiser" &&
+      (!websiteLink || !hotline || !companyProfile)
+    ) {
+      message.error("All fields are required for Advertiser");
       return false;
     }
-    if (type === 'Seller' && (!name || !description)) {
-      message.error('All fields are required for Seller');
+    if (type === "Seller" && (!name || !description)) {
+      message.error("All fields are required for Seller");
       return false;
     }
-    if (!acceptTerms){
-      message.error('You must Accept Terms & Conditions');
-      return false;
-    }
+    if (!acceptTerms) {
+      message.error("You must Accept Terms & Conditions");
+      return false;
+    }
     return true;
   };
 
@@ -73,8 +93,7 @@ const FormSection = () => {
 
   const handleCloseTerms = () => {
     setOpenTerms(false);
-  };
-
+  };
 
   const handleAdd = async () => {
     if (!validateFields()) {
@@ -85,37 +104,55 @@ const FormSection = () => {
       password,
       email,
       role: type,
-      ...(type === 'Tourist' && { mobileNumber, nationality, DOB, employmentStatus }),
-      ...(type === 'Guide' && { mobileNumber, yearsOfExperience, previousWork }),
-      ...(type === 'Advertiser' && { websiteLink, hotline, companyProfile }),
-      ...(type === 'Seller' && { name, description }),
+      ...(type === "Tourist" && {
+        mobileNumber,
+        nationality,
+        DOB,
+        employmentStatus,
+      }),
+      ...(type === "Guide" && {
+        mobileNumber,
+        yearsOfExperience,
+        previousWork,
+      }),
+      ...(type === "Advertiser" && { websiteLink, hotline, companyProfile }),
+      ...(type === "Seller" && { name, description }),
     };
 
     try {
-      await axios.post('http://localhost:8000/signUp', data);
-      message.success('Signed Up successfully!');
-      window.location.href = '/login';
+      await axios.post("http://localhost:8000/signUp", data);
+      message.success("Signed Up successfully!");
+      window.location.href = "/login";
     } catch (error) {
-      message.error('An error occurred: ' + error.message);
-      console.error('There was an error signing up!', error);
+      message.error("An error occurred: " + error.message);
+      console.error("There was an error signing up!", error);
     }
   };
 
   return (
-    <div style={{
-      backgroundImage: 'url(../../public/Images/bg-intro-desktop.png)', // Update with your image path
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      height: '100vh',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
-    }}>
-     
-      <Stack spacing={1} sx={{ width: '600px', padding: '10px', backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: '10px' }}>
-      <div className="trial-btn text-white cursor-pointer" >
-        <span className="text-bold">Welcome To Ducksplorer</span>
-      </div>
+    <div
+      style={{
+        backgroundImage: "url(../../public/Images/bg-intro-desktop.png)", // Update with your image path
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Stack
+        spacing={1}
+        sx={{
+          width: "600px",
+          padding: "10px",
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
+          borderRadius: "10px",
+        }}
+      >
+        <div className="trial-btn text-white cursor-pointer">
+          <span className="text-bold">Welcome To Ducksplorer</span>
+        </div>
         <TextField
           name="username"
           label="Username"
@@ -133,7 +170,7 @@ const FormSection = () => {
         <TextField
           name="password"
           label="Password"
-          type={showPassword ? 'text' : 'password'} // Toggle password visibility
+          type={showPassword ? "text" : "password"} // Toggle password visibility
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           InputProps={{
@@ -144,8 +181,8 @@ const FormSection = () => {
                   edge="end"
                 >
                   <Iconify
-                    icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'}
-                    style={{ color: '#602b37', fontSize: '40px' }}
+                    icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
+                    style={{ color: "#602b37", fontSize: "40px" }}
                   />
                 </IconButton>
               </InputAdornment>
@@ -155,7 +192,7 @@ const FormSection = () => {
         <TextField
           name="confirmPassword"
           label="Confirm Password"
-          type={showConfirmPassword ? 'text' : 'password'} // Toggle password visibility
+          type={showConfirmPassword ? "text" : "password"} // Toggle password visibility
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           InputProps={{
@@ -166,15 +203,17 @@ const FormSection = () => {
                   edge="end"
                 >
                   <Iconify
-                    icon={showConfirmPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'}
-                    style={{ color: '#602b37', fontSize: '40px' }}
+                    icon={
+                      showConfirmPassword ? "eva:eye-fill" : "eva:eye-off-fill"
+                    }
+                    style={{ color: "#602b37", fontSize: "40px" }}
                   />
                 </IconButton>
               </InputAdornment>
             ),
           }}
         />
-        {type === 'Tourist' && (
+        {type === "Tourist" && (
           <>
             <TextField
               name="mobileNumber"
@@ -207,7 +246,7 @@ const FormSection = () => {
             />
           </>
         )}
-        {type === 'Guide' && (
+        {type === "Guide" && (
           <>
             <TextField
               name="mobileNumber"
@@ -232,7 +271,7 @@ const FormSection = () => {
             />
           </>
         )}
-        {type === 'Advertiser' && (
+        {type === "Advertiser" && (
           <>
             <TextField
               name="websiteLink"
@@ -257,7 +296,7 @@ const FormSection = () => {
             />
           </>
         )}
-        {type === 'Seller' && (
+        {type === "Seller" && (
           <>
             <TextField
               name="name"
@@ -279,77 +318,109 @@ const FormSection = () => {
         <FormControlLabel
           control={
             <Checkbox
-             checked={acceptTerms}
+              checked={acceptTerms}
               onChange={(e) => setAcceptTerms(e.target.checked)}
               color="primary"
             />
           }
           label={
             <span>
-              I accept the{' '}
-              <a href="#" onClick={handleOpenTerms} style={{ textDecoration: 'underline', cursor: 'pointer' }}>
-               Terms & Conditions
+              I accept the{" "}
+              <a
+                href="#"
+                onClick={handleOpenTerms}
+                style={{ textDecoration: "underline", cursor: "pointer" }}
+              >
+                Terms & Conditions
               </a>
             </span>
-         }
+          }
         />
         <Dialog open={openTerms} onClose={handleCloseTerms}>
           <DialogTitle>Terms and Conditions</DialogTitle>
           <DialogContent>
-  <Typography variant="h6" gutterBottom>
-    1. Acceptance of Terms
-  </Typography>
-  <Typography paragraph>
-    By using our Site, you affirm that you are at least 18 years old and capable of entering into a legally binding agreement. If you are using the Site on behalf of a company or other legal entity, you represent that you have the authority to bind that entity to these Terms.
-  </Typography>
-  
-  <Typography variant="h6" gutterBottom>
-    2. Changes to Terms
-  </Typography>
-  <Typography paragraph>
-    We reserve the right to modify or replace these Terms at any time. If we make material changes, we will provide notice on our Site. Your continued use of the Site after any such changes constitutes your acceptance of the new Terms.
-  </Typography>
-  
-  <Typography variant="h6" gutterBottom>
-    3. Services Offered
-  </Typography>
-  <Typography paragraph>
-    Ducksplorer provides trip planning services, including but not limited to travel itineraries, booking information, and destination recommendations. We do not act as a travel agent, and we do not provide travel services directly.
-  </Typography>
-  
-  <Typography variant="h6" gutterBottom>
-    4. User Responsibilities
-  </Typography>
-  <Typography paragraph>
-    When using our Site, you agree to:
-  </Typography>
-  <ul>
-    <li><Typography>Provide accurate and complete information when creating an account or making bookings.</Typography></li>
-    <li><Typography>Maintain the confidentiality of your account and password.</Typography></li>
-    <li><Typography>Notify us immediately of any unauthorized use of your account.</Typography></li>
-    <li><Typography>Use the Site only for lawful purposes and in accordance with these Terms.</Typography></li>
-  </ul>
-</DialogContent>
+            <Typography variant="h6" gutterBottom>
+              1. Acceptance of Terms
+            </Typography>
+            <Typography paragraph>
+              By using our Site, you affirm that you are at least 18 years old
+              and capable of entering into a legally binding agreement. If you
+              are using the Site on behalf of a company or other legal entity,
+              you represent that you have the authority to bind that entity to
+              these Terms.
+            </Typography>
 
+            <Typography variant="h6" gutterBottom>
+              2. Changes to Terms
+            </Typography>
+            <Typography paragraph>
+              We reserve the right to modify or replace these Terms at any time.
+              If we make material changes, we will provide notice on our Site.
+              Your continued use of the Site after any such changes constitutes
+              your acceptance of the new Terms.
+            </Typography>
+
+            <Typography variant="h6" gutterBottom>
+              3. Services Offered
+            </Typography>
+            <Typography paragraph>
+              Ducksplorer provides trip planning services, including but not
+              limited to travel itineraries, booking information, and
+              destination recommendations. We do not act as a travel agent, and
+              we do not provide travel services directly.
+            </Typography>
+
+            <Typography variant="h6" gutterBottom>
+              4. User Responsibilities
+            </Typography>
+            <Typography paragraph>
+              When using our Site, you agree to:
+            </Typography>
+            <ul>
+              <li>
+                <Typography>
+                  Provide accurate and complete information when creating an
+                  account or making bookings.
+                </Typography>
+              </li>
+              <li>
+                <Typography>
+                  Maintain the confidentiality of your account and password.
+                </Typography>
+              </li>
+              <li>
+                <Typography>
+                  Notify us immediately of any unauthorized use of your account.
+                </Typography>
+              </li>
+              <li>
+                <Typography>
+                  Use the Site only for lawful purposes and in accordance with
+                  these Terms.
+                </Typography>
+              </li>
+            </ul>
+          </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseTerms} color="primary">
               Close
             </Button>
           </DialogActions>
-        </Dialog>
+                 
+        </Dialog>
         <Button
           variant="contained"
           onClick={handleAdd}
           style={{
-            width: '580px',
-            backgroundColor: 'Green',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            fontSize: '16px',
-            cursor: 'pointer',
-            padding:'10px',
-            justifyContent: 'center'
+            width: "580px",
+            backgroundColor: "Green",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            fontSize: "16px",
+            cursor: "pointer",
+            padding: "10px",
+            justifyContent: "center",
           }}
         >
           Sign Up
@@ -358,6 +429,5 @@ const FormSection = () => {
     </div>
   );
 };
-
 
 export default FormSection;
