@@ -284,7 +284,7 @@ function PaymentPage() {
                 </Form.Item>
                 <p><strong>Selected Date and Time:</strong> {chosenDate ? new Date(chosenDate).toLocaleString() : 'None selected'}</p>
 
-                <h1>Enter Payment Details</h1>
+                <h1>Payment Details</h1>
 
                 <p>Email</p>
                 <input
@@ -340,7 +340,7 @@ function PaymentPage() {
                 </Space>
               </Card>
               <Form>
-                <h1>Enter Payment Details</h1>
+                <h1>Payment Details</h1>
 
                 <p>Email</p>
                 <input

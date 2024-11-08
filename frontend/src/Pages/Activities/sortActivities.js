@@ -27,7 +27,7 @@ const SortActivities = () => {
   const [activities, setActivities] = useState([]);
   const [sortBy, setSortBy] = useState("date"); // Default sorting by date
   const [order, setOrder] = useState("asc"); // Default ascending order
-  
+
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState('EGP');
   // Function to fetch sorted activities
@@ -161,7 +161,7 @@ const SortActivities = () => {
               <TableRow>
                 <TableCell>Name</TableCell>
                 <TableCell>Price
-                <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                  <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
                 </TableCell>
                 <TableCell>Is open</TableCell>
                 <TableCell>Category</TableCell>
@@ -179,24 +179,14 @@ const SortActivities = () => {
                 !activity.flag && (
                   <TableRow key={activity._id}>
                     <TableCell>{activity.name}</TableCell>
-                    <TableCell>                    
-                  {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
-                  </TableCell>
+                    <TableCell>
+                      {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                    </TableCell>
                     <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
                     <TableCell>{activity.category}</TableCell>
                     <TableCell>{activity.tags.join(", ")}</TableCell>
                     <TableCell>{activity.specialDiscount}</TableCell>
                     <TableCell>{activity.date ? (() => {
-                    const dateObj = new Date(activity.date);
-                    const date = dateObj.toISOString().split('T')[0];
-                    const time = dateObj.toTimeString().split(' ')[0];
-                    return (
-                      <div>
-                        {date} at {time}
-                      </div>
-                    );
-                  })()
-                    : 'No available date and time' ? (() => {
                       const dateObj = new Date(activity.date);
                       const date = dateObj.toISOString().split('T')[0];
                       const time = dateObj.toTimeString().split(' ')[0];
@@ -206,18 +196,28 @@ const SortActivities = () => {
                         </div>
                       );
                     })()
-                      : 'No available date and time'}</TableCell>
+                      : 'No available date and time' ? (() => {
+                        const dateObj = new Date(activity.date);
+                        const date = dateObj.toISOString().split('T')[0];
+                        const time = dateObj.toTimeString().split(' ')[0];
+                        return (
+                          <div>
+                            {date} at {time}
+                          </div>
+                        );
+                      })()
+                        : 'No available date and time'}</TableCell>
 
                     <TableCell>{activity.duration}</TableCell>
                     <TableCell>{activity.location}</TableCell>
                     <TableCell>
                       <Rating value={activity.averageRating} precision={0.1} readOnly />
                     </TableCell>
-                  <TableCell>
-                    <Button onClick={() => handleBooking(activity._id)}>
-                      Book Now
-                    </Button>
-                  </TableCell>
+                    <TableCell>
+                      <Button onClick={() => handleBooking(activity._id)}>
+                        Book Now
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 )
               )}
