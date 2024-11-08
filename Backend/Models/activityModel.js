@@ -80,4 +80,3 @@ const Activity = mongoose.model("Activity", activitySchema);
 
 module.exports = Activity;
 
-//date, time, location (using Google Maps), price (or price range), category, tags, special discounts, if booking is open

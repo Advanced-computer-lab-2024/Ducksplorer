@@ -81,12 +81,7 @@ const itinerarySchema = new Schema({
     comments: {
         type: [String],
         required: false,
-    },
-    bookedCount: {
-        type: Number,
-        default: 0,
-        required: false
-    },
+    }
 }, { timestamps: true }); // Moved `timestamps` to schema options here
 
 const Itinerary = mongoose.model("Itinerary", itinerarySchema);
