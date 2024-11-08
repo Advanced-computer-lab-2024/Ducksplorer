@@ -386,8 +386,23 @@ const payVisa = async (req, res) => {
         const { userName } = req.params;
         const { price } = req.body;
         const tourist = await Tourist.findOne({ userName });
-
-        await receiveLoyaltyPoints(price, userName);
+        if (tourist.level === 1) {
+            tourist.points += (price * 0.5)
+        }
+        else if (tourist.level === 2) {
+            tourist.points += (price * 1.0)
+        }
+        else if (tourist.level === 3) {
+            tourist.points += (price * 1.5)
+        }
+        if (tourist.points >= 10000 && tourist.points < 50000) {
+            tourist.level = 2;
+        } else if (tourist.points >= 50000) {
+            tourist.level = 3;
+        } else {
+            tourist.level = 1;
+        }
+        await tourist.save();
         await tourist.save();
         res.status(200).json({
             status: 200,
@@ -409,11 +424,9 @@ const payWallet = async (req, res) => {
         console.log(tourist);
         let myWallet = tourist.wallet;
         if (myWallet >= price) {
-            console.log("inside");
             myWallet -= price;
             tourist.wallet = myWallet;
             await tourist.save();
-            console.log("Tourist.save working")
             if (tourist.level === 1) {
                 tourist.points += (price * 0.5)
             }
@@ -430,9 +443,7 @@ const payWallet = async (req, res) => {
             } else {
                 tourist.level = 1;
             }
-            console.log("Tourist.recieveLoyaltyPoints working")
             await tourist.save();
-            console.log("Tourist.save 2 is working")
             res.status(200).json({
                 status: 200,
                 message: "Activity/Itinerary payed successfully",

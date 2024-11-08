@@ -26,6 +26,8 @@ const BookingDetails = () => {
   const [currencyAc, setCurrencyAc] = useState('EGP');
   const [exchangeRatesIt, setExchangeRatesIt] = useState({});
   const [currencyIt, setCurrencyIt] = useState('EGP');
+  const [activityBookings, setActivityBookings] = useState([]);
+  const [itineraryBookings, setItineraryBookings] = useState([]);
 
   const handleCurrencyChangeAc = (rates, selectedCurrency) => {
     setExchangeRatesAc(rates);
@@ -37,33 +39,25 @@ const BookingDetails = () => {
     setCurrencyIt(selectedCurrency);
   };
 
-  useEffect(() => {
-    const fetchBooking = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8000/touristRoutes/booking/${userName}`);
-        console.log("Booking Response:", response);
-        setBooking(response.data[0]);  // Access the first element of the data array
-      } catch (error) {
-        console.error("Error fetching booking details:", error.response ? error.response.data : error.message);
-      }
-    };
-    fetchBooking();
+  const fetchBookings = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8000/touristRoutes/booking`, {
+        params: { tourist: userName }
+      });
 
+      // Set activity and itinerary bookings separately
+      setActivityBookings(response.data.activities || []);
+      setItineraryBookings(response.data.itineraries || []);
+    } catch (error) {
+      console.error("Error fetching booking details:", error.response ? error.response.data : error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchBookings();
   }, [userName]);
 
   const handleDeleteBooking = async (type, itemId, price) => {
-    const userJson = localStorage.getItem('user');
-    if (!userJson) {
-      message.error("User is not logged in.");
-      return null;
-    }
-    const user = JSON.parse(userJson);
-    if (!user || !user.username) {
-      message.error("User information is missing.");
-      return null;
-    }
-    const userName = user.username;
-
     try {
       const response = await axios.patch(`http://localhost:8000/touristRoutes/booking/${userName}`, {
         type,
@@ -72,39 +66,38 @@ const BookingDetails = () => {
       });
 
       if (response.status === 200) {
-        message.success(response.data.message);
+        message.success("Booking Canceled");
 
-        // Remove the item from the state (either activity or itinerary)
-        setBooking((prevBooking) => {
-          const updatedBooking = { ...prevBooking };
+        // Update state immediately to remove the item locally
+        if (type === 'activity') {
+          setActivityBookings((prev) => prev.filter(activity => activity._id !== itemId));
+        } else if (type === 'itinerary') {
+          setItineraryBookings((prev) => prev.filter(itinerary => itinerary._id !== itemId));
+        }
 
-          if (type === 'activity') {
-            updatedBooking.activities = updatedBooking.activities.filter((activity) => activity._id !== itemId);
-          } else if (type === 'itinerary') {
-            updatedBooking.itineraries = updatedBooking.itineraries.filter((itinerary) => itinerary._id !== itemId);
-          }
-
-          return updatedBooking;
-        });
+        // Re-fetch bookings to ensure the state is in sync with the server
+        fetchBookings();
       } else {
         message.error(response.data.message || "Failed to delete booking item.");
       }
     } catch (error) {
       console.error("Error cancelling booking:", error);
-      message.error("You can't cancel the booking within 48 hours or after the start of the activity/itinerary");
+      message.error(error.response?.data?.message || "Cannot cancel the booking within 48 hours of the start date or after the start of the activity/itinerary.");
     }
   };
 
 
-  if (!booking) return <p>Loading...</p>;
-  if (!Array.isArray(booking.activities) || !Array.isArray(booking.itineraries)) {
+
+  if (!activityBookings.length && !itineraryBookings.length) return <p>Loading...</p>;
+
+  if (!Array.isArray(activityBookings) || !Array.isArray(itineraryBookings)) {
     return <p>No booking details available.</p>;
   }
 
   return (
     <>
       <TouristNavBar />
-      <div style={{ overflowY: 'visible', height: '100vh' }}>
+      <div style={{ overflowY: 'visible', height: '90vh' }}>
         <Typography variant="h4" gutterBottom>Booking Details</Typography>
 
         {/* Activities Table */}
@@ -130,28 +123,28 @@ const BookingDetails = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {booking.activities.map((activity) => (
+              {activityBookings.map((activity) => (
                 <TableRow key={activity._id}>
-                  <TableCell>{activity.name}</TableCell>
-                  <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
-                  <TableCell>{activity.advertiser}</TableCell>
-                  <TableCell>{new Date(activity.date).toLocaleDateString()}</TableCell>
-                  <TableCell>{activity.location}</TableCell>
+                  <TableCell>{activity.activity.name}</TableCell>
+                  <TableCell>{activity.activity.isOpen ? "Yes" : "No"}</TableCell>
+                  <TableCell>{activity.activity.advertiser}</TableCell>
+                  <TableCell>{new Date(activity.activity.date).toLocaleDateString()}</TableCell>
+                  <TableCell>{activity.activity.location}</TableCell>
                   <TableCell>
-                    {(activity.price * (exchangeRatesAc[currencyAc] || 1)).toFixed(2)} {currencyAc}
+                    {(activity.activity.price * (exchangeRatesAc[currencyAc] || 1)).toFixed(2)} {currencyAc}
                   </TableCell>
-                  <TableCell>{activity.category}</TableCell>
-                  <TableCell>{activity.tags.join(", ")}</TableCell>
-                  <TableCell>{activity.specialDiscount}%</TableCell>
-                  <TableCell>{activity.duration} mins</TableCell>
+                  <TableCell>{activity.activity.category}</TableCell>
+                  <TableCell>{activity.activity.tags.join(", ")}</TableCell>
+                  <TableCell>{activity.activity.specialDiscount}%</TableCell>
+                  <TableCell>{activity.activity.duration} mins</TableCell>
                   <TableCell><Rating
-                    value={activity.averageRating}
+                    value={activity.activity.averageRating}
                     precision={0.1}
                     readOnly
                   /></TableCell>
                   <TableCell>
                     <Tooltip title="Delete Itinerary">
-                      <IconButton color="error" aria-label="delete category" onClick={() => handleDeleteBooking('activity', activity._id, activity.price)}>
+                      <IconButton color="error" aria-label="delete category" onClick={() => handleDeleteBooking('activity', activity.activity._id, activity.activity.price)}>
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip></TableCell>
@@ -185,30 +178,30 @@ const BookingDetails = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {booking.itineraries.map((itinerary) => (
+              {itineraryBookings.map((itinerary) => (
                 <TableRow key={itinerary._id}>
-                  <TableCell>{itinerary.activity.map(act => act.name).join(", ")}</TableCell>
-                  <TableCell>{itinerary.locations.join(", ")}</TableCell>
-                  <TableCell>{itinerary.timeline}</TableCell>
-                  <TableCell>{itinerary.language}</TableCell>
+                  <TableCell>{itinerary.itinerary.activity.map(act => act.name).join(", ")}</TableCell>
+                  <TableCell>{itinerary.itinerary.locations.join(", ")}</TableCell>
+                  <TableCell>{itinerary.itinerary.timeline}</TableCell>
+                  <TableCell>{itinerary.itinerary.language}</TableCell>
                   <TableCell>
-                    {(itinerary.price * (exchangeRatesIt[currencyIt] || 1)).toFixed(2)} {currencyIt}
+                    {(itinerary.itinerary.price * (exchangeRatesIt[currencyIt] || 1)).toFixed(2)} {currencyIt}
                   </TableCell>
-                  <TableCell>{itinerary.availableDatesAndTimes.map(date => new Date(date).toLocaleDateString()).join(", ")}</TableCell>
-                  <TableCell>{itinerary.chosenDate}</TableCell>
-                  <TableCell>{itinerary.accessibility}</TableCell>
-                  <TableCell>{itinerary.pickUpLocation}</TableCell>
-                  <TableCell>{itinerary.dropOffLocation}</TableCell>
-                  <TableCell>{itinerary.tourGuideModel?.name || "N/A"}</TableCell>
+                  <TableCell>{itinerary.itinerary.availableDatesAndTimes.map(date => new Date(date).toLocaleDateString()).join(", ")}</TableCell>
+                  <TableCell>{itinerary.itinerary.chosenDate}</TableCell>
+                  <TableCell>{itinerary.itinerary.accessibility}</TableCell>
+                  <TableCell>{itinerary.itinerary.pickUpLocation}</TableCell>
+                  <TableCell>{itinerary.itinerary.dropOffLocation}</TableCell>
+                  <TableCell>{itinerary.itinerary.tourGuideModel?.name || "N/A"}</TableCell>
                   <TableCell><Rating
-                    value={itinerary.rating}
+                    value={itinerary.itinerary.rating}
                     precision={0.1}
                     readOnly
                   /></TableCell>
-                  <TableCell>{itinerary.tags.join(", ")}</TableCell>
+                  <TableCell>{itinerary.itinerary.tags.join(", ")}</TableCell>
                   <TableCell>
                     <Tooltip title="Delete Itinerary">
-                      <IconButton color="error" aria-label="delete category" onClick={() => handleDeleteBooking('itinerary', itinerary._id, itinerary.price)}>
+                      <IconButton color="error" aria-label="delete category" onClick={() => handleDeleteBooking('itinerary', itinerary.itinerary._id, itinerary.itinerary.price)}>
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>

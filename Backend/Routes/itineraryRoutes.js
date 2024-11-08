@@ -1,5 +1,5 @@
 const express = require('express')
-const { getAllItineraries, getItinerary, updateItinerary, updateChosenDateItinerary, deleteItinerary, createItinerary, toggleFlagItinerary } = require('../Controllers/Itinerary/itineraryCRUDController');
+const { getAllItineraries, getItinerary, updateItinerary, deleteItinerary, createItinerary, toggleFlagItinerary } = require('../Controllers/Itinerary/itineraryCRUDController');
 const { sortItineraries } = require('../Controllers/Itinerary/itinerarySortController');
 const { filterItineraries, filterUpcomingItineraries } = require('../Controllers/Itinerary/itineraryFilterController');
 const { getUpcomingItineraries } = require('../Controllers/Itinerary/itineraryViewUpcomingController');
@@ -29,7 +29,6 @@ router.route("/myItineraries/:userName").get(getAllMyItineraries)
 
 router.route("/:id").get(getItinerary).put(updateItinerary).delete(deleteItinerary)
 
-router.route("/updateDate/:id").put(updateChosenDateItinerary)
 
 router.route("/toggleFlagItinerary/:id").put(toggleFlagItinerary)
 

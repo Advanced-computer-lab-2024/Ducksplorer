@@ -177,24 +177,7 @@ function PaymentPage() {
     console.log("date", value);
     setChosenDate(value);
     form.setFieldsValue({ dateTime: value });
-    const itineraryId = localStorage.getItem('itineraryId');
-
-    try {
-      const response = await fetch(`http://localhost:8000/itinerary/updateDate/${itineraryId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chosenDate: value }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Updated itinerary:", data);
-      } else {
-        console.error("Failed to update chosen date:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error updating chosen date:", error);
-    }
+    localStorage.setItem('date', value);
   };
 
   const onFinish = (values) => {
