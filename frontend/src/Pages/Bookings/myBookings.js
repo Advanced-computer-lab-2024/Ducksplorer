@@ -188,7 +188,7 @@ const BookingDetails = () => {
                     {(itinerary.itinerary.price * (exchangeRatesIt[currencyIt] || 1)).toFixed(2)} {currencyIt}
                   </TableCell>
                   <TableCell>{itinerary.itinerary.availableDatesAndTimes.map(date => new Date(date).toLocaleDateString()).join(", ")}</TableCell>
-                  <TableCell>{itinerary.itinerary.chosenDate}</TableCell>
+                  <TableCell>{new Date(itinerary.itinerary.chosenDate).toLocaleDateString()}</TableCell>
                   <TableCell>{itinerary.itinerary.accessibility}</TableCell>
                   <TableCell>{itinerary.itinerary.pickUpLocation}</TableCell>
                   <TableCell>{itinerary.itinerary.dropOffLocation}</TableCell>

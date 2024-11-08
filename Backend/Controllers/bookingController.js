@@ -8,7 +8,7 @@ const ItineraryBooking = require('../Models/itineraryBookingModel');
 
 const createBooking = async (req, res) => {
     const { user } = req.params;
-    const { activityId, itineraryId, type } = req.body;
+    const { activityId, itineraryId, type, date } = req.body;
 
     try {
         const tourist = await Tourist.findOne({ userName: user });
@@ -50,7 +50,7 @@ const createBooking = async (req, res) => {
             const newItineraryBooking = await ItineraryBooking.create({
                 user: tourist.userName,
                 itinerary: itinerary._id,
-                chosenDate: itinerary.date,
+                chosenDate: date,
                 chosenPrice: itinerary.price
             });
             await newItineraryBooking.save();

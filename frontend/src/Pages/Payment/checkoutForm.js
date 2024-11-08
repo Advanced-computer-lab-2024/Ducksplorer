@@ -128,6 +128,7 @@ export default function CheckoutForm() {
         const itineraryId = localStorage.getItem('itineraryId');
         const itineraryOrActivity = localStorage.getItem('type');
         const amount = localStorage.getItem('price');
+        const chosenDate = localStorage.getItem('date')
 
         console.log("Creating booking with userName:", userName, "activityId:", activityId, "itineraryId:", itineraryId);
 
@@ -135,7 +136,7 @@ export default function CheckoutForm() {
         const bookingResponse = await fetch(`http://localhost:8000/touristRoutes/booking/${userName}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ activityId: activityId, itineraryId: itineraryId, type: itineraryOrActivity }),
+          body: JSON.stringify({ activityId: activityId, itineraryId: itineraryId, type: itineraryOrActivity, date: chosenDate }),
         });
 
         if (!bookingResponse.ok) {

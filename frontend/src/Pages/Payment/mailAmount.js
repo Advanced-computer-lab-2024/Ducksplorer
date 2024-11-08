@@ -93,7 +93,7 @@ function PaymentPage() {
         const bookingResponse = await fetch(`http://localhost:8000/touristRoutes/booking/${userName}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ activityId: activityId, itineraryId: itineraryId, type: itineraryOrActivity }),
+          body: JSON.stringify({ activityId: activityId, itineraryId: itineraryId, type: itineraryOrActivity, date: chosenDate }),
         });
         const bookingResult = await bookingResponse.json();
         console.log("Booking Result", bookingResult);
