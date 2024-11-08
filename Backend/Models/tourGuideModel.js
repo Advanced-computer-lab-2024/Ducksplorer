@@ -37,6 +37,9 @@ const tourGuideSchema = new Schema({
         type: String,
         required : false
     },
+    photo: {
+        type: String,
+    },
     profilePicture: {
         filename: { type: String },
         filepath: { type: String },

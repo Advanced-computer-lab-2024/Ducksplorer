@@ -20,6 +20,7 @@ const TourGuideEditProfile = () => {
     previousWork: '',
     nationalId: '',
     certificates: '',
+    photo: '',
   });
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
@@ -28,16 +29,39 @@ const TourGuideEditProfile = () => {
   const [nationalIdFiles, setNationalIdFiles] = useState(null);
   const [certificatesFiles, setCertificatesFiles] = useState(null);
 
+  const handlePhotoUpload = async () => {
+    const photoFile = document.getElementById('photo').files[0];
+    const formData = new FormData();
+    formData.append('file', photoFile);
+  
+    try {
+      message.success('Uploading photo...');
+      const response = await axios.post('http://localhost:8000/api/documents/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setTourGuideDetails(prevDetails => ({ ...prevDetails, photo: response.data.url }));
+      message.success('Photo uploaded successfully');
+    } catch (error) {
+      message.error('Error uploading photo');
+    }
+  };
+  
+  const handlePhotoDelete =  () => {
+    try {
+      setTourGuideDetails(prevDetails => ({ ...prevDetails, photo: '' }));
+      message.success('Photo deleted successfully');
+    } catch (error) {
+      message.error('Error deleting photo');
+    }
+  };
 
   const handleNationalIdSelect = async () => {
     const nationalIdFile = document.getElementById('nationalIdUpload').files[0];
-    // setNationalIdFiles(file);
     tourGuideDetails.nationalId = await handleFileUpload(nationalIdFile);
   };
 
   const handleCertificatesSelect = async () => {
     const certificatesFile = document.getElementById('certificateUpload').files[0];
-    // setCertificatesFiles(file);
     console.log("before the call",certificatesFile);
     tourGuideDetails.certificates = await handleFileUpload(certificatesFile);
   };
@@ -146,9 +170,30 @@ const TourGuideEditProfile = () => {
       <Link to="/tourGuideDashboard"> Back </Link>
       <Paper elevation={4} sx={{ p: 4, width: 500, borderRadius: 3, boxShadow: '0px 8px 24px rgba(0,0,0,0.2)' }}>
         <Box sx={{ textAlign: 'center', mb: 3 }}>
-          <Avatar sx={{ bgcolor: 'primary.main', width: 64, height: 64, mx: 'auto' }}>
-            <AccountCircleIcon fontSize="large" />
-          </Avatar>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Avatar src={tourGuideDetails.photo} sx={{ width: 80, height: 80 }} />
+          {isEditing && (
+            <>
+              <input
+                type="file"
+                id="photo"
+                onChange={handlePhotoUpload}
+                style={{ display: 'none' }}
+              />
+              <label htmlFor="photo">
+                <Button component="span" color="primary" variant="contained">
+                  Upload New Photo
+                </Button>
+              </label>
+              {tourGuideDetails.photo && (
+                <Button onClick={handlePhotoDelete} color="secondary" variant="contained">
+                  Delete Photo
+                </Button>
+              )}
+            </>
+          )}
+        </Box>
+
           <Typography variant="h5" sx={{ mt: 2 }}>
             Edit Tour Guide Profile
           </Typography>

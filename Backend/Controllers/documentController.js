@@ -17,11 +17,15 @@ const uploadDocument = async (req, res) => {
     if (!file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
+    let resourceType = 'raw'; // Default to 'raw' for non-images
+    if (file.mimetype.startsWith('image')) {
+      resourceType = 'image'; // For image files, use 'image'
+    }
 
     // Upload file to Cloudinary
     const result = await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
-        { resource_type: 'raw' }, // 'raw' type is for non-image files like PDFs
+        { resource_type: resourceType }, // 'raw' type is for non-image files like PDFs
         (error, result) => {
           if (error) reject(error);
           else resolve(result);

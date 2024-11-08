@@ -27,6 +27,9 @@ const sellerSchema = new Schema({
     uploads:{
         type: String
     },
+    photo: {
+        type: String,
+    },
     profilePicture: {
         filename: { type: String },
         filepath: { type: String },

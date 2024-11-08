@@ -21,9 +21,36 @@ const AdvertiserEditProfile = () => {
     hotline: "",
     companyProfile: "",
     uploads:"",
+    photo:"",
   });
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
+
+  const handlePhotoUpload = async () => {
+    const photoFile = document.getElementById('photo').files[0];
+    const formData = new FormData();
+    formData.append('file', photoFile);
+  
+    try {
+      message.success('Uploading photo...');
+      const response = await axios.post('http://localhost:8000/api/documents/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setAdvertiserDetails(prevDetails => ({ ...prevDetails, photo: response.data.url }));
+      message.success('Photo uploaded successfully');
+    } catch (error) {
+      message.error('Error uploading photo');
+    }
+  };
+  
+  const handlePhotoDelete =  () => {
+    try {
+      setAdvertiserDetails(prevDetails => ({ ...prevDetails, photo: '' }));
+      message.success('Photo deleted successfully');
+    } catch (error) {
+      message.error('Error deleting photo');
+    }
+  };
 
   const handleUploadsSelect = async () => {
     const uploadsFile = document.getElementById('uploads').files[0];
@@ -133,10 +160,31 @@ const AdvertiserEditProfile = () => {
             },
           }}
         >
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 3 }}>
-            <Avatar sx={{ bgcolor: "primary.main", width: 64, height: 64 }}>
-              <AccountCircleIcon fontSize="large" />
-            </Avatar>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 3 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Avatar src={advertiserDetails.photo} sx={{ width: 80, height: 80 }} />
+          {isEditing && (
+            <>
+              <input
+                type="file"
+                id="photo"
+                onChange={handlePhotoUpload}
+                style={{ display: 'none' }}
+              />
+              <label htmlFor="photo">
+                <Button component="span" color="primary" variant="contained">
+                  Upload New Photo
+                </Button>
+              </label>
+              {advertiserDetails.photo && (
+                <Button onClick={handlePhotoDelete} color="secondary" variant="contained">
+                  Delete Photo
+                </Button>
+              )}
+            </>
+          )}
+        </Box>
+           
             <Typography variant="h5" sx={{ mt: 2 }}>
               Edit Profile
             </Typography>
