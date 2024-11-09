@@ -1,8 +1,17 @@
 // src/Components/MyComplaints.js
-import React, { useEffect, useState } from 'react';
-import { Typography, Container, CircularProgress, Box, Card, CardContent, Grid, Divider } from '@mui/material';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import {
+  Typography,
+  Container,
+  CircularProgress,
+  Box,
+  Card,
+  CardContent,
+  Grid,
+  Divider,
+} from "@mui/material";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const MyComplaints = () => {
   const [complaints, setComplaints] = useState([]);
@@ -14,8 +23,10 @@ const MyComplaints = () => {
       try {
         const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
         const user = JSON.parse(userJson);
-        const userName = user.username;
-        const response = await axios.get(`http://localhost:8000/complaint/myComplaints/${userName}`);
+        const userName = user.username;
+        const response = await axios.get(
+          `http://localhost:8000/complaint/myComplaints/${userName}`
+        );
         setComplaints(response.data);
         setLoading(false);
       } catch (error) {
@@ -28,7 +39,12 @@ const MyComplaints = () => {
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="80vh">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
         <CircularProgress size={60} thickness={4} />
       </Box>
     );
@@ -36,7 +52,12 @@ const MyComplaints = () => {
 
   return (
     <Container maxWidth="md" sx={{ mt: 145, mb: 4 }}>
-      <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: 'bold', color: '#00796b' }}>
+      <Typography
+        variant="h4"
+        align="center"
+        gutterBottom
+        sx={{ fontWeight: "bold", color: "#00796b" }}
+      >
         My Complaints
       </Typography>
       <Divider sx={{ mb: 3 }} />
@@ -45,23 +66,43 @@ const MyComplaints = () => {
         <Grid container spacing={3}>
           {complaints.map((complaint) => (
             <Grid item xs={12} key={complaint._id}>
-              <Card variant="outlined" sx={{ borderRadius: 2, boxShadow: 2, backgroundColor: '#f9f9f9' }}>
+              <Card
+                variant="outlined"
+                sx={{
+                  borderRadius: 2,
+                  boxShadow: 2,
+                  backgroundColor: "#f9f9f9",
+                }}
+              >
                 <CardContent>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333' }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: "bold", color: "#333" }}
+                  >
                     {complaint.title}
                   </Typography>
                   <Divider sx={{ my: 1 }} />
                   <Typography variant="body2" color="textSecondary">
-                    <strong>Date:</strong> {new Date(complaint.date).toLocaleDateString()}
+                    <strong>Date:</strong>{" "}
+                    {new Date(complaint.date).toLocaleDateString()}
                   </Typography>
                   <Divider sx={{ my: 1 }} />
                   <Typography variant="body2" color="textSecondary">
-                    <strong>Body:</strong> {(complaint.body)}
+                    <strong>Body:</strong> {complaint.body}
                   </Typography>
                   <Divider sx={{ my: 1 }} />
-                  <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
-                    <strong>Status:</strong>{' '}
-                    <span style={{ fontWeight: 'bold', color: complaint.status ? 'green' : 'orange' }}>
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    sx={{ mt: 1 }}
+                  >
+                    <strong>Status:</strong>{" "}
+                    <span
+                      style={{
+                        fontWeight: "bold",
+                        color: complaint.status ? "green" : "orange",
+                      }}
+                    >
                       {complaint.status ? "Resolved" : "Pending"}
                     </span>
                   </Typography>
@@ -71,7 +112,12 @@ const MyComplaints = () => {
           ))}
         </Grid>
       ) : (
-        <Box display="flex" justifyContent="center" alignItems="center" sx={{ mt: 5 }}>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          sx={{ mt: 5 }}
+        >
           <Typography variant="h6" color="textSecondary">
             No complaints found.
           </Typography>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Drawer,
   Typography,
@@ -11,30 +11,30 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Button
+  Button,
 } from "@mui/material";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 // import DashboardIcon from '@mui/icons-material/Dashboard';
 // import PeopleIcon from '@mui/icons-material/People';
-// import PersonAddIcon from '@mui/icons-material/PersonAdd'; 
+// import PersonAddIcon from '@mui/icons-material/PersonAdd';
 // import CategoryIcon from '@mui/icons-material/Category';
 // import LabelIcon from '@mui/icons-material/Label';
 // import EventNoteIcon from '@mui/icons-material/EventNote';
 // import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 // import MuseumIcon from '@mui/icons-material/Museum';
-import PersonIcon from '@mui/icons-material/Person';
-// import DeleteIcon from '@mui/icons-material/Delete';
-import axios from 'axios';
+import PersonIcon from "@mui/icons-material/Person";
+import DeleteIcon from "@mui/icons-material/Delete";
+import axios from "axios";
 
 const drawerWidth = 300;
 
 const SellerSidebar = () => {
   const [open, setOpen] = useState(false); // State for the dialog
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState("");
 
   const handleDeleteClick = () => {
-    const userJson = localStorage.getItem('user');
+    const userJson = localStorage.getItem("user");
     const user = JSON.parse(userJson);
     setUserName(user.username);
     setOpen(true); // Open the confirmation dialog
@@ -47,7 +47,9 @@ const SellerSidebar = () => {
   const handleDeleteAccount = async () => {
     if (userName) {
       try {
-        const response = await axios.delete(`http://localhost:8000/sellerAccount/deleteMySellerAccount/${userName}`);
+        const response = await axios.delete(
+          `http://localhost:8000/sellerAccount/deleteMySellerAccount/${userName}`
+        );
         alert(response.data.message); // Show success message
       } catch (error) {
         console.error("Error deleting account:", error);
@@ -63,7 +65,7 @@ const SellerSidebar = () => {
       sx={{
         width: drawerWidth,
         flexShrink: 0,
-        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" },
       }}
     >
       <div>
@@ -93,7 +95,6 @@ const SellerSidebar = () => {
             </ListItemIcon>
             <ListItemText primary="Manage Products" />
           </ListItem>
-
         </List>
         <Divider />
       </div>
@@ -105,10 +106,12 @@ const SellerSidebar = () => {
           Are you sure you want to delete your account?
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary" variant="outlined">Cancel</Button>
+          <Button onClick={handleClose} color="primary" variant="outlined">
+            Cancel
+          </Button>
           <Button
             onClick={handleDeleteAccount}
-            sx={{ color: 'white', backgroundColor: 'error.main' }} // Set red background
+            sx={{ color: "white", backgroundColor: "error.main" }} // Set red background
             variant="contained"
           >
             Yes, Delete
