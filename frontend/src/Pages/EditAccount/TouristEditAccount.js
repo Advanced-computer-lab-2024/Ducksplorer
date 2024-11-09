@@ -24,7 +24,7 @@ const EditProfile = () => {
     DOB: '',
     employmentStatus: '',
     wallet: 0,
-    points: 0
+    points: 0,
     tagPreferences: [],
     favouriteCategory: localStorage.getItem("category"),
     historicalPlacestags: [],
