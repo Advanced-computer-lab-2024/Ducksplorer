@@ -1,12 +1,12 @@
-//This is no longer used 
+//This is no longer used
 
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { message } from "antd";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import WarningIcon from '@mui/icons-material/Warning';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import WarningIcon from "@mui/icons-material/Warning";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { calculateAverageRating } from "../../Utilities/averageRating.js";
 import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
 
@@ -33,6 +33,8 @@ import {
   Tooltip,
   TextField,
 } from "@mui/material";
+import StandAloneToggleButton from "../../Components/ToggleButton.js";
+import Help from "../../Components/HelpIcon.js";
 
 const RUDActivity = () => {
   const [activities, setActivities] = useState([]);
@@ -40,9 +42,8 @@ const RUDActivity = () => {
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [editingActivity, setEditingActivity] = useState(null);
 
-  
   const [exchangeRates, setExchangeRates] = useState({});
-  const [currency, setCurrency] = useState('EGP');
+  const [currency, setCurrency] = useState("EGP");
   const [formData, setFormData] = useState({
     name: "",
     price: "",
@@ -68,13 +69,13 @@ const RUDActivity = () => {
   useEffect(() => {
     const showPreferences = localStorage.getItem("showPreferences");
     const favCategory = localStorage.getItem("category");
-        axios
-    .get("http://localhost:8000/activity/", {
-      params: {
-        showPreferences,
-        favCategory
-      }
-    })
+    axios
+      .get("http://localhost:8000/activity/", {
+        params: {
+          showPreferences,
+          favCategory,
+        },
+      })
       .then((response) => {
         setActivities(response.data);
       })
@@ -167,8 +168,9 @@ const RUDActivity = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell>Price
-                <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                <TableCell>
+                  Price
+                  <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
                 </TableCell>
                 <TableCell>Is open</TableCell>
                 <TableCell>Category</TableCell>
@@ -186,24 +188,30 @@ const RUDActivity = () => {
               {activities.map((activity) => (
                 <TableRow key={activity._id}>
                   <TableCell>{activity.name}</TableCell>
-                  <TableCell>                    
-                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                  <TableCell>
+                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(
+                      2
+                    )}{" "}
+                    {currency}
                   </TableCell>
                   <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
                   <TableCell>{activity.category}</TableCell>
                   <TableCell>{activity.tags}</TableCell>
                   <TableCell>{activity.specialDiscount}</TableCell>
-                  <TableCell>{activity.date ? (() => {
-                    const dateObj = new Date(activity.date);
-                    const date = dateObj.toISOString().split('T')[0];
-                    const time = dateObj.toTimeString().split(' ')[0];
-                    return (
-                      <div>
-                        {date} at {time}
-                      </div>
-                    );
-                  })()
-                    : 'No available date and time'}</TableCell>
+                  <TableCell>
+                    {activity.date
+                      ? (() => {
+                          const dateObj = new Date(activity.date);
+                          const date = dateObj.toISOString().split("T")[0];
+                          const time = dateObj.toTimeString().split(" ")[0];
+                          return (
+                            <div>
+                              {date} at {time}
+                            </div>
+                          );
+                        })()
+                      : "No available date and time"}
+                  </TableCell>
                   <TableCell>{activity.duration}</TableCell>
                   <TableCell>{activity.location}</TableCell>
                   <TableCell>
@@ -214,17 +222,32 @@ const RUDActivity = () => {
                     />
                   </TableCell>
 
-                  <TableCell> {activity.flag ? (
-                    <span style={{ color: 'red', display: 'flex', alignItems: 'center' }}>
-                      <WarningIcon style={{ marginRight: '4px' }} />
-                      Inappropriate
-                    </span>
-                  ) : (
-                    <span style={{ color: 'green', display: 'flex', alignItems: 'center' }}>
-                      <CheckCircleIcon style={{ marginRight: '4px' }} />
-                      Appropriate
-                    </span>
-                  )}</TableCell>
+                  <TableCell>
+                    {" "}
+                    {activity.flag ? (
+                      <span
+                        style={{
+                          color: "red",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <WarningIcon style={{ marginRight: "4px" }} />
+                        Inappropriate
+                      </span>
+                    ) : (
+                      <span
+                        style={{
+                          color: "green",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <CheckCircleIcon style={{ marginRight: "4px" }} />
+                        Appropriate
+                      </span>
+                    )}
+                  </TableCell>
 
                   <TableCell>
                     <Tooltip title="Delete Activity">
@@ -358,6 +381,7 @@ const RUDActivity = () => {
           </DialogActions>
         </Dialog>
       </Box>
+      <Help />
     </>
   );
 };

@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import axios from "axios";
 import Sidebar from "../../Components/Sidebars/Sidebar.js";
+import Help from "../../Components/HelpIcon.js";
 
 function AddGovernor() {
   const [userName, setUserName] = useState("");
@@ -116,6 +117,7 @@ function AddGovernor() {
             </Button>
           </Stack>
         </div>
+        <Help />
       </div>
     </>
   );

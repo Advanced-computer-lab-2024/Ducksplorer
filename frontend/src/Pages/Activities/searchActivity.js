@@ -1,7 +1,7 @@
 // This is the file that gets all the activities for the tourist
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { message } from 'antd';
+import { message } from "antd";
 import {
   Box,
   Table,
@@ -17,18 +17,21 @@ import {
   Rating,
 } from "@mui/material";
 
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from "react-router-dom";
 
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
+import CurrencyConvertor from "../../Components/CurrencyConvertor";
+import Help from "../../Components/HelpIcon";
 
 const SearchActivities = () => {
-
   const { id } = useParams();
 
   const [activities, setActivities] = useState([]); // Displayed activities
   const [allActivities, setAllActivities] = useState([]); // Store all fetched activities
   const [searchQuery, setSearchQuery] = useState(""); // Single search input
-  const isGuest = localStorage.getItem('guest') === 'true';
+  const isGuest = localStorage.getItem("guest") === "true";
+  const [exchangeRates, setExchangeRates] = useState({});
+  const [currency, setCurrency] = useState("EGP");
 
   // Fetch all activities when component mounts
   useEffect(() => {
@@ -36,23 +39,23 @@ const SearchActivities = () => {
     const favCategory = localStorage.getItem("category");
     console.log(showPreferences, favCategory);
     axios
-    .get("http://localhost:8000/activity/", {
-      params: {
-        showPreferences: showPreferences.toString(),
-        favCategory
-      }
-    })
+      .get("http://localhost:8000/activity/", {
+        params: {
+          showPreferences: showPreferences.toString(),
+          favCategory,
+        },
+      })
       .then((response) => {
         if (id === undefined) {
           setAllActivities(response.data);
           setActivities(response.data); // Set initial activities to all fetched activities
-        }
-        else {
-          const tempActivities = response.data.filter((activity) => activity._id === id);
+        } else {
+          const tempActivities = response.data.filter(
+            (activity) => activity._id === id
+          );
           setAllActivities(tempActivities);
           setActivities(tempActivities);
         }
-
       })
       .catch((error) => {
         console.error("There was an error fetching the activities!", error);
@@ -78,20 +81,23 @@ const SearchActivities = () => {
   // Share itinerary functionality
   const handleShareLink = (activityId) => {
     const link = `${window.location.origin}/activity/searchActivities/${activityId}`; // Update with your actual route
-    navigator.clipboard.writeText(link)
+    navigator.clipboard
+      .writeText(link)
       .then(() => {
-        message.success('Link copied to clipboard!');
+        message.success("Link copied to clipboard!");
       })
       .catch(() => {
-        message.error('Failed to copy link.');
+        message.error("Failed to copy link.");
       });
   };
 
   const handleShareEmail = (activityId) => {
     const link = `${window.location.origin}/activity/searchActivities/${activityId}`; // Update with your actual route
-    const subject = 'Check out this activity';
+    const subject = "Check out this activity";
     const body = `Here is the link to the activity: ${link}`;
-    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = `mailto:?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
   };
 
   return (
@@ -105,7 +111,13 @@ const SearchActivities = () => {
           marginLeft: 40,
         }}
       >
-        <Button component={Link} to={isGuest ? "/guestDashboard" : "/touristDashboard"} variant="contained" color="primary" style={{ marginBottom: '20px' }}>
+        <Button
+          component={Link}
+          to={isGuest ? "/guestDashboard" : "/touristDashboard"}
+          variant="contained"
+          color="primary"
+          style={{ marginBottom: "20px" }}
+        >
           Back to Dashboard
         </Button>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
@@ -141,7 +153,10 @@ const SearchActivities = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell>Price</TableCell>
+                <TableCell>
+                  Price
+                  <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                </TableCell>
                 <TableCell>Is Open</TableCell>
                 <TableCell>Category</TableCell>
                 <TableCell>Tags</TableCell>
@@ -158,36 +173,55 @@ const SearchActivities = () => {
                   return (
                     <TableRow key={activity._id}>
                       <TableCell>{activity.name}</TableCell>
-                      <TableCell>{activity.price}</TableCell>
+                      <TableCell>
+                        {(
+                          activity.price * (exchangeRates[currency] || 1)
+                        ).toFixed(2)}{" "}
+                        {currency}
+                      </TableCell>
                       <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
                       <TableCell>{activity.category}</TableCell>
                       <TableCell>{activity.tags.join(", ")}</TableCell>
                       <TableCell>{activity.specialDiscount}</TableCell>
-                      <TableCell>{activity.date ? (() => {
-                        const dateObj = new Date(activity.date);
-                        const date = dateObj.toISOString().split('T')[0];
-                        const time = dateObj.toTimeString().split(' ')[0];
-                        return (
-                          <div>
-                            {date} at {time}
-                          </div>
-                        );
-                      })()
-                        : 'No available date and time'}</TableCell>
+                      <TableCell>
+                        {activity.date
+                          ? (() => {
+                              const dateObj = new Date(activity.date);
+                              const date = dateObj.toISOString().split("T")[0];
+                              const time = dateObj.toTimeString().split(" ")[0];
+                              return (
+                                <div>
+                                  {date} at {time}
+                                </div>
+                              );
+                            })()
+                          : "No available date and time"}
+                      </TableCell>
                       <TableCell>{activity.duration}</TableCell>
                       <TableCell>{activity.location}</TableCell>
                       <TableCell>
-                        <Rating value={activity.averageRating} precision={0.1} readOnly />
+                        <Rating
+                          value={activity.averageRating}
+                          precision={0.1}
+                          readOnly
+                        />
                       </TableCell>
-                      {id === undefined ? (<TableCell>
-                        <Button variant="outlined" onClick={() => handleShareLink(activity._id)}>
-                          Share Via Link
-                        </Button>
-                        <Button variant="outlined" onClick={() => handleShareEmail(activity._id)}>
-                          Share Via Email
-                        </Button>
-                      </TableCell>) : null
-                      }
+                      {id === undefined ? (
+                        <TableCell>
+                          <Button
+                            variant="outlined"
+                            onClick={() => handleShareLink(activity._id)}
+                          >
+                            Share Via Link
+                          </Button>
+                          <Button
+                            variant="outlined"
+                            onClick={() => handleShareEmail(activity._id)}
+                          >
+                            Share Via Email
+                          </Button>
+                        </TableCell>
+                      ) : null}
                     </TableRow>
                   );
                 }
@@ -195,10 +229,10 @@ const SearchActivities = () => {
                 return null;
               })}
             </TableBody>
-
           </Table>
         </TableContainer>
       </Box>
+      <Help />
     </>
   );
 };

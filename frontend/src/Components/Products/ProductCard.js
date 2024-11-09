@@ -146,23 +146,47 @@ const ProductCard = ({
 
   return (
     <Card
+      className="product-card"
       style={{
-        marginBottom: "20px",
-        maxWidth: "500px",
+        width: "450px",
+        margin: "20px",
+        height: "700px",
+        maxHeight: "900px  ",
         position: "relative",
         filter: archived ? "grayscale(100%)" : "none", // Greyscale effect when archived
         opacity: archived ? 0.6 : 1,
+        borderRadius: "3cap",
+        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
       }}
     >
       <CardMedia
         component="img"
         height="400" // Adjust the height as needed
+        width="500"
         image={product.picture}
         alt={product.name}
-        style={{ objectFit: "cover" }} // Ensure the image covers the container
+        style={{
+          objectFit: "cover",
+          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+          borderRadius: "3cap",
+        }} // Ensure the image covers the container
       />
       <CardContent>
-        <Typography variant="h5">{product.name}</Typography>
+        <Typography variant="h5" style={{ fontWeight: "bold" }}>
+          {product.name}
+        </Typography>
+        {role === "Tourist" && showRating && (
+          <div key={product._id}>
+            <Rating
+              value={rating}
+              onChange={handleRatingChange}
+              icon={<StarIcon sx={{ color: "orange" }} />}
+              emptyIcon={<StarOutlineIcon />}
+              readOnly={false}
+              precision={0.5}
+            />
+          </div>
+        )}
         <Typography variant="body1">
           Price <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />:
           {(product.price * (exchangeRates[currency] || 1)).toFixed(2)}{" "}
@@ -178,12 +202,6 @@ const ProductCard = ({
           Description: {product.description}
         </Typography>
         <Typography variant="body1">Seller: {product.seller}</Typography>
-        {/* <Typography variant="body1">
-          Ratings:{" "}
-          {product.ratings.length > 0
-            ? product.ratings.join(", ")
-            : "No ratings yet"}
-        </Typography> */}
         <h4>Reviews:</h4>
         {Object.entries(product.reviews).length > 0 ? (
           Object.entries(product.reviews).map(([user, review]) => (
@@ -201,18 +219,6 @@ const ProductCard = ({
           !archived && <Button onClick={handleArchive}> Archive </Button>}
         {archived && showUnarchive && (
           <Button onClick={handleUnarchive}> Unarchive </Button>
-        )}
-        {role === "Tourist" && showRating && (
-          <div key={product._id}>
-            <Rating
-              value={rating}
-              onChange={handleRatingChange}
-              icon={<StarIcon sx={{ color: "orange" }} />}
-              emptyIcon={<StarOutlineIcon />}
-              readOnly={false}
-              precision={0.5}
-            />
-          </div>
         )}
         {role === "Tourist" && showReview && (
           <Button

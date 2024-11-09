@@ -6,6 +6,7 @@ import { Button } from "@mui/material";
 import { useState } from "react";
 import FilterActivities from "./filterActivities";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
+import Help from "../../Components/HelpIcon";
 
 function SortFilterActivity() {
   const [sort, setSort] = useState(true);
@@ -13,7 +14,7 @@ function SortFilterActivity() {
 
   return (
     <div>
-      <TouristSidebar/>
+      <TouristSidebar />
       <div style={{ marginLeft: 300 }}>
         <Button
           style={{
@@ -50,6 +51,7 @@ function SortFilterActivity() {
         {sort && <SortActivities />}
         {filter && <FilterActivities />}
       </div>
+      <Help />
     </div>
   );
 }

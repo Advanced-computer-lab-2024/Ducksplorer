@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import StandAloneToggleButton from "../../Components/ToggleButton.js";
 import TouristCategoryDropDown from "../../Components/TouristComponents/TouristCategoryDropDown.js";
 import TagsToggleButtons from "../../Components/MuseumHistoricalPlaceComponent/TagsToggleButtons.js";
-
+import Help from "../../Components/HelpIcon.js";
 
 const EditProfile = () => {
   const [touristDetails, setTouristDetails] = useState({
@@ -371,19 +371,33 @@ const EditProfile = () => {
                   </Box>
                 </>
               )}
-            {isEditing ? (
-              <Button variant="contained" color="success" onClick={handleSaveClick} fullWidth sx={{ py: 1.5 }}>
-                Save Changes
-              </Button>
-            ) : (
-              <Button variant="contained" color="primary" onClick={handleEditClick} fullWidth sx={{ py: 1.5 }}>
-                Edit Profile
-              </Button>
-            )}
-          </Box>
-        </Paper>
+              {isEditing ? (
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={handleSaveClick}
+                  fullWidth
+                  sx={{ py: 1.5 }}
+                >
+                  Save Changes
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleEditClick}
+                  fullWidth
+                  sx={{ py: 1.5 }}
+                >
+                  Edit Profile
+                </Button>
+              )}
+            </Box>
+          </Paper>
+        </Box>
+        <Help />
       </Box>
-    </Box>
+    </>
   );
 };
 

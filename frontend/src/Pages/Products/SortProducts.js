@@ -5,6 +5,7 @@ import { message } from "antd";
 import { Button, Stack, Typography } from "@mui/material";
 import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
 import useUserRole from "../../Components/getRole";
+import Help from "../../Components/HelpIcon";
 
 function SortProducts() {
   const [products, setProducts] = useState([]);
@@ -113,6 +114,7 @@ function SortProducts() {
           </Typography>
         )}
       </div>
+      <Help />
     </div>
   );
 }
