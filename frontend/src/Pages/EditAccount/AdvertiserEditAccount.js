@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, TextField, Typography, Paper, Avatar } from "@mui/material";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Paper,
+  Avatar,
+} from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
 import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import Help from "../../Components/HelpIcon";
 
 const AdvertiserEditProfile = () => {
   const [advertiserDetails, setAdvertiserDetails] = useState({
@@ -17,7 +25,7 @@ const AdvertiserEditProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    const userJson = localStorage.getItem("user"); 
+    const userJson = localStorage.getItem("user");
     const user = JSON.parse(userJson);
     const userName = user.username;
 
@@ -40,7 +48,10 @@ const AdvertiserEditProfile = () => {
 
   const handleSaveClick = () => {
     axios
-      .put("http://localhost:8000/advertiserAccount/editaccount", advertiserDetails)
+      .put(
+        "http://localhost:8000/advertiserAccount/editaccount",
+        advertiserDetails
+      )
       .then(() => {
         message.success("Advertiser details updated successfully");
         setIsEditing(false);
@@ -62,12 +73,26 @@ const AdvertiserEditProfile = () => {
   return (
     <div style={{ display: "flex" }}>
       <AdvertiserSidebar />
-      <Box sx={{ flexGrow: 1, p: 5, display: "flex", justifyContent: "center" }}>
-        <Paper 
-          elevation={4} 
-          sx={{ p: 4, width: "500px", borderRadius: 3, boxShadow: "0px 8px 24px rgba(0,0,0,0.2)" }}
+      <Box
+        sx={{ flexGrow: 1, p: 5, display: "flex", justifyContent: "center" }}
+      >
+        <Paper
+          elevation={4}
+          sx={{
+            p: 4,
+            width: "500px",
+            borderRadius: 3,
+            boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
+          }}
         >
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 3 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              mb: 3,
+            }}
+          >
             <Avatar sx={{ bgcolor: "primary.main", width: 64, height: 64 }}>
               <AccountCircleIcon fontSize="large" />
             </Avatar>
@@ -139,17 +164,30 @@ const AdvertiserEditProfile = () => {
 
           <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
             {isEditing ? (
-              <Button variant="contained" color="success" onClick={handleSaveClick} fullWidth sx={{ py: 1.5 }}>
+              <Button
+                variant="contained"
+                color="success"
+                onClick={handleSaveClick}
+                fullWidth
+                sx={{ py: 1.5 }}
+              >
                 Save Changes
               </Button>
             ) : (
-              <Button variant="contained" color="primary" onClick={handleEditClick} fullWidth sx={{ py: 1.5 }}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleEditClick}
+                fullWidth
+                sx={{ py: 1.5 }}
+              >
                 Edit Profile
               </Button>
             )}
           </Box>
         </Paper>
       </Box>
+      <Help />
     </div>
   );
 };

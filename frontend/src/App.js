@@ -119,6 +119,7 @@ function App() {
           <Route path="/admin/complaints" element={<ComplaintsDashboard />} />
           <Route path="/admin/complaints/:id" element={<ComplaintDetails />} />
           <Route path="/myComplaints" element={<MyComplaints />} />
+          <Route path="/touristProducts" element={<TouristProducts />} />
 
           <Route
             path="/advertiserDashboard"

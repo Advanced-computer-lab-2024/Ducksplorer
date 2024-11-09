@@ -30,6 +30,7 @@ import {
   TextField,
 } from "@mui/material";
 import StandAloneToggleButton from "../../Components/ToggleButton.js";
+import Help from "../../Components/HelpIcon.js";
 
 const RUDActivity = () => {
   const [activities, setActivities] = useState([]);
@@ -37,9 +38,8 @@ const RUDActivity = () => {
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [editingActivity, setEditingActivity] = useState(null);
 
-  
   const [exchangeRates, setExchangeRates] = useState({});
-  const [currency, setCurrency] = useState('EGP');
+  const [currency, setCurrency] = useState("EGP");
   const [formData, setFormData] = useState({
     name: "",
     price: "",
@@ -65,13 +65,13 @@ const RUDActivity = () => {
   useEffect(() => {
     const showPreferences = localStorage.getItem("showPreferences");
     const favCategory = localStorage.getItem("category");
-        axios
-    .get("http://localhost:8000/activity/", {
-      params: {
-        showPreferences,
-        favCategory
-      }
-    })
+    axios
+      .get("http://localhost:8000/activity/", {
+        params: {
+          showPreferences,
+          favCategory,
+        },
+      })
       .then((response) => {
         setActivities(response.data);
       })
@@ -164,8 +164,9 @@ const RUDActivity = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell>Price
-                <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                <TableCell>
+                  Price
+                  <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
                 </TableCell>
                 <TableCell>Is open</TableCell>
                 <TableCell>Category</TableCell>
@@ -182,8 +183,11 @@ const RUDActivity = () => {
               {activities.map((activity) => (
                 <TableRow key={activity._id}>
                   <TableCell>{activity.name}</TableCell>
-                  <TableCell>                    
-                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                  <TableCell>
+                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(
+                      2
+                    )}{" "}
+                    {currency}
                   </TableCell>
                   <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
                   <TableCell>{activity.category}</TableCell>
@@ -332,6 +336,7 @@ const RUDActivity = () => {
           </DialogActions>
         </Dialog>
       </Box>
+      <Help />
     </>
   );
 };

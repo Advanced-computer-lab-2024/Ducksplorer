@@ -16,31 +16,32 @@ import {
 } from "@mui/material";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
+import Help from "../../Components/HelpIcon";
 
 const SearchActivities = () => {
   const [activities, setActivities] = useState([]); // Displayed activities
   const [allActivities, setAllActivities] = useState([]); // Store all fetched activities
   const [searchQuery, setSearchQuery] = useState(""); // Single search input
-  
+
   const [exchangeRates, setExchangeRates] = useState({});
-  const [currency, setCurrency] = useState('EGP');
+  const [currency, setCurrency] = useState("EGP");
 
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
-  }
+  };
   // Fetch all activities when component mounts
   useEffect(() => {
     const showPreferences = localStorage.getItem("showPreferences");
     const favCategory = localStorage.getItem("category");
     console.log(showPreferences, favCategory);
     axios
-    .get("http://localhost:8000/activity/", {
-      params: {
-        showPreferences,
-        favCategory
-      }
-    })
+      .get("http://localhost:8000/activity/", {
+        params: {
+          showPreferences,
+          favCategory,
+        },
+      })
       .then((response) => {
         setAllActivities(response.data);
         setActivities(response.data); // Set initial activities to all fetched activities
@@ -111,8 +112,9 @@ const SearchActivities = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell>Price
-                <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                <TableCell>
+                  Price
+                  <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
                 </TableCell>
                 <TableCell>Is Open</TableCell>
                 <TableCell>Category</TableCell>
@@ -128,8 +130,11 @@ const SearchActivities = () => {
               {activities.map((activity) => (
                 <TableRow key={activity._id}>
                   <TableCell>{activity.name}</TableCell>
-                  <TableCell>                    
-                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                  <TableCell>
+                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(
+                      2
+                    )}{" "}
+                    {currency}
                   </TableCell>
                   <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
                   <TableCell>{activity.category}</TableCell>
@@ -151,6 +156,7 @@ const SearchActivities = () => {
           </Table>
         </TableContainer>
       </Box>
+      <Help />
     </>
   );
 };

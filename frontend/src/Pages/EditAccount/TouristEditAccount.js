@@ -15,6 +15,7 @@ import TouristNavBar from "../../Components/TouristNavBar.js";
 import StandAloneToggleButton from "../../Components/ToggleButton.js";
 import TouristCategoryDropDown from "../../Components/TouristComponents/TouristCategoryDropDown.js";
 import TagsToggleButtons from "../../Components/MuseumHistoricalPlaceComponent/TagsToggleButtons.js";
+import Help from "../../Components/HelpIcon.js";
 
 const EditProfile = () => {
   const [touristDetails, setTouristDetails] = useState({
@@ -341,6 +342,7 @@ const EditProfile = () => {
             </Box>
           </Paper>
         </Box>
+        <Help />
       </Box>
     </>
   );
