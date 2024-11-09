@@ -51,8 +51,8 @@ const FormSection = () => {
   const [description, setDescription] = useState("");
   const [nationalIdFiles, setNationalIdFiles] = useState(null);
   const [certificatesFiles, setCertificatesFiles] = useState(null);
-  const [uploadsFiles, setUploadsFiles] = useState(null);  const [acceptTerms, setAcceptTerms] = useState(false);
-  const [openTerms, setOpenTerms] = useState(false);
+  const [uploadsFiles, setUploadsFiles] = useState(null); 
+
 
   // Handler for nationalId file selection
   const handleNationalIdSelect = (files) => {

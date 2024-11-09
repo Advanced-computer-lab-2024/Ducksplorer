@@ -52,8 +52,6 @@ app.use(express.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-console.log(process.env.PORT);
-app.use(express.json());
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/"); // Folder where images will be stored

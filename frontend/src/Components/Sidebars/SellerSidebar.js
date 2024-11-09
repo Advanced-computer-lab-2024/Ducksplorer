@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import {
   Drawer,
   Typography,
@@ -24,7 +24,7 @@ import { Link } from 'react-router-dom';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 // import MuseumIcon from '@mui/icons-material/Museum';
 import PersonIcon from '@mui/icons-material/Person';
-// import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 
 const drawerWidth = 300;

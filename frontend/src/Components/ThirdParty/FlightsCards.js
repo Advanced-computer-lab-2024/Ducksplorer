@@ -4,13 +4,81 @@ import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineC
 import CurrencyConverterGeneral from './CurrencyConverterGeneral'; 
 import { Button } from '@mui/material';
 import axios from 'axios';
+import { message } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
-const FlightsCards = ({ flights }) => {
+const FlightsCards = ({ flights , originCity, destinationCity, originCountry, destinationCountry }) => {
+    const cities = [
+        { label: 'New York', code: 'NYC', country: 'USA' },
+        { label: 'Los Angeles', code: 'LAX', country: 'USA' },
+        { label: 'Chicago', code: 'CHI', country: 'USA' },
+        { label: 'Houston', code: 'HOU', country: 'USA' },
+        { label: 'Phoenix', code: 'PHX', country: 'USA' },
+        { label: 'Philadelphia', code: 'PHL', country: 'USA' },
+        { label: 'San Francisco', code: 'SFO', country: 'USA' },
+        { label: 'Indianapolis', code: 'IND', country: 'USA' },
+        { label: 'Seattle', code: 'SEA', country: 'USA' },
+        { label: 'Denver', code: 'DEN', country: 'USA' },
+        { label: 'Washington', code: 'DCA', country: 'USA' },
+        { label: 'London', code: 'LON', country: 'UK' },
+        { label: 'Paris', code: 'PAR', country: 'France' },
+        { label: 'Tokyo', code: 'TYO', country: 'Japan' },
+        { label: 'Dubai', code: 'DXB', country: 'UAE' },
+        { label: 'Singapore', code: 'SIN', country: 'Singapore' },
+        { label: 'Sydney', code: 'SYD', country: 'Australia' },
+        { label: 'Hong Kong', code: 'HKG', country: 'Hong Kong' },
+        { label: 'Bangkok', code: 'BKK', country: 'Thailand' },
+        { label: 'Toronto', code: 'YYZ', country: 'Canada' },
+        { label: 'Vancouver', code: 'YVR', country: 'Canada' },
+        { label: 'Mexico City', code: 'MEX', country: 'Mexico' },
+        { label: 'São Paulo', code: 'GRU', country: 'Brazil' },
+        { label: 'Buenos Aires', code: 'EZE', country: 'Argentina' },
+        { label: 'Cape Town', code: 'CPT', country: 'South Africa' },
+        { label: 'Johannesburg', code: 'JNB', country: 'South Africa' },
+        { label: 'Moscow', code: 'MOW', country: 'Russia' },
+        { label: 'Istanbul', code: 'IST', country: 'Turkey' },
+        { label: 'Rome', code: 'ROM', country: 'Italy' },
+        { label: 'Madrid', code: 'MAD', country: 'Spain' },
+        { label: 'Berlin', code: 'BER', country: 'Germany' },
+        { label: 'Amsterdam', code: 'AMS', country: 'Netherlands' },
+        { label: 'Zurich', code: 'ZRH', country: 'Switzerland' },
+        { label: 'Vienna', code: 'VIE', country: 'Austria' },
+        { label: 'Athens', code: 'ATH', country: 'Greece' },
+        { label: 'Lisbon', code: 'LIS', country: 'Portugal' },
+        { label: 'Dublin', code: 'DUB', country: 'Ireland' },
+        { label: 'Copenhagen', code: 'CPH', country: 'Denmark' },
+        { label: 'Stockholm', code: 'ARN', country: 'Sweden' },
+        { label: 'Oslo', code: 'OSL', country: 'Norway' },
+        { label: 'Helsinki', code: 'HEL', country: 'Finland' },
+        { label: 'Warsaw', code: 'WAW', country: 'Poland' },
+        { label: 'Prague', code: 'PRG', country: 'Czech Republic' },
+        { label: 'Budapest', code: 'BUD', country: 'Hungary' },
+        { label: 'Brussels', code: 'BRU', country: 'Belgium' },
+        { label: 'Munich', code: 'MUC', country: 'Germany' },
+        { label: 'Frankfurt', code: 'FRA', country: 'Germany' },
+        { label: 'Milan', code: 'MIL', country: 'Italy' },
+        { label: 'Barcelona', code: 'BCN', country: 'Spain' },
+        { label: 'Vienna', code: 'VIE', country: 'Austria' },
+        { label: 'Kuala Lumpur', code: 'KUL', country: 'Malaysia' },
+        { label: 'Jakarta', code: 'CGK', country: 'Indonesia' },
+        { label: 'Manila', code: 'MNL', country: 'Philippines' },
+        { label: 'Seoul', code: 'ICN', country: 'South Korea' },
+        { label: 'Mumbai', code: 'BOM', country: 'India' },
+        { label: 'Delhi', code: 'DEL', country: 'India' },
+        { label: 'Shanghai', code: 'PVG', country: 'China' },
+        { label: 'Beijing', code: 'PEK', country: 'China' },
+        { label: 'Guangzhou', code: 'CAN', country: 'China' },
+        { label: 'Cairo', code: 'CAI', country: 'Egypt' },
+        { label: 'Alexandria', code: 'ALY', country: 'Egypt' },
+        { label: 'Hurghada', code: 'HRG', country: 'Egypt' },
+        { label: 'Sharm Al-Sheikh', code: 'SSH', country: 'Egypt' }
+      ];
 
         const initialCurrency = flights[0].price.currency;
         const [exchangeRates, setExchangeRates] = useState({});
         const [currency, setCurrency] = useState(initialCurrency);
-    
+        const navigate = useNavigate();
+
         useEffect(() => {
             setCurrency(initialCurrency);
           }, [initialCurrency]);
@@ -38,19 +106,53 @@ const FlightsCards = ({ flights }) => {
             return (price * rate).toFixed(2);
           };
         
-    const handleBooking = async (flight) => {
-        try {
-            const response = await axios.post('/api/bookFlight', { flight });
-            if (response.status === 200) {
-                alert('Booking successful!');
-            } else {
-                alert('Booking failed. Please try again.');
+   const handleBooking = async (flightBooking) => {
+            try {
+              const userJson = localStorage.getItem('user');
+              if (!userJson) {
+                message.error("User is not logged in.");
+                return null;
+              }
+              const user = JSON.parse(userJson);
+              if (!user || !user.username) {
+                message.error("User information is missing.");
+                return null;
+              }
+              
+              const departure = cities.find(city => city.code === flightBooking.itineraries[0].segments[0].departure.iataCode);
+              console.log("departure",departure);
+              const arrival = cities.find(city => city.code === flightBooking.itineraries[0].segments[0].arrival.iataCode);  
+              console.log("arrival",arrival);
+              
+              
+              const type = 'flight';
+              const flight = {
+                price : flightBooking.price.total,
+                currency : flightBooking.price.currency,
+                departureDate : flightBooking.itineraries[0].segments[0].departure.at,
+                arrivalDate : flightBooking.itineraries[0].segments[0].arrival.at,
+                companyName : flightBooking.itineraries[0].segments[0].carrierCode,
+                departureCity : originCity,
+                departureCountry: originCountry,
+                arrivalCountry : destinationCountry,
+                arrivalCity : destinationCity,
+              }
+        
+              localStorage.setItem('flight', JSON.stringify(flight));
+              localStorage.setItem('type', type);
+        
+              
+        
+              if (flightBooking) {
+                navigate('/payment');
+              } else {
+                message.error("Please Choose a flight.");
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              message.error("An error occurred while booking.");
             }
-        } catch (error) {
-            console.error('Error booking flight:', error);
-            alert('An error occurred while booking the flight. Please try again.');
-        }
-    };
+   };
     
 
     return (
