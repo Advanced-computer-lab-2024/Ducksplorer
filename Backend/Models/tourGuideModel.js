@@ -28,6 +28,17 @@ const tourGuideSchema = new Schema({
     previousWork: {
         type: String,
         required: false
+    }, 
+    nationalId:{
+        type: String,
+        required : false
+    },
+    certificates: {
+        type: String,
+        required : false
+    },
+    photo: {
+        type: String,
     },
     profilePicture: {
         filename: { type: String },

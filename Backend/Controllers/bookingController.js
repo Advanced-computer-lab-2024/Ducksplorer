@@ -361,8 +361,7 @@ const redeemPoints = async (req, res) => {
         let myWallet = tourist.wallet;
         if (myPoints > addPoints) {
             myPoints -= addPoints;
-            myWallet += addPoints / 100;
-            //myWallet = myWallet + 100;
+            myWallet = myWallet + 100;
             tourist.points = myPoints;
             tourist.wallet = myWallet;
             await tourist.save();

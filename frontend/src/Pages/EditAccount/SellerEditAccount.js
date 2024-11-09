@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, TextField, Typography, Paper, Avatar } from '@mui/material';
+import { Box, Button, TextField, Typography, Paper, Avatar, CircularProgress } from '@mui/material';
 import axios from 'axios';
 import { message } from 'antd';
 import { Link } from 'react-router-dom';
@@ -9,6 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Iconify from '../../Components/TopNav/iconify.js';
 import ProfilePictureUpload from '../../Components/pp';
+import DownloadButton from '../../Components/DownloadButton';
 
 const EditProfile = () => {
   const [sellerDetails, setSellerDetails] = useState({
@@ -17,13 +18,44 @@ const EditProfile = () => {
     password: '',
     name: '',
     description: '',
-    taxationRegisteryCard: '',
-    logo: ''
+    uploads:'',
+    photo: '',
   });
 
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
 
+  const handlePhotoUpload = async () => {
+    const photoFile = document.getElementById('photo').files[0];
+    const formData = new FormData();
+    formData.append('file', photoFile);
+  
+    try {
+      message.success('Uploading photo...');
+      const response = await axios.post('http://localhost:8000/api/documents/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setSellerDetails(prevDetails => ({ ...prevDetails, photo: response.data.url }));
+      message.success('Photo uploaded successfully');
+    } catch (error) {
+      message.error('Error uploading photo');
+    }
+  };
+  
+  const handlePhotoDelete =  () => {
+    try {
+      setSellerDetails(prevDetails => ({ ...prevDetails, photo: '' }));
+      message.success('Photo deleted successfully');
+    } catch (error) {
+      message.error('Error deleting photo');
+    }
+  };
+  
+  const handleUploadsSelect = async () => {
+    const uploadsFile = document.getElementById('uploads').files[0];
+    console.log("before the call",uploadsFile);
+    sellerDetails.uploads = await handleFileUpload(uploadsFile);
+  };
   useEffect(() => {
     const userJson = localStorage.getItem('user');
     const user = JSON.parse(userJson);
@@ -45,7 +77,27 @@ const EditProfile = () => {
   const handleEditClick = () => {
     setIsEditing(true);
   };
-
+  const handleFileUpload = async (uploads) => {
+    const formData = new FormData();
+    formData.append('file', uploads);
+    try {
+      message.success("uploading file please wait");
+      const response = await axios.post('http://localhost:8000/api/documents/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      message.success('File uploaded successfully you can now click save');
+      console.log(response.data.url);
+      console.log('Document uploaded successfully:', response.data);
+      return response.data.url; // Return the file URL
+    } catch (error) {
+      message.error('Error uploading document');
+      console.log("fel catch",error.response.data);
+      console.error('Error uploading document for tourguide:', error);
+      return null; // Return null if upload fails
+    }
+};
   const handleSaveClick = () => {
     axios.put('http://localhost:8000/sellerAccount/editaccount', sellerDetails)
       .then(response => {
@@ -65,18 +117,63 @@ const EditProfile = () => {
       [name]: value,
     }));
   };
-
+  const handleFileDelete = async (uploads) => {
+    const userName = sellerDetails.userName; // assuming userName is stored in AdvertiserDetails
+  
+    if (!userName) {
+      message.error('Username is missing');
+      return;
+    }
+  
+    try {
+      await axios.post(`http://localhost:8000/sellerAccount/removeFileUrl`, {
+        userName: userName,
+        uploads: uploads // using "uploads" to match the backend parameter
+      });
+      message.success('File deleted successfully');
+  
+      // Remove the file URL from the state
+      setSellerDetails(prevDetails => ({
+        ...prevDetails,
+        [uploads]: '', // clears the correct field in the state
+      }));
+    } catch (error) {
+      message.error('Error deleting file');
+      console.error('Error deleting file:', error);
+    }
+  };
+  
+  
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
       <Link to="/sellerDashboard"> Back </Link>
       <Paper elevation={4} sx={{ p: 4, width: 500, borderRadius: 3, boxShadow: '0px 8px 24px rgba(0,0,0,0.2)' }}>
         <Box sx={{ textAlign: 'center', mb: 3 }}>
-          <Avatar sx={{ bgcolor: 'primary.main', width: 64, height: 64, mx: 'auto' }}>
-            <AccountCircleIcon fontSize="large" />
-          </Avatar>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3 }}>
-          <ProfilePictureUpload username={sellerDetails.userName} />
+          
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Avatar src={sellerDetails.photo} sx={{ width: 80, height: 80 }} />
+          {isEditing && (
+            <>
+              <input
+                type="file"
+                id="photo"
+                onChange={handlePhotoUpload}
+                style={{ display: 'none' }}
+              />
+              <label htmlFor="photo">
+                <Button component="span" color="primary" variant="contained">
+                  Upload New Photo
+                </Button>
+              </label>
+              {sellerDetails.photo && (
+                <Button onClick={handlePhotoDelete} color="secondary" variant="contained">
+                  Delete Photo
+                </Button>
+              )}
+            </>
+          )}
         </Box>
+
       <Typography variant="h5" sx={{ mt: 2 }}>
             Edit Seller Profile
           </Typography>
@@ -147,28 +244,18 @@ const EditProfile = () => {
             multiline
             rows={3}
           />
-          <lable>Taxation Registery Card</lable>
-          <FileUpload />
-          {/* <TextField
-          label="taxationRegisteryCard" // Singular label
-          name="taxationRegisteryCard" // This should match the updated state field
-          value={sellerDetails.taxationRegisteryCard} // Access the pictures string directly
-          onChange={handleChange}
-          InputProps={{
-            readOnly: !isEditing,
-          }}
-         /> */}
-          <lable>Logo</lable>
-          <FileUpload />
-          {/* <TextField
-          label="logo" // Singular label
-          name="logo" // This should match the updated state field
-          value={sellerDetails.logo} // Access the pictures string directly
-          onChange={handleChange}
-          InputProps={{
-            readOnly: !isEditing,
-          }}
-         /> */}
+          <Box disabled={!isEditing} sx={{ display: 'flex', gap: 2, mt: 3 }}>
+          <label>Uploads:</label>
+          <DownloadButton fileUrl={sellerDetails.uploads} label="Download uploaded file" />
+          {isEditing && (
+            <>
+          <Button onClick={() => handleFileDelete('uploads')}>Delete uploaded file</Button>
+          <FileUpload          
+            inputId="uploads"
+            onFileSelect={handleUploadsSelect}            />
+            </>
+          )}
+          </Box>
         </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>

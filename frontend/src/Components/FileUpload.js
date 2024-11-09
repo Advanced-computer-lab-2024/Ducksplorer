@@ -77,7 +77,7 @@
 import React, { useState } from 'react';
 import { Button, Input } from '@mui/material';
 
-const FileUpload = ({ onFileSelect, inputId }) => {
+const FileUpload = ({ onFileSelect, inputId, label }) => {
   const [fileNames, setFileNames] = useState([]);
 
   const handleFileChange = (event) => {
@@ -105,7 +105,7 @@ const FileUpload = ({ onFileSelect, inputId }) => {
           Upload Document
         </Button>
       </label>
-      <div>{fileNames.join(', ')}</div> {/* Display selected file names */}
+      <div>{fileNames.join(', ')}</div> 
     </div>
   );
 };

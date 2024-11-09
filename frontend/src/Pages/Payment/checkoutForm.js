@@ -3,11 +3,13 @@ import { useState, useEffect } from "react";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
 import axios from "axios";
 import { message } from "antd";
+import { useNavigate } from "react-router-dom";
 
 
 export default function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
+  const navigate = useNavigate();
 
   const [message1, setMessage1] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -167,6 +169,7 @@ export default function CheckoutForm() {
         console.log("Points Result", pointsResult);
 
       }
+      navigate('/myBookings');
     } catch (error) {
       setMessage1("Failed to confirm OTP.");
       console.error("Error:", error);

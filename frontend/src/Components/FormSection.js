@@ -6,7 +6,6 @@ import { message } from 'antd';
 import { useTypeContext } from '../context/TypeContext';
 import DropDown from './DropDown.js';
 import { useNavigate } from "react-router-dom";
-// import { FileUpload } from '@mui/icons-material';
 import FileUpload from './FileUpload';
 
 const FormSection = () => {
@@ -18,6 +17,7 @@ const FormSection = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [selectedFiles2, setSelectedFiles2] = useState([]);
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [openTerms, setOpenTerms] = useState(false);
 
@@ -33,8 +33,22 @@ const FormSection = () => {
   const [companyProfile, setCompanyProfile] = useState('');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-
+  const [nationalIdFiles, setNationalIdFiles] = useState(null);
+  const [certificatesFiles, setCertificatesFiles] = useState(null);
+  const [uploadsFiles, setUploadsFiles] = useState(null);
   const navigate = useNavigate();
+
+  // Handler for nationalId file selection
+  const handleNationalIdSelect = (files) => {
+    setNationalIdFiles(files);
+  };
+  const handleUploadsSelect = (files) => {
+    setUploadsFiles(files);
+  };
+  // Handler for certificates file selection
+  const handleCertificatesSelect = (files) => {
+    setCertificatesFiles(files);
+  };
 
   const validateFields = () => {
     if (!userName || !password || !confirmPassword || !email) {
@@ -64,7 +78,8 @@ const FormSection = () => {
     
     return true;
   };
-
+  
+  
   const handleOpenTerms = () => {
     setOpenTerms(true);
   };
@@ -73,54 +88,179 @@ const FormSection = () => {
     setOpenTerms(false);
   };
 
+const uploadDocument2 = async (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  console.log("gowa upload doc2",formData);
+  try {
+    const response = await axios.post('http://localhost:8000/api/documents/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    console.log(response.data.url);
+    console.log('Document uploaded successfully:', response.data);
+    return response.data.url; // Return the file URL
+  } catch (error) {
+    console.log("fel catch",error.response);
+    console.error('Error uploading document for tourguide:', error);
+    return null; // Return null if upload fails
+  }
+};
+
+const handleNationalIdFileSelect = (files) => {
+  // Call the existing handler to process the selected national ID files
+  handleNationalIdSelect(files);
+  
+  // Also update the selected files state
+  setSelectedFiles(files);
+};
+const handleUploadsFileSelect = (files) => {
+  // Call the existing handler to process the selected national ID files
+  handleUploadsSelect(files);
+  
+  // Also update the selected files state
+  setSelectedFiles(files);
+};
+const handleCertificatesFileSelect = (files) => {
+  // Call the existing handler to process the selected national ID files
+  handleCertificatesSelect(files);
+  
+  // Also update the selected files state
+  setSelectedFiles2(files);
+};
 
   const handleAdd = async () => {
     if (!validateFields()) {
       return;
     }
-    const data = {
+    let nationalIdUrl = null; // Initialize variables to store URLs
+    let certificatesUrl = null;
+    let data =null;
+    try{
+    if (type === 'Guide') {
+      console.log("before error");
+      const nationalIdFile = document.getElementById('nationalIdUpload').files[0];
+      console.log(nationalIdFile);
+      const certificatesFile = document.getElementById('certificateUpload').files[0];
+      console.log(certificatesFile);
+      // Upload documents and set URLs
+      
+      
+      if (nationalIdFile) {
+        nationalIdUrl = await uploadDocument2(nationalIdFile);
+        console.log("nationalIdUrl gowa el if",nationalIdUrl);
+      }
+      if (certificatesFile) {
+        certificatesUrl = await uploadDocument2(certificatesFile);
+        
+      }
+     
+    data = {
       userName,
       password,
       email,
       role: type,
-      ...(type === 'Tourist' && { mobileNumber, nationality, DOB, employmentStatus }),
-      ...(type === 'Guide' && { mobileNumber, yearsOfExperience, previousWork }),
-      ...(type === 'Advertiser' && { websiteLink, hotline, companyProfile }),
-      ...(type === 'Seller' && { name, description }),
+      ...(type === 'Guide' && { mobileNumber, yearsOfExperience, previousWork, nationalIdUrl, certificatesUrl }),
     };
-
     try {
-      try{
+      console.log(data);
       await axios.post('http://localhost:8000/signUp', data);
       message.success('Signed Up successfully!');
-      }
-      catch(error){
-        message.error('An error occurred: ' + error.message);
-        console.error('There was an sigining up!', error);
-      }
-      if (selectedFiles.length > 0) {
-           const fileUploadData = new FormData();
-           fileUploadData.append('userName', userName);
-          selectedFiles.forEach(file => fileUploadData.append('files', file));  // Append each file object directly
-          // Log each file appended for document upload
-            for (let pair of fileUploadData.entries()) {
-                console.log(`${pair[0]}: ${pair[1].name || pair[1]}`);
-            }
-
-            try {
-                await axios.post('http://localhost:8000/file/user/upload/documents', fileUploadData, {
-                    headers: { 'Content-Type': 'multipart/form-data' },
-                });
-                message.success('Documents uploaded successfully!');
-            } catch (error) {
-                console.error('Error uploading documents:', error);
-                message.error('Document upload failed: ' + (error.response?.data?.message || error.message));
-            }
-        }
-      window.location.href = '/login';
     } catch (error) {
       message.error('An error occurred: ' + error.message);
-      console.error('There was an error uploading document!', error);
+      console.error('There was an error signing up:', error);
+      }
+    if (selectedFiles.length > 0) {
+      const fileUploadData = new FormData();
+      fileUploadData.append('userName', userName);
+     selectedFiles.forEach(file => fileUploadData.append('files', file));  // Append each file object directly
+     // Log each file appended for document upload
+       for (let pair of fileUploadData.entries()) {
+           console.log(`${pair[0]}: ${pair[1].name || pair[1]}`);
+       }
+ 
+       try {
+           await axios.post('http://localhost:8000/file/user/upload/documents', fileUploadData, {
+               headers: { 'Content-Type': 'multipart/form-data' },
+           });
+           message.success('Documents uploaded successfully!');
+       } 
+       catch (error) {
+           console.error('Error uploading documents:', error);
+           message.error('Document upload failed: ' + (error.response?.data?.message || error.message));
+       }
+   }
+   if (selectedFiles2.length > 0) {
+    const fileUploadData = new FormData();
+    fileUploadData.append('userName', userName);
+   selectedFiles2.forEach(file => fileUploadData.append('files', file));  // Append each file object directly
+
+     try {
+         await axios.post('http://localhost:8000/file/user/upload/documents', fileUploadData, {
+             headers: { 'Content-Type': 'multipart/form-data' },
+         });
+         message.success('Documents uploaded successfully!');
+     } catch (error) {
+         console.error('Error uploading documents:', error);
+         message.error('Document upload failed: ' + (error.response?.data?.message || error.message));
+     }
+    }
+  }
+  else{
+      let uploadsFile = null;
+      let uploads =null;
+      if(!(type === 'Tourist')){
+        uploadsFile = document.getElementById('uploads').files[0];
+        console.log("gowa el if",uploadsFile);
+        if (uploadsFile) {
+          uploads = await uploadDocument2(uploadsFile);
+  
+        }
+      }
+        data  = {
+          userName,
+          password,
+          email,
+          role: type,
+          ...(type === 'Tourist' && { mobileNumber, nationality, DOB, employmentStatus }),
+          ...(type === 'Advertiser' && { websiteLink, hotline, companyProfile, uploads}),
+          ...(type === 'Seller' && { name, description, uploads }),
+        };
+        try{
+          console.log(data);
+          await axios.post('http://localhost:8000/signUp', data);
+          message.success('Signed Up successfully!');
+          }
+          catch(error){
+            message.error('An error occurred: ' + error.message);
+            console.error('There was an sigining up!', error);
+          }
+        if (selectedFiles.length > 0) {
+          const fileUploadData = new FormData();
+          fileUploadData.append('userName', userName);
+         selectedFiles.forEach(file => fileUploadData.append('files', file));  // Append each file object directly
+         // Log each file appended for document upload
+           for (let pair of fileUploadData.entries()) {
+               console.log(`${pair[0]}: ${pair[1].name || pair[1]}`);
+           }
+     
+           try {
+               await axios.post('http://localhost:8000/file/user/upload/documents', fileUploadData, {
+                   headers: { 'Content-Type': 'multipart/form-data' },
+               });
+               message.success('Documents uploaded successfully!');
+           } catch (error) {
+               console.error('Error uploading documents:', error);
+               message.error('Document upload failed: ' + (error.response?.data?.message || error.message));
+           }
+       }
+    }
+    window.location.href = '/login';
+  }
+  catch (error) {
+      message.error('An error occurred: ' + error.message);
+      console.error('There was an error uploading document barra!', error);
     }
   };
 
@@ -244,9 +384,14 @@ const FormSection = () => {
               value={mobileNumber}
               onChange={(e) => setMobileNumber(e.target.value)}
             />
-            
-            <FileUpload onFileSelect={(files) => setSelectedFiles(files)} inputId="document-upload" />
-            
+            <label>National Id:</label>
+            <FileUpload
+              inputId="nationalIdUpload"
+              onFileSelect={(files) => handleNationalIdFileSelect(files)}       />
+            <label>Certificates</label>
+            <FileUpload
+              inputId="certificateUpload"
+              onFileSelect={(files) => handleCertificatesFileSelect(files)}            />
             <TextField
               name="yearsOfExperience"
               label="Years of Experience"
@@ -279,8 +424,10 @@ const FormSection = () => {
               value={hotline}
               onChange={(e) => setHotline(e.target.value)}
             />
-            
-            <FileUpload onFileSelect={(files) => setSelectedFiles(files)} inputId="document-upload" />
+            <label>Uploads:</label>
+            <FileUpload
+              inputId="uploads"
+              onFileSelect={(files) => handleUploadsFileSelect(files)}       />
             <TextField
               name="companyProfile"
               label="Company Profile"
@@ -299,7 +446,10 @@ const FormSection = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-            <FileUpload onFileSelect={(files) => setSelectedFiles(files)} inputId="document-upload" />
+            <label>Uploads:</label>
+            <FileUpload
+              inputId="uploads"
+              onFileSelect={(files) => handleUploadsFileSelect(files)}       />
             
              <TextField
               name="description"
