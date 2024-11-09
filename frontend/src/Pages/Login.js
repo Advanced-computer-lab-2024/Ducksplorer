@@ -8,15 +8,21 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
+  const handleContinueAsGuest = () => {
+    localStorage.setItem("guest", "true");
+    navigate("/guestDashboard"); // Navigate to guest dashboard
+  };
   const handleLogin = async () => {
     try {
+      localStorage.setItem("guest", "false");
       setLoading(true);
       //console.log(localStorage.getItem('user'));
       const response = await axios.post("http://localhost:8000/signUp/login", {
@@ -125,6 +131,12 @@ function Login() {
           >
             Sign Up
           </Link>
+          <div
+            onClick={handleContinueAsGuest}
+            className="text-sm hover:underline hover:text-blue-600 mt-2 inline-block cursor-pointer"
+          >
+            Continue as a Guest
+          </div>
 
           <Button
             variant="contained"
