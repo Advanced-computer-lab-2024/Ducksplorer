@@ -29,13 +29,12 @@ const SortActivities = () => {
   const fetchSortedActivities = () => {
     const showPreferences = localStorage.getItem("showPreferences");
     const favCategory = localStorage.getItem("category");
-    console.log(showPreferences);
     axios
       .get(
         `http://localhost:8000/activity/sort?sortBy=${sortBy}&order=${order}`
       )
       .then((response) => {
-        if(!showPreferences){
+        if(showPreferences === 'true'){
           let Activities = response.data;
         Activities = Activities.sort((a, b) => {
           if (a.category === favCategory && b.category !== favCategory) {
