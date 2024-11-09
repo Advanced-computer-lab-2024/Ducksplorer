@@ -28,6 +28,7 @@ const SearchActivities = () => {
   const [activities, setActivities] = useState([]); // Displayed activities
   const [allActivities, setAllActivities] = useState([]); // Store all fetched activities
   const [searchQuery, setSearchQuery] = useState(""); // Single search input
+  const isGuest = localStorage.getItem('guest') === 'true';
 
   // Fetch all activities when component mounts
   useEffect(() => {
@@ -95,7 +96,6 @@ const SearchActivities = () => {
 
   return (
     <>
-      <TouristSidebar />
       <Box
         sx={{
           p: 6,
@@ -105,7 +105,7 @@ const SearchActivities = () => {
           marginLeft: 40,
         }}
       >
-        <Button component={Link} to="/touristDashboard" variant="contained" color="primary" style={{ marginBottom: '20px' }}>
+        <Button component={Link} to={isGuest ? "/guestDashboard" : "/touristDashboard"} variant="contained" color="primary" style={{ marginBottom: '20px' }}>
           Back to Dashboard
         </Button>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>

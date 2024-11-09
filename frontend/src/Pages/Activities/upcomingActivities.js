@@ -4,12 +4,13 @@ import { message } from 'antd';
 import { Box, Button, Table, Typography, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import CurrencyConvertor from '../../Components/CurrencyConvertor';
-
+import { Link } from 'react-router-dom';
 const UpcomingActivities = () => {
   const [activities, setActivities] = useState([]);
   const navigate = useNavigate();  
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState('EGP');
+  const isGuest = localStorage.getItem('guest') === 'true';
 
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
@@ -30,6 +31,12 @@ const UpcomingActivities = () => {
   const handleBooking = async (activityId) => {
     try {
       const userJson = localStorage.getItem('user');
+      const isGuest = localStorage.getItem('guest') === 'true';
+        if(isGuest){
+             message.error("User is not logged in, Please login or sign up.");
+             navigate('/guestDashboard');
+             return;
+            }
       if (!userJson) {
         message.error("User is not logged in.");
         return null;
@@ -64,6 +71,10 @@ const UpcomingActivities = () => {
           <Typography variant="h4">Upcoming Activities</Typography>
         </Box>
         <TableContainer component={Paper}>
+        <Link to={isGuest ? "/guestDashboard" : "/touristDashboard"} className='text-sm hover:underline hover:text-blue-600 mt-2 inline-block'>
+  Back
+</Link>
+
           <Table>
             <TableHead>
               <TableRow>
