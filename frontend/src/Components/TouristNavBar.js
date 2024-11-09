@@ -55,6 +55,7 @@ function TouristNavBar() {
       setImage("level3.png");
     }
   }
+  
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };

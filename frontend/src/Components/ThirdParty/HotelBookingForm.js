@@ -208,7 +208,7 @@ const HotelBookingForm = () => {
         </Grid>
       </Box>
     </Container>
-    {hotels.length > 0 && <HotelCards sx={{overflowY: 'auto'}} hotels={hotels} />}
+    {hotels.length > 0 && <HotelCards sx={{overflowY: 'auto'}} hotels={hotels} checkInDate={checkInDate} checkOutDate={checkOutDate} country={city.country} city={city.label}  adults={adults} />}
     </Container>
   );
 };

@@ -28,6 +28,8 @@ const BookingDetails = () => {
   const [currencyIt, setCurrencyIt] = useState('EGP');
   const [exchangeRatesft, setExchangeRatesft] = useState({});
   const [currencyft, setCurrencyft] = useState('EUR');
+  const [exchangeRatesht, setExchangeRatesht] = useState({});
+  const [currencyht, setCurrencyht] = useState('USD');
   const [activityBookings, setActivityBookings] = useState([]);
   const [itineraryBookings, setItineraryBookings] = useState([]);
   const [flightsBookings, setFlightsBookings] = useState([]);
@@ -48,19 +50,23 @@ const BookingDetails = () => {
     setExchangeRatesft(rates);
     setCurrencyft(selectedCurrency);
   };
+  
+  const handleCurrencyChangeht = (rates, selectedCurrency) => {
+    setExchangeRatesht(rates);
+    setCurrencyht(selectedCurrency);
+  };
 
   const fetchBookings = async () => {
     try {
       const response = await axios.get(`http://localhost:8000/touristRoutes/booking`, {
         params: { tourist: userName }
       });
-
       // Set activity and itinerary bookings separately
       setActivityBookings(response.data.activities || []);
       setItineraryBookings(response.data.itineraries || []);
-      console.log(response.data)
       setFlightsBookings(response.data.flights || []);
       setHotelsBookings(response.data.hotels || []);
+      console.log("HotelsData",response.data.hotels);
       setTransportationBookings(response.data.transportation || []);
       // setCurrencyft(response.data.flights[0].currency);
       console.log(response.data)
@@ -295,6 +301,46 @@ const BookingDetails = () => {
             </TableBody>
           </Table>
         </TableContainer>
+          
+          {/* Hotels Table */}
+        <Typography variant="h5" gutterBottom>Hotels</Typography>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Hotel Name</TableCell>
+                <TableCell>Location</TableCell>
+                <TableCell>Price<CurrencyConvertor onCurrencyChange={handleCurrencyChangeht} /></TableCell>
+                <TableCell>Check In Date</TableCell>
+                <TableCell>Check Out Date</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {hotelsBookings.map((hotel) => (
+                <TableRow key={hotel._id}>
+                  <TableCell>{hotel.hotelName}</TableCell>
+                  <TableCell>{hotel.city}{"  ,"}{hotel.country}</TableCell>
+                  <TableCell>
+                    {(hotel.price * (exchangeRatesht[currencyht] || 1)).toFixed(2)} {currencyht}
+                  </TableCell>
+                  <TableCell>{new Date(hotel.checkInDate).toLocaleDateString()}</TableCell>
+                  <TableCell>{new Date(hotel.checkOutDate).toLocaleDateString()}</TableCell>
+                  {/* <TableCell><Rating value={hotel.rating} precision={0.1} readOnly /></TableCell> */}
+                  <TableCell>
+                    <Tooltip title="Delete Hotel">
+                      <IconButton color="error" aria-label="delete category" onClick={() => handleDeleteThirdPartyBooking('hotel',hotel.price,hotel)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+
       </div>
     </>
   );

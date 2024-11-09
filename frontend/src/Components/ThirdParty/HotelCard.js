@@ -5,31 +5,65 @@ import axios from 'axios';
 import CurrencyConverterGeneral from './CurrencyConverterGeneral'; // Adjust the import path as needed
 import PersonIcon from '@mui/icons-material/Person';
 import PaymentIcon from '@mui/icons-material/Payment';
+import { message } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
-const HotelCards = ({ hotels }) => {
+const HotelCards = ({ hotels , checkInDate, checkOutDate , adults , city , country }) => {
   const initialCurrency = 'USD';
   const [currency, setCurrency] = useState('USD');
   const [exchangeRates, setExchangeRates] = useState({});
+  const navigate = useNavigate();
 
-  console.log(hotels);
+  //console.log(hotels);
 
   useEffect(() => {
     setCurrency(initialCurrency);
   }, [initialCurrency]);
 
-  const handleBooking = async (hotel) => {
+  const handleBooking = async (hotelBooking) => {
     try {
-      const response = await axios.post('/api/bookFlight', { hotel });
-      if (response.status === 200) {
-        alert('Booking successful!');
+      const userJson = localStorage.getItem('user');
+      if (!userJson) {
+        message.error("User is not logged in.");
+        return null;
+      }
+      const user = JSON.parse(userJson);
+      if (!user || !user.username) {
+        message.error("User information is missing.");
+        return null;
+      }
+      const nameBefore = hotelBooking.title.match(/^(\d+)\.\s*(.*)$/);
+          // const titleNumber = titleMatch ? titleMatch[1] : '';
+      const name = nameBefore ? nameBefore[2] : hotelBooking.title;
+      
+      
+      const type = 'hotel';
+      const hotel = {
+        price : hotelBooking.priceForDisplay ? convertPrice(parseFloat(hotelBooking.priceForDisplay.replace('$', '')), 'USD') :(hotelBooking.priceSummary && extractPrice(hotelBooking.priceSummary) ),
+        currency :'USD',
+        checkInDate : checkInDate,
+        checkOutDate : checkOutDate,
+        hotelName :name,
+        city : city,
+        country: country,
+        rating : hotelBooking.bubbleRating.rating,
+      }
+
+      localStorage.setItem('hotel', JSON.stringify(hotel));
+      localStorage.setItem('type', type);
+
+      console.log(hotel);
+
+      if (hotelBooking) {
+        navigate('/payment');
       } else {
-        alert('Booking failed. Please try again.');
+        message.error("Please Choose a hotel.");
       }
     } catch (error) {
-      console.error('Error booking hotel:', error);
-      alert('An error occurred while booking the hotel. Please try again.');
+      console.error("Error:", error);
+      message.error("An error occurred while booking.");
     }
-  };
+};
 
   const handleImageSwipe = (index, direction) => {
     const newHotels = hotels;

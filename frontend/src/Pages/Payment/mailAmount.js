@@ -19,8 +19,8 @@ function PaymentPage() {
   const navigate = useNavigate();
   const [chosenDate, setChosenDate] = useState(null);
   const [flightsData,setFlight] = useState(JSON.parse(localStorage.getItem('flight')));
-  const [hotelsData, setHotel] = useState(null);
-  const [transportationsData, setTransportation] = useState(null);
+  const [hotelsData, setHotel] = useState(JSON.parse(localStorage.getItem('hotel')));
+  const [transportationsData, setTransportation] = useState(JSON.parse(localStorage.getItem('transportation')));
 
 
   const handleVisaSubmit = async (e) => {
@@ -178,7 +178,7 @@ function PaymentPage() {
         console.log("flight price",flightsData.price )
       }
       else if (itineraryOrActivity === 'hotel'&& hotel) {
-        setHotel(hotel);
+        //setHotel(hotel);
       }
       else if (itineraryOrActivity === 'transportation' && transportation) {
         setTransportation(transportation);
@@ -430,7 +430,45 @@ function PaymentPage() {
                 />
               </Form>
             </div>
-          ) : null
+          ) : type === 'hotel' ? (
+            <div>
+              <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
+                <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                  <Title level={3}>Booked Details</Title>
+                  <p><strong>Hotel Details:</strong> </p>
+                  <p><strong>Price:</strong> {hotelsData.price}{'  '}{hotelsData.currency}</p>
+                  <p><strong>Check In Date:</strong> {hotelsData.checkInDate}</p>
+                  <p><strong>Check Out Date:</strong> {hotelsData.checkOutDate}</p>
+                  <p><strong>Hotel Name:</strong> {hotelsData.hotelName}</p>
+                  <p><strong>Location:</strong> {hotelsData.city}{"  ,"}{hotelsData.country}</p>
+                </Space>
+              </Card>
+              <Form>
+              <h1>Enter Payment Details</h1>
+
+              <p>Email</p>
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value * 100)}
+                required
+                readOnly
+                style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+              />
+              <p>Amount</p>
+              <input
+                type="number"
+                placeholder="Amount"
+                value={hotelsData.price}
+                onChange={(e) => setAmount(e.target.value * 100)}
+                required
+                readOnly
+                style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+              />
+          </Form>
+            </div>
+           ) : null
         ) : (
           <p>Loading booking details...</p>
         )}
