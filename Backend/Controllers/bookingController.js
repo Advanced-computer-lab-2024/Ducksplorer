@@ -4,11 +4,12 @@ const Activity = require("../Models/activityModel.js");
 const Itinerary = require("../Models/itineraryModel.js");
 const ActivityBooking = require('../Models/activityBookingModel.js');
 const ItineraryBooking = require('../Models/itineraryBookingModel');
+const ThirdPartyBookings = require('../Models/ThirdPartyBookingsModel.js');
 
 
 const createBooking = async (req, res) => {
     const { user } = req.params;
-    const { activityId, itineraryId, type } = req.body;
+    const { activityId, itineraryId ,hotel, transporation, flight , type } = req.body;
 
     try {
         const tourist = await Tourist.findOne({ userName: user });
@@ -65,6 +66,49 @@ const createBooking = async (req, res) => {
                 points: tourist.points
             });
         }
+        else if(type === 'hotel' && hotel){
+            const newHotelBooking = await ThirdPartyBookings.create({
+                user: tourist.userName,
+                hotels: hotel
+            });
+            await newHotelBooking.save();
+            return res.status(200).json({
+                message: "Hotel booking created successfully",
+                booking: newHotelBooking,
+                status: 200,
+                wallet: tourist.wallet,
+                points: tourist.points
+            });
+        }
+        else if(type === 'transporation' && transporation){
+            const newTransporationBooking = await ThirdPartyBookings.create({
+                user: tourist.userName,
+                transporations: transporation
+            });
+            await newTransporationBooking.save();
+            return res.status(200).json({
+                message: "Transporation booking created successfully",
+                booking: newTransporationBooking,
+                status: 200,
+                wallet: tourist.wallet,
+                points: tourist.points
+            });
+        }
+        else if(type === 'flight' && flight){
+            const newFlightBooking = await ThirdPartyBookings.create({
+                user: tourist.userName,
+                flights: flight
+            });
+            await newFlightBooking.save();
+            return res.status(200).json({
+                message: "Flight booking created successfully",
+                booking: newFlightBooking,
+                status: 200,
+                wallet: tourist.wallet,
+                points: tourist.points
+            });
+        }
+
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
@@ -184,15 +228,35 @@ const getMyBookings = async (req, res) => {
             user: tourist
         }).populate('itinerary');
 
+        //fetch third party bookings
+        const thirdPartyBookings = await ThirdPartyBookings.find({user: tourist});
+
         // Check if there are no bookings
-        if (!activityBookings.length && !itineraryBookings.length) {
+        if (!activityBookings.length && !itineraryBookings.length && !thirdPartyBookings.length) {
             return res.status(404).json({ message: "No bookings found." });
         }
+        console.log("ThirdPartyBookings",thirdPartyBookings);
+
+        // Extract flights, hotels, and transportations from third party bookings
+        const flights = thirdPartyBookings
+        .filter(booking => booking.flights)
+        .map(booking => booking.flights);
+
+        const hotels = thirdPartyBookings
+        .filter(booking => booking.hotels)
+        .map(booking => booking.hotels);
+
+        const transportations = thirdPartyBookings
+        .filter(booking => booking.transportations)
+        .map(booking => booking.transportations);
 
         // Return bookings as a response
         res.status(200).json({
             activities: activityBookings,
-            itineraries: itineraryBookings
+            itineraries: itineraryBookings,
+            flights: flights,
+            hotels: hotels,
+            transporations: transportations
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -203,15 +267,19 @@ const getMyBookings = async (req, res) => {
 const cancelMyBooking = async (req, res) => {
     const { user } = req.params;
     const { type, itemId, price } = req.body;
+    const { booking } = req.body.booking;
     const currentDate = new Date();
+    console.log("requestBody", req.body);
+
 
     try {
         const tourist = await Tourist.findOne({ userName: user });
         if (!tourist) {
             return res.status(404).json({ message: 'Tourist not found' });
         }
-
+        if(itemId){
         const itemObjectId = new mongoose.Types.ObjectId(itemId);
+        }
         let itemDate;
 
         if (type === 'activity') {
@@ -262,7 +330,46 @@ const cancelMyBooking = async (req, res) => {
 
             await ItineraryBooking.deleteOne({ user, itinerary: itemObjectId });
 
-        } else {
+        } else if (type === 'flight') {
+            const thirdPartyBooking = await ThirdPartyBookings.findOne({ user });
+            if (!thirdPartyBooking) {
+                return res.status(404).json({ message: 'Flight not found in the booking' });
+            }
+
+            await ThirdPartyBookings.deleteOne(
+                { user },
+                {  flights: booking  });
+            
+            tourist.wallet += parseFloat(price);
+            await tourist.save();
+
+        } else if (type === 'hotel') {
+            const thirdPartyBooking = await ThirdPartyBookings.findOne({ user });
+            if (!thirdPartyBooking) {
+                return res.status(404).json({ message: 'Hotel not found in the booking' });
+            }
+
+            await ThirdPartyBookings.deleteOne(
+                { user },
+                {  hotels: booking  });
+
+            tourist.wallet += parseFloat(price);
+            await tourist.save();
+            
+        } else if (type === 'transportation') {
+            const thirdPartyBooking = await ThirdPartyBookings.findOne({ user });
+            if (!thirdPartyBooking) {
+                return res.status(404).json({ message: 'Transportation not found in the booking' });
+            }
+
+            await ThirdPartyBookings.deleteOne(
+                { user },
+                {  transportations: booking  });
+
+            tourist.wallet += parseFloat(price);
+            await tourist.save();
+        }
+        else {
             return res.status(400).json({ message: 'Invalid type for cancellation. Must be "activity" or "itinerary".' });
         }
 

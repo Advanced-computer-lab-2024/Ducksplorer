@@ -7,6 +7,9 @@ const { Title } = Typography
 const { Option } = Select;
 
 function PaymentPage() {
+  const flight = localStorage.getItem('flight');
+  const hotel = localStorage.getItem('hotel');
+  const transportation = localStorage.getItem('transportation');
   const [itineraryData, setItineraryData] = useState(null);
   const [activityData, setActivityData] = useState(null);
   const [price, setPrice] = useState('');
@@ -15,6 +18,10 @@ function PaymentPage() {
   const [amount, setAmount] = useState("");
   const navigate = useNavigate();
   const [chosenDate, setChosenDate] = useState(null);
+  const [flightsData,setFlight] = useState(JSON.parse(localStorage.getItem('flight')));
+  const [hotelsData, setHotel] = useState(null);
+  const [transportationsData, setTransportation] = useState(null);
+
 
   const handleVisaSubmit = async (e) => {
     if (itineraryData && !chosenDate) {
@@ -93,7 +100,7 @@ function PaymentPage() {
         const bookingResponse = await fetch(`http://localhost:8000/touristRoutes/booking/${userName}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ activityId: activityId, itineraryId: itineraryId, type: itineraryOrActivity }),
+          body: JSON.stringify({ activityId: activityId, itineraryId: itineraryId, type: itineraryOrActivity , flight:flightsData, hotel:hotelsData, transportation:transportationsData, date: chosenDate, price: price}),
         });
         const bookingResult = await bookingResponse.json();
         console.log("Booking Result", bookingResult);
@@ -129,6 +136,7 @@ function PaymentPage() {
       const itineraryOrActivity = localStorage.getItem('type');
       const activityId = localStorage.getItem('activityId');
       const itineraryId = localStorage.getItem('itineraryId');
+      
 
       if (!itineraryOrActivity) {
         message.error("Type information is missing.");
@@ -161,7 +169,20 @@ function PaymentPage() {
         } else {
           message.error("Failed to retrieve activity details.");
         }
-      } else {
+      }
+      else if (itineraryOrActivity === 'flight') {
+        //setFlight(flight);
+        console.log("Flight sada data fetched:", flight); // Debugging
+        console.log("FlightData fetched:", flightsData); // Debugging
+        console.log("flight price",flightsData.price )
+      }
+      else if (itineraryOrActivity === 'hotel'&& hotel) {
+        setHotel(hotel);
+      }
+      else if (itineraryOrActivity === 'transportation' && transportation) {
+        setTransportation(transportation);
+      }
+       else {
         message.error("Failed to retrieve details");
       }
       //console.log(response);
@@ -203,7 +224,7 @@ function PaymentPage() {
     }}>
 
       <div>
-        {itineraryData || activityData ? (
+        {itineraryData || activityData || flightsData || hotelsData || transportationsData ? (
           type === 'itinerary' ? (
             <div>
               <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
@@ -363,6 +384,49 @@ function PaymentPage() {
                   style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
                 />
 
+              </Form>
+            </div>
+          ): type === 'flight' ? (
+            <div>
+              <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
+                <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                  <Title level={3}>Booked Details</Title>
+                  <p><strong>Flight Details:</strong> </p>
+                  <p><strong>Price:</strong> {flightsData.price}{'  '}{flightsData.currency}</p>
+                  <p><strong>Departure Date:</strong> {flightsData.departureDate}</p>
+                  <p><strong>Arrival Date:</strong> {flightsData.arrivalDate}</p>
+                  <p><strong>Company Name:</strong> {flightsData.companyName}</p>
+                  <p><strong>Departure City:</strong> {flightsData.departureCity}</p>
+                  <p><strong>Departure Country:</strong> {flightsData.departureCountry}</p>
+                  <p><strong>Arrival City:</strong> {flightsData.arrivalCity}</p>
+                  <p><strong>Arrival Country:</strong> {flightsData.arrivalCountry}</p>
+                  {/* <p><strong>Departure Airport:</strong> {flightsData.departureAirport}</p>
+                  <p><strong>Arrival Airport:</strong> {flightsData.arrivalAirport}</p> */}
+                </Space>
+              </Card>
+              <Form>
+                <h1>Enter Payment Details</h1>
+
+                <p>Email</p>
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value * 100)}
+                  required
+                  readOnly
+                  style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                />
+                <p>Amount</p>
+                <input
+                  type="number"
+                  placeholder="Amount"
+                  value={flightsData.price}
+                  onChange={(e) => setAmount(e.target.value * 100)}
+                  required
+                  readOnly
+                  style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                />
               </Form>
             </div>
           ) : null

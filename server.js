@@ -67,6 +67,7 @@ app.use("/advertiserAccount", advertiserAccountRoutes);
 app.use("/sellerAccount", sellerAccountRoutes);
 app.use('/file', fileRoutes);
 app.use('/payment', paymentRoutes);
+app.use("/", bookingThirdPartyRoutes);
 // app.use('/api/documents', documentRoutes);app.use("/", bookingThirdPartyRoutes);
 app.use("/tourGuideRate", tourGuideRateRoutes);
 app.use("/tourGuideComment", tourGuideCommentRoutes);

@@ -212,7 +212,7 @@ function TouristNavBar() {
               </IconButton>
             </Tooltip>
             <Tooltip title="Book Itineraries">
-              <IconButton onClick={() => handleNavigation("itineraries")}>
+              <IconButton onClick={() => handleNavigation("viewUpcomingItinerary")}>
                 <TempleBuddhistIcon />
                 <Typography textAlign="center" marginRight={1}>
                   Itineraries
