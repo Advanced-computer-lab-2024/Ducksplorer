@@ -337,9 +337,9 @@ const updateLevel = async (userName, points) => {
             return;
         }
 
-        if (points >= 10000 && points < 50000) {
+        if (points >= 100000 && points < 500000) {
             user.level = 2;
-        } else if (points >= 50000) {
+        } else if (points >= 500000) {
             user.level = 3;
         } else {
             user.level = 1;
