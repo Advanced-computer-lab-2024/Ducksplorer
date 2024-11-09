@@ -36,7 +36,7 @@ function TouristNavBar() {
   //call the getImage in a useEffect
   const userName = JSON.parse(localStorage.getItem("user")).username;
   React.useEffect(() => {
-  const storedPicture = localStorage.getItem('profilePicture');
+    const storedPicture = localStorage.getItem('profilePicture');
     getImage(userName);
     // console.log("image", image);
   })
@@ -204,7 +204,7 @@ function TouristNavBar() {
             }}
           >
             <Tooltip title="Book Activities">
-              <IconButton onClick={() => handleNavigation("activities")}>
+              <IconButton onClick={() => handleNavigation("activity/sortFilter")}>
                 <FestivalIcon />
                 <Typography textAlign="center" marginRight={3}>
                   Activities
@@ -255,16 +255,16 @@ function TouristNavBar() {
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open Account settings">
-            <IconButton
-  onClick={handleOpenUserMenu}
-  sx={{ p: 0, ml: 4, width: 40, height: 40 }}
->
-  <img
-    src={storedPicture || "duckAvatar.png"}  // Check if profilePicture exists, else use default
-    alt="Avatar"
-    style={{ width: 40, height: 40, borderRadius: "50%" }}
-  />
-</IconButton>
+              <IconButton
+                onClick={handleOpenUserMenu}
+                sx={{ p: 0, ml: 4, width: 40, height: 40 }}
+              >
+                <img
+                  src={storedPicture || "duckAvatar.png"}  // Check if profilePicture exists, else use default
+                  alt="Avatar"
+                  style={{ width: 40, height: 40, borderRadius: "50%" }}
+                />
+              </IconButton>
 
             </Tooltip>
             <Menu

@@ -3,11 +3,13 @@ import { useState, useEffect } from "react";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
 import axios from "axios";
 import { message } from "antd";
+import { useNavigate } from "react-router-dom";
 
 
 export default function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
+  const navigate = useNavigate();
 
   const [message1, setMessage1] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -128,6 +130,7 @@ export default function CheckoutForm() {
         const itineraryId = localStorage.getItem('itineraryId');
         const itineraryOrActivity = localStorage.getItem('type');
         const amount = localStorage.getItem('price');
+        const chosenDate = localStorage.getItem('date')
 
         console.log("Creating booking with userName:", userName, "activityId:", activityId, "itineraryId:", itineraryId);
 
@@ -135,7 +138,7 @@ export default function CheckoutForm() {
         const bookingResponse = await fetch(`http://localhost:8000/touristRoutes/booking/${userName}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ activityId: activityId, itineraryId: itineraryId, type: itineraryOrActivity }),
+          body: JSON.stringify({ activityId: activityId, itineraryId: itineraryId, type: itineraryOrActivity, date: chosenDate }),
         });
 
         if (!bookingResponse.ok) {
@@ -166,6 +169,7 @@ export default function CheckoutForm() {
         console.log("Points Result", pointsResult);
 
       }
+      navigate('/myBookings');
     } catch (error) {
       setMessage1("Failed to confirm OTP.");
       console.error("Error:", error);

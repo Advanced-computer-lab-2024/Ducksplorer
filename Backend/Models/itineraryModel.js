@@ -58,10 +58,6 @@ const itinerarySchema = new Schema({
         type: [String],
         required: false
     },
-    chosenDate: {
-        type: Date,
-        required: false
-    },
     flag: {
         type: Boolean,
         required: false

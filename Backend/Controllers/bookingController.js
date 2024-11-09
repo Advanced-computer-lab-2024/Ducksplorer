@@ -9,7 +9,7 @@ const ThirdPartyBookings = require('../Models/ThirdPartyBookingsModel.js');
 
 const createBooking = async (req, res) => {
     const { user } = req.params;
-    const { activityId, itineraryId ,hotel, transporation, flight , type } = req.body;
+    const { activityId, itineraryId ,hotel, transporation, flight , type, date } = req.body;
 
     try {
         const tourist = await Tourist.findOne({ userName: user });
@@ -51,7 +51,7 @@ const createBooking = async (req, res) => {
             const newItineraryBooking = await ItineraryBooking.create({
                 user: tourist.userName,
                 itinerary: itinerary._id,
-                chosenDate: itinerary.date,
+                chosenDate: date,
                 chosenPrice: itinerary.price
             });
             await newItineraryBooking.save();
@@ -468,8 +468,7 @@ const redeemPoints = async (req, res) => {
         let myWallet = tourist.wallet;
         if (myPoints > addPoints) {
             myPoints -= addPoints;
-            myWallet += addPoints / 100;
-            //myWallet = myWallet + 100;
+            myWallet = myWallet + 100;
             tourist.points = myPoints;
             tourist.wallet = myWallet;
             await tourist.save();

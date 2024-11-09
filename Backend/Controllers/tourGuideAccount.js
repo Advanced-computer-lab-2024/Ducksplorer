@@ -47,6 +47,41 @@ const updateTourGuideDetails = async (req, res) => {
   }
 };
 
+
+// Controller to remove the URL from the schema
+const removeFileUrl = async (req, res) => {
+  const { userName, fileType } = req.body; // Expecting the userName and fileType ('nationalId' or 'certificates')
+
+  if (!userName || !fileType) {
+    return res.status(400).json({ message: 'User Name and File Type are required' });
+  }
+
+  try {
+    // Determine which field to update
+    const updateField = fileType === 'nationalId' ? 'nationalId' : 'certificates';
+
+    // Find the TourGuide document by userName and update the specific field to null or ''
+    const updatedTourGuide = await TourGuide.findOneAndUpdate(
+      { userName: userName },
+      { $set: { [updateField]: '' } }, // Remove the file URL
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedTourGuide) {
+      return res.status(404).json({ message: 'Tour guide not found' });
+    }
+
+    res.status(200).json({
+      message: `${fileType} URL removed successfully`,
+      updatedTourGuide
+    });
+  } catch (error) {
+    console.error('Error removing file URL:', error);
+    res.status(500).json({ message: 'Error removing file URL' });
+  }
+};
+
+
 const deleteMyTourGuideAccount = async (req, res) => {
   try {
     // Get tour guide username from the route parameters
@@ -95,5 +130,6 @@ const deleteMyTourGuideAccount = async (req, res) => {
 module.exports = {
   getTourGuideDetails,
   updateTourGuideDetails,
-  deleteMyTourGuideAccount,
+  removeFileUrl,
+  deleteMyTourGuideAccount
 };

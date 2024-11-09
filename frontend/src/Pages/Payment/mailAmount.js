@@ -100,7 +100,7 @@ function PaymentPage() {
         const bookingResponse = await fetch(`http://localhost:8000/touristRoutes/booking/${userName}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ activityId: activityId, itineraryId: itineraryId, type: itineraryOrActivity , flight:flightsData, hotel:hotelsData, transportation:transportationsData, date: chosenDate, price: price}),
+          body: JSON.stringify({ activityId: activityId, itineraryId: itineraryId, type: itineraryOrActivity,  flight:flightsData, hotel:hotelsData, transportation:transportationsData, date: chosenDate, price: price}),
         });
         const bookingResult = await bookingResponse.json();
         console.log("Booking Result", bookingResult);
@@ -114,6 +114,7 @@ function PaymentPage() {
       } else {
         message.error("Error creating payment. Not enough money in the wallet.");
       }
+    navigate('/myBookings');
     } catch (error) {
       console.error("Payment initiation failed:", error);
       message.error("Error creating payment. Not enough money in the wallet.");
@@ -305,7 +306,7 @@ function PaymentPage() {
                 </Form.Item>
                 <p><strong>Selected Date and Time:</strong> {chosenDate ? new Date(chosenDate).toLocaleString() : 'None selected'}</p>
 
-                <h1>Enter Payment Details</h1>
+                <h1>Payment Details</h1>
 
                 <p>Email</p>
                 <input
@@ -361,7 +362,7 @@ function PaymentPage() {
                 </Space>
               </Card>
               <Form>
-                <h1>Enter Payment Details</h1>
+                <h1>Payment Details</h1>
 
                 <p>Email</p>
                 <input

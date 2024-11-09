@@ -8,9 +8,7 @@ import FileUpload from '../../Components/FileUpload';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Iconify from '../../Components/TopNav/iconify.js';
-import pp from '../../Components/pp';
-import ProfilePictureUpload from '../../Components/pp';
-
+import DownloadButton from '../../Components/DownloadButton';
 const TourGuideEditProfile = () => {
   const [tourGuideDetails, setTourGuideDetails] = useState({
     userName: '',
@@ -19,13 +17,53 @@ const TourGuideEditProfile = () => {
     mobileNumber: '',
     yearsOfExperience: '',
     previousWork: '',
-    profilePicture: '',
-    files:[]
+    nationalId: '',
+    certificates: '',
+    photo: '',
   });
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
 
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [nationalIdFiles, setNationalIdFiles] = useState(null);
+  const [certificatesFiles, setCertificatesFiles] = useState(null);
+
+  const handlePhotoUpload = async () => {
+    const photoFile = document.getElementById('photo').files[0];
+    const formData = new FormData();
+    formData.append('file', photoFile);
+  
+    try {
+      message.success('Uploading photo...');
+      const response = await axios.post('http://localhost:8000/api/documents/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setTourGuideDetails(prevDetails => ({ ...prevDetails, photo: response.data.url }));
+      message.success('Photo uploaded successfully');
+    } catch (error) {
+      message.error('Error uploading photo');
+    }
+  };
+  
+  const handlePhotoDelete =  () => {
+    try {
+      setTourGuideDetails(prevDetails => ({ ...prevDetails, photo: '' }));
+      message.success('Photo deleted successfully');
+    } catch (error) {
+      message.error('Error deleting photo');
+    }
+  };
+
+  const handleNationalIdSelect = async () => {
+    const nationalIdFile = document.getElementById('nationalIdUpload').files[0];
+    tourGuideDetails.nationalId = await handleFileUpload(nationalIdFile);
+  };
+
+  const handleCertificatesSelect = async () => {
+    const certificatesFile = document.getElementById('certificateUpload').files[0];
+    console.log("before the call",certificatesFile);
+    tourGuideDetails.certificates = await handleFileUpload(certificatesFile);
+  };
 
   useEffect(() => {
     const userJson = localStorage.getItem('user');
@@ -39,31 +77,16 @@ const TourGuideEditProfile = () => {
           message.success('Tour Guide details fetched successfully');
           setTourGuideDetails({ ...response.data });
         })
+        // console.log('National ID URL:', tourGuideDetails.nationalIdUrl);
+        // console.log('Certificates URL:', tourGuideDetails.certificatesUrl);
+
       }
       catch(error){
           message.error('Error fetching tour guide details');
           console.error('Error fetching tour guide details:', error);
         }
-        if (selectedFiles.length > 0) {
-          const fileUploadData = new FormData();
-          fileUploadData.append('userName', userName);
-         selectedFiles.forEach(file => fileUploadData.append('files', file));  // Append each file object directly
-         // Log each file appended for document upload
-           for (let pair of fileUploadData.entries()) {
-               console.log(`${pair[0]}: ${pair[1].name || pair[1]}`);
-           }
-
-           try {
-               axios.post('http://localhost:8000/file/user/upload/documents', fileUploadData, {
-                   headers: { 'Content-Type': 'multipart/form-data' },
-               });
-               message.success('Documents uploaded successfully!');
-           } catch (error) {
-               console.error('Error uploading documents:', error);
-               message.error('Document upload failed: ' + (error.response?.data?.message || error.message));
-           }
-       }
-    }
+        
+  }
 
 
   }, []);
@@ -72,6 +95,37 @@ const TourGuideEditProfile = () => {
     setIsEditing(true);
   };
 
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setTourGuideDetails(prevDetails => ({
+      ...prevDetails,
+      [name]: value,
+    }));
+  };
+  
+  const handleFileUpload = async (file) => {
+      const formData = new FormData();
+      formData.append('file', file);
+      console.log("gowa upload doc2",formData);
+      try {
+        message.success("uploading file please wait");
+        const response = await axios.post('http://localhost:8000/api/documents/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        message.success('File uploaded successfully');
+        console.log(response.data.url);
+        console.log('Document uploaded successfully:', response.data);
+        return response.data.url; // Return the file URL
+      } catch (error) {
+        message.error('Error uploading document');
+        console.log("fel catch",error.response.data);
+        console.error('Error uploading document for tourguide:', error);
+        return null; // Return null if upload fails
+      }
+  };
   const handleSaveClick = () => {
     axios.put('http://localhost:8000/tourGuideAccount/editaccount', tourGuideDetails)
       .then(response => {
@@ -83,23 +137,62 @@ const TourGuideEditProfile = () => {
         console.error('Error updating tour guide details:', error);
       });
   };
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setTourGuideDetails(prevDetails => ({
-      ...prevDetails,
-      [name]: value,
-    }));
+  // File delete handler
+  const handleFileDelete = async (fileType) => {
+    const userName = tourGuideDetails.userName; // assuming userName is stored in tourGuideDetails
+  
+    if (!userName) {
+      message.error('Username is missing');
+      return;
+    }
+  
+    try {
+      await axios.post(`http://localhost:8000/tourGuideAccount/removeFileUrl`, {
+        userName: userName,
+        fileType: fileType
+      });
+      message.success('File deleted successfully');
+  
+      // Remove the file URL from the state
+      setTourGuideDetails(prevDetails => ({
+        ...prevDetails,
+        [fileType]: '',
+      }));
+    } catch (error) {
+      message.error('Error deleting file');
+      console.error('Error deleting file:', error);
+    }
   };
-
+  
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
       <Link to="/tourGuideDashboard"> Back </Link>
       <Paper elevation={4} sx={{ p: 4, width: 500, borderRadius: 3, boxShadow: '0px 8px 24px rgba(0,0,0,0.2)' }}>
         <Box sx={{ textAlign: 'center', mb: 3 }}>
-          <Avatar sx={{ bgcolor: 'primary.main', width: 64, height: 64, mx: 'auto' }}>
-            <AccountCircleIcon fontSize="large" />
-          </Avatar>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Avatar src={tourGuideDetails.photo} sx={{ width: 80, height: 80 }} />
+          {isEditing && (
+            <>
+              <input
+                type="file"
+                id="photo"
+                onChange={handlePhotoUpload}
+                style={{ display: 'none' }}
+              />
+              <label htmlFor="photo">
+                <Button component="span" color="primary" variant="contained">
+                  Upload New Photo
+                </Button>
+              </label>
+              {tourGuideDetails.photo && (
+                <Button onClick={handlePhotoDelete} color="secondary" variant="contained">
+                  Delete Photo
+                </Button>
+              )}
+            </>
+          )}
+        </Box>
+
           <Typography variant="h5" sx={{ mt: 2 }}>
             Edit Tour Guide Profile
           </Typography>
@@ -180,28 +273,33 @@ const TourGuideEditProfile = () => {
             multiline
             rows={3}
           />
-          <lable>Certificates</lable>
-          <FileUpload />
-          {/* <TextField
-          label="certificates" // Singular label
-          name="certificates" // This should match the updated state field
-          value={tourGuideDetails.certificates} // Access the pictures string directly
-          onChange={handleChange}
-          InputProps={{
-            readOnly: !isEditing,
-          }}
-         /> */}
-          <lable>Photo</lable>
-          <FileUpload />
-          {/* <TextField
-          label="photo" // Singular label
-          name="photo" // This should match the updated state field
-          value={tourGuideDetails.photo} // Access the pictures string directly
-          onChange={handleChange}
-          InputProps={{
-            readOnly: !isEditing,
-          }}
-         /> */}
+          <Box disabled={!isEditing} sx={{ display: 'flex', gap: 2, mt: 3 }}>
+          <label>National ID</label>
+          <DownloadButton fileUrl={tourGuideDetails.nationalId} label="Download National ID" />
+          {isEditing && (
+            <>
+          <Button onClick={() => handleFileDelete('nationalId')}>Delete National ID</Button>
+          <FileUpload          
+            inputId="nationalIdUpload"
+            onFileSelect={handleNationalIdSelect}            />
+          </>
+)}
+          </Box>
+
+        
+        <Box disabled={!isEditing} sx={{ display: 'flex', gap: 2, mt: 3 }}> 
+          <label>Certificates</label>
+          <DownloadButton fileUrl={tourGuideDetails.certificates} label="Download Certificates" />
+          {isEditing && (
+            <>
+          <Button onClick={() => handleFileDelete('certificates')}>Delete Certificates</Button>
+          <FileUpload
+              inputId="certificateUpload"
+              onFileSelect={handleCertificatesSelect}            />
+              </>
+        )}
+          </Box>
+          
         </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
