@@ -2,6 +2,7 @@ const express = require("express");
 const { getProducts, findProduct, filterProducts, sortProducts } = require('../Controllers/Products/TAScontroller');
 const { createBooking, viewMyUpcomingBookings, viewMyPastBookings, viewDesiredActivity, viewDesiredItinerary, getMyBookings, cancelMyBooking, receiveLoyaltyPoints, getLevel, updateLevel,
     redeemPoints, payVisa, payWallet } = require("../Controllers/bookingController");
+    
 
 const router = express.Router();
 
@@ -20,6 +21,7 @@ router.route("/viewDesiredActivity/:activityId").get(viewDesiredActivity);
 router.route("/viewDesiredItinerary/:itineraryId").get(viewDesiredItinerary);
 router.patch("/payWallet/:userName", payWallet);
 router.patch("/payVisa/:userName", payVisa);
+
 //router.patch("/loyalty/:name/:userName",receiveLoyaltyPoints);
 
 
