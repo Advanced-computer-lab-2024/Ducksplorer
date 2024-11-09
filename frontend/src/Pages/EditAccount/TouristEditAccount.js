@@ -70,7 +70,7 @@ const EditProfile = () => {
           // }));
           axios.get(`http://localhost:8000/touristAccount/viewaccount/${userName}`)
             .then(response => {
-              message.success('Tourist details fetched successfully');
+              message.success('Tourist details updated successfully');
               const formattedDOB = response.data.DOB.split('T')[0];
               setTouristDetails({
                 ...response.data,
@@ -229,6 +229,16 @@ const EditProfile = () => {
               variant="outlined"
               fullWidth
             />
+            <TextField
+            label="Points"
+            name="points"
+            value={touristDetails.points}
+            onChange={handleChange}
+            InputProps={{
+              readOnly: true,
+            }}
+          />  
+          <Button variant="outlined" onClick={handleRedeemClick}>Redeem points</Button> 
           </Box>
 
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
