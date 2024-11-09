@@ -282,10 +282,10 @@ function TouristNavBar() {
               <MenuItem onClick={handleCloseUserMenu}>
                 <IconButton
                   component="a"
-                  href="/logout"
+                  href="/login"
                   sx={{ textAlign: "center", p: 0.5 }}
                 >
-                  <LockIcon sx={{ fontSize: 20, color: "blue" }} />
+                  <LockIcon sx={{ fontSize: 20, color: "gold" }} />
                   <Typography sx={{ ml: 1 }} variant="body2">
                     Logout
                   </Typography>
