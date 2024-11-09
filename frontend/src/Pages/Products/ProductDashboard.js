@@ -34,6 +34,7 @@ const sidebarButtonStyle = {
 const ProductDashboard = () => {
   // State for managing the dropdown menu
   const [anchorEl, setAnchorEl] = useState(null);
+  // const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate(); 
 
   const handleFilterClick = (event) => {
@@ -43,6 +44,11 @@ const ProductDashboard = () => {
   const handleFilterClose = () => {
     navigate('/FilterProducts');
   };
+
+  // Handler for search input change
+  // const handleSearchChange = (event) => {
+  //   setSearchQuery(event.target.value);
+  // };
 
   // Placeholder functions for button actions
   const handleAddProduct = () => {
@@ -95,7 +101,6 @@ const ProductDashboard = () => {
 
   return (
     <div >
-      {/* Search Container at the Top */}
       <Button onClick={handleBackButtonClick}>Back</Button>
       <div style={searchContainerStyle}>
         <Stack spacing={2}>
@@ -115,15 +120,22 @@ const ProductDashboard = () => {
           Search
         </Button>
        
-        <div style={{ maxHeight: '400px', overflowY: 'auto', padding: '10px', marginTop: '20px' }}>
+        <div style={{ maxHeight: '400px', overflowY: 'visible', padding: '10px', marginTop: '20px' }}>
         {/* Render the filtered products using the ProductCard component */}
-        {products.length > 0 ? (
-          products.map((product) => (
-            <ProductCard key={product._id} product={product} />
+        {products.filter(product => product.isArchived !== true).length > 0 ? (
+        products
+          .filter(product => product.isArchived !== true)
+          .map((product) => (
+            <div
+              key={product._id}
+              style={{ position: "relative", marginBottom: "20px" }}
+            >
+              <ProductCard product={product} />
+            </div>
           ))
         ) : (
-          <Typography variant="body1" style={{ marginTop: '20px' }}>
-            No products found under the specified name.
+          <Typography variant="body1" style={{ marginTop: "20px" }}>
+            No products found.
           </Typography>
         )}
       </div>

@@ -259,3 +259,7 @@ button[type="submit"]:hover {
 #isOpenDiv:hover {
   border-color: black !important;
 }
+
+::-webkit-file-upload-button {
+  display: none;
+}

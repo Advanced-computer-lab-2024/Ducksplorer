@@ -38,7 +38,18 @@ function SearchItineraries() {
 
     //default rendering of all itineraries
     useEffect(() => {
-        axios.get('http://localhost:8000/itinerary/')
+        const showPreferences = localStorage.getItem("showPreferences");
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        const username = user?.username;
+        const role = user?.role;
+        axios.get('http://localhost:8000/itinerary/', {
+            params: {
+                showPreferences: showPreferences.toString(),
+                username,
+                role
+            }
+          })
             .then(response => {
                 if (id === undefined) {
                     setItineraries(response.data);

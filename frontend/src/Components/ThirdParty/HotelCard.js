@@ -131,7 +131,7 @@ const HotelCards = ({ hotels }) => {
               <PersonIcon /> 2
               </IconButton>
               <IconButton aria-label="booking" sx={{ fontSize: 15 }}>
-              <PaymentIcon sx={{ color: 'green' }} /> {hotel.priceForDisplay ? convertPrice(parseFloat(hotel.priceForDisplay.replace('$', '')), 'USD') :hotel.priceSummary && extractPrice(hotel.priceSummary) || 'N/A'} {currency}
+              <PaymentIcon sx={{ color: 'green' }} /> {hotel.priceForDisplay ? convertPrice(parseFloat(hotel.priceForDisplay.replace('$', '')), 'USD') :(hotel.priceSummary && extractPrice(hotel.priceSummary) )|| 'N/A'} {currency}
               </IconButton>
               </div>
               <Button variant="contained" color="primary" fullWidth onClick={() => handleBooking(hotel)}>

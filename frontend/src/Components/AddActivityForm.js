@@ -40,7 +40,7 @@ const AddActivityForm = () => {
         duration: storedDuration,
         tags: storedTags,
       } = JSON.parse(storedFormData);
-
+      
       setName(storedName || "");
       setDate(storedDate || "");
       setIsOpen(storedIsOpen || false);
@@ -168,8 +168,8 @@ const AddActivityForm = () => {
             }}
           >
             <div
-              className="trial-btn text-white cursor-pointer"
-              style={{
+               className="trial-btn text-white"
+                style={{
                 textAlign: "center",
                 backgroundColor: "black",
                 borderRadius: "1cap",
@@ -185,6 +185,8 @@ const AddActivityForm = () => {
                 style={{
                   alignSelf: "center",
                   fontSize: 30,
+                  cursor: "default",
+
                 }}
               >
                 Add Activity
@@ -304,7 +306,6 @@ const AddActivityForm = () => {
                 border: "none",
                 borderRadius: "4px",
                 fontSize: "16px",
-                cursor: "pointer",
               }}
             >
               Add Activity

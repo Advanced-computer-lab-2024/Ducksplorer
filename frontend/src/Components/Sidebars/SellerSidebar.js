@@ -19,8 +19,12 @@ import { Link } from 'react-router-dom';
 // import PersonAddIcon from '@mui/icons-material/PersonAdd'; 
 // import CategoryIcon from '@mui/icons-material/Category';
 // import LabelIcon from '@mui/icons-material/Label';
+// import EventNoteIcon from '@mui/icons-material/EventNote';
+// import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+// import MuseumIcon from '@mui/icons-material/Museum';
 import PersonIcon from '@mui/icons-material/Person';
-import DeleteIcon from '@mui/icons-material/Delete';
+// import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 
 const drawerWidth = 300;
@@ -85,7 +89,7 @@ const SellerSidebar = () => {
 
           <ListItem button component={Link} to="/ProductDashboard">
             <ListItemIcon>
-              <PersonIcon />
+              <ShoppingCartIcon />
             </ListItemIcon>
             <ListItemText primary="Manage Products" />
           </ListItem>
