@@ -247,10 +247,14 @@ const EditProfile = () => {
           <Box disabled={!isEditing} sx={{ display: 'flex', gap: 2, mt: 3 }}>
           <label>Uploads:</label>
           <DownloadButton fileUrl={sellerDetails.uploads} label="Download uploaded file" />
+          {isEditing && (
+            <>
           <Button onClick={() => handleFileDelete('uploads')}>Delete uploaded file</Button>
           <FileUpload          
             inputId="uploads"
             onFileSelect={handleUploadsSelect}            />
+            </>
+          )}
           </Box>
         </Box>
 

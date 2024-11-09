@@ -8,7 +8,6 @@ import FileUpload from '../../Components/FileUpload';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Iconify from '../../Components/TopNav/iconify.js';
-import ProfilePictureUpload from '../../Components/pp';
 import DownloadButton from '../../Components/DownloadButton';
 const TourGuideEditProfile = () => {
   const [tourGuideDetails, setTourGuideDetails] = useState({
@@ -277,21 +276,30 @@ const TourGuideEditProfile = () => {
           <Box disabled={!isEditing} sx={{ display: 'flex', gap: 2, mt: 3 }}>
           <label>National ID</label>
           <DownloadButton fileUrl={tourGuideDetails.nationalId} label="Download National ID" />
+          {isEditing && (
+            <>
           <Button onClick={() => handleFileDelete('nationalId')}>Delete National ID</Button>
           <FileUpload          
             inputId="nationalIdUpload"
             onFileSelect={handleNationalIdSelect}            />
+          </>
+)}
           </Box>
 
-        <Box disabled={!isEditing} sx={{ display: 'flex', gap: 2, mt: 3 }}>
+        
+        <Box disabled={!isEditing} sx={{ display: 'flex', gap: 2, mt: 3 }}> 
           <label>Certificates</label>
           <DownloadButton fileUrl={tourGuideDetails.certificates} label="Download Certificates" />
+          {isEditing && (
+            <>
           <Button onClick={() => handleFileDelete('certificates')}>Delete Certificates</Button>
           <FileUpload
               inputId="certificateUpload"
               onFileSelect={handleCertificatesSelect}            />
+              </>
+        )}
           </Box>
-
+          
         </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>

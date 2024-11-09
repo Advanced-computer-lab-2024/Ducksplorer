@@ -107,6 +107,7 @@ function PaymentPage() {
       } else {
         message.error("Error creating payment. Not enough money in the wallet.");
       }
+    navigate('/myBookings');
     } catch (error) {
       console.error("Payment initiation failed:", error);
       message.error("Error creating payment. Not enough money in the wallet.");
