@@ -45,7 +45,7 @@ const TouristAllProducts = () => {
   };
 
   const handleViewAllProducts = () => {
-    navigate('/AllProducts');
+    navigate('/touristProducts');
   };
 
   const handleSearchProduct = () => {
@@ -77,8 +77,12 @@ const TouristAllProducts = () => {
 
   const handleSortProducts = ()=> {
     navigate('/SortProducts');
-  }
+  };
 
+  const handleMyPurchases = () => {
+    navigate('/myPurchases');
+  };
+  
   const handleBackButtonClick = () => {
     window.history.back();
   };
@@ -105,15 +109,22 @@ const TouristAllProducts = () => {
           Search
         </Button>
         
-        <div style={{ maxHeight: '400px', overflowY: 'auto', padding: '10px', marginTop: '20px' }}>
+        <div style={{ maxHeight: '400px', overflowY: 'visible', padding: '10px', marginTop: '20px' }}>
         {/* Render the filtered products using the ProductCard component */}
-        {products.length > 0 ? (
-          products.map((product) => (
-            <ProductCard key={product._id} product={product} />
+        {products.filter(product => product.isArchived !== true).length > 0 ? (
+        products
+          .filter(product => product.isArchived !== true)
+          .map((product) => (
+            <div
+              key={product._id}
+              style={{ position: "relative", marginBottom: "20px" }}
+            >
+              <ProductCard product={product} />
+            </div>
           ))
         ) : (
-          <Typography variant="body1" style={{ marginTop: '20px' }}>
-            No products found under the specified name.
+          <Typography variant="body1" style={{ marginTop: "20px" }}>
+            No products found.
           </Typography>
         )}
       </div>
@@ -171,7 +182,14 @@ const TouristAllProducts = () => {
         >
           Sort Products
         </Button>
-        
+        <Button
+            fullWidth
+            variant="contained"
+            onClick={handleMyPurchases}
+            style={sidebarButtonStyle}
+          >
+            My Purchases
+          </Button>
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}

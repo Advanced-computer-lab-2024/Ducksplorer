@@ -3,11 +3,12 @@ const express = require("express");
 const mongoose = require("mongoose");
 const app = express(); //el kol fel kol
 const PORT = process.env.PORT || 8000; //tells us to get port from env file or law ma3refsh yegebha it's 3000
-const cors = require('cors');
+const cors = require("cors");
 const path = require('path');
-const touristRoutes = require('./Backend/Routes/touristRoutes.js');
-const sellerRoutes = require('./Backend/Routes/sellerRoutes.js');
-const adminProductRoutes = require('./Backend/Routes/adminRoutes.js');
+const touristRoutes = require("./Backend/Routes/touristRoutes.js");
+const sellerRoutes = require("./Backend/Routes/sellerRoutes.js");
+const adminProductRoutes = require("./Backend/Routes/adminRoutes.js");
+const multer = require("multer");
 const signUpRoutes = require("./Backend/Routes/signUpRoutes.js");
 const adminRoutes = require("./Backend/Routes/Admin/AdminRoutes.js");
 const touristAccountRoutes = require("./Backend/Routes/TouristAccountRoutes.js");
@@ -17,10 +18,24 @@ const activityRoutes = require("./Backend/Routes/activityRoutes.js");
 const categoryRoutes = require("./Backend/Routes/categoryRoutes.js");
 const fileRoutes = require("./Backend/Routes/fileRoutes.js")
 const paymentRoutes = require('./Backend/Routes/paymentRoutes.js');
+const userRoutes = require("./Backend/Routes/userRoutes.js");
+const bodyParser = require("body-parser");
 const bookingThirdPartyRoutes = require("./Backend/Routes/ThirdParty/bookingRoutes.js");
 const documentRoutes = require('./Backend/Routes/documentRoutes');
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');const museumRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/museumRoutes.js");
+const historicalPlaceRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceRoutes.js");
+const historicalPlaceTagRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceTagRoutes.js");
+const museumTagRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/museumTagRoutes.js");
+const itineraryRoutes = require("./Backend/Routes/itineraryRoutes.js");
+const tourGuideAccountRoutes = require("./Backend/Routes/TourGuideAccountRoutes.js");
+const advertiserAccountRoutes = require("./Backend/Routes/AdvertiserAccountRoutes.js");
+const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js");
+const transportationBookingThirdPartyRoutes = require("./Backend/Routes/ThirdParty/transportationBookingRoutes.js");
+const complaintRoutes = require("./Backend/Routes/complaintRoutes.js");
+const uploadImage = require("./Backend/Middleware/uploadImageMW.js");
  app.use(cors());
+app.use(express.json({ limit: "25mb" }));
+app.use(express.urlencoded({ limit: "25mb" }));
 
 //__dirname = path.dirname(fileURLToPath(import.meta.url)); // Set __dirname
 app.use("/uploads", (req, res, next) => {
@@ -29,20 +44,30 @@ app.use("/uploads", (req, res, next) => {
 }, express.static(path.join(__dirname, "uploads")));
 
 app.use(bodyParser.json());
+//app.use("/uploads", express.static("uploads"));
+
 
 console.log(process.env.PORT);
 app.use(express.json());
 
+app.use(bodyParser.urlencoded({ extended: true }));
 
+console.log(process.env.PORT);
+app.use(express.json());
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Folder where images will be stored
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Generate a unique filename with the correct extension
+  },
+});
 
-const museumRoutes = require('./Backend/Routes/museumHistoricalPlaceRoutes/museumRoutes.js')
-const historicalPlaceRoutes = require('./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceRoutes.js')
-const historicalPlaceTagRoutes = require('./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceTagRoutes.js')
-const museumTagRoutes = require('./Backend/Routes/museumHistoricalPlaceRoutes/museumTagRoutes.js')
-const itineraryRoutes = require("./Backend/Routes/itineraryRoutes.js")
-const tourGuideAccountRoutes = require("./Backend/Routes/TourGuideAccountRoutes.js")
-const advertiserAccountRoutes = require("./Backend/Routes/AdvertiserAccountRoutes.js")
-const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js")
+app.post("/uploadImage", (req, res) => {
+  uploadImage(req.body.image)
+    .then((url) => res.send(url))
+    .catch((err) => res.status(500).send(err.message));
+});
 const tourGuideRateRoutes = require("./Backend/Routes/tourGuideRateRoutes.js")
 const tourGuideCommentRoutes = require("./Backend/Routes/tourGuideCommentRoutes.js")
 
@@ -67,19 +92,23 @@ app.use("/advertiserAccount", advertiserAccountRoutes);
 app.use("/sellerAccount", sellerAccountRoutes);
 app.use('/file', fileRoutes);
 app.use('/payment', paymentRoutes);
+app.use("/complaint", complaintRoutes);
+app.use("/users", userRoutes);
 app.use("/", bookingThirdPartyRoutes);
 app.use('/api/documents', documentRoutes);
 // app.use("/", bookingThirdPartyRoutes);
 app.use("/tourGuideRate", tourGuideRateRoutes);
 app.use("/tourGuideComment", tourGuideCommentRoutes);
-
+app.use("/transportBook", transportationBookingThirdPartyRoutes);
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header("Access-Control-Allow-Origin", "*"); // Allow requests from any origin
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
   next();
 });
-
 
 const connectToMongoDB = async () => {
   try {
@@ -92,5 +121,5 @@ const connectToMongoDB = async () => {
 
 app.listen(PORT, () => {
   connectToMongoDB();
-  console.log(`Server Running on Port ${PORT}`)
+  console.log(`Server Running on Port ${PORT}`);
 });

@@ -66,8 +66,15 @@ const RUDActivity = () => {
 
   // Handle fetching activities
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/activity/")
+    const showPreferences = localStorage.getItem("showPreferences");
+    const favCategory = localStorage.getItem("category");
+        axios
+    .get("http://localhost:8000/activity/", {
+      params: {
+        showPreferences,
+        favCategory
+      }
+    })
       .then((response) => {
         setActivities(response.data);
       })

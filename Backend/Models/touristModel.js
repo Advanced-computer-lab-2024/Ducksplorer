@@ -61,7 +61,21 @@ const touristSchema = new Schema(
     points:{
       type: Number,
       default:0
+    },
+    favouriteCategory : {
+      required : false,
+      type : String,
+      default : "Category"
+    },
+    tagPreferences : {
+        type : Array,
+        required : false
+    },
+    historicalPlacestags : {
+        type : Array,
+        required : false
     }
+  
 },{timestamps: true})
 
 

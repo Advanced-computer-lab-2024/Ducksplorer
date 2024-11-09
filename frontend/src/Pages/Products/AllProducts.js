@@ -6,58 +6,56 @@ import ProductCard from '../../Components/Products/ProductCard'; // Import the P
 
 
 function AllProducts() {
-  const [products,setProducts] = useState([]);
+  const [products, setProducts] = useState([]);
 
-  const handleAllProducts = async () =>{
-    try{
-      const response = await axios.get('http://localhost:8000/adminRoutes/getproducts');
-      if (response.status === 200) {
-        message.success('Products fetched successfully');
-        setProducts(response.data); // Store the filtered products
-      } else {
-        message.error('Failed to filter products');
-      }
-    } catch (error) {
-      message.error('An error occurred: ' + error.message);
-    }
-    
-  };
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/adminRoutes/getproducts")
+      .then((response) => {
+        message.success("Products fetched successfully");
+        setProducts(response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the products!", error);
+      });
+  }, []);
 
   const handleBackButtonClick = () => {
     window.history.back();
   };
 
-
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: 'auto' }}>
-        <Button onClick={handleBackButtonClick}>Back</Button>
+    <div
+      className="tester"
+      style={{
+        padding: "20px",
+        maxWidth: "1600px",
+        margin: "auto",
+      }}
+    >
+      <Button onClick={handleBackButtonClick}>Back</Button>
 
-      <Button
-          variant="contained"
-          color="primary"
-          onClick={handleAllProducts}
-        >
-          Products
-        </Button>
-
-      <div style={{ maxHeight: '400px', overflowY: 'auto', padding: '10px', marginTop: '20px' }}>
+      <div
+        style={{
+          maxHeight: "400px",
+          overflowY: "visible",
+          padding: "10px",
+          marginTop: "20px",
+        }}
+      >
         {/* Render the filtered products using the ProductCard component */}
         {products.length > 0 ? (
           products.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))
         ) : (
-          <Typography variant="body1" style={{ marginTop: '20px' }}>
-            No products found.
+          <Typography variant="body1" style={{ marginTop: "20px" }}>
+            No products found under the specified name.
           </Typography>
         )}
       </div>
     </div>
   );
-
-
-
 }
-
 
 export default AllProducts;

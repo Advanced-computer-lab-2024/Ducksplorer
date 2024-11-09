@@ -1,13 +1,12 @@
-import React from 'react'
-import FormSection from '../Components/FormSection';
-const Signup = () => {
+import React from "react";
+import FormSection from "../Components/FormSection";
 
+const Signup = () => {
   return (
     <div>
-      <FormSection/>
+      <FormSection />
     </div>
-  )
-}
+  );
+};
 
-export default Signup
-
+export default Signup;

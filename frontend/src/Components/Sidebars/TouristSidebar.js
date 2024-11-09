@@ -23,7 +23,7 @@ import WidgetsIcon from "@mui/icons-material/Widgets";
 import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
 import BookIcon from '@mui/icons-material/Book'; // Import an icon for "My Past Bookings"
-import axios from 'axios';
+import axios from 'axios';import ReportIcon from '@mui/icons-material/Report'; // Import icon for "My Complaints"
 
 const drawerWidth = 300;
 
@@ -86,7 +86,7 @@ const TouristSidebar = () => {
             <ListItemIcon>
               <PersonIcon />
             </ListItemIcon>
-            <ListItemText primary="Edit Profile" />
+            <ListItemText primary="Profile" />
           </ListItem>
 
           <ListItem button component={Link} to="/viewAllTourist">
@@ -143,6 +143,13 @@ const TouristSidebar = () => {
               <BookIcon />
             </ListItemIcon>
             <ListItemText primary="My Past Bookings" />
+          </ListItem>
+          {/* New My Complaints button */}
+          <ListItem button component={Link} to="/myComplaints">
+            <ListItemIcon>
+              <ReportIcon />
+            </ListItemIcon>
+            <ListItemText primary="My Complaints" />
           </ListItem>
         </List>
         <Divider />

@@ -154,13 +154,23 @@ const ViewUpcomingItinerary = () => {
 
     //get upcoming itineraries
     useEffect(() => {
-        axios.get('http://localhost:8000/itinerary/upcoming')
-            .then(response => {
-                setItineraries(response.data);
-            })
-            .catch(error => {
-                console.error('There was an error fetching the itineraries!', error);
-            });
+        const showPreferences = localStorage.getItem('showPreferences');
+        const user = JSON.parse(localStorage.getItem("user"));
+        const username = user?.username;
+        const role = user?.role;
+        axios.get('http://localhost:8000/itinerary/upcoming',{
+            params:{
+                showPreferences: showPreferences.toString(),
+                username,
+                role
+            }
+        })
+          .then(response => {
+            setItineraries(response.data);
+          })
+          .catch(error => {
+            console.error('There was an error fetching the itineraries!', error);
+          });
     }, []);
 
 

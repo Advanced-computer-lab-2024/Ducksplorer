@@ -9,7 +9,7 @@
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^6.1.2",
     "@mui/lab": "^6.0.0-beta.14",
-    "@mui/material": "^6.1.2",
+    "@mui/material": "^6.1.4",
     "@mui/x-date-pickers": "^7.22.1",
     "@stripe/react-stripe-js": "^2.8.1",
     "@stripe/stripe-js": "^4.9.0",
@@ -25,7 +25,8 @@
     "busboy": "^1.6.0",
     "bytes": "^3.1.2",
     "call-bind": "^1.0.7",
-    "cloudinary": "^1.41.3",
+    "cloudinary": "^2.5.1",
+    //"cloudinary": "^1.41.3",
     "combined-stream": "^1.0.8",
     "content-disposition": "^0.5.4",
     "content-type": "^1.0.5",
@@ -123,6 +124,7 @@
     "twilio": "^5.3.5",
     "type-is": "^1.6.18",
     "unpipe": "^1.0.0",
+    "uploadthing": "^7.2.0",
     "utils-merge": "^1.0.1",
     "vary": "^1.1.2",
     "webidl-conversions": "^7.0.0",
@@ -135,5 +137,8 @@
   },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "tailwindcss": "^3.4.14"
+  }
 }

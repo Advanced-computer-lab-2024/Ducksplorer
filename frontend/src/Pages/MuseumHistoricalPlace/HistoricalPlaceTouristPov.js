@@ -39,7 +39,18 @@ const HistoricalPlaceTouristPov = () => {
 
   // Fetch all museums on component mount
   useEffect(() => {
-    axios.get(`http://localhost:8000/historicalPlace/getAllHistoricalPlaces`)
+    const showPreferences = localStorage.getItem("showPreferences");
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const username = user?.username;
+    const role = user?.role;
+    axios.get(`http://localhost:8000/historicalPlace/getAllHistoricalPlaces`, {
+      params: {
+          showPreferences: showPreferences.toString(),
+          username,
+          role
+      }
+    })
       .then(response => {
         if (id === undefined) {
           setHistoricalPlaces(response.data);
