@@ -10,6 +10,7 @@ import LabelIcon from '@mui/icons-material/Label';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import WidgetsIcon from "@mui/icons-material/Widgets";
+import ReportIcon from '@mui/icons-material/Report'; // Icon for Complaints
 
 const drawerWidth = 300;
 
@@ -66,6 +67,15 @@ const Sidebar = () => {
             </ListItemIcon>
             <ListItemText primary="Categories" />
           </ListItem>
+          
+          {/* Complaints Button */}
+          <ListItem button component={Link} to="/admin/complaints">
+            <ListItemIcon>
+              <ReportIcon />
+            </ListItemIcon>
+            <ListItemText primary="Complaints" />
+          </ListItem>
+
           <ListItem button component={Link} to="/preferenceTags">
             <ListItemIcon>
               <LabelIcon />

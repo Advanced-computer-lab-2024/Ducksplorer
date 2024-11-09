@@ -86,7 +86,6 @@ const FlightBookingForm = () => {
         originCode: origin.code,
         destinationCode: destination.code,
         dateOfDeparture: formattedDepartureDate,
-        seats
       };
 
       try {
@@ -182,7 +181,7 @@ const FlightBookingForm = () => {
         </Grid>
       </Box>
     </Container>
-    {flights.length > 0 && <FlightsCards sx={{overflowY: 'auto'}}flights={flights} originCity={origin.label} destinationCity={destination.label} originCountry={origin.country} destinationCountry={destination.country} departureDate={departureDate} />}
+    {flights.length > 0 && <FlightsCards sx={{overflowY: 'auto'}}flights={flights} origin={origin} destination={destination} departureDate={departureDate} />}
     </Container>
   );
 };

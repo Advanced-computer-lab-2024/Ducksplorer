@@ -13,6 +13,8 @@ L.Icon.Default.mergeOptions({
 
 const ClinicLocation = () => {
   const [locationAddress, setLocationAddress] = useState("");
+  // const [locationNeighborhood, setLocationNeighborhood] = useState("");
+  // const [locationRegion, setLocationRegion] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddressLoading, setIsAddressLoading] = useState(false);
   const mapContainer = useRef(null);
