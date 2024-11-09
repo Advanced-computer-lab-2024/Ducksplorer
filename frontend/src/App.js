@@ -63,7 +63,7 @@ import PaymentPage from "./Pages/Payment/mailAmount.js";
 import ViewAllItineraries from "./Pages/Admin/ViewAllItineraries.js";
 import ViewAllActivities from "./Pages/Admin/ViewAllActivities.js";
 import PastBookingDetails from "./Pages/Bookings/myPastBookings.js";
-
+import GuestDashboard from "./Pages/Dashboards/GuestDashboard.js";
 
 
 function App() {
@@ -83,7 +83,7 @@ function App() {
           <Route path="/tourGuideDashboard" element={<TourGuideDashboard />} />
           <Route path="/touristDashboard" element={<TouristDashboard />} />
           <Route path="/tourGuideEditAccount" element={<TourGuideEditProfile />} />
-
+          <Route path="/guestDashboard" element={<GuestDashboard />} />
           <Route path="/governorDashboard" element={<GovernorDashboard />} />
           <Route path="/createMuseum" element={<CreateMuseum />} />
           <Route path="/createHistoricalPlace" element={<CreateHistoricalPlace />} />

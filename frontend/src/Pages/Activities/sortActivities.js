@@ -58,6 +58,12 @@ const SortActivities = () => {
   const handleBooking = async (activityId) => {
     try {
       const userJson = localStorage.getItem('user');
+      const isGuest = localStorage.getItem('guest') === 'true';
+            if(isGuest){
+                message.error("User is not logged in, Please login or sign up.");
+                navigate('/guestDashboard');
+                return;
+            }
       if (!userJson) {
         message.error("User is not logged in.");
         return null;

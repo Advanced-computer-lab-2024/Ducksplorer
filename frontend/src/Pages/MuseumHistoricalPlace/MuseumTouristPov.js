@@ -25,7 +25,8 @@ const MuseumTouristPov = () => {
   const { id } = useParams();
 
   const [Museums, setMuseums] = useState([]);
-  
+  const isGuest = localStorage.getItem('guest') === 'true';
+
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState('EGP');
 
@@ -90,7 +91,7 @@ const MuseumTouristPov = () => {
 
   return (
     <>
-      <Button component={Link} to="/touristDashboard" variant="contained" color="primary" style={{ marginBottom: '20px' }}>
+   <Button component={Link} to={isGuest ? "/guestDashboard" : "/touristDashboard"} variant="contained" color="primary" style={{ marginBottom: '20px' }}>
         Back to Dashboard
       </Button>
       <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'visible', height: '100vh' }}>

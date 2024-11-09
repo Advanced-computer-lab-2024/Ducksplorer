@@ -31,6 +31,7 @@ const ViewUpcomingItinerary = () => {
     const [priceRange, setPriceRange] = useState([0, 5000]);
     const [tags, setTags] = useState([]);  // Tags selected by the user
     const [allTags, setAllTags] = useState([]);  // All available tags from backend
+    const isGuest = localStorage.getItem('guest') === 'true';
 
     const [exchangeRates, setExchangeRates] = useState({});
     const [currency, setCurrency] = useState('EGP');
@@ -210,6 +211,12 @@ const ViewUpcomingItinerary = () => {
     const handleBooking = async (itineraryId) => {
         try {
             const userJson = localStorage.getItem('user');
+            const isGuest = localStorage.getItem('guest') === 'true';
+            if(isGuest){
+                message.error("Can't book as a guest, Please login or sign up.");
+                navigate('/guestDashboard');
+                return;
+            }
             if (!userJson) {
                 message.error("User is not logged in.");
                 return null;
@@ -240,7 +247,9 @@ const ViewUpcomingItinerary = () => {
 
     return (
         <div>
-            <Link to="/touristDashboard"> Back </Link>
+<Link to={isGuest ? "/guestDashboard" : "/touristDashboard"} className='text-sm hover:underline hover:text-blue-600 mt-2 inline-block'>
+  Back
+</Link>
             <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'visible', height: '100vh' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
                     <Typography variant="h4">

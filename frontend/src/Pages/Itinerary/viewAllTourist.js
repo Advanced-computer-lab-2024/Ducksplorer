@@ -17,6 +17,7 @@ function SearchItineraries() {
 
     const [searchTerm, setSearchTerm] = useState(''); // Single search term
     const [itineraries, setItineraries] = useState([]);
+    const isGuest = localStorage.getItem('guest') === 'true';
 
     //filtering consts
     const [minPrice, setMinPrice] = useState('');
@@ -222,7 +223,9 @@ function SearchItineraries() {
 
     return (
         <Box sx={{ padding: '20px', maxWidth: '1200px', margin: 'auto', display: 'flex', flexDirection: 'column', overflowY: 'visible', height: '100vh' }}>
-            <Link to="/touristDashboard"> Back </Link>
+<Link to={isGuest ? "/guestDashboard" : "/touristDashboard"} className='text-sm hover:underline hover:text-blue-600 mt-2 inline-block'>
+  Back
+</Link>
             <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
                 <Typography variant="h4">
                     Available itineraries
