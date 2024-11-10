@@ -3,6 +3,7 @@ import React from "react";
 import SortActivities from "./sortActivities";
 import { Button } from "@mui/material";
 import { useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import FilterActivities from "./filterActivities";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 import Help from "../../Components/HelpIcon";
@@ -10,10 +11,19 @@ import Help from "../../Components/HelpIcon";
 function SortFilterActivity() {
   const [sort, setSort] = useState(true);
   const [filter, setFilter] = useState(false);
+  const isGuest = localStorage.getItem("guest") === "true";
 
   return (
     <div>
-      <TouristSidebar />
+      <Button
+        component={Link}
+        to={isGuest ? "/guestDashboard" : "/touristDashboard"}
+        variant="contained"
+        color="primary"
+        style={{ marginBottom: "20px" }}
+      >
+        Back to Dashboard
+      </Button>
       <div style={{ marginLeft: 300 }}>
         <Button
           style={{

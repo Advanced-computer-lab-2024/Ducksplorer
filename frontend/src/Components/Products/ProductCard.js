@@ -32,7 +32,6 @@ const ProductCard = ({
   const location = useLocation();
   const isGuest = localStorage.getItem("guest") === "true";
 
-
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
@@ -292,11 +291,7 @@ const ProductCard = ({
               variant="contained"
               color="secondary"
               onClick={() => handlePurchase(product)}
-              style={{
-                position: "absolute",
-                right: "60px",
-                bottom: "50px",
-              }} // Place the button at the bottom-right corner
+              style={{ position: "relative", left: "75%" }} // Place the button at the bottom-right corner
             >
               Purchase
             </Button>

@@ -21,7 +21,7 @@ const searchItineraries = async (req, res) => {
         const itineraries = await itineraryModel.find(searches);
 
         if (!itineraries.length) {
-            return res.status(404).json({ error: "No itineraries found matching the search criteria" });
+            return res.status(200).json({ error: "No itineraries found matching the search criteria" });
         }
 
         res.status(200).json(itineraries);
