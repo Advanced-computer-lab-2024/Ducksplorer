@@ -61,6 +61,7 @@ function MyPurchases() {
                   productID={product._id}
                   showRating={true}
                   showReview={true}
+                  showAverageRating={false}
                 />
               </div>
             ))

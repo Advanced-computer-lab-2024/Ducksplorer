@@ -68,6 +68,7 @@ function TouristProducts() {
             overflowY: "visible",
             padding: "10px",
             marginTop: "20px",
+            gridGap: "40px",
           }}
         >
           {/* Render the filtered products using the ProductCard component */}
@@ -78,7 +79,13 @@ function TouristProducts() {
               .map((product) => (
                 <div
                   key={product._id}
-                  style={{ position: "relative", marginBottom: "20px" }}
+                  style={{
+                    position: "relative",
+                    marginBottom: "20px",
+                    height: "100%",
+                    width: "100%",
+                    maxHeight: "100%",
+                  }}
                 >
                   <ProductCard product={product} showRating={false} />
                   {!isGuest && (
