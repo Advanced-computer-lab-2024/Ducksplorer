@@ -52,7 +52,10 @@ const MyComplaints = () => {
   }
 
   return (
-    <Container maxWidth="md" sx={{ mt: 145, mb: 4 }}>
+    <Container
+      maxWidth="md"
+      sx={{ mt: 1, mb: 4, overflowY: "visible", height: "100vh" }}
+    >
       <Typography
         variant="h4"
         align="center"

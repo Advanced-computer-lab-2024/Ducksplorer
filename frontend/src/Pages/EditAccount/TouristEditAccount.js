@@ -200,13 +200,24 @@ const EditProfile = () => {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box
+      sx={{
+        display: "flex",
+        height: "100vh",
+      }}
+    >
       <TouristNavBar />
-      <Box sx={{ p: 3 }}>
+      <Box sx={{ height: "100vh", p: 3 }}>
         <Link to="/touristDashboard">Back to Dashboard</Link>
       </Box>
       <Box
-        sx={{ flexGrow: 1, p: 4, display: "flex", justifyContent: "center" }}
+        sx={{
+          flexGrow: 1,
+          p: 4,
+          display: "flex",
+          justifyContent: "center",
+          height: "100vh",
+        }}
       >
         <Paper
           elevation={4}
@@ -215,6 +226,8 @@ const EditProfile = () => {
             width: "550px",
             borderRadius: 3,
             boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
+            height: "120vh",
+            overflow: "auto",
           }}
         >
           <Box
@@ -341,7 +354,14 @@ const EditProfile = () => {
             </Button>
           </Box>
 
-          <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              mt: 4,
+              flexDirection: "column",
+            }}
+          >
             {isEditing && (
               <>
                 <Typography variant="h6" sx={{ mt: 2 }}>
@@ -356,12 +376,19 @@ const EditProfile = () => {
                 <Typography variant="h6" sx={{ mt: 2 }}>
                   Choose Itineraries' Preference Tags
                 </Typography>
-                <Box sx={{ display: "flex", gap: 1 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 1,
+                    flexWrap: "wrap",
+                    justifyContent: "flex-start",
+                  }}
+                >
                   {allTags.map((element, index) => {
                     return (
                       <Box
                         key={element._id}
-                        sx={{ flex: "1 1 calc(25% - 16px)" }}
+                        sx={{ display: "flex", flexWrap: "wrap" }}
                       >
                         <StandAloneToggleButton
                           tags={touristDetails.tagPreferences}
@@ -376,12 +403,19 @@ const EditProfile = () => {
                 <Typography variant="h6" sx={{ mt: 2 }}>
                   Choose Museum & Historical Places' Preference Tags
                 </Typography>
-                <Box sx={{ display: "flex", gap: 1 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 1,
+                    flexWrap: "wrap",
+                    marginBottom: "20px",
+                  }}
+                >
                   {allHistoricalPlacesTags.map((element, index) => {
                     return (
                       <Box
                         key={element._id}
-                        sx={{ flex: "1 1 calc(25% - 16px)" }}
+                        sx={{ display: "flex", flexWrap: "wrap" }}
                       >
                         <TagsToggleButtons
                           tags={touristDetails.historicalPlacestags}
