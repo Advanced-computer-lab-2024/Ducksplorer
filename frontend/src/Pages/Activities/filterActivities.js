@@ -31,6 +31,7 @@ const FilterActivities = () => {
   const [averageRating, setAverageRating] = useState(0); // Set default value to 0
   const [categories, setCategories] = useState([]); // Store fetched categories
 
+
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
   // Fetch categories from backend
@@ -176,7 +177,7 @@ const FilterActivities = () => {
                 <TableRow key={activity._id}>
                   <TableCell>{activity.name}</TableCell>
                   <TableCell>
-                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {" "}
+                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
                   </TableCell>
                   <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
                   <TableCell>{activity.category}</TableCell>
