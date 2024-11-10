@@ -52,11 +52,7 @@ function ViewMyProducts() {
               key={product._id}
               style={{ position: "relative", marginBottom: "20px" }}
             >
-              <ProductCard
-                product={product}
-                showArchive={true}
-                showUnarchive={true}
-              />
+              <ProductCard product={product} showArchive={true} showUnarchive={true} productID={product._id}/>
               <Button
                 variant="contained"
                 color="secondary"

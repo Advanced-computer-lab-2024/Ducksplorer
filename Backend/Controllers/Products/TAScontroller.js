@@ -15,6 +15,20 @@ const getProducts = async (req, res) => {
     res.status(400).json({ err: err.message }); //400 ashan error aady
   }
 };
+// In your controller file, e.g., sellerController.js
+const getProductById = async (req, res) => {
+  const { productId } = req.params;
+  try {
+    const product = await productModel.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 const sortProducts = async (req, res) => {
   const sortingDecider = req.query.sortingDecider; // Get the sortingDecider from the query params
@@ -164,7 +178,6 @@ const getProductRating = async (req, res) => {
     const buyerRating = product.ratings.find(
       (rating) => rating.buyer === buyer
     );
-
     if (buyerRating) {
       res.status(200).json({ rating: buyerRating.rating });
     } else {
@@ -225,5 +238,5 @@ module.exports = {
   touristUpdateProductRating,
   getProductRating,
   touristUpdateProductReview,
-  findProductByID,
+  getProductById
 };
