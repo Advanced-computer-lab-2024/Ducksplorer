@@ -1,11 +1,12 @@
 import { React, useState, useEffect } from "react";
+import CurrencyConvertor from "../CurrencyConvertor";
 import {
   Card,
   CardContent,
   Typography,
   CardMedia,
   Button,
-  TextField
+  TextField,
 } from "@mui/material";
 import useUserRole from "../getRole";
 import { message } from "antd";
@@ -21,8 +22,15 @@ const ProductCard = ({
   showUnarchive,
   productID,
   showRating,
-  showReview
+  showReview,
 }) => {
+  const [exchangeRates, setExchangeRates] = useState({});
+  const [currency, setCurrency] = useState("EGP");
+
+  const handleCurrencyChange = (rates, selectedCurrency) => {
+    setExchangeRates(rates);
+    setCurrency(selectedCurrency);
+  };
   const role = useUserRole();
   const [archived, setArchived] = useState(product.isArchived);
   const [rating, setRating] = useState(product.rating || 0);
@@ -82,7 +90,7 @@ const ProductCard = ({
   };
 
   const handleAddReview = async () => {
-    try{
+    try {
       const response = await axios.put(
         `http://localhost:8000/touristRoutes/addReview/${productID}`,
         {
@@ -96,7 +104,7 @@ const ProductCard = ({
       } else {
         message.error("Failed to submit review");
       }
-    }catch(error){
+    } catch (error) {
       console.error(error);
     }
   };
@@ -139,24 +147,52 @@ const ProductCard = ({
 
   return (
     <Card
+      className="product-card"
       style={{
-        marginBottom: "20px",
-        maxWidth: "500px",
+        width: "450px",
+        margin: "20px",
+        height: "700px",
+        maxHeight: "900px  ",
         position: "relative",
         filter: archived ? "grayscale(100%)" : "none", // Greyscale effect when archived
         opacity: archived ? 0.6 : 1,
+        borderRadius: "3cap",
+        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
       }}
     >
       <CardMedia
         component="img"
         height="400" // Adjust the height as needed
+        width="500"
         image={product.picture}
         alt={product.name}
-        style={{ objectFit: "cover" }} // Ensure the image covers the container
+        style={{
+          objectFit: "cover",
+          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+          borderRadius: "3cap",
+        }} // Ensure the image covers the container
       />
       <CardContent>
-        <Typography variant="h5">{product.name}</Typography>
-        <Typography variant="body1">Price: ${product.price}</Typography>
+        <Typography variant="h5" style={{ fontWeight: "bold" }}>
+          {product.name}
+        </Typography>
+        {role === "Tourist" && showRating && (
+          <div key={product._id}>
+            <Rating
+              value={rating}
+              onChange={handleRatingChange}
+              icon={<StarIcon sx={{ color: "orange" }} />}
+              emptyIcon={<StarOutlineIcon />}
+              readOnly={false}
+              precision={0.5}
+            />
+          </div>
+        )}
+        <Typography variant="body1">
+          Price <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />:
+          {(product.price * (exchangeRates[currency] || 1)).toFixed(2)}{" "}
+          {currency}
+        </Typography>
         <Typography variant="body1">
           Available Quantity: {product.availableQuantity}
         </Typography>
@@ -190,24 +226,12 @@ const ProductCard = ({
         {archived && showUnarchive && (
           <Button onClick={handleUnarchive}> Unarchive </Button>
         )}
-        {role === "Tourist" && showRating && (
-          <div key={product._id}>
-            <Rating
-              value={rating}
-              onChange={handleRatingChange}
-              icon={<StarIcon sx={{ color: "orange" }} />}
-              emptyIcon={<StarOutlineIcon />}
-              readOnly={false}
-              precision={0.5}
-            />
-          </div>
-        )}
         {role === "Tourist" && showReview && (
           <Button
-          variant="contained"
-          color="primary"
-          style={{ position: "absolute", right: "10px", bottom: "10px" }} 
-          onClick={() => setShowReviewBox(!showReviewBox)}
+            variant="contained"
+            color="primary"
+            style={{ position: "absolute", right: "10px", bottom: "10px" }}
+            onClick={() => setShowReviewBox(!showReviewBox)}
           >
             {showReviewBox ? "Cancel" : "Add Review"}
           </Button>
@@ -223,7 +247,11 @@ const ProductCard = ({
               value={review}
               onChange={(e) => setReview(e.target.value)}
             />
-            <Button onClick={handleAddReview} variant="contained" color="primary">
+            <Button
+              onClick={handleAddReview}
+              variant="contained"
+              color="primary"
+            >
               Submit Review
             </Button>
           </div>

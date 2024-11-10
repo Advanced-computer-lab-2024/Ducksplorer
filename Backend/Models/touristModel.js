@@ -41,7 +41,21 @@ const touristSchema = new Schema(
         required: true,
         default: 0,
         immutable: true // This makes the field read-only
+    },
+    favouriteCategory : {
+      required : false,
+      type : String,
+      default : "Category"
+    },
+    tagPreferences : {
+        type : Array,
+        required : false
+    },
+    historicalPlacestags : {
+        type : Array,
+        required : false
     }
+  
 },{timestamps: true})
 
 

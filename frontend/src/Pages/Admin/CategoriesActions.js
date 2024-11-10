@@ -25,6 +25,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import Sidebar from "../../Components/Sidebars/Sidebar.js";
+import Help from "../../Components/HelpIcon.js";
 
 const DeleteCategory = () => {
   const [categories, setCategories] = useState([]);
@@ -259,6 +260,7 @@ const DeleteCategory = () => {
             </DialogActions>
           </Dialog>
         </Box>
+        <Help />
       </div>
     </>
   );

@@ -3,9 +3,14 @@ import { useParams } from 'react-router-dom';
 import { TextField, Button, Stack, CircularProgress, Box, Typography, Paper } from '@mui/material';
 import axios from 'axios';
 import { message } from 'antd';
+import { get } from "mongoose";
+import UploadFile from "../ProductUploadImage";
+
+let picture = "";
 
 const EditProduct = () => {
   const { productId } = useParams();
+  const [URL, setURL] = useState("");
   const [formData, setFormData] = useState({
     name: '',
     price: '',
@@ -21,6 +26,7 @@ const EditProduct = () => {
         const response = await axios.get(`http://localhost:8000/sellerRoutes/product/${productId}`);
         setFormData(response.data); 
         setLoading(false);
+        picture = response.data.picture;
       } catch (error) {
         message.error('Failed to load product data');
         setLoading(false);
@@ -34,6 +40,11 @@ const EditProduct = () => {
     setFormData(prevData => ({ ...prevData, [name]: value }));
   };
 
+  const handleUpload = (url) => {
+    setURL(url);
+    picture = url;
+  };
+
   const handleEdit = async () => {
     try {
       const response = await axios.put(`http://localhost:8000/sellerRoutes/editProduct/${productId}`, formData);
@@ -45,6 +56,9 @@ const EditProduct = () => {
     } catch (error) {
       message.error('An error occurred: ' + error.message);
     }
+  };
+  const handleBackButtonClick = () => {
+    window.history.back();
   };
 
   if (loading) {
@@ -66,8 +80,10 @@ const EditProduct = () => {
         justifyContent: 'center',
         alignItems: 'center',
         padding: 3,
+        overflowY: 'visible'
       }}
     >
+      <Button onClick={handleBackButtonClick}>Back</Button>
       <Paper
         elevation={6}
         sx={{
@@ -81,6 +97,9 @@ const EditProduct = () => {
           Edit Product
         </Typography>
 
+        <div className="trial-btn text-white cursor-pointer">
+          <span className="text-bold"></span>
+        </div>
         <Stack spacing={3} sx={{ mt: 2 }}>
           <TextField
             name="name"
@@ -109,15 +128,19 @@ const EditProduct = () => {
             variant="outlined"
             fullWidth
           />
-          <TextField
+         <div style={{ borderRadius: "3cap" }}>
+          <img
             name="picture"
-            label="Picture URL"
+            label="picture"
             type="text"
-            value={formData.picture}
-            onChange={handleInputChange}
-            variant="outlined"
-            fullWidth
+            src={picture}
+            style={{
+              maxWidth: "500px",
+              borderRadius: "3cap",
+            }}
           />
+        </div>
+        <UploadFile onUpload={handleUpload} />
           <TextField
             name="description"
             label="Description"

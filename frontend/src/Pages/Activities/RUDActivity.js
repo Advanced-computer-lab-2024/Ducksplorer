@@ -4,6 +4,8 @@ import { message } from "antd";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { calculateAverageRating } from "../../Utilities/averageRating.js";
+import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
+
 import {
   Rating,
   Checkbox,
@@ -28,6 +30,7 @@ import {
   TextField,
 } from "@mui/material";
 import StandAloneToggleButton from "../../Components/ToggleButton.js";
+import Help from "../../Components/HelpIcon.js";
 
 const RUDActivity = () => {
   const [activities, setActivities] = useState([]);
@@ -35,6 +38,8 @@ const RUDActivity = () => {
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [editingActivity, setEditingActivity] = useState(null);
 
+  const [exchangeRates, setExchangeRates] = useState({});
+  const [currency, setCurrency] = useState("EGP");
   const [formData, setFormData] = useState({
     name: "",
     price: "",
@@ -51,10 +56,22 @@ const RUDActivity = () => {
   // Ref to the form for scrolling
   const formRef = useRef(null);
 
+  const handleCurrencyChange = (rates, selectedCurrency) => {
+    setExchangeRates(rates);
+    setCurrency(selectedCurrency);
+  };
+
   // Handle fetching activities
   useEffect(() => {
+    const showPreferences = localStorage.getItem("showPreferences");
+    const favCategory = localStorage.getItem("category");
     axios
-      .get("http://localhost:8000/activity/")
+      .get("http://localhost:8000/activity/", {
+        params: {
+          showPreferences,
+          favCategory,
+        },
+      })
       .then((response) => {
         setActivities(response.data);
       })
@@ -147,7 +164,10 @@ const RUDActivity = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell>Price</TableCell>
+                <TableCell>
+                  Price
+                  <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                </TableCell>
                 <TableCell>Is open</TableCell>
                 <TableCell>Category</TableCell>
                 <TableCell>Tags</TableCell>
@@ -163,7 +183,12 @@ const RUDActivity = () => {
               {activities.map((activity) => (
                 <TableRow key={activity._id}>
                   <TableCell>{activity.name}</TableCell>
-                  <TableCell>{activity.price}</TableCell>
+                  <TableCell>
+                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(
+                      2
+                    )}{" "}
+                    {currency}
+                  </TableCell>
                   <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
                   <TableCell>{activity.category}</TableCell>
                   <TableCell>{activity.tags}</TableCell>
@@ -311,6 +336,7 @@ const RUDActivity = () => {
           </DialogActions>
         </Dialog>
       </Box>
+      <Help />
     </>
   );
 };

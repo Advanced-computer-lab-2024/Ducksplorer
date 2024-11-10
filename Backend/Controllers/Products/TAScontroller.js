@@ -85,6 +85,19 @@ const filterProducts = async (req, res) => {
   }
 };
 
+const findProductByID = async (req, res) => {
+  const ID = req.params.productId;
+  try {
+    const product = await productModel.findById(ID);
+    if (!product) {
+      res.status(404).json("product not found");
+    }
+    res.status(200).json(product);
+  } catch (err) {
+    res.status(400).json({ err: err.message });
+  }
+};
+
 const findProduct = async (req, res) => {
   //search based on products name
   const name = req.query.name;
