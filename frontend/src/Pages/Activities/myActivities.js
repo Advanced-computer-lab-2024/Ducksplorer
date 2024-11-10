@@ -33,8 +33,6 @@ import {
   TextField,
 } from "@mui/material";
 import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar.js";
-import Help from "../../Components/HelpIcon.js";
-
 const MyActivities = () => {
   // Accept userNameId as a prop
   const userName = JSON.parse(localStorage.getItem("user")).username;
@@ -374,7 +372,6 @@ const MyActivities = () => {
           </Dialog>
         </Box>
       </div>
-      <Help />
     </>
   );
 };

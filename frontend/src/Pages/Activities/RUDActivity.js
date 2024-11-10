@@ -34,8 +34,6 @@ import {
   TextField,
 } from "@mui/material";
 import StandAloneToggleButton from "../../Components/ToggleButton.js";
-import Help from "../../Components/HelpIcon.js";
-
 const RUDActivity = () => {
   const [activities, setActivities] = useState([]);
   const [open, setOpen] = useState(false);
@@ -381,7 +379,6 @@ const RUDActivity = () => {
           </DialogActions>
         </Dialog>
       </Box>
-      <Help />
     </>
   );
 };

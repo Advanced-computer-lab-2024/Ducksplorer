@@ -28,7 +28,6 @@ import Sidebar from "../../Components/Sidebars/Sidebar";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
-import Help from "../../Components/HelpIcon";
 
 const ApproveUsers = () => {
   const [pendingUsers, setPendingUsers] = useState([]);
@@ -134,12 +133,23 @@ const ApproveUsers = () => {
     <>
       <Sidebar />
       <Box sx={{ p: 6 }}>
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            mb: 3,
+            overflowY: "visible",
+            height: "100vh",
+          }}
+        >
           <Typography variant="h4">Pending Users</Typography>
         </Box>
         <TableContainer
           component={Paper}
-          sx={{ maxWidth: "100%", margin: "0 auto" }}
+          sx={{
+            maxWidth: "100%",
+            margin: "0 auto",
+          }}
         >
           <Table>
             <TableHead>
@@ -202,7 +212,6 @@ const ApproveUsers = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        <Help />
 
         {/* File List Display */}
         {selectedUser && (

@@ -12,7 +12,6 @@ import axios from "axios";
 import { message } from "antd";
 import { Link } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import Help from "../../Components/HelpIcon";
 import FileUpload from "../../Components/FileUpload";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -335,7 +334,6 @@ const EditProfile = () => {
           </Link>
         </Box>
       </Paper>
-      <Help />
     </Box>
   );
 };

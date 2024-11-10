@@ -114,7 +114,7 @@ function SortProducts() {
           </Typography>
         )}
       </div>
-      <Help />
+      {role === "Tourist" && <Help />}
     </div>
   );
 }

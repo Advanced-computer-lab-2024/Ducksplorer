@@ -104,7 +104,7 @@ function FilterProducts() {
           </Typography>
         )}
       </div>
-      <Help />
+      {role === "Tourist" && <Help />}
     </div>
   );
 }

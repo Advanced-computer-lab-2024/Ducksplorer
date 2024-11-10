@@ -12,7 +12,6 @@ import {
 import { message } from "antd";
 import axios from "axios";
 import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
-import Help from "../../Components/HelpIcon";
 
 // Inline styles
 // const pageStyle = {
@@ -234,7 +233,6 @@ const ProductDashboard = () => {
             <MenuItem onClick={handleFilterClose}>Price</MenuItem>
           </Menu>
         </div>
-        <Help />
       </Drawer>
     </div>
   );

@@ -18,7 +18,6 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Iconify from "../../Components/TopNav/iconify.js";
 import ProfilePictureUpload from "../../Components/pp";
 import DownloadButton from "../../Components/DownloadButton";
-import Help from "../../Components/HelpIcon";
 
 const AdvertiserEditProfile = () => {
   const [advertiserDetails, setAdvertiserDetails] = useState({
@@ -374,7 +373,6 @@ const AdvertiserEditProfile = () => {
           </Box>
         </Paper>
       </Box>
-      <Help />
     </div>
   );
 };

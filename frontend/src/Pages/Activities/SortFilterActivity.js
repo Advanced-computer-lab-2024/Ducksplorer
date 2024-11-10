@@ -1,7 +1,6 @@
 //This is the page that gets called when the upcoming activities button is clicked
 import React from "react";
 import SortActivities from "./sortActivities";
-
 import { Button } from "@mui/material";
 import { useState } from "react";
 import FilterActivities from "./filterActivities";

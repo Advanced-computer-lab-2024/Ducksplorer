@@ -78,6 +78,10 @@ const SearchActivities = () => {
       });
   };
 
+  const handleCurrencyChange = (rates, selectedCurrency) => {
+    setExchangeRates(rates);
+    setCurrency(selectedCurrency);
+  };
   // Share itinerary functionality
   const handleShareLink = (activityId) => {
     const link = `${window.location.origin}/activity/searchActivities/${activityId}`; // Update with your actual route

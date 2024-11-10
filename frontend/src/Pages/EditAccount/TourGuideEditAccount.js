@@ -16,7 +16,6 @@ import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Iconify from "../../Components/TopNav/iconify.js";
 import DownloadButton from "../../Components/DownloadButton";
-import Help from "../../Components/HelpIcon";
 const TourGuideEditProfile = () => {
   const [tourGuideDetails, setTourGuideDetails] = useState({
     userName: "",
@@ -385,7 +384,6 @@ const TourGuideEditProfile = () => {
           </Link>
         </Box>
       </Paper>
-      <Help />
     </Box>
   );
 };

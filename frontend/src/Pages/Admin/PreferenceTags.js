@@ -25,8 +25,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import Sidebar from "../../Components/Sidebars/Sidebar.js";
-import Help from "../../Components/HelpIcon.js";
-
 const PreferenceTags = () => {
   const [tags, setTags] = useState([]);
   const [open, setOpen] = useState(false);
@@ -254,7 +252,6 @@ const PreferenceTags = () => {
           </Dialog>
         </Box>
       </div>
-      <Help />
     </>
   );
 };

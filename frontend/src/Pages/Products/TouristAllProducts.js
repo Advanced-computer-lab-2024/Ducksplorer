@@ -12,7 +12,7 @@ import {
 import { message } from "antd";
 import axios from "axios";
 import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
-
+import Help from "../../Components/HelpIcon";
 // Inline styles
 // const pageStyle = {
 //   backgroundColor: 'yellow',
@@ -215,6 +215,7 @@ const TouristAllProducts = () => {
           </Menu>
         </div>
       </Drawer>
+      <Help />
     </div>
   );
 };

@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import Help from "../HelpIcon";
 
 const MyComplaints = () => {
   const [complaints, setComplaints] = useState([]);
@@ -123,6 +124,7 @@ const MyComplaints = () => {
           </Typography>
         </Box>
       )}
+      <Help />
     </Container>
   );
 };
