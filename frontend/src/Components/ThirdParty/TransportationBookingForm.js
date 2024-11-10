@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button, Container, Grid, Box, Typography, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
+import { TextField, Button, Container, Grid, Box, Typography, MenuItem, FormControl, InputLabel, Select , Autocomplete} from '@mui/material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import axios from 'axios';
@@ -90,6 +90,9 @@ const TransportationBookingForm = () => {
   const[transferType, setTransferType] = useState(null);
   const[startDate, setStartDate] = useState(null);
   const[startTime, setStartTime] = useState(null);
+  const [origin, setOrigin] = useState(null);
+  const [destination, setDestination] = useState(null);
+
 
   const validateFields = () => {
     if (!startLocationCode || !endAddressLine || !endCountryCode || !transferType || !startTime || !startDate) {
@@ -117,8 +120,10 @@ const TransportationBookingForm = () => {
       const dateTime = startDate+"T"+startTime;
       const requestBody ={
         startLocationCode : startLocationCode,
+        //startLocationCode : origin.country,
         endAddressLine : endAddressLine,
         endCountryCode: endCountryCode,
+        //endCountryCode: destination.country,
         transferType: transferType,
         startDateTime: dateTime
       }
@@ -131,7 +136,7 @@ const TransportationBookingForm = () => {
           setTransportations(transportationData);
 
         }else {
-          message.error('No flights found.');
+          message.error('No Transportations found.');
         }
 
       }catch(error){
@@ -160,6 +165,13 @@ const TransportationBookingForm = () => {
                 onChange={(e) => setStartLocationCode(e.target.value)}
                 fullWidth
               />
+            {/* <Autocomplete
+              options={cities}
+              getOptionLabel={(option) => `${option.country}, ${option.label}, ${option.code}`}
+              value={origin}
+              onChange={(event, newValue) => setOrigin(newValue)}
+              renderInput={(params) => <TextField {...params} label="Origin City" fullWidth />}
+            /> */}
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -176,6 +188,13 @@ const TransportationBookingForm = () => {
                 onChange={(e) => setEndCountryCode(e.target.value)}
                 fullWidth
               />
+              {/* <Autocomplete
+              options={cities}
+              getOptionLabel={(option) => `${option.country}, ${option.label}, ${option.code}`}
+              value={destination}
+              onChange={(event, newValue) => setDestination(newValue)}
+              renderInput={(params) => <TextField {...params} label="Destination City" fullWidth />}
+              /> */}
             </Grid>
             <Grid item xs={12} sm={6}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -195,7 +214,22 @@ const TransportationBookingForm = () => {
                 onChange={(e) => setStartTime(e.target.value)}
                 fullWidth
               />
-            </FormControl>
+          </FormControl>
+          {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <TextField
+                  label="Start Time"
+                  type="time"
+                  value={startTime}
+                  onChange={(e) => setStartTime(e.target.value)}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  inputProps={{
+                    step: 1, // 1 second
+                  }}
+                  fullWidth
+                />
+              </LocalizationProvider> */}
             </Grid>
             <Grid item xs={12}>
             <FormControl fullWidth>

@@ -6,9 +6,11 @@ import { Button } from "@mui/material";
 import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
 import Help from "../../Components/HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar";
+import { useNavigate } from "react-router-dom";
 
 function TouristProducts() {
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -24,27 +26,6 @@ function TouristProducts() {
 
   const handleBackButtonClick = () => {
     window.history.back();
-  };
-
-  const handlePurchase = async (product) => {
-    const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
-    const user = JSON.parse(userJson);
-    const userName = user.username;
-    try {
-      const response = await axios.put(
-        `http://localhost:8000/touristRoutes/updatePurchases/${userName}`,
-        {
-          products: [product],
-        }
-      );
-      if (response.status === 200) {
-        message.success("Product purchased successfully!");
-      } else {
-        message.error("Failed to purchase product.");
-      }
-    } catch (error) {
-      message.error("An error occurred while purchasing the product.");
-    }
   };
 
   return (
@@ -65,6 +46,7 @@ function TouristProducts() {
             overflowY: "visible",
             padding: "10px",
             marginTop: "20px",
+            gridGap: "40px",
           }}
         >
           {/* Render the filtered products using the ProductCard component */}
@@ -75,21 +57,16 @@ function TouristProducts() {
               .map((product) => (
                 <div
                   key={product._id}
-                  style={{ position: "relative", marginBottom: "20px" }}
+                  style={{
+                    position: "relative",
+                    marginBottom: "20px",
+                    height: "60vh",
+                    width: "30vw",
+                    maxHeight: "100%",
+                  }}
                 >
-                  <ProductCard product={product} showRating={false} />
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => handlePurchase(product)}
-                    style={{
-                      position: "absolute",
-                      right: "60px",
-                      bottom: "50px",
-                    }} // Place the button at the bottom-right corner
-                  >
-                    Purchase
-                  </Button>
+                  <ProductCard product={product} showRating={false} showPurchase={true} />
+
                 </div>
               ))
           ) : (

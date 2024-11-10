@@ -1,9 +1,17 @@
 const express = require("express");
-const {getProducts, sortProducts, filterProducts, findProduct}= require('../Controllers/Products/TAScontroller');
-const {createProduct, editProduct, ViewMyProducts}= require('../Controllers/Products/AScontroller');
-const sellerModel = require('../Models/sellerModel')
-const { getProductById } = require('../Controllers/Products/TAScontroller'); // Adjust path if necessary
-
+const {
+  getProducts,
+  sortProducts,
+  filterProducts,
+  findProduct,
+} = require("../Controllers/Products/TAScontroller");
+const {
+  createProduct,
+  editProduct,
+  ViewMyProducts,
+} = require("../Controllers/Products/AScontroller");
+const sellerModel = require("../Models/sellerModel");
+const { getProductById } = require("../Controllers/Products/TAScontroller"); // Adjust path if necessary
 
 const upload = require("../Controllers/uploadMiddleware");
 
@@ -25,10 +33,11 @@ const addSeller = async (req, res) => {
 
 const router = express.Router();
 
-router.get("/getProducts",getProducts);
-router.post("/addSeller",addSeller);
+router.get("/getProducts", getProducts);
+router.post("/addSeller", addSeller);
 router.get("/product/:productId", getProductById);
-router.get("/ViewMyProducts/:seller",ViewMyProducts);
+
+router.get("/ViewMyProducts/:seller", ViewMyProducts);
 //router.post("/createProducts", createProduct);
 
 router.post("/createProducts", upload.single("picture"), createProduct);

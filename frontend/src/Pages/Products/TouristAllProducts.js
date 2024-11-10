@@ -41,7 +41,8 @@ const sidebarButtonStyle = {
 const TouristAllProducts = () => {
   // State for managing the dropdown menu
   const [anchorEl, setAnchorEl] = useState(null);
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
+  const isGuest = localStorage.getItem('guest') === 'true';
 
   const handleFilterClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -190,14 +191,15 @@ const TouristAllProducts = () => {
             Search Products
           </Button>
           <Button
-            fullWidth
-            variant="contained"
-            color="primary"
-            onClick={handleSortProducts}
-            style={sidebarButtonStyle}
-          >
-            Sort Products
-          </Button>
+          fullWidth
+          variant="contained"
+          color="primary"
+          onClick={handleSortProducts}
+          style={sidebarButtonStyle}
+        >
+          Sort Products
+        </Button>
+        {!isGuest && (
           <Button
             fullWidth
             variant="contained"
@@ -206,6 +208,7 @@ const TouristAllProducts = () => {
           >
             My Purchases
           </Button>
+        )}
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}

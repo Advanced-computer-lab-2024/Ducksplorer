@@ -567,6 +567,7 @@ const FormSection = () => {
           </>
         )}
         <DropDown />
+        {type && (type === "Seller" || type === "Advertiser" || type === "Guide") && (
         <FormControlLabel
           sx={{ justifyContent: "center" }}
           control={
@@ -589,6 +590,7 @@ const FormSection = () => {
             </span>
           }
         />
+        )}
         <Dialog open={openTerms} onClose={handleCloseTerms}>
           <DialogTitle>Terms and Conditions</DialogTitle>
           <DialogContent>

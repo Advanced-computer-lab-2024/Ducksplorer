@@ -15,17 +15,23 @@ import { Rating } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { calculateProductRating } from "../../Utilities/averageRating";
+import { useLocation } from "react-router-dom";
 
 const ProductCard = ({
   product,
   showArchive,
   showUnarchive,
   productID,
-  showRating,
+  showRating, //shows the user review , also for myPurchases as a tourist
   showReview,
+  showPurchase,
+  showAverageRating, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
 }) => {
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
+  const location = useLocation();
+  const isGuest = localStorage.getItem("guest") === "true";
+
 
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
@@ -42,26 +48,27 @@ const ProductCard = ({
   }, [product.isArchived]);
 
   useEffect(() => {
-    // Fetch the product's rating for this buyer on component mount
-    const fetchRating = async () => {
-      const userJson = localStorage.getItem("user");
-      const user = JSON.parse(userJson);
-      const userName = user.username;
+    if (location.pathname === "/myPurchases") {
+      const fetchRating = async () => {
+        const userJson = localStorage.getItem("user");
+        const user = JSON.parse(userJson);
+        const userName = user.username;
 
-      try {
-        const response = await axios.get(
-          `http://localhost:8000/touristRoutes/getRating/${productID}/rating/${userName}`
-        );
+        try {
+          const response = await axios.get(
+            `http://localhost:8000/touristRoutes/getRating/${productID}/rating/${userName}`
+          );
 
-        if (response.status === 200 && response.data.rating !== undefined) {
-          setRating(response.data.rating); // Set the buyer's rating from the database
+          if (response.status === 200 && response.data.rating !== undefined) {
+            setRating(response.data.rating); // Set the buyer's rating from the database
+          }
+        } catch (error) {
+          console.error("Failed to fetch rating:", error);
         }
-      } catch (error) {
-        console.error("Failed to fetch rating:", error);
-      }
-    };
+      };
 
-    fetchRating();
+      fetchRating();
+    }
   }, [productID]);
 
   const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
@@ -109,6 +116,27 @@ const ProductCard = ({
     }
   };
 
+  const handlePurchase = async (product) => {
+    const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
+    const user = JSON.parse(userJson);
+    const userName = user.username;
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/touristRoutes/updatePurchases/${userName}`,
+        {
+          products: [product],
+        }
+      );
+      if (response.status === 200) {
+        message.success("Product purchased successfully!");
+      } else {
+        message.error("Failed to purchase product.");
+      }
+    } catch (error) {
+      message.error("An error occurred while purchasing the product.");
+    }
+  };
+
   const handleArchive = async () => {
     const data = { isArchived: true };
     try {
@@ -149,21 +177,19 @@ const ProductCard = ({
     <Card
       className="product-card"
       style={{
-        width: "450px",
         margin: "20px",
-        height: "700px",
-        maxHeight: "900px  ",
         position: "relative",
         filter: archived ? "grayscale(100%)" : "none", // Greyscale effect when archived
         opacity: archived ? 0.6 : 1,
         borderRadius: "3cap",
         boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
+        height: "100%",
       }}
     >
       <CardMedia
         component="img"
-        height="400" // Adjust the height as needed
-        width="500"
+        height="60%" // Adjust the height as needed
+        width="100%"
         image={product.picture}
         alt={product.name}
         style={{
@@ -172,91 +198,111 @@ const ProductCard = ({
           borderRadius: "3cap",
         }} // Ensure the image covers the container
       />
-      <CardContent>
-        <Typography variant="h5" style={{ fontWeight: "bold" }}>
-          {product.name}
-        </Typography>
-        {role === "Tourist" && showRating && (
-          <div key={product._id}>
-            <Rating
-              value={rating}
-              onChange={handleRatingChange}
-              icon={<StarIcon sx={{ color: "orange" }} />}
-              emptyIcon={<StarOutlineIcon />}
-              readOnly={false}
-              precision={0.5}
-            />
-          </div>
-        )}
-        <Typography variant="body1">
-          Price <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />:
-          {(product.price * (exchangeRates[currency] || 1)).toFixed(2)}{" "}
-          {currency}
-        </Typography>
-        <Typography variant="body1">
-          Available Quantity: {product.availableQuantity}
-        </Typography>
-        {(role === "Admin" || role === "Seller") && (
-          <Typography variant="body1">Sales: {product.sales}</Typography>
-        )}
-        <Typography variant="body1">
-          Description: {product.description}
-        </Typography>
-        <Typography variant="body1">Seller: {product.seller}</Typography>
-        <Rating
-                        value={calculateProductRating(product.ratings)}
-                        precision={0.1}
-                        readOnly
-                      />
-        <h4>Reviews:</h4>
-        {Object.entries(product.reviews).length > 0 ? (
-          Object.entries(product.reviews).map(([user, review]) => (
-            <div key={user}>
-              <Typography variant="body2">User: {user}</Typography>
-              <Typography variant="body2">Rating: {review.rating}</Typography>
-              <Typography variant="body2">Comment: {review.comment}</Typography>
+      <div style={{ overflow: "auto", height: "40%" }}>
+        <CardContent>
+          <Typography variant="h5" style={{ fontWeight: "bold" }}>
+            {product.name}
+          </Typography>
+          {role === "Tourist" && showRating && (
+            <div key={product._id}>
+              <Rating
+                value={rating}
+                onChange={handleRatingChange}
+                icon={<StarIcon sx={{ color: "orange" }} />}
+                emptyIcon={<StarOutlineIcon />}
+                readOnly={false}
+                precision={0.5}
+              />
             </div>
-          ))
-        ) : (
-          <Typography variant="body2">No reviews available.</Typography>
-        )}
-        {(role === "Admin" || role === "Seller") &&
-          showArchive &&
-          !archived && <Button onClick={handleArchive}> Archive </Button>}
-        {archived && showUnarchive && (
-          <Button onClick={handleUnarchive}> Unarchive </Button>
-        )}
-        {role === "Tourist" && showReview && (
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ position: "absolute", right: "10px", bottom: "10px" }}
-            onClick={() => setShowReviewBox(!showReviewBox)}
-          >
-            {showReviewBox ? "Cancel" : "Add Review"}
-          </Button>
-        )}
-        {showReviewBox && (
-          <div>
-            <TextField
-              label="Write your review"
-              variant="outlined"
-              fullWidth
-              multiline
-              rows={4}
-              value={review}
-              onChange={(e) => setReview(e.target.value)}
+          )}
+          <Typography variant="body1">
+            Price <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />:
+            {(product.price * (exchangeRates[currency] || 1)).toFixed(2)}{" "}
+            {currency}
+          </Typography>
+          <Typography variant="body1">
+            Available Quantity: {product.availableQuantity}
+          </Typography>
+          {(role === "Admin" || role === "Seller") && (
+            <Typography variant="body1">Sales: {product.sales}</Typography>
+          )}
+          <Typography variant="body1">
+            Description: {product.description}
+          </Typography>
+          <Typography variant="body1">Seller: {product.seller}</Typography>
+          {showAverageRating && (
+            <Rating
+              value={calculateProductRating(product.ratings)}
+              precision={0.1}
+              readOnly
             />
+          )}
+          <h4>Reviews:</h4>
+          {Object.entries(product.reviews).length > 0 ? (
+            Object.entries(product.reviews).map(([user, review]) => (
+              <div key={user}>
+                <Typography variant="body2">User: {user}</Typography>
+                <Typography variant="body2">Rating: {review.rating}</Typography>
+                <Typography variant="body2">
+                  Comment: {review.comment}
+                </Typography>
+              </div>
+            ))
+          ) : (
+            <Typography variant="body2">No reviews available.</Typography>
+          )}
+          {(role === "Admin" || role === "Seller") &&
+            showArchive &&
+            !archived && <Button onClick={handleArchive}> Archive </Button>}
+          {archived && showUnarchive && (
+            <Button onClick={handleUnarchive}> Unarchive </Button>
+          )}
+          {role === "Tourist" && showReview && (
             <Button
-              onClick={handleAddReview}
               variant="contained"
               color="primary"
+              style={{ position: "absolute", right: "10px", bottom: "10px" }}
+              onClick={() => setShowReviewBox(!showReviewBox)}
             >
-              Submit Review
+              {showReviewBox ? "Cancel" : "Add Review"}
             </Button>
-          </div>
-        )}
-      </CardContent>
+          )}
+          {showReviewBox && (
+            <div>
+              <TextField
+                label="Write your review"
+                variant="outlined"
+                fullWidth
+                multiline
+                rows={4}
+                value={review}
+                onChange={(e) => setReview(e.target.value)}
+              />
+              <Button
+                onClick={handleAddReview}
+                variant="contained"
+                color="primary"
+              >
+                Submit Review
+              </Button>
+            </div>
+          )}
+          {!isGuest && showPurchase && (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => handlePurchase(product)}
+              style={{
+                position: "absolute",
+                right: "60px",
+                bottom: "50px",
+              }} // Place the button at the bottom-right corner
+            >
+              Purchase
+            </Button>
+          )}
+        </CardContent>
+      </div>
     </Card>
   );
 };
