@@ -17,7 +17,8 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import Help from "../../Components/HelpIcon";
 
 const PastBookingDetails = ({ userName }) => {
   const [booking, setBooking] = useState(null);
@@ -30,29 +31,33 @@ const PastBookingDetails = ({ userName }) => {
   const [tourGuideComment, setTourGuideComment] = useState("");
   const [tourGuideId, setSelectedTourGuideId] = useState(null);
   const [tourGuideNames, setTourGuideNames] = useState({});
+  const [loading, setLoading] = useState(true);
 
-  const fetchTourGuideName = useCallback(async (id) => {
-    if (!id || tourGuideNames[id]) return;
+  const fetchTourGuideName = useCallback(
+    async (id) => {
+      if (!id || tourGuideNames[id]) return;
 
-    try {
-      const response = await axios.get(
-        `http://localhost:8000/tourGuideRate/getUserNameById/${id}`
-      );
-      setTourGuideNames((prevNames) => ({
-        ...prevNames,
-        [id]: response.data.userName,
-      }));
-    } catch (error) {
-      console.error(
-        "Error fetching tour guide name:",
-        error.response ? error.response.data : error.message
-      );
-      setTourGuideNames((prevNames) => ({
-        ...prevNames,
-        [id]: "N/A",
-      }));
-    }
-  }, [tourGuideNames]);
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/tourGuideRate/getUserNameById/${id}`
+        );
+        setTourGuideNames((prevNames) => ({
+          ...prevNames,
+          [id]: response.data.userName,
+        }));
+      } catch (error) {
+        console.error(
+          "Error fetching tour guide name:",
+          error.response ? error.response.data : error.message
+        );
+        setTourGuideNames((prevNames) => ({
+          ...prevNames,
+          [id]: "N/A",
+        }));
+      }
+    },
+    [tourGuideNames]
+  );
 
   useEffect(() => {
     const fetchBooking = async () => {
@@ -84,13 +89,20 @@ const PastBookingDetails = ({ userName }) => {
           "Error fetching booking details:",
           error.response ? error.response.data : error.message
         );
+      } finally {
+        setTimeout(() => setLoading(false), 1000); // Delay of 1 second
       }
     };
     fetchBooking();
   }, [userName, fetchTourGuideName]);
 
-  if (!booking) return <p>Loading...</p>;
-  if (!Array.isArray(booking.activities) || !Array.isArray(booking.itineraries)) {
+  if (loading) return <p>Loading...</p>;
+
+  if (!booking) return <p>You have no past bookings.</p>;
+  if (
+    !Array.isArray(booking.activities) ||
+    !Array.isArray(booking.itineraries)
+  ) {
     return <p>No booking details available.</p>;
   }
 
@@ -112,7 +124,9 @@ const PastBookingDetails = ({ userName }) => {
       setBooking((prevBooking) => ({
         ...prevBooking,
         activities: prevBooking.activities.map((activity) =>
-          activity._id === activityId ? { ...activity, averageRating: newRating } : activity
+          activity._id === activityId
+            ? { ...activity, averageRating: newRating }
+            : activity
         ),
       }));
     } catch (error) {
@@ -144,13 +158,17 @@ const PastBookingDetails = ({ userName }) => {
       setBooking((prevBooking) => ({
         ...prevBooking,
         itineraries: prevBooking.itineraries.map((itinerary) =>
-          itinerary._id === itineraryId ? { ...itinerary, averageRating: newRating } : itinerary
+          itinerary._id === itineraryId
+            ? { ...itinerary, averageRating: newRating }
+            : itinerary
         ),
       }));
     } catch (error) {
       if (error.response) {
         console.error("Error response data:", error.response.data);
-        alert(`Failed to submit itinerary rating: ${error.response.data.message}`);
+        alert(
+          `Failed to submit itinerary rating: ${error.response.data.message}`
+        );
       } else {
         console.error("Error submitting itinerary rating:", error.message);
         alert("Failed to submit itinerary rating. Please try again.");
@@ -164,9 +182,12 @@ const PastBookingDetails = ({ userName }) => {
 
   const handleActivityCommentSubmit = async (activityId) => {
     try {
-      await axios.patch(`http://localhost:8000/activity/commentActivity/${activityId}`, {
-        comment: activityComments[activityId],
-      });
+      await axios.patch(
+        `http://localhost:8000/activity/commentActivity/${activityId}`,
+        {
+          comment: activityComments[activityId],
+        }
+      );
       alert("Comment submitted successfully!");
       setActivityComments((prev) => ({ ...prev, [activityId]: "" })); // Clear the comment input after submission
     } catch (error) {
@@ -181,9 +202,12 @@ const PastBookingDetails = ({ userName }) => {
 
   const handleItineraryCommentSubmit = async (itineraryId) => {
     try {
-      await axios.patch(`http://localhost:8000/itinerary/commentItinerary/${itineraryId}`, {
-        comment: itineraryComments[itineraryId],
-      });
+      await axios.patch(
+        `http://localhost:8000/itinerary/commentItinerary/${itineraryId}`,
+        {
+          comment: itineraryComments[itineraryId],
+        }
+      );
       alert("Comment submitted successfully!");
       setItineraryComments((prev) => ({ ...prev, [itineraryId]: "" })); // Clear the comment input after submission
     } catch (error) {
@@ -207,7 +231,7 @@ const PastBookingDetails = ({ userName }) => {
 
   const handleTourGuideRateSubmit = async () => {
     try {
-      console.log("This is the tourguide id:", tourGuideId)
+      console.log("This is the tourguide id:", tourGuideId);
       await axios.patch(
         `http://localhost:8000/tourGuideRate/rateTourGuide/${tourGuideId}`,
         {
@@ -246,13 +270,23 @@ const PastBookingDetails = ({ userName }) => {
 
   return (
     <div>
-      <Button component={Link} to="/touristDashboard" variant="contained" color="primary" style={{ marginBottom: '20px' }}>
+      <Button
+        component={Link}
+        to="/touristDashboard"
+        variant="contained"
+        color="primary"
+        style={{ marginBottom: "20px" }}
+      >
         Back to Dashboard
       </Button>
-      <Typography variant="h4" gutterBottom>Bookings History</Typography>
+      <Typography variant="h4" gutterBottom>
+        Bookings History
+      </Typography>
 
       {/* Activities Table */}
-      <Typography variant="h5" gutterBottom>Activities</Typography>
+      <Typography variant="h5" gutterBottom>
+        Activities
+      </Typography>
       <TableContainer component={Paper} sx={{ marginBottom: 4 }}>
         <Table>
           <TableHead>
@@ -278,7 +312,9 @@ const PastBookingDetails = ({ userName }) => {
                 <TableCell>{activity.name}</TableCell>
                 <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
                 <TableCell>{activity.advertiser}</TableCell>
-                <TableCell>{new Date(activity.date).toLocaleDateString()}</TableCell>
+                <TableCell>
+                  {new Date(activity.date).toLocaleDateString()}
+                </TableCell>
                 <TableCell>{activity.location}</TableCell>
                 <TableCell>{activity.price}</TableCell>
                 <TableCell>{activity.category}</TableCell>
@@ -289,7 +325,11 @@ const PastBookingDetails = ({ userName }) => {
                 <TableCell>
                   <Rating
                     name={`activity-rating-${activity._id}`}
-                    value={(selectedActivityRatings[activity._id] ?? activity.averageRating) || 0}
+                    value={
+                      (selectedActivityRatings[activity._id] ??
+                        activity.averageRating) ||
+                      0
+                    }
                     precision={1}
                     onChange={(event, newValue) => {
                       if (newValue) {
@@ -303,7 +343,9 @@ const PastBookingDetails = ({ userName }) => {
                     variant="outlined"
                     size="small"
                     value={activityComments[activity._id] || ""}
-                    onChange={(e) => handleActivityCommentChange(activity._id, e.target.value)}
+                    onChange={(e) =>
+                      handleActivityCommentChange(activity._id, e.target.value)
+                    }
                     placeholder="Comment"
                   />
                   <Button
@@ -311,7 +353,7 @@ const PastBookingDetails = ({ userName }) => {
                     variant="contained"
                     color="primary"
                     size="small"
-                    style={{ marginLeft: '0px', marginTop: '5px' }}
+                    style={{ marginLeft: "0px", marginTop: "5px" }}
                   >
                     Submit
                   </Button>
@@ -323,7 +365,9 @@ const PastBookingDetails = ({ userName }) => {
       </TableContainer>
 
       {/* Itineraries Table */}
-      <Typography variant="h5" gutterBottom>Itineraries</Typography>
+      <Typography variant="h5" gutterBottom>
+        Itineraries
+      </Typography>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -347,25 +391,33 @@ const PastBookingDetails = ({ userName }) => {
           <TableBody>
             {booking.itineraries.map((itinerary) => (
               <TableRow key={itinerary._id}>
-                <TableCell>{itinerary.activity.map((act) => act.name).join(", ")}</TableCell>
+                <TableCell>
+                  {itinerary.activity.map((act) => act.name).join(", ")}
+                </TableCell>
                 <TableCell>{itinerary.locations.join(", ")}</TableCell>
                 <TableCell>{itinerary.timeline}</TableCell>
                 <TableCell>{itinerary.language}</TableCell>
                 <TableCell>{itinerary.price}</TableCell>
-                <TableCell>{itinerary.availableDatesAndTimes.map((date) => new Date(date).toLocaleDateString()).join(", ")}</TableCell>
+                <TableCell>
+                  {itinerary.availableDatesAndTimes
+                    .map((date) => new Date(date).toLocaleDateString())
+                    .join(", ")}
+                </TableCell>
                 <TableCell>{itinerary.accessibility}</TableCell>
                 <TableCell>{itinerary.pickUpLocation}</TableCell>
                 <TableCell>{itinerary.dropOffLocation}</TableCell>
                 <TableCell>{itinerary.tags.join(", ")}</TableCell>
                 <TableCell>
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span>{tourGuideNames[itinerary.tourGuideModel] || "N/A"}</span>
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <span>
+                      {tourGuideNames[itinerary.tourGuideModel] || "N/A"}
+                    </span>
                     <Button
                       onClick={() => handleOpenDialog(itinerary.tourGuideModel)}
                       variant="contained"
                       color="primary"
                       size="small"
-                      style={{ marginTop: '5px' }}
+                      style={{ marginTop: "5px" }}
                     >
                       Rate&Comment
                     </Button>
@@ -375,7 +427,11 @@ const PastBookingDetails = ({ userName }) => {
                 <TableCell>
                   <Rating
                     name={`itinerary-rating-${itinerary._id}`}
-                    value={(selectedItineraryRatings[itinerary._id] ?? itinerary.averageRating) || 0}
+                    value={
+                      (selectedItineraryRatings[itinerary._id] ??
+                        itinerary.averageRating) ||
+                      0
+                    }
                     precision={1}
                     onChange={(event, newValue) => {
                       if (newValue) {
@@ -391,17 +447,20 @@ const PastBookingDetails = ({ userName }) => {
                     marginright="0px"
                     fullWidth={true}
                     value={itineraryComments[itinerary._id] || ""}
-                    onChange={(e) => handleItineraryCommentChange(itinerary._id, e.target.value)}
+                    onChange={(e) =>
+                      handleItineraryCommentChange(
+                        itinerary._id,
+                        e.target.value
+                      )
+                    }
                     placeholder="Comment"
-
                   />
                   <Button
                     onClick={() => handleItineraryCommentSubmit(itinerary._id)}
                     variant="contained"
                     color="primary"
                     size="small"
-
-                    style={{ marginLeft: '0px', marginTop: '5px' }}
+                    style={{ marginLeft: "0px", marginTop: "5px" }}
                   >
                     Submit
                   </Button>
@@ -440,7 +499,8 @@ const PastBookingDetails = ({ userName }) => {
           </Button>
         </DialogActions>
       </Dialog>
-    </div >
+      <Help />
+    </div>
   );
 };
 

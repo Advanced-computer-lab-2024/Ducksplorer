@@ -1,7 +1,7 @@
 ////This is the page that gets called when the sort activities button is clicked
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { message } from 'antd';
+import { message } from "antd";
 import {
   Box,
   Table,
@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
-
+import Help from "../../Components/HelpIcon";
 const SortActivities = () => {
   const navigate = useNavigate();
   const [activities, setActivities] = useState([]);
@@ -29,7 +29,7 @@ const SortActivities = () => {
   const [order, setOrder] = useState("asc"); // Default ascending order
 
   const [exchangeRates, setExchangeRates] = useState({});
-  const [currency, setCurrency] = useState('EGP');
+  const [currency, setCurrency] = useState("EGP");
   // Function to fetch sorted activities
   const fetchSortedActivities = () => {
     const showPreferences = localStorage.getItem("showPreferences");
@@ -39,23 +39,24 @@ const SortActivities = () => {
         `http://localhost:8000/activity/sort?sortBy=${sortBy}&order=${order}`
       )
       .then((response) => {
-        if(showPreferences === 'true'){
+        if (showPreferences === "true") {
           let Activities = response.data;
-        Activities = Activities.sort((a, b) => {
-          if (a.category === favCategory && b.category !== favCategory) {
-            return -1; // "restaurant" category comes first
-          } else if (b.category === favCategory && a.category !== favCategory) {
-            return 1; // Move other categories after "restaurant"
-          } else {
-            return 0; // If both have the same category, retain their relative order
-          }
-        });
-        setActivities(Activities);
-
-        }else{
+          Activities = Activities.sort((a, b) => {
+            if (a.category === favCategory && b.category !== favCategory) {
+              return -1; // "restaurant" category comes first
+            } else if (
+              b.category === favCategory &&
+              a.category !== favCategory
+            ) {
+              return 1; // Move other categories after "restaurant"
+            } else {
+              return 0; // If both have the same category, retain their relative order
+            }
+          });
+          setActivities(Activities);
+        } else {
           setActivities(response.data);
         }
-        
       })
       .catch((error) => {
         console.error("There was an error fetching the activities!", error);
@@ -75,13 +76,13 @@ const SortActivities = () => {
 
   const handleBooking = async (activityId) => {
     try {
-      const userJson = localStorage.getItem('user');
-      const isGuest = localStorage.getItem('guest') === 'true';
-            if(isGuest){
-                message.error("User is not logged in, Please login or sign up.");
-                navigate('/guestDashboard');
-                return;
-            }
+      const userJson = localStorage.getItem("user");
+      const isGuest = localStorage.getItem("guest") === "true";
+      if (isGuest) {
+        message.error("User is not logged in, Please login or sign up.");
+        navigate("/guestDashboard");
+        return;
+      }
       if (!userJson) {
         message.error("User is not logged in.");
         return null;
@@ -92,15 +93,17 @@ const SortActivities = () => {
         return null;
       }
 
-      const type = 'activity';
+      const type = "activity";
 
-      localStorage.setItem('activityId', activityId);
-      localStorage.setItem('type', type);
+      localStorage.setItem("activityId", activityId);
+      localStorage.setItem("type", type);
 
-      const response = await axios.get(`http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}`);
+      const response = await axios.get(
+        `http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}`
+      );
 
       if (response.status === 200) {
-        navigate('/payment');
+        navigate("/payment");
       } else {
         message.error("Booking failed.");
       }
@@ -180,11 +183,18 @@ const SortActivities = () => {
 
         {/* Activity Table */}
         <TableContainer style={{ borderRadius: 20 }} component={Paper}>
-          <Table style={{ width: '100%', textAlign: 'center', borderSpacing: '10px 5px' }}>
+          <Table
+            style={{
+              width: "100%",
+              textAlign: "center",
+              borderSpacing: "10px 5px",
+            }}
+          >
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell>Price
+                <TableCell>
+                  Price
                   <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
                 </TableCell>
                 <TableCell>Is open</TableCell>
@@ -199,57 +209,69 @@ const SortActivities = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {activities.map((activity) =>
-                !activity.flag && (
-                  <TableRow key={activity._id}>
-                    <TableCell>{activity.name}</TableCell>
-                    <TableCell>
-                      {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
-                    </TableCell>
-                    <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
-                    <TableCell>{activity.category}</TableCell>
-                    <TableCell>{activity.tags.join(", ")}</TableCell>
-                    <TableCell>{activity.specialDiscount}</TableCell>
-                    <TableCell>{activity.date ? (() => {
-                      const dateObj = new Date(activity.date);
-                      const date = dateObj.toISOString().split('T')[0];
-                      const time = dateObj.toTimeString().split(' ')[0];
-                      return (
-                        <div>
-                          {date} at {time}
-                        </div>
-                      );
-                    })()
-                      : 'No available date and time' ? (() => {
-                        const dateObj = new Date(activity.date);
-                        const date = dateObj.toISOString().split('T')[0];
-                        const time = dateObj.toTimeString().split(' ')[0];
-                        return (
-                          <div>
-                            {date} at {time}
-                          </div>
-                        );
-                      })()
-                        : 'No available date and time'}</TableCell>
+              {activities.map(
+                (activity) =>
+                  !activity.flag && (
+                    <TableRow key={activity._id}>
+                      <TableCell>{activity.name}</TableCell>
+                      <TableCell>
+                        {(
+                          activity.price * (exchangeRates[currency] || 1)
+                        ).toFixed(2)}{" "}
+                        {currency}
+                      </TableCell>
+                      <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
+                      <TableCell>{activity.category}</TableCell>
+                      <TableCell>{activity.tags.join(", ")}</TableCell>
+                      <TableCell>{activity.specialDiscount}</TableCell>
+                      <TableCell>
+                        {activity.date
+                          ? (() => {
+                              const dateObj = new Date(activity.date);
+                              const date = dateObj.toISOString().split("T")[0];
+                              const time = dateObj.toTimeString().split(" ")[0];
+                              return (
+                                <div>
+                                  {date} at {time}
+                                </div>
+                              );
+                            })()
+                          : "No available date and time"
+                          ? (() => {
+                              const dateObj = new Date(activity.date);
+                              const date = dateObj.toISOString().split("T")[0];
+                              const time = dateObj.toTimeString().split(" ")[0];
+                              return (
+                                <div>
+                                  {date} at {time}
+                                </div>
+                              );
+                            })()
+                          : "No available date and time"}
+                      </TableCell>
 
-                    <TableCell>{activity.duration}</TableCell>
-                    <TableCell>{activity.location}</TableCell>
-                    <TableCell>
-                      <Rating value={activity.averageRating} precision={0.1} readOnly />
-                    </TableCell>
-                    <TableCell>
-                      <Button onClick={() => handleBooking(activity._id)}>
-                        Book Now
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                )
+                      <TableCell>{activity.duration}</TableCell>
+                      <TableCell>{activity.location}</TableCell>
+                      <TableCell>
+                        <Rating
+                          value={activity.averageRating}
+                          precision={0.1}
+                          readOnly
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Button onClick={() => handleBooking(activity._id)}>
+                          Book Now
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  )
               )}
             </TableBody>
-
           </Table>
         </TableContainer>
       </Box>
+      <Help />
     </>
   );
 };

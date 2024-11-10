@@ -24,12 +24,14 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 function TouristNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [image, setImage] = React.useState("");
   const [storedPicture, setStoredPicture] = React.useState(localStorage.getItem('profilePicture'));
+  const navigate = useNavigate();
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -86,7 +88,12 @@ function TouristNavBar() {
             <img
               src={image}
               alt="Avatar"
-              style={{ width: 70, height: 70, borderRadius: "50%", marginRight: 10 }}
+              style={{
+                width: 70,
+                height: 70,
+                borderRadius: "50%",
+                marginRight: 10,
+              }}
             />
           </Tooltip>
           <Tooltip title="Ducksplorer Home Page">
@@ -97,7 +104,7 @@ function TouristNavBar() {
               variant="h6"
               noWrap
               component="a"
-              href="/"
+              onClick={() => navigate('/touristDashboard')}
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -106,6 +113,7 @@ function TouristNavBar() {
                 letterSpacing: ".3rem",
                 color: "inherit",
                 textDecoration: "none",
+                cursor: "pointer",
               }}
             >
               Ducksplorer
@@ -215,7 +223,9 @@ function TouristNavBar() {
             }}
           >
             <Tooltip title="Book Activities">
-              <IconButton onClick={() => handleNavigation("activity/sortFilter")}>
+              <IconButton
+                onClick={() => handleNavigation("activity/sortFilter")}
+              >
                 <FestivalIcon />
                 <Typography textAlign="center" marginRight={3}>
                   Activities
@@ -223,7 +233,9 @@ function TouristNavBar() {
               </IconButton>
             </Tooltip>
             <Tooltip title="Book Itineraries">
-              <IconButton onClick={() => handleNavigation("viewUpcomingItinerary")}>
+              <IconButton
+                onClick={() => handleNavigation("viewUpcomingItinerary")}
+              >
                 <TempleBuddhistIcon />
                 <Typography textAlign="center" marginRight={1}>
                   Itineraries
@@ -272,7 +284,6 @@ function TouristNavBar() {
                 </Typography>
               </IconButton>
             </Tooltip>
-
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open Account settings">
@@ -281,12 +292,11 @@ function TouristNavBar() {
                 sx={{ p: 0, ml: 4, width: 40, height: 40 }}
               >
                 <img
-                  src={storedPicture || "duckAvatar.png"}  // Check if profilePicture exists, else use default
+                  src={"duckAvatar.png"} // Check if profilePicture exists, else use default
                   alt="Avatar"
                   style={{ width: 40, height: 40, borderRadius: "50%" }}
                 />
               </IconButton>
-
             </Tooltip>
             <Menu
               sx={{ mt: "45px" }}

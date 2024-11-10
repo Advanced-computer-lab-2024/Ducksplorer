@@ -23,8 +23,8 @@ const Help = () => {
     const user = JSON.parse(userJson);
     const userName = user.username;
     if (!userName) {
-        message.error("Username not found in user data.");
-        return;
+      message.error("Username not found in user data.");
+      return;
     }
 
     const currentDate = new Date().toISOString();
@@ -85,7 +85,18 @@ const Help = () => {
 
   return (
     <div ref={menuRef}>
-      <div className="floating-icon" onClick={toggleMenu}>
+      <div
+        className="floating-icon"
+        onClick={toggleMenu}
+        style={{
+          borderRadius: "100cap",
+          height: "40px",
+          width: "40px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <HelpIcon color="#4CAF50" />
       </div>
       {isOpen && (

@@ -117,7 +117,7 @@
     "slick-carousel": "^1.8.1",
     "sparse-bitfield": "^3.0.3",
     "statuses": "^2.0.1",
-    "stripe": "^17.3.0",
+    "stripe": "^17.3.1",
     "toidentifier": "^1.0.1",
     "tr46": "^4.1.1",
     "twilio": "^5.3.5",

@@ -9,6 +9,7 @@ import {
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { Link, useParams } from 'react-router-dom';
 import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
+import Help from "../../Components/HelpIcon.js";
 
 
 function SearchItineraries() {
@@ -478,6 +479,7 @@ function SearchItineraries() {
                     </Typography>
                 )}
             </div>
+        <Help/>
         </Box>
     );
 }

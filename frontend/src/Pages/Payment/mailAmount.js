@@ -2,19 +2,22 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import React from "react";
-import { Card, Typography, Space, message, Select, Form, Button } from 'antd';
-const { Title } = Typography
+import { Card, Typography, Space, message, Select, Form, Button } from "antd";
+import Help from "../../Components/HelpIcon.js";
+const { Title } = Typography;
 const { Option } = Select;
 
 function PaymentPage() {
-  const flight = localStorage.getItem('flight');
-  const hotel = localStorage.getItem('hotel');
-  const transportation = localStorage.getItem('transportation');
+  const flight = localStorage.getItem("flight");
+  const hotel = localStorage.getItem("hotel");
+  const transportation = localStorage.getItem("transportation");
   const [itineraryData, setItineraryData] = useState(null);
   const [activityData, setActivityData] = useState(null);
-  const [price, setPrice] = useState('');
+  const [price, setPrice] = useState("");
   const [type, setType] = useState(null);
-  const [email, setEmail] = useState(JSON.parse(localStorage.getItem('user')).email);
+  const [email, setEmail] = useState(
+    JSON.parse(localStorage.getItem("user")).email
+  );
   const [amount, setAmount] = useState("");
   const navigate = useNavigate();
   const [chosenDate, setChosenDate] = useState(null);
@@ -26,9 +29,9 @@ function PaymentPage() {
   const handleVisaSubmit = async (e) => {
     if (itineraryData && !chosenDate) {
       message.error("Please select a date and time before proceeding.");
-      return;  // Prevent form submission if no date is selected
+      return; // Prevent form submission if no date is selected
     }
-    const userJson = localStorage.getItem('user');
+    const userJson = localStorage.getItem("user");
     if (!userJson) {
       message.error("User is not logged in.");
       return null;
@@ -45,7 +48,11 @@ function PaymentPage() {
       const response = await fetch("http://localhost:8000/payment/pay", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: amountInCents, currency: "usd", email: email }),
+        body: JSON.stringify({
+          amount: amountInCents,
+          currency: "usd",
+          email: email,
+        }),
       });
       const data = await response.json();
       console.log(data);
@@ -67,9 +74,9 @@ function PaymentPage() {
   const handleWalletSubmit = async (e) => {
     if (itineraryData && !chosenDate) {
       message.error("Please select a date and time before proceeding.");
-      return;  // Prevent form submission if no date is selected
+      return; // Prevent form submission if no date is selected
     }
-    const userJson = localStorage.getItem('user');
+    const userJson = localStorage.getItem("user");
     if (!userJson) {
       message.error("User is not logged in.");
       return null;
@@ -81,40 +88,56 @@ function PaymentPage() {
     }
 
     const userName = user.username;
-    const activityId = localStorage.getItem('activityId');
-    const itineraryId = localStorage.getItem('itineraryId');
-    const itineraryOrActivity = localStorage.getItem('type');
+    const activityId = localStorage.getItem("activityId");
+    const itineraryId = localStorage.getItem("itineraryId");
+    const itineraryOrActivity = localStorage.getItem("type");
     e.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:8000/touristRoutes/payWallet/${userName}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ price }),
-      });
+      const response = await fetch(
+        `http://localhost:8000/touristRoutes/payWallet/${userName}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ price }),
+        }
+      );
       const data = await response.json();
       console.log(data);
       if (response.status === 200) {
         message.success("Payment successfully completed!");
         // Payment succeeded; now create the booking in the backend
-        const bookingResponse = await fetch(`http://localhost:8000/touristRoutes/booking/${userName}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ activityId: activityId, itineraryId: itineraryId, type: itineraryOrActivity,  flight:flightsData, hotel:hotelsData, transportation:transportationsData, date: chosenDate, price: price}),
-        });
+        const bookingResponse = await fetch(
+          `http://localhost:8000/touristRoutes/booking/${userName}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              activityId: activityId,
+              itineraryId: itineraryId,
+              type: itineraryOrActivity,
+              flight: flightsData,
+              hotel: hotelsData,
+              transportation: transportationsData,
+              date: chosenDate,
+              price: price,
+            }),
+          }
+        );
         const bookingResult = await bookingResponse.json();
         console.log("Booking Result", bookingResult);
 
         if (bookingResult.status === 200) {
           console.log("Booking successfully created:", bookingResult);
-
+          navigate("/myBookings");
         } else {
           console.error("Booking creation failed:", bookingResult.message);
         }
       } else {
-        message.error("Error creating payment. Not enough money in the wallet.");
+        message.error(
+          "Error creating payment. Not enough money in the wallet."
+        );
       }
-    navigate('/myBookings');
     } catch (error) {
       console.error("Payment initiation failed:", error);
       message.error("Error creating payment. Not enough money in the wallet.");
@@ -123,7 +146,7 @@ function PaymentPage() {
 
   const handleDisplayBooked = async () => {
     try {
-      const userJson = localStorage.getItem('user');
+      const userJson = localStorage.getItem("user");
       if (!userJson) {
         message.error("User is not logged in.");
         return null;
@@ -134,10 +157,9 @@ function PaymentPage() {
         return null;
       }
 
-      const itineraryOrActivity = localStorage.getItem('type');
-      const activityId = localStorage.getItem('activityId');
-      const itineraryId = localStorage.getItem('itineraryId');
-      
+      const itineraryOrActivity = localStorage.getItem("type");
+      const activityId = localStorage.getItem("activityId");
+      const itineraryId = localStorage.getItem("itineraryId");
 
       if (!itineraryOrActivity) {
         message.error("Type information is missing.");
@@ -149,29 +171,31 @@ function PaymentPage() {
 
       let response;
 
-      if (itineraryOrActivity === 'itinerary' && itineraryId) {
-        response = await axios.get(`http://localhost:8000/touristRoutes/viewDesiredItinerary/${itineraryId}`);
+      if (itineraryOrActivity === "itinerary" && itineraryId) {
+        response = await axios.get(
+          `http://localhost:8000/touristRoutes/viewDesiredItinerary/${itineraryId}`
+        );
         if (response.status === 200) {
           setItineraryData(response.data);
           setPrice(response.data.price);
-          localStorage.setItem('price', price);
+          localStorage.setItem("price", price);
         } else {
           message.error("Failed to retrieve itinerary details.");
         }
-      }
-      else if (itineraryOrActivity === 'activity' && activityId) {
+      } else if (itineraryOrActivity === "activity" && activityId) {
         console.log("Fetching activity data for ID:", activityId); // Debugging
-        response = await axios.get(`http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}`);
+        response = await axios.get(
+          `http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}`
+        );
         if (response.status === 200) {
           console.log("Activity data fetched:", response.data); // Debugging
           setActivityData(response.data);
           setPrice(response.data.price);
-          localStorage.setItem('price', price);
+          localStorage.setItem("price", price);
         } else {
           message.error("Failed to retrieve activity details.");
         }
-      }
-      else if (itineraryOrActivity === 'flight') {
+      } else if (itineraryOrActivity === "flight") {
         //setFlight(flight);
         console.log("Flight sada data fetched:", flight); // Debugging
         console.log("FlightData fetched:", flightsData); // Debugging
@@ -199,11 +223,11 @@ function PaymentPage() {
     console.log("date", value);
     setChosenDate(value);
     form.setFieldsValue({ dateTime: value });
-    localStorage.setItem('date', value);
+    localStorage.setItem("date", value);
   };
 
   const onFinish = (values) => {
-    console.log('Form values:', values);
+    console.log("Form values:", values);
     // Perform the next action here, such as navigating to another page
   };
 
@@ -211,60 +235,109 @@ function PaymentPage() {
     handleDisplayBooked();
   }, [type]);
 
-
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      maxWidth: '1500px',
-      margin: 'auto',
-      gap: '1rem',
-      overflowY: 'visible',
-      height: '120vh'
-    }}>
-
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        maxWidth: "1500px",
+        margin: "auto",
+        gap: "1rem",
+        overflowY: "visible",
+        height: "120vh",
+      }}
+    >
       <div>
-        {itineraryData || activityData || flightsData || hotelsData || transportationsData ? (
-          type === 'itinerary' ? (
+        {itineraryData ||
+        activityData ||
+        flightsData ||
+        hotelsData ||
+        transportationsData ? (
+          type === "itinerary" ? (
             <div>
-              <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
-                <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+              <Card
+                style={{
+                  maxWidth: "600px",
+                  margin: "20px auto",
+                  borderRadius: "8px",
+                }}
+              >
+                <Space
+                  direction="vertical"
+                  size="middle"
+                  style={{ display: "flex" }}
+                >
                   <Title level={3}>Booked Details</Title>
-                  <p><strong>Itinerary Details:</strong> {itineraryData.name}</p>
+                  <p>
+                    <strong>Itinerary Details:</strong> {itineraryData.name}
+                  </p>
                   {/* Looping through the activities */}
-                  {itineraryData.activity && itineraryData.activity.length > 0 ? (
+                  {itineraryData.activity &&
+                  itineraryData.activity.length > 0 ? (
                     itineraryData.activity.map((activity, index) => (
                       <div key={index}>
-                        <p><strong>Activity Name:</strong> {activity.name}</p>
-                        <p><strong>Activity Price:</strong> {activity.price}</p>
+                        <p>
+                          <strong>Activity Name:</strong> {activity.name}
+                        </p>
+                        <p>
+                          <strong>Activity Price:</strong> {activity.price}
+                        </p>
                       </div>
                     ))
                   ) : (
                     <p>No activities found.</p>
                   )}
-                  <p><strong>Locations:</strong> {itineraryData.locations.join(', ')}</p>
-                  <p><strong>Timeline:</strong> {itineraryData.timeline}</p>
-                  <p><strong>Language:</strong> {itineraryData.language}</p>
-                  <p><strong>Price:</strong> {itineraryData.price}</p>
-                  <p><strong>Available Dates and Times:</strong> {itineraryData.availableDatesAndTimes.length > 0
-                    ? itineraryData.availableDatesAndTimes.map((dateTime, index) => {
-                      const dateObj = new Date(dateTime);
-                      const date = dateObj.toISOString().split('T')[0];
-                      const time = dateObj.toTimeString().split(' ')[0];
-                      return (
-                        <div key={index}>
-                          Date {index + 1}: {date}<br />
-                          Time {index + 1}: {time}
-                        </div>
-                      );
-                    })
-                    : 'No available dates and times'}</p>
-                  <p><strong>Accessibility:</strong> {itineraryData.accessibility}</p>
-                  <p><strong>Pick Up Location:</strong> {itineraryData.pickUpLocation}</p>
-                  <p><strong>Drop Off Location:</strong> {itineraryData.dropOffLocation}</p>
-                  <p><strong>Rating:</strong> {itineraryData.averageRating}/5</p>
-                  <p><strong>Tags:</strong> {itineraryData.tags}</p>
+                  <p>
+                    <strong>Locations:</strong>{" "}
+                    {itineraryData.locations.join(", ")}
+                  </p>
+                  <p>
+                    <strong>Timeline:</strong> {itineraryData.timeline}
+                  </p>
+                  <p>
+                    <strong>Language:</strong> {itineraryData.language}
+                  </p>
+                  <p>
+                    <strong>Price:</strong> {itineraryData.price}
+                  </p>
+                  <p>
+                    <strong>Available Dates and Times:</strong>{" "}
+                    {itineraryData.availableDatesAndTimes.length > 0
+                      ? itineraryData.availableDatesAndTimes.map(
+                          (dateTime, index) => {
+                            const dateObj = new Date(dateTime);
+                            const date = dateObj.toISOString().split("T")[0];
+                            const time = dateObj.toTimeString().split(" ")[0];
+                            return (
+                              <div key={index}>
+                                Date {index + 1}: {date}
+                                <br />
+                                Time {index + 1}: {time}
+                              </div>
+                            );
+                          }
+                        )
+                      : "No available dates and times"}
+                  </p>
+                  <p>
+                    <strong>Accessibility:</strong>{" "}
+                    {itineraryData.accessibility}
+                  </p>
+                  <p>
+                    <strong>Pick Up Location:</strong>{" "}
+                    {itineraryData.pickUpLocation}
+                  </p>
+                  <p>
+                    <strong>Drop Off Location:</strong>{" "}
+                    {itineraryData.dropOffLocation}
+                  </p>
+                  <p>
+                    <strong>Rating:</strong> {itineraryData.averageRating}/5
+                  </p>
+                  <p>
+                    <strong>Tags:</strong> {itineraryData.tags}
+                  </p>
                 </Space>
               </Card>
 
@@ -277,23 +350,28 @@ function PaymentPage() {
                 <Form.Item
                   name="dateTime"
                   label="Date and Time"
-                  rules={[{ required: true, message: 'Please select a date and time!' }]}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please select a date and time!",
+                    },
+                  ]}
                 >
                   <Select
                     placeholder="Select a Date and Time"
                     onChange={handleDateChange}
-                    style={{ width: '100%' }}
+                    style={{ width: "100%" }}
                   >
                     {itineraryData?.availableDatesAndTimes
-                      .filter(dateTime => {
-                        const currentDate = new Date();  // Get the current date and time
-                        const dateObj = new Date(dateTime);  // Convert available date to Date object
-                        return dateObj >= currentDate;  // Only keep dates in the future or equal to now
+                      .filter((dateTime) => {
+                        const currentDate = new Date(); // Get the current date and time
+                        const dateObj = new Date(dateTime); // Convert available date to Date object
+                        return dateObj >= currentDate; // Only keep dates in the future or equal to now
                       })
                       .map((dateTime, index) => {
                         const dateObj = new Date(dateTime);
-                        const date = dateObj.toISOString().split('T')[0];
-                        const time = dateObj.toTimeString().split(' ')[0];
+                        const date = dateObj.toISOString().split("T")[0];
+                        const time = dateObj.toTimeString().split(" ")[0];
                         const displayText = `${date} at ${time}`;
 
                         return (
@@ -304,7 +382,12 @@ function PaymentPage() {
                       })}
                   </Select>
                 </Form.Item>
-                <p><strong>Selected Date and Time:</strong> {chosenDate ? new Date(chosenDate).toLocaleString() : 'None selected'}</p>
+                <p>
+                  <strong>Selected Date and Time:</strong>{" "}
+                  {chosenDate
+                    ? new Date(chosenDate).toLocaleString()
+                    : "None selected"}
+                </p>
 
                 <h1>Payment Details</h1>
 
@@ -316,7 +399,12 @@ function PaymentPage() {
                   onChange={(e) => setEmail(e.target.value * 100)}
                   required
                   readOnly
-                  style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                  style={{
+                    width: "100%",
+                    padding: "8px",
+                    borderRadius: "4px",
+                    border: "1px solid #ddd",
+                  }}
                 />
 
                 <p>Amount</p>
@@ -327,38 +415,77 @@ function PaymentPage() {
                   onChange={(e) => setAmount(e.target.value * 100)}
                   required
                   readOnly
-                  style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                  style={{
+                    width: "100%",
+                    padding: "8px",
+                    borderRadius: "4px",
+                    border: "1px solid #ddd",
+                  }}
                 />
-
               </Form>
             </div>
-          ) : type === 'activity' && activityData ? (
+          ) : type === "activity" && activityData ? (
             <div>
-              <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
-                <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+              <Card
+                style={{
+                  maxWidth: "600px",
+                  margin: "20px auto",
+                  borderRadius: "8px",
+                }}
+              >
+                <Space
+                  direction="vertical"
+                  size="middle"
+                  style={{ display: "flex" }}
+                >
                   <Title level={3}>Booked Details</Title>
-                  <p><strong>Activity Details:</strong> </p>
-                  <p><strong>Activity Name:</strong> {activityData.name}</p>
-                  <p><strong>Price:</strong> {activityData.price}</p>
-                  <p><strong>Is Open:</strong> {activityData.isOpen ? 'Yes' : 'No'}</p>
-                  <p><strong>Category:</strong> {activityData.category}</p>
-                  <p><strong>Tags:</strong> {activityData.tags}</p>
-                  <p><strong>Special Discount:</strong> {activityData.specialDiscount}</p>
-                  <p><strong>Date and Time:</strong> {activityData.date
-                    ? (() => {
-                      const dateObj = new Date(activityData.date);
-                      const date = dateObj.toISOString().split('T')[0];
-                      const time = dateObj.toTimeString().split(' ')[0];
-                      return (
-                        <div>
-                          {date} at {time}
-                        </div>
-                      );
-                    })()
-                    : 'No available date and time'}</p>
-                  <p><strong>Duration:</strong> {activityData.duration}</p>
-                  <p><strong>Location:</strong> {activityData.location}</p>
-                  <p><strong>Ratings:</strong> {activityData.averageRating}/5</p>
+                  <p>
+                    <strong>Activity Details:</strong>{" "}
+                  </p>
+                  <p>
+                    <strong>Activity Name:</strong> {activityData.name}
+                  </p>
+                  <p>
+                    <strong>Price:</strong> {activityData.price}
+                  </p>
+                  <p>
+                    <strong>Is Open:</strong>{" "}
+                    {activityData.isOpen ? "Yes" : "No"}
+                  </p>
+                  <p>
+                    <strong>Category:</strong> {activityData.category}
+                  </p>
+                  <p>
+                    <strong>Tags:</strong> {activityData.tags}
+                  </p>
+                  <p>
+                    <strong>Special Discount:</strong>{" "}
+                    {activityData.specialDiscount}
+                  </p>
+                  <p>
+                    <strong>Date and Time:</strong>{" "}
+                    {activityData.date
+                      ? (() => {
+                          const dateObj = new Date(activityData.date);
+                          const date = dateObj.toISOString().split("T")[0];
+                          const time = dateObj.toTimeString().split(" ")[0];
+                          return (
+                            <div>
+                              {date} at {time}
+                            </div>
+                          );
+                        })()
+                      : "No available date and time"}
+                  </p>
+                  <p>
+                    <strong>Duration:</strong> {activityData.duration}
+                  </p>
+                  <p>
+                    <strong>Location:</strong> {activityData.location}
+                  </p>
+                  <p>
+                    <strong>Ratings:</strong> {activityData.averageRating}/5
+                  </p>
                 </Space>
               </Card>
               <Form>
@@ -372,7 +499,12 @@ function PaymentPage() {
                   onChange={(e) => setEmail(e.target.value * 100)}
                   required
                   readOnly
-                  style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                  style={{
+                    width: "100%",
+                    padding: "8px",
+                    borderRadius: "4px",
+                    border: "1px solid #ddd",
+                  }}
                 />
                 <p>Amount</p>
                 <input
@@ -382,25 +514,61 @@ function PaymentPage() {
                   onChange={(e) => setAmount(e.target.value * 100)}
                   required
                   readOnly
-                  style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                  style={{
+                    width: "100%",
+                    padding: "8px",
+                    borderRadius: "4px",
+                    border: "1px solid #ddd",
+                  }}
                 />
-
               </Form>
             </div>
-          ): type === 'flight' ? (
+          ) : type === "flight" ? (
             <div>
-              <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
-                <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+              <Card
+                style={{
+                  maxWidth: "600px",
+                  margin: "20px auto",
+                  borderRadius: "8px",
+                }}
+              >
+                <Space
+                  direction="vertical"
+                  size="middle"
+                  style={{ display: "flex" }}
+                >
                   <Title level={3}>Booked Details</Title>
-                  <p><strong>Flight Details:</strong> </p>
-                  <p><strong>Price:</strong> {flightsData.price}{'  '}{flightsData.currency}</p>
-                  <p><strong>Departure Date:</strong> {flightsData.departureDate}</p>
-                  <p><strong>Arrival Date:</strong> {flightsData.arrivalDate}</p>
-                  <p><strong>Company Name:</strong> {flightsData.companyName}</p>
-                  <p><strong>Departure City:</strong> {flightsData.departureCity}</p>
-                  <p><strong>Departure Country:</strong> {flightsData.departureCountry}</p>
-                  <p><strong>Arrival City:</strong> {flightsData.arrivalCity}</p>
-                  <p><strong>Arrival Country:</strong> {flightsData.arrivalCountry}</p>
+                  <p>
+                    <strong>Flight Details:</strong>{" "}
+                  </p>
+                  <p>
+                    <strong>Price:</strong> {flightsData.price}
+                    {"  "}
+                    {flightsData.currency}
+                  </p>
+                  <p>
+                    <strong>Departure Date:</strong> {flightsData.departureDate}
+                  </p>
+                  <p>
+                    <strong>Arrival Date:</strong> {flightsData.arrivalDate}
+                  </p>
+                  <p>
+                    <strong>Company Name:</strong> {flightsData.companyName}
+                  </p>
+                  <p>
+                    <strong>Departure City:</strong> {flightsData.departureCity}
+                  </p>
+                  <p>
+                    <strong>Departure Country:</strong>{" "}
+                    {flightsData.departureCountry}
+                  </p>
+                  <p>
+                    <strong>Arrival City:</strong> {flightsData.arrivalCity}
+                  </p>
+                  <p>
+                    <strong>Arrival Country:</strong>{" "}
+                    {flightsData.arrivalCountry}
+                  </p>
                   {/* <p><strong>Departure Airport:</strong> {flightsData.departureAirport}</p>
                   <p><strong>Arrival Airport:</strong> {flightsData.arrivalAirport}</p> */}
                 </Space>
@@ -416,7 +584,12 @@ function PaymentPage() {
                   onChange={(e) => setEmail(e.target.value * 100)}
                   required
                   readOnly
-                  style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                  style={{
+                    width: "100%",
+                    padding: "8px",
+                    borderRadius: "4px",
+                    border: "1px solid #ddd",
+                  }}
                 />
                 <p>Amount</p>
                 <input
@@ -426,7 +599,12 @@ function PaymentPage() {
                   onChange={(e) => setAmount(e.target.value * 100)}
                   required
                   readOnly
-                  style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                  style={{
+                    width: "100%",
+                    padding: "8px",
+                    borderRadius: "4px",
+                    border: "1px solid #ddd",
+                  }}
                 />
               </Form>
             </div>
@@ -512,15 +690,15 @@ function PaymentPage() {
           <p>Loading booking details...</p>
         )}
       </div>
-      <form style={{ display: 'flex', width: '100%' }}>
+      <form style={{ display: "flex", width: "100%" }}>
         <button
           type="submit"
           onClick={handleVisaSubmit}
           style={{
-            padding: '10px',
-            fontSize: '1rem',
-            flex: 1,  // Ensures both buttons take equal space
-            marginRight: '12px'  // Adds space between the buttons
+            padding: "10px",
+            fontSize: "1rem",
+            flex: 1, // Ensures both buttons take equal space
+            marginRight: "12px", // Adds space between the buttons
           }}
         >
           Visa
@@ -529,18 +707,16 @@ function PaymentPage() {
           type="submit"
           onClick={handleWalletSubmit}
           style={{
-            padding: '10px',
-            fontSize: '1rem',
-            flex: 1  // Makes this button take equal space as the first one
+            padding: "10px",
+            fontSize: "1rem",
+            flex: 1, // Makes this button take equal space as the first one
           }}
         >
           Wallet
         </button>
       </form>
-
-
-    </div >
-
+      <Help />
+    </div>
   );
 }
 
