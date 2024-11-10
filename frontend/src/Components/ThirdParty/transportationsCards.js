@@ -19,6 +19,13 @@ const TransportationsCards = ({transportations}) => {
         setCurrency(initialCurrency);
       }, [initialCurrency]);
     
+      const convertPriceToEgp = (price) => {
+        if (!exchangeRates || !exchangeRates['EUR'] || !exchangeRates['EGP']) {
+          return price;
+        }
+        const rate = exchangeRates['EGP'] / exchangeRates['EUR'];
+        return (price * rate).toFixed(2);
+      }
 
     const handleBooking = async (transportationBookings) => {
         try {
@@ -36,8 +43,8 @@ const TransportationsCards = ({transportations}) => {
 
           const type = 'transportation';
           const transportation = {
-           price : transportationBookings.quotation.monetaryAmount,
-           currency : 'USD',
+           price :convertPriceToEgp(transportationBookings.quotation.monetaryAmount), 
+           currency : 'EGP',
            departureDate : transportationBookings.start.dateTime,
            arrivalDate : transportationBookings.end.dateTime,
            transferType : transportationBookings.transferType,

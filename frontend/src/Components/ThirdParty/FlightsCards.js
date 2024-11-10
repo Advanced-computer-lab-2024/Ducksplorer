@@ -105,8 +105,16 @@ const FlightsCards = ({ flights , originCity, destinationCity, originCountry, de
             const rate = exchangeRates[currency] / exchangeRates[fromCurrency];
             return (price * rate).toFixed(2);
           };
-        
-   const handleBooking = async (flightBooking) => {
+
+          //i want a function that converts the price to egp from euro
+          const convertPriceToEgp = (price) => {
+            if (!exchangeRates || !exchangeRates['EUR'] || !exchangeRates['EGP']) {
+              return price;
+            }
+            const rate = exchangeRates['EGP'] / exchangeRates['EUR'];
+            return (price * rate).toFixed(2);
+          }
+        const handleBooking = async (flightBooking) => {
             try {
               const userJson = localStorage.getItem('user');
               if (!userJson) {
@@ -127,8 +135,8 @@ const FlightsCards = ({ flights , originCity, destinationCity, originCountry, de
               
               const type = 'flight';
               const flight = {
-                price : flightBooking.price.total,
-                currency : flightBooking.price.currency,
+                price: convertPriceToEgp(flightBooking.price.total),
+                currency : 'EGP',
                 departureDate : flightBooking.itineraries[0].segments[0].departure.at,
                 arrivalDate : flightBooking.itineraries[0].segments[0].arrival.at,
                 companyName : flightBooking.itineraries[0].segments[0].carrierCode,
@@ -152,7 +160,7 @@ const FlightsCards = ({ flights , originCity, destinationCity, originCountry, de
               console.error("Error:", error);
               message.error("An error occurred while booking.");
             }
-   };
+   }
     
 
     return (

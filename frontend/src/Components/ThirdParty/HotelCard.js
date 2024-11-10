@@ -20,6 +20,14 @@ const HotelCards = ({ hotels , checkInDate, checkOutDate , adults , city , count
     setCurrency(initialCurrency);
   }, [initialCurrency]);
 
+  const convertPriceToEgp = (price) => {
+    if (!exchangeRates || !exchangeRates['EUR'] || !exchangeRates['EGP']) {
+      return price;
+    }
+    const rate = exchangeRates['EGP'] / exchangeRates['EUR'];
+    return (price * rate).toFixed(2);
+  }
+
   const handleBooking = async (hotelBooking) => {
     try {
       const userJson = localStorage.getItem('user');
@@ -39,8 +47,8 @@ const HotelCards = ({ hotels , checkInDate, checkOutDate , adults , city , count
       
       const type = 'hotel';
       const hotel = {
-        price : hotelBooking.priceForDisplay ? convertPrice(parseFloat(hotelBooking.priceForDisplay.replace('$', '')), 'USD') :(hotelBooking.priceSummary && extractPrice(hotelBooking.priceSummary) ),
-        currency :'USD',
+        price : hotelBooking.priceForDisplay ? convertPriceToEgp(parseFloat(hotelBooking.priceForDisplay.replace('$', ''))) :(hotelBooking.priceSummary && extractPrice(hotelBooking.priceSummary) ),
+        currency :'EGP',
         checkInDate : checkInDate,
         checkOutDate : checkOutDate,
         hotelName :name,
@@ -94,6 +102,8 @@ const HotelCards = ({ hotels , checkInDate, checkOutDate , adults , city , count
     const price = priceString.split('$')[1];
     return price ? price.trim() : 'N/A';
   };
+
+  
 
   return (
     <Box sx={{ flexGrow: 1, mt: 4, overflowY: 'auto' }}>
