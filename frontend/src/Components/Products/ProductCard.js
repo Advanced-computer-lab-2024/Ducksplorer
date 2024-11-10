@@ -174,7 +174,7 @@ const ProductCard = ({
           borderRadius: "3cap",
         }} // Ensure the image covers the container
       />
-      <div style={{ overflow: "auto", height: "calc(100% - 400px)" }}>
+      <div style={{ overflow: "auto", height: "40%" }}>
         <CardContent>
           <Typography variant="h5" style={{ fontWeight: "bold" }}>
             {product.name}
