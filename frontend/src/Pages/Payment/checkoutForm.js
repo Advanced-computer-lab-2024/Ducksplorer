@@ -4,7 +4,7 @@ import { useStripe, useElements } from "@stripe/react-stripe-js";
 import axios from "axios";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
-
+import Help from "../../Components/HelpIcon.js";
 
 export default function CheckoutForm() {
   const stripe = useStripe();
@@ -37,13 +37,16 @@ export default function CheckoutForm() {
     setIsProcessing(true);
 
     try {
-      const response = await fetch("http://localhost:8000/payment/create-payment-intent", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: localStorage.getItem("paymentEmail") }),
-      });
+      const response = await fetch(
+        "http://localhost:8000/payment/create-payment-intent",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: localStorage.getItem("paymentEmail") }),
+        }
+      );
 
       const data = await response.json();
       console.log(data.clientSecret); //undefined
@@ -68,17 +71,19 @@ export default function CheckoutForm() {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/payment/confirm-otp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: localStorage.getItem("paymentEmail"),
-          otp,
-        }),
-
-      });
+      const response = await fetch(
+        "http://localhost:8000/payment/confirm-otp",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: localStorage.getItem("paymentEmail"),
+            otp,
+          }),
+        }
+      );
 
       const result = await response.json();
       console.log(result.message);
@@ -103,7 +108,7 @@ export default function CheckoutForm() {
         setShowOtpPopup(false);
       } else {
         setMessage1("Invalid OTP.");
-        message.error("Incorrect OTP")
+        message.error("Incorrect OTP");
       }
       // if (result.message === "OTP verified") {
       //   const { error } = await stripe.confirmPayment({
@@ -114,8 +119,7 @@ export default function CheckoutForm() {
       //  });
 
       if (true) {
-
-        const userJson = localStorage.getItem('user');
+        const userJson = localStorage.getItem("user");
         if (!userJson) {
           message.error("User is not logged in.");
           return null;
@@ -126,24 +130,39 @@ export default function CheckoutForm() {
           return null;
         }
         const userName = user.username;
-        const activityId = localStorage.getItem('activityId');
-        const itineraryId = localStorage.getItem('itineraryId');
-        const itineraryOrActivity = localStorage.getItem('type');
-        const amount = localStorage.getItem('price');
-        const chosenDate = localStorage.getItem('date')
+        const activityId = localStorage.getItem("activityId");
+        const itineraryId = localStorage.getItem("itineraryId");
+        const itineraryOrActivity = localStorage.getItem("type");
+        const amount = localStorage.getItem("price");
+        const chosenDate = localStorage.getItem("date");
 
-        console.log("Creating booking with userName:", userName, "activityId:", activityId, "itineraryId:", itineraryId);
+        console.log(
+          "Creating booking with userName:",
+          userName,
+          "activityId:",
+          activityId,
+          "itineraryId:",
+          itineraryId
+        );
 
         // Payment succeeded; now create the booking in the backend
-        const bookingResponse = await fetch(`http://localhost:8000/touristRoutes/booking/${userName}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ activityId: activityId, itineraryId: itineraryId, type: itineraryOrActivity, date: chosenDate }),
-        });
+        const bookingResponse = await fetch(
+          `http://localhost:8000/touristRoutes/booking/${userName}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              activityId: activityId,
+              itineraryId: itineraryId,
+              type: itineraryOrActivity,
+              date: chosenDate,
+            }),
+          }
+        );
 
         if (!bookingResponse.ok) {
           console.error("Booking API error:", await bookingResponse.text());
-          message.error("Booking already created in database")
+          message.error("Booking already created in database");
 
           return;
         }
@@ -152,24 +171,26 @@ export default function CheckoutForm() {
         console.log("Booking Result", bookingResult);
 
         console.log("Booking successfully created:", bookingResult);
-        const pointsResponse = await fetch(`http://localhost:8000/touristRoutes/payVisa/${userName}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ price: amount }),
-        });
+        const pointsResponse = await fetch(
+          `http://localhost:8000/touristRoutes/payVisa/${userName}`,
+          {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ price: amount }),
+          }
+        );
 
         if (!pointsResponse.ok) {
           console.error("Points API error:", await bookingResponse.text());
-          message.error("Failed to update points")
+          message.error("Failed to update points");
           return;
         }
 
         const pointsResult = await pointsResponse.json();
         message.success("Payment completed and loyalty points updated");
         console.log("Points Result", pointsResult);
-
       }
-      navigate('/myBookings');
+      navigate("/myBookings");
     } catch (error) {
       setMessage1("Failed to confirm OTP.");
       console.error("Error:", error);
@@ -186,9 +207,12 @@ export default function CheckoutForm() {
     }
 
     try {
-      const response = await axios.get(`http://localhost:8000/touristRoutes/loyalty/${userName}`, {
-        params: { price }
-      });
+      const response = await axios.get(
+        `http://localhost:8000/touristRoutes/loyalty/${userName}`,
+        {
+          params: { price },
+        }
+      );
 
       if (response.data.success) {
         // Start the animation
@@ -200,9 +224,11 @@ export default function CheckoutForm() {
 
         // Display the final message after animation
         setTimeout(() => {
-          setMessage1(`You have earned ${response.data.points} loyalty points. You now have ${response.data.points} total points.`);
+          setMessage1(
+            `You have earned ${response.data.points} loyalty points. You now have ${response.data.points} total points.`
+          );
           setShowPointsAnimation(false);
-        }, 3000);  // Delay message until after animation
+        }, 3000); // Delay message until after animation
       } else {
         setMessage1("Failed to update loyalty points.");
       }
@@ -213,23 +239,36 @@ export default function CheckoutForm() {
   };
 
   return (
-    <div style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      minHeight: "80vh",
-      backgroundColor: "#f9f9f9",
-      padding: "20px",
-    }}>
-      <div style={{
-        backgroundColor: "#ffffff",
-        padding: "40px",
-        borderRadius: "12px",
-        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.15)",
-        maxWidth: "500px",
-        width: "100%",
-      }}>
-        <h2 style={{ fontSize: "24px", marginBottom: "20px", textAlign: "center", color: "#333" }}>Checkout</h2>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "80vh",
+        backgroundColor: "#f9f9f9",
+        padding: "20px",
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: "#ffffff",
+          padding: "40px",
+          borderRadius: "12px",
+          boxShadow: "0 8px 20px rgba(0, 0, 0, 0.15)",
+          maxWidth: "500px",
+          width: "100%",
+        }}
+      >
+        <h2
+          style={{
+            fontSize: "24px",
+            marginBottom: "20px",
+            textAlign: "center",
+            color: "#333",
+          }}
+        >
+          Checkout
+        </h2>
         <form id="payment-form" onSubmit={handleSubmit}>
           <PaymentElement id="payment-element" />
           <button
@@ -248,8 +287,12 @@ export default function CheckoutForm() {
               cursor: "pointer",
               transition: "background-color 0.3s",
             }}
-            onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#0056b3"}
-            onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#007bff"}
+            onMouseOver={(e) =>
+              (e.currentTarget.style.backgroundColor = "#0056b3")
+            }
+            onMouseOut={(e) =>
+              (e.currentTarget.style.backgroundColor = "#007bff")
+            }
           >
             {isProcessing ? "Processing ..." : "Pay now"}
           </button>
@@ -272,14 +315,21 @@ export default function CheckoutForm() {
         </form>
 
         {showOtpPopup && (
-          <div className="otp-popup" style={{
-            marginTop: "20px",
-            padding: "20px",
-            backgroundColor: "#f7f7f7",
-            border: "1px solid #ddd",
-            borderRadius: "8px",
-          }}>
-            <h3 style={{ fontSize: "18px", marginBottom: "10px", color: "#333" }}>Enter OTP</h3>
+          <div
+            className="otp-popup"
+            style={{
+              marginTop: "20px",
+              padding: "20px",
+              backgroundColor: "#f7f7f7",
+              border: "1px solid #ddd",
+              borderRadius: "8px",
+            }}
+          >
+            <h3
+              style={{ fontSize: "18px", marginBottom: "10px", color: "#333" }}
+            >
+              Enter OTP
+            </h3>
             <input
               type="text"
               value={otp}
@@ -294,20 +344,26 @@ export default function CheckoutForm() {
                 border: "1px solid #ccc",
               }}
             />
-            <button onClick={handleOtpSubmit} style={{
-              width: "100%",
-              padding: "10px",
-              fontSize: "16px",
-              fontWeight: "bold",
-              color: "#ffffff",
-              backgroundColor: "#28a745",
-              border: "none",
-              borderRadius: "8px",
-              cursor: "pointer",
-              transition: "background-color 0.3s",
-            }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#218838"}
-              onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#28a745"}
+            <button
+              onClick={handleOtpSubmit}
+              style={{
+                width: "100%",
+                padding: "10px",
+                fontSize: "16px",
+                fontWeight: "bold",
+                color: "#ffffff",
+                backgroundColor: "#28a745",
+                border: "none",
+                borderRadius: "8px",
+                cursor: "pointer",
+                transition: "background-color 0.3s",
+              }}
+              onMouseOver={(e) =>
+                (e.currentTarget.style.backgroundColor = "#218838")
+              }
+              onMouseOut={(e) =>
+                (e.currentTarget.style.backgroundColor = "#28a745")
+              }
             >
               Submit OTP
             </button>
@@ -316,21 +372,26 @@ export default function CheckoutForm() {
 
         {/* Loyalty points animation */}
         {showPointsAnimation && (
-          <div style={{
-            marginTop: "20px",
-            padding: "10px",
-            backgroundColor: "#d4edda",
-            color: "#155724",
-            borderRadius: "8px",
-            textAlign: "center",
-            fontSize: "18px",
-            fontWeight: "bold",
-          }}>
+          <div
+            style={{
+              marginTop: "20px",
+              padding: "10px",
+              backgroundColor: "#d4edda",
+              color: "#155724",
+              borderRadius: "8px",
+              textAlign: "center",
+              fontSize: "18px",
+              fontWeight: "bold",
+            }}
+          >
             <p>Points increasing...</p>
-            <div style={{ fontSize: "30px", fontWeight: "bold" }}>{loyaltyPoints} points</div>
+            <div style={{ fontSize: "30px", fontWeight: "bold" }}>
+              {loyaltyPoints} points
+            </div>
           </div>
         )}
       </div>
+      <Help />
     </div>
   );
 }

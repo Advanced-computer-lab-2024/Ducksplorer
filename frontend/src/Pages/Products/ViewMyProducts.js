@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { message } from "antd";
 import { Typography } from "@mui/material";
-import {  Button } from "@mui/material";
+import { Button } from "@mui/material";
 import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
 import { useNavigate } from "react-router-dom"; // Import to navigate to the edit page
 
@@ -14,14 +14,15 @@ function ViewMyProducts() {
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
     const user = JSON.parse(userJson);
     const seller = user.username;
-    axios.get(
-      `http://localhost:8000/sellerRoutes/ViewMyProducts/${seller}`
-    ).then(response => {
-      message.success("Products fetched successfully");
-      setProducts(response.data);
-    }).catch(error => {
-      console.error('There was an error fetching the products!', error);
-    });
+    axios
+      .get(`http://localhost:8000/sellerRoutes/ViewMyProducts/${seller}`)
+      .then((response) => {
+        message.success("Products fetched successfully");
+        setProducts(response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the products!", error);
+      });
   }, []);
 
   const handleEditProduct = (productId) => {
@@ -51,7 +52,7 @@ function ViewMyProducts() {
               key={product._id}
               style={{ position: "relative", marginBottom: "20px" }}
             >
-              <ProductCard product={product} showArchive={true} showUnarchive={true}/>
+              <ProductCard product={product} showArchive={true} showUnarchive={true} productID={product._id}/>
               <Button
                 variant="contained"
                 color="secondary"

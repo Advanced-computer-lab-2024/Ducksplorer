@@ -19,8 +19,8 @@ import TempleBuddhistIcon from "@mui/icons-material/TempleBuddhist";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import LockIcon from "@mui/icons-material/Lock";
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
@@ -39,24 +39,23 @@ function TouristNavBar() {
   //call the getImage in a useEffect
   const userName = JSON.parse(localStorage.getItem("user")).username;
   React.useEffect(() => {
-    const storedPicture = localStorage.getItem('profilePicture');
+    const storedPicture = localStorage.getItem("profilePicture");
     getImage(userName);
     // console.log("image", image);
-  })
+  });
   const getImage = async (userName) => {
-    const res = await axios.get(`http://localhost:8000/touristRoutes/getLevel/${userName}`);
+    const res = await axios.get(
+      `http://localhost:8000/touristRoutes/getLevel/${userName}`
+    );
     // console.log("level",res.data);
     if (res.data === 1) {
       setImage("level1.png");
-    }
-    else if (res.data === 2) {
+    } else if (res.data === 2) {
       setImage("level2.png");
-    }
-
-    else if (res.data === 3) {
+    } else if (res.data === 3) {
       setImage("level3.png");
     }
-  }
+  };
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
@@ -84,7 +83,12 @@ function TouristNavBar() {
             <img
               src={image}
               alt="Avatar"
-              style={{ width: 70, height: 70, borderRadius: "50%", marginRight: 10 }}
+              style={{
+                width: 70,
+                height: 70,
+                borderRadius: "50%",
+                marginRight: 10,
+              }}
             />
           </Tooltip>
           <Tooltip title="Ducksplorer Home Page">
@@ -214,7 +218,9 @@ function TouristNavBar() {
             }}
           >
             <Tooltip title="Book Activities">
-              <IconButton onClick={() => handleNavigation("activity/sortFilter")}>
+              <IconButton
+                onClick={() => handleNavigation("activity/sortFilter")}
+              >
                 <FestivalIcon />
                 <Typography textAlign="center" marginRight={3}>
                   Activities
@@ -222,7 +228,9 @@ function TouristNavBar() {
               </IconButton>
             </Tooltip>
             <Tooltip title="Book Itineraries">
-              <IconButton onClick={() => handleNavigation("viewUpcomingItinerary")}>
+              <IconButton
+                onClick={() => handleNavigation("viewUpcomingItinerary")}
+              >
                 <TempleBuddhistIcon />
                 <Typography textAlign="center" marginRight={1}>
                   Itineraries
@@ -271,7 +279,6 @@ function TouristNavBar() {
                 </Typography>
               </IconButton>
             </Tooltip>
-
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open Account settings">
@@ -280,12 +287,11 @@ function TouristNavBar() {
                 sx={{ p: 0, ml: 4, width: 40, height: 40 }}
               >
                 <img
-                  src={storedPicture || "duckAvatar.png"}  // Check if profilePicture exists, else use default
+                  src={"duckAvatar.png"} // Check if profilePicture exists, else use default
                   alt="Avatar"
                   style={{ width: 40, height: 40, borderRadius: "50%" }}
                 />
               </IconButton>
-
             </Tooltip>
             <Menu
               sx={{ mt: "45px" }}

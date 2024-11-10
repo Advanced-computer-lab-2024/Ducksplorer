@@ -3,6 +3,8 @@ import axios from "axios";
 import { message } from "antd";
 import { Typography, Button } from "@mui/material";
 import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
+import Help from "../../Components/HelpIcon";
+import TouristNavBar from "../../Components/TouristNavBar";
 function MyPurchases() {
   const [products, setProducts] = useState([]);
 
@@ -27,46 +29,50 @@ function MyPurchases() {
   };
 
   return (
-    <div
-      style={{
-        padding: "20px",
-        maxWidth: "1600px",
-        margin: "auto",
-      }}
-    >
+    <>
+      <TouristNavBar />
       <Button onClick={handleBackButtonClick}>Back</Button>
-
       <div
         style={{
-          maxHeight: "400px",
-          overflowY: "visible",
-          padding: "10px",
-          marginTop: "20px",
+          padding: "20px",
+          margin: "auto",
+          height: "100vh",
         }}
       >
-        {/* Render the filtered products using the ProductCard component */}
-        {products && products.length > 0 ? (
-          products.map((product) => (
-            <div
-              key={product._id}
-              style={{ position: "relative", marginBottom: "20px" }}
-            >
-              <ProductCard
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            overflowY: "visible",
+            padding: "10px",
+            marginTop: "20px",
+          }}
+        >
+          {/* Render the filtered products using the ProductCard component */}
+          {products && products.length > 0 ? (
+            products.map((product) => (
+              <div
                 key={product._id}
-                product={product}
-                productID={product._id}
-                showRating={true}
-                showReview={true}
-              />
-            </div>
-          ))
-        ) : (
-          <Typography variant="body1" style={{ marginTop: "20px" }}>
-            No products found under the specified name.
-          </Typography>
-        )}
+                style={{ position: "relative", marginBottom: "20px" }}
+              >
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                  productID={product._id}
+                  showRating={true}
+                  showReview={true}
+                />
+              </div>
+            ))
+          ) : (
+            <Typography variant="body1" style={{ marginTop: "20px" }}>
+              No products found under the specified name.
+            </Typography>
+          )}
+        </div>
+        <Help />
       </div>
-    </div>
+    </>
   );
 }
 

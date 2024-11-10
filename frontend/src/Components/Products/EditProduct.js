@@ -1,109 +1,180 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { TextField, Button, Stack } from '@mui/material';
+import { TextField, Button, Stack, CircularProgress, Box, Typography, Paper } from '@mui/material';
 import axios from 'axios';
 import { message } from 'antd';
+import { get } from "mongoose";
+import UploadFile from "../ProductUploadImage";
 
+let picture = "";
 
 const EditProduct = () => {
   const { productId } = useParams();
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState('');
-  const [availableQuantity, setAvailableQuantity] = useState('');
-  const [picture, setPicture] = useState('');
-  const [description, setDescription] = useState('');
+  const [URL, setURL] = useState("");
+  const [formData, setFormData] = useState({
+    name: '',
+    price: '',
+    availableQuantity: '',
+    picture: '',
+    description: ''
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/sellerRoutes/product/${productId}`);
+        setFormData(response.data); 
+        setLoading(false);
+        picture = response.data.picture;
+      } catch (error) {
+        message.error('Failed to load product data');
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, [productId]);
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData(prevData => ({ ...prevData, [name]: value }));
+  };
+
+  const handleUpload = (url) => {
+    setURL(url);
+    picture = url;
+  };
 
   const handleEdit = async () => {
-    const data = {};
-
-    if (name !== '') data.name = name;
-    if (price !== '') data.price = price;
-    if (availableQuantity !== '') data.availableQuantity = availableQuantity;
-    if (picture !== '') data.picture = picture;
-    if (description !== '') data.description = description;
-
-
     try {
-      const response = await axios.put(`http://localhost:8000/sellerRoutes/editProduct/${productId}`, data);
+      const response = await axios.put(`http://localhost:8000/sellerRoutes/editProduct/${productId}`, formData);
       if (response.status === 200) {
-        message.success('Product edited');
+        message.success('Product edited successfully');
       } else {
-        message.error('Failed to edit products');
+        message.error('Failed to edit product');
       }
     } catch (error) {
       message.error('An error occurred: ' + error.message);
     }
-
-
   };
-
   const handleBackButtonClick = () => {
     window.history.back();
   };
 
-  return (
-    <div style={{
-      backgroundImage: 'url(../../public/Images/bg-intro-desktop.png)', // Update with your image path
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      height: '100vh',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
-    }}>
-      <Button onClick={handleBackButtonClick}>Back</Button>
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <CircularProgress size={60} thickness={4} />
+      </Box>
+    );
+  }
 
-      <Stack spacing={1} sx={{ width: '600px', padding: '10px', backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: '10px' }}>
-        <div className="trial-btn text-white cursor-pointer" >
+  return (
+    <Box
+      sx={{
+        backgroundImage: 'url(https://example.com/background-image.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 3,
+        overflowY: 'visible',
+        height: '100vh'
+      }}
+    >
+      <Button onClick={handleBackButtonClick}>Back</Button>
+      <Paper
+        elevation={6}
+        sx={{
+          padding: 4,
+          maxWidth: 600,
+          borderRadius: 3,
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          overflowY: 'visible',
+          height: '100vh'
+        }}
+      >
+        <Typography variant="h4" align="center" sx={{ mb: 2, color: '#00796b', fontWeight: 'bold' }}>
+          Edit Product
+        </Typography>
+
+        <div className="trial-btn text-white cursor-pointer">
           <span className="text-bold"></span>
         </div>
-        <TextField
-          name="name"
-          label="product"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <TextField
-          name="price"
-          label="price"
-          type="number"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
-        <TextField
-          name="available quantity"
-          label="available quantity"
-          type="number"
-          value={availableQuantity}
-          onChange={(e) => setAvailableQuantity(e.target.value)}
-        />
-        <TextField
-          name="picture"
-          label="picture"
-          type="text"
-          value={picture}
-          onChange={(e) => setPicture(e.target.value)}
-        />
-        <TextField
-          name="desription"
-          label="description"
-          type="text"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleEdit} // Call function to handle adding the product here
-          style={{ marginTop: '10px' }}
-        >
-          Edit Product
-        </Button>
-      </Stack>
-    </div>
-  )
-}
-
+        <Stack spacing={3} sx={{ mt: 2 }}>
+          <TextField
+            name="name"
+            label="Product Name"
+            type="text"
+            value={formData.name}
+            onChange={handleInputChange}
+            variant="outlined"
+            fullWidth
+          />
+          <TextField
+            name="price"
+            label="Price ($)"
+            type="number"
+            value={formData.price}
+            onChange={handleInputChange}
+            variant="outlined"
+            fullWidth
+          />
+          <TextField
+            name="availableQuantity"
+            label="Available Quantity"
+            type="number"
+            value={formData.availableQuantity}
+            onChange={handleInputChange}
+            variant="outlined"
+            fullWidth
+          />
+         <div style={{ borderRadius: "3cap" }}>
+          <img
+            name="picture"
+            label="picture"
+            type="text"
+            src={picture}
+            style={{
+              maxWidth: "500px",
+              borderRadius: "3cap",
+            }}
+          />
+        </div>
+        <UploadFile onUpload={handleUpload} />
+          <TextField
+            name="description"
+            label="Description"
+            type="text"
+            value={formData.description}
+            onChange={handleInputChange}
+            variant="outlined"
+            multiline
+            rows={4}
+            fullWidth
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleEdit}
+            fullWidth
+            sx={{
+              backgroundColor: '#00796b',
+              ':hover': {
+                backgroundColor: '#005a4f',
+              },
+              fontWeight: 'bold',
+              py: 1.5,
+            }}
+          >
+            Save Changes
+          </Button>
+        </Stack>
+      </Paper>
+    </Box>
+  );
+};
 
 export default EditProduct;

@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const app = express(); //el kol fel kol
 const PORT = process.env.PORT || 8000; //tells us to get port from env file or law ma3refsh yegebha it's 3000
 const cors = require("cors");
-const path = require('path');
+const path = require("path");
 const touristRoutes = require("./Backend/Routes/touristRoutes.js");
 const sellerRoutes = require("./Backend/Routes/sellerRoutes.js");
 const adminProductRoutes = require("./Backend/Routes/adminRoutes.js");
@@ -16,12 +16,12 @@ const AdminActivityRoutes = require("./Backend/Routes/Admin/AdminActivityRoutes.
 const preferenceTagsRoutes = require("./Backend/Routes/Admin/PreferenceTagsRoutes.js");
 const activityRoutes = require("./Backend/Routes/activityRoutes.js");
 const categoryRoutes = require("./Backend/Routes/categoryRoutes.js");
-const fileRoutes = require("./Backend/Routes/fileRoutes.js")
-const paymentRoutes = require('./Backend/Routes/paymentRoutes.js');
+const fileRoutes = require("./Backend/Routes/fileRoutes.js");
+const paymentRoutes = require("./Backend/Routes/paymentRoutes.js");
 const userRoutes = require("./Backend/Routes/userRoutes.js");
 const bodyParser = require("body-parser");
 const bookingThirdPartyRoutes = require("./Backend/Routes/ThirdParty/bookingRoutes.js");
-const documentRoutes = require('./Backend/Routes/documentRoutes');
+const documentRoutes = require("./Backend/Routes/documentRoutes");
 const museumRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/museumRoutes.js");
 const historicalPlaceRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceRoutes.js");
 const historicalPlaceTagRoutes = require("./Backend/Routes/museumHistoricalPlaceRoutes/historicalPlaceTagRoutes.js");
@@ -38,14 +38,17 @@ app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ limit: "25mb" }));
 
 //__dirname = path.dirname(fileURLToPath(import.meta.url)); // Set __dirname
-app.use("/uploads", (req, res, next) => {
-  console.log("Static file request:", req.url);
-  next();
-}, express.static(path.join(__dirname, "uploads")));
+app.use(
+  "/uploads",
+  (req, res, next) => {
+    console.log("Static file request:", req.url);
+    next();
+  },
+  express.static(path.join(__dirname, "uploads"))
+);
 
 app.use(bodyParser.json());
 //app.use("/uploads", express.static("uploads"));
-
 
 console.log(process.env.PORT);
 app.use(express.json());
@@ -66,9 +69,8 @@ app.post("/uploadImage", (req, res) => {
     .then((url) => res.send(url))
     .catch((err) => res.status(500).send(err.message));
 });
-const tourGuideRateRoutes = require("./Backend/Routes/tourGuideRateRoutes.js")
-const tourGuideCommentRoutes = require("./Backend/Routes/tourGuideCommentRoutes.js")
-
+const tourGuideRateRoutes = require("./Backend/Routes/tourGuideRateRoutes.js");
+const tourGuideCommentRoutes = require("./Backend/Routes/tourGuideCommentRoutes.js");
 
 app.use("/signUp", signUpRoutes);
 app.use("/touristRoutes", touristRoutes);
@@ -88,12 +90,12 @@ app.use("/itinerary", itineraryRoutes);
 app.use("/tourGuideAccount", tourGuideAccountRoutes);
 app.use("/advertiserAccount", advertiserAccountRoutes);
 app.use("/sellerAccount", sellerAccountRoutes);
-app.use('/file', fileRoutes);
-app.use('/payment', paymentRoutes);
+app.use("/file", fileRoutes);
+app.use("/payment", paymentRoutes);
 app.use("/complaint", complaintRoutes);
 app.use("/users", userRoutes);
 app.use("/", bookingThirdPartyRoutes);
-app.use('/api/documents', documentRoutes);
+app.use("/api/documents", documentRoutes);
 // app.use("/", bookingThirdPartyRoutes);
 app.use("/tourGuideRate", tourGuideRateRoutes);
 app.use("/tourGuideComment", tourGuideCommentRoutes);

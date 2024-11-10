@@ -3,7 +3,7 @@ import React, { useState, useRef } from "react";
 import axios from "axios";
 import { message } from "antd";
 import { TextField, Button, Stack } from "@mui/material";
-import UploadFile from "../../Components/FileUpload.js";
+import UploadFile from "../../Components/ProductUploadImage";
 
 let picture = "";
 

@@ -1,6 +1,6 @@
-import React, {  useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { message } from "antd";
+import { Flex, message } from "antd";
 import { Typography } from "@mui/material";
 import { Button } from "@mui/material";
 import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
@@ -11,13 +11,14 @@ function AdminAllProducts() {
   const navigate = useNavigate(); // Initialize useNavigate for navigation
 
   useEffect(() => {
-      axios.get(
-        "http://localhost:8000/adminRoutes/getproducts"
-      ).then(response => {
+    axios
+      .get("http://localhost:8000/adminRoutes/getproducts")
+      .then((response) => {
         message.success("Products fetched successfully");
         setProducts(response.data);
-      }).catch(error => {
-        console.error('There was an error fetching the products!', error);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the products!", error);
       });
   }, []);
 
@@ -31,7 +32,13 @@ function AdminAllProducts() {
   };
 
   return (
-    <div style={{ padding: "20px", maxWidth: "800px", margin: "auto" }}>
+    <div
+      style={{
+        padding: "20px",
+        maxWidth: "800px",
+        margin: "auto",
+      }}
+    >
       <Button onClick={handleBackButtonClick}>Back</Button>
 
       <div
@@ -51,7 +58,11 @@ function AdminAllProducts() {
               key={product._id}
               style={{ position: "relative", marginBottom: "20px" }}
             >
-              <ProductCard product={product} showArchive={true} showUnarchive={true}/>
+              <ProductCard
+                product={product}
+                showArchive={true}
+                showUnarchive={true}
+              />
               <Button
                 variant="contained"
                 color="secondary"
@@ -67,7 +78,6 @@ function AdminAllProducts() {
             No products found.
           </Typography>
         )}
-
       </div>
     </div>
   );

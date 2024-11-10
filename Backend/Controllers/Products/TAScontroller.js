@@ -15,6 +15,20 @@ const getProducts = async (req, res) => {
     res.status(400).json({ err: err.message }); //400 ashan error aady
   }
 };
+// In your controller file, e.g., sellerController.js
+const getProductById = async (req, res) => {
+  const { productId } = req.params;
+  try {
+    const product = await productModel.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 const sortProducts = async (req, res) => {
   const sortingDecider = req.query.sortingDecider; // Get the sortingDecider from the query params
@@ -68,6 +82,19 @@ const filterProducts = async (req, res) => {
     res.status(200).send(products);
   } catch (err) {
     res.status(400).send(err.message);
+  }
+};
+
+const findProductByID = async (req, res) => {
+  const ID = req.params.productId;
+  try {
+    const product = await productModel.findById(ID);
+    if (!product) {
+      res.status(404).json("product not found");
+    }
+    res.status(200).json(product);
+  } catch (err) {
+    res.status(400).json({ err: err.message });
   }
 };
 
@@ -151,7 +178,6 @@ const getProductRating = async (req, res) => {
     const buyerRating = product.ratings.find(
       (rating) => rating.buyer === buyer
     );
-
     if (buyerRating) {
       res.status(200).json({ rating: buyerRating.rating });
     } else {
@@ -212,4 +238,5 @@ module.exports = {
   touristUpdateProductRating,
   getProductRating,
   touristUpdateProductReview,
+  getProductById
 };
