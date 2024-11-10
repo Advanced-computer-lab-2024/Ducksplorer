@@ -6,9 +6,12 @@ import { Button } from "@mui/material";
 import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
 import Help from "../../Components/HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar";
+import {useNavigate} from "react-router-dom";
 
 function TouristProducts() {
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
+  const isGuest = localStorage.getItem("guest") === "true";
 
   useEffect(() => {
     axios
@@ -78,6 +81,7 @@ function TouristProducts() {
                   style={{ position: "relative", marginBottom: "20px" }}
                 >
                   <ProductCard product={product} showRating={false} />
+                  {!isGuest && (
                   <Button
                     variant="contained"
                     color="secondary"
@@ -90,6 +94,7 @@ function TouristProducts() {
                   >
                     Purchase
                   </Button>
+                  )}
                 </div>
               ))
           ) : (
