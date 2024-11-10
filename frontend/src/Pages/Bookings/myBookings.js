@@ -11,7 +11,8 @@ import {
   Typography,
   Rating,
   Tooltip,
-  IconButton
+  IconButton,
+  Tab
 } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { message } from 'antd';
@@ -30,6 +31,8 @@ const BookingDetails = () => {
   const [currencyft, setCurrencyft] = useState('EUR');
   const [exchangeRatesht, setExchangeRatesht] = useState({});
   const [currencyht, setCurrencyht] = useState('USD');
+  const [exchangeRatestt, setExchangeRatestt] = useState({});
+  const [currencytt, setCurrencytt] = useState('USD');
   const [activityBookings, setActivityBookings] = useState([]);
   const [itineraryBookings, setItineraryBookings] = useState([]);
   const [flightsBookings, setFlightsBookings] = useState([]);
@@ -56,6 +59,10 @@ const BookingDetails = () => {
     setCurrencyht(selectedCurrency);
   };
 
+  const handleCurrencyChangett = (rates, selectedCurrency) => {
+    setExchangeRatestt(rates);
+    setCurrencytt(selectedCurrency);
+  };
   const fetchBookings = async () => {
     try {
       const response = await axios.get(`http://localhost:8000/touristRoutes/booking`, {
@@ -67,7 +74,7 @@ const BookingDetails = () => {
       setFlightsBookings(response.data.flights || []);
       setHotelsBookings(response.data.hotels || []);
       console.log("HotelsData",response.data.hotels);
-      setTransportationBookings(response.data.transportation || []);
+      setTransportationBookings(response.data.transportations || []);
       // setCurrencyft(response.data.flights[0].currency);
       console.log(response.data)
     } catch (error) {
@@ -77,7 +84,7 @@ const BookingDetails = () => {
 
   useEffect(() => {
     fetchBookings();
-  }, [userName]);
+  }, []);
 
   const handleDeleteBooking = async (type, itemId, price) => {
     try {
@@ -98,7 +105,7 @@ const BookingDetails = () => {
         }
 
         // Re-fetch bookings to ensure the state is in sync with the server
-        fetchBookings();
+        //fetchBookings();
       } else {
         message.error(response.data.message || "Failed to delete booking item.");
       }
@@ -204,7 +211,7 @@ const BookingDetails = () => {
         </TableContainer>
 
         {/* Itineraries Table */}
-        <Typography variant="h5" gutterBottom>Itineraries</Typography>
+        <Typography variant="h5"  gutterBottom>Itineraries</Typography>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -229,25 +236,48 @@ const BookingDetails = () => {
             <TableBody>
               {itineraryBookings.map((itinerary) => (
                 <TableRow key={itinerary._id}>
-                  <TableCell>{itinerary.itinerary.activity.map(act => act.name).join(", ")}</TableCell>
-                  <TableCell>{itinerary.itinerary.locations.join(", ")}</TableCell>
-                  <TableCell>{itinerary.itinerary.timeline}</TableCell>
-                  <TableCell>{itinerary.itinerary.language}</TableCell>
-                  <TableCell>
-                    {(itinerary.itinerary.price * (exchangeRatesIt[currencyIt] || 1)).toFixed(2)} {currencyIt}
+                  <TableCell>{itinerary.itinerary && itinerary.itinerary.activity
+                            ? itinerary.itinerary.activity.map((act) => act.name).join(", ")
+                            : "N/A"}
                   </TableCell>
-                  <TableCell>{itinerary.itinerary.availableDatesAndTimes.map(date => new Date(date).toLocaleDateString()).join(", ")}</TableCell>
-                  <TableCell>{new Date(itinerary.itinerary.chosenDate).toLocaleDateString()}</TableCell>
-                  <TableCell>{itinerary.itinerary.accessibility}</TableCell>
-                  <TableCell>{itinerary.itinerary.pickUpLocation}</TableCell>
-                  <TableCell>{itinerary.itinerary.dropOffLocation}</TableCell>
-                  <TableCell>{itinerary.itinerary.tourGuideModel?.name || "N/A"}</TableCell>
+                  <TableCell>{itinerary.itinerary && itinerary.itinerary.locations
+                          ? itinerary.itinerary.locations.join(", ")
+                          : "N/A"}
+                  </TableCell>
+                  <TableCell>{itinerary.itinerary && itinerary.itinerary.timeline
+          ? itinerary.itinerary.timeline
+          : "N/A"}</TableCell>
+                  <TableCell> {itinerary.itinerary && itinerary.itinerary.language
+          ? itinerary.itinerary.language
+          : "N/A"}</TableCell>
+                  <TableCell>
+                  {itinerary.itinerary && itinerary.itinerary.price
+          ? (itinerary.itinerary.price * (exchangeRatesIt[currencyIt] || 1)).toFixed(2) + ` ${currencyIt}`
+          : "N/A"}                  </TableCell>
+                  <TableCell> {itinerary.itinerary && itinerary.itinerary.availableDatesAndTimes
+          ? itinerary.itinerary.availableDatesAndTimes.map((date) => new Date(date).toLocaleDateString()).join(", ")
+          : "N/A"}</TableCell>
+                  <TableCell>{itinerary.itinerary && itinerary.itinerary.chosenDate
+          ? new Date(itinerary.itinerary.chosenDate).toLocaleDateString()
+          : "N/A"}</TableCell>
+                  <TableCell>{itinerary.itinerary && itinerary.itinerary.accessibility
+          ? itinerary.itinerary.accessibility
+          : "N/A"}</TableCell>
+                  <TableCell>{itinerary.itinerary && itinerary.itinerary.pickUpLocation
+          ? itinerary.itinerary.pickUpLocation
+          : "N/A"}</TableCell>
+                  <TableCell> {itinerary.itinerary && itinerary.itinerary.dropOffLocation
+          ? itinerary.itinerary.dropOffLocation
+          : "N/A"}</TableCell>
+                  <TableCell>{ itinerary.itinerary && itinerary.itinerary.tourGuideModel?.name ? itinerary.itinerary.tourGuideModel.name : "N/A"}</TableCell>
                   <TableCell><Rating
-                    value={itinerary.itinerary.rating}
+                    value={itinerary.itinerary && itinerary.itinerary.rating ? itinerary.itinerary.rating : 0}
                     precision={0.1}
                     readOnly
                   /></TableCell>
-                  <TableCell>{itinerary.itinerary.tags.join(", ")}</TableCell>
+                  <TableCell>  {itinerary.itinerary && itinerary.itinerary.tags
+          ? itinerary.itinerary.tags.join(", ")
+          : "N/A"}</TableCell>
                   <TableCell>
                     <Tooltip title="Delete Itinerary">
                       <IconButton color="error" aria-label="delete category" onClick={() => handleDeleteBooking('itinerary', itinerary.itinerary._id, itinerary.itinerary.price)}>
@@ -263,7 +293,7 @@ const BookingDetails = () => {
 
 
         {/* Flights Table */}
-        <Typography variant="h5" gutterBottom>Flights</Typography>
+        <Typography variant="h5" sx ={{ marginTop: '20px' }}gutterBottom>Flights</Typography>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -303,7 +333,7 @@ const BookingDetails = () => {
         </TableContainer>
           
           {/* Hotels Table */}
-        <Typography variant="h5" gutterBottom>Hotels</Typography>
+        <Typography variant="h5" sx={{ marginTop: '20px' }}gutterBottom>Hotels</Typography>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -330,6 +360,47 @@ const BookingDetails = () => {
                   <TableCell>
                     <Tooltip title="Delete Hotel">
                       <IconButton color="error" aria-label="delete category" onClick={() => handleDeleteThirdPartyBooking('hotel',hotel.price,hotel)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        {/* Transportation Table */}
+        <Typography variant="h5" sx={{ marginTop: '30px' }}gutterBottom>Transportation</Typography>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Transportation Company</TableCell>
+                <TableCell>Departure Date</TableCell>
+                <TableCell>Arrival Date</TableCell>
+                <TableCell>Price<CurrencyConvertor onCurrencyChange={handleCurrencyChangett} /></TableCell>
+                {/* <TableCell>Origin</TableCell> */}
+                {/* <TableCell>Destination</TableCell> */}
+                <TableCell>Transfer Type</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {transportationBookings.map((transportation) => (
+                <TableRow key={transportation._id}>
+                  <TableCell>{transportation.companyName}</TableCell>
+                  <TableCell>{new Date(transportation.departureDate).toLocaleString()}</TableCell>
+                  <TableCell>{new Date(transportation.arrivalDate).toLocaleString()}</TableCell>
+                  <TableCell>
+                    {(transportation.price * (exchangeRatestt[currencytt] || 1)).toFixed(2)} {currencytt}
+                  </TableCell>
+                  {/* <TableCell> {transportation.City}{" , "}{transportation.Country}</TableCell> */}
+                  {/* <TableCell> {transportation.arrivalCity}{" , "}{transportation.arrivalCountry}</TableCell> */}
+                  <TableCell> {transportation.transferType}</TableCell>
+                  <TableCell>
+                    <Tooltip title="Delete Transportation">
+                      <IconButton color="error" aria-label="delete Transportation" onClick={() => handleDeleteThirdPartyBooking('transportation',transportation.price,transportation)}>
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>

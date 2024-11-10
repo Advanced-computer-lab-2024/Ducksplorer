@@ -70,7 +70,7 @@ import ViewAllActivities from "./Pages/Admin/ViewAllActivities.js";
 import PastBookingDetails from "./Pages/Bookings/myPastBookings.js";
 import GuestDashboard from "./Pages/Dashboards/GuestDashboard.js";
 
-import TransportationBooking from "./Pages/Products/TransportationBooking.js";
+import TransportationBooking from "./Pages/ThirdParty/TransportationBooking.js";
 
 function App() {
   return (

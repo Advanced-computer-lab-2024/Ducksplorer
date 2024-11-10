@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import StorefrontIcon from "@mui/icons-material/Storefront";
@@ -21,6 +22,7 @@ import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import LockIcon from "@mui/icons-material/Lock";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+
 import axios from "axios";
 
 function TouristNavBar() {
@@ -36,26 +38,27 @@ function TouristNavBar() {
   };
   //call the getImage in a useEffect
   const userName = JSON.parse(localStorage.getItem("user")).username;
-  React.useEffect(() => {
-    const storedPicture = localStorage.getItem('profilePicture');
-    getImage(userName);
-    // console.log("image", image);
-  })
-  const getImage = async (userName) => {
-    const res = await axios.get(`http://localhost:8000/touristRoutes/getLevel/${userName}`);
-    // console.log("level",res.data);
-    if (res.data === 1) {
-      setImage("level1.png");
-    }
-    else if (res.data === 2) {
-      setImage("level2.png");
-    }
 
-    else if (res.data === 3) {
-      setImage("level3.png");
-    }
-  }
+  useEffect(() => {
+    //const storedPicture = localStorage.getItem('profilePicture');
   
+        axios.get(`http://localhost:8000/touristRoutes/getLevel/${userName}`)
+        .then((response) => {
+          console.log(response.data);
+          const level = response.data;
+        if (level === 1) {
+          setImage("level1.png");
+        } else if (level === 2) {
+          setImage("level2.png");
+        } else if (level === 3) {
+          setImage("level3.png");
+        }
+      }) 
+      .catch ((error) => {
+        console.log("Error: ", error.message);
+        console.error("There was an error fetching the image!", error);
+      });
+    }, [userName]);
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };

@@ -181,7 +181,7 @@ function PaymentPage() {
         //setHotel(hotel);
       }
       else if (itineraryOrActivity === 'transportation' && transportation) {
-        setTransportation(transportation);
+       // setTransportation(transportation);
       }
        else {
         message.error("Failed to retrieve details");
@@ -468,7 +468,46 @@ function PaymentPage() {
               />
           </Form>
             </div>
-           ) : null
+           ) : type === 'transportation' ? (
+            <div>
+              <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
+                <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                  <Title level={3}>Booked Details</Title>
+                  <p><strong>Price:</strong> {transportationsData.price}{'  '}{transportationsData.currency}</p>
+                  <p><strong>Departure Date:</strong> {transportationsData.departureDate}</p>
+                  <p><strong>Arrival Date:</strong> {transportationsData.arrivalDate}</p>
+                  <p><strong>Company Name:</strong> {transportationsData.companyName}</p>
+                  {/* <p><strong>Departure City:</strong> {transportationsData.departureCity}</p> */}
+                  <p><strong>Transfer Type:</strong> {transportationsData.transferType}</p>
+                </Space>
+              </Card>
+              <Form>
+              <h1>Enter Payment Details</h1>
+
+              <p>Email</p>
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value * 100)}
+                required
+                readOnly
+                style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+              />
+
+              <p>Amount</p>
+              <input
+                type="number"
+                placeholder="Amount"
+                value={transportationsData.price}
+                onChange={(e) => setAmount(e.target.value * 100)}
+                required
+                readOnly
+                style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+              />
+
+          </Form>
+            </div> ): null
         ) : (
           <p>Loading booking details...</p>
         )}

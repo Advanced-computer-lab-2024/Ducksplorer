@@ -3,29 +3,86 @@ import { Card, CardContent, Typography, Box, Grid } from '@mui/material';
 import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot, TimelineOppositeContent } from '@mui/lab';
 import CurrencyConverterGeneral from './CurrencyConverterGeneral'; 
 import { Button } from '@mui/material';
+import { message } from 'antd';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
 const TransportationsCards = ({transportations}) => {
 
+    const initialCurrency = 'USD';
+    const [exchangeRates, setExchangeRates] = useState({});
+    const [currency, setCurrency] = useState('USD');
+    const navigate = useNavigate();
   
+    useEffect(() => {
+        setCurrency(initialCurrency);
+      }, [initialCurrency]);
+    
 
-  const handleBooking = async(transportation) => {
-    try {
-      const response = await axios.post('http://localhost:8000/transportBook/transportation-booking', { transportation });
-      if (response.status === 200) {
-          alert('Booking successful!');
-      } else {
-          alert('Booking failed. Please try again.');
-      }
-    }catch(error){
-      console.error('Error booking transportation:', error);
-      alert('An error occurred while booking the transportation. Please try again.');
+    const handleBooking = async (transportationBookings) => {
+        try {
+          const userJson = localStorage.getItem('user');
+          if (!userJson) {
+            message.error("User is not logged in.");
+            return null;
+          }
+          const user = JSON.parse(userJson);
+          if (!user || !user.username) {
+            message.error("User information is missing.");
+            return null;
+          }
+          
+
+          const type = 'transportation';
+          const transportation = {
+           price : transportationBookings.quotation.monetaryAmount,
+           currency : 'USD',
+           departureDate : transportationBookings.start.dateTime,
+           arrivalDate : transportationBookings.end.dateTime,
+           transferType : transportationBookings.transferType,
+           companyName : transportationBookings.serviceProvider.name,
+           seats : transportationBookings.vehicle.seats[0].count,
+          }
+    
+          localStorage.setItem('transportation', JSON.stringify(transportation));
+          localStorage.setItem('type', type);
+    
+          
+    
+          if (transportationBookings) {
+            navigate('/payment');
+          } else {
+            message.error("Please Choose a transporation.");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          message.error("An error occurred while booking.");
+        }
+};
+
+const convertPrice = (price, fromCurrency) => {
+    if (!exchangeRates || !exchangeRates[fromCurrency] || !exchangeRates[currency]) {
+      return price;
     }
-  }
+    const rate = exchangeRates[currency] / exchangeRates[fromCurrency];
+    return (price * rate).toFixed(2);
+  };
+
+const extractPrice = (priceString) => {
+    const price = priceString.split('$')[1];
+    return price ? price.trim() : 'N/A';
+  };
+
+const handleCurrencyChange = useCallback((rates, selectedCurrency) => {
+    setExchangeRates(rates);
+    setCurrency(selectedCurrency);
+  }, []);
+
 
   return (
     <Box sx={{ flexGrow: 1, mt: 4, overflowY: 'auto' }}>
+        <CurrencyConverterGeneral onCurrencyChange={handleCurrencyChange} initialCurrency={currency} />
         <Grid container spacing={2} justifyContent="center">
             {transportations.map((transportation, index) => (
                 <Grid item xs={12} sm={4} key={index} sx={{ mt: 2, overflowY: 'auto' }}>
@@ -73,7 +130,7 @@ const TransportationsCards = ({transportations}) => {
                             {/* Price */}
                             {transportation.quotation && transportation.quotation.monetaryAmount && (
                                 <Typography variant="subtitle1" color="text.secondary" sx={{ textAlign: 'center', padding: 1 }}>
-                                    Price: {transportation.quotation.monetaryAmount}$
+                                    Price: {convertPrice(transportation.quotation.monetaryAmount,'USD')} {currency}
                                 </Typography>
                             )}
 

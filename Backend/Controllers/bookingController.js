@@ -9,7 +9,8 @@ const ThirdPartyBookings = require('../Models/ThirdPartyBookingsModel.js');
 
 const createBooking = async (req, res) => {
     const { user } = req.params;
-    const { activityId, itineraryId ,hotel, transporation, flight , type, date } = req.body;
+    const { activityId, itineraryId ,hotel, transportation, flight , type, date } = req.body;
+    console.log("requestBody", req.body);
 
     try {
         const tourist = await Tourist.findOne({ userName: user });
@@ -80,15 +81,15 @@ const createBooking = async (req, res) => {
                 points: tourist.points
             });
         }
-        else if(type === 'transporation' && transporation){
-            const newTransporationBooking = await ThirdPartyBookings.create({
+        else if(type === 'transportation' && transportation){
+            const newtransportationBooking = await ThirdPartyBookings.create({
                 user: tourist.userName,
-                transporations: transporation
+                transportations: transportation
             });
-            await newTransporationBooking.save();
+            await newtransportationBooking.save();
             return res.status(200).json({
-                message: "Transporation booking created successfully",
-                booking: newTransporationBooking,
+                message: "transportation booking created successfully",
+                booking: newtransportationBooking,
                 status: 200,
                 wallet: tourist.wallet,
                 points: tourist.points
@@ -256,7 +257,7 @@ const getMyBookings = async (req, res) => {
             itineraries: itineraryBookings,
             flights: flights,
             hotels: hotels,
-            transporations: transportations
+            transportations: transportations
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -267,10 +268,10 @@ const getMyBookings = async (req, res) => {
 const cancelMyBooking = async (req, res) => {
     const { user } = req.params;
     const { type, itemId, price } = req.body;
-    const { booking } = req.body.booking;
+    const { booking } = req.body.booking ? req.body.booking : " ";
     const currentDate = new Date();
     console.log("requestBody", req.body);
-
+    let itemObjectId;
 
     try {
         const tourist = await Tourist.findOne({ userName: user });
@@ -278,7 +279,7 @@ const cancelMyBooking = async (req, res) => {
             return res.status(404).json({ message: 'Tourist not found' });
         }
         if(itemId){
-        const itemObjectId = new mongoose.Types.ObjectId(itemId);
+         itemObjectId = new mongoose.Types.ObjectId(itemId);
         }
         let itemDate;
 
@@ -426,13 +427,16 @@ const getLevel = async (req, res) => {
     const { userName } = req.params;
     try {
         const user = await Tourist.findOne({ userName });
+        const level = user.level || 1;
         if (!user) {
             console.error('User not found');
-            return;
+         res.status(404).json({ message: "User not found" });
         }
-        res.status(200).json(user.level);
+        else{
+         res.status(200).json(level);
+        }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+       return  res.status(500).json({ message: error.message });
     }
 }
 const updateLevel = async (userName, points) => {

@@ -104,7 +104,7 @@ const FlightBookingForm = () => {
 
       } catch (error) {
         console.error('Error fetching flights:', error);
-        message.error('Response data:', error.response.data.error);
+        //message.error('Response data:', error.response.error);
         message.error('Failed to fetch flights. Please try again.');
       }
     } else {
