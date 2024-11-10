@@ -202,7 +202,7 @@ const EditProfile = () => {
   return (
     <Box
       sx={{
-        display: "flex",
+        height: "100vh",
       }}
     >
       <TouristNavBar />
