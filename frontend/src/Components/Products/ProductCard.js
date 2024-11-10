@@ -15,6 +15,7 @@ import { Rating } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { calculateProductRating } from "../../Utilities/averageRating";
+import { useLocation } from 'react-router-dom';
 
 const ProductCard = ({
   product,
@@ -26,6 +27,7 @@ const ProductCard = ({
 }) => {
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
+  const location = useLocation();
 
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
@@ -42,7 +44,7 @@ const ProductCard = ({
   }, [product.isArchived]);
 
   useEffect(() => {
-    // Fetch the product's rating for this buyer on component mount
+    if (location.pathname === '/myPurchases') {
     const fetchRating = async () => {
       const userJson = localStorage.getItem("user");
       const user = JSON.parse(userJson);
@@ -62,6 +64,7 @@ const ProductCard = ({
     };
 
     fetchRating();
+  }
   }, [productID]);
 
   const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
