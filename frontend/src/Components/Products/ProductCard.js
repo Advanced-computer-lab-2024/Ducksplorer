@@ -13,6 +13,7 @@ import axios from "axios";
 import { Rating } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
+import { calculateProductRating } from "../../Utilities/averageRating";
 
 const ProductCard = ({
   product,
@@ -166,12 +167,11 @@ const ProductCard = ({
           Description: {product.description}
         </Typography>
         <Typography variant="body1">Seller: {product.seller}</Typography>
-        {/* <Typography variant="body1">
-          Ratings:{" "}
-          {product.ratings.length > 0
-            ? product.ratings.join(", ")
-            : "No ratings yet"}
-        </Typography> */}
+        <Rating
+                        value={calculateProductRating(product.ratings)}
+                        precision={0.1}
+                        readOnly
+                      />
         <h4>Reviews:</h4>
         {Object.entries(product.reviews).length > 0 ? (
           Object.entries(product.reviews).map(([user, review]) => (
