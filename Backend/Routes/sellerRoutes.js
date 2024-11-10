@@ -36,7 +36,6 @@ router.post("/createProducts", upload.single("picture"), createProduct);
 router.post("/sortProducts", sortProducts);
 router.get("/findProduct", findProduct);
 router.get("/filterProducts", filterProducts);
-router.get("/findProductByID/:productId", findProductByID);
 router.put("/editProduct/:productId", editProduct);
 
 module.exports = router;

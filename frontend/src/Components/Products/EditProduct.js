@@ -80,7 +80,8 @@ const EditProduct = () => {
         justifyContent: 'center',
         alignItems: 'center',
         padding: 3,
-        overflowY: 'visible'
+        overflowY: 'visible',
+        height: '100vh'
       }}
     >
       <Button onClick={handleBackButtonClick}>Back</Button>
@@ -91,6 +92,8 @@ const EditProduct = () => {
           maxWidth: 600,
           borderRadius: 3,
           backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          overflowY: 'visible',
+          height: '100vh'
         }}
       >
         <Typography variant="h4" align="center" sx={{ mb: 2, color: '#00796b', fontWeight: 'bold' }}>
