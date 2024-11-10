@@ -82,7 +82,7 @@ function TouristProducts() {
                   style={{
                     position: "relative",
                     marginBottom: "20px",
-                    height: "50vh",
+                    height: "60vh",
                     width: "30vw",
                     maxHeight: "100%",
                   }}

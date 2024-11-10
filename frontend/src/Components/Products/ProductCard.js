@@ -15,7 +15,7 @@ import { Rating } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { calculateProductRating } from "../../Utilities/averageRating";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 
 const ProductCard = ({
   product,
@@ -45,27 +45,27 @@ const ProductCard = ({
   }, [product.isArchived]);
 
   useEffect(() => {
-    if (location.pathname === '/myPurchases') {
-    const fetchRating = async () => {
-      const userJson = localStorage.getItem("user");
-      const user = JSON.parse(userJson);
-      const userName = user.username;
+    if (location.pathname === "/myPurchases") {
+      const fetchRating = async () => {
+        const userJson = localStorage.getItem("user");
+        const user = JSON.parse(userJson);
+        const userName = user.username;
 
-      try {
-        const response = await axios.get(
-          `http://localhost:8000/touristRoutes/getRating/${productID}/rating/${userName}`
-        );
+        try {
+          const response = await axios.get(
+            `http://localhost:8000/touristRoutes/getRating/${productID}/rating/${userName}`
+          );
 
-        if (response.status === 200 && response.data.rating !== undefined) {
-          setRating(response.data.rating); // Set the buyer's rating from the database
+          if (response.status === 200 && response.data.rating !== undefined) {
+            setRating(response.data.rating); // Set the buyer's rating from the database
+          }
+        } catch (error) {
+          console.error("Failed to fetch rating:", error);
         }
-      } catch (error) {
-        console.error("Failed to fetch rating:", error);
-      }
-    };
+      };
 
-    fetchRating();
-  }
+      fetchRating();
+    }
   }, [productID]);
 
   const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
@@ -164,8 +164,8 @@ const ProductCard = ({
     >
       <CardMedia
         component="img"
-        height="400" // Adjust the height as needed
-        width="500"
+        height="400vh" // Adjust the height as needed
+        width="50vh"
         image={product.picture}
         alt={product.name}
         style={{
