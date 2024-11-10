@@ -35,6 +35,7 @@ const TouristAllProducts = () => {
   // State for managing the dropdown menu
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate(); 
+  const isGuest = localStorage.getItem('guest') === 'true';
 
   const handleFilterClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -182,7 +183,8 @@ const TouristAllProducts = () => {
         >
           Sort Products
         </Button>
-        <Button
+        {!isGuest && (
+          <Button
             fullWidth
             variant="contained"
             onClick={handleMyPurchases}
@@ -190,6 +192,7 @@ const TouristAllProducts = () => {
           >
             My Purchases
           </Button>
+        )}
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}

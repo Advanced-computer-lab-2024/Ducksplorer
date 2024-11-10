@@ -22,12 +22,14 @@ import LockIcon from "@mui/icons-material/Lock";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 function TouristNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [image, setImage] = React.useState("");
   const [storedPicture, setStoredPicture] = React.useState(localStorage.getItem('profilePicture'));
+  const navigate = useNavigate();
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -93,7 +95,7 @@ function TouristNavBar() {
               variant="h6"
               noWrap
               component="a"
-              href="/"
+              onClick={() => navigate('/touristDashboard')}
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -102,6 +104,7 @@ function TouristNavBar() {
                 letterSpacing: ".3rem",
                 color: "inherit",
                 textDecoration: "none",
+                cursor: "pointer",
               }}
             >
               Ducksplorer
