@@ -6,7 +6,7 @@ import { Button } from "@mui/material";
 import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
 import Help from "../../Components/HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function TouristProducts() {
   const [products, setProducts] = useState([]);
@@ -82,25 +82,25 @@ function TouristProducts() {
                   style={{
                     position: "relative",
                     marginBottom: "20px",
-                    height: "100%",
-                    width: "100%",
+                    height: "50vh",
+                    width: "30vw",
                     maxHeight: "100%",
                   }}
                 >
                   <ProductCard product={product} showRating={false} />
                   {!isGuest && (
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => handlePurchase(product)}
-                    style={{
-                      position: "absolute",
-                      right: "60px",
-                      bottom: "50px",
-                    }} // Place the button at the bottom-right corner
-                  >
-                    Purchase
-                  </Button>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => handlePurchase(product)}
+                      style={{
+                        position: "absolute",
+                        right: "60px",
+                        bottom: "50px",
+                      }} // Place the button at the bottom-right corner
+                    >
+                      Purchase
+                    </Button>
                   )}
                 </div>
               ))
