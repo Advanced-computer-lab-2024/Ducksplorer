@@ -203,6 +203,7 @@ const EditProfile = () => {
     <Box
       sx={{
         display: "flex",
+        overflowY : 'visible',
         height: "100vh",
       }}
     >
@@ -217,6 +218,7 @@ const EditProfile = () => {
           display: "flex",
           justifyContent: "center",
           height: "100vh",
+          overflowY : 'visible'
         }}
       >
         <Paper
@@ -227,7 +229,7 @@ const EditProfile = () => {
             borderRadius: 3,
             boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
             height: "120vh",
-            overflow: "auto",
+            overflow: "visible",
           }}
         >
           <Box
