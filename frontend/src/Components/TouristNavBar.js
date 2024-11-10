@@ -286,7 +286,7 @@ function TouristNavBar() {
                 sx={{ p: 0, ml: 4, width: 40, height: 40 }}
               >
                 <img
-                  src={storedPicture || "duckAvatar.png"} // Check if profilePicture exists, else use default
+                  src={"duckAvatar.png"} // Check if profilePicture exists, else use default
                   alt="Avatar"
                   style={{ width: 40, height: 40, borderRadius: "50%" }}
                 />

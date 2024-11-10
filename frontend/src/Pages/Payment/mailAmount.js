@@ -130,6 +130,7 @@ function PaymentPage() {
 
         if (bookingResult.status === 200) {
           console.log("Booking successfully created:", bookingResult);
+          navigate("/myBookings");
         } else {
           console.error("Booking creation failed:", bookingResult.message);
         }
@@ -138,7 +139,6 @@ function PaymentPage() {
           "Error creating payment. Not enough money in the wallet."
         );
       }
-      navigate("/myBookings");
     } catch (error) {
       console.error("Payment initiation failed:", error);
       message.error("Error creating payment. Not enough money in the wallet.");
