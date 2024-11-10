@@ -203,33 +203,25 @@ const EditProfile = () => {
     <Box
       sx={{
         display: "flex",
-        overflowY : 'visible',
-        height: "100vh",
       }}
     >
       <TouristNavBar />
-      <Box sx={{ height: "100vh", p: 3 }}>
-        <Link to="/touristDashboard">Back to Dashboard</Link>
-      </Box>
       <Box
         sx={{
-          flexGrow: 1,
           p: 4,
-          display: "flex",
           justifyContent: "center",
-          height: "100vh",
-          overflowY : 'visible'
         }}
       >
+        <Link to="/touristDashboard">Back to Dashboard</Link>
         <Paper
           elevation={4}
           sx={{
+            marginTop: "30px",
             p: 5,
             width: "550px",
             borderRadius: 3,
             boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
-            height: "120vh",
-            overflow: "visible",
+            height: "100%",
           }}
         >
           <Box
