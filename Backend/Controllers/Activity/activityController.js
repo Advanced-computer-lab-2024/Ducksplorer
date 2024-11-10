@@ -50,7 +50,7 @@ const updateActivity = async (req, res) => {
 
 const deleteOnlyNotBookedActivity = async (req, res) => {
   try {
-    const { activityId } = req.params;
+    const { activityId } =  req.params;
     if (!mongoose.Types.ObjectId.isValid(activityId)) {
       return res.status(400).json({ error: "ID invalid" });
     } else {
