@@ -164,8 +164,8 @@ const ProductCard = ({
     >
       <CardMedia
         component="img"
-        height="400vh" // Adjust the height as needed
-        width="50vh"
+        height="60%" // Adjust the height as needed
+        width="100%"
         image={product.picture}
         alt={product.name}
         style={{
