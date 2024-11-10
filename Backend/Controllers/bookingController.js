@@ -241,10 +241,15 @@ const getMyBookings = async (req, res) => {
         // Extract flights, hotels, and transportations from third party bookings
         const flights = thirdPartyBookings
         .filter(booking => booking.flights)
-        .map(booking => ({
-            _id: booking._id,
-            flights: booking.flights
-        }));
+        .map(booking => booking.flights);
+
+        
+        // const flights = thirdPartyBookings
+        // .filter(booking => booking.flights)
+        // .map(booking => ({
+        //     _id: booking._id,
+        //     flights: booking.flights
+        // }));
 
         const hotels = thirdPartyBookings
         .filter(booking => booking.hotels)
@@ -340,7 +345,9 @@ const cancelMyBooking = async (req, res) => {
                 return res.status(404).json({ message: 'Flight not found in the booking' });
             }
 
-            await ThirdPartyBookings.findByIdAndDelete(booking);
+            await ThirdPartyBookings.deleteOne(
+                { user },
+                {  flights: booking  });
             
             tourist.wallet += parseFloat(price);
             await tourist.save();
@@ -365,8 +372,7 @@ const cancelMyBooking = async (req, res) => {
             }
 
             await ThirdPartyBookings.deleteOne(
-                { transportations: booking }
-            );
+                {  user ,  transportations: booking},);
 
             tourist.wallet += parseFloat(price);
             await tourist.save();
