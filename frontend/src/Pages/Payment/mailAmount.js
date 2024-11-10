@@ -236,260 +236,175 @@ function PaymentPage() {
   }, [type]);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        maxWidth: "1500px",
-        margin: "auto",
-        gap: "1rem",
-        overflowY: "visible",
-        height: "120vh",
-      }}
-    >
-      <div>
-        {itineraryData ||
-        activityData ||
-        flightsData ||
+    <div style={{
+      overflowY: 'visible',
+      height: '120vh'
+    }}>
+      <Button
+        onClick={() => navigate(-1)}
+        style={{ marginLeft: '0%' }}  // Add margin to position the button to the left
+      >
+        Go Back
+      </Button>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        maxWidth: '1500px',
+        margin: 'auto',
+        gap: '1rem',
+        overflowY: 'visible',
+        height: '120vh'
+      }}>
+        <div>
+          {itineraryData || activityData || flightsData ||
         hotelsData ||
         transportationsData ? (
-          type === "itinerary" ? (
-            <div>
-              <Card
-                style={{
-                  maxWidth: "600px",
-                  margin: "20px auto",
-                  borderRadius: "8px",
-                }}
-              >
-                <Space
-                  direction="vertical"
-                  size="middle"
-                  style={{ display: "flex" }}
-                >
-                  <Title level={3}>Booked Details</Title>
-                  <p>
-                    <strong>Itinerary Details:</strong> {itineraryData.name}
-                  </p>
-                  {/* Looping through the activities */}
-                  {itineraryData.activity &&
-                  itineraryData.activity.length > 0 ? (
-                    itineraryData.activity.map((activity, index) => (
-                      <div key={index}>
-                        <p>
-                          <strong>Activity Name:</strong> {activity.name}
-                        </p>
-                        <p>
-                          <strong>Activity Price:</strong> {activity.price}
-                        </p>
-                      </div>
-                    ))
-                  ) : (
-                    <p>No activities found.</p>
-                  )}
-                  <p>
-                    <strong>Locations:</strong>{" "}
-                    {itineraryData.locations.join(", ")}
-                  </p>
-                  <p>
-                    <strong>Timeline:</strong> {itineraryData.timeline}
-                  </p>
-                  <p>
-                    <strong>Language:</strong> {itineraryData.language}
-                  </p>
-                  <p>
-                    <strong>Price:</strong> {itineraryData.price}
-                  </p>
-                  <p>
-                    <strong>Available Dates and Times:</strong>{" "}
-                    {itineraryData.availableDatesAndTimes.length > 0
-                      ? itineraryData.availableDatesAndTimes.map(
-                          (dateTime, index) => {
-                            const dateObj = new Date(dateTime);
-                            const date = dateObj.toISOString().split("T")[0];
-                            const time = dateObj.toTimeString().split(" ")[0];
-                            return (
-                              <div key={index}>
-                                Date {index + 1}: {date}
-                                <br />
-                                Time {index + 1}: {time}
-                              </div>
-                            );
-                          }
-                        )
-                      : "No available dates and times"}
-                  </p>
-                  <p>
-                    <strong>Accessibility:</strong>{" "}
-                    {itineraryData.accessibility}
-                  </p>
-                  <p>
-                    <strong>Pick Up Location:</strong>{" "}
-                    {itineraryData.pickUpLocation}
-                  </p>
-                  <p>
-                    <strong>Drop Off Location:</strong>{" "}
-                    {itineraryData.dropOffLocation}
-                  </p>
-                  <p>
-                    <strong>Rating:</strong> {itineraryData.averageRating}/5
-                  </p>
-                  <p>
-                    <strong>Tags:</strong> {itineraryData.tags}
-                  </p>
-                </Space>
-              </Card>
-
-              <Form
-              // form={form}
-              // onFinish={handleVisaSubmit}
-              // layout="vertical"
-              // initialValues={{ dateTime: null }}
-              >
-                <Form.Item
-                  name="dateTime"
-                  label="Date and Time"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please select a date and time!",
-                    },
-                  ]}
-                >
-                  <Select
-                    placeholder="Select a Date and Time"
-                    onChange={handleDateChange}
-                    style={{ width: "100%" }}
-                  >
-                    {itineraryData?.availableDatesAndTimes
-                      .filter((dateTime) => {
-                        const currentDate = new Date(); // Get the current date and time
-                        const dateObj = new Date(dateTime); // Convert available date to Date object
-                        return dateObj >= currentDate; // Only keep dates in the future or equal to now
-                      })
-                      .map((dateTime, index) => {
+            type === 'itinerary' ? (
+              <div>
+                <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
+                  <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                    <Title level={3}>Booked Details</Title>
+                    <p><strong>Itinerary Details:</strong> {itineraryData.name}</p>
+                    {/* Looping through the activities */}
+                    {itineraryData.activity && itineraryData.activity.length > 0 ? (
+                      itineraryData.activity.map((activity, index) => (
+                        <div key={index}>
+                          <p><strong>Activity Name:</strong> {activity.name}</p>
+                          <p><strong>Activity Price:</strong> {activity.price}</p>
+                        </div>
+                      ))
+                    ) : (
+                      <p>No activities found.</p>
+                    )}
+                    <p><strong>Locations:</strong> {itineraryData.locations.join(', ')}</p>
+                    <p><strong>Timeline:</strong> {itineraryData.timeline}</p>
+                    <p><strong>Language:</strong> {itineraryData.language}</p>
+                    <p><strong>Price:</strong> {itineraryData.price}</p>
+                    <p><strong>Available Dates and Times:</strong> {itineraryData.availableDatesAndTimes.length > 0
+                      ? itineraryData.availableDatesAndTimes.map((dateTime, index) => {
                         const dateObj = new Date(dateTime);
-                        const date = dateObj.toISOString().split("T")[0];
-                        const time = dateObj.toTimeString().split(" ")[0];
-                        const displayText = `${date} at ${time}`;
-
+                        const date = dateObj.toISOString().split('T')[0];
+                        const time = dateObj.toTimeString().split(' ')[0];
                         return (
-                          <Option key={index} value={dateTime} required>
-                            {displayText}
-                          </Option>
+                          <div key={index}>
+                            Date {index + 1}: {date}<br />
+                            Time {index + 1}: {time}
+                          </div>
                         );
-                      })}
-                  </Select>
-                </Form.Item>
-                <p>
-                  <strong>Selected Date and Time:</strong>{" "}
-                  {chosenDate
-                    ? new Date(chosenDate).toLocaleString()
-                    : "None selected"}
-                </p>
+                      })
+                      : 'No available dates and times'}</p>
+                    <p><strong>Accessibility:</strong> {itineraryData.accessibility}</p>
+                    <p><strong>Pick Up Location:</strong> {itineraryData.pickUpLocation}</p>
+                    <p><strong>Drop Off Location:</strong> {itineraryData.dropOffLocation}</p>
+                    <p><strong>Rating:</strong> {(itineraryData.activity.averageRating || itineraryData.activity.averageRating === 0)
+                      ? `${itineraryData.activity.averageRating}/5`
+                      : `0/5`}</p>
+                    <p><strong>Tags:</strong> {itineraryData.tags}</p>
+                  </Space>
+                </Card>
 
-                <h1>Payment Details</h1>
-
-                <p>Email</p>
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value * 100)}
-                  required
-                  readOnly
-                  style={{
-                    width: "100%",
-                    padding: "8px",
-                    borderRadius: "4px",
-                    border: "1px solid #ddd",
-                  }}
-                />
-
-                <p>Amount</p>
-                <input
-                  type="number"
-                  placeholder="Amount"
-                  value={price}
-                  onChange={(e) => setAmount(e.target.value * 100)}
-                  required
-                  readOnly
-                  style={{
-                    width: "100%",
-                    padding: "8px",
-                    borderRadius: "4px",
-                    border: "1px solid #ddd",
-                  }}
-                />
-              </Form>
-            </div>
-          ) : type === "activity" && activityData ? (
-            <div>
-              <Card
-                style={{
-                  maxWidth: "600px",
-                  margin: "20px auto",
-                  borderRadius: "8px",
-                }}
-              >
-                <Space
-                  direction="vertical"
-                  size="middle"
-                  style={{ display: "flex" }}
+                <Form
+                // form={form}
+                // onFinish={handleVisaSubmit}
+                // layout="vertical"
+                // initialValues={{ dateTime: null }}
                 >
-                  <Title level={3}>Booked Details</Title>
-                  <p>
-                    <strong>Activity Details:</strong>{" "}
-                  </p>
-                  <p>
-                    <strong>Activity Name:</strong> {activityData.name}
-                  </p>
-                  <p>
-                    <strong>Price:</strong> {activityData.price}
-                  </p>
-                  <p>
-                    <strong>Is Open:</strong>{" "}
-                    {activityData.isOpen ? "Yes" : "No"}
-                  </p>
-                  <p>
-                    <strong>Category:</strong> {activityData.category}
-                  </p>
-                  <p>
-                    <strong>Tags:</strong> {activityData.tags}
-                  </p>
-                  <p>
-                    <strong>Special Discount:</strong>{" "}
-                    {activityData.specialDiscount}
-                  </p>
-                  <p>
-                    <strong>Date and Time:</strong>{" "}
-                    {activityData.date
-                      ? (() => {
-                          const dateObj = new Date(activityData.date);
-                          const date = dateObj.toISOString().split("T")[0];
-                          const time = dateObj.toTimeString().split(" ")[0];
+                  <Form.Item
+                    name="dateTime"
+                    label="Date and Time"
+                    rules={[{ required: true, message: 'Please select a date and time!' }]}
+                  >
+                    <Select
+                      placeholder="Select a Date and Time"
+                      onChange={handleDateChange}
+                      style={{ width: '100%' }}
+                    >
+                      {itineraryData?.availableDatesAndTimes
+                        .filter(dateTime => {
+                          const currentDate = new Date();  // Get the current date and time
+                          const dateObj = new Date(dateTime);  // Convert available date to Date object
+                          return dateObj >= currentDate;  // Only keep dates in the future or equal to now
+                        })
+                        .map((dateTime, index) => {
+                          const dateObj = new Date(dateTime);
+                          const date = dateObj.toISOString().split('T')[0];
+                          const time = dateObj.toTimeString().split(' ')[0];
+                          const displayText = `${date} at ${time}`;
+
                           return (
-                            <div>
-                              {date} at {time}
-                            </div>
+                            <Option key={index} value={dateTime} required>
+                              {displayText}
+                            </Option>
                           );
-                        })()
-                      : "No available date and time"}
-                  </p>
-                  <p>
-                    <strong>Duration:</strong> {activityData.duration}
-                  </p>
-                  <p>
-                    <strong>Location:</strong> {activityData.location}
-                  </p>
-                  <p>
-                    <strong>Ratings:</strong> {activityData.averageRating}/5
-                  </p>
-                </Space>
-              </Card>
-              <Form>
-                <h1>Payment Details</h1>
+                        })}
+                    </Select>
+                  </Form.Item>
+                  <p><strong>Selected Date and Time:</strong> {chosenDate ? new Date(chosenDate).toLocaleString() : 'None selected'}</p>
+
+                  <h1> Payment Details</h1>
+
+                  <p>Email</p>
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value * 100)}
+                    required
+                    readOnly
+                    style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                  />
+
+                  <p>Amount</p>
+                  <input
+                    type="number"
+                    placeholder="Amount"
+                    value={price}
+                    onChange={(e) => setAmount(e.target.value * 100)}
+                    required
+                    readOnly
+                    style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                  />
+
+                </Form>
+              </div>
+            ) : type === 'activity' && activityData ? (
+              <div>
+                <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
+                  <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                    <Title level={3}>Booked Details</Title>
+                    <p><strong>Activity Details:</strong> </p>
+                    <p><strong>Activity Name:</strong> {activityData.name}</p>
+                    <p><strong>Price:</strong> {activityData.price}</p>
+                    <p><strong>Is Open:</strong> {activityData.isOpen ? 'Yes' : 'No'}</p>
+                    <p><strong>Category:</strong> {activityData.category}</p>
+                    <p><strong>Tags:</strong> {activityData.tags}</p>
+                    <p><strong>Special Discount:</strong> {activityData.specialDiscount}</p>
+                    <p><strong>Date and Time:</strong> {activityData.date
+                      ? (() => {
+                        const dateObj = new Date(activityData.date);
+                        const date = dateObj.toISOString().split('T')[0];
+                        const time = dateObj.toTimeString().split(' ')[0];
+                        return (
+                          <div>
+                            {date} at {time}
+                          </div>
+                        );
+                      })()
+                      : 'No available date and time'}</p>
+                    <p><strong>Duration:</strong> {activityData.duration}</p>
+                    <p><strong>Location:</strong> {activityData.location}</p>
+                    <p>
+                      <strong>Ratings:</strong>
+                      {(activityData && activityData.activity && (activityData.activity.averageRating || activityData.activity.averageRating === 0))
+                        ? `${activityData.activity.averageRating}/5`
+                        : `0/5`}
+                    </p>
+
+                  </Space>
+                </Card>
+                <Form>
+                  <h1>Payment Details</h1>
 
                 <p>Email</p>
                 <input

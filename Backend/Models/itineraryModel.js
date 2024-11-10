@@ -4,6 +4,7 @@ const Activity = require('./activityModel');
 const Schema = mongoose.Schema;
 const TourGuide = require('./tourGuideModel');
 const Tags = require('./preferenceTagsModels');
+const ItineraryBooking = require('./itineraryBookingModel');
 
 const itinerarySchema = new Schema({
     activity: {
@@ -67,8 +68,20 @@ const itinerarySchema = new Schema({
         required: false
     },
     ratings: {
-        type: [Number],
-        required: false
+        type: [{
+            bookingId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "ItineraryBooking",
+                required: true
+            },
+            rating: {
+                type: Number,
+                required: true,
+                min: 0,
+                max: 5
+            }
+        }],
+        default: []
     },
     averageRating: {
         type: Number,
@@ -78,7 +91,7 @@ const itinerarySchema = new Schema({
         type: [String],
         required: false,
     }
-}, { timestamps: true }); // Moved `timestamps` to schema options here
+}, { timestamps: true });
 
 const Itinerary = mongoose.model("Itinerary", itinerarySchema);
 

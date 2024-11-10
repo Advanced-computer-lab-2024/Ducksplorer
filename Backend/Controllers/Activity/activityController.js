@@ -3,6 +3,7 @@ const activityService = require("../../Services/activityServices.js");
 const Tags = require("../../Models/preferenceTagsModels.js");
 const Category = require("../../Models/activityCategory.js");
 const mongoose = require("mongoose");
+const ActivityBooking = require("../../Models/activityBookingModel.js");
 
 const createActivity = async (req, res) => {
   try {
@@ -60,35 +61,7 @@ const deleteActivity = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-// const searchActivities = async (req, res) => {
-//   const searchParams = req.query;
-//   try {
-//     const activities = await activityService.searchActivities(searchParams);
-//     res.json(activities);
-//   } catch (error) {
-//     res.status(500).json({ message: "Error fetching activities" });
-//   }
-// };
 
-// const searchActivities = async (req, res) => {
-//     const { search } = req.query;
-//     const filters = {};
-
-//     if (search) {
-//       filters.$or = [
-//         { name: { $regex: search, $options: 'i' } }, // Search by name (case-insensitive)
-//         { category: { $regex: search, $options: 'i' } }, // Search by category (case-insensitive)
-//         { tags: { $regex: search, $options: 'i' } } // Search by tags (case-insensitive)
-//       ];
-//     }
-
-//     try {
-//       const activities = await Activity.find(filters);
-//       res.status(200).json(activities);
-//     } catch (error) {
-//       res.status(400).json({ error: error.message });
-//     }
-//   };
 const searchActivities = async (req, res) => {
   const { search, showPreferences, favCategory} = req.query;
   const filters = {};
@@ -221,22 +194,6 @@ const viewUpcomingActivities = async (req, res) => {
   
 };
 
-// const filterActivities = async (req, res) => {
-//   const { price, date, category, rating } = req.query;
-
-//   try {
-//     const activities = await activityService.filterActivities({
-//       price,
-//       date,
-//       category,
-//       rating,
-//     });
-//     res.json(activities); // Return activities as JSON
-//   } catch (error) {
-//     res.status(500).json({ message: "Error filtering activities" });
-//   }
-// };
-
 const filterActivity = async (req, res) => {
   const { price, date, category, averageRating } = req.query;
   const filters = {};
@@ -317,31 +274,42 @@ const sortActivities = async (req, res) => {
   }
 };
 
-
 const rateActivity = async (req, res) => {
-  const { activityId } = req.params;
-  const { rating } = req.body;
-
-  if (!rating || rating < 1 || rating > 5) {
-    return res.status(400).json({
-      message: "Invalid rating. Please provide a rating between 1 and 5.",
-    });
-  }
-
   try {
-    const activity = await Activity.findById(activityId);
+    const { bookingId } = req.params;
+    const { rating } = req.body;
 
-    if (!activity) {
-      return res.status(404).json({ message: "Activity not found" });
+    // Find the activity booking and associated activity
+    const activityBooking = await ActivityBooking.findById(bookingId);
+    if (!activityBooking) return res.status(404).send("Booking not found");
+
+    activityBooking.rating = rating
+    await activityBooking.save();
+
+    const activity = await Activity.findById(activityBooking.activity);
+    if (!activity) return res.status(404).send("Activity not found");
+
+    // Update or add the rating specific to the booking
+    const existingRating = activity.ratings.find(r => r.bookingId.toString() === bookingId);
+    if (existingRating) {
+      existingRating.rating = rating;
+    } else {
+      activity.ratings.push({ bookingId, rating });
     }
-    activity.ratings.push(rating);
-    const sum = activity.ratings.reduce((acc, val) => acc + val, 0);
-    activity.averageRating = sum / activity.ratings.length;
+
+    // Recalculate the average rating
+    const totalRating = activity.ratings.reduce((acc, r) => acc + r.rating, 0);
+    activity.averageRating = totalRating / activity.ratings.length;
+
     await activity.save();
 
-    res.status(200).json({ message: "Rating added successfully", activity });
+    res.status(200).json({
+      updatedAverageRating: activity.averageRating,
+      userRating: rating,
+    });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    console.error("Error updating rating:", error);
+    res.status(500).send("Failed to update rating");
   }
 };
 
@@ -380,6 +348,28 @@ const toggleFlagActivity = async (req, res) => {
 };
 
 
+const deletePastActivities = async (req, res) => {
+  try {
+    const currentDate = new Date();
+    console.log("Current Date:", currentDate);
+
+    const pastActivities = await Activity.find({ date: { $lt: currentDate } });
+    console.log("Activities to delete:", pastActivities);
+
+    const result = await Activity.deleteMany({
+      date: { $lt: currentDate }
+    });
+    res.status(200).json({
+      message: `Deleted ${result.deletedCount} past activities.`
+    });
+  } catch (error) {
+    console.error("Error deleting past activities:", error);
+    res.status(500).json({ message: "Failed to delete past activities" });
+  }
+};
+
+
+
 module.exports = {
   createActivity,
   getAllActivitiesByUsername,
@@ -391,5 +381,6 @@ module.exports = {
   sortActivities,
   rateActivity,
   getAppropriateActivities,
-  toggleFlagActivity
+  toggleFlagActivity,
+  deletePastActivities
 };

@@ -1,36 +1,56 @@
 const express = require("express");
-const itineraryModel = require("../../Models/itineraryModel");
+const Itinerary = require("../../Models/itineraryModel");
 const mongoose = require('mongoose');
+const ItineraryBooking = require("../../Models/itineraryBookingModel");
 
 const rateItinerary = async (req, res) => {
-    const { itineraryId } = req.params;
-    const { rating } = req.body;
-
-    if (!rating || rating < 1 || rating > 5) {
-        return res.status(400).json({
-            message: "Invalid rating. Please provide a rating between 1 and 5.",
-        });
-    }
-
     try {
-        const itinerary = await itineraryModel.findById(itineraryId);
+        const { bookingId } = req.params; // Get booking ID from request parameters
+        const { rating } = req.body; // Get rating from request body
 
-        if (!itinerary) {
-            return res.status(404).json({ message: "Itinerary not found" });
+        // Find the itinerary booking and itinerary document
+        const itineraryBooking = await ItineraryBooking.findById(bookingId);
+        if (!itineraryBooking) {
+            return res.status(404).send("Itineraray Booking not found");
         }
-        itinerary.ratings.push(rating);
-        const sum = itinerary.ratings.reduce((acc, val) => acc + val, 0);
-        itinerary.averageRating = sum / itinerary.ratings.length;
+
+        itineraryBooking.rating = rating
+        await itineraryBooking.save();
+
+        const itinerary = await Itinerary.findById(itineraryBooking.itinerary);
+
+        if (!itinerary) return res.status(404).send("Itinerary not found");
+
+        // Check if the rating for this bookingId exists
+        const existingRating = itinerary.ratings.find(r => r.bookingId.toString() === bookingId);
+
+        if (existingRating) {
+            // Update existing rating
+            existingRating.rating = rating;
+        } else {
+            // Add new rating
+            itinerary.ratings.push({ bookingId, rating });
+        }
+
+        // Update the average rating
+        const totalRating = itinerary.ratings.reduce((acc, r) => acc + r.rating, 0);
+        itinerary.averageRating = totalRating / itinerary.ratings.length;
+
         await itinerary.save();
 
-        res.status(200).json({ message: "Rating added successfully", itinerary });
+        res.status(200).json({
+            updatedAverageRating: itinerary.averageRating,
+            userRating: rating, // Return the user's specific rating
+        });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        console.error("Error updating rating:", error);
+        res.status(500).send("Failed to update rating");
     }
 };
 
-
-
+module.exports = {
+    rateItinerary,
+};
 
 
 module.exports = { rateItinerary }

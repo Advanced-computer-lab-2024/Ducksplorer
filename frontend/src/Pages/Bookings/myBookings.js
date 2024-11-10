@@ -229,54 +229,37 @@ const BookingDetails = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {activityBookings.map((activity) => (
-                <TableRow key={activity._id}>
-                  <TableCell>{activity.activity.name}</TableCell>
+              {activityBookings.map((activityBooking) => (
+                <TableRow key={activityBooking._id}>
+                  <TableCell>{activityBooking.activity?.name || "No Name"}</TableCell>
+                  <TableCell>{activityBooking.activity?.isOpen ? "Yes" : "No"}</TableCell>
+                  <TableCell>{activityBooking.activity?.advertiser || "N/A"}</TableCell>
+                  <TableCell>{activityBooking.activity?.date ? new Date(activityBooking.activity.date).toLocaleDateString() : "N/A"}</TableCell>
+                  <TableCell>{activityBooking.activity?.location || "N/A"}</TableCell>
                   <TableCell>
-                    {activity.activity.isOpen ? "Yes" : "No"}
+                    {(activityBooking.activity?.price * (exchangeRatesAc[currencyAc] || 1)).toFixed(2)} {" "}{currencyAc}
                   </TableCell>
-                  <TableCell>{activity.activity.advertiser}</TableCell>
-                  <TableCell>
-                    {new Date(activity.activity.date).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell>{activity.activity.location}</TableCell>
-                  <TableCell>
-                    {(
-                      activity.activity.price *
-                      (exchangeRatesAc[currencyAc] || 1)
-                    ).toFixed(2)}{" "}
-                    {currencyAc}
-                  </TableCell>
-                  <TableCell>{activity.activity.category}</TableCell>
-                  <TableCell>{activity.activity.tags.join(", ")}</TableCell>
-                  <TableCell>{activity.activity.specialDiscount}%</TableCell>
-                  <TableCell>{activity.activity.duration} mins</TableCell>
+                  <TableCell>{activityBooking.activity?.category || "N/A"}</TableCell>
+                  <TableCell>{activityBooking.activity?.tags?.join(", ") || "N/A"}</TableCell>
+                  <TableCell>{activityBooking.activity?.specialDiscount || 0}%</TableCell>
+                  <TableCell>{activityBooking.activity?.duration || "N/A"} mins</TableCell>
                   <TableCell>
                     <Rating
-                      value={activity.activity.averageRating}
+                      value={activityBooking.activity?.averageRating || 0}
                       precision={0.1}
                       readOnly
                     />
                   </TableCell>
                   <TableCell>
                     <Tooltip title="Delete Itinerary">
-                      <IconButton
-                        color="error"
-                        aria-label="delete category"
-                        onClick={() =>
-                          handleDeleteBooking(
-                            "activity",
-                            activity.activity._id,
-                            activity.activity.price
-                          )
-                        }
-                      >
+                      <IconButton color="error" aria-label="delete category" onClick={() => handleDeleteBooking('activity', activityBooking.activity?._id, activityBooking.activity?.price)}>
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>
                   </TableCell>
                 </TableRow>
               ))}
+
             </TableBody>
           </Table>
         </TableContainer>
@@ -304,8 +287,7 @@ const BookingDetails = () => {
                 <TableCell>Accessibility</TableCell>
                 <TableCell>Pick-Up Location</TableCell>
                 <TableCell>Drop-Off Location</TableCell>
-                <TableCell>Tour Guide</TableCell>
-                <TableCell>Rating</TableCell>
+                <TableCell>Average Rating</TableCell>
                 <TableCell>Tags</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
@@ -348,7 +330,7 @@ const BookingDetails = () => {
           : "N/A"}</TableCell>
                   <TableCell>{ itinerary.itinerary && itinerary.itinerary.tourGuideModel?.name ? itinerary.itinerary.tourGuideModel.name : "N/A"}</TableCell>
                   <TableCell><Rating
-                    value={itinerary.itinerary && itinerary.itinerary.rating ? itinerary.itinerary.rating : 0}
+                    value={itinerary.itinerary.averageRating}
                     precision={0.1}
                     readOnly
                   /></TableCell>
