@@ -632,6 +632,7 @@ function PaymentPage() {
       </form>
       <Help />
     </div>
+    </div>
   );
 }
 
