@@ -95,7 +95,6 @@ function SearchItineraries() {
       );
 
       if (response.status === 200) {
-        message.success("Itineraries viewed successfully"); //might remove this
         setItineraries(response.data);
       } else {
         message.error("Failed to search itineraries");

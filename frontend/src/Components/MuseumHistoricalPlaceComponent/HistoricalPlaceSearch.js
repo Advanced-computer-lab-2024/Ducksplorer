@@ -28,8 +28,7 @@ function HistoricalPlaceSearch({ onSearch }) {
 
       console.log("Backend Response:", response); // Log the response
 
-      if (response.status === 200 && response.data.results.length > 0) {
-        message.success('Historical places found');
+      if (response.status === 200 ) {
         onSearch(response.data.results);  // Pass the search results to the parent component
       } else {
         message.error('No historical places found. Try refining your search.');

@@ -223,7 +223,7 @@ const searchHistoricalPlace = async (req, res) => {
         // Perform the MongoDB query using the built 'query' object.
         const results = await historicalPlaceModel.find(searches);
 
-        if (results.length === 0) {
+        if (!results.length) {
             return res.status(200).json({ message: "No matching Historical Place found" });
         }
         res.status(200).json({ message: "Search results found", results });

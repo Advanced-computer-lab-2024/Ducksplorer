@@ -197,7 +197,7 @@ const searchMuseum = async (req, res) => {
         const results = await museumModel.find(searches);
 
         // If no results are found, return a 404 (Not Found) response with a message.
-        if (results.length === 0) {
+        if (!results.length ) {
             return res.status(200).json({ message: "No matching Museum found" });
         }
         res.status(200).json({ message: "Search results found", results });
