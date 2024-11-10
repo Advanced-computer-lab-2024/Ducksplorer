@@ -24,11 +24,14 @@ const ProductCard = ({
   productID,
   showRating, //shows the user review , also for myPurchases as a tourist
   showReview,
+  showPurchase,
   showAverageRating, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
 }) => {
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
   const location = useLocation();
+  const isGuest = localStorage.getItem("guest") === "true";
+
 
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
@@ -110,6 +113,27 @@ const ProductCard = ({
       }
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const handlePurchase = async (product) => {
+    const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
+    const user = JSON.parse(userJson);
+    const userName = user.username;
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/touristRoutes/updatePurchases/${userName}`,
+        {
+          products: [product],
+        }
+      );
+      if (response.status === 200) {
+        message.success("Product purchased successfully!");
+      } else {
+        message.error("Failed to purchase product.");
+      }
+    } catch (error) {
+      message.error("An error occurred while purchasing the product.");
     }
   };
 
@@ -262,6 +286,20 @@ const ProductCard = ({
                 Submit Review
               </Button>
             </div>
+          )}
+          {!isGuest && showPurchase && (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => handlePurchase(product)}
+              style={{
+                position: "absolute",
+                right: "60px",
+                bottom: "50px",
+              }} // Place the button at the bottom-right corner
+            >
+              Purchase
+            </Button>
           )}
         </CardContent>
       </div>
