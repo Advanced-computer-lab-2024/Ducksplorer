@@ -17,6 +17,7 @@ const createActivity = async (activityData) => {
     tags,
     specialDiscount,
     duration,
+    flag,
   } = activityData;
 
   try {

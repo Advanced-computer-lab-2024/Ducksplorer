@@ -22,7 +22,6 @@ import {
 } from "@mui/material";
 import Sidebar from "../../Components/Sidebars/Sidebar";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Help from "../../Components/HelpIcon";
 const DeleteUser = () => {
   const [users, setUsers] = useState([]);
   const [open, setOpen] = useState(false);
@@ -144,7 +143,6 @@ const DeleteUser = () => {
           </DialogActions>
         </Dialog>
       </Box>
-      <Help />
     </>
   );
 };

@@ -1,3 +1,4 @@
+//This is the page that gets called when the filter button is clicked inside the upcoming page
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
@@ -164,38 +165,64 @@ const FilterActivities = () => {
                 <TableCell>Category</TableCell>
                 <TableCell>Tags</TableCell>
                 <TableCell>Discount</TableCell>
-                <TableCell>Date</TableCell>
+                <TableCell>Dates and Times</TableCell>
                 <TableCell>Duration</TableCell>
                 <TableCell>Location</TableCell>
                 <TableCell>Rating</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {activities.map((activity) => (
-                <TableRow key={activity._id}>
-                  <TableCell>{activity.name}</TableCell>
-                  <TableCell>
-                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(
-                      2
-                    )}{" "}
-                    {currency}
-                  </TableCell>
-                  <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
-                  <TableCell>{activity.category}</TableCell>
-                  <TableCell>{activity.tags.join(", ")}</TableCell>
-                  <TableCell>{activity.specialDiscount}</TableCell>
-                  <TableCell>{activity.date}</TableCell>
-                  <TableCell>{activity.duration}</TableCell>
-                  <TableCell>{activity.location}</TableCell>
-                  <TableCell>
-                    <Rating
-                      value={activity.averageRating}
-                      precision={0.1}
-                      readOnly
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
+              {activities.map((activity) =>
+                !activity.flag ? (
+                  <TableRow key={activity._id}>
+                    <TableCell>{activity.name}</TableCell>
+                    <TableCell>
+                      {(
+                        activity.price * (exchangeRates[currency] || 1)
+                      ).toFixed(2)}{" "}
+                      {currency}
+                    </TableCell>
+                    <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
+                    <TableCell>{activity.category}</TableCell>
+                    <TableCell>{activity.tags.join(", ")}</TableCell>
+                    <TableCell>{activity.specialDiscount}</TableCell>
+                    <TableCell>
+                      {activity.date
+                        ? (() => {
+                            const dateObj = new Date(activity.date);
+                            const date = dateObj.toISOString().split("T")[0];
+                            const time = dateObj.toTimeString().split(" ")[0];
+                            return (
+                              <div>
+                                {date} at {time}
+                              </div>
+                            );
+                          })()
+                        : "No available date and time"
+                        ? (() => {
+                            const dateObj = new Date(activity.date);
+                            const date = dateObj.toISOString().split("T")[0];
+                            const time = dateObj.toTimeString().split(" ")[0];
+                            return (
+                              <div>
+                                {date} at {time}
+                              </div>
+                            );
+                          })()
+                        : "No available date and time"}
+                    </TableCell>
+                    <TableCell>{activity.duration}</TableCell>
+                    <TableCell>{activity.location}</TableCell>
+                    <TableCell>
+                      <Rating
+                        value={activity.averageRating}
+                        precision={0.1}
+                        readOnly
+                      />
+                    </TableCell>
+                  </TableRow>
+                ) : null
+              )}
             </TableBody>
           </Table>
         </TableContainer>

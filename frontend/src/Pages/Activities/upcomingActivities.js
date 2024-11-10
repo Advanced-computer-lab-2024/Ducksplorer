@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { message } from "antd";
 import {
   Box,
+  Button,
   Table,
   Typography,
   TableBody,
@@ -11,13 +13,16 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon";
+import { Link } from "react-router-dom";
 const UpcomingActivities = () => {
   const [activities, setActivities] = useState([]);
-
+  const navigate = useNavigate();
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
+  const isGuest = localStorage.getItem("guest") === "true";
 
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
@@ -36,6 +41,44 @@ const UpcomingActivities = () => {
       });
   }, []);
 
+  const handleBooking = async (activityId) => {
+    try {
+      const userJson = localStorage.getItem("user");
+      const isGuest = localStorage.getItem("guest") === "true";
+      if (isGuest) {
+        message.error("User is not logged in, Please login or sign up.");
+        navigate("/guestDashboard");
+        return;
+      }
+      if (!userJson) {
+        message.error("User is not logged in.");
+        return null;
+      }
+      const user = JSON.parse(userJson);
+      if (!user || !user.username) {
+        message.error("User information is missing.");
+        return null;
+      }
+
+      const type = "activity";
+
+      localStorage.setItem("activityId", activityId);
+      localStorage.setItem("type", type);
+
+      const response = await axios.get(
+        `http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}`
+      );
+
+      if (response.status === 200) {
+        navigate("/payment");
+      } else {
+        message.error("Booking failed.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      message.error("An error occurred while booking.");
+    }
+  };
   return (
     <>
       <Box sx={{ p: 6, maxWidth: 1200, overflowY: "auto", height: "100vh" }}>
@@ -43,6 +86,13 @@ const UpcomingActivities = () => {
           <Typography variant="h4">Upcoming Activities</Typography>
         </Box>
         <TableContainer component={Paper}>
+          <Link
+            to={isGuest ? "/guestDashboard" : "/touristDashboard"}
+            className="text-sm hover:underline hover:text-blue-600 mt-2 inline-block"
+          >
+            Back
+          </Link>
+
           <Table>
             <TableHead>
               <TableRow>
@@ -55,9 +105,10 @@ const UpcomingActivities = () => {
                 <TableCell>Category</TableCell>
                 <TableCell>Tags</TableCell>
                 <TableCell>Discount</TableCell>
-                <TableCell>Date</TableCell>
+                <TableCell>Dates and Times</TableCell>
                 <TableCell>Duration</TableCell>
                 <TableCell>Location</TableCell>
+                <TableCell>Bookings</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -74,9 +125,29 @@ const UpcomingActivities = () => {
                   <TableCell>{activity.category}</TableCell>
                   <TableCell>{activity.tags}</TableCell>
                   <TableCell>{activity.specialDiscount}</TableCell>
-                  <TableCell>{activity.date}</TableCell>
+                  <TableCell>
+                    {activity.date.length > 0
+                      ? activity.date.map((dateTime, index) => {
+                          const dateObj = new Date(dateTime);
+                          const date = dateObj.toISOString().split("T")[0];
+                          const time = dateObj.toTimeString().split(" ")[0];
+                          return (
+                            <div key={index}>
+                              Date {index + 1}: {date}
+                              <br />
+                              Time {index + 1}: {time}
+                            </div>
+                          );
+                        })
+                      : "No available dates and times"}
+                  </TableCell>
                   <TableCell>{activity.duration}</TableCell>
                   <TableCell>{activity.location}</TableCell>
+                  <TableCell>
+                    <Button onClick={() => handleBooking(activity._id)}>
+                      Book Now
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

@@ -1,3 +1,4 @@
+////This is the page that gets called for the advertiser to see HIS activities ONLY 
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { message } from "antd";
@@ -5,6 +6,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { calculateAverageRating } from "../../Utilities/averageRating.js";
 import StandAloneToggleButton from "../../Components/ToggleButton.js";
+import WarningIcon from '@mui/icons-material/Warning';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+
 import {
   Rating,
   Checkbox,
@@ -29,8 +33,6 @@ import {
   TextField,
 } from "@mui/material";
 import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar.js";
-import Help from "../../Components/HelpIcon.js";
-
 const MyActivities = () => {
   // Accept userNameId as a prop
   const userName = JSON.parse(localStorage.getItem("user")).username;
@@ -171,10 +173,11 @@ const MyActivities = () => {
                   <TableCell>Category</TableCell>
                   <TableCell>Tags</TableCell>
                   <TableCell>Discount</TableCell>
-                  <TableCell>Date</TableCell>
+                  <TableCell>Dates and Times</TableCell>
                   <TableCell>Duration</TableCell>
                   <TableCell>Location</TableCell>
                   <TableCell>Rating</TableCell>
+                  <TableCell>Flag</TableCell>
                   <TableCell>Actions</TableCell>
                 </TableRow>
               </TableHead>
@@ -187,7 +190,17 @@ const MyActivities = () => {
                     <TableCell>{activity.category}</TableCell>
                     <TableCell>{activity.tags.join(", ")}</TableCell>
                     <TableCell>{activity.specialDiscount}</TableCell>
-                    <TableCell>{activity.date}</TableCell>
+                    <TableCell>{activity.date ? (() => {
+                      const dateObj = new Date(activity.date);
+                      const date = dateObj.toISOString().split('T')[0];
+                      const time = dateObj.toTimeString().split(' ')[0];
+                      return (
+                        <div>
+                          {date} at {time}
+                        </div>
+                      );
+                    })()
+                      : 'No available date and time'}</TableCell>
                     <TableCell>{activity.duration}</TableCell>
                     <TableCell>{activity.location}</TableCell>
                     <TableCell>
@@ -197,6 +210,19 @@ const MyActivities = () => {
                         readOnly
                       />
                     </TableCell>
+
+                    <TableCell> {activity.flag ? (
+                      <span style={{ color: 'red', display: 'flex', alignItems: 'center' }}>
+                        <WarningIcon style={{ marginRight: '4px' }} />
+                        Inappropriate
+                      </span>
+                    ) : (
+                      <span style={{ color: 'green', display: 'flex', alignItems: 'center' }}>
+                        <CheckCircleIcon style={{ marginRight: '4px' }} />
+                        Appropriate
+                      </span>
+                    )}</TableCell>
+
                     <TableCell>
                       <Tooltip title="Delete Activity">
                         <IconButton
@@ -346,7 +372,6 @@ const MyActivities = () => {
           </Dialog>
         </Box>
       </div>
-      <Help />
     </>
   );
 };

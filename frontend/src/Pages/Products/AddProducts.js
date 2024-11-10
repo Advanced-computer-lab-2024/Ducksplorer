@@ -4,7 +4,6 @@ import axios from "axios";
 import { message } from "antd";
 import { TextField, Button, Stack } from "@mui/material";
 import UploadFile from "../../Components/ProductUploadImage";
-import Help from "../../Components/HelpIcon.js";
 
 let picture = "";
 
@@ -129,7 +128,6 @@ function AddProducts() {
           Add Product
         </Button>
       </Stack>
-      <Help />
     </div>
   );
 }

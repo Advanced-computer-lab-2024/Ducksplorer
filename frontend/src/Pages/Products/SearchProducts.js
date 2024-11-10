@@ -97,7 +97,7 @@ function SearchProducts() {
           </Typography>
         )}
       </div>
-      <Help />
+      {role === "Tourist" && <Help />}
     </div>
   );
 }

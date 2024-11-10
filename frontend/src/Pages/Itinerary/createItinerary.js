@@ -25,6 +25,7 @@ const AddItinerary = () => {
             document.removeEventListener('wheel', handleWheel);
         };
     }, []);
+    const isGuest = localStorage.getItem('guest') === 'true';
 
     const [prefTagsOptions, setPrefTagsOptions] = useState([]);
     const [locations, setLocations] = useState(['']);
@@ -187,7 +188,9 @@ const AddItinerary = () => {
 
     return (
         <div>
-            <Link to="/tourGuideDashboard"> Back </Link>
+<Link to={isGuest ? "/guestDashboard" : "/touristDashboard"} className='text-sm hover:underline hover:text-blue-600 mt-2 inline-block'>
+  Back
+</Link>
             <Box sx={{ overflowY: 'visible', height: "100vh" }}>
                 <h1>Create an Itinerary</h1>
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -274,7 +277,7 @@ const AddItinerary = () => {
                     <input
                         type="text"
                         name="timeline"
-                        placeholder="Timeline"
+                        placeholder="Timeline in days"
                         value={formData.timeline}
                         onChange={handleChange}
                         required

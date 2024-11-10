@@ -45,7 +45,7 @@ const AddActivityForm = () => {
       setDate(storedDate || "");
       setIsOpen(storedIsOpen || false);
       setPrice(storedPrice || "");
-      // setCategory(storedCategory || ""); 
+      // setCategory(localStorage.getItem("category") ? localStorage.getItem("category").trim() : "");
       setCategory(localStorage.getItem("category") || "");
       setSpecialDiscount(storedDiscount || "");
       setDuration(storedDuration || "");
@@ -69,6 +69,14 @@ const AddActivityForm = () => {
   let isClicked = null;
 
   const validateFields = () => {
+    // console.log("Validating fields:");
+    // console.log("Name:", name);
+    // console.log("Date:", date);
+    // console.log("Price:", price);
+    // console.log("Category:", category);
+    // console.log("Special Discount:", specialDiscount);
+    // console.log("Duration:", duration);
+
     if (
       !date ||
       !price ||
@@ -98,6 +106,9 @@ const AddActivityForm = () => {
       // Clear localStorage
       localStorage.removeItem("addActivityFormData");
       localStorage.removeItem("selectedLocation");
+
+      // Navigate to the dashboard after successful submission
+      navigate("/advertiserDashboard");
     } catch (error) {
       console.log(data);
       message.error("An error occurred: " + error.message);
@@ -247,6 +258,7 @@ const AddActivityForm = () => {
               value={duration}
               onChange={(e) => {
                 setDuration(e.target.value);
+                // setCategory(localStorage.getItem("category") ? localStorage.getItem("category").trim() : "");
                 setCategory(localStorage.getItem("category").trim());
               }}
             />

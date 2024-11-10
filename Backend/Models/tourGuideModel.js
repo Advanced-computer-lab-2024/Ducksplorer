@@ -16,6 +16,7 @@ const tourGuideSchema = new Schema({
         type: String,
         required: true
     },
+
     mobileNumber: {
         type: Number,
         required: true
@@ -27,6 +28,41 @@ const tourGuideSchema = new Schema({
     previousWork: {
         type: String,
         required: false
+    }, 
+    nationalId:{
+        type: String,
+        required : false
+    },
+    certificates: {
+        type: String,
+        required : false
+    },
+    photo: {
+        type: String,
+    },
+    profilePicture: {
+        filename: { type: String },
+        filepath: { type: String },
+        uploadedAt: { type: Date },
+    },
+    files: [
+        {
+            filename: String,
+            filepath: String,
+            uploadedAt: { type: Date, default: Date.now },
+        },
+    ],
+    ratings: {
+        type: [Number],
+        required: false
+    },
+    averageRating: {
+        type: Number,
+        required: false
+    },
+    comments: {
+        type: [String],
+        required: false,
     }
 }, { timestamps: true })
 

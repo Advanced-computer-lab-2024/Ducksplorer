@@ -5,7 +5,6 @@ import { Typography } from "@mui/material";
 import { Button } from "@mui/material";
 import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
 import { useNavigate } from "react-router-dom"; // Import to navigate to the edit page
-import Help from "../../Components/HelpIcon";
 
 function ViewMyProducts() {
   const [products, setProducts] = useState([]);
@@ -70,7 +69,6 @@ function ViewMyProducts() {
           </Typography>
         )}
       </div>
-      <Help />
     </div>
   );
 }

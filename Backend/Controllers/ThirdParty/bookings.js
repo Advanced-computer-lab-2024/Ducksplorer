@@ -48,6 +48,7 @@ const getFlights = async (req, res) => {
     const originCode = req.body.originCode;
     const destinationCode = req.body.destinationCode;
     const dateOfDeparture = req.body.dateOfDeparture;
+    const seats = req.body.seats.toString();
 
     // Check if the date of departure is in the past
     const currentDate = new Date();
@@ -67,8 +68,8 @@ const getFlights = async (req, res) => {
         originLocationCode: originCode,
         destinationLocationCode: destinationCode,
         departureDate: dateOfDeparture,
-        adults: '1',
-        max: '18',
+        adults: seats,
+        max: '6',
     }).then(function (response) {
         res.send(JSON.stringify(response.result));
     }).catch(function (response) {

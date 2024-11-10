@@ -60,6 +60,17 @@ import MyComplaints from "./Components/Complaints/MyComplaints.js";
 import FlightsBooking from "./Pages/ThirdParty/FlightsBooking.js";
 import HotelsBooking from "./Pages/ThirdParty/HotelsBooking.js";
 import TouristNavBar from "./Components/TouristNavBar.js";
+import BookingDetails from "./Pages/Bookings/myBookings.js";
+import CheckoutForm from "./Pages/Payment/checkout.js";
+import Completion from "./Pages/Payment/completion.js";
+import Payment from "./Pages/Payment/payment2.js";
+import PaymentPage from "./Pages/Payment/mailAmount.js";
+//import Payment from "./Pages/Payment/payment.js";
+import ViewAllItineraries from "./Pages/Admin/ViewAllItineraries.js";
+import ViewAllActivities from "./Pages/Admin/ViewAllActivities.js";
+import PastBookingDetails from "./Pages/Bookings/myPastBookings.js";
+import GuestDashboard from "./Pages/Dashboards/GuestDashboard.js";
+
 import TransportationBooking from "./Pages/Products/TransportationBooking.js";
 
 function App() {
@@ -78,12 +89,14 @@ function App() {
             element={<ViewUpcomingItinerary />}
           />
           <Route path="/viewAllTourist" element={<ViewAllTourist />} />
+          <Route path="/viewAllTourist/:id" element={<ViewAllTourist />} />
           <Route path="/tourGuideDashboard" element={<TourGuideDashboard />} />
           <Route path="/touristDashboard" element={<TouristDashboard />} />
           <Route
             path="/tourGuideEditAccount"
             element={<TourGuideEditProfile />}
           />
+          <Route path="/guestDashboard" element={<GuestDashboard />} />
           <Route path="/governorDashboard" element={<GovernorDashboard />} />
           <Route path="/createMuseum" element={<CreateMuseum />} />
           <Route
@@ -92,9 +105,15 @@ function App() {
           />
           <Route path="/RUDMuseum" element={<RUDMuseum />} />
           <Route path="/RUDHistoricalPlace" element={<RUDHistoricalPlace />} />
+          {/* <Route path="/RUDVisit" element={<RUDVisit />} /> */}
           <Route path="/MuseumTouristPov" element={<MuseumTouristPov />} />
           <Route
             path="/HistoricalPlaceTouristPov"
+            element={<HistoricalPlaceTouristPov />}
+          />
+          <Route path="/MuseumTouristPov/:id" element={<MuseumTouristPov />} />
+          <Route
+            path="/HistoricalPlaceTouristPov/:id"
             element={<HistoricalPlaceTouristPov />}
           />
           <Route
@@ -114,6 +133,8 @@ function App() {
           <Route path="/addAdmin" element={<AddAdmin />} />
           <Route path="/addGovernor" element={<AddGoverner />} />
           <Route path="/categoriesActions" element={<CategoriesActions />} />
+          <Route path="/viewAllItineraries" element={<ViewAllItineraries />} />
+          <Route path="/viewAllActivities" element={<ViewAllActivities />} />
           <Route path="/preferenceTags" element={<PreferenceTags />} />
           <Route path="/admin/complaints" element={<ComplaintsDashboard />} />
           <Route path="/admin/complaints" element={<ComplaintsDashboard />} />
@@ -135,6 +156,12 @@ function App() {
           <Route path="/activity/SortFilter" element={<SortFilterActivity />} />
           <Route path="/activity/myActivities" element={<MyActivities />} />
           <Route path="/location" element={<ClinicLocation />} />
+          <Route path="/myPastBookings" element={<PastBookingDetails />} />
+          <Route path="/myBookings" element={<BookingDetails />} />
+
+          <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/checkout" element={<Payment />} />
+          <Route path="/completion" element={<Completion />} />
 
           <Route path="/ProductDashboard" element={<ProductDashboard />} />
           <Route path="/AllProducts" element={<AllProducts />} />
@@ -156,7 +183,7 @@ function App() {
           <Route path="/sellerDashboard" element={<SellerDashboard />} />
           <Route path="/flights" element={<FlightsBooking />} />
           <Route path="/transportation" element={<TransportationBooking />} />
-          <Route path="hotels" element={<HotelsBooking />} />
+          <Route path="/hotels" element={<HotelsBooking />} />
           <Route path="/myPurchases" element={<MyPurchases />} />
         </Routes>
       </BrowserRouter>
