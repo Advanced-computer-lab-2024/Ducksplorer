@@ -31,6 +31,7 @@ const PastBookingDetails = ({ userName }) => {
   const [tourGuideComment, setTourGuideComment] = useState("");
   const [tourGuideId, setSelectedTourGuideId] = useState(null);
   const [tourGuideNames, setTourGuideNames] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const fetchTourGuideName = useCallback(
     async (id) => {
@@ -88,12 +89,16 @@ const PastBookingDetails = ({ userName }) => {
           "Error fetching booking details:",
           error.response ? error.response.data : error.message
         );
+      } finally {
+        setTimeout(() => setLoading(false), 1000); // Delay of 1 second
       }
     };
     fetchBooking();
   }, [userName, fetchTourGuideName]);
 
-  if (!booking) return <p>Loading...</p>;
+  if (loading) return <p>Loading...</p>;
+
+  if (!booking) return <p>You have no past bookings.</p>;
   if (
     !Array.isArray(booking.activities) ||
     !Array.isArray(booking.itineraries)

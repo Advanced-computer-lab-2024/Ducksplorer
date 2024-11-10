@@ -34,6 +34,7 @@ const BookingDetails = () => {
   const [hotelsBookings, setHotelsBookings] = useState([]);
   const [transportationBookings, setTransportationBookings] = useState([]);
   const [flight, setFlight] = useState(null);
+  const [loading, setLoading] = useState(true);
   const handleCurrencyChangeAc = (rates, selectedCurrency) => {
     setExchangeRatesAc(rates);
     setCurrencyAc(selectedCurrency);
@@ -72,12 +73,15 @@ const BookingDetails = () => {
         "Error fetching booking details:",
         error.response ? error.response.data : error.message
       );
+    } finally {
+      setTimeout(() => setLoading(false), 1000); // Delay of 1 second
     }
   };
 
   useEffect(() => {
     fetchBookings();
   }, [userName]);
+  if (loading) return <p>Loading...</p>;
 
   const handleDeleteBooking = async (type, itemId, price) => {
     try {
@@ -168,7 +172,7 @@ const BookingDetails = () => {
     !hotelsBookings.length &&
     !transportationBookings.length
   )
-    return <p>Loading...</p>;
+    return <p>You have no bookings.</p>;
 
   if (!Array.isArray(activityBookings) || !Array.isArray(itineraryBookings)) {
     return <p>No booking details available.</p>;
