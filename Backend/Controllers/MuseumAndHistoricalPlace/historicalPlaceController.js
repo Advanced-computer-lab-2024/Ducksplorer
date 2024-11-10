@@ -224,7 +224,7 @@ const searchHistoricalPlace = async (req, res) => {
         const results = await historicalPlaceModel.find(searches);
 
         if (results.length === 0) {
-            return res.status(404).json({ message: "No matching Historical Place found" });
+            return res.status(200).json({ message: "No matching Historical Place found" });
         }
         res.status(200).json({ message: "Search results found", results });
 
