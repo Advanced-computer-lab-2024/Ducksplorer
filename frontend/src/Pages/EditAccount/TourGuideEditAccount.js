@@ -192,6 +192,8 @@ const TourGuideEditProfile = () => {
           width: 500,
           borderRadius: 3,
           boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
+          overflowY : 'visible',
+          height : '100vh'
         }}
       >
         <Box sx={{ textAlign: "center", mb: 3 }}>
