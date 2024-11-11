@@ -141,6 +141,7 @@ const BookingDetails = () => {
 
   const handleDeleteThirdPartyBooking = async (type, price, booking) => {
     try {
+      console.log("BookingID", booking);
       const response = await axios.patch(
         `http://localhost:8000/touristRoutes/booking/${userName}`,
         {
@@ -154,18 +155,22 @@ const BookingDetails = () => {
         message.success("Booking Canceled");
 
         // Update state immediately to remove the item locally
-        setFlightsBookings((prev) =>
-          prev.filter((flight) => flight._id !== booking._id)
-        );
-        setHotelsBookings((prev) =>
-          prev.filter((hotel) => hotel._id !== booking._id)
-        );
-        setTransportationBookings((prev) =>
-          prev.filter((transportation) => transportation._id !== booking._id)
-        );
+        if (type === "flight") {
+          setFlightsBookings((prev) =>
+            prev.filter((flight) => flight.id !== booking)
+          );
+        } else if (type === "hotel") {
+          setHotelsBookings((prev) =>
+            prev.filter((hotel) => hotel.id !== booking)
+          );
+        } else if (type === "transportation") {
+          setTransportationBookings((prev) =>
+            prev.filter((transportation) => transportation.id !== booking)
+          );
+        }
 
         // Re-fetch bookings to ensure the state is in sync with the server
-        //fetchBookings();
+        fetchBookings();
       } else {
         message.error(
           response.data.message || "Failed to delete booking item."
@@ -400,31 +405,31 @@ const BookingDetails = () => {
             </TableHead>
             <TableBody>
               {flightsBookings.map((flight) => (
-                <TableRow key={flight._id}>
-                  <TableCell>{flight.companyName}</TableCell>
+                <TableRow key={flight.id}>
+                  <TableCell>{flight.flights.companyName}</TableCell>
                   <TableCell>
-                    {new Date(flight.departureDate).toLocaleString()}
+                    {new Date(flight.flights.departureDate).toLocaleString()}
                   </TableCell>
                   <TableCell>
-                    {new Date(flight.arrivalDate).toLocaleString()}
+                    {new Date(flight.flights.arrivalDate).toLocaleString()}
                   </TableCell>
                   <TableCell>
                     {(
-                      flight.price * (exchangeRatesft[currencyft] || 1)
+                      flight.flights.price * (exchangeRatesft[currencyft] || 1)
                     ).toFixed(2)}{" "}
                     {currencyft}
                   </TableCell>
                   <TableCell>
                     {" "}
-                    {flight.departureCity}
+                    {flight.flights.departureCity}
                     {" , "}
-                    {flight.departureCountry}
+                    {flight.flights.departureCountry}
                   </TableCell>
                   <TableCell>
                     {" "}
-                    {flight.arrivalCity}
+                    {flight.flights.arrivalCity}
                     {" , "}
-                    {flight.arrivalCountry}
+                    {flight.flights.arrivalCountry}
                   </TableCell>
 
                   <TableCell>
@@ -435,8 +440,8 @@ const BookingDetails = () => {
                         onClick={() =>
                           handleDeleteThirdPartyBooking(
                             "flight",
-                            flight.price,
-                            flight
+                            flight.flights.price,
+                            flight.id
                           )
                         }
                       >
@@ -467,17 +472,17 @@ const BookingDetails = () => {
             <TableBody>
               {hotelsBookings.map((hotel) => (
                 <TableRow key={hotel._id}>
-                  <TableCell>{hotel.hotelName}</TableCell>
-                  <TableCell>{hotel.city}{"  ,"}{hotel.country}</TableCell>
+                  <TableCell>{hotel.hotels.hotelName}</TableCell>
+                  <TableCell>{hotel.hotels.city}{"  ,"}{hotel.hotels.country}</TableCell>
                   <TableCell>
-                    {(hotel.price * (exchangeRatesht[currencyht] || 1)).toFixed(2)} {currencyht}
+                    {(hotel.hotels.price * (exchangeRatesht[currencyht] || 1)).toFixed(2)} {currencyht}
                   </TableCell>
-                  <TableCell>{new Date(hotel.checkInDate).toLocaleDateString()}</TableCell>
-                  <TableCell>{new Date(hotel.checkOutDate).toLocaleDateString()}</TableCell>
+                  <TableCell>{new Date(hotel.hotels.checkInDate).toLocaleDateString()}</TableCell>
+                  <TableCell>{new Date(hotel.hotels.checkOutDate).toLocaleDateString()}</TableCell>
                   {/* <TableCell><Rating value={hotel.rating} precision={0.1} readOnly /></TableCell> */}
                   <TableCell>
                     <Tooltip title="Delete Hotel">
-                      <IconButton color="error" aria-label="delete category" onClick={() => handleDeleteThirdPartyBooking('hotel',hotel.price,hotel)}>
+                      <IconButton color="error" aria-label="delete category" onClick={() => handleDeleteThirdPartyBooking('hotel',hotel.hotels.price,hotel.id)}>
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>
@@ -507,18 +512,18 @@ const BookingDetails = () => {
             <TableBody>
               {transportationBookings.map((transportation) => (
                 <TableRow key={transportation._id}>
-                  <TableCell>{transportation.companyName}</TableCell>
-                  <TableCell>{new Date(transportation.departureDate).toLocaleString()}</TableCell>
-                  <TableCell>{new Date(transportation.arrivalDate).toLocaleString()}</TableCell>
+                  <TableCell>{transportation.transportations.companyName}</TableCell>
+                  <TableCell>{new Date(transportation.transportations.departureDate).toLocaleString()}</TableCell>
+                  <TableCell>{new Date(transportation.transportations.arrivalDate).toLocaleString()}</TableCell>
                   <TableCell>
-                    {(transportation.price * (exchangeRatestt[currencytt] || 1)).toFixed(2)} {currencytt}
+                    {(transportation.transportations.price * (exchangeRatestt[currencytt] || 1)).toFixed(2)} {currencytt}
                   </TableCell>
                   {/* <TableCell> {transportation.City}{" , "}{transportation.Country}</TableCell> */}
                   {/* <TableCell> {transportation.arrivalCity}{" , "}{transportation.arrivalCountry}</TableCell> */}
-                  <TableCell> {transportation.transferType}</TableCell>
+                  <TableCell> {transportation.transportations.transferType}</TableCell>
                   <TableCell>
                     <Tooltip title="Delete Transportation">
-                      <IconButton color="error" aria-label="delete Transportation" onClick={() => handleDeleteThirdPartyBooking('transportation',transportation.price,transportation)}>
+                      <IconButton color="error" aria-label="delete Transportation" onClick={() => handleDeleteThirdPartyBooking('transportation',transportation.transportations.price,transportation.id)}>
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>
