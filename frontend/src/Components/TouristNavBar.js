@@ -73,8 +73,10 @@ function TouristNavBar() {
     window.location.href = `/${page}`;
   };
 
-  const [showPreferences, setShowPreferences] = React.useState(false);
-
+  const [showPreferences, setShowPreferences] = React.useState(() => {
+    const savedPreference = localStorage.getItem('showPreferences');
+    return savedPreference !== null ? JSON.parse(savedPreference) : false;
+  });
   const handleTogglePreferences = () => {
     setShowPreferences((prev) => !prev);
     localStorage.setItem("showPreferences", !showPreferences);

@@ -2,6 +2,8 @@ const express = require("express");
 const itineraryModel = require("../../Models/itineraryModel");
 const mongoose = require("mongoose");
 const tourGuideModel = require("../../Models/tourGuideModel");
+const Itinerary = require("../../Models/itineraryModel");
+const ItineraryBooking = require("../../Models/itineraryBookingModel");
 const touristModel = require("../../Models/touristModel");
 
 
@@ -107,7 +109,7 @@ const toggleFlagItinerary = async (req, res) => {
     try {
         const { id } = req.params;
 
-     
+
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ error: "Invalid ID" });
         }
@@ -135,22 +137,58 @@ const toggleFlagItinerary = async (req, res) => {
 
 
 
-const deleteItinerary = async (req, res) => {
-  //delete
-  //delete an itinerary from the database
-  try {
-    const { id } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: "ID invalid" });
+const deleteItinerary = async (req, res) => { //delete
+    //delete an itinerary from the database
+    try {
+        const { id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ error: "ID invalid" });
+        }
+        const itinerary = await itineraryModel.findByIdAndDelete(id);
+        if (!itinerary) {
+            return res.status(404).json({ error: "Itinerary not found" });
+        }
+        res.status(200).json({ message: "Itinerary deleted" });
+
     }
-    const itinerary = await itineraryModel.findByIdAndDelete(id);
-    if (!itinerary) {
-      return res.status(404).json({ error: "Itinerary not found" });
+    catch (error) {
+        res.status(400).json({ error: error.message });
     }
-    res.status(200).json({ message: "Itinerary deleted" });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+}
+
+
+const deletePastItineraries = async (req, res) => {
+    try {
+        const currentDate = new Date();
+        console.log("Current Date:", currentDate);
+
+        // Find itineraries where all available dates are in the past
+        const pastItineraries = await Itinerary.find({
+            availableDatesAndTimes: { $not: { $gte: currentDate } }
+        });
+        console.log("Itineraries to delete:", pastItineraries);
+
+        // Delete itineraries where all dates are in the past
+        const resultIt = await Itinerary.deleteMany({
+            availableDatesAndTimes: { $not: { $gte: currentDate } }
+        });
+
+        // Delete past itinerary bookings where chosenDate is in the past
+        const resultBIt = await ItineraryBooking.deleteMany({
+            chosenDate: { $lt: currentDate }
+        });
+
+        // Send combined response
+        res.status(200).json({
+            message: `Deleted ${resultIt.deletedCount} past itineraries and ${resultBIt.deletedCount} past itinerary bookings.`
+        });
+    } catch (error) {
+        console.error("Error deleting past itineraries:", error);
+        res.status(500).json({ message: "Failed to delete past itineraries" });
+    }
 };
 
-module.exports = { createItinerary, getItinerary, deleteItinerary, updateItinerary, getAllItineraries, toggleFlagItinerary };
+
+
+
+module.exports = { createItinerary, getItinerary, deleteItinerary, updateItinerary, getAllItineraries, toggleFlagItinerary, deletePastItineraries };

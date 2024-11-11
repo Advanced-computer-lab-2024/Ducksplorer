@@ -19,6 +19,8 @@ const createBooking = async (req, res) => {
             return;
         }
 
+        const convertedDate = new Date(date);
+
         const activity = activityId ? await Activity.findById(activityId) : null;
         const itinerary = itineraryId ? await Itinerary.findById(itineraryId) : null;
 
@@ -52,7 +54,7 @@ const createBooking = async (req, res) => {
             const newItineraryBooking = await ItineraryBooking.create({
                 user: tourist.userName,
                 itinerary: itinerary._id,
-                chosenDate: date,
+                chosenDate: convertedDate,
                 chosenPrice: itinerary.price
             });
             await newItineraryBooking.save();
@@ -149,25 +151,32 @@ const viewMyUpcomingBookings = async (req, res) => {
 
 const viewMyPastBookings = async (req, res) => {
     try {
-        // Use req.query to get the tourist parameter
         const { tourist } = req.query;
 
         if (!tourist) {
             return res.status(400).json({ message: "Tourist query parameter is required." });
         }
 
-        // Fetch past activity bookings
-        const pastActivityBookings = await ActivityBooking.find({
-            user: tourist,
-            chosenDate: { $lt: new Date() }
-        }).populate('activity');
+        // Log the current date for debugging
+        console.log("Current Date:", new Date());
 
-        // Fetch past itinerary bookings
-        const pastItineraryBookings = await ItineraryBooking.find({
-            user: tourist,
-            chosenDate: { $lt: new Date() }
-        }).populate('itinerary');
+        // Fetch past activity bookings and itinerary bookings
+        const [pastActivityBookings, pastItineraryBookings] = await Promise.all([
+            ActivityBooking.find({
+                user: tourist,
+                chosenDate: { $lt: new Date() }
+            }).populate('activity'),
+            ItineraryBooking.find({
+                user: tourist,
+                chosenDate: { $lt: new Date() }
+            }).populate('itinerary')
+        ]);
 
+        // Log results for debugging
+        console.log("Past Activity Bookings:", pastActivityBookings);
+        console.log("Past Itinerary Bookings:", pastItineraryBookings);
+
+        // Check if there are no past bookings
         if (!pastActivityBookings.length && !pastItineraryBookings.length) {
             return res.status(404).json({ message: "No past bookings found." });
         }
@@ -180,7 +189,6 @@ const viewMyPastBookings = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
 
 const viewDesiredActivity = async (req, res) => {
     try {
@@ -284,12 +292,6 @@ const cancelMyBooking = async (req, res) => {
     // const { booking } = req.body.booking || "";
     const currentDate = new Date();
     console.log("requestBody", req.body);
-    console.log("Req.Body.booking", req.body.booking);
-    console.log("booking", booking);
-    console.log("itemId", itemId);
-    console.log("price", price);
-    console.log("type", type);
-    console.log("user", user);    
     let itemObjectId;
 
     try {
