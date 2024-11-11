@@ -69,8 +69,9 @@ const activitySchema = new Schema(
       type: Number,
       required: false
     },
-    flag: {
+    flag: { //it is true this means the activity is inappropriate (since the default of a boolean is false the activity starts as appropriate)
       type: Boolean,
+      default: false,
       required: false
     },
     comments: {
@@ -81,10 +82,20 @@ const activitySchema = new Schema(
       type: Number,
       default: 0,
       required: false
-    }
+    },
+    advertiserDeleted: //when the advertiser associated with this activity leaves it should no longer appear to new tourists but should stay in the database if it is booked this is why we use this boolean 
+    {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
+    deletedActivity: //when the advertiser deletes an activity it should no longer appear to new tourists but should stay in the database if it is booked this is why we use this boolean 
+    {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
   },
-
-
 
   { timestamps: true }
 );

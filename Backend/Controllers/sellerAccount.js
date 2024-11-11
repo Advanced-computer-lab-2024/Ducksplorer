@@ -84,8 +84,9 @@ const deleteMySellerAccount = async (req, res) => {
     }
     //IMPORTANT For sprint 3: This method is missing the process of deleting the unpurchased products associated with this seller
 
-    // Delete the seller account
+    // Delete the seller account from seller table and user table
     await Seller.findByIdAndDelete(seller._id);
+    await User.findOneAndDelete({userName:userName});
 
     // Respond with a success message
     res.status(200).json({ message: "Seller account deleted successfully." });

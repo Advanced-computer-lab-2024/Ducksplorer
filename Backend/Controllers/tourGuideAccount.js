@@ -108,8 +108,9 @@ const deleteMyTourGuideAccount = async (req, res) => {
           results.push({ id: itinerary._id, message: "Itinerary deleted" });
         } else {
           // If itinerary is booked, it can't be deleted
-          await itineraryModel.findByIdAndDelete(itinerary._id);
-          results.push({ id: itinerary._id, message: "Cannot delete booked itinerary from bookings table" });
+          itinerary.tourGuideDeleted=true;
+          await itinerary.save();
+          results.push({ id: itinerary._id, message: "Cannot delete booked itinerary" });
         }
       });
 
@@ -117,8 +118,9 @@ const deleteMyTourGuideAccount = async (req, res) => {
       await Promise.all(deletePromises);
     }
 
-    // After handling the itineraries, delete the tour guide account
+    // After handling the itineraries, delete the tour guide account from table tour guide and users
     await TourGuide.findByIdAndDelete(tourGuide._id);
+    await User.findOneAndDelete({userName:userName});
 
     // Respond with a success message after deleting the tour guide account
     res.status(200).json({ message: "Tour Guide account deleted successfully.", results });

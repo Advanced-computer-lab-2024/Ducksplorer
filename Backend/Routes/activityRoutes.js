@@ -13,7 +13,7 @@ router.delete("/deletePast", activity.deletePastActivities);
 router
   .route("/:activityId")
   .patch(activity.updateActivity)
-  .delete(activity.deleteActivity);
+  .delete(activity.deleteOnlyNotBookedActivity);
 router.get("/my/:advertiser", activity.getAllActivitiesByUsername);
 router.get("/myAppropriate", activity.getAppropriateActivities);
 router.post("/:activityId", activity.rateActivity);

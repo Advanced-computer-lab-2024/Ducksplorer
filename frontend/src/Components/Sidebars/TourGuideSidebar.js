@@ -13,7 +13,7 @@ import {
   DialogTitle,
   Button
 } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 // import DashboardIcon from '@mui/icons-material/Dashboard';
 // import PeopleIcon from '@mui/icons-material/People';
 // import PersonAddIcon from '@mui/icons-material/PersonAdd'; 
@@ -33,6 +33,7 @@ const drawerWidth = 300;
 const TouristSidebar = () => {
   const [open, setOpen] = useState(false); // State for the dialog
   const [userName, setUserName] = useState('');
+  const navigate = useNavigate(); // Initialize the useNavigate hook
 
   const handleDeleteClick = () => {
     const userJson = localStorage.getItem('user');
@@ -50,6 +51,7 @@ const TouristSidebar = () => {
       try {
         const response = await axios.delete(`http://localhost:8000/tourGuideAccount/deleteMyTourGuideAccount/${userName}`);
         alert(response.data.message); // Show success message
+        navigate('/login'); // Redirect to the login page
       } catch (error) {
         console.error("Error deleting account:", error);
         alert("Failed to delete account. Please try again.");
@@ -74,7 +76,11 @@ const TouristSidebar = () => {
         </Typography>
         <Divider />
         <List>
-          <ListItem button onClick={handleDeleteClick}>
+          <ListItem
+            button
+            onClick={handleDeleteClick}
+            sx={{ color: 'red', cursor: 'pointer' }}
+          >
             <ListItemIcon>
               <DeleteIcon />
             </ListItemIcon>

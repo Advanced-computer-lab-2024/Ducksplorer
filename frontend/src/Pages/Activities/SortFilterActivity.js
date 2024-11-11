@@ -5,7 +5,8 @@ import { Button } from "@mui/material";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import FilterActivities from "./filterActivities";
-import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
+import { Link } from "react-router-dom";
+// import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 import Help from "../../Components/HelpIcon";
 
 function SortFilterActivity() {
@@ -24,7 +25,7 @@ function SortFilterActivity() {
       >
         Back to Dashboard
       </Button>
-      <div style={{ marginLeft: 300 }}>
+      <div style={{ marginLeft: 0, maxWidth: "170vh", padding: "0 20px" }}>
         <Button
           style={{
             border: "1.3px solid black",

@@ -19,7 +19,7 @@ import {
 
 import { Link, useParams } from "react-router-dom";
 
-import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
+// import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon";
 
@@ -108,11 +108,11 @@ const SearchActivities = () => {
     <>
       <Box
         sx={{
-          p: 6,
-          maxWidth: "120vh",
+          // p: 6,
+          maxWidth: "150vh",
           overflowY: "visible",
-          height: "100vh",
-          marginLeft: 40,
+          height: "110vh",
+          marginLeft: 0,
         }}
       >
         <Button
@@ -172,9 +172,7 @@ const SearchActivities = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {activities.map((activity) => {
-                if (!activity.flag) {
-                  return (
+              {activities.map((activity) => activity.flag===false && activity.advertiserDeleted===false && activity.deletedActivity===false? (
                     <TableRow key={activity._id}>
                       <TableCell>{activity.name}</TableCell>
                       <TableCell>
@@ -227,12 +225,9 @@ const SearchActivities = () => {
                         </TableCell>
                       ) : null}
                     </TableRow>
-                  );
+                  ):null)// We don't output a row when it has `activity.flag` is true (ie activity is inappropriate) or when the activity's advertiser has left the system or the activity has been deleted but cannot be removed from database since it is booked my previous tourists
                 }
-                // Return null or nothing for cases where `activity.flag` is true
-                return null;
-              })}
-            </TableBody>
+                 </TableBody>
           </Table>
         </TableContainer>
       </Box>

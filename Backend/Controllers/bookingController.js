@@ -247,25 +247,30 @@ const getMyBookings = async (req, res) => {
         console.log("ThirdPartyBookings",thirdPartyBookings);
 
         // Extract flights, hotels, and transportations from third party bookings
-        const flights = thirdPartyBookings
-        .filter(booking => booking.flights)
-        .map(booking => booking.flights);
-
-        
         // const flights = thirdPartyBookings
         // .filter(booking => booking.flights)
-        // .map(booking => ({
-        //     _id: booking._id,
-        //     flights: booking.flights
-        // }));
+        // .map(booking => booking.flights);
+       
+        const flights = thirdPartyBookings
+        .filter(booking => booking.flights)
+        .map(booking => ({
+            id: booking._id,
+            flights: booking.flights
+        }));
 
         const hotels = thirdPartyBookings
         .filter(booking => booking.hotels)
-        .map(booking => booking.hotels);
+        .map(booking => ({
+            id: booking._id,
+            hotels: booking.hotels
+        }));
 
         const transportations = thirdPartyBookings
         .filter(booking => booking.transportations)
-        .map(booking => booking.transportations);
+        .map(booking => ({
+            id: booking._id,
+            transportations: booking.transportations
+        }))
 
         // Return bookings as a response
         res.status(200).json({
@@ -283,9 +288,10 @@ const getMyBookings = async (req, res) => {
 
 const cancelMyBooking = async (req, res) => {
     const { user } = req.params;
-    const { type, itemId, price } = req.body;
-    const { booking } = req.body.booking ? req.body.booking : " ";
+    const { type, itemId, price , booking } = req.body;
+    // const { booking } = req.body.booking || "";
     const currentDate = new Date();
+    console.log("requestBody", req.body);
     let itemObjectId;
 
     try {
@@ -295,6 +301,9 @@ const cancelMyBooking = async (req, res) => {
         }
         if(itemId){
          itemObjectId = new mongoose.Types.ObjectId(itemId);
+        }
+        else if(booking){
+        itemObjectId = new mongoose.Types.ObjectId(booking);
         }
         let itemDate;
 
@@ -346,44 +355,18 @@ const cancelMyBooking = async (req, res) => {
 
             await ItineraryBooking.deleteOne({ user, itinerary: itemObjectId });
 
-        } else if (type === 'flight') {
+        } else if (type === 'flight' || type === 'hotel' || type === 'transportation') {
             const thirdPartyBooking = await ThirdPartyBookings.findOne({ user });
             if (!thirdPartyBooking) {
-                return res.status(404).json({ message: 'Flight not found in the booking' });
+                return res.status(404).json({ message: 'Booking not found in the ThirdPartyBookings' });
             }
-            console.log(booking);
-            await ThirdPartyBookings.findOneAndDelete(
-    {  flights: { price: price } }   // Match only based on the flight ID
-);
+            console.log("Booking itemObjectId",booking);
+
+            await ThirdPartyBookings.findByIdAndDelete(booking);
             
             tourist.wallet += parseFloat(price);
             await tourist.save();
-
-        } else if (type === 'hotel') {
-            const thirdPartyBooking = await ThirdPartyBookings.findOne({ user });
-            if (!thirdPartyBooking) {
-                return res.status(404).json({ message: 'Hotel not found in the booking' });
-            }
-
-            await ThirdPartyBookings.deleteOne(
-                { user },
-                {  hotels: booking  });
-
-            tourist.wallet += parseFloat(price);
-            await tourist.save();
-            
-        } else if (type === 'transportation') {
-            const thirdPartyBooking = await ThirdPartyBookings.findOne({ user });
-            if (!thirdPartyBooking) {
-                return res.status(404).json({ message: 'Transportation not found in the booking' });
-            }
-
-            await ThirdPartyBookings.deleteOne(
-                {  user ,  transportations: booking},);
-
-            tourist.wallet += parseFloat(price);
-            await tourist.save();
-        }
+        } 
         else {
             return res.status(400).json({ message: 'Invalid type for cancellation. Must be "activity" or "itinerary".' });
         }

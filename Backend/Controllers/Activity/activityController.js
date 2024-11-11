@@ -49,19 +49,65 @@ const updateActivity = async (req, res) => {
   }
 };
 
-const deleteActivity = async (req, res) => {
-  try {
-    const activityId = req.params.activityId;
-    const deletedActivity = await activityService.deleteActivity(activityId);
-    if (!deletedActivity) {
-      return res.status(404).json({ message: "Activity not found" });
-    }
-    res.status(200).json({ message: "Activity deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+const deleteOnlyNotBookedActivity = async (req, res) => {
 
+  try {
+    const { activityId } =  req.params;
+    if (!mongoose.Types.ObjectId.isValid(activityId)) {
+      return res.status(400).json({ error: "ID invalid" });
+    }
+    else {
+      const activity = await Activity.findById(activityId);
+      if (!activity) {
+        return res.status(404).json({ error: "Activity not found" });
+      }
+      else if (activity.bookedCount >= 1) {
+        activity.deletedActivity = true; // not actually deleting from DB since it is booked but making it invisible to future tourists
+        await activity.save();
+        return res.status(200).json({ message: "Activity deleted" });
+      }
+      else {
+        // If bookedCount is less than 1, proceed to delete from database normally
+        await Activity.findByIdAndDelete(activityId);
+        return res.status(200).json({ message: "Activity deleted" });
+      }
+    }
+  }
+  catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+
+}
+
+// const searchActivities = async (req, res) => {
+//   const searchParams = req.query;
+//   try {
+//     const activities = await activityService.searchActivities(searchParams);
+//     res.json(activities);
+//   } catch (error) {
+//     res.status(500).json({ message: "Error fetching activities" });
+//   }
+// };
+
+// const searchActivities = async (req, res) => {
+//     const { search } = req.query;
+//     const filters = {};
+
+//     if (search) {
+//       filters.$or = [
+//         { name: { $regex: search, $options: 'i' } }, // Search by name (case-insensitive)
+//         { category: { $regex: search, $options: 'i' } }, // Search by category (case-insensitive)
+//         { tags: { $regex: search, $options: 'i' } } // Search by tags (case-insensitive)
+//       ];
+//     }
+
+//     try {
+//       const activities = await Activity.find(filters);
+//       res.status(200).json(activities);
+//     } catch (error) {
+//       res.status(400).json({ error: error.message });
+//     }
+//   };
 const searchActivities = async (req, res) => {
   const { search, showPreferences, favCategory} = req.query;
   const filters = {};
@@ -374,7 +420,7 @@ module.exports = {
   createActivity,
   getAllActivitiesByUsername,
   updateActivity,
-  deleteActivity,
+  deleteOnlyNotBookedActivity,
   searchActivities,
   viewUpcomingActivities,
   filterActivity,

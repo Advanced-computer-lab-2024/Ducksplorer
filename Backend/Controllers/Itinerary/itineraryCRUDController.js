@@ -137,23 +137,34 @@ const toggleFlagItinerary = async (req, res) => {
 
 
 
-const deleteItinerary = async (req, res) => { //delete
-    //delete an itinerary from the database
+const deleteOnlyNotBookedItinerary = async (req, res) => {
+
     try {
         const { id } = req.params;
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ error: "ID invalid" });
         }
-        const itinerary = await itineraryModel.findByIdAndDelete(id);
+        const itinerary = await itineraryModel.findById(id);
         if (!itinerary) {
             return res.status(404).json({ error: "Itinerary not found" });
         }
+
+        if (itinerary.bookedCount >= 1) {
+            itinerary.deletedItinerary = true; // not actually deleting from DB since it is booked but making it invisible to future tourists
+            console.log(itinerary.deletedItinerary);
+            await itinerary.save();
+            return res.status(200).json({ message: "Itinerary deleted" });
+        }
+
+        // If bookedCount is less than 1, proceed to delete from database normally
+        await itineraryModel.findByIdAndDelete(id);
         res.status(200).json({ message: "Itinerary deleted" });
 
     }
     catch (error) {
         res.status(400).json({ error: error.message });
     }
+
 }
 
 
@@ -191,4 +202,4 @@ const deletePastItineraries = async (req, res) => {
 
 
 
-module.exports = { createItinerary, getItinerary, deleteItinerary, updateItinerary, getAllItineraries, toggleFlagItinerary, deletePastItineraries };
+module.exports = { createItinerary, getItinerary, deleteOnlyNotBookedItinerary, updateItinerary, getAllItineraries, toggleFlagItinerary, deletePastItineraries };

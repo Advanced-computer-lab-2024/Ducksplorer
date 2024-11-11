@@ -13,14 +13,15 @@ import {
   DialogTitle,
   Button
 } from "@mui/material";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import MuseumIcon from '@mui/icons-material/Museum';
 import PersonIcon from '@mui/icons-material/Person';
 import WidgetsIcon from "@mui/icons-material/Widgets";
-import SearchIcon from '@mui/icons-material/Search';
+// import SearchIcon from '@mui/icons-material/Search';
+import DirectionsRunIcon from '@mui/icons-material/DirectionsRun'; // Import the new icon
 import DeleteIcon from '@mui/icons-material/Delete';
 import BookIcon from '@mui/icons-material/Book'; // Import an icon for "My Past Bookings"
 import axios from 'axios';import ReportIcon from '@mui/icons-material/Report'; // Import icon for "My Complaints"
@@ -30,6 +31,7 @@ const drawerWidth = 300;
 const TouristSidebar = () => {
   const [open, setOpen] = useState(false); // State for the dialog
   const [userName, setUserName] = useState('');
+  const navigate = useNavigate(); // Initialize the useNavigate hook
 
   const handleDeleteClick = () => {
     const userJson = localStorage.getItem('user');
@@ -47,6 +49,7 @@ const TouristSidebar = () => {
       try {
         const response = await axios.delete(`http://localhost:8000/touristAccount/deleteMyTouristAccount/${userName}`);
         alert(response.data.message); // Show success message
+        navigate('/login'); // Redirect to the login page
       } catch (error) {
         console.error("Error deleting account:", error);
         alert("Failed to delete account. Please try again.");
@@ -139,18 +142,19 @@ const TouristSidebar = () => {
           </ListItem>
           
 
+          <ListItem button component={Link} to="/activity/searchActivities">
+            <ListItemIcon>
+              {/* <SearchIcon /> */}
+              <DirectionsRunIcon />
+            </ListItemIcon>
+            <ListItemText primary="View All Activities" />
+          </ListItem>
+
           <ListItem button component={Link} to="/activity/sortFilter">
             <ListItemIcon>
               <WidgetsIcon />
             </ListItemIcon>
-            <ListItemText primary="Upcoming Activities" />
-          </ListItem>
-
-          <ListItem button component={Link} to="/activity/searchActivities">
-            <ListItemIcon>
-              <SearchIcon />
-            </ListItemIcon>
-            <ListItemText primary="Search Activities" />
+            <ListItemText primary="View Upcoming Activities" />
           </ListItem>
 
           <ListItem button component={Link} to="/myPastBookings">

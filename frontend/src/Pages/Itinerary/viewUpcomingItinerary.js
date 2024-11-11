@@ -474,130 +474,121 @@ const ViewUpcomingItinerary = () => {
               </FormControl>
             </MenuItem>
 
-            <MenuItem>
-              <Button onClick={handleFilter}>Apply Filters</Button>
-            </MenuItem>
-            <MenuItem>
-              <Button onClick={handleClearAllFilters}>Clear All Filters</Button>
-            </MenuItem>
-          </Menu>
-        </Box>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Activities</TableCell>
-                <TableCell>Locations</TableCell>
-                <TableCell>Timeline</TableCell>
-                <TableCell>Language</TableCell>
-                <TableCell>
-                  Price
-                  <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
-                </TableCell>
-                <TableCell>Available Dates And Times</TableCell>
-                <TableCell>Accessibility</TableCell>
-                <TableCell>Pick Up Location</TableCell>
-                <TableCell>Drop Off Location</TableCell>
-                <TableCell>Rating</TableCell>
-                <TableCell>Tags</TableCell>
-                <TableCell>Booking</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {itineraries.map((itinerary) =>
-                !itinerary.flag ? (
-                  <TableRow key={itinerary._id}>
-                    <TableCell>
-                      {itinerary.activity && itinerary.activity.length > 0
-                        ? itinerary.activity.map((activity, index) => (
-                            <div key={index}>
-                              {activity.name || "N/A"}- Price:{" "}
-                              {activity.price !== undefined
-                                ? activity.price
-                                : "N/A"}
-                              ,<br />
-                              Location: {activity.location || "N/A"},<br />
-                              Category: {activity.category || "N/A"}
-                              <br />
-                              <br />
-                            </div>
-                          ))
-                        : "No activities available"}
-                    </TableCell>
-                    <TableCell>
-                      {itinerary.locations && itinerary.locations.length > 0
-                        ? itinerary.locations.map((location, index) => (
-                            <div key={index}>
-                              <Typography variant="body1">
-                                Location {index + 1}: {location.trim()}
-                              </Typography>
-                              <br />
-                            </div>
-                          ))
-                        : "No locations available"}
-                    </TableCell>
-                    <TableCell>{itinerary.timeline}</TableCell>
-                    <TableCell>{itinerary.language}</TableCell>
-                    <TableCell>
-                      {(
-                        itinerary.price * (exchangeRates[currency] || 1)
-                      ).toFixed(2)}{" "}
-                      {currency}
-                    </TableCell>
-                    <TableCell>
-                      {itinerary.availableDatesAndTimes.length > 0
-                        ? itinerary.availableDatesAndTimes.map(
-                            (dateTime, index) => {
-                              const dateObj = new Date(dateTime);
-                              const date = dateObj.toISOString().split("T")[0];
-                              const time = dateObj.toTimeString().split(" ")[0];
-                              return (
-                                <div key={index}>
-                                  Date {index + 1}: {date}
-                                  <br />
-                                  Time {index + 1}: {time}
-                                </div>
-                              );
-                            }
-                          )
-                        : "No available dates and times"}
-                    </TableCell>
-                    <TableCell>{itinerary.accessibility}</TableCell>
-                    <TableCell>{itinerary.pickUpLocation}</TableCell>
-                    <TableCell>{itinerary.dropOffLocation}</TableCell>
-                    <TableCell>
-                      <Rating
-                        value={itinerary.averageRating}
-                        precision={0.1}
-                        readOnly
-                      />
-                    </TableCell>
-                    <TableCell>
-                      {itinerary.tags && itinerary.tags.length > 0
-                        ? itinerary.tags.map((tag, index) => (
-                            <div key={index}>
-                              {tag || "N/A"}
-                              <br />
-                              <br />
-                            </div>
-                          ))
-                        : "No tags available"}
-                    </TableCell>
-                    <TableCell>
-                      <Button onClick={() => handleBooking(itinerary._id)}>
-                        Book Now
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ) : null
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
-      <Help />
-    </div>
-  );
-};
+                        <MenuItem>
+                            <Button onClick={handleFilter}>Apply Filters</Button>
+                        </MenuItem>
+                        <MenuItem>
+                            <Button onClick={handleClearAllFilters}>Clear All Filters</Button>
+                        </MenuItem>
+                    </Menu>
+
+                </Box>
+                <TableContainer component={Paper}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Activities</TableCell>
+                                <TableCell>Locations</TableCell>
+                                <TableCell>Timeline</TableCell>
+                                <TableCell>Language</TableCell>
+                                <TableCell>Price
+                                    <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                                </TableCell>
+                                <TableCell>Available Dates And Times</TableCell>
+                                <TableCell>Accessibility</TableCell>
+                                <TableCell>Pick Up Location</TableCell>
+                                <TableCell>Drop Off Location</TableCell>
+                                <TableCell>Rating</TableCell>
+                                <TableCell>Tags</TableCell>
+                                <TableCell>Booking</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {itineraries.map(itinerary => (
+                                itinerary.flag===false  && itinerary.isDeactivated===false && itinerary.tourGuideDeleted===false && itinerary.deletedItinerary===false ? (
+                                    <TableRow key={itinerary._id}>
+                                        <TableCell>
+                                            {itinerary.activity && itinerary.activity.length > 0
+                                                ? itinerary.activity.map((activity, index) => (
+                                                    <div key={index}>
+                                                        {activity.name || 'N/A'}- Price:{" "} 
+                                                        {activity.price !== undefined ? activity.price : 'N/A'},<br />
+                                                        Location: {activity.location || 'N/A'},<br />
+                                                        Category: {activity.category || 'N/A'}
+                                                        <br /><br />
+                                                    </div>
+                                                ))
+                                                : 'No activities available'}
+                                        </TableCell>
+                                        <TableCell>
+                                            {itinerary.locations && itinerary.locations.length > 0 ? (
+                                                itinerary.locations.map((location, index) => (
+                                                    <div key={index}>
+                                                        <Typography variant="body1">
+                                                            Location  {index + 1}: {location.trim()}
+                                                        </Typography>
+                                                        <br />
+                                                    </div>
+                                                ))
+                                            ) : 'No locations available'}
+
+                                        </TableCell>
+                                        <TableCell>{itinerary.timeline}</TableCell>
+                                        <TableCell>{itinerary.language}</TableCell>
+                                        <TableCell>
+                                            {(itinerary.price * (exchangeRates[currency] || 1)).toFixed(2)} {" "}
+                                            {currency}
+                                        </TableCell>
+                                        <TableCell>
+                                            {itinerary.availableDatesAndTimes.length > 0
+                                                ? itinerary.availableDatesAndTimes.map((dateTime, index) => {
+                                                    const dateObj = new Date(dateTime);
+                                                    const date = dateObj.toISOString().split('T')[0];
+                                                    const time = dateObj.toTimeString().split(' ')[0];
+                                                    return (
+                                                        <div key={index}>
+                                                            Date {index + 1}: {date}<br />
+                                                            Time {index + 1}: {time}
+                                                        </div>
+                                                    );
+                                                })
+                                                : 'No available dates and times'}
+                                        </TableCell>
+                                        <TableCell>{itinerary.accessibility}</TableCell>
+                                        <TableCell>{itinerary.pickUpLocation}</TableCell>
+                                        <TableCell>{itinerary.dropOffLocation}</TableCell>
+                                        <TableCell><Rating
+                                            value={itinerary.averageRating}
+                                            precision={0.1}
+                                            readOnly
+                                        /></TableCell>
+                                        <TableCell>
+                                            {itinerary.tags && itinerary.tags.length > 0
+                                                ? itinerary.tags.map((tag, index) => (
+                                                    <div key={index}>
+                                                        {tag || 'N/A'}
+                                                        <br /><br />
+                                                    </div>
+                                                ))
+                                                : 'No tags available'}
+                                        </TableCell>
+                                        <TableCell>
+                                            <Button onClick={() => handleBooking(itinerary._id)}>
+                                                Book Now
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ) : null // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Box>
+            <Help />
+        </div>
+    );
+
+}
+
 
 export default ViewUpcomingItinerary;
