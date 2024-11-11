@@ -343,6 +343,7 @@ const PastBookingDetails = () => {
               <TableCell>Language</TableCell>
               <TableCell>Price</TableCell>
               <TableCell>Available Dates & Times</TableCell>
+              <TableCell>Chosen Date</TableCell>
               <TableCell>Accessibility</TableCell>
               <TableCell>Pick-Up Location</TableCell>
               <TableCell>Drop-Off Location</TableCell>
@@ -362,6 +363,7 @@ const PastBookingDetails = () => {
                 <TableCell>{itineraryBooking.itinerary.language}</TableCell>
                 <TableCell>{itineraryBooking.chosenPrice}</TableCell>
                 <TableCell>{itineraryBooking.itinerary.availableDatesAndTimes.map((date) => new Date(date).toLocaleDateString()).join(", ")}</TableCell>
+                <TableCell>{new Date(itineraryBooking.chosenDate).toLocaleDateString()}</TableCell>
                 <TableCell>{itineraryBooking.itinerary.accessibility}</TableCell>
                 <TableCell>{itineraryBooking.itinerary.pickUpLocation}</TableCell>
                 <TableCell>{itineraryBooking.itinerary.dropOffLocation}</TableCell>
