@@ -288,7 +288,7 @@ const BookingDetails = () => {
                     />
                   </TableCell>
                   <TableCell>
-                    <Tooltip title="Delete Itinerary">
+                    <Tooltip title="Delete Activity">
                       <IconButton color="error" aria-label="delete category" onClick={() => handleDeleteBooking('activity', activityBooking.activity?._id, activityBooking.activity?.price)}>
                         <DeleteIcon />
                       </IconButton>
