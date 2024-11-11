@@ -1,6 +1,6 @@
-import React, {  useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { message } from "antd";
+import { Flex, message } from "antd";
 import { Typography } from "@mui/material";
 import { Button } from "@mui/material";
 import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
@@ -10,21 +10,17 @@ function AdminAllProducts() {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate(); // Initialize useNavigate for navigation
 
-  const handleViewAdminProducts = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8000/adminRoutes/getproducts"
-      );
-      if (response.status === 200) {
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/adminRoutes/getproducts")
+      .then((response) => {
         message.success("Products fetched successfully");
-        setProducts(response.data); // Store the filtered products
-      } else {
-        message.error("Failed to fetch products");
-      }
-    } catch (error) {
-      message.error("An error occurred: " + error.message);
-    }
-  };
+        setProducts(response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the products!", error);
+      });
+  }, []);
 
   const handleEditProduct = (productId) => {
     // Navigate to the edit product page with the product ID
@@ -36,15 +32,14 @@ function AdminAllProducts() {
   };
 
   return (
-    <div style={{ padding: "20px", maxWidth: "800px", margin: "auto" }}>
+    <div
+      style={{
+        padding: "20px",
+        maxWidth: "800px",
+        margin: "auto",
+      }}
+    >
       <Button onClick={handleBackButtonClick}>Back</Button>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleViewAdminProducts}
-      >
-        My Products
-      </Button>
 
       <div
         style={{
@@ -52,7 +47,7 @@ function AdminAllProducts() {
           overflowY: "visible",
           padding: "10px",
           marginTop: "20px",
-          height: "80vh",
+          height: "100vh",
           transform: "translateX(125px)",
         }}
       >
@@ -63,7 +58,11 @@ function AdminAllProducts() {
               key={product._id}
               style={{ position: "relative", marginBottom: "20px" }}
             >
-              <ProductCard product={product} />
+              <ProductCard
+                product={product}
+                showArchive={true}
+                showUnarchive={true}
+              />
               <Button
                 variant="contained"
                 color="secondary"

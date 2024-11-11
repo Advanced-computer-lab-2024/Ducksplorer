@@ -1,3 +1,5 @@
+const ItineraryBooking = require('../Models/itineraryBookingModel.js');
+const Itinerary = require('../Models/itineraryModel.js');
 const TourGuide = require('../Models/tourGuideModel.js');
 const UserModels = require('../Models/userModel.js');
 const mongoose = require('mongoose');
@@ -29,39 +31,57 @@ const rateTourGuide = async (req, res) => {
     }
 };
 
-const getUserNameById = async (req,res) => {
-    if(!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)){
-        return res.status(200).json({userName : "N/A"});
+const getUserNameById = async (req, res) => {
+    const { bookingId } = req.params;
+
+    // Validate bookingId
+    if (!bookingId || !mongoose.Types.ObjectId.isValid(bookingId)) {
+        return res.status(200).json({ userName: "N/A" });
     }
-    else{
-    const {id } = req.params;
-    
-    const tourGuide = await TourGuide.findById(id);
-    if (!tourGuide) {
-      res.status(200).json({ userName: "Tour Guide not found"});
+
+    try {
+        // Find booking by ID
+        const booking = await ItineraryBooking.findById(bookingId);
+        if (!booking) {
+            return res.status(404).json({ message: "Booking doesn't exist" });
+        }
+
+        // Find itinerary by the itinerary ID in booking
+        const itinerary = await Itinerary.findById(booking.itinerary._id);
+        if (!itinerary) {
+            return res.status(404).json({ message: "Itinerary doesn't exist" });
+        }
+
+        // Find tour guide by ID
+        const tourGuide = await TourGuide.findById(itinerary.tourGuideModel);
+        if (!tourGuide) {
+            return res.status(404).json({ message: "Tour Guide doesn't exist" });
+        }
+
+        // Respond with the tour guide's user name
+        res.status(200).json({ userName: tourGuide.userName });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
     }
-    else{
-     res.status(200).json({userName:tourGuide.userName});
-    }
-}
-}
+};
+
 
 //check if tourGuide is found using his id
-const getTourGuideById = async (req , res) => {
+const getTourGuideById = async (req, res) => {
     if (!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
         return res.status(200).json({ present: false, message: "Invalid ID format" });
     }
-    else{
-    const {id} = req.params;
-    const tourGuide = await TourGuide.findById(id);
-    if (!tourGuide) {
-        res.status(200).json({present : false});
+    else {
+        const { id } = req.params;
+        const tourGuide = await TourGuide.findById(id);
+        if (!tourGuide) {
+            res.status(200).json({ present: false });
+        }
+        else {
+            res.status(200).json({ present: true });
+        }
     }
-    else{
-    res.status(200).json({present : true});
-    }
-}
 }
 module.exports = {
-    rateTourGuide,getUserNameById,getTourGuideById
+    rateTourGuide, getUserNameById, getTourGuideById
 };

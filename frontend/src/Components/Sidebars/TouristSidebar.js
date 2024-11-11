@@ -24,7 +24,7 @@ import WidgetsIcon from "@mui/icons-material/Widgets";
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun'; // Import the new icon
 import DeleteIcon from '@mui/icons-material/Delete';
 import BookIcon from '@mui/icons-material/Book'; // Import an icon for "My Past Bookings"
-import axios from 'axios';
+import axios from 'axios';import ReportIcon from '@mui/icons-material/Report'; // Import icon for "My Complaints"
 
 const drawerWidth = 300;
 
@@ -89,7 +89,7 @@ const TouristSidebar = () => {
             <ListItemIcon>
               <PersonIcon />
             </ListItemIcon>
-            <ListItemText primary="Edit Profile" />
+            <ListItemText primary="Profile" />
           </ListItem>
 
           <ListItem button component={Link} to="/viewAllTourist">
@@ -127,6 +127,21 @@ const TouristSidebar = () => {
             <ListItemText primary="View Historical Places" />
           </ListItem>
 
+          <ListItem button component={Link} to="/UpcomingMuseums">
+            <ListItemIcon>
+              <EventAvailableIcon />
+            </ListItemIcon>
+            <ListItemText primary="View Upcoming Museums" />
+          </ListItem>
+
+          <ListItem button component={Link} to="/UpcomingHistoricalPlaces">
+            <ListItemIcon>
+              <EventAvailableIcon />
+            </ListItemIcon>
+            <ListItemText primary="View Upcoming Historical Places" />
+          </ListItem>
+          
+
           <ListItem button component={Link} to="/activity/searchActivities">
             <ListItemIcon>
               {/* <SearchIcon /> */}
@@ -147,6 +162,13 @@ const TouristSidebar = () => {
               <BookIcon />
             </ListItemIcon>
             <ListItemText primary="My Past Bookings" />
+          </ListItem>
+          {/* New My Complaints button */}
+          <ListItem button component={Link} to="/myComplaints">
+            <ListItemIcon>
+              <ReportIcon />
+            </ListItemIcon>
+            <ListItemText primary="My Complaints" />
           </ListItem>
         </List>
         <Divider />

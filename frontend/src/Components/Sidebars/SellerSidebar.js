@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Drawer,
   Typography,
@@ -11,17 +11,21 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Button
+  Button,
 } from "@mui/material";
 import { Link, useNavigate } from 'react-router-dom';
 // import DashboardIcon from '@mui/icons-material/Dashboard';
 // import PeopleIcon from '@mui/icons-material/People';
-// import PersonAddIcon from '@mui/icons-material/PersonAdd'; 
+// import PersonAddIcon from '@mui/icons-material/PersonAdd';
 // import CategoryIcon from '@mui/icons-material/Category';
 // import LabelIcon from '@mui/icons-material/Label';
-import PersonIcon from '@mui/icons-material/Person';
-import DeleteIcon from '@mui/icons-material/Delete';
-import axios from 'axios';
+// import EventNoteIcon from '@mui/icons-material/EventNote';
+// import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+// import MuseumIcon from '@mui/icons-material/Museum';
+import PersonIcon from "@mui/icons-material/Person";
+import DeleteIcon from "@mui/icons-material/Delete";
+import axios from "axios";
 
 const drawerWidth = 300;
 
@@ -31,7 +35,7 @@ const SellerSidebar = () => {
   const navigate = useNavigate(); // Initialize the useNavigate hook
 
   const handleDeleteClick = () => {
-    const userJson = localStorage.getItem('user');
+    const userJson = localStorage.getItem("user");
     const user = JSON.parse(userJson);
     setUserName(user.username);
     setOpen(true); // Open the confirmation dialog
@@ -44,7 +48,9 @@ const SellerSidebar = () => {
   const handleDeleteAccount = async () => {
     if (userName) {
       try {
-        const response = await axios.delete(`http://localhost:8000/sellerAccount/deleteMySellerAccount/${userName}`);
+        const response = await axios.delete(
+          `http://localhost:8000/sellerAccount/deleteMySellerAccount/${userName}`
+        );
         alert(response.data.message); // Show success message
         navigate('/login'); // Redirect to the login page
       } catch (error) {
@@ -61,7 +67,7 @@ const SellerSidebar = () => {
       sx={{
         width: drawerWidth,
         flexShrink: 0,
-        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" },
       }}
     >
       <div>
@@ -91,11 +97,10 @@ const SellerSidebar = () => {
 
           <ListItem button component={Link} to="/ProductDashboard">
             <ListItemIcon>
-              <PersonIcon />
+              <ShoppingCartIcon />
             </ListItemIcon>
             <ListItemText primary="Manage Products" />
           </ListItem>
-
         </List>
         <Divider />
       </div>
@@ -107,10 +112,12 @@ const SellerSidebar = () => {
           Are you sure you want to delete your account?
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary" variant="outlined">Cancel</Button>
+          <Button onClick={handleClose} color="primary" variant="outlined">
+            Cancel
+          </Button>
           <Button
             onClick={handleDeleteAccount}
-            sx={{ color: 'white', backgroundColor: 'error.main' }} // Set red background
+            sx={{ color: "white", backgroundColor: "error.main" }} // Set red background
             variant="contained"
           >
             Yes, Delete

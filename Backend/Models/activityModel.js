@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const Tags = require("./preferenceTagsModels")
+const ActivityBooking = require("./activityBookingModel")
 
 const activitySchema = new Schema(
   {
@@ -49,8 +50,20 @@ const activitySchema = new Schema(
       required: false,
     },
     ratings: {
-      type: [Number],
-      required: false
+      type: [{
+        bookingId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "ActivityBooking",
+          required: true
+        },
+        rating: {
+          type: Number,
+          required: true,
+          min: 0,
+          max: 5
+        }
+      }],
+      default: []
     },
     averageRating: {
       type: Number,

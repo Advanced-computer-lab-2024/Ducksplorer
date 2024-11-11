@@ -24,6 +24,7 @@ const updateTouristDetails = async (req, res) => {
   const userName = req.body.userName;
   const newPassword = req.body.password;
   const updateData = { ...req.body };
+    console.log(updateData);
 
   try {
     // Update the Tourist details first
@@ -48,6 +49,41 @@ const updateTouristDetails = async (req, res) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+  //get all the preferences of a tourist
+  const getTouristPreferences = async (req, res) => {
+    const {userName} = req.params;
+    try {
+      const tourist = await Tourist.findOne({userName});
+  
+      if (!tourist){
+      res.status(404).json({ message: 'Tourist not found' });
+      }
+      else{
+       res.status(200).json(tourist.tagPreferences);
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+
+  const getFavoriteCategory = async (req, res) => {
+    const {userName} = req.params;
+    try {
+      const tourist = await Tourist.findOne({userName});
+  
+      if (!tourist){
+      res.status(404).json({ message: 'Tourist not found' });
+      }
+      else{
+       res.status(200).json(tourist.favouriteCategory);
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  };
 
 const deleteMyTouristAccount = async (req, res) => {
   try {
@@ -79,5 +115,7 @@ const deleteMyTouristAccount = async (req, res) => {
 module.exports = {
   getTouristDetails,
   updateTouristDetails,
+    getTouristPreferences,
+    getFavoriteCategory,
   deleteMyTouristAccount
 };

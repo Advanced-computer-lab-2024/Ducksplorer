@@ -86,6 +86,7 @@ const FlightBookingForm = () => {
         originCode: origin.code,
         destinationCode: destination.code,
         dateOfDeparture: formattedDepartureDate,
+        seats
       };
 
       try {
@@ -100,10 +101,10 @@ const FlightBookingForm = () => {
       } else {
         message.error('No flights found.');
       }
-        
+
       } catch (error) {
         console.error('Error fetching flights:', error);
-        message.error('Response data:', error.response.data.error);
+        //message.error('Response data:', error.response.error);
         message.error('Failed to fetch flights. Please try again.');
       }
     } else {
@@ -181,7 +182,7 @@ const FlightBookingForm = () => {
         </Grid>
       </Box>
     </Container>
-    {flights.length > 0 && <FlightsCards sx={{overflowY: 'auto'}}flights={flights} origin={origin} destination={destination} departureDate={departureDate} />}
+    {flights.length > 0 && <FlightsCards sx={{overflowY: 'auto'}}flights={flights} originCity={origin.label} destinationCity={destination.label} originCountry={origin.country} destinationCountry={destination.country} departureDate={departureDate} />}
     </Container>
   );
 };

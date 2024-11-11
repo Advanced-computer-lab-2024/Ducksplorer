@@ -94,6 +94,10 @@ const Adminproducts = () => {
     navigate("/SortProducts");
   };
 
+  const handleViewMyProducts = ()=> {
+    navigate('/ViewMyProducts');
+  }
+
   const handleBackClick = () => {
     window.history.back();
   };
@@ -123,10 +127,10 @@ const Adminproducts = () => {
           <div
             style={{
               maxHeight: "400px",
-              overflowY: "auto",
+              overflowY: "visible",
               padding: "10px",
               marginTop: "20px",
-              height: "80vh",
+              height: "100vh",
               transform: "translateX(125px)",
             }}
           >
@@ -176,6 +180,15 @@ const Adminproducts = () => {
             style={sidebarButtonStyle}
           >
             View All Products
+          </Button>
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            onClick={handleViewMyProducts}
+            style={sidebarButtonStyle}
+          >
+            View My Products
           </Button>
           <Button
             fullWidth

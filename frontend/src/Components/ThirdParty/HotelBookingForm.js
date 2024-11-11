@@ -91,7 +91,7 @@ const HotelBookingForm = () => {
         console.log(encodedQuery);
         const locationResponse = await axios.get(`https://tripadvisor16.p.rapidapi.com/api/v1/hotels/searchLocation?query=${encodedQuery}`, {
           headers: {
-            'x-rapidapi-key': 'fd830a92bemsh170577a13a24378p19b572jsn351826216193',
+            'x-rapidapi-key': '3bfcb9b73fmshef1b90262efc940p1fdb52jsn3fa77589cdab',
             'x-rapidapi-host': 'tripadvisor16.p.rapidapi.com'
           }
         });
@@ -108,7 +108,7 @@ const HotelBookingForm = () => {
               adults: adults
             },
             headers: {
-              'x-rapidapi-key': 'fd830a92bemsh170577a13a24378p19b572jsn351826216193',
+              'x-rapidapi-key': '3bfcb9b73fmshef1b90262efc940p1fdb52jsn3fa77589cdab',
               'x-rapidapi-host': 'tripadvisor16.p.rapidapi.com'
             }
           });
@@ -208,7 +208,7 @@ const HotelBookingForm = () => {
         </Grid>
       </Box>
     </Container>
-    {hotels.length > 0 && <HotelCards sx={{overflowY: 'auto'}} hotels={hotels} />}
+    {hotels.length > 0 && <HotelCards sx={{overflowY: 'auto'}} hotels={hotels} checkInDate={checkInDate} checkOutDate={checkOutDate} country={city.country} city={city.label}  adults={adults} />}
     </Container>
   );
 };

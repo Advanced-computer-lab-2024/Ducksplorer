@@ -74,16 +74,16 @@
 
 // export default FileUpload;
 ////////
-import React, { useState } from 'react';
-import { Button, Input } from '@mui/material';
+import React, { useState } from "react";
+import { Button, Input } from "@mui/material";
 
-const FileUpload = ({ onFileSelect, inputId }) => {
+const FileUpload = ({ onFileSelect, inputId, label }) => {
   const [fileNames, setFileNames] = useState([]);
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
     if (files.length > 0) {
-      setFileNames(files.map(file => file.name));
+      setFileNames(files.map((file) => file.name));
       onFileSelect(files); // Pass selected files array to parent component
     } else {
       setFileNames([]);
@@ -97,7 +97,7 @@ const FileUpload = ({ onFileSelect, inputId }) => {
         type="file"
         multiple
         onChange={handleFileChange}
-        style={{ display: 'none' }}
+        style={{ display: "none" }}
         id={inputId}
       />
       <label htmlFor={inputId}>
@@ -105,11 +105,9 @@ const FileUpload = ({ onFileSelect, inputId }) => {
           Upload Document
         </Button>
       </label>
-      <div>{fileNames.join(', ')}</div> {/* Display selected file names */}
+      <div>{fileNames.join(", ")}</div>
     </div>
   );
 };
 
 export default FileUpload;
-
-

@@ -3,6 +3,7 @@ const activityService = require("../../Services/activityServices.js");
 const Tags = require("../../Models/preferenceTagsModels.js");
 const Category = require("../../Models/activityCategory.js");
 const mongoose = require("mongoose");
+const ActivityBooking = require("../../Models/activityBookingModel.js");
 
 const createActivity = async (req, res) => {
   try {
@@ -108,77 +109,136 @@ const deleteOnlyNotBookedActivity = async (req, res) => {
 //     }
 //   };
 const searchActivities = async (req, res) => {
-  const { search } = req.query;
+  const { search, showPreferences, favCategory} = req.query;
   const filters = {};
-
-  try {
-    // If the user is searching, check both the activity name, category, and related tags in respective schemas
-    if (search) {
-      // Find matching tags in the preferenceTagsSchema
-      const matchingTags = await Tags.find({
-        name: { $regex: search, $options: "i" },
-      });
-      const matchingTagNames = matchingTags.map((tag) => tag.name); // Get array of matching tag names
-
-      // Find matching categories in the Category schema
-      const matchingCategories = await Category.find({
-        name: { $regex: search, $options: "i" },
-      });
-      const matchingCategoryNames = matchingCategories.map(
-        (category) => category.name
-      ); // Get array of matching category names
-
-      console.log("Matching Tags:", matchingTagNames);
-      console.log("Matching Categories:", matchingCategoryNames);
-
-      // Construct the filters to include name, matching categories, and matching preference tags
-      filters.$or = [
-        { name: { $regex: search, $options: "i" } }, // Search by name (case-insensitive)
-      ];
-
-      // Only add the category filter if there are matching categories
-      if (matchingCategoryNames.length > 0) {
-        filters.$or.push({ category: { $in: matchingCategoryNames } }); // Search by matching category names
+   
+  if(showPreferences === 'false'){
+    try {
+      // If the user is searching, check both the activity name, category, and related tags in respective schemas
+      if (search) {
+        // Find matching tags in the preferenceTagsSchema
+        const matchingTags = await Tags.find({
+          name: { $regex: search, $options: "i" },
+        });
+        const matchingTagNames = matchingTags.map((tag) => tag.name); // Get array of matching tag names
+  
+        // Find matching categories in the Category schema
+        const matchingCategories = await Category.find({
+          name: { $regex: search, $options: "i" },
+        });
+        const matchingCategoryNames = matchingCategories.map(
+          (category) => category.name
+        ); // Get array of matching category names
+  
+        console.log("Matching Tags:", matchingTagNames);
+        console.log("Matching Categories:", matchingCategoryNames);
+  
+        // Construct the filters to include name, matching categories, and matching preference tags
+        filters.$or = [
+          { name: { $regex: search, $options: "i" } }, // Search by name (case-insensitive)
+        ];
+  
+        // Only add the category filter if there are matching categories
+        if (matchingCategoryNames.length > 0) {
+          filters.$or.push({ category: { $in: matchingCategoryNames } }); // Search by matching category names
+        }
+  
+        // Only add the tag filter if there are matching tags
+        if (matchingTagNames.length > 0) {
+          filters.$or.push({ tags: { $in: matchingTagNames } }); // Search by matching preference tags
+        }
       }
-
-      // Only add the tag filter if there are matching tags
-      if (matchingTagNames.length > 0) {
-        filters.$or.push({ tags: { $in: matchingTagNames } }); // Search by matching preference tags
-      }
+      // Fetch the activities based on the search filters
+      const activities = await Activity.find(filters);
+      res.status(200).json(activities);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
     }
-
-    // Fetch the activities based on the search filters
-    const activities = await Activity.find(filters);
-    res.status(200).json(activities);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  }else{
+    try {
+      // If the user is searching, check both the activity name, category, and related tags in respective schemas
+      if (search) {
+        // Find matching tags in the preferenceTagsSchema
+        const matchingTags = await Tags.find({
+          name: { $regex: search, $options: "i" },
+        });
+        const matchingTagNames = matchingTags.map((tag) => tag.name); // Get array of matching tag names
+  
+        // Find matching categories in the Category schema
+        const matchingCategories = await Category.find({
+          name: { $regex: search, $options: "i" },
+        });
+        const matchingCategoryNames = matchingCategories.map(
+          (category) => category.name
+        ); // Get array of matching category names
+  
+        console.log("Matching Tags:", matchingTagNames);
+        console.log("Matching Categories:", matchingCategoryNames);
+  
+        // Construct the filters to include name, matching categories, and matching preference tags
+        filters.$or = [
+          { name: { $regex: search, $options: "i" } }, // Search by name (case-insensitive)
+        ];
+  
+        // Only add the category filter if there are matching categories
+        if (matchingCategoryNames.length > 0) {
+          filters.$or.push({ category: { $in: matchingCategoryNames } }); // Search by matching category names
+        }
+  
+        // Only add the tag filter if there are matching tags
+        if (matchingTagNames.length > 0) {
+          filters.$or.push({ tags: { $in: matchingTagNames } }); // Search by matching preference tags
+        }
+      }
+  
+      // Fetch the activities based on the search filters
+      let activities = await Activity.find(filters);
+      activities = activities.sort((a, b) => {
+        if (a.category === favCategory && b.category !== favCategory) {
+          return -1; // "restaurant" category comes first
+        } else if (b.category === favCategory && a.category !== favCategory) {
+          return 1; // Move other categories after "restaurant"
+        } else {
+          return 0; // If both have the same category, retain their relative order
+        }
+      });
+      res.status(200).json(activities);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
   }
+
+  
 };
 
 const viewUpcomingActivities = async (req, res) => {
-  try {
-    const upcomingActivities = await activityService.viewUpcomingActivities();
-    res.json(upcomingActivities);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching upcoming activities" });
+  const {showPreferences, favCategory} = req.query;
+  if(showPreferences){
+    try {
+      const upcomingActivities = await activityService.viewUpcomingActivities();
+      res.json(upcomingActivities);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching upcoming activities" });
+    }
+  }else{
+    try {
+      let upcomingActivities = await activityService.viewUpcomingActivities();
+      upcomingActivities = upcomingActivities.sort((a, b) => {
+        if (a.category === favCategory && b.category !== favCategory) {
+          return -1; // "restaurant" category comes first
+        } else if (b.category === favCategory && a.category !== favCategory) {
+          return 1; // Move other categories after "restaurant"
+        } else {
+          return 0; // If both have the same category, retain their relative order
+        }
+      });
+      res.status(200).json(upcomingActivities);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching upcoming activities" });
+    }
   }
+  
 };
-
-// const filterActivities = async (req, res) => {
-//   const { price, date, category, rating } = req.query;
-
-//   try {
-//     const activities = await activityService.filterActivities({
-//       price,
-//       date,
-//       category,
-//       rating,
-//     });
-//     res.json(activities); // Return activities as JSON
-//   } catch (error) {
-//     res.status(500).json({ message: "Error filtering activities" });
-//   }
-// };
 
 const filterActivity = async (req, res) => {
   const { price, date, category, averageRating } = req.query;
@@ -244,6 +304,7 @@ const sortActivities = async (req, res) => {
   const { sortBy, order } = req.query;
   const currentDate = new Date();
 
+  
   let sortCriteria = {};
   if (sortBy) {
     sortCriteria[sortBy] = order === "desc" ? -1 : 1;
@@ -259,31 +320,42 @@ const sortActivities = async (req, res) => {
   }
 };
 
-
 const rateActivity = async (req, res) => {
-  const { activityId } = req.params;
-  const { rating } = req.body;
-
-  if (!rating || rating < 1 || rating > 5) {
-    return res.status(400).json({
-      message: "Invalid rating. Please provide a rating between 1 and 5.",
-    });
-  }
-
   try {
-    const activity = await Activity.findById(activityId);
+    const { bookingId } = req.params;
+    const { rating } = req.body;
 
-    if (!activity) {
-      return res.status(404).json({ message: "Activity not found" });
+    // Find the activity booking and associated activity
+    const activityBooking = await ActivityBooking.findById(bookingId);
+    if (!activityBooking) return res.status(404).send("Booking not found");
+
+    activityBooking.rating = rating
+    await activityBooking.save();
+
+    const activity = await Activity.findById(activityBooking.activity);
+    if (!activity) return res.status(404).send("Activity not found");
+
+    // Update or add the rating specific to the booking
+    const existingRating = activity.ratings.find(r => r.bookingId.toString() === bookingId);
+    if (existingRating) {
+      existingRating.rating = rating;
+    } else {
+      activity.ratings.push({ bookingId, rating });
     }
-    activity.ratings.push(rating);
-    const sum = activity.ratings.reduce((acc, val) => acc + val, 0);
-    activity.averageRating = sum / activity.ratings.length;
+
+    // Recalculate the average rating
+    const totalRating = activity.ratings.reduce((acc, r) => acc + r.rating, 0);
+    activity.averageRating = totalRating / activity.ratings.length;
+
     await activity.save();
 
-    res.status(200).json({ message: "Rating added successfully", activity });
+    res.status(200).json({
+      updatedAverageRating: activity.averageRating,
+      userRating: rating,
+    });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    console.error("Error updating rating:", error);
+    res.status(500).send("Failed to update rating");
   }
 };
 
@@ -322,6 +394,28 @@ const toggleFlagActivity = async (req, res) => {
 };
 
 
+const deletePastActivities = async (req, res) => {
+  try {
+    const currentDate = new Date();
+    console.log("Current Date:", currentDate);
+
+    const pastActivities = await Activity.find({ date: { $lt: currentDate } });
+    console.log("Activities to delete:", pastActivities);
+
+    const result = await Activity.deleteMany({
+      date: { $lt: currentDate }
+    });
+    res.status(200).json({
+      message: `Deleted ${result.deletedCount} past activities.`
+    });
+  } catch (error) {
+    console.error("Error deleting past activities:", error);
+    res.status(500).json({ message: "Failed to delete past activities" });
+  }
+};
+
+
+
 module.exports = {
   createActivity,
   getAllActivitiesByUsername,
@@ -333,5 +427,6 @@ module.exports = {
   sortActivities,
   rateActivity,
   getAppropriateActivities,
-  toggleFlagActivity
+  toggleFlagActivity,
+  deletePastActivities
 };

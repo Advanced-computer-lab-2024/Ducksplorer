@@ -46,6 +46,31 @@ const updateSellerDetails = async (req, res) => {
   }
 };
 
+
+const removeFileUrl = async (req, res) => {
+  const { userName, uploads } = req.body;
+
+  if (!userName || !uploads) {
+    return res.status(400).json({ error: 'userName and uploads are required' });
+  }
+
+  try {
+    // Find the tour guide by username
+    const seller = await Seller.findOne({ userName });
+    if (!seller) {
+      return res.status(404).json({ error: 'advertiser not found' });
+    }
+
+    seller.uploads = ''; // Clear the uploads field
+    // Save the updated document
+    await seller.save();
+    res.status(200).json({ message: 'File URL removed successfully' });
+  } catch (error) {
+    console.error('Error deleting file URL:', error);
+    res.status(500).json({ error: 'An error occurred while deleting the file URL' });
+  }
+};
+
 const deleteMySellerAccount = async (req, res) => {
   try {
     // Get seller username from the route parameters
@@ -73,5 +98,6 @@ const deleteMySellerAccount = async (req, res) => {
 module.exports = {
   getSellerDetails,
   updateSellerDetails,
+  removeFileUrl,
   deleteMySellerAccount
 };

@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@cloudinary/react": "^1.13.1",
+    "@cloudinary/url-gen": "^1.21.0",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@faker-js/faker": "^9.0.2",
@@ -17,9 +19,10 @@
     "@testing-library/user-event": "^13.5.0",
     "antd": "^5.21.6",
     "axios": "^1.7.7",
+    "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
     "css-loader": "^7.1.2",
-    "date-fns": "^2.29.3",
+    "date-fns": "^2.29.2",
     "formik": "^2.4.6",
     "frontend": "file:",
     "install": "^0.13.0",
@@ -27,6 +30,7 @@
     "material-ui-popup-state": "^5.3.1",
     "npm": "^10.8.3",
     "react": "^18.3.1",
+    "react-bootstrap": "^2.10.5",
     "react-dom": "^18.3.1",
     "react-places-autocomplete": "^7.3.0",
     "react-router-dom": "^6.26.2",
@@ -59,5 +63,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.14"
   }
 }

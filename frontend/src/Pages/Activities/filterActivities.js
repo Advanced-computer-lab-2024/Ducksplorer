@@ -1,4 +1,4 @@
-//This is the page that gets called when the filter button is clicked inside the upcoming page 
+//This is the page that gets called when the filter button is clicked inside the upcoming page
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
@@ -21,6 +21,7 @@ import {
   Slider,
 } from "@mui/material";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
+import Help from "../../Components/HelpIcon";
 const FilterActivities = () => {
   const [activities, setActivities] = useState([]);
   const [allActivities, setAllActivities] = useState([]); // Store all activities
@@ -31,7 +32,7 @@ const FilterActivities = () => {
   const [categories, setCategories] = useState([]); // Store fetched categories
 
   const [exchangeRates, setExchangeRates] = useState({});
-  const [currency, setCurrency] = useState('EGP');
+  const [currency, setCurrency] = useState("EGP");
   // Fetch categories from backend
   useEffect(() => {
     axios
@@ -156,7 +157,8 @@ const FilterActivities = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell>Price
+                <TableCell>
+                  Price
                   <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
                 </TableCell>
                 <TableCell>Is Open</TableCell>
@@ -174,7 +176,7 @@ const FilterActivities = () => {
                 <TableRow key={activity._id}>
                   <TableCell>{activity.name}</TableCell>
                   <TableCell>
-                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {" "}
                   </TableCell>
                   <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
                   <TableCell>{activity.category}</TableCell>
@@ -211,10 +213,10 @@ const FilterActivities = () => {
               ) // We don't output a row when it has `activity.flag` is true (ie activity is inappropriate) or when the activity's advertiser has left the system or the activity has been deleted but cannot be removed from database since it is booked my previous tourists
               }
             </TableBody>
-
           </Table>
         </TableContainer>
       </Box>
+      <Help />
     </>
   );
 };

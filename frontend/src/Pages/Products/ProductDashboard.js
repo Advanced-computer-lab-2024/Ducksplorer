@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button, Menu, MenuItem, TextField, Typography, Drawer, Stack } from '@mui/material';
-import { message } from 'antd';
-import axios from 'axios';
-import ProductCard from '../../Components/Products/ProductCard'; // Import the ProductCard component
-
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Button,
+  Menu,
+  MenuItem,
+  TextField,
+  Typography,
+  Drawer,
+  Stack,
+} from "@mui/material";
+import { message } from "antd";
+import axios from "axios";
+import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
 
 // Inline styles
 // const pageStyle = {
@@ -14,120 +21,141 @@ import ProductCard from '../../Components/Products/ProductCard'; // Import the P
 // };
 
 const searchContainerStyle = {
-  display: 'flex',
-  justifyContent: 'center',
-  marginBottom: '20px',
+  display: "flex",
+  justifyContent: "center",
+  marginBottom: "20px",
 };
 
 const sidebarStyle = {
   width: 240,
-  padding: '10px',
-  backgroundColor: 'lightblue', // Set the background color of the sidebar to be visible
+  padding: "10px",
+  backgroundColor: "lightblue", // Set the background color of the sidebar to be visible
 };
 
 const sidebarButtonStyle = {
-  marginBottom: '10px',
-  backgroundColor: 'blue',  
-  color: 'white',  // White text for contrast
+  marginBottom: "10px",
+  backgroundColor: "blue",
+  color: "white", // White text for contrast
 };
 
 const ProductDashboard = () => {
   // State for managing the dropdown menu
   const [anchorEl, setAnchorEl] = useState(null);
-  const navigate = useNavigate(); 
+  // const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
 
   const handleFilterClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleFilterClose = () => {
-    navigate('/FilterProducts');
+    navigate("/FilterProducts");
   };
+
+  // Handler for search input change
+  // const handleSearchChange = (event) => {
+  //   setSearchQuery(event.target.value);
+  // };
 
   // Placeholder functions for button actions
   const handleAddProduct = () => {
-    navigate('/AddProducts');
+    navigate("/AddProducts");
   };
 
   const handleViewAllProducts = () => {
-    navigate('/AllProducts');
+    navigate("/AllProducts");
   };
 
   const handleSearchProduct = () => {
-    navigate('/SearchProducts');
+    navigate("/SearchProducts");
   };
 
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [products, setProducts] = useState([]);
   const handleSearchProducts = async () => {
     // console.log(price);
     try {
-      
-      const response = await axios.get('http://localhost:8000/sellerRoutes/findProduct', {
-        params: {
-          name, // Send price as a query parameter
-        },
-      });
+      const response = await axios.get(
+        "http://localhost:8000/sellerRoutes/findProduct",
+        {
+          params: {
+            name, // Send price as a query parameter
+          },
+        }
+      );
 
       if (response.status === 200) {
-        message.success('Products viewed successfully');
+        message.success("Products viewed successfully");
         setProducts(response.data); // Store the filtered products
       } else {
-        message.error('Failed to search products');
+        message.error("Failed to search products");
       }
     } catch (error) {
-      message.error('An error occurred: ' + error.message);
+      message.error("An error occurred: " + error.message);
     }
   };
 
-  const handleSortProducts = ()=> {
-    navigate('/SortProducts');
-  }
+  const handleSortProducts = () => {
+    navigate("/SortProducts");
+  };
 
-  const handleViewMyProducts = ()=> {
-    navigate('/ViewMyProducts');
-  }
+  const handleViewMyProducts = () => {
+    navigate("/ViewMyProducts");
+  };
 
   const handleBackButtonClick = () => {
     window.history.back();
   };
 
-
   return (
-    <div >
-      {/* Search Container at the Top */}
+    <div>
       <Button onClick={handleBackButtonClick}>Back</Button>
       <div style={searchContainerStyle}>
         <Stack spacing={2}>
-        <TextField
-          label="Search for a product"
-          variant="outlined"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          style={{ marginRight: '10px' }}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSearchProducts}
-          style={{ backgroundColor: '#3f51b5', color: 'white' }}  // Blue color for better visibility
-        >
-          Search
-        </Button>
-       
-        <div style={{ maxHeight: '400px', overflowY: 'auto', padding: '10px', marginTop: '20px' }}>
-        {/* Render the filtered products using the ProductCard component */}
-        {products.length > 0 ? (
-          products.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))
-        ) : (
-          <Typography variant="body1" style={{ marginTop: '20px' }}>
-            No products found under the specified name.
-          </Typography>
-        )}
-      </div>
-      </Stack>
+          <TextField
+            label="Search for a product"
+            variant="outlined"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            style={{ marginRight: "10px" }}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSearchProducts}
+            style={{ backgroundColor: "#3f51b5", color: "white" }} // Blue color for better visibility
+          >
+            Search
+          </Button>
+
+          <div
+            style={{
+              maxHeight: "400px",
+              overflowY: "visible",
+              padding: "10px",
+              marginTop: "20px",
+            }}
+          >
+            {/* Render the filtered products using the ProductCard component */}
+            {products.filter((product) => product.isArchived !== true).length >
+            0 ? (
+              products
+                .filter((product) => product.isArchived !== true)
+                .map((product) => (
+                  <div
+                    key={product._id}
+                    style={{ position: "relative", marginBottom: "20px" }}
+                  >
+                    <ProductCard product={product} />
+                  </div>
+                ))
+            ) : (
+              <Typography variant="body1" style={{ marginTop: "20px" }}>
+                No products found.
+              </Typography>
+            )}
+          </div>
+        </Stack>
       </div>
 
       {/* Sidebar with Drawer */}
@@ -138,12 +166,12 @@ const ProductDashboard = () => {
           flexShrink: 0,
           [`& .MuiDrawer-paper`]: {
             width: sidebarStyle.width,
-            boxSizing: 'border-box',
+            boxSizing: "border-box",
             backgroundColor: sidebarStyle.backgroundColor,
           },
         }}
       >
-        <div style={{ padding: '10px' }}>
+        <div style={{ padding: "10px" }}>
           <Typography variant="h6" sx={{ paddingBottom: 2 }}>
             Actions
           </Typography>
@@ -180,23 +208,23 @@ const ProductDashboard = () => {
             Search Products
           </Button>
           <Button
-          fullWidth
-          variant="contained"
-          color="primary"
-          onClick={handleSortProducts}
-          style={sidebarButtonStyle}
-        >
-          Sort Products
-        </Button>
-        <Button
-          fullWidth
-          variant="contained"
-          color="primary"
-          onClick={handleViewMyProducts}
-          style={sidebarButtonStyle}
-        >
-          View my Products
-        </Button>
+            fullWidth
+            variant="contained"
+            color="primary"
+            onClick={handleSortProducts}
+            style={sidebarButtonStyle}
+          >
+            Sort Products
+          </Button>
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            onClick={handleViewMyProducts}
+            style={sidebarButtonStyle}
+          >
+            View my Products
+          </Button>
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}

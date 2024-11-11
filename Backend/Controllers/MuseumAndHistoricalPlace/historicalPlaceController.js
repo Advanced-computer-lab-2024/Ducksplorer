@@ -1,5 +1,6 @@
 // file created to contain all functions that the routes will reference instead of hard coding them in the routes folder
 const historicalPlaceModel = require('../../Models/museumHistoricalPlaceModels/historicalPlaceModel');//to get out of our folder then out of the controller folder
+const touristModel = require('../../Models/touristModel');
 const { default: mongoose } = require('mongoose');//allows us to do the check of the id ta7t
 
 
@@ -86,15 +87,42 @@ const getAllMyHistoricalPlaces = async (req, res) => {
 
 // Retrieve all Historical Places from the database
 const getAllHistoricalPlaces = async (req, res) => {
-    try {
-        const HistoricalPlace = await historicalPlaceModel.find();
-        if (!HistoricalPlace) {
-            return res.status(404).json({ message: "Historical Place not found" });
+    const {showPreferences, role, username} = req.query;
+    if(showPreferences === 'true' && role === 'Tourist'){
+        const tourist =await touristModel.findOne({userName: username});
+        const touristTags = tourist.historicalPlacestags;
+        try{
+            let HistoricalPlace = await historicalPlaceModel.find();
+            console.log(HistoricalPlace[0].tags);
+            HistoricalPlace = HistoricalPlace.sort((a, b) => {
+                const aHasMatch = a.tags.some(tag => touristTags.includes(tag));
+                const bHasMatch = b.tags.some(tag => touristTags.includes(tag));
+                
+                
+                if (aHasMatch && !bHasMatch) {
+                    return -1; // If 'a' has a match and 'b' doesn't, 'a' comes first
+                  } else if (!aHasMatch && bHasMatch) {
+                    return 1; // If 'b' has a match and 'a' doesn't, 'b' comes first
+                  } else {
+                    return 0; // If both have matches or both don't, retain their relative order
+                  }            });
+                res.status(200).json(HistoricalPlace);
+
+        }catch (error){
+            res.status(500).json({ message: "Error retrieving Historical Place", error: error.message });
         }
-        res.status(200).json(HistoricalPlace);
-    } catch (error) {
-        res.status(500).json({ message: "Error retrieving Historical Place", error: error.message });
+    }else{
+        try {
+            const HistoricalPlace = await historicalPlaceModel.find();
+            if (!HistoricalPlace) {
+                return res.status(404).json({ message: "Historical Place not found" });
+            }
+            res.status(200).json(HistoricalPlace);
+        } catch (error) {
+            res.status(500).json({ message: "Error retrieving Historical Place", error: error.message });
+        }
     }
+    
 };
 
 // Update a Historical Place from the database
@@ -195,8 +223,8 @@ const searchHistoricalPlace = async (req, res) => {
         // Perform the MongoDB query using the built 'query' object.
         const results = await historicalPlaceModel.find(searches);
 
-        if (results.length === 0) {
-            return res.status(404).json({ message: "No matching Historical Place found" });
+        if (!results.length) {
+            return res.status(200).json({ message: "No matching Historical Place found" });
         }
         res.status(200).json({ message: "Search results found", results });
 

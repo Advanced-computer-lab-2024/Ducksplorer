@@ -1,63 +1,66 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { message } from 'antd';
-import { Typography, Button } from '@mui/material';
-import ProductCard from '../../Components/Products/ProductCard'; // Import the ProductCard component
-
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { message } from "antd";
+import { Typography } from "@mui/material";
+import { Button } from "@mui/material";
+import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
+import Help from "../../Components/HelpIcon";
+import TouristNavBar from "../../Components/TouristNavBar";
 
 function AllProducts() {
-  const [products,setProducts] = useState([]);
+  const [products, setProducts] = useState([]);
 
-  const handleAllProducts = async () =>{
-    try{
-      const response = await axios.get('http://localhost:8000/adminRoutes/getproducts');
-      if (response.status === 200) {
-        message.success('Products fetched successfully');
-        setProducts(response.data); // Store the filtered products
-      } else {
-        message.error('Failed to filter products');
-      }
-    } catch (error) {
-      message.error('An error occurred: ' + error.message);
-    }
-    
-  };
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/adminRoutes/getproducts")
+      .then((response) => {
+        message.success("Products fetched successfully");
+        setProducts(response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the products!", error);
+      });
+  }, []);
 
   const handleBackButtonClick = () => {
     window.history.back();
   };
 
-
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: 'auto' }}>
-        <Button onClick={handleBackButtonClick}>Back</Button>
-
-      <Button
-          variant="contained"
-          color="primary"
-          onClick={handleAllProducts}
+    <>
+      <TouristNavBar />
+      <Button onClick={handleBackButtonClick}>Back</Button>
+      <div
+        style={{
+          padding: "20px",
+          margin: "auto",
+          height: "100vh",
+        }}
+      >
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            overflowY: "visible",
+            padding: "10px",
+            marginTop: "20px",
+          }}
         >
-          Products
-        </Button>
-
-      <div style={{ maxHeight: '400px', overflowY: 'auto', padding: '10px', marginTop: '20px' }}>
-        {/* Render the filtered products using the ProductCard component */}
-        {products.length > 0 ? (
-          products.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))
-        ) : (
-          <Typography variant="body1" style={{ marginTop: '20px' }}>
-            No products found.
-          </Typography>
-        )}
+          {/* Render the filtered products using the ProductCard component */}
+          {products.length > 0 ? (
+            products.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))
+          ) : (
+            <Typography variant="body1" style={{ marginTop: "20px" }}>
+              No products found under the specified name.
+            </Typography>
+          )}
+        </div>
+        <Help />
       </div>
-    </div>
+    </>
   );
-
-
-
 }
-
 
 export default AllProducts;

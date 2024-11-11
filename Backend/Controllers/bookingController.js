@@ -4,11 +4,13 @@ const Activity = require("../Models/activityModel.js");
 const Itinerary = require("../Models/itineraryModel.js");
 const ActivityBooking = require('../Models/activityBookingModel.js');
 const ItineraryBooking = require('../Models/itineraryBookingModel');
+const ThirdPartyBookings = require('../Models/ThirdPartyBookingsModel.js');
 
 
 const createBooking = async (req, res) => {
     const { user } = req.params;
-    const { activityId, itineraryId, type, date } = req.body;
+    const { activityId, itineraryId ,hotel, transportation, flight , type, date } = req.body;
+    console.log("requestBody", req.body);
 
     try {
         const tourist = await Tourist.findOne({ userName: user });
@@ -16,6 +18,8 @@ const createBooking = async (req, res) => {
             res.status(404).json({ message: "Tourist not found" });
             return;
         }
+
+        const convertedDate = new Date(date);
 
         const activity = activityId ? await Activity.findById(activityId) : null;
         const itinerary = itineraryId ? await Itinerary.findById(itineraryId) : null;
@@ -50,7 +54,7 @@ const createBooking = async (req, res) => {
             const newItineraryBooking = await ItineraryBooking.create({
                 user: tourist.userName,
                 itinerary: itinerary._id,
-                chosenDate: date,
+                chosenDate: convertedDate,
                 chosenPrice: itinerary.price
             });
             await newItineraryBooking.save();
@@ -65,6 +69,49 @@ const createBooking = async (req, res) => {
                 points: tourist.points
             });
         }
+        else if(type === 'hotel' && hotel){
+            const newHotelBooking = await ThirdPartyBookings.create({
+                user: tourist.userName,
+                hotels: hotel
+            });
+            await newHotelBooking.save();
+            return res.status(200).json({
+                message: "Hotel booking created successfully",
+                booking: newHotelBooking,
+                status: 200,
+                wallet: tourist.wallet,
+                points: tourist.points
+            });
+        }
+        else if(type === 'transportation' && transportation){
+            const newtransportationBooking = await ThirdPartyBookings.create({
+                user: tourist.userName,
+                transportations: transportation
+            });
+            await newtransportationBooking.save();
+            return res.status(200).json({
+                message: "transportation booking created successfully",
+                booking: newtransportationBooking,
+                status: 200,
+                wallet: tourist.wallet,
+                points: tourist.points
+            });
+        }
+        else if(type === 'flight' && flight){
+            const newFlightBooking = await ThirdPartyBookings.create({
+                user: tourist.userName,
+                flights: flight
+            });
+            await newFlightBooking.save();
+            return res.status(200).json({
+                message: "Flight booking created successfully",
+                booking: newFlightBooking,
+                status: 200,
+                wallet: tourist.wallet,
+                points: tourist.points
+            });
+        }
+
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
@@ -104,25 +151,32 @@ const viewMyUpcomingBookings = async (req, res) => {
 
 const viewMyPastBookings = async (req, res) => {
     try {
-        // Use req.query to get the tourist parameter
         const { tourist } = req.query;
 
         if (!tourist) {
             return res.status(400).json({ message: "Tourist query parameter is required." });
         }
 
-        // Fetch past activity bookings
-        const pastActivityBookings = await ActivityBooking.find({
-            user: tourist,
-            chosenDate: { $lt: new Date() }
-        }).populate('activity');
+        // Log the current date for debugging
+        console.log("Current Date:", new Date());
 
-        // Fetch past itinerary bookings
-        const pastItineraryBookings = await ItineraryBooking.find({
-            user: tourist,
-            chosenDate: { $lt: new Date() }
-        }).populate('itinerary');
+        // Fetch past activity bookings and itinerary bookings
+        const [pastActivityBookings, pastItineraryBookings] = await Promise.all([
+            ActivityBooking.find({
+                user: tourist,
+                chosenDate: { $lt: new Date() }
+            }).populate('activity'),
+            ItineraryBooking.find({
+                user: tourist,
+                chosenDate: { $lt: new Date() }
+            }).populate('itinerary')
+        ]);
 
+        // Log results for debugging
+        console.log("Past Activity Bookings:", pastActivityBookings);
+        console.log("Past Itinerary Bookings:", pastItineraryBookings);
+
+        // Check if there are no past bookings
         if (!pastActivityBookings.length && !pastItineraryBookings.length) {
             return res.status(404).json({ message: "No past bookings found." });
         }
@@ -135,7 +189,6 @@ const viewMyPastBookings = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
 
 const viewDesiredActivity = async (req, res) => {
     try {
@@ -184,15 +237,48 @@ const getMyBookings = async (req, res) => {
             user: tourist
         }).populate('itinerary');
 
+        //fetch third party bookings
+        const thirdPartyBookings = await ThirdPartyBookings.find({user: tourist});
+
         // Check if there are no bookings
-        if (!activityBookings.length && !itineraryBookings.length) {
+        if (!activityBookings.length && !itineraryBookings.length && !thirdPartyBookings.length) {
             return res.status(404).json({ message: "No bookings found." });
         }
+        console.log("ThirdPartyBookings",thirdPartyBookings);
+
+        // Extract flights, hotels, and transportations from third party bookings
+        // const flights = thirdPartyBookings
+        // .filter(booking => booking.flights)
+        // .map(booking => booking.flights);
+       
+        const flights = thirdPartyBookings
+        .filter(booking => booking.flights)
+        .map(booking => ({
+            id: booking._id,
+            flights: booking.flights
+        }));
+
+        const hotels = thirdPartyBookings
+        .filter(booking => booking.hotels)
+        .map(booking => ({
+            id: booking._id,
+            hotels: booking.hotels
+        }));
+
+        const transportations = thirdPartyBookings
+        .filter(booking => booking.transportations)
+        .map(booking => ({
+            id: booking._id,
+            transportations: booking.transportations
+        }))
 
         // Return bookings as a response
         res.status(200).json({
             activities: activityBookings,
-            itineraries: itineraryBookings
+            itineraries: itineraryBookings,
+            flights: flights,
+            hotels: hotels,
+            transportations: transportations
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -202,16 +288,23 @@ const getMyBookings = async (req, res) => {
 
 const cancelMyBooking = async (req, res) => {
     const { user } = req.params;
-    const { type, itemId, price } = req.body;
+    const { type, itemId, price , booking } = req.body;
+    // const { booking } = req.body.booking || "";
     const currentDate = new Date();
+    console.log("requestBody", req.body);
+    let itemObjectId;
 
     try {
         const tourist = await Tourist.findOne({ userName: user });
         if (!tourist) {
             return res.status(404).json({ message: 'Tourist not found' });
         }
-
-        const itemObjectId = new mongoose.Types.ObjectId(itemId);
+        if(itemId){
+         itemObjectId = new mongoose.Types.ObjectId(itemId);
+        }
+        else if(booking){
+        itemObjectId = new mongoose.Types.ObjectId(booking);
+        }
         let itemDate;
 
         if (type === 'activity') {
@@ -262,7 +355,19 @@ const cancelMyBooking = async (req, res) => {
 
             await ItineraryBooking.deleteOne({ user, itinerary: itemObjectId });
 
-        } else {
+        } else if (type === 'flight' || type === 'hotel' || type === 'transportation') {
+            const thirdPartyBooking = await ThirdPartyBookings.findOne({ user });
+            if (!thirdPartyBooking) {
+                return res.status(404).json({ message: 'Booking not found in the ThirdPartyBookings' });
+            }
+            console.log("Booking itemObjectId",booking);
+
+            await ThirdPartyBookings.findByIdAndDelete(booking);
+            
+            tourist.wallet += parseFloat(price);
+            await tourist.save();
+        } 
+        else {
             return res.status(400).json({ message: 'Invalid type for cancellation. Must be "activity" or "itinerary".' });
         }
 
@@ -319,13 +424,16 @@ const getLevel = async (req, res) => {
     const { userName } = req.params;
     try {
         const user = await Tourist.findOne({ userName });
+        const level = user.level || 1;
         if (!user) {
             console.error('User not found');
-            return;
+         res.status(404).json({ message: "User not found" });
         }
-        res.status(200).json(user.level);
+        else{
+         res.status(200).json(level);
+        }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+       return  res.status(500).json({ message: error.message });
     }
 }
 const updateLevel = async (userName, points) => {
@@ -337,15 +445,16 @@ const updateLevel = async (userName, points) => {
             return;
         }
 
-        if (points >= 10000 && points < 50000) {
+        if (points >= 100000 && points < 500000) {
             user.level = 2;
-        } else if (points >= 50000) {
+        } else if (points >= 500000) {
             user.level = 3;
         } else {
             user.level = 1;
         }
 
         await user.save();
+        await tourist.save();
 
     } catch (error) {
         console.error('Error updating level:', error);
@@ -361,8 +470,7 @@ const redeemPoints = async (req, res) => {
         let myWallet = tourist.wallet;
         if (myPoints > addPoints) {
             myPoints -= addPoints;
-            myWallet += addPoints / 100;
-            //myWallet = myWallet + 100;
+            myWallet = myWallet + 100;
             tourist.points = myPoints;
             tourist.wallet = myWallet;
             await tourist.save();

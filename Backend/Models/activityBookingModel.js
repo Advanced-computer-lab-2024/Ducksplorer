@@ -19,6 +19,16 @@ const activityBookingSchema = new Schema({
     chosenPrice: {
         type: Number,
         required: true
+    },
+    rating: {
+        type: Number,
+        default: 0,
+        required: false
+    },
+    comment: {
+        type: String,
+        default: "",
+        required: false
     }
 }, { timestamps: true });
 
