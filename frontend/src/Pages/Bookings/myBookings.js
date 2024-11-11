@@ -45,6 +45,17 @@ const BookingDetails = () => {
   const isGuest = localStorage.getItem("guest") === "true";
   const [tourGuideNames, setTourGuideNames] = useState({});
 
+  const fetchTourGuideName = async (bookingId) => {
+    try {
+      const response = await axios.get(`http://localhost:8000/tourGuideRate/getUserNameById/${bookingId}`);
+      console.log("Tour Guide Name Response:", response.data);
+      return response.data.userName;
+    } catch (error) {
+      console.error("Error fetching tour guide name:", error.message);
+      return "N/A";
+    }
+  };
+
   const handleCurrencyChangeAc = (rates, selectedCurrency) => {
     setExchangeRatesAc(rates);
     setCurrencyAc(selectedCurrency);
@@ -89,11 +100,11 @@ const BookingDetails = () => {
       // setCurrencyft(response.data.flights[0].currency);
       console.log(response.data);
       const tourGuideNamesMap = {};
-      await Promise.all(response.data.itineraries.map(async (itineraryBooking) => {
-        const tourGuideName = await fetchTourGuideName(itineraryBooking._id);
-        tourGuideNamesMap[itineraryBooking._id] = tourGuideName;
-      }));
-      setTourGuideNames(tourGuideNamesMap);
+        for (const itineraryBooking of response.data.itineraries) {
+          const tourGuideName = await fetchTourGuideName(itineraryBooking._id);
+          tourGuideNamesMap[itineraryBooking._id] = tourGuideName;
+        }
+        setTourGuideNames(tourGuideNamesMap);
 
     } catch (error) {
       console.error(
@@ -194,17 +205,6 @@ const BookingDetails = () => {
         error.response?.data?.message ||
           "Cannot cancel the booking within 48 hours of the start date or after the start of the activity/itinerary."
       );
-    }
-  };
-
-  const fetchTourGuideName = async (bookingId) => {
-    try {
-      const response = await axios.get(`http://localhost:8000/tourGuideRate/getUserNameById/${bookingId}`);
-      console.log("Tour Guide Name Response:", response.data);
-      return response.data.userName;
-    } catch (error) {
-      console.error("Error fetching tour guide name:", error.message);
-      return "N/A";
     }
   };
 
