@@ -175,7 +175,7 @@ const AdvertiserEditProfile = () => {
     <div style={{ display: "flex" }}>
       <AdvertiserSidebar />
       <Box
-        sx={{ flexGrow: 1, p: 5, display: "flex", justifyContent: "center" }}
+        sx={{ flexGrow: 1, p: 5, display: "flex", justifyContent: "center", overflowY: 'visible', height: '100vh' }}
       >
         <Paper
           elevation={4}
@@ -184,6 +184,7 @@ const AdvertiserEditProfile = () => {
             width: "700px",
             borderRadius: 3,
             boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
+            overflowY: 'visible', height: '100vh',
             "@media (max-width: 768px)": {
               width: "500%",
             },
