@@ -397,49 +397,24 @@ const BookingDetails = () => {
                       : "N/A"}
                   </TableCell>
                   <TableCell>
-                    {itineraryBooking.itinerary && itineraryBooking.chosenPrice
-                      ? (
-                          itineraryBooking.chosenPrice *
-                          (exchangeRatesIt[currencyIt] || 1)
-                        ).toFixed(2) + ` ${currencyIt}`
-                      : "N/A"}{" "}
-                  </TableCell>
-                  <TableCell>
-                    {" "}
-                    {itineraryBooking.itinerary &&
-                    itineraryBooking.itinerary.availableDatesAndTimes
-                      ? itineraryBooking.itinerary.availableDatesAndTimes
-                          .map((date) => new Date(date).toLocaleDateString())
-                          .join(", ")
-                      : "N/A"}
-                  </TableCell>
-                  <TableCell>
-                    {itineraryBooking.itinerary &&
-                    itineraryBooking.itinerary.chosenDate
-                      ? new Date(
-                          itineraryBooking.itinerary.chosenDate
-                        ).toLocaleDateString()
-                      : "N/A"}
-                  </TableCell>
-                  <TableCell>
-                    {itineraryBooking.itinerary &&
-                    itineraryBooking.itinerary.accessibility
-                      ? itineraryBooking.itinerary.accessibility
-                      : "N/A"}
-                  </TableCell>
-                  <TableCell>
-                    {itineraryBooking.itinerary &&
-                    itineraryBooking.itinerary.pickUpLocation
-                      ? itineraryBooking.itinerary.pickUpLocation
-                      : "N/A"}
-                  </TableCell>
-                  <TableCell>
-                    {" "}
-                    {itineraryBooking.itinerary &&
-                    itineraryBooking.itinerary.dropOffLocation
-                      ? itineraryBooking.itinerary.dropOffLocation
-                      : "N/A"}
-                  </TableCell>
+                  {itineraryBooking.itinerary && itineraryBooking.chosenPrice
+          ? (itineraryBooking.chosenPrice * (exchangeRatesIt[currencyIt] || 1)).toFixed(2) + ` ${currencyIt}`
+          : "N/A"}                  </TableCell>
+                  <TableCell> {itineraryBooking.itinerary && itineraryBooking.itinerary.availableDatesAndTimes
+          ? itineraryBooking.itinerary.availableDatesAndTimes.map((date) => new Date(date).toLocaleDateString()).join(", ")
+          : "N/A"}</TableCell>
+                  <TableCell>{itineraryBooking.itinerary && itineraryBooking.chosenDate
+          ? new Date(itineraryBooking.chosenDate).toLocaleDateString()
+          : "N/A"}</TableCell>
+                  <TableCell>{itineraryBooking.itinerary && itineraryBooking.itinerary.accessibility
+          ? itineraryBooking.itinerary.accessibility
+          : "N/A"}</TableCell>
+                  <TableCell>{itineraryBooking.itinerary && itineraryBooking.itinerary.pickUpLocation
+          ? itineraryBooking.itinerary.pickUpLocation
+          : "N/A"}</TableCell>
+                  <TableCell> {itineraryBooking.itinerary && itineraryBooking.itinerary.dropOffLocation
+          ? itineraryBooking.itinerary.dropOffLocation
+          : "N/A"}</TableCell>
                   {/* <TableCell>{ itineraryBooking.itinerary && itineraryBooking.itinerary.tourGuideModel?.userName ? itineraryBooking.itinerary.tourGuideModel.userName : "N/A"}</TableCell> */}
                   <TableCell>
                     {tourGuideNames[itineraryBooking._id] || "N/A"}
