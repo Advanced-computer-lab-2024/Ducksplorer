@@ -5,7 +5,6 @@ import { Typography } from "@mui/material";
 import { Button } from "@mui/material";
 import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
 import Help from "../../Components/HelpIcon";
-import TouristNavBar from "../../Components/TouristNavBar";
 
 function AllProducts() {
   const [products, setProducts] = useState([]);
@@ -28,7 +27,6 @@ function AllProducts() {
 
   return (
     <>
-      <TouristNavBar />
       <Button onClick={handleBackButtonClick}>Back</Button>
       <div
         style={{

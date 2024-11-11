@@ -153,6 +153,10 @@ function App() {
             path="/activity/searchActivities"
             element={<SearchActivities />}
           />
+          <Route
+            path="/activity/searchActivities/:id"
+            element={<SearchActivities />}
+          />
           <Route path="/activity/SortFilter" element={<SortFilterActivity />} />
           <Route path="/activity/myActivities" element={<MyActivities />} />
           <Route path="/location" element={<ClinicLocation />} />

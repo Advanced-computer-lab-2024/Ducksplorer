@@ -183,7 +183,7 @@ const ComplaintsDashboard = () => {
                           size="small"
                           sx={{ minWidth: 150 }}
                         >
-                          <InputLabel>Filter by Date</InputLabel>
+                          <InputLabel>Sort by Date</InputLabel>
                           <Select
                             label="Filter by Date"
                             value={dateFilter}
