@@ -141,6 +141,7 @@ const BookingDetails = () => {
 
   const handleDeleteThirdPartyBooking = async (type, price, booking) => {
     try {
+      console.log(booking);
       const response = await axios.patch(
         `http://localhost:8000/touristRoutes/booking/${userName}`,
         {

@@ -278,7 +278,6 @@ const cancelMyBooking = async (req, res) => {
     const { type, itemId, price } = req.body;
     const { booking } = req.body.booking ? req.body.booking : " ";
     const currentDate = new Date();
-    console.log("requestBody", req.body);
     let itemObjectId;
 
     try {
@@ -344,10 +343,10 @@ const cancelMyBooking = async (req, res) => {
             if (!thirdPartyBooking) {
                 return res.status(404).json({ message: 'Flight not found in the booking' });
             }
-
-            await ThirdPartyBookings.deleteOne(
-                { user },
-                {  flights: booking  });
+            console.log(booking);
+            await ThirdPartyBookings.findOneAndDelete(
+    {  flights: { price: price } }   // Match only based on the flight ID
+);
             
             tourist.wallet += parseFloat(price);
             await tourist.save();
