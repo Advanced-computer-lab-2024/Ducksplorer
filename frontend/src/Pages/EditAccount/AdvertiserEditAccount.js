@@ -172,22 +172,30 @@ const AdvertiserEditProfile = () => {
   };
 
   return (
-    <div style={{ display: "flex" }}>
+    <box sx={{ height: "100vh" }}>
       <AdvertiserSidebar />
       <Box
-        sx={{ flexGrow: 1, p: 5, display: "flex", justifyContent: "center", overflowY: 'visible', height: '100vh' }}
+        sx={{
+          p: 5,
+          display: "flex",
+          flexDirection: "column",
+        }}
       >
+        <Link
+          to="/advertiserDashboard"
+          style={{ textDecoration: "none", color: "primary.main" }}
+        >
+          Back to Dashboard
+        </Link>
         <Paper
           elevation={4}
           sx={{
+            marginTop: "30px",
             p: 4,
             width: "700px",
             borderRadius: 3,
             boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
-            overflowY: 'visible', height: '100vh',
-            "@media (max-width: 768px)": {
-              width: "500%",
-            },
+            height: "100%",
           }}
         >
           <Box
@@ -364,17 +372,9 @@ const AdvertiserEditProfile = () => {
               </Button>
             )}
           </Box>
-          <Box sx={{ textAlign: "center", mt: 2 }}>
-            <Link
-              to="/advertiserDashboard"
-              style={{ textDecoration: "none", color: "primary.main" }}
-            >
-              Back to Dashboard
-            </Link>
-          </Box>
         </Paper>
       </Box>
-    </div>
+    </box>
   );
 };
 

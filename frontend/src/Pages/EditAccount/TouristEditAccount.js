@@ -218,7 +218,7 @@ const EditProfile = () => {
           sx={{
             marginTop: "30px",
             p: 5,
-            width: "550px",
+            width: "700px",
             borderRadius: 3,
             boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
             height: "100%",
