@@ -87,6 +87,12 @@ const BookingDetails = () => {
       setTransportationBookings(response.data.transportations || []);
       // setCurrencyft(response.data.flights[0].currency);
       console.log(response.data);
+      const tourGuideNamesMap = {};
+      for (const itineraryBooking of response.data.itineraries) {
+        const tourGuideName = await fetchTourGuideName(itineraryBooking._id);
+        tourGuideNamesMap[itineraryBooking._id] = tourGuideName;
+      }
+      setTourGuideNames(tourGuideNamesMap);
     } catch (error) {
       console.error(
         "Error fetching booking details:",
@@ -181,6 +187,17 @@ const BookingDetails = () => {
         error.response?.data?.message ||
           "Cannot cancel the booking within 48 hours of the start date or after the start of the activity/itinerary."
       );
+    }
+  };
+
+  const fetchTourGuideName = async (bookingId) => {
+    try {
+      const response = await axios.get(`http://localhost:8000/tourGuideRate/getUserNameById/${bookingId}`);
+      console.log("Tour Guide Name Response:", response.data);
+      return response.data.userName;
+    } catch (error) {
+      console.error("Error fetching tour guide name:", error.message);
+      return "N/A";
     }
   };
 
@@ -300,6 +317,7 @@ const BookingDetails = () => {
                 <TableCell>Accessibility</TableCell>
                 <TableCell>Pick-Up Location</TableCell>
                 <TableCell>Drop-Off Location</TableCell>
+                <TableCell>Tour Guide</TableCell>
                 <TableCell>Average Rating</TableCell>
                 <TableCell>Tags</TableCell>
                 <TableCell>Actions</TableCell>
@@ -323,8 +341,8 @@ const BookingDetails = () => {
           ? itineraryBooking.itinerary.language
           : "N/A"}</TableCell>
                   <TableCell>
-                  {itineraryBooking.itinerary && itineraryBooking.itinerary.price
-          ? (itineraryBooking.itinerary.price * (exchangeRatesIt[currencyIt] || 1)).toFixed(2) + ` ${currencyIt}`
+                  {itineraryBooking.itinerary && itineraryBooking.chosenPrice
+          ? (itineraryBooking.chosenPrice * (exchangeRatesIt[currencyIt] || 1)).toFixed(2) + ` ${currencyIt}`
           : "N/A"}                  </TableCell>
                   <TableCell> {itineraryBooking.itinerary && itineraryBooking.itinerary.availableDatesAndTimes
           ? itineraryBooking.itinerary.availableDatesAndTimes.map((date) => new Date(date).toLocaleDateString()).join(", ")
@@ -341,7 +359,7 @@ const BookingDetails = () => {
                   <TableCell> {itineraryBooking.itinerary && itineraryBooking.itinerary.dropOffLocation
           ? itineraryBooking.itinerary.dropOffLocation
           : "N/A"}</TableCell>
-                  <TableCell>{ itineraryBooking.itinerary && itineraryBooking.itinerary.tourGuideModel?.name ? itineraryBooking.itinerary.tourGuideModel.name : "N/A"}</TableCell>
+                  <TableCell>{ itineraryBooking.itinerary && itineraryBooking.itinerary.tourGuideModel?.userName ? itineraryBooking.itinerary.tourGuideModel.userName : "N/A"}</TableCell>
                   <TableCell><Rating
                     value={itineraryBooking.itinerary.averageRating}
                     precision={0.1}
