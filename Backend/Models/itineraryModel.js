@@ -58,12 +58,19 @@ const itinerarySchema = new Schema({
         type: [String],
         required: false
     },
-    flag: {
-        type: Boolean,
+    chosenDate: {
+        type: Date,
         required: false
     },
-    isActive: {
+    flag: { //it is true this means the itinerary is inappropriate (since the default of a boolean is false the itinerary starts as appropriate)
         type: Boolean,
+        default:false,
+        required: false
+    },
+
+    isDeactivated: {//created as deactivated because the default of any boolean is false and we want the itinerary to start as active when created (ie with this boolean as false)
+        type: Boolean,
+        default:false,
         required: false
     },
     ratings: {
@@ -77,7 +84,19 @@ const itinerarySchema = new Schema({
     comments: {
         type: [String],
         required: false,
-    }
+    },
+    tourGuideDeleted:{  //when the tour guide associated with this itinerary leaves it should no longer appear to tourists but should stay in the database if it is booked this is why we use this boolean 
+        type:Boolean,
+        default:false,
+        required: false,
+    },
+
+    deletedItinerary: //when the tour guide deletes an itinerary it should no longer appear to new tourists but should stay in the database if it is booked this is why we use this boolean 
+    {
+      type: Boolean,
+      default:false,
+      required: false,
+    },
 }, { timestamps: true }); // Moved `timestamps` to schema options here
 
 const Itinerary = mongoose.model("Itinerary", itinerarySchema);

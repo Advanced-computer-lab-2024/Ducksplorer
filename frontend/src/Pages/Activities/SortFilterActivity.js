@@ -5,7 +5,8 @@ import SortActivities from "./sortActivities";
 import { Button } from "@mui/material";
 import { useState } from "react";
 import FilterActivities from "./filterActivities";
-import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
+import { Link } from "react-router-dom";
+// import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 
 function SortFilterActivity() {
   const [sort, setSort] = useState(true);
@@ -13,8 +14,11 @@ function SortFilterActivity() {
 
   return (
     <div>
-      <TouristSidebar/>
-      <div style={{ marginLeft: 300 }}>
+      <Button component={Link} to="/touristDashboard" variant="contained" color="primary" style={{ marginBottom: '20px' }}>
+        Back to Dashboard
+      </Button>
+      {/* <TouristSidebar/> */}
+      <div style={{ marginLeft: 0, maxWidth: "170vh", padding: "0 20px" }}>
         <Button
           style={{
             border: "1.3px solid black",

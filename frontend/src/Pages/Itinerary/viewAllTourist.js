@@ -378,7 +378,7 @@ function SearchItineraries() {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {itineraries.map(itinerary => !itinerary.flag && itinerary.isActive === true ? (
+                                    {itineraries.map(itinerary => itinerary.flag=== false && itinerary.isDeactivated===false && itinerary.tourGuideDeleted===false && itinerary.deletedItinerary===false? (
                                         <TableRow key={itinerary._id}>
                                             <TableCell>
                                                 {itinerary.activity && itinerary.activity.length > 0
@@ -453,7 +453,9 @@ function SearchItineraries() {
                                             </TableCell>) : null
                                             }
                                         </TableRow>
-                                    ) : null)}
+                                    ) : null)   // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists
+                                    }
+
                                 </TableBody>
                             </Table>
                         </TableContainer>

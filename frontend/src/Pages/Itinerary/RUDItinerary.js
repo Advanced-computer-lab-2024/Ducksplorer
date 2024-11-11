@@ -317,7 +317,7 @@ const RUDItinerary = () => {
 
   async function toggleItineraryActiveStatus(itineraryId) {
     try {
-      const response = await fetch(`http://localhost:8000/itinerary/toggleActiveFlagItinerary/${itineraryId}`, {
+      const response = await fetch(`http://localhost:8000/itinerary/toggleItineraryActiveStatus/${itineraryId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -329,10 +329,10 @@ const RUDItinerary = () => {
       }
 
       const data = await response.json();
-      console.log(`New isActive status after toggle: ${data.itinerary.isActive}`);
+      console.log(`New isDeactivated status after toggle: ${data.itinerary.isDeactivated}`);
       setItineraries(prevItineraries =>
         prevItineraries.map(itinerary =>
-          itinerary._id === itineraryId ? { ...itinerary, isActive: !itinerary.isActive } : itinerary
+          itinerary._id === itineraryId ? { ...itinerary, isDeactivated: !itinerary.isDeactivated } : itinerary
         )
       );
       return data.itinerary;
@@ -376,7 +376,7 @@ const RUDItinerary = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {itineraries.map(itinerary => (
+              {itineraries.map(itinerary => itinerary.deletedItinerary=== false ? (
                 <TableRow key={itinerary._id}>
                   <TableCell>
                     {itinerary.activity && itinerary.activity.length > 0
@@ -462,13 +462,13 @@ const RUDItinerary = () => {
                   <TableCell>
                     <Button
                       variant="contained"
-                      color={itinerary.isActive ? 'error' : 'success'}
+                      color={itinerary.isDeactivated ? 'success' : 'error'} // it is not active this means the button will activate the itinerary which we want to be in color success (green) 
                       onClick={() => {
                         console.log(`Button clicked for itinerary ID: ${itinerary._id}`); //For debugging
                         toggleItineraryActiveStatus(itinerary._id);
                       }}
                     >
-                      {itinerary.isActive ? 'Deactivate' : 'Activate'}
+                      {itinerary.isDeactivated ? 'Activate' : 'Deactivate'}
                     </Button>
                   </TableCell>
 
@@ -485,7 +485,8 @@ const RUDItinerary = () => {
                     </Tooltip>
                   </TableCell>
                 </TableRow>
-              ))}
+              ):null) //We don't output a row when the itinerary has been deleted but cannot be removed from the database since it is booked by previous tourists
+              }
             </TableBody>
           </Table>
         </TableContainer>

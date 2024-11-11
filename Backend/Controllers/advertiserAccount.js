@@ -60,7 +60,7 @@ const deleteMyAdvertiserAccount = async (req, res) => {
     }
 
     // Find activities associated with the logged-in advertiser
-    const activities = await Activity.find({ advertiser: userName  });
+    const activities = await Activity.find({ advertiser: userName });
 
     let results = [];
 
@@ -73,7 +73,8 @@ const deleteMyAdvertiserAccount = async (req, res) => {
           results.push({ id: activity._id, message: "Activity deleted" });
         } else {
           // If activity is booked, it can't be deleted
-          await Activity.findByIdAndDelete(activity._id);
+          activity.advertiserDeleted = true;
+          await activity.save();
           results.push({ id: activity._id, message: "Cannot delete booked activity from bookings table" });
         }
       });
@@ -82,8 +83,10 @@ const deleteMyAdvertiserAccount = async (req, res) => {
       await Promise.all(deletePromises);
     }
 
-    // After handling the activity, delete the advertiser account
+    // After handling the activity, delete the advertiser account from advertiser table and user table
     await Advertiser.findByIdAndDelete(advertiser._id);
+    await User.findOneAndDelete({userName:userName});
+
 
     // Respond with a success message after deleting the advertiser account
     res.status(200).json({ message: "Advertiser account deleted successfully.", results });

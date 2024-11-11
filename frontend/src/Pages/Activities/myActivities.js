@@ -183,7 +183,7 @@ const MyActivities = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {activities.map((activity) => (
+                {activities.map((activity) => activity.deletedActivity=== false?(
                   <TableRow key={activity._id}>
                     <TableCell>{activity.name}</TableCell>
                     <TableCell>{activity.price}</TableCell>
@@ -243,7 +243,8 @@ const MyActivities = () => {
                       </Tooltip>
                     </TableCell>
                   </TableRow>
-                ))}
+                ):null)// We don't output a row when the activity has been deleted but cannot be removed from database since it is booked by previous tourists
+                } 
               </TableBody>
             </Table>
           </TableContainer>

@@ -1,4 +1,4 @@
-////This is the page that gets called when the sort activities button is clicked
+//This is the page that gets called when the sort activities button is clicked and it contains upcoming activities
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { message } from 'antd';
@@ -175,18 +175,27 @@ const SortActivities = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {activities.map((activity) =>
-                !activity.flag && (
-                  <TableRow key={activity._id}>
-                    <TableCell>{activity.name}</TableCell>
-                    <TableCell>
-                      {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
-                    </TableCell>
-                    <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
-                    <TableCell>{activity.category}</TableCell>
-                    <TableCell>{activity.tags.join(", ")}</TableCell>
-                    <TableCell>{activity.specialDiscount}</TableCell>
-                    <TableCell>{activity.date ? (() => {
+              {activities.map((activity) => activity.flag === false && activity.advertiserDeleted === false && activity.deletedActivity === false ? (
+                <TableRow key={activity._id}>
+                  <TableCell>{activity.name}</TableCell>
+                  <TableCell>
+                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
+                  </TableCell>
+                  <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
+                  <TableCell>{activity.category}</TableCell>
+                  <TableCell>{activity.tags.join(", ")}</TableCell>
+                  <TableCell>{activity.specialDiscount}</TableCell>
+                  <TableCell>{activity.date ? (() => {
+                    const dateObj = new Date(activity.date);
+                    const date = dateObj.toISOString().split('T')[0];
+                    const time = dateObj.toTimeString().split(' ')[0];
+                    return (
+                      <div>
+                        {date} at {time}
+                      </div>
+                    );
+                  })()
+                    : 'No available date and time' ? (() => {
                       const dateObj = new Date(activity.date);
                       const date = dateObj.toISOString().split('T')[0];
                       const time = dateObj.toTimeString().split(' ')[0];
@@ -196,31 +205,21 @@ const SortActivities = () => {
                         </div>
                       );
                     })()
-                      : 'No available date and time' ? (() => {
-                        const dateObj = new Date(activity.date);
-                        const date = dateObj.toISOString().split('T')[0];
-                        const time = dateObj.toTimeString().split(' ')[0];
-                        return (
-                          <div>
-                            {date} at {time}
-                          </div>
-                        );
-                      })()
-                        : 'No available date and time'}</TableCell>
+                      : 'No available date and time'}</TableCell>
 
-                    <TableCell>{activity.duration}</TableCell>
-                    <TableCell>{activity.location}</TableCell>
-                    <TableCell>
-                      <Rating value={activity.averageRating} precision={0.1} readOnly />
-                    </TableCell>
-                    <TableCell>
-                      <Button onClick={() => handleBooking(activity._id)}>
-                        Book Now
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                )
-              )}
+                  <TableCell>{activity.duration}</TableCell>
+                  <TableCell>{activity.location}</TableCell>
+                  <TableCell>
+                    <Rating value={activity.averageRating} precision={0.1} readOnly />
+                  </TableCell>
+                  <TableCell>
+                    <Button onClick={() => handleBooking(activity._id)}>
+                      Book Now
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ) : null) // We don't output a row when it has `activity.flag` is true (ie activity is inappropriate) or when the activity's advertiser has left the system or the activity has been deleted but cannot be removed from database since it is booked my previous tourists
+              }
             </TableBody>
 
           </Table>

@@ -1,6 +1,7 @@
 const Tourist = require('../Models/touristModel.js');
 const User = require('../Models/userModel.js');
-const Bookings = require("../Models/bookingsModel.js");
+const ItineraryBooking = require("../Models/itineraryBookingModel.js");
+const ActivityBooking = require("../Models/activityBookingModel.js");
 
 
 const getTouristDetails = async (req, res) => {
@@ -60,11 +61,13 @@ const deleteMyTouristAccount = async (req, res) => {
       return res.status(404).json({ error: 'Tourist not found' });
     }
 
-    // Delete the tourist account from the tourist model
+    // Delete the tourist account from the tourist model and users model
     await Tourist.findByIdAndDelete(tourist._id);
+    await User.findOneAndDelete({userName:userName});
 
     // Delete the tourist from the bookings table
-    await Bookings.deleteMany({ user: userName });
+    await ItineraryBooking.deleteMany({ user: userName });
+    await ActivityBooking.deleteMany({user:userName});
 
     // Respond with a success message
     res.status(200).json({ message: "Tourist account deleted successfully." });
