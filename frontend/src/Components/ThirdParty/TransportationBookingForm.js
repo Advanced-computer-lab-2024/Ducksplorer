@@ -6,6 +6,8 @@ import axios from 'axios';
 import { message } from 'antd';
 import TransportationsCards from './transportationsCards';
 import { format } from 'date-fns';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+
 
 
 
@@ -16,71 +18,61 @@ function isDatePassed(enteredDate) {
   return inputDate < currentDate; // Returns true if the entered date is in the past
 }
 
-const cities = [
-  { label: 'New York', code: 'NYC', country: 'USA' },
-  { label: 'Los Angeles', code: 'LAX', country: 'USA' },
-  { label: 'Chicago', code: 'CHI', country: 'USA' },
-  { label: 'Houston', code: 'HOU', country: 'USA' },
-  { label: 'Phoenix', code: 'PHX', country: 'USA' },
-  { label: 'Philadelphia', code: 'PHL', country: 'USA' },
-  { label: 'San Francisco', code: 'SFO', country: 'USA' },
-  { label: 'Indianapolis', code: 'IND', country: 'USA' },
-  { label: 'Seattle', code: 'SEA', country: 'USA' },
-  { label: 'Denver', code: 'DEN', country: 'USA' },
-  { label: 'Washington', code: 'DCA', country: 'USA' },
-  { label: 'London', code: 'LON', country: 'UK' },
-  { label: 'Paris', code: 'PAR', country: 'France' },
-  { label: 'Tokyo', code: 'TYO', country: 'Japan' },
-  { label: 'Dubai', code: 'DXB', country: 'UAE' },
-  { label: 'Singapore', code: 'SIN', country: 'Singapore' },
-  { label: 'Sydney', code: 'SYD', country: 'Australia' },
-  { label: 'Hong Kong', code: 'HKG', country: 'Hong Kong' },
-  { label: 'Bangkok', code: 'BKK', country: 'Thailand' },
-  { label: 'Toronto', code: 'YYZ', country: 'Canada' },
-  { label: 'Vancouver', code: 'YVR', country: 'Canada' },
-  { label: 'Mexico City', code: 'MEX', country: 'Mexico' },
-  { label: 'São Paulo', code: 'GRU', country: 'Brazil' },
-  { label: 'Buenos Aires', code: 'EZE', country: 'Argentina' },
-  { label: 'Cape Town', code: 'CPT', country: 'South Africa' },
-  { label: 'Johannesburg', code: 'JNB', country: 'South Africa' },
-  { label: 'Moscow', code: 'MOW', country: 'Russia' },
-  { label: 'Istanbul', code: 'IST', country: 'Turkey' },
-  { label: 'Rome', code: 'ROM', country: 'Italy' },
-  { label: 'Madrid', code: 'MAD', country: 'Spain' },
-  { label: 'Berlin', code: 'BER', country: 'Germany' },
-  { label: 'Amsterdam', code: 'AMS', country: 'Netherlands' },
-  { label: 'Zurich', code: 'ZRH', country: 'Switzerland' },
-  { label: 'Vienna', code: 'VIE', country: 'Austria' },
-  { label: 'Athens', code: 'ATH', country: 'Greece' },
-  { label: 'Lisbon', code: 'LIS', country: 'Portugal' },
-  { label: 'Dublin', code: 'DUB', country: 'Ireland' },
-  { label: 'Copenhagen', code: 'CPH', country: 'Denmark' },
-  { label: 'Stockholm', code: 'ARN', country: 'Sweden' },
-  { label: 'Oslo', code: 'OSL', country: 'Norway' },
-  { label: 'Helsinki', code: 'HEL', country: 'Finland' },
-  { label: 'Warsaw', code: 'WAW', country: 'Poland' },
-  { label: 'Prague', code: 'PRG', country: 'Czech Republic' },
-  { label: 'Budapest', code: 'BUD', country: 'Hungary' },
-  { label: 'Brussels', code: 'BRU', country: 'Belgium' },
-  { label: 'Munich', code: 'MUC', country: 'Germany' },
-  { label: 'Frankfurt', code: 'FRA', country: 'Germany' },
-  { label: 'Milan', code: 'MIL', country: 'Italy' },
-  { label: 'Barcelona', code: 'BCN', country: 'Spain' },
-  { label: 'Vienna', code: 'VIE', country: 'Austria' },
-  { label: 'Kuala Lumpur', code: 'KUL', country: 'Malaysia' },
-  { label: 'Jakarta', code: 'CGK', country: 'Indonesia' },
-  { label: 'Manila', code: 'MNL', country: 'Philippines' },
-  { label: 'Seoul', code: 'ICN', country: 'South Korea' },
-  { label: 'Mumbai', code: 'BOM', country: 'India' },
-  { label: 'Delhi', code: 'DEL', country: 'India' },
-  { label: 'Shanghai', code: 'PVG', country: 'China' },
-  { label: 'Beijing', code: 'PEK', country: 'China' },
-  { label: 'Guangzhou', code: 'CAN', country: 'China' },
-  { label: 'Cairo', code: 'CAI', country: 'Egypt' },
-  { label: 'Alexandria', code: 'ALY', country: 'Egypt' },
-  { label: 'Hurghada', code: 'HRG', country: 'Egypt' },
-  { label: 'Sharm Al-Sheikh', code: 'SSH', country: 'Egypt' }
+const airports = [
+  { label: 'Hartsfield-Jackson Atlanta International Airport', code: 'ATL', country: 'USA', countryCode: 'USA' },
+  { label: 'Beijing Capital International Airport', code: 'PEK', country: 'China', countryCode: 'CHN' },
+  { label: 'Los Angeles International Airport', code: 'LAX', country: 'USA', countryCode: 'USA' },
+  { label: 'Dubai International Airport', code: 'DXB', country: 'UAE', countryCode: 'ARE' },
+  { label: 'Tokyo Haneda Airport', code: 'HND', country: 'Japan', countryCode: 'JPN' },
+  { label: 'O\'Hare International Airport', code: 'ORD', country: 'USA', countryCode: 'USA' },
+  { label: 'London Heathrow Airport', code: 'LHR', country: 'UK', countryCode: 'GBR' },
+  { label: 'Hong Kong International Airport', code: 'HKG', country: 'Hong Kong', countryCode: 'HKG' },
+  { label: 'Shanghai Pudong International Airport', code: 'PVG', country: 'China', countryCode: 'CHN' },
+  { label: 'Paris Charles de Gaulle Airport', code: 'CDG', country: 'France', countryCode: 'FR' },
+  { label: 'Dallas/Fort Worth International Airport', code: 'DFW', country: 'USA', countryCode: 'USA' },
+  { label: 'Amsterdam Schiphol Airport', code: 'AMS', country: 'Netherlands', countryCode: 'NLD' },
+  { label: 'Frankfurt Airport', code: 'FRA', country: 'Germany', countryCode: 'DEU' },
+  { label: 'Istanbul Airport', code: 'IST', country: 'Turkey', countryCode: 'TUR' },
+  { label: 'Singapore Changi Airport', code: 'SIN', country: 'Singapore', countryCode: 'SGP' },
+  { label: 'Incheon International Airport', code: 'ICN', country: 'South Korea', countryCode: 'KOR' },
+  { label: 'Guangzhou Baiyun International Airport', code: 'CAN', country: 'China', countryCode: 'CHN' },
+  { label: 'Denver International Airport', code: 'DEN', country: 'USA', countryCode: 'USA' },
+  { label: 'Soekarno-Hatta International Airport', code: 'CGK', country: 'Indonesia', countryCode: 'IDN' },
+  { label: 'Suvarnabhumi Airport', code: 'BKK', country: 'Thailand', countryCode: 'THA' },
+  { label: 'Barcelona-El Prat Airport', code: 'BCN', country: 'Spain', countryCode: 'ESP' },
+  { label: 'Toronto Pearson International Airport', code: 'YYZ', country: 'Canada', countryCode: 'CAN' },
+  { label: 'Sydney Kingsford Smith Airport', code: 'SYD', country: 'Australia', countryCode: 'AUS' },
+  { label: 'São Paulo-Guarulhos International Airport', code: 'GRU', country: 'Brazil', countryCode: 'BRA' },
+  { label: 'Madrid-Barajas Airport', code: 'MAD', country: 'Spain', countryCode: 'ESP' },
+  { label: 'Mexico City International Airport', code: 'MEX', country: 'Mexico', countryCode: 'MEX' },
+  { label: 'Miami International Airport', code: 'MIA', country: 'USA', countryCode: 'USA' },
+  { label: 'Narita International Airport', code: 'NRT', country: 'Japan', countryCode: 'JPN' },
+  { label: 'Rome Fiumicino Airport', code: 'FCO', country: 'Italy', countryCode: 'ITA' },
+  { label: 'Munich Airport', code: 'MUC', country: 'Germany', countryCode: 'DEU' },
+  { label: 'Zurich Airport', code: 'ZRH', country: 'Switzerland', countryCode: 'CHE' },
+  { label: 'Vienna International Airport', code: 'VIE', country: 'Austria', countryCode: 'AUT' },
+  { label: 'Lisbon Humberto Delgado Airport', code: 'LIS', country: 'Portugal', countryCode: 'PRT' },
+  { label: 'Dublin Airport', code: 'DUB', country: 'Ireland', countryCode: 'IRL' },
+  { label: 'Copenhagen Airport', code: 'CPH', country: 'Denmark', countryCode: 'DNK' },
+  { label: 'Stockholm Arlanda Airport', code: 'ARN', country: 'Sweden', countryCode: 'SWE' },
+  { label: 'Oslo Gardermoen Airport', code: 'OSL', country: 'Norway', countryCode: 'NOR' },
+  { label: 'Helsinki-Vantaa Airport', code: 'HEL', country: 'Finland', countryCode: 'FIN' },
+  { label: 'Brussels Airport', code: 'BRU', country: 'Belgium', countryCode: 'BEL' },
+  { label: 'Vienna International Airport', code: 'VIE', country: 'Austria', countryCode: 'AUT' },
+  { label: 'Athens International Airport', code: 'ATH', country: 'Greece', countryCode: 'GRC' },
+  { label: 'Budapest Ferenc Liszt International Airport', code: 'BUD', country: 'Hungary', countryCode: 'HUN' },
+  { label: 'Johannesburg OR Tambo International Airport', code: 'JNB', country: 'South Africa', countryCode: 'ZAF' },
+  { label: 'Cape Town International Airport', code: 'CPT', country: 'South Africa', countryCode: 'ZAF' },
+  { label: 'Moscow Sheremetyevo International Airport', code: 'SVO', country: 'Russia', countryCode: 'RUS' },
+  { label: 'Cairo International Airport', code: 'CAI', country: 'Egypt', countryCode: 'EGY' },
+  { label: 'Vienna International Airport', code: 'VIE', country: 'Austria', countryCode: 'AUT' },
+  { label: 'Kuala Lumpur International Airport', code: 'KUL', country: 'Malaysia', countryCode: 'MYS' },
+  { label: 'Manila Ninoy Aquino International Airport', code: 'MNL', country: 'Philippines', countryCode: 'PHL' },
+  { label: 'Mumbai Chhatrapati Shivaji Maharaj International Airport', code: 'BOM', country: 'India', countryCode: 'IND' },
+  { label: 'Delhi Indira Gandhi International Airport', code: 'DEL', country: 'India', countryCode: 'IND' }
 ];
+
+
 
 const TransportationBookingForm = () => {
   const[transportations, setTransportations] = useState([]);
@@ -90,9 +82,15 @@ const TransportationBookingForm = () => {
   const[transferType, setTransferType] = useState(null);
   const[startDate, setStartDate] = useState(null);
   const[startTime, setStartTime] = useState(null);
-  const [origin, setOrigin] = useState(null);
-  const [destination, setDestination] = useState(null);
 
+
+
+  const handleTimeChange = (newTime) => {
+    if (newTime) {
+      const formattedTime = newTime.toISOString().substr(11, 8); // Converts to HH:MM:SS
+      setStartTime(formattedTime);
+    }
+  };
 
   const validateFields = () => {
     if (!startLocationCode || !endAddressLine || !endCountryCode || !transferType || !startTime || !startDate) {
@@ -129,10 +127,11 @@ const TransportationBookingForm = () => {
       }
 
       try{
+        console.log(requestBody);
         const response = await axios.post("http://localhost:8000/transportBook/transfer-offers",requestBody);
         const transportationData = response.data.data;
 
-        if(response && transportationData.length >0){
+        if(transportationData.length >0){
           setTransportations(transportationData);
 
         }else {
@@ -141,7 +140,7 @@ const TransportationBookingForm = () => {
 
       }catch(error){
         console.error('Error fetching transportation:', error);
-        message.error('Failed to fetch transportations. Please try again.');
+        message.error('No Transportations available for this address at this time');
       }
     }else {
       message.error('Error in the Form');
@@ -158,21 +157,18 @@ const TransportationBookingForm = () => {
             Transportation Booking
           </Typography>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="start location code"
-                value={startLocationCode}
-                onChange={(e) => setStartLocationCode(e.target.value)}
-                fullWidth
-              />
-            {/* <Autocomplete
-              options={cities}
+          <Grid item xs={12} sm={6}>
+            <Autocomplete
+              options={airports}
               getOptionLabel={(option) => `${option.country}, ${option.label}, ${option.code}`}
-              value={origin}
-              onChange={(event, newValue) => setOrigin(newValue)}
-              renderInput={(params) => <TextField {...params} label="Origin City" fullWidth />}
-            /> */}
-            </Grid>
+              value={airports.find((airport) => airport.code === startLocationCode) || null}
+              onChange={(event, newValue) =>{
+                setStartLocationCode(newValue ? newValue.code : ''); // Set the start location code
+                setEndCountryCode(newValue ? newValue.countryCode : ''); // Set the end country code
+              }}
+              renderInput={(params) => <TextField {...params} label="Airport" fullWidth />}
+            />
+          </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 label="end address"
@@ -181,22 +177,16 @@ const TransportationBookingForm = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            {/* <Grid item xs={12} sm={6}>
               <TextField
                 label="end country code"
                 value={endCountryCode}
                 onChange={(e) => setEndCountryCode(e.target.value)}
                 fullWidth
               />
-              {/* <Autocomplete
-              options={cities}
-              getOptionLabel={(option) => `${option.country}, ${option.label}, ${option.code}`}
-              value={destination}
-              onChange={(event, newValue) => setDestination(newValue)}
-              renderInput={(params) => <TextField {...params} label="Destination City" fullWidth />}
-              /> */}
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            </Grid> */}
+            <Grid item xs={12}>
+            <FormControl fullWidth>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
                 label="Start Date"
@@ -205,32 +195,20 @@ const TransportationBookingForm = () => {
                  renderInput={(params) => <TextField {...params} fullWidth />}
               />
             </LocalizationProvider>
+            </FormControl>
           </Grid>
-          <Grid item xs={12} >
+          <Grid item xs={12}>
           <FormControl fullWidth>
-              <TextField
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <TimePicker
                 label="Start Time: H:M:S"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-                fullWidth
+                value={startTime ? new Date(`1970-01-01T${startTime}Z`) : null} // Initialize the value
+                onChange={handleTimeChange} // Handle time change
+                renderInput={(params) => <TextField {...params} fullWidth />}
               />
+            </LocalizationProvider>
           </FormControl>
-          {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <TextField
-                  label="Start Time"
-                  type="time"
-                  value={startTime}
-                  onChange={(e) => setStartTime(e.target.value)}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  inputProps={{
-                    step: 1, // 1 second
-                  }}
-                  fullWidth
-                />
-              </LocalizationProvider> */}
-            </Grid>
+          </Grid>
             <Grid item xs={12}>
             <FormControl fullWidth>
                 <InputLabel>Service Type</InputLabel>
@@ -241,8 +219,6 @@ const TransportationBookingForm = () => {
                 >
                   <MenuItem value="PRIVATE">Private</MenuItem>
                   <MenuItem value="SHARED">Shared</MenuItem>
-                  <MenuItem value="TAXI">Taxi</MenuItem>
-                  <MenuItem value="HOURLY">Hourly</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
