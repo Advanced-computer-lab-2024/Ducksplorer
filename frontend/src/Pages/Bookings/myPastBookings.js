@@ -43,7 +43,7 @@ const PastBookingDetails = () => {
       return response.data.userName;
     } catch (error) {
       console.error("Error fetching tour guide name:", error.message);
-      return "N/A";
+      return "N/A (Guide left the system)";
     }
   };
 
