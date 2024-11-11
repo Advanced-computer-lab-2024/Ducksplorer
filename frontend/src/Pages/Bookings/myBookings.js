@@ -354,8 +354,8 @@ const BookingDetails = () => {
                   <TableCell> {itineraryBooking.itinerary && itineraryBooking.itinerary.availableDatesAndTimes
           ? itineraryBooking.itinerary.availableDatesAndTimes.map((date) => new Date(date).toLocaleDateString()).join(", ")
           : "N/A"}</TableCell>
-                  <TableCell>{itineraryBooking.itinerary && itineraryBooking.itinerary.chosenDate
-          ? new Date(itineraryBooking.itinerary.chosenDate).toLocaleDateString()
+                  <TableCell>{itineraryBooking.itinerary && itineraryBooking.chosenDate
+          ? new Date(itineraryBooking.chosenDate).toLocaleDateString()
           : "N/A"}</TableCell>
                   <TableCell>{itineraryBooking.itinerary && itineraryBooking.itinerary.accessibility
           ? itineraryBooking.itinerary.accessibility
