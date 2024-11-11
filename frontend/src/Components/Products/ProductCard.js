@@ -25,7 +25,7 @@ const ProductCard = ({
   showRating, //shows the user review , also for myPurchases as a tourist
   showReview,
   showPurchase,
-  showAverageRating, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
+  showAverageRatingNo, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
 }) => {
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
@@ -237,7 +237,7 @@ const ProductCard = ({
             Description: {product.description}
           </Typography>
           <Typography variant="body1">Seller: {product.seller}</Typography>
-          {showAverageRating && (
+          {!showAverageRatingNo && (
             <Rating
               value={calculateProductRating(product.ratings)}
               precision={0.1}
