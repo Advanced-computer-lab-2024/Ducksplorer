@@ -24,7 +24,7 @@ import {Link} from "react-router-dom";
 
 const BookingDetails = () => {
   const userName = JSON.parse(localStorage.getItem("user")).username;
-  const [booking, setBooking] = useState(null);
+  //const [booking, setBooking] = useState(null);
   const [exchangeRatesAc, setExchangeRatesAc] = useState({});
   const [currencyAc, setCurrencyAc] = useState("EGP");
   const [exchangeRatesIt, setExchangeRatesIt] = useState({});
@@ -43,6 +43,7 @@ const BookingDetails = () => {
   const [flight, setFlight] = useState(null);
   const [loading, setLoading] = useState(true);
   const isGuest = localStorage.getItem("guest") === "true";
+  const [tourGuideNames, setTourGuideNames] = useState({});
 
   const handleCurrencyChangeAc = (rates, selectedCurrency) => {
     setExchangeRatesAc(rates);
@@ -88,11 +89,12 @@ const BookingDetails = () => {
       // setCurrencyft(response.data.flights[0].currency);
       console.log(response.data);
       const tourGuideNamesMap = {};
-      for (const itineraryBooking of response.data.itineraries) {
+      await Promise.all(response.data.itineraries.map(async (itineraryBooking) => {
         const tourGuideName = await fetchTourGuideName(itineraryBooking._id);
         tourGuideNamesMap[itineraryBooking._id] = tourGuideName;
-      }
+      }));
       setTourGuideNames(tourGuideNamesMap);
+
     } catch (error) {
       console.error(
         "Error fetching booking details:",
@@ -132,7 +134,7 @@ const BookingDetails = () => {
             prev.filter((itinerary) => itinerary._id !== itemId)
           );
         }
-
+        await fetchBookings();
         // Re-fetch bookings to ensure the state is in sync with the server
         //fetchBookings();
       } else {
@@ -359,7 +361,8 @@ const BookingDetails = () => {
                   <TableCell> {itineraryBooking.itinerary && itineraryBooking.itinerary.dropOffLocation
           ? itineraryBooking.itinerary.dropOffLocation
           : "N/A"}</TableCell>
-                  <TableCell>{ itineraryBooking.itinerary && itineraryBooking.itinerary.tourGuideModel?.userName ? itineraryBooking.itinerary.tourGuideModel.userName : "N/A"}</TableCell>
+                  {/* <TableCell>{ itineraryBooking.itinerary && itineraryBooking.itinerary.tourGuideModel?.userName ? itineraryBooking.itinerary.tourGuideModel.userName : "N/A"}</TableCell> */}
+                  <TableCell>{tourGuideNames[itineraryBooking._id] || "N/A"}</TableCell>
                   <TableCell><Rating
                     value={itineraryBooking.itinerary.averageRating}
                     precision={0.1}
