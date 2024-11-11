@@ -1,14 +1,20 @@
+const ActivityBooking = require("../../Models/activityBookingModel.js");
 const Activity = require("../../Models/activityModel.js");
 
 
 const commentActivity = async (req, res) => {
-    const { activityId } = req.params;
+    const { bookingId } = req.params;
     const { comment } = req.body;
 
-
-
     try {
-        const activity = await Activity.findById(activityId);
+        const booking = await ActivityBooking.findById(bookingId);
+        if (!booking) {
+            return res.status(404).json({ message: "Booking not found" });
+        }
+        booking.comment = comment;
+        await booking.save();
+
+        const activity = await Activity.findById(booking.activity._id);
 
         if (!activity) {
             return res.status(404).json({ message: "Activity not found" });

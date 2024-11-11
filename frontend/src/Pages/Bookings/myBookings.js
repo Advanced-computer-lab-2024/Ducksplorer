@@ -12,17 +12,19 @@ import {
   Rating,
   Tooltip,
   IconButton,
-  Tab
+  Tab,
+  Button
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { message } from "antd";
 import TouristNavBar from "../../Components/TouristNavBar";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon";
+import {Link} from "react-router-dom";
 
 const BookingDetails = () => {
   const userName = JSON.parse(localStorage.getItem("user")).username;
-  const [booking, setBooking] = useState(null);
+  //const [booking, setBooking] = useState(null);
   const [exchangeRatesAc, setExchangeRatesAc] = useState({});
   const [currencyAc, setCurrencyAc] = useState("EGP");
   const [exchangeRatesIt, setExchangeRatesIt] = useState({});
@@ -40,6 +42,9 @@ const BookingDetails = () => {
   const [transportationBookings, setTransportationBookings] = useState([]);
   const [flight, setFlight] = useState(null);
   const [loading, setLoading] = useState(true);
+  const isGuest = localStorage.getItem("guest") === "true";
+  const [tourGuideNames, setTourGuideNames] = useState({});
+
   const handleCurrencyChangeAc = (rates, selectedCurrency) => {
     setExchangeRatesAc(rates);
     setCurrencyAc(selectedCurrency);
@@ -83,6 +88,13 @@ const BookingDetails = () => {
       setTransportationBookings(response.data.transportations || []);
       // setCurrencyft(response.data.flights[0].currency);
       console.log(response.data);
+      const tourGuideNamesMap = {};
+      await Promise.all(response.data.itineraries.map(async (itineraryBooking) => {
+        const tourGuideName = await fetchTourGuideName(itineraryBooking._id);
+        tourGuideNamesMap[itineraryBooking._id] = tourGuideName;
+      }));
+      setTourGuideNames(tourGuideNamesMap);
+
     } catch (error) {
       console.error(
         "Error fetching booking details:",
@@ -122,7 +134,7 @@ const BookingDetails = () => {
             prev.filter((itinerary) => itinerary._id !== itemId)
           );
         }
-
+        await fetchBookings();
         // Re-fetch bookings to ensure the state is in sync with the server
         //fetchBookings();
       } else {
@@ -181,6 +193,17 @@ const BookingDetails = () => {
     }
   };
 
+  const fetchTourGuideName = async (bookingId) => {
+    try {
+      const response = await axios.get(`http://localhost:8000/tourGuideRate/getUserNameById/${bookingId}`);
+      console.log("Tour Guide Name Response:", response.data);
+      return response.data.userName;
+    } catch (error) {
+      console.error("Error fetching tour guide name:", error.message);
+      return "N/A";
+    }
+  };
+
   if (
     !activityBookings.length &&
     !itineraryBookings.length &&
@@ -197,6 +220,15 @@ const BookingDetails = () => {
   return (
     <>
       <TouristNavBar />
+      <Button
+        component={Link}
+        to={isGuest ? "/guestDashboard" : "/touristDashboard"}
+        variant="contained"
+        color="primary"
+        style={{ marginBottom: "20px" }}
+      >
+        Back to Dashboard
+      </Button>
       <div style={{ overflowY: "visible", height: "90vh" }}>
         <Typography variant="h4" gutterBottom>
           Booking Details
@@ -230,54 +262,37 @@ const BookingDetails = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {activityBookings.map((activity) => (
-                <TableRow key={activity._id}>
-                  <TableCell>{activity.activity.name}</TableCell>
+              {activityBookings.map((activityBooking) => (
+                <TableRow key={activityBooking._id}>
+                  <TableCell>{activityBooking.activity?.name || "No Name"}</TableCell>
+                  <TableCell>{activityBooking.activity?.isOpen ? "Yes" : "No"}</TableCell>
+                  <TableCell>{activityBooking.activity?.advertiser || "N/A"}</TableCell>
+                  <TableCell>{activityBooking.activity?.date ? new Date(activityBooking.activity.date).toLocaleDateString() : "N/A"}</TableCell>
+                  <TableCell>{activityBooking.activity?.location || "N/A"}</TableCell>
                   <TableCell>
-                    {activity.activity.isOpen ? "Yes" : "No"}
+                    {(activityBooking.activity?.price * (exchangeRatesAc[currencyAc] || 1)).toFixed(2)} {" "}{currencyAc}
                   </TableCell>
-                  <TableCell>{activity.activity.advertiser}</TableCell>
-                  <TableCell>
-                    {new Date(activity.activity.date).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell>{activity.activity.location}</TableCell>
-                  <TableCell>
-                    {(
-                      activity.activity.price *
-                      (exchangeRatesAc[currencyAc] || 1)
-                    ).toFixed(2)}{" "}
-                    {currencyAc}
-                  </TableCell>
-                  <TableCell>{activity.activity.category}</TableCell>
-                  <TableCell>{activity.activity.tags.join(", ")}</TableCell>
-                  <TableCell>{activity.activity.specialDiscount}%</TableCell>
-                  <TableCell>{activity.activity.duration} mins</TableCell>
+                  <TableCell>{activityBooking.activity?.category || "N/A"}</TableCell>
+                  <TableCell>{activityBooking.activity?.tags?.join(", ") || "N/A"}</TableCell>
+                  <TableCell>{activityBooking.activity?.specialDiscount || 0}%</TableCell>
+                  <TableCell>{activityBooking.activity?.duration || "N/A"} mins</TableCell>
                   <TableCell>
                     <Rating
-                      value={activity.activity.averageRating}
+                      value={activityBooking.activity?.averageRating || 0}
                       precision={0.1}
                       readOnly
                     />
                   </TableCell>
                   <TableCell>
                     <Tooltip title="Delete Itinerary">
-                      <IconButton
-                        color="error"
-                        aria-label="delete category"
-                        onClick={() =>
-                          handleDeleteBooking(
-                            "activity",
-                            activity.activity._id,
-                            activity.activity.price
-                          )
-                        }
-                      >
+                      <IconButton color="error" aria-label="delete category" onClick={() => handleDeleteBooking('activity', activityBooking.activity?._id, activityBooking.activity?.price)}>
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>
                   </TableCell>
                 </TableRow>
               ))}
+
             </TableBody>
           </Table>
         </TableContainer>
@@ -306,55 +321,56 @@ const BookingDetails = () => {
                 <TableCell>Pick-Up Location</TableCell>
                 <TableCell>Drop-Off Location</TableCell>
                 <TableCell>Tour Guide</TableCell>
-                <TableCell>Rating</TableCell>
+                <TableCell>Average Rating</TableCell>
                 <TableCell>Tags</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {itineraryBookings.map((itinerary) => (
-                <TableRow key={itinerary._id}>
-                  <TableCell>{itinerary.itinerary && itinerary.itinerary.activity
-                            ? itinerary.itinerary.activity.map((act) => act.name).join(", ")
+              {itineraryBookings.map((itineraryBooking) => (
+                <TableRow key={itineraryBooking._id}>
+                  <TableCell>{itineraryBooking.itinerary && itineraryBooking.itinerary.activity
+                            ? itineraryBooking.itinerary.activity.map((act) => act.name).join(", ")
                             : "N/A"}
                   </TableCell>
-                  <TableCell>{itinerary.itinerary && itinerary.itinerary.locations
-                          ? itinerary.itinerary.locations.join(", ")
+                  <TableCell>{itineraryBooking.itinerary && itineraryBooking.itinerary.locations
+                          ? itineraryBooking.itinerary.locations.join(", ")
                           : "N/A"}
                   </TableCell>
-                  <TableCell>{itinerary.itinerary && itinerary.itinerary.timeline
-          ? itinerary.itinerary.timeline
+                  <TableCell>{itineraryBooking.itinerary && itineraryBooking.itinerary.timeline
+          ? itineraryBooking.itinerary.timeline
           : "N/A"}</TableCell>
-                  <TableCell> {itinerary.itinerary && itinerary.itinerary.language
-          ? itinerary.itinerary.language
+                  <TableCell> {itineraryBooking.itinerary && itineraryBooking.itinerary.language
+          ? itineraryBooking.itinerary.language
           : "N/A"}</TableCell>
                   <TableCell>
-                  {itinerary.itinerary && itinerary.itinerary.price
-          ? (itinerary.itinerary.price * (exchangeRatesIt[currencyIt] || 1)).toFixed(2) + ` ${currencyIt}`
+                  {itineraryBooking.itinerary && itineraryBooking.chosenPrice
+          ? (itineraryBooking.chosenPrice * (exchangeRatesIt[currencyIt] || 1)).toFixed(2) + ` ${currencyIt}`
           : "N/A"}                  </TableCell>
-                  <TableCell> {itinerary.itinerary && itinerary.itinerary.availableDatesAndTimes
-          ? itinerary.itinerary.availableDatesAndTimes.map((date) => new Date(date).toLocaleDateString()).join(", ")
+                  <TableCell> {itineraryBooking.itinerary && itineraryBooking.itinerary.availableDatesAndTimes
+          ? itineraryBooking.itinerary.availableDatesAndTimes.map((date) => new Date(date).toLocaleDateString()).join(", ")
           : "N/A"}</TableCell>
-                  <TableCell>{itinerary.itinerary && itinerary.itinerary.chosenDate
-          ? new Date(itinerary.itinerary.chosenDate).toLocaleDateString()
+                  <TableCell>{itineraryBooking.itinerary && itineraryBooking.itinerary.chosenDate
+          ? new Date(itineraryBooking.itinerary.chosenDate).toLocaleDateString()
           : "N/A"}</TableCell>
-                  <TableCell>{itinerary.itinerary && itinerary.itinerary.accessibility
-          ? itinerary.itinerary.accessibility
+                  <TableCell>{itineraryBooking.itinerary && itineraryBooking.itinerary.accessibility
+          ? itineraryBooking.itinerary.accessibility
           : "N/A"}</TableCell>
-                  <TableCell>{itinerary.itinerary && itinerary.itinerary.pickUpLocation
-          ? itinerary.itinerary.pickUpLocation
+                  <TableCell>{itineraryBooking.itinerary && itineraryBooking.itinerary.pickUpLocation
+          ? itineraryBooking.itinerary.pickUpLocation
           : "N/A"}</TableCell>
-                  <TableCell> {itinerary.itinerary && itinerary.itinerary.dropOffLocation
-          ? itinerary.itinerary.dropOffLocation
+                  <TableCell> {itineraryBooking.itinerary && itineraryBooking.itinerary.dropOffLocation
+          ? itineraryBooking.itinerary.dropOffLocation
           : "N/A"}</TableCell>
-                  <TableCell>{ itinerary.itinerary && itinerary.itinerary.tourGuideModel?.name ? itinerary.itinerary.tourGuideModel.name : "N/A"}</TableCell>
+                  {/* <TableCell>{ itineraryBooking.itinerary && itineraryBooking.itinerary.tourGuideModel?.userName ? itineraryBooking.itinerary.tourGuideModel.userName : "N/A"}</TableCell> */}
+                  <TableCell>{tourGuideNames[itineraryBooking._id] || "N/A"}</TableCell>
                   <TableCell><Rating
-                    value={itinerary.itinerary && itinerary.itinerary.rating ? itinerary.itinerary.rating : 0}
+                    value={itineraryBooking.itinerary.averageRating}
                     precision={0.1}
                     readOnly
                   /></TableCell>
-                  <TableCell>  {itinerary.itinerary && itinerary.itinerary.tags
-          ? itinerary.itinerary.tags.join(", ")
+                  <TableCell>  {itineraryBooking.itinerary && itineraryBooking.itinerary.tags
+          ? itineraryBooking.itinerary.tags.join(", ")
           : "N/A"}</TableCell>
                   <TableCell>
                     <Tooltip title="Delete Itinerary">
@@ -364,8 +380,8 @@ const BookingDetails = () => {
                         onClick={() =>
                           handleDeleteBooking(
                             "itinerary",
-                            itinerary.itinerary._id,
-                            itinerary.itinerary.price
+                            itineraryBooking.itinerary._id,
+                            itineraryBooking.itinerary.price
                           )
                         }
                       >

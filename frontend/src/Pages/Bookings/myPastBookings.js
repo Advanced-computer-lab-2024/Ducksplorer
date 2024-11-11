@@ -20,8 +20,11 @@ import {
 import { Link } from "react-router-dom";
 import Help from "../../Components/HelpIcon";
 
-const PastBookingDetails = ({ userName }) => {
-  const [booking, setBooking] = useState(null);
+const PastBookingDetails = () => {
+  const userName = JSON.parse(localStorage.getItem("user")).username
+  //const [booking, setBooking] = useState(null);
+  const [activityBookings, setActivityBookings] = useState(null);
+  const [itineraryBookings, setItineraryBookings] = useState(null);
   const [selectedActivityRatings, setSelectedActivityRatings] = useState({});
   const [selectedItineraryRatings, setSelectedItineraryRatings] = useState({});
   const [activityComments, setActivityComments] = useState({});
@@ -33,57 +36,48 @@ const PastBookingDetails = ({ userName }) => {
   const [tourGuideNames, setTourGuideNames] = useState({});
   const [loading, setLoading] = useState(true);
 
-  const fetchTourGuideName = useCallback(
-    async (id) => {
-      if (!id || tourGuideNames[id]) return;
-
-      try {
-        const response = await axios.get(
-          `http://localhost:8000/tourGuideRate/getUserNameById/${id}`
-        );
-        setTourGuideNames((prevNames) => ({
-          ...prevNames,
-          [id]: response.data.userName,
-        }));
-      } catch (error) {
-        console.error(
-          "Error fetching tour guide name:",
-          error.response ? error.response.data : error.message
-        );
-        setTourGuideNames((prevNames) => ({
-          ...prevNames,
-          [id]: "N/A",
-        }));
-      }
-    },
-    [tourGuideNames]
-  );
+  const fetchTourGuideName = async (bookingId) => {
+    try {
+      const response = await axios.get(`http://localhost:8000/tourGuideRate/getUserNameById/${bookingId}`);
+      console.log("Tour Guide Name Response:", response.data);
+      return response.data.userName;
+    } catch (error) {
+      console.error("Error fetching tour guide name:", error.message);
+      return "N/A";
+    }
+  };
 
   useEffect(() => {
     const fetchBooking = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/touristRoutes/myPastBookings/${userName}`
+          `http://localhost:8000/touristRoutes/myPastBookings`,
+          { params: { tourist: userName } }
         );
-        console.log("Booking Response:", response.data);
-        setBooking(response.data[0]);
+        console.log("Activity Bookings Response:", response.data.activities);
+        setActivityBookings(response.data.activities);
+
+        console.log("Itinerary Bookings Response:", response.data.itineraries);
+        setItineraryBookings(response.data.itineraries);
 
         const initialActivityRatings = {};
-        response.data[0]?.activities.forEach((activity) => {
-          initialActivityRatings[activity._id] = activity.averageRating;
+        activityBookings?.forEach((activityBooking) => {
+          initialActivityRatings[activityBooking._id] = activityBooking.activity.averageRating;
         });
         setSelectedActivityRatings(initialActivityRatings);
 
         const initialItineraryRatings = {};
-        response.data[0]?.itineraries.forEach((itinerary) => {
-          initialItineraryRatings[itinerary._id] = itinerary.averageRating || 0;
+        itineraryBookings?.forEach((itineraryBooking) => {
+          initialItineraryRatings[itineraryBooking._id] = itineraryBooking.itinerary.averageRating || 0;
         });
         setSelectedItineraryRatings(initialItineraryRatings);
 
-        // Fetch tour guide names for all itineraries
-        for (const itinerary of response.data[0].itineraries) {
-          await fetchTourGuideName(itinerary.tourGuideModel);
+        const tourGuideNamesMap = {};
+        for (const itineraryBooking of response.data.itineraries) {
+          const tourGuideName = await fetchTourGuideName(itineraryBooking._id);
+          tourGuideNamesMap[itineraryBooking._id] = tourGuideName;
         }
+        setTourGuideNames(tourGuideNamesMap);
       } catch (error) {
         console.error(
           "Error fetching booking details:",
@@ -94,23 +88,13 @@ const PastBookingDetails = ({ userName }) => {
       }
     };
     fetchBooking();
-  }, [userName, fetchTourGuideName]);
+  }, [userName]);
 
-  if (loading) return <p>Loading...</p>;
-
-  if (!booking) return <p>You have no past bookings.</p>;
-  if (
-    !Array.isArray(booking.activities) ||
-    !Array.isArray(booking.itineraries)
-  ) {
-    return <p>No booking details available.</p>;
-  }
-
-  const handleActivityRatingChange = async (activityId, newRating) => {
-    console.log(`Submitting rating for activity ${activityId}:`, newRating);
+  const handleActivityRatingChange = async (bookingId, newRating) => {
+    console.log(`Submitting rating for activity of booking ${bookingId}:`, newRating);
     try {
       const response = await axios.patch(
-        `http://localhost:8000/activity/rate/${activityId}`,
+        `http://localhost:8000/activity/rate/${bookingId}`,
         { rating: newRating }
       );
       console.log("Rating response:", response.data);
@@ -118,17 +102,16 @@ const PastBookingDetails = ({ userName }) => {
 
       setSelectedActivityRatings((prevRatings) => ({
         ...prevRatings,
-        [activityId]: newRating,
+        [bookingId]: newRating,
       }));
 
-      setBooking((prevBooking) => ({
-        ...prevBooking,
-        activities: prevBooking.activities.map((activity) =>
-          activity._id === activityId
-            ? { ...activity, averageRating: newRating }
-            : activity
-        ),
-      }));
+      setActivityBookings((prevActivityBookings) =>
+        prevActivityBookings.map((activityBooking) =>
+          activityBooking._id === bookingId
+            ? { ...activityBooking, rating: newRating } // Update the rating for the specific booking
+            : activityBooking // Keep other bookings unchanged
+        )
+      );
     } catch (error) {
       if (error.response) {
         console.error("Error response data:", error.response.data);
@@ -140,11 +123,11 @@ const PastBookingDetails = ({ userName }) => {
     }
   };
 
-  const handleItineraryRatingChange = async (itineraryId, newRating) => {
-    console.log(`Submitting rating for itinerary ${itineraryId}:`, newRating);
+  const handleItineraryRatingChange = async (bookingId, newRating) => {
+    console.log(`Submitting rating for booking for itinerary ${bookingId}:`, newRating);
     try {
       const response = await axios.patch(
-        `http://localhost:8000/itinerary/rateItinerary/${itineraryId}`,
+        `http://localhost:8000/itinerary/rateItinerary/${bookingId}`,
         { rating: newRating }
       );
       console.log("Rating response:", response.data);
@@ -152,17 +135,16 @@ const PastBookingDetails = ({ userName }) => {
 
       setSelectedItineraryRatings((prevRatings) => ({
         ...prevRatings,
-        [itineraryId]: newRating,
+        [bookingId]: newRating,
       }));
 
-      setBooking((prevBooking) => ({
-        ...prevBooking,
-        itineraries: prevBooking.itineraries.map((itinerary) =>
-          itinerary._id === itineraryId
-            ? { ...itinerary, averageRating: newRating }
-            : itinerary
-        ),
-      }));
+      setItineraryBookings((prevItineraryBookings) =>
+        prevItineraryBookings.map((itineraryBooking) =>
+          itineraryBooking._id === bookingId
+            ? { ...itineraryBooking, rating: newRating } // Update the rating for the specific booking
+            : itineraryBooking // Keep other bookings unchanged
+        )
+      );
     } catch (error) {
       if (error.response) {
         console.error("Error response data:", error.response.data);
@@ -176,40 +158,34 @@ const PastBookingDetails = ({ userName }) => {
     }
   };
 
-  const handleActivityCommentChange = (activityId, comment) => {
-    setActivityComments((prev) => ({ ...prev, [activityId]: comment }));
+  const handleActivityCommentChange = (bookingId, comment) => {
+    setActivityComments((prev) => ({ ...prev, [bookingId]: comment }));
   };
 
-  const handleActivityCommentSubmit = async (activityId) => {
+  const handleActivityCommentSubmit = async (bookingId) => {
     try {
-      await axios.patch(
-        `http://localhost:8000/activity/commentActivity/${activityId}`,
-        {
-          comment: activityComments[activityId],
-        }
-      );
+      await axios.patch(`http://localhost:8000/activity/commentActivity/${bookingId}`, {
+        comment: activityComments[bookingId],
+      });
       alert("Comment submitted successfully!");
-      setActivityComments((prev) => ({ ...prev, [activityId]: "" })); // Clear the comment input after submission
+      setActivityComments((prev) => ({ ...prev, [bookingId]: "" })); // Clear the comment input after submission
     } catch (error) {
       console.error("Error submitting comment:", error.message);
       alert("Failed to submit comment. Please try again.");
     }
   };
 
-  const handleItineraryCommentChange = (itineraryId, comment) => {
-    setItineraryComments((prev) => ({ ...prev, [itineraryId]: comment }));
+  const handleItineraryCommentChange = (bookingId, comment) => {
+    setItineraryComments((prev) => ({ ...prev, [bookingId]: comment }));
   };
 
-  const handleItineraryCommentSubmit = async (itineraryId) => {
+  const handleItineraryCommentSubmit = async (bookingId) => {
     try {
-      await axios.patch(
-        `http://localhost:8000/itinerary/commentItinerary/${itineraryId}`,
-        {
-          comment: itineraryComments[itineraryId],
-        }
-      );
+      await axios.patch(`http://localhost:8000/itinerary/commentItinerary/${bookingId}`, {
+        comment: itineraryComments[bookingId],
+      });
       alert("Comment submitted successfully!");
-      setItineraryComments((prev) => ({ ...prev, [itineraryId]: "" })); // Clear the comment input after submission
+      setItineraryComments((prev) => ({ ...prev, [bookingId]: "" })); // Clear the comment input after submission
     } catch (error) {
       console.error("Error submitting comment:", error.message);
       alert("Failed to submit comment. Please try again.");
@@ -268,15 +244,16 @@ const PastBookingDetails = ({ userName }) => {
     setOpenDialog(false);
   };
 
+  if (activityBookings === null || itineraryBookings === null) return <p>Loading...</p>;
+
+  if (!Array.isArray(activityBookings) || !Array.isArray(itineraryBookings)) {
+    return <p>No booking details available.</p>;
+  }
+
+
   return (
-    <div>
-      <Button
-        component={Link}
-        to="/touristDashboard"
-        variant="contained"
-        color="primary"
-        style={{ marginBottom: "20px" }}
-      >
+    <div style={{ overflowY: 'visible', height: "120vh" }}>
+      <Button component={Link} to="/touristDashboard" variant="contained" color="primary" style={{ marginBottom: '20px' }}>
         Back to Dashboard
       </Button>
       <Typography variant="h4" gutterBottom>
@@ -301,59 +278,47 @@ const PastBookingDetails = ({ userName }) => {
               <TableCell>Tags</TableCell>
               <TableCell>Special Discount</TableCell>
               <TableCell>Duration</TableCell>
-              <TableCell>Average Rating</TableCell>
+              <TableCell>Rating</TableCell>
               <TableCell>Rate</TableCell>
               <TableCell>Comment</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {booking.activities.map((activity) => (
-              <TableRow key={activity._id}>
-                <TableCell>{activity.name}</TableCell>
-                <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
-                <TableCell>{activity.advertiser}</TableCell>
-                <TableCell>
-                  {new Date(activity.date).toLocaleDateString()}
-                </TableCell>
-                <TableCell>{activity.location}</TableCell>
-                <TableCell>{activity.price}</TableCell>
-                <TableCell>{activity.category}</TableCell>
-                <TableCell>{activity.tags.join(", ")}</TableCell>
-                <TableCell>{activity.specialDiscount}%</TableCell>
-                <TableCell>{activity.duration} mins</TableCell>
-                <TableCell>{activity.averageRating}/5</TableCell>
+            {activityBookings.map((activityBooking) => (
+              <TableRow key={activityBooking.activity._id}>
+                <TableCell>{activityBooking.activity.name}</TableCell>
+                <TableCell>{activityBooking.activity.isOpen ? "Yes" : "No"}</TableCell>
+                <TableCell>{activityBooking.activity.advertiser}</TableCell>
+                <TableCell>{new Date(activityBooking.activity.date).toLocaleDateString()}</TableCell>
+                <TableCell>{activityBooking.activity.location}</TableCell>
+                <TableCell>{activityBooking.chosenPrice}</TableCell>
+                <TableCell>{activityBooking.activity.category}</TableCell>
+                <TableCell>{activityBooking.activity.tags.join(", ")}</TableCell>
+                <TableCell>{activityBooking.activity.specialDiscount}%</TableCell>
+                <TableCell>{activityBooking.activity.duration} mins</TableCell>
+                <TableCell>{activityBooking.rating}/5</TableCell>
                 <TableCell>
                   <Rating
-                    name={`activity-rating-${activity._id}`}
-                    value={
-                      (selectedActivityRatings[activity._id] ??
-                        activity.averageRating) ||
-                      0
-                    }
-                    precision={1}
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        handleActivityRatingChange(activity._id, newValue);
-                      }
-                    }}
+                    name={`activity-rating-${activityBooking._id}`}
+                    value={activityBooking.rating}
+                    precision={0.5} // Set precision to 0.5 for half-star ratings
+                    onChange={(event, newValue) => handleActivityRatingChange(activityBooking._id, newValue)} // Pass the new value from the Rating component
                   />
                 </TableCell>
+
                 <TableCell>
                   <TextField
                     variant="outlined"
                     size="small"
-                    value={activityComments[activity._id] || ""}
-                    onChange={(e) =>
-                      handleActivityCommentChange(activity._id, e.target.value)
-                    }
+                    value={activityComments[activityBooking._id] || ""}
+                    onChange={(e) => handleActivityCommentChange(activityBooking._id, e.target.value)}
                     placeholder="Comment"
                   />
                   <Button
-                    onClick={() => handleActivityCommentSubmit(activity._id)}
+                    onClick={() => handleActivityCommentSubmit(activityBooking._id)}
                     variant="contained"
                     color="primary"
                     size="small"
-                    style={{ marginLeft: "0px", marginTop: "5px" }}
                   >
                     Submit
                   </Button>
@@ -383,37 +348,29 @@ const PastBookingDetails = ({ userName }) => {
               <TableCell>Drop-Off Location</TableCell>
               <TableCell>Tags</TableCell>
               <TableCell>Tour Guide</TableCell>
-              <TableCell>Average Rating</TableCell>
+              <TableCell>Rating</TableCell>
               <TableCell>Rate</TableCell>
               <TableCell>Comment</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {booking.itineraries.map((itinerary) => (
-              <TableRow key={itinerary._id}>
+            {itineraryBookings.map((itineraryBooking) => (
+              <TableRow key={itineraryBooking._id}>
+                <TableCell>{itineraryBooking.itinerary.activity.map((act) => act.name).join(", ")}</TableCell>
+                <TableCell>{itineraryBooking.itinerary.locations.join(", ")}</TableCell>
+                <TableCell>{itineraryBooking.itinerary.timeline}</TableCell>
+                <TableCell>{itineraryBooking.itinerary.language}</TableCell>
+                <TableCell>{itineraryBooking.chosenPrice}</TableCell>
+                <TableCell>{itineraryBooking.itinerary.availableDatesAndTimes.map((date) => new Date(date).toLocaleDateString()).join(", ")}</TableCell>
+                <TableCell>{itineraryBooking.itinerary.accessibility}</TableCell>
+                <TableCell>{itineraryBooking.itinerary.pickUpLocation}</TableCell>
+                <TableCell>{itineraryBooking.itinerary.dropOffLocation}</TableCell>
+                <TableCell>{itineraryBooking.itinerary.tags.join(", ")}</TableCell>
                 <TableCell>
-                  {itinerary.activity.map((act) => act.name).join(", ")}
-                </TableCell>
-                <TableCell>{itinerary.locations.join(", ")}</TableCell>
-                <TableCell>{itinerary.timeline}</TableCell>
-                <TableCell>{itinerary.language}</TableCell>
-                <TableCell>{itinerary.price}</TableCell>
-                <TableCell>
-                  {itinerary.availableDatesAndTimes
-                    .map((date) => new Date(date).toLocaleDateString())
-                    .join(", ")}
-                </TableCell>
-                <TableCell>{itinerary.accessibility}</TableCell>
-                <TableCell>{itinerary.pickUpLocation}</TableCell>
-                <TableCell>{itinerary.dropOffLocation}</TableCell>
-                <TableCell>{itinerary.tags.join(", ")}</TableCell>
-                <TableCell>
-                  <div style={{ display: "flex", flexDirection: "column" }}>
-                    <span>
-                      {tourGuideNames[itinerary.tourGuideModel] || "N/A"}
-                    </span>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    {tourGuideNames[itineraryBooking._id] || "Loading..."}
                     <Button
-                      onClick={() => handleOpenDialog(itinerary.tourGuideModel)}
+                      onClick={() => handleOpenDialog(itineraryBooking.itinerary.tourGuideModel)}
                       variant="contained"
                       color="primary"
                       size="small"
@@ -423,44 +380,28 @@ const PastBookingDetails = ({ userName }) => {
                     </Button>
                   </div>
                 </TableCell>
-                <TableCell>{itinerary.averageRating}/5</TableCell>
+                <TableCell>{itineraryBooking.rating}/5</TableCell>
                 <TableCell>
                   <Rating
-                    name={`itinerary-rating-${itinerary._id}`}
-                    value={
-                      (selectedItineraryRatings[itinerary._id] ??
-                        itinerary.averageRating) ||
-                      0
-                    }
-                    precision={1}
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        handleItineraryRatingChange(itinerary._id, newValue);
-                      }
-                    }}
+                    name={`itinerary-rating-${itineraryBooking._id}`}
+                    value={itineraryBooking.rating}
+                    precision={0.5} // Set precision to 0.5 for half-star ratings
+                    onChange={(event, newValue) => handleItineraryRatingChange(itineraryBooking._id, newValue)} // Pass the new value from the Rating component
                   />
                 </TableCell>
-                <TableCell style={{ width: "9%" }}>
+                <TableCell>
                   <TextField
                     variant="outlined"
                     size="small"
-                    marginright="0px"
-                    fullWidth={true}
-                    value={itineraryComments[itinerary._id] || ""}
-                    onChange={(e) =>
-                      handleItineraryCommentChange(
-                        itinerary._id,
-                        e.target.value
-                      )
-                    }
+                    value={itineraryComments[itineraryBooking._id] || ""}
+                    onChange={(e) => handleItineraryCommentChange(itineraryBooking._id, e.target.value)}
                     placeholder="Comment"
                   />
                   <Button
-                    onClick={() => handleItineraryCommentSubmit(itinerary._id)}
+                    onClick={() => handleItineraryCommentSubmit(itineraryBooking._id)}
                     variant="contained"
                     color="primary"
                     size="small"
-                    style={{ marginLeft: "0px", marginTop: "5px" }}
                   >
                     Submit
                   </Button>

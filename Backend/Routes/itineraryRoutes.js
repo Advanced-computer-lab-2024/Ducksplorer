@@ -1,5 +1,5 @@
 const express = require('express')
-const { getAllItineraries, getItinerary, updateItinerary, deleteItinerary, createItinerary, toggleFlagItinerary } = require('../Controllers/Itinerary/itineraryCRUDController');
+const { getAllItineraries, getItinerary, updateItinerary, deleteItinerary, createItinerary, toggleFlagItinerary, deletePastItineraries } = require('../Controllers/Itinerary/itineraryCRUDController');
 const { sortItineraries } = require('../Controllers/Itinerary/itinerarySortController');
 const { filterItineraries, filterUpcomingItineraries } = require('../Controllers/Itinerary/itineraryFilterController');
 const { getUpcomingItineraries } = require('../Controllers/Itinerary/itineraryViewUpcomingController');
@@ -19,6 +19,8 @@ router.route("/sort").get(sortItineraries)
 
 router.route("/filter").get(filterItineraries)
 
+router.route("/deletePast").delete(deletePastItineraries);
+
 router.route("/search").get(searchItineraries)
 
 router.route("/upcoming").get(getUpcomingItineraries)
@@ -32,11 +34,11 @@ router.route("/:id").get(getItinerary).put(updateItinerary).delete(deleteItinera
 
 router.route("/toggleFlagItinerary/:id").put(toggleFlagItinerary)
 
-router.route("/rateItinerary/:itineraryId").patch(rateItinerary)
+router.route("/rateItinerary/:bookingId").patch(rateItinerary)
 
 router.route("/toggleActiveFlagItinerary/:id").put(toggleActiveFlagItinerary)
 
-router.route("/commentItinerary/:itineraryId").patch(commentItinerary)
+router.route("/commentItinerary/:bookingId").patch(commentItinerary)
 
 router.route("/deleteOnlyNotBookedItinerary/:id").delete(deleteOnlyNotBookedItinerary)
 
