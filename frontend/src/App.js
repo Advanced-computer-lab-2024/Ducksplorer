@@ -79,7 +79,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           {/* <Route index element={<Hotels />} /> */}
-          <Route path="/" element={<TouristNavBar />} />
+          <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signUp" element={<Signup />} />
           <Route path="/createItinerary" element={<CreateItinerary />} />
