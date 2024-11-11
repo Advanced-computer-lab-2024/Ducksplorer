@@ -101,7 +101,7 @@ const FormSection = () => {
       message.error("All fields are required for Seller");
       return false;
     }
-    if (!acceptTerms) {
+    if (!acceptTerms && type !== "Tourist") {
       message.error("You must Accept Terms & Conditions");
       return false;
     }

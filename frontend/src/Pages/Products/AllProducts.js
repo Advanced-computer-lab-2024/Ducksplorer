@@ -44,12 +44,24 @@ function AllProducts() {
             overflowY: "visible",
             padding: "10px",
             marginTop: "20px",
+            gridGap: "40px",
           }}
         >
           {/* Render the filtered products using the ProductCard component */}
           {products.length > 0 ? (
             products.map((product) => (
-              <ProductCard key={product._id} product={product} />
+              <div
+                key={product._id}
+                style={{
+                  position: "relative",
+                  marginBottom: "20px",
+                  height: "60vh",
+                  width: "30vw",
+                  maxHeight: "100%",
+                }}
+              >
+                <ProductCard key={product._id} product={product} />
+              </div>
             ))
           ) : (
             <Typography variant="body1" style={{ marginTop: "20px" }}>
