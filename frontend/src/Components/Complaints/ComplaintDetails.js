@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Typography, Container, Paper, CircularProgress, Box, Divider } from '@mui/material';
 import axios from 'axios';
-import { message } from 'antd';
 
 const ComplaintDetails = () => {
   const { id } = useParams(); // Get the complaint ID from the URL

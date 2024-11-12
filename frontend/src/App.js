@@ -59,9 +59,9 @@ import MyComplaints from "./Components/Complaints/MyComplaints.js";
 
 import FlightsBooking from "./Pages/ThirdParty/FlightsBooking.js";
 import HotelsBooking from "./Pages/ThirdParty/HotelsBooking.js";
-import TouristNavBar from "./Components/TouristNavBar.js";
+//import TouristNavBar from "./Components/TouristNavBar.js";
 import BookingDetails from "./Pages/Bookings/myBookings.js";
-import CheckoutForm from "./Pages/Payment/checkout.js";
+//import CheckoutForm from "./Pages/Payment/checkout.js";
 import Completion from "./Pages/Payment/completion.js";
 import Payment from "./Pages/Payment/payment2.js";
 import PaymentPage from "./Pages/Payment/mailAmount.js";

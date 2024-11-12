@@ -12,7 +12,6 @@ import {
   Rating,
   Tooltip,
   IconButton,
-  Tab,
   Button,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -40,7 +39,7 @@ const BookingDetails = () => {
   const [flightsBookings, setFlightsBookings] = useState([]);
   const [hotelsBookings, setHotelsBookings] = useState([]);
   const [transportationBookings, setTransportationBookings] = useState([]);
-  const [flight, setFlight] = useState(null);
+  //const [flight, setFlight] = useState(null);
   const [loading, setLoading] = useState(true);
   const isGuest = localStorage.getItem("guest") === "true";
   const [tourGuideNames, setTourGuideNames] = useState({});
