@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Link } from "react-router-dom";
 import FileUpload from "../../Components/FileUpload";
 import IconButton from "@mui/material/IconButton";
@@ -31,9 +30,6 @@ const TourGuideEditProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
 
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [nationalIdFiles, setNationalIdFiles] = useState(null);
-  const [certificatesFiles, setCertificatesFiles] = useState(null);
 
   const handlePhotoUpload = async () => {
     const photoFile = document.getElementById("photo").files[0];

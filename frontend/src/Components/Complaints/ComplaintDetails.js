@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Typography, Container, Paper, CircularProgress, Box, Divider } from '@mui/material';
 import axios from 'axios';
-import { message } from 'antd';
 
 const ComplaintDetails = () => {
   const { id } = useParams(); // Get the complaint ID from the URL
@@ -100,11 +99,18 @@ const ComplaintDetails = () => {
         {/* Response */}
         <Box sx={{ mb: 2 }}>
           <Typography variant="h6" color="textPrimary" sx={{ fontWeight: 'bold' }}>
-            Response:
+            Responses:
           </Typography>
-          <Typography variant="body1" color="textSecondary" sx={{ ml: 1 }}>
-            {complaint.response || 'No response yet'}
+          <Typography                     
+            variant="body1"
+            color="textSecondary"
+            sx={{ mt: 1 }}>
           </Typography>
+          {complaint.replies.map((reply, index) => (
+            <Typography key={index} variant="body1" color="textSecondary">
+              <strong>Reply:</strong>  {reply.text}
+            </Typography>
+          ))}
         </Box>
       </Paper>
     </Container>
