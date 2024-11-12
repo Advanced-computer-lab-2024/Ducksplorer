@@ -530,6 +530,9 @@ const payWallet = async (req, res) => {
         const tourist = await Tourist.findOne({ userName });
         const level = tourist.level;
         console.log(tourist);
+        console.log("body",req.body);
+        console.log("wallet",tourist.wallet);
+        console.log("price",price);
         let myWallet = tourist.wallet;
         if (myWallet >= price) {
             myWallet -= price;
