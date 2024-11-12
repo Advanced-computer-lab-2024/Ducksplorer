@@ -11,6 +11,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import ReportIcon from '@mui/icons-material/Report'; // Icon for Complaints
+import LockIcon from '@mui/icons-material/Lock'; // Icon for Change Password
 
 const drawerWidth = 300;
 
@@ -31,11 +32,11 @@ const Sidebar = () => {
         </Typography>
         <Divider />
         <List>
-          <ListItem button component={Link} to="/AdminDashboard">
+          <ListItem button component={Link} to="/changePassword">
             <ListItemIcon>
-              <DashboardIcon />
+              <LockIcon />
             </ListItemIcon>
-            <ListItemText primary="Dashboard" />
+            <ListItemText primary="Change Password" />
           </ListItem>
           <ListItem button component={Link} to="/pendingusers">
             <ListItemIcon>

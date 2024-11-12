@@ -72,6 +72,7 @@ import PastBookingDetails from "./Pages/Bookings/myPastBookings.js";
 import GuestDashboard from "./Pages/Dashboards/GuestDashboard.js";
 
 import TransportationBooking from "./Pages/ThirdParty/TransportationBooking.js";
+import ChangePassword from "./Pages/Admin/ChangePassword.js";
 
 function App() {
   return (
@@ -79,6 +80,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           {/* <Route index element={<Hotels />} /> */}
+          <Route path="/changePassword" element={<ChangePassword/>} />
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signUp" element={<Signup />} />
