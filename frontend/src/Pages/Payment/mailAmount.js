@@ -44,6 +44,8 @@ function PaymentPage() {
     e.preventDefault();
     const amountInCents = price;
     const email = user.email;
+    localStorage.setItem("price", price);
+
     try {
       const response = await fetch("http://localhost:8000/payment/pay", {
         method: "POST",
