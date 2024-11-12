@@ -197,15 +197,18 @@ function PaymentPage() {
         }
       } else if (itineraryOrActivity === "flight") {
         //setFlight(flight);
+        setPrice(flight.price);
         console.log("Flight sada data fetched:", flight); // Debugging
         console.log("FlightData fetched:", flightsData); // Debugging
         console.log("flight price",flightsData.price )
       }
       else if (itineraryOrActivity === 'hotel'&& hotel) {
         //setHotel(hotel);
+        setPrice(hotel.price);
       }
       else if (itineraryOrActivity === 'transportation' && transportation) {
        // setTransportation(transportation);
+       setPrice(transportation.price);
       }
        else {
         message.error("Failed to retrieve details");
