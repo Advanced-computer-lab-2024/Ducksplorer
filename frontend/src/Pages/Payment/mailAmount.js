@@ -257,9 +257,9 @@ function PaymentPage() {
         height: '120vh'
       }}>
         <div>
-          {itineraryData || activityData || flightsData ||
-        hotelsData ||
-        transportationsData ? (
+          {itineraryData || activityData || (flightsData && type === 'flight') ||
+        (hotelsData && type === 'hotel') ||
+        (transportationsData && type === 'transportation') ? (
             type === 'itinerary' ? (
               <div>
                 <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
