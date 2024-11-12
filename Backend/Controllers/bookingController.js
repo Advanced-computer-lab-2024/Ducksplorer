@@ -454,7 +454,6 @@ const updateLevel = async (userName, points) => {
         }
 
         await user.save();
-        await tourist.save();
 
     } catch (error) {
         console.error('Error updating level:', error);
