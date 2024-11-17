@@ -3,7 +3,7 @@ import React from "react";
 import SortActivities from "./sortActivities";
 import { Button } from "@mui/material";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import FilterActivities from "./filterActivities";
 // import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 import Help from "../../Components/HelpIcon";

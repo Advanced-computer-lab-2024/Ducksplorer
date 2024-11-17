@@ -11,12 +11,12 @@ import axios from "axios";
 import { message } from "antd";
 import { Link } from "react-router-dom";
 import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+// import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FileUpload from "../../Components/FileUpload";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Iconify from "../../Components/TopNav/iconify.js";
-import ProfilePictureUpload from "../../Components/pp";
+// import ProfilePictureUpload from "../../Components/pp";
 import DownloadButton from "../../Components/DownloadButton";
 
 const AdvertiserEditProfile = () => {

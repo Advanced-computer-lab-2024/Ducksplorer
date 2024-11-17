@@ -3,7 +3,6 @@ import { Card, CardContent, Typography, Box, Grid } from '@mui/material';
 import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot, TimelineOppositeContent } from '@mui/lab';
 import CurrencyConverterGeneral from './CurrencyConverterGeneral'; 
 import { Button } from '@mui/material';
-import axios from 'axios';
 import { message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 

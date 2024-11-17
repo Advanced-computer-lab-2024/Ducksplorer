@@ -14,7 +14,7 @@ import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Iconify from "../../Components/TopNav/iconify.js";
 import TouristNavBar from "../../Components/TouristNavBar.js";
-import ProfilePictureUpload from "../../Components/pp.js"; // Import ProfilePictureUpload component
+// import ProfilePictureUpload from "../../Components/pp.js"; // Import ProfilePictureUpload component
 import { Link } from "react-router-dom";
 import StandAloneToggleButton from "../../Components/ToggleButton.js";
 import TouristCategoryDropDown from "../../Components/TouristComponents/TouristCategoryDropDown.js";
