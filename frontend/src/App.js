@@ -105,15 +105,15 @@ function App() {
           <Route
             path="/viewUpcomingItinerary"
             element={
-              <ProtectedRoute>
-                <ViewUpcomingItinerary />
+              <ProtectedRoute  allowGuest={true}>
+                <ViewUpcomingItinerary/>
               </ProtectedRoute>
             }
           />
           <Route
             path="/viewAllTourist"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowGuest={true}>
                 <ViewAllTourist />
               </ProtectedRoute>
             }
@@ -153,9 +153,9 @@ function App() {
           <Route
             path="/guestDashboard"
             element={
-              <ProtectedRoute>
-                <GuestDashboard />
-              </ProtectedRoute>
+            <ProtectedRoute allowGuest={true}>
+              <GuestDashboard />
+            </ProtectedRoute>
             }
           />
           <Route
@@ -201,7 +201,7 @@ function App() {
           <Route
             path="/MuseumTouristPov"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute  allowGuest={true}>
                 <MuseumTouristPov />
               </ProtectedRoute>
             }
@@ -209,7 +209,7 @@ function App() {
           <Route
             path="/HistoricalPlaceTouristPov"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute  allowGuest={true}>
                 <HistoricalPlaceTouristPov />
               </ProtectedRoute>
             }
@@ -233,7 +233,7 @@ function App() {
           <Route
             path="/UpcomingHistoricalPlaces"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute  allowGuest={true}>
                 <UpcomingHistoricalPlaces />
               </ProtectedRoute>
             }
@@ -241,7 +241,7 @@ function App() {
           <Route
             path="/UpcomingMuseums"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowGuest={true}>
                 <UpcomingMuseums />
               </ProtectedRoute>
             }
@@ -409,7 +409,7 @@ function App() {
           <Route
             path="/activity/searchActivities"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowGuest={true}>
                 <SearchActivities />
               </ProtectedRoute>
             }
@@ -425,7 +425,7 @@ function App() {
           <Route
             path="/activity/SortFilter"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowGuest={true}>
                 <SortFilterActivity />
               </ProtectedRoute>
             }
@@ -569,8 +569,8 @@ function App() {
           <Route
             path="/TouristAllProducts"
             element={
-              <ProtectedRoute>
-                <TouristAllProducts />
+              <ProtectedRoute allowGuest={true}>
+                <TouristAllProducts/>
               </ProtectedRoute>
             }
           />

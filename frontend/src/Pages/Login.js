@@ -16,6 +16,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  localStorage.setItem("guest", "false");
   const handleContinueAsGuest = () => {
     localStorage.setItem("guest", "true");
     navigate("/guestDashboard"); // Navigate to guest dashboard
