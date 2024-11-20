@@ -41,6 +41,19 @@ function TouristNavBar() {
   //call the getImage in a useEffect
   const userName = JSON.parse(localStorage.getItem("user")).username;
 
+  const handleLogout = () => {
+    handleCloseUserMenu();
+    const response = axios.post("http://localhost:8000/signUp/logout")
+    .then((response) => {
+      console.log(response.data);
+      localStorage.removeItem("user");
+      window.location.href = "/login";
+    })
+    .catch ((error) => {
+      console.error("There was an error logging out!", error);
+    })
+  }
+
   useEffect(() => {
     //const storedPicture = localStorage.getItem('profilePicture');
   
@@ -328,7 +341,7 @@ function TouristNavBar() {
                   </Typography>
                 </IconButton>
               </MenuItem>
-              <MenuItem onClick={handleCloseUserMenu}>
+              <MenuItem onClick={handleLogout}>
                 <IconButton
                   component="a"
                   href="/login"
