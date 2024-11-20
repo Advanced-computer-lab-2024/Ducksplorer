@@ -22,6 +22,7 @@ import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import LockIcon from "@mui/icons-material/Lock";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
@@ -300,7 +301,15 @@ function TouristNavBar() {
               </IconButton>
             </Tooltip>
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
+          <Box sx={{ flexGrow: 0  }}>
+            <Tooltip title="Notifications">
+              <IconButton
+                onClick={() => handleNavigation("notifications")}
+                sx={{ p: 0, ml: 4, width: 40, height: 40 }}
+              >
+                <NotificationsIcon />
+              </IconButton>
+            </Tooltip>
             <Tooltip title="Open Account settings">
               <IconButton
                 onClick={handleOpenUserMenu}
@@ -344,7 +353,6 @@ function TouristNavBar() {
               <MenuItem onClick={handleLogout}>
                 <IconButton
                   component="a"
-                  href="/login"
                   sx={{ textAlign: "center", p: 0.5 }}
                 >
                   <LockIcon sx={{ fontSize: 20, color: "gold" }} />
