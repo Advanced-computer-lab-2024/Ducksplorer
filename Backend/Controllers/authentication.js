@@ -3,7 +3,23 @@ const TourGuide = require("../Models/tourGuideModel.js");
 const Seller = require("../Models/sellerModel.js");
 const Advertiser = require("../Models/advertiserModel");
 const User = require("../Models/userModel.js");
-const path = require('path');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+
+
+const generateToken = (userName, res) => {
+    const token = jwt.sign({userName}, process.env.JWT_SECRET,{
+        expiresIn: '15d'
+    })
+    
+    res.cookie("jwt", token, {
+        maxAge: 15 *24*60*60*1000,
+        httpOnly: true, //prevent XSS attacks
+        sameSite:"strict", // CSRF attack
+        secure: process.env.CURR_ENV === "Develpoment"? false : true
+    })
+}
+
 const signUp = async (req, res) => { //req gai mn el frontend el etmalet wa2t el signup
     try {
         const { email, userName, password, nationalId } = req.body;
@@ -17,13 +33,17 @@ const signUp = async (req, res) => { //req gai mn el frontend el etmalet wa2t el
         if (role === "Guide" || role === "Seller" || role === "Advertiser") {
             status = "Pending";
         }
+        // PASSWORD HASH
+        // const salt = await bcrypt.genSalt(10);
+        // const hashedPassword = await bcrypt.hash(password, salt);
+        const hashedPassword = password;
 
         if (role === "Tourist") {
             const mobileNumber = req.body.mobileNumber;
             const nationality = req.body.nationality;
             const DOB = req.body.DOB;
             const employmentStatus = req.body.employmentStatus;
-            const newTourist = new Tourist({ email, userName, password, mobileNumber, nationality, DOB, employmentStatus });
+            const newTourist = new Tourist({ email, userName, password : hashedPassword, mobileNumber, nationality, DOB, employmentStatus });
             await newTourist.save();
             res.status(201).json(newTourist);
         }
@@ -33,7 +53,7 @@ const signUp = async (req, res) => { //req gai mn el frontend el etmalet wa2t el
             const previousWork = req.body.previousWork;
             const nationalId = req.body.nationalIdUrl;
             const certificates = req.body.certificatesUrl;
-            const newTourGuide = new TourGuide({ email, userName, password, mobileNumber, yearsOfExperience, previousWork, nationalId, certificates });
+            const newTourGuide = new TourGuide({ email, userName, password : hashedPassword, mobileNumber, yearsOfExperience, previousWork, nationalId, certificates });
             await newTourGuide.save();
             res.status(201).json(newTourGuide);
         }
@@ -41,7 +61,7 @@ const signUp = async (req, res) => { //req gai mn el frontend el etmalet wa2t el
             const description = req.body.description;
             const name = req.body.name;
             const uploads = req.body.uploads;
-            const newSeller = new Seller({email, userName, password, name,description ,uploads});
+            const newSeller = new Seller({email, userName, password: hashedPassword, name,description ,uploads});
             await newSeller.save();
             res.status(201).json(newSeller);
         }
@@ -50,11 +70,13 @@ const signUp = async (req, res) => { //req gai mn el frontend el etmalet wa2t el
             const hotline = req.body.hotline;
             const companyProfile = req.body.companyProfile;
             const uploads = req.body.uploads;
-            const newAdvertiser = new Advertiser({email, userName, password,  websiteLink, hotline, companyProfile, uploads});
+            const newAdvertiser = new Advertiser({email, userName, password : hashedPassword,  websiteLink, hotline, companyProfile, uploads});
             await newAdvertiser.save();
             res.status(201).json(newAdvertiser);
         }
-        const newuser = new User({ role, userName, password, status });
+         
+
+        const newuser = new User({ role, userName, password: hashedPassword, status });
         await newuser.save();
 
     } catch (error) {
@@ -67,6 +89,12 @@ const login = async (req, res) => {
         const user = await User.findOne({ userName });
         let tourist;
 
+        //const isPasswordCorrect = await bcrypt.compare(password, user?.password || "")
+
+        // if(!user || !isPasswordCorrect){
+        //     return res.status(400).json({error: "Incorrect UserName or Password"});
+        // }
+
         if (user) {
             if (user.status === "Pending") {
                 return res.status(400).json({ error: "Your Account is not approved yet" });
@@ -78,7 +106,7 @@ const login = async (req, res) => {
                 tourist = await Tourist.findOne({ userName });
             }
 
-
+            generateToken(user.userName, res);
 
             res.status(200).json({
                 _id: user._id,
@@ -98,7 +126,17 @@ const login = async (req, res) => {
 
 }
 
+const logout = (req,res) => {
+    try{
+        res.cookie("jwt","",{maxAge:0});
+        res.status(200).json({message:"Logged Out Successfully"});
+
+    }catch(error){
+        console.log("Error in Logout Controller", error.message)
+        res.status(500).json({error:"Internal Server Error"})
+    }
+}
 
 
 
-module.exports = { signUp, login };
+module.exports = { signUp, login, logout };
