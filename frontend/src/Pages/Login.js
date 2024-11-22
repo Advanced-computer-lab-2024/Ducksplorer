@@ -9,6 +9,7 @@ import Stack from "@mui/material/Stack";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie';
 
 function Login() {
   localStorage.setItem("showPreferences", "false");
@@ -34,6 +35,7 @@ function Login() {
       console.log(response);
       if (response.status === 200) {
         message.success("Logged in successfully");
+        Cookies.set('jwt', response.data.token, { expires: 60/1440 });
         switch (response.data.role) {
           case "Admin":
             window.location.href = "/AdminDashboard";

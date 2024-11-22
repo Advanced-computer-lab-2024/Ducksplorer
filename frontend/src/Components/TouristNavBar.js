@@ -23,7 +23,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-
+import Cookies from 'js-cookie';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
@@ -48,6 +48,7 @@ function TouristNavBar() {
     .then((response) => {
       console.log(response.data);
       localStorage.removeItem("user");
+      Cookies.remove('jwt');
       window.location.href = "/login";
     })
     .catch ((error) => {
