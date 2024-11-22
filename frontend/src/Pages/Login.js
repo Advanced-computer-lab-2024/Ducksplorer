@@ -11,12 +11,13 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
+  localStorage.setItem("showPreferences", "false");
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  localStorage.setItem("guest", "false");
+  //localStorage.setItem("guest", "false");
   const handleContinueAsGuest = () => {
     localStorage.setItem("guest", "true");
     navigate("/guestDashboard"); // Navigate to guest dashboard
