@@ -4,6 +4,43 @@ const ItineraryBooking = require("../Models/itineraryBookingModel.js");
 const ActivityBooking = require("../Models/activityBookingModel.js");
 const { schedule } = require("node-cron");
 const cron = require("node-cron");
+const nodemailer = require("nodemailer");
+const send = require("send");
+
+const transporter = nodemailer.createTransport({
+  service: "gmail", // Or another email service provider
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
+
+const sendEmail = async (to, subject, message) => {
+  try {
+    // Configure the email transporter
+    const transporter = nodemailer.createTransport({
+      service: "Gmail", // You can replace it with another service like SendGrid, etc.
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    // Email options
+    const mailOptions = {
+      from: "ducksplorer@gmail.com", // Sender address
+      to, // Receiver's email address
+      subject, // Email subject
+      text: message, // Email message
+    };
+
+    // Send email
+    await transporter.sendMail(mailOptions);
+    console.log(`Email sent to ${to}`);
+  } catch (error) {
+    console.error(`Failed to send email: ${error.message}`);
+  }
+};
 
 const getTouristDetails = async (req, res) => {
   const { userName } = req.params;
@@ -115,23 +152,76 @@ const deleteMyTouristAccount = async (req, res) => {
   }
 };
 // Scheduler to check birthdays daily
-cron.schedule("0 0 * * *", async () => {
+//cron.schedule("0 0 * * *", async () => {
+const bod = async () => {
   const today = new Date();
-  const todayFormatted = today.toISOString().slice(5, 10); // MM-DD format
-  const tourist = await Tourist.find({ BOD: todayFormatted });
-  const touristMail = tourist.email;
-  const promoCode = tourist.promoCode;
+  const todayMonth = today.getMonth() + 1; // Months are zero-based
+  const todayDay = today.getDate(); // Get today's day
+
   try {
-    if (tourist) {
-      if (updatedActivity.flag) {
-        const emailMessage = ` 🎉 Happy Birthday ya sa7by! 5od el promo dah le 2agl 3eyoonak dol: ${promoCode} 🎉`;
-        await sendEmail(touristMail, "Birthday Promo Code", emailMessage);
+    // Find all tourists and filter by today's month and day
+    const tourists = await Tourist.find().lean(); // Get all tourists as plain objects for easier manipulation
+    const birthdayTourists = tourists.filter((tourist) => {
+      const bodDate = new Date(tourist.DOB);
+      const bodMonth = bodDate.getMonth() + 1;
+      const bodDay = bodDate.getDate();
+      return bodMonth === todayMonth && bodDay === todayDay;
+    });
+
+    if (!birthdayTourists || birthdayTourists.length === 0) {
+      return { status: "success", message: "No birthdays today!", data: [] };
+    }
+
+    const responses = [];
+
+    // Loop through each birthday tourist and send them an email
+    for (const tourist of birthdayTourists) {
+      const promoCode = `PROMO-${Math.random()
+        .toString(36)
+        .substr(2, 9)
+        .toUpperCase()}`; // Generate promo code
+      const emailMessage = `🎉 Happy Birthday ya sa7by! 5od el promo dah le 2agl 3eyoonak dol: ${promoCode} 🎉`;
+
+      try {
+        // Send the email
+        await sendEmail(tourist.email, "Birthday Promo Code", emailMessage);
+
+        // Optionally, save the promo code to the tourist's document in the database
+        await Tourist.updateOne(
+          { _id: tourist._id },
+          { $set: { promoCode: promoCode } }
+        );
+
+        responses.push({
+          email: tourist.email,
+          promoCode: promoCode,
+          status: "success",
+          message: `Promo code sent to ${tourist.email}`,
+        });
+      } catch (emailError) {
+        responses.push({
+          email: tourist.email,
+          promoCode: null,
+          status: "error",
+          message: `Failed to send promo code to ${tourist.email}: ${emailError.message}`,
+        });
       }
     }
+
+    return {
+      status: "success",
+      message: "Birthday promo emails processed.",
+      data: responses,
+    };
   } catch (error) {
-    console.error(error);
+    return {
+      status: "error",
+      message: `An error occurred: ${error.message}`,
+      data: [],
+    };
   }
-});
+};
+
 module.exports = {
   getTouristDetails,
   updateTouristDetails,
@@ -139,4 +229,5 @@ module.exports = {
   getFavoriteCategory,
   deleteMyTouristAccount,
   schedule,
+  bod,
 };

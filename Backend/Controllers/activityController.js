@@ -2,9 +2,6 @@ const Activity = require("../Models/activityModel.js");
 const activityService = require("../Services/activityServices.js");
 const Tags = require("../Models/preferenceTagsModels.js");
 const Category = require("../Models/activityCategory.js");
-const cron = require("node-cron");
-const Booking = require("./models/bookingModel");
-const sendEmail = require("./utils/sendEmail");
 
 const createActivity = async (req, res) => {
   try {
@@ -213,49 +210,6 @@ const filterActivity = async (req, res) => {
   }
 };
 
-const notifyUpcomingEvents = async () => {
-  try {
-    // Get the current date and time
-    const now = new Date();
-
-    // Get the date two days from now
-    const twoDaysFromNow = new Date();
-    twoDaysFromNow.setDate(now.getDate() + 2);
-
-    // Query for bookings with activity dates within the next two days and not yet notified
-    const bookings = await Booking.find({
-      "activities.date": {
-        $gte: now,
-        $lte: twoDaysFromNow,
-      },
-      notificationSent: false,
-    });
-
-    // Send notifications
-    for (const booking of bookings) {
-      const { user, activities } = booking;
-      const userEmail = user.email; // Assume the user object includes an email
-
-      for (const activity of activities) {
-        // Send an email for each activity
-        await sendEmail(
-          userEmail,
-          "Upcoming Event Reminder",
-          `Reminder: You have an upcoming event "${activity.name}" on ${activity.date}.`
-        );
-      }
-
-      // Mark notification as sent
-      booking.notificationSent = true;
-      await booking.save();
-    }
-  } catch (error) {
-    console.error("Error in notifying upcoming events:", error);
-  }
-};
-
-// Schedule the job to run daily
-cron.schedule("0 8 * * *", notifyUpcomingEvents); // Runs every day at 8:00 AM
 
 const sortActivities = async (req, res) => {
   const { sortBy, order } = req.query;

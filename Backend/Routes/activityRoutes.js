@@ -21,4 +21,5 @@ router.route("/rate/:bookingId").patch(activity.rateActivity);
 router.route("/toggleFlagActivity/:id").put(toggleFlagActivity);
 router.route("/commentActivity/:bookingId").patch(commentActivity);
 
+
 module.exports = router;
