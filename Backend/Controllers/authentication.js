@@ -112,7 +112,8 @@ const login = async (req, res) => {
                 _id: user._id,
                 username: user.userName,
                 role: user.role,
-                email: user.role === "Tourist" ? tourist.email : " "
+                email: user.role === "Tourist" ? tourist.email : " ",
+                token: jwt.sign({ userName: user.userName }, process.env.JWT_SECRET, { expiresIn: '15d' })
             })
         }
         else {
