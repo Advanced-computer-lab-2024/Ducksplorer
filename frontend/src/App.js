@@ -76,6 +76,9 @@ import ChangePassword from "./Pages/Admin/ChangePassword.js";
 import { useAuthContext } from "./context/AuthContext.js";
 import ProtectedRoute from "./Components/ProtectedRoute"; // Import the ProtectedRoute component
 
+
+import CreatePromoCode from "./Pages/Admin/CreatePromoCode.js";
+
 function App() {
   const { authUser } = useAuthContext();
   return (
@@ -638,6 +641,8 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route path="/addPromoCode" element={<CreatePromoCode/>} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

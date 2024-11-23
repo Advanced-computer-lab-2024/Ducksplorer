@@ -12,6 +12,7 @@ import EventNoteIcon from '@mui/icons-material/EventNote';
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import ReportIcon from '@mui/icons-material/Report'; // Icon for Complaints
 import LockIcon from '@mui/icons-material/Lock'; // Icon for Change Password
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 
 const drawerWidth = 300;
 
@@ -102,6 +103,13 @@ const Sidebar = () => {
             <EventNoteIcon />
             </ListItemIcon>
             <ListItemText primary="View All Itineraries " />
+          </ListItem>
+
+          <ListItem button component={Link} to="/addPromoCode">
+            <ListItemIcon>
+              <LocalOfferIcon />
+            </ListItemIcon>
+            <ListItemText primary="Create Promo Code" />
           </ListItem>
 
         </List>
