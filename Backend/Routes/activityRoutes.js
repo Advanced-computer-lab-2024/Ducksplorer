@@ -2,12 +2,13 @@ const express = require("express");
 const activity = require("../Controllers/Activity/activityController.js");
 const { toggleFlagActivity } = require('../Controllers/Activity/activityController');
 const { commentActivity } = require('../Controllers/Activity/activityCommentController');
-const { viewMyActivities} = require('../Controllers/Reports/advertiserReport.js');
+const { viewMyActivities, filterMyActivities } = require('../Controllers/Reports/advertiserReport.js');
 
 const router = express.Router();
 
 router.route("/").post(activity.createActivity).get(activity.searchActivities);
 router.route("/filter").get(activity.filterActivity);
+router.route("/filterReport").get(filterMyActivities);
 router.route("/sort").get(activity.sortActivities);
 router.route("/upcoming").get(activity.viewUpcomingActivities);
 router.delete("/deletePast", activity.deletePastActivities);

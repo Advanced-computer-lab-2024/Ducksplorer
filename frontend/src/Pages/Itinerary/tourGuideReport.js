@@ -210,7 +210,7 @@ const ItineraryReport = () => {
                                     </TableCell>
 
                                     <TableCell>
-                                        {itinerary.isDeactivated ? 'Activate' : 'Deactivate'}
+                                        {itinerary.isDeactivated ? 'Activated' : 'Deactivated'}
                                     </TableCell>
                                     <TableCell>{itinerary.bookedCount}</TableCell>
                                     <TableCell>

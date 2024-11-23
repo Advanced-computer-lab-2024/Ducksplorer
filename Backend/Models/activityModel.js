@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const Tags = require("./preferenceTagsModels")
-const ActivityBooking = require("./activityBookingModel")
 
 const activitySchema = new Schema(
   {
