@@ -41,7 +41,7 @@ const ProductCard = ({
   const [rating, setRating] = useState(product.rating || 0);
   const [review, setReview] = useState("");
   const [showReviewBox, setShowReviewBox] = useState(false);
-
+  const [showWishlist, setShowWishlist] = useState(false);
   const getReviewerRating = (reviewer) => {
     const ratingEntry = product.ratings.find(
       (rating) => rating.buyer === reviewer
@@ -122,6 +122,29 @@ const ProductCard = ({
     }
   };
 
+  const addToWishlist = async (product) => {
+    const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
+    const user = JSON.parse(userJson);
+    const userName = user.username;
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/touristRoutes/updateWishlist/${userName}`,
+        {
+          products: [product],
+        }
+      );
+      if (response.status === 200) {
+        message.success("Product added to wishlist successfully!");
+        setShowWishlist(false);
+
+      } else {
+        message.error("Failed to add the product to the wishlist.");
+      }
+    } catch (error) {
+      message.error("An error occurred while adding the product to the wishlist.");
+    }
+
+  }
   const handlePurchase = async (product) => {
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
     const user = JSON.parse(userJson);
@@ -306,6 +329,18 @@ const ProductCard = ({
               Purchase
             </Button>
           )}
+          <div>
+          {role === "Tourist" && showPurchase && (
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ position: "relative", left: "75%" ,bottom: "100%"}} // Place the button at the bottom-right corner
+              onClick={() => addToWishlist(product)}
+            >
+              {showWishlist ? "remove from wishlist" : "Add to Wishlist"}
+            </Button>
+          )}
+          </div>
         </CardContent>
       </div>
     </Card>

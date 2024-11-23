@@ -70,7 +70,7 @@ import ViewAllItineraries from "./Pages/Admin/ViewAllItineraries.js";
 import ViewAllActivities from "./Pages/Admin/ViewAllActivities.js";
 import PastBookingDetails from "./Pages/Bookings/myPastBookings.js";
 import GuestDashboard from "./Pages/Dashboards/GuestDashboard.js";
-
+import Wishlist from "./Pages/Wishlist.js";
 import TransportationBooking from "./Pages/ThirdParty/TransportationBooking.js";
 import ChangePassword from "./Pages/Admin/ChangePassword.js";
 
@@ -143,7 +143,7 @@ function App() {
           <Route path="/admin/complaints/:id" element={<ComplaintDetails />} />
           <Route path="/myComplaints" element={<MyComplaints />} />
           <Route path="/touristProducts" element={<TouristProducts />} />
-
+          <Route path="/Wishlist" element={<Wishlist />} />
           <Route
             path="/advertiserDashboard"
             element={<AdvertiserDashboard />}

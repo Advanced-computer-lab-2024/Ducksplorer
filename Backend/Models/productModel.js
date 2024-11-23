@@ -2,6 +2,7 @@ const { urlencoded } = require("body-parser");
 const Seller = require("../Models/sellerModel");
 const User = require("../Models/userModel");
 const mongoose = require("mongoose");
+const Wishlist = require("./wishlistModel");
 
 // const reviewSchema = new mongoose.Schema({
 //   user: {
@@ -69,7 +70,11 @@ const productSchema = new mongoose.Schema({
       },
     ],
     default: [],
-  }
+  },
+  // wishlist: {
+  //   type: Boolean,
+  //   default: false,
+  // },
 });
 
 const Product = mongoose.model("Product", productSchema);

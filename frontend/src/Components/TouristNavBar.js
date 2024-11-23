@@ -22,6 +22,7 @@ import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import LockIcon from "@mui/icons-material/Lock";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
@@ -283,6 +284,14 @@ function TouristNavBar() {
                 <BookmarkAddedIcon />
                 <Typography textAlign="center" marginRight={1}>
                   My Bookings
+                </Typography>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="View My Wishlist">
+              <IconButton onClick={() => handleNavigation("wishlist")}>
+                <FavoriteBorderIcon />
+                <Typography textAlign="center" marginRight={1}>
+                  Wishlist
                 </Typography>
               </IconButton>
             </Tooltip>
