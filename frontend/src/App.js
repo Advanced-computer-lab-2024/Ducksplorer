@@ -74,13 +74,15 @@ import GuestDashboard from "./Pages/Dashboards/GuestDashboard.js";
 import TransportationBooking from "./Pages/ThirdParty/TransportationBooking.js";
 import ChangePassword from "./Pages/Admin/ChangePassword.js";
 
+import TourGuideItineraryReport from "./Pages/Itinerary/tourGuideReport.js"
+
 function App() {
   return (
     <React.StrictMode>
       <BrowserRouter>
         <Routes>
           {/* <Route index element={<Hotels />} /> */}
-          <Route path="/changePassword" element={<ChangePassword/>} />
+          <Route path="/changePassword" element={<ChangePassword />} />
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signUp" element={<Signup />} />
@@ -90,6 +92,7 @@ function App() {
             path="/viewUpcomingItinerary"
             element={<ViewUpcomingItinerary />}
           />
+          <Route path="/report" element={<TourGuideItineraryReport />} />
           <Route path="/viewAllTourist" element={<ViewAllTourist />} />
           <Route path="/viewAllTourist/:id" element={<ViewAllTourist />} />
           <Route path="/tourGuideDashboard" element={<TourGuideDashboard />} />
@@ -151,6 +154,7 @@ function App() {
           <Route path="/activity/addActivity" element={<AddActivity />} />
           <Route path="/activity/rudActivity" element={<RUDActivity />} />
           <Route path="/activity/upcoming" element={<UpcomingActivities />} />
+
           <Route
             path="/activity/searchActivities"
             element={<SearchActivities />}

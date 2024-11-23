@@ -28,6 +28,9 @@ const RUDItinerary = () => {
 
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState('EGP');
+  const [activityExchangeRates, setActivityExchangeRates] = useState({});
+  const [activityCurrency, setActivityCurrency] = useState('EGP');
+
   const [formData, setFormData] = useState({
     activity: {
       name: '',
@@ -64,6 +67,11 @@ const RUDItinerary = () => {
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
+  };
+
+  const handleActivityCurrencyChange = (rates, selectedCurrency) => {
+    setActivityExchangeRates(rates);
+    setActivityCurrency(selectedCurrency);
   };
 
   //updates general input fields based on user input
@@ -357,7 +365,9 @@ const RUDItinerary = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Activities</TableCell>
+                <TableCell>Activities
+                  <CurrencyConvertor onCurrencyChange={handleActivityCurrencyChange} />
+                </TableCell>
                 <TableCell>Locations</TableCell>
                 <TableCell>Timeline</TableCell>
                 <TableCell>Language</TableCell>
@@ -376,13 +386,14 @@ const RUDItinerary = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {itineraries.map(itinerary => itinerary.deletedItinerary=== false ? (
+              {itineraries.map(itinerary => itinerary.deletedItinerary === false ? (
                 <TableRow key={itinerary._id}>
                   <TableCell>
                     {itinerary.activity && itinerary.activity.length > 0
                       ? itinerary.activity.map((activity, index) => (
                         <div key={index}>
-                          {activity.name || 'N/A'} - Price: {activity.price !== undefined ? activity.price : 'N/A'},<br />
+                          {activity.name || 'N/A'} -
+                          Price: {(activity.price * (activityExchangeRates[activityCurrency] || 1)).toFixed(2)} {activityCurrency},<br />
                           Location: {activity.location || 'N/A'},<br />
                           Category: {activity.category || 'N/A'}
                           <br /><br /> {/* Adds an extra line break between activities */}
@@ -485,7 +496,7 @@ const RUDItinerary = () => {
                     </Tooltip>
                   </TableCell>
                 </TableRow>
-              ):null) //We don't output a row when the itinerary has been deleted but cannot be removed from the database since it is booked by previous tourists
+              ) : null) //We don't output a row when the itinerary has been deleted but cannot be removed from the database since it is booked by previous tourists
               }
             </TableBody>
           </Table>

@@ -13,6 +13,7 @@ import {
   DialogTitle,
   Button
 } from '@mui/material';
+import SummarizeIcon from '@mui/icons-material/Summarize';
 import { Link, useNavigate } from 'react-router-dom';
 // import DashboardIcon from '@mui/icons-material/Dashboard';
 // import PeopleIcon from '@mui/icons-material/People';
@@ -30,10 +31,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 const drawerWidth = 300;
 
-const TouristSidebar = () => {
+const TourGuideSidebar = () => {
   const [open, setOpen] = useState(false); // State for the dialog
   const [userName, setUserName] = useState('');
   const navigate = useNavigate(); // Initialize the useNavigate hook
+
+  const user = JSON.parse(localStorage.getItem('user')); // Fetch user from localStorage
+  const userId = user ? user._id : null; // Safely extract the ID
 
   const handleDeleteClick = () => {
     const userJson = localStorage.getItem('user');
@@ -108,11 +112,17 @@ const TouristSidebar = () => {
             <ListItemText primary="Create a new Itinerary" />
           </ListItem>
 
+          {/* <ListItem button component={Link} to="/report">
+            <ListItemIcon>
+              <SummarizeIcon />
+            </ListItemIcon>
+            <ListItemText primary="Report" />
+          </ListItem> */}
+
         </List>
         <Divider />
       </div>
 
-      {/* Confirmation Dialog */}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
@@ -135,4 +145,4 @@ const TouristSidebar = () => {
   );
 };
 
-export default TouristSidebar;
+export default TourGuideSidebar;
