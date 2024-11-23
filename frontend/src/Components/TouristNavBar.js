@@ -26,11 +26,13 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import Cookies from 'js-cookie';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+import { Badge } from "@mui/material";
 
 function TouristNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [image, setImage] = React.useState("");
+  const [notificationsLength, setNotificationsLength] = React.useState([]);
   const [storedPicture, setStoredPicture] = React.useState(localStorage.getItem('profilePicture'));
   const navigate = useNavigate();
   const handleOpenNavMenu = (event) => {
@@ -41,6 +43,22 @@ function TouristNavBar() {
   };
   //call the getImage in a useEffect
   const userName = JSON.parse(localStorage.getItem("user")).username;
+
+//get the notifications length periodically
+  useEffect(() => {
+    const interval = setInterval(() => {
+      axios.get(`http://localhost:8000/notification/getNotifications/${userName}`)
+      .then((response) => {
+        console.log(response.data);
+        setNotificationsLength(response.data.length);
+      })
+      .catch ((error) => {
+        console.error("There was an error fetching the notifications!", error);
+      });
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
 
   const handleLogout = () => {
     handleCloseUserMenu();
@@ -76,6 +94,8 @@ function TouristNavBar() {
         console.error("There was an error fetching the image!", error);
       });
     }, [userName]);
+
+
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
@@ -303,14 +323,16 @@ function TouristNavBar() {
             </Tooltip>
           </Box>
           <Box sx={{ flexGrow: 0  }}>
-            <Tooltip title="Notifications">
+          <Tooltip title="Notifications">
               <IconButton
                 onClick={() => handleNavigation("notifications")}
                 sx={{ p: 0, ml: 4, width: 40, height: 40 }}
               >
-                <NotificationsIcon />
+                <Badge badgeContent={notificationsLength} color="error">
+                  <NotificationsIcon />
+                </Badge>
               </IconButton>
-            </Tooltip>
+          </Tooltip>
             <Tooltip title="Open Account settings">
               <IconButton
                 onClick={handleOpenUserMenu}

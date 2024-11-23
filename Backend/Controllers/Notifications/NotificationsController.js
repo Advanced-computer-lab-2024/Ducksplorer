@@ -3,7 +3,7 @@ const Notifications = require('../../Models/Notifications.js');
 //get all unseen notifications for a certain user
 const getNotifications = async (req, res) => {
     try{
-        const user = req.body.user;
+        const user = req.params.user;
         if(!user){
             return res.status(400).json({err: "User not found"});
         }
@@ -33,4 +33,47 @@ const markAsSeen = async (req, res) => {
     }
 }
 
-module.exports = {getNotifications, markAsSeen};
+//create a new notification
+const createNotification = async (message, user) => {
+    try{
+        if(!message || !user){
+            return;
+        }
+        const notification = new Notifications({
+            message: message,
+            user: user,
+            seen: false,
+            date: new Date()
+        });
+        await notification.save();
+    }catch(err){
+        console.log(err);
+    }
+}
+
+//get all notifications for all users
+const getAllNotifications = async (req, res) => {
+    try{
+        const notifications = await Notifications.find();
+        res.status(200).json(notifications);
+    }catch(err){
+        res.status(400).json({err: err.message});
+    }
+}
+
+//Add notification to a certain user for testing purposes
+const testNotification = async (req, res) => {
+    try{
+        const message = req.body.message;
+        const user = req.body.user;
+        if(!message || !user){
+            return res.status(400).json({err: "Message or user not found"});
+        }
+        await createNotification(message, user);
+        res.status(200).json({message: "Notification added"});
+    }catch(err){
+        res.status(400).json({err: err.message});
+    }
+}
+
+module.exports = {getNotifications, markAsSeen, createNotification, getAllNotifications ,testNotification};

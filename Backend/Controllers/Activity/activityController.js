@@ -9,6 +9,7 @@ const User = require("../../Models/userModel.js");
 const Advertiser = require("../../Models/advertiserModel.js");
 const send = require("send");
 const nodemailer = require("nodemailer");
+const { createNotification } = require("../Notifications/NotificationsController.js");
 
 const sendEmail = async (to, subject, message) => {
   try {
@@ -416,6 +417,13 @@ const toggleFlagActivity = async (req, res) => {
     // Send email to the advertiser if flagged as inappropriate
     if (updatedActivity.flag) {
       const emailMessage = `Your activity titled "${activity.name}" has been flagged as inappropriate.`;
+
+      // Create a notification for the advertiser on site
+      await createNotification(
+        `Your activity titled "${activity.name}" has been flagged as inappropriate.`,
+        advertiser.userName
+      );
+
       await sendEmail(
         advertiser.email,
         "Activity Flagged as Inappropriate",
