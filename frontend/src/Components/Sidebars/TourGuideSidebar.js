@@ -112,12 +112,12 @@ const TourGuideSidebar = () => {
             <ListItemText primary="Create a new Itinerary" />
           </ListItem>
 
-          {/* <ListItem button component={Link} to="/report">
+          <ListItem button component={Link} to="/tourGuideReport">
             <ListItemIcon>
               <SummarizeIcon />
             </ListItemIcon>
             <ListItemText primary="Report" />
-          </ListItem> */}
+          </ListItem>
 
         </List>
         <Divider />

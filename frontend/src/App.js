@@ -75,6 +75,7 @@ import TransportationBooking from "./Pages/ThirdParty/TransportationBooking.js";
 import ChangePassword from "./Pages/Admin/ChangePassword.js";
 
 import TourGuideItineraryReport from "./Pages/Itinerary/tourGuideReport.js"
+import AdvertiserActivityReport from "./Pages/Activities/advertiserReport.js"
 
 function App() {
   return (
@@ -92,7 +93,7 @@ function App() {
             path="/viewUpcomingItinerary"
             element={<ViewUpcomingItinerary />}
           />
-          <Route path="/report" element={<TourGuideItineraryReport />} />
+          <Route path="/tourGuideReport" element={<TourGuideItineraryReport />} />
           <Route path="/viewAllTourist" element={<ViewAllTourist />} />
           <Route path="/viewAllTourist/:id" element={<ViewAllTourist />} />
           <Route path="/tourGuideDashboard" element={<TourGuideDashboard />} />
@@ -140,6 +141,7 @@ function App() {
           <Route path="/categoriesActions" element={<CategoriesActions />} />
           <Route path="/viewAllItineraries" element={<ViewAllItineraries />} />
           <Route path="/viewAllActivities" element={<ViewAllActivities />} />
+          <Route path="/advertiserReport" element={<AdvertiserActivityReport />} />
           <Route path="/preferenceTags" element={<PreferenceTags />} />
           <Route path="/admin/complaints" element={<ComplaintsDashboard />} />
           <Route path="/admin/complaints" element={<ComplaintsDashboard />} />

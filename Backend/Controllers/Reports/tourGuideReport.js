@@ -6,8 +6,10 @@ const viewMyItineraries = async (req, res) => {
     const { tourGuideName } = req.params;
     try {
 
-        const tourGuideId = await TourGuide.findOne({ userName: tourGuideName });
+        const tourGuide = await TourGuide.findOne({ userName: tourGuideName });
 
+        const tourGuideId = tourGuide._id;
+        
         if (!mongoose.Types.ObjectId.isValid(tourGuideId)) {
             return res.status(400).json({ error: "ID invalid" });
         }
