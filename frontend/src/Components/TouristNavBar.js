@@ -33,6 +33,7 @@ function TouristNavBar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [image, setImage] = React.useState("");
   const [notificationsLength, setNotificationsLength] = React.useState([]);
+  const [notifications, setNotifications] = React.useState([]);
   const [storedPicture, setStoredPicture] = React.useState(localStorage.getItem('profilePicture'));
   const navigate = useNavigate();
   const handleOpenNavMenu = (event) => {
@@ -51,6 +52,7 @@ function TouristNavBar() {
       .then((response) => {
         console.log(response.data);
         setNotificationsLength(response.data.length);
+        setNotifications(response.data);
       })
       .catch ((error) => {
         console.error("There was an error fetching the notifications!", error);
