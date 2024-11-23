@@ -74,6 +74,9 @@ import GuestDashboard from "./Pages/Dashboards/GuestDashboard.js";
 import TransportationBooking from "./Pages/ThirdParty/TransportationBooking.js";
 import ChangePassword from "./Pages/Admin/ChangePassword.js";
 
+
+import CreatePromoCode from "./Pages/Admin/CreatePromoCode.js";
+
 function App() {
   return (
     <React.StrictMode>
@@ -191,6 +194,9 @@ function App() {
           <Route path="/transportation" element={<TransportationBooking />} />
           <Route path="/hotels" element={<HotelsBooking />} />
           <Route path="/myPurchases" element={<MyPurchases />} />
+
+
+          <Route path="/addPromoCode" element={<CreatePromoCode/>} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>
