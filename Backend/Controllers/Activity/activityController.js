@@ -4,6 +4,38 @@ const Tags = require("../../Models/preferenceTagsModels.js");
 const Category = require("../../Models/activityCategory.js");
 const mongoose = require("mongoose");
 const ActivityBooking = require("../../Models/activityBookingModel.js");
+const ItineraryBooking = require("../../Models/itineraryBookingModel.js");
+const User = require("../../Models/userModel.js");
+const Advertiser = require("../../Models/advertiserModel.js");
+const send = require("send");
+const nodemailer = require("nodemailer");
+
+const sendEmail = async (to, subject, message) => {
+  try {
+    // Configure the email transporter
+    const transporter = nodemailer.createTransport({
+      service: "Gmail", // You can replace it with another service like SendGrid, etc.
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    // Email options
+    const mailOptions = {
+      from: "Ducksplorer@gmail.com", // Sender address
+      to, // Receiver's email address
+      subject, // Email subject
+      text: message, // Email message
+    };
+
+    // Send email
+    await transporter.sendMail(mailOptions);
+    console.log(`Email sent to ${to}`);
+  } catch (error) {
+    console.error(`Failed to send email: ${error.message}`);
+  }
+};
 
 const createActivity = async (req, res) => {
   try {
@@ -359,6 +391,15 @@ const toggleFlagActivity = async (req, res) => {
     }
 
     const activity = await Activity.findById(id);
+    const activityAdvertiser = activity.advertiser;
+
+    if (!activityAdvertiser) {
+      return res.status(404).json({ error: "Tour guide not found" });
+    }
+
+    const advertiser = await Advertiser.findOne({
+      userName: activityAdvertiser,
+    });
 
     if (!activity) {
       return res.status(404).json({ error: "Activity not found" });
@@ -372,9 +413,20 @@ const toggleFlagActivity = async (req, res) => {
     // Save the updated activity because it is not just changed in memory not on server
     const updatedActivity = await activity.save();
 
+    // Send email to the advertiser if flagged as inappropriate
+    if (updatedActivity.flag) {
+      const emailMessage = `Your activity titled "${activity.name}" has been flagged as inappropriate.`;
+      await sendEmail(
+        advertiser.email,
+        "Activity Flagged as Inappropriate",
+        emailMessage
+      );
+    }
+
     res.status(200).json({
       status: 200,
       activity: updatedActivity,
+      advetiserMail: advertiser.email,
       message: `Activity flagged as ${
         updatedActivity.flag ? "inappropriate" : "appropriate"
       }`,
@@ -383,6 +435,14 @@ const toggleFlagActivity = async (req, res) => {
     res.status(400).json({ error: error.message + "error in toggleFlag" });
   }
 };
+
+// const notiFlaginAppropriate = async (req, res) =>{
+//   const {itemId, type, userName, } = req.body;
+//   try{
+//     userBookings = await ItineraryBooking.find(userName);
+
+//   }
+// };
 
 const deletePastActivities = async (req, res) => {
   try {
