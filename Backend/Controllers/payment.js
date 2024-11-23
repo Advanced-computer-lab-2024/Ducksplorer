@@ -1,11 +1,15 @@
 const express = require("express");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const cron = require("node-cron");
 
 const nodemailer = require("nodemailer");
 const Activity = require("../Models/activityModel");
 const Itinerary = require("../Models/itineraryModel");
 const Product = require("../Models/productModel");
+const ActivityBooking = require("../Models/activityBookingModel");
+const ItineraryBooking = require("../Models/itineraryBookingModel");
 const send = require("send");
+const Tourist = require("../Models/touristModel");
 
 // Temporary store for OTPs
 const OTPStore = {};
@@ -32,7 +36,7 @@ const sendEmail = async (to, subject, message) => {
 
     // Email options
     const mailOptions = {
-      from: "your-email@example.com", // Sender address
+      from: "ducksplorer@gmail.com", // Sender address
       to, // Receiver's email address
       subject, // Email subject
       text: message, // Email message
@@ -45,6 +49,74 @@ const sendEmail = async (to, subject, message) => {
     console.error(`Failed to send email: ${error.message}`);
   }
 };
+
+const notifyUpcomingActivities = async (req, res) => {
+  try {
+    // Extract the user parameter
+    const { user } = req.params; // Assuming req.params.user contains the user string
+    if (!user) {
+      return res.status(400).json({ error: "User parameter is missing." });
+    }
+    console.log("user:", user);
+
+    // Get the current date and time
+    const now = new Date();
+    console.log("Current Date:", now);
+
+    // Get the date two days from now
+    const twoDaysFromNow = new Date();
+    twoDaysFromNow.setDate(now.getDate() + 2);
+    console.log("Date two days from now:", twoDaysFromNow);
+
+    // Query for bookings with activity dates within the next two days and not yet notified
+    const bookings = await ActivityBooking.find({
+      user: user, // Pass user directly as a string
+      chosenDate: {
+        $gte: now,
+        $lte: twoDaysFromNow,
+      },
+      notificationSent: false,
+    });
+    console.log(bookings);
+
+    // Send notifications
+    for (const booking of bookings) {
+      const { activities } = booking;
+      //console.log(activities);
+      // Fetch the user's email
+      const userData = await Tourist.findOne({ userName: user });
+      if (!userData) {
+        console.error(`No user found with userName: ${user}`);
+        continue;
+      }
+      //console.log(userData);
+
+      const userEmail = userData.email; // Ensure userData.email exists
+      for (const activity of activities) {
+        // Send an email for each activity
+        await sendEmail(
+          userEmail,
+          "Upcoming Event Reminder",
+          `Reminder: You have an upcoming event "${activity.name}" on ${activity.date}.`
+        );
+      }
+
+      // Mark notification as sent
+      booking.notificationSent = true;
+      await booking.save();
+    }
+
+    res.status(200).json({ message: "Notifications sent successfully." });
+  } catch (error) {
+    console.error("Error in notifying upcoming events:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while sending notifications." });
+  }
+};
+
+// Schedule the job to run daily
+cron.schedule("39 18 * * *", notifyUpcomingActivities); // Runs every day at 8:00 AM
 
 const createPayment = async (req, res) => {
   //const itemId = req.params;
@@ -227,4 +299,5 @@ module.exports = {
   sendConfirmation,
   getConfig,
   createPaymentIntent,
+  notifyUpcomingActivities,
 };
