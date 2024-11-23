@@ -2,6 +2,7 @@ const express = require("express");
 const activity = require("../Controllers/Activity/activityController.js");
 const { toggleFlagActivity } = require('../Controllers/Activity/activityController');
 const { commentActivity } = require('../Controllers/Activity/activityCommentController');
+const { touristSaveActivity } = require('../Controllers/Activity/activitySaveController.js');
 
 const router = express.Router();
 
@@ -20,5 +21,7 @@ router.post("/:activityId", activity.rateActivity);
 router.route("/rate/:bookingId").patch(activity.rateActivity);
 router.route("/toggleFlagActivity/:id").put(toggleFlagActivity);
 router.route("/commentActivity/:bookingId").patch(commentActivity);
+router.route("/save/:id").put(touristSaveActivity);
+
 
 module.exports = router;

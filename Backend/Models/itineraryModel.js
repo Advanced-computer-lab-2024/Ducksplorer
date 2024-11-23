@@ -110,6 +110,10 @@ const itinerarySchema = new Schema({
       default:false,
       required: false,
     },
+    saved: {
+        user: {type: String, required: false, default: null},
+        isSaved: {type: Boolean, required: false, default: false}
+    }
 }, { timestamps: true }); // Moved `timestamps` to schema options here
 
 const Itinerary = mongoose.model("Itinerary", itinerarySchema);
