@@ -93,7 +93,7 @@ const ItineraryReport = () => {
             <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'visible', height: '100vh' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
                     <Typography variant="h4">
-                        Tour Guide Report
+                        Sales Tour Guide Report
                     </Typography>
                 </Box>
 

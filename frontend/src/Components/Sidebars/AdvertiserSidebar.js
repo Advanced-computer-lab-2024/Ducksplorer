@@ -114,7 +114,7 @@ const AdvertiserSidebar = () => {
             <ListItemIcon>
               <SummarizeIcon />
             </ListItemIcon>
-            <ListItemText primary="Report" />
+            <ListItemText primary="Sales Report" />
           </ListItem>
 
         </List>

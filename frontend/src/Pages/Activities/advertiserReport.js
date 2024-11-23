@@ -1,5 +1,5 @@
 ////This is the page that gets called for the advertiser to see HIS activities ONLY 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { calculateAverageRating } from "../../Utilities/averageRating.js";
 import WarningIcon from '@mui/icons-material/Warning';
@@ -70,7 +70,7 @@ const ActivityReport = () => {
                     }}
                 >
                     <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-                        <Typography variant="h4">Advertiser Report</Typography>
+                        <Typography variant="h4">Sales Advertiser Report</Typography>
                     </Box>
                     <TableContainer style={{ borderRadius: 20 }} component={Paper}>
                         <Table>

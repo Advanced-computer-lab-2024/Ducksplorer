@@ -107,7 +107,7 @@ const SellerSidebar = () => {
             <ListItemIcon>
               <SummarizeIcon />
             </ListItemIcon>
-            <ListItemText primary="Seller Report" />
+            <ListItemText primary="Sales Report" />
           </ListItem>
 
         </List>
