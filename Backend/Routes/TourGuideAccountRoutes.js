@@ -14,5 +14,4 @@ router.post('/removeFileUrl', removeFileUrl);
 
 router.delete("/deleteMyTourGuideAccount/:userName", deleteMyTourGuideAccount);
 
-
 module.exports = router;

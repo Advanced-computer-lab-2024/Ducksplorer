@@ -70,7 +70,7 @@ const ActivityReport = () => {
                     }}
                 >
                     <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-                        <Typography variant="h4">Available activities</Typography>
+                        <Typography variant="h4">Advertiser Report</Typography>
                     </Box>
                     <TableContainer style={{ borderRadius: 20 }} component={Paper}>
                         <Table>

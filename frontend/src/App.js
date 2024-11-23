@@ -77,6 +77,8 @@ import ChangePassword from "./Pages/Admin/ChangePassword.js";
 import TourGuideItineraryReport from "./Pages/Itinerary/tourGuideReport.js"
 import AdvertiserActivityReport from "./Pages/Activities/advertiserReport.js"
 
+import SellerProductReport from "./Pages/Products/sellerReport.js"
+
 function App() {
   return (
     <React.StrictMode>
@@ -191,6 +193,8 @@ function App() {
             path="/advertiserEditAccount"
             element={<AdvertiserEditProfile />}
           />
+
+          <Route path="/sellerReport" element={<SellerProductReport />} />
           <Route path="/sellerEditAccount" element={<SellerEditProfile />} />
           <Route path="/sellerDashboard" element={<SellerDashboard />} />
           <Route path="/flights" element={<FlightsBooking />} />

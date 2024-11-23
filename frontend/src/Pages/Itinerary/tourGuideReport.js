@@ -6,7 +6,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 
 import {
-    Box, Button, Table, Typography, TableBody,
+    Box, Table, Typography, TableBody,
     TableCell, TableContainer, TableHead, TableRow, Paper, Rating
 } from '@mui/material';
 import { Link } from 'react-router-dom';
@@ -93,7 +93,7 @@ const ItineraryReport = () => {
             <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'visible', height: '100vh' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
                     <Typography variant="h4">
-                        Your Itineraries
+                        Tour Guide Report
                     </Typography>
                 </Box>
 
