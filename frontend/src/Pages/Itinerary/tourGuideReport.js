@@ -1,7 +1,7 @@
 import React, { useEffect, useState, createContext, useRef } from 'react';
 import axios from 'axios';
-import { message } from 'antd';
-import CurrencyConvertor from '../../Components/CurrencyConvertor'; import WarningIcon from '@mui/icons-material/Warning';
+import CurrencyConvertor from '../../Components/CurrencyConvertor';
+import WarningIcon from '@mui/icons-material/Warning';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 
@@ -210,16 +210,7 @@ const ItineraryReport = () => {
                                     </TableCell>
 
                                     <TableCell>
-                                        <Button
-                                            variant="contained"
-                                            color={itinerary.isDeactivated ? 'success' : 'error'} // it is not active this means the button will activate the itinerary which we want to be in color success (green) 
-                                            onClick={() => {
-                                                console.log(`Button clicked for itinerary ID: ${itinerary._id}`); //For debugging
-                                                toggleItineraryActiveStatus(itinerary._id);
-                                            }}
-                                        >
-                                            {itinerary.isDeactivated ? 'Activate' : 'Deactivate'}
-                                        </Button>
+                                        {itinerary.isDeactivated ? 'Activate' : 'Deactivate'}
                                     </TableCell>
                                     <TableCell>{itinerary.bookedCount}</TableCell>
                                     <TableCell>
