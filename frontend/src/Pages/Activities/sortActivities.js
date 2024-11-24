@@ -175,6 +175,9 @@ const SortActivities = () => {
               `http://localhost:8000/activity/getSave/${activity._id}/${userName}`
             );
 
+            console.log("hal heya saved: ", response.data);
+            console.log("what is the status ", response.status);
+
             if (response.status === 200) {
               newSaveStates[activity._id] = response.data.saved; // Save the state
             }

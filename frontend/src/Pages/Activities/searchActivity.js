@@ -15,7 +15,7 @@ import {
   TextField,
   Button,
   Rating,
-  IconButton
+  IconButton,
 } from "@mui/material";
 
 import { Link, useParams } from "react-router-dom";
@@ -44,20 +44,20 @@ const SearchActivities = () => {
   // Fetch all activities when component mounts
   useEffect(() => {
     const fetchActivities = async () => {
-    const showPreferences = localStorage.getItem("showPreferences");
-    const favCategory = localStorage.getItem("category");
-    console.log(showPreferences, favCategory);
-    try{
-      const response = await axios.get("http://localhost:8000/activity/", {
-        params: {
-          showPreferences: showPreferences.toString(),
-          favCategory,
-        },
-      });
-      const data = response.data.map((activity) => ({
-        ...activity,
-        saved: activity.saved || { isSaved: false, user: null },
-      }));
+      const showPreferences = localStorage.getItem("showPreferences");
+      const favCategory = localStorage.getItem("category");
+      console.log(showPreferences, favCategory);
+      try {
+        const response = await axios.get("http://localhost:8000/activity/", {
+          params: {
+            showPreferences: showPreferences.toString(),
+            favCategory,
+          },
+        });
+        const data = response.data.map((activity) => ({
+          ...activity,
+          saved: activity.saved || { isSaved: false, user: null },
+        }));
         if (id === undefined) {
           setAllActivities(data);
           setActivities(data); // Set initial activities to all fetched activities
@@ -68,8 +68,7 @@ const SearchActivities = () => {
           setAllActivities(tempActivities);
           setActivities(tempActivities);
         }
-    }
-      catch(error) {
+      } catch (error) {
         console.error("There was an error fetching the activities!", error);
       }
     };
@@ -165,6 +164,9 @@ const SearchActivities = () => {
             const response = await axios.get(
               `http://localhost:8000/activity/getSave/${activity._id}/${userName}`
             );
+            
+            console.log("hal heya saved: ", response.data);
+            console.log("what is the status ", response.status);
 
             if (response.status === 200) {
               newSaveStates[activity._id] = response.data.saved; // Save the state
@@ -185,7 +187,6 @@ const SearchActivities = () => {
       fetchSaveStates();
     }
   }, [activities]);
-
 
   return (
     <>
@@ -257,7 +258,11 @@ const SearchActivities = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {activities.map((activity) => activity.flag===false && activity.advertiserDeleted===false && activity.deletedActivity===false? (
+              {
+                activities.map((activity) =>
+                  activity.flag === false &&
+                  activity.advertiserDeleted === false &&
+                  activity.deletedActivity === false ? (
                     <TableRow key={activity._id}>
                       <TableCell>{activity.name}</TableCell>
                       <TableCell>
@@ -309,30 +314,31 @@ const SearchActivities = () => {
                           </Button>
                         </TableCell>
                       ) : null}
-                            <TableCell>
-                            <span
-                              onClick={() =>
-                                handleSaveActivity(
-                                  activity._id,
-                                  activity.saved?.isSaved
-                                )
-                              }
-                            >
-                              {saveStates[activity._id] ? (
-                                <IconButton>
-                                  <BookmarkIcon />
-                                </IconButton>
-                              ) : (
-                                <IconButton>
-                                  <BookmarkBorderIcon />
-                                </IconButton>
-                              )}
-                            </span>
-                          </TableCell>
+                      <TableCell>
+                        <span
+                          onClick={() =>
+                            handleSaveActivity(
+                              activity._id,
+                              activity.saved?.isSaved
+                            )
+                          }
+                        >
+                          {saveStates[activity._id] ? (
+                            <IconButton>
+                              <BookmarkIcon />
+                            </IconButton>
+                          ) : (
+                            <IconButton>
+                              <BookmarkBorderIcon />
+                            </IconButton>
+                          )}
+                        </span>
+                      </TableCell>
                     </TableRow>
-                  ):null)// We don't output a row when it has `activity.flag` is true (ie activity is inappropriate) or when the activity's advertiser has left the system or the activity has been deleted but cannot be removed from database since it is booked my previous tourists
-                }
-                 </TableBody>
+                  ) : null
+                ) // We don't output a row when it has `activity.flag` is true (ie activity is inappropriate) or when the activity's advertiser has left the system or the activity has been deleted but cannot be removed from database since it is booked my previous tourists
+              }
+            </TableBody>
           </Table>
         </TableContainer>
       </Box>

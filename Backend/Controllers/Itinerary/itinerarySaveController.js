@@ -43,13 +43,15 @@ const getSaveState = async (req, res) => {
       return res.status(404).json({ message: "itinerary not found" });
     }
 
-    if (itinerary.saved && itinerary.saved.user === user) {
-      res.status(200).json({ saved: itinerary.saved.isSaved });
+    if (itinerary.saved && (itinerary.saved.user === user || itinerary.saved.user === null)) {
+      return res.status(200).json({ saved: itinerary.saved.isSaved });
     } else {
-      res.status(404).json({ message: "Save state not found for this user" });
+      return res
+        .status(404)
+        .json({ message: "Save state not found for this user" });
     }
   } catch (error) {
-    console.error("Error fetching rating:", error);
+    console.error("Error fetching saved itinerary:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
