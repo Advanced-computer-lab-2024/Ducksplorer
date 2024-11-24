@@ -17,7 +17,8 @@ const getNotifications = async (req, res) => {
  //mark a notification as seen
 const markAsSeen = async (req, res) => {
     try{
-        const id = req.params;
+        const {id} = req.params;
+        console.log(id);
         if(!id){
             return res.status(400).json({err: "Notification not found"});
         }
@@ -34,7 +35,7 @@ const markAsSeen = async (req, res) => {
 }
 
 //create a new notification
-const createNotification = async (message, user) => {
+const createNotification = async (message, user, title) => {
     try{
         if(!message || !user){
             return;
@@ -43,7 +44,8 @@ const createNotification = async (message, user) => {
             message: message,
             user: user,
             seen: false,
-            date: new Date()
+            date: new Date(),
+            title: title || "Notification"
         });
         await notification.save();
     }catch(err){

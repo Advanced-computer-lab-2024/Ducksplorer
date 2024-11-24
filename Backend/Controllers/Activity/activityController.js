@@ -421,7 +421,8 @@ const toggleFlagActivity = async (req, res) => {
       // Create a notification for the advertiser on site
       await createNotification(
         `Your activity titled "${activity.name}" has been flagged as inappropriate.`,
-        advertiser.userName
+        advertiser.userName,
+        "Activity Flagged"
       );
 
       await sendEmail(

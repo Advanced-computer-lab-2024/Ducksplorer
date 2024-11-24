@@ -22,7 +22,7 @@ import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import LockIcon from "@mui/icons-material/Lock";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import MyNotifications from "./myNotifications";
 import Cookies from 'js-cookie';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
@@ -32,9 +32,6 @@ function TouristNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [image, setImage] = React.useState("");
-  const [notificationsLength, setNotificationsLength] = React.useState([]);
-  const [notifications, setNotifications] = React.useState([]);
-  const [storedPicture, setStoredPicture] = React.useState(localStorage.getItem('profilePicture'));
   const navigate = useNavigate();
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -46,22 +43,7 @@ function TouristNavBar() {
   const userName = JSON.parse(localStorage.getItem("user")).username;
 
 //get the notifications length periodically
-  useEffect(() => {
-    const interval = setInterval(() => {
-      axios.get(`http://localhost:8000/notification/getNotifications/${userName}`)
-      .then((response) => {
-        console.log(response.data);
-        setNotificationsLength(response.data.length);
-        setNotifications(response.data);
-      })
-      .catch ((error) => {
-        console.error("There was an error fetching the notifications!", error);
-      });
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
-
+  
   const handleLogout = () => {
     handleCloseUserMenu();
     const response = axios.post("http://localhost:8000/signUp/logout")
@@ -324,16 +306,9 @@ function TouristNavBar() {
               </IconButton>
             </Tooltip>
           </Box>
-          <Box sx={{ flexGrow: 0  }}>
+          <Box sx={{ flexGrow: 0 }}>
           <Tooltip title="Notifications">
-              <IconButton
-                onClick={() => handleNavigation("notifications")}
-                sx={{ p: 0, ml: 4, width: 40, height: 40 }}
-              >
-                <Badge badgeContent={notificationsLength} color="error">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
+              <MyNotifications  />
           </Tooltip>
             <Tooltip title="Open Account settings">
               <IconButton
