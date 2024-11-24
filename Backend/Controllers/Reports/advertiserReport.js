@@ -31,14 +31,17 @@ const filterMyActivities = async (req, res) => {
 
     // Exact date filter
     if (date) {
-        const dateObject = new Date(date);
-        const startOfDay = new Date(dateObject.setHours(0, 0, 0, 0));
-        const endOfDay = new Date(dateObject.setHours(23, 59, 59, 999));
+        const dateObject = new Date(date); // Input date
+        const startOfDay = new Date(Date.UTC(dateObject.getUTCFullYear(), dateObject.getUTCMonth(), dateObject.getUTCDate(), 0, 0, 0));
+        const endOfDay = new Date(Date.UTC(dateObject.getUTCFullYear(), dateObject.getUTCMonth(), dateObject.getUTCDate(), 23, 59, 59, 999));
+
+        // Add the date filter
         dateFilters.push({ date: { $gte: startOfDay, $lte: endOfDay } });
     }
 
+
     // Month and year filter
-    if (month && year) {
+    else if (month && year) {
         const yearNum = parseInt(year, 10);
         const monthNum = parseInt(month, 10) - 1;
         const startOfMonth = new Date(yearNum, monthNum, 1);

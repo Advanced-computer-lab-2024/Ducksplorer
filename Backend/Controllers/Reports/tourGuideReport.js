@@ -31,12 +31,11 @@ const filterMyItineraries = async (req, res) => {
     const filters = {};
     const dateFilters = [];
 
-    // Exact date filter (for availableDatesAndTimes)
     if (date) {
-        const dateObject = new Date(date);
-        const startOfDay = new Date(dateObject.setHours(0, 0, 0, 0));
-        const endOfDay = new Date(dateObject.setHours(23, 59, 59, 999));
-        // Use $elemMatch to check if any date in the array matches the range
+        const dateObject = new Date(date); // Input date
+        const startOfDay = new Date(Date.UTC(dateObject.getUTCFullYear(), dateObject.getUTCMonth(), dateObject.getUTCDate(), 0, 0, 0));
+        const endOfDay = new Date(Date.UTC(dateObject.getUTCFullYear(), dateObject.getUTCMonth(), dateObject.getUTCDate(), 23, 59, 59, 999));
+        // Add to query
         dateFilters.push({
             availableDatesAndTimes: {
                 $elemMatch: { $gte: startOfDay, $lte: endOfDay },
@@ -44,8 +43,9 @@ const filterMyItineraries = async (req, res) => {
         });
     }
 
+
     // Month and year filter (for availableDatesAndTimes)
-    if (month && year) {
+    else if (month && year) {
         const yearNum = parseInt(year, 10);
         const monthNum = parseInt(month, 10) - 1; // Adjust for zero-indexed months
         const startOfMonth = new Date(yearNum, monthNum, 1);  // Start of the month

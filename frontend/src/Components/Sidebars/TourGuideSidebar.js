@@ -116,7 +116,7 @@ const TourGuideSidebar = () => {
             <ListItemIcon>
               <SummarizeIcon />
             </ListItemIcon>
-            <ListItemText primary="Sales Report" />
+            <ListItemText primary="Report" />
           </ListItem>
 
         </List>

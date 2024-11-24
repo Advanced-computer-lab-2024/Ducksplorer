@@ -104,55 +104,55 @@ const ItineraryReport = () => {
         handleFilterClose();
     };
 
-    useEffect(() => {
-        if (!filtersApplied) return; // Do nothing if filters are not applied
+    const fetchFilteredItineraries = async () => {
+        setLoading(true);
+        setErrorMessage(""); // Reset error message before fetching
 
-        const fetchFilteredActivities = async () => {
-            setLoading(true);
-            setErrorMessage(""); // Reset error message before fetching
+        try {
+            let queryString = '';
 
-            try {
-                let queryString = '';
-
-                // Apply date filter if selected
-                if (date) {
-                    queryString += `date=${date}&`;
-                }
-
-                // Apply month and year filters only if selected
-                else if (month) {
-                    queryString += `month=${month}&`;
-                }
-
-                if (year) {
-                    queryString += `year=${year}&`;
-                }
-
-                // Remove the trailing '&' if it exists
-                queryString = queryString.endsWith('&') ? queryString.slice(0, -1) : queryString;
-
-                // Fetch activities with the constructed query string
-                const response = await axios.get(`http://localhost:8000/tourGuideAccount/filterItReport?${queryString}`);
-
-                setItineraries(response.data);
-
-                if (response.data.length === 0) {
-                    setErrorMessage("No itineraries found for the selected filters.");
-                }
-            } catch (error) {
-                setErrorMessage("Error fetching itineraries!");
-            } finally {
-                setLoading(false);
+            // Apply date filter if selected
+            if (date) {
+                queryString += `date=${date}&`;
             }
-        };
 
-        fetchFilteredActivities(); // Trigger the fetching when the effect runs
-    }, [filtersApplied, date, month, year]); // Re-run the effect if any of the filters change or filters are applied
+            // Apply month and year filters only if selected
+            else if (month) {
+                queryString += `month=${month}&`;
+            }
+
+            if (year) {
+                queryString += `year=${year}&`;
+            }
+
+            // Remove the trailing '&' if it exists
+            queryString = queryString.endsWith('&') ? queryString.slice(0, -1) : queryString;
+
+            // Fetch activities with the constructed query string
+            const response = await axios.get(`http://localhost:8000/tourGuideAccount/filterItReport?${queryString}`);
+
+            setItineraries(response.data);
+
+            if (response.data.length === 0) {
+                setErrorMessage("No itineraries found for the selected filters.");
+            }
+        } catch (error) {
+            setErrorMessage("Error fetching itineraries!");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleApplyFilters = () => {
         // Assuming `setFiltersApplied` is a state setter for the `filtersApplied` variable
         setFiltersApplied(true);
     };
+
+    useEffect(() => {
+        if (!filtersApplied) return;
+        fetchFilteredItineraries();
+    }, [filtersApplied, date, month, year]);
+    
 
     const generateYearOptions = () => {
         const startYear = 2030;
@@ -182,9 +182,7 @@ const ItineraryReport = () => {
             <Link to="/tourGuideDashboard"> Back </Link>
             <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'visible', height: '100vh' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
-                    <Typography variant="h4">
-                        Sales Tour Guide Report
-                    </Typography>
+                    <Typography variant="h4">Tour Guide Report</Typography>
                 </Box>
 
                 {/* Filtering */}
