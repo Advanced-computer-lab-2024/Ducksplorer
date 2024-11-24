@@ -4,7 +4,7 @@ const router = express.Router();
 
 
 router.get('/getNotifications/:user', getNotifications);
-router.put('/markAsSeen', markAsSeen);
+router.put('/markAsSeen/:id', markAsSeen);
 router.get('/getAllNotifications', getAllNotifications);
 router.post('/testNotification', testNotification);
 

@@ -78,6 +78,7 @@ import ProtectedRoute from "./Components/ProtectedRoute"; // Import the Protecte
 
 
 import CreatePromoCode from "./Pages/Admin/CreatePromoCode.js";
+import MyNotifications from "./Components/myNotifications.js";
 
 function App() {
   const { authUser } = useAuthContext();
@@ -85,6 +86,7 @@ function App() {
     <React.StrictMode>
       <BrowserRouter>
         <Routes>
+          <Route path="/notifications" element={<MyNotifications />} />
           <Route path="/changePassword" element={<ChangePassword />} />
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />

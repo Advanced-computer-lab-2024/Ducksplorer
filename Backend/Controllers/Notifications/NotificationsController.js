@@ -17,11 +17,11 @@ const getNotifications = async (req, res) => {
  //mark a notification as seen
 const markAsSeen = async (req, res) => {
     try{
-        const notificationId = req.body.notificationId;
-        if(!notificationId){
+        const id = req.params;
+        if(!id){
             return res.status(400).json({err: "Notification not found"});
         }
-        const notification = await Notifications.findById(notificationId);
+        const notification = await Notifications.findById(id);
         if(!notification){
             return res.status(400).json({err: "Notification not found"});
         }
@@ -29,7 +29,7 @@ const markAsSeen = async (req, res) => {
         await notification.save();
         res.status(200).json({message: "Notification marked as seen"});
     }catch(err){
-        res.status(400).json({err: err.message});   
+        res.status(401).json({err: err.message});   
     }
 }
 
