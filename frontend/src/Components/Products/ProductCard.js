@@ -25,7 +25,7 @@ const ProductCard = ({
   showRating, //shows the user review , also for myPurchases as a tourist
   showReview,
   showPurchase,
-  showAverageRating, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
+  showAverageRatingNo, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
 }) => {
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
@@ -41,6 +41,13 @@ const ProductCard = ({
   const [rating, setRating] = useState(product.rating || 0);
   const [review, setReview] = useState("");
   const [showReviewBox, setShowReviewBox] = useState(false);
+
+  const getReviewerRating = (reviewer) => {
+    const ratingEntry = product.ratings.find(
+      (rating) => rating.buyer === reviewer
+    );
+    return ratingEntry ? ratingEntry.rating : "No rating available";
+  };
 
   useEffect(() => {
     setArchived(product.isArchived);
@@ -187,11 +194,12 @@ const ProductCard = ({
     >
       <CardMedia
         component="img"
-        height="60%" // Adjust the height as needed
         width="100%"
+        height="60%" // Adjust the height as needed
         image={product.picture}
         alt={product.name}
         style={{
+          maxHeight: "500px",
           objectFit: "cover",
           boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
           borderRadius: "3cap",
@@ -229,7 +237,7 @@ const ProductCard = ({
             Description: {product.description}
           </Typography>
           <Typography variant="body1">Seller: {product.seller}</Typography>
-          {showAverageRating && (
+          {!showAverageRatingNo && (
             <Rating
               value={calculateProductRating(product.ratings)}
               precision={0.1}
@@ -240,10 +248,12 @@ const ProductCard = ({
           {Object.entries(product.reviews).length > 0 ? (
             Object.entries(product.reviews).map(([user, review]) => (
               <div key={user}>
-                <Typography variant="body2">User: {user}</Typography>
-                <Typography variant="body2">Rating: {review.rating}</Typography>
+                <Typography variant="body2">User: {review.buyer}</Typography>
                 <Typography variant="body2">
-                  Comment: {review.comment}
+                  Rating: {getReviewerRating(review.buyer)}
+                </Typography>
+                <Typography variant="body2">
+                  Comment: {review.review}
                 </Typography>
               </div>
             ))

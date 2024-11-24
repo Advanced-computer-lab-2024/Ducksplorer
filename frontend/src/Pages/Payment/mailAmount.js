@@ -44,6 +44,8 @@ function PaymentPage() {
     e.preventDefault();
     const amountInCents = price;
     const email = user.email;
+    localStorage.setItem("price", price);
+
     try {
       const response = await fetch("http://localhost:8000/payment/pay", {
         method: "POST",
@@ -197,15 +199,18 @@ function PaymentPage() {
         }
       } else if (itineraryOrActivity === "flight") {
         //setFlight(flight);
+        setPrice(flightsData.price);
         console.log("Flight sada data fetched:", flight); // Debugging
         console.log("FlightData fetched:", flightsData); // Debugging
         console.log("flight price",flightsData.price )
       }
       else if (itineraryOrActivity === 'hotel'&& hotel) {
         //setHotel(hotel);
+        setPrice(hotelsData.price);
       }
       else if (itineraryOrActivity === 'transportation' && transportation) {
        // setTransportation(transportation);
+       setPrice(transportationsData.price);
       }
        else {
         message.error("Failed to retrieve details");
@@ -257,9 +262,9 @@ function PaymentPage() {
         height: '120vh'
       }}>
         <div>
-          {itineraryData || activityData || flightsData ||
-        hotelsData ||
-        transportationsData ? (
+          {itineraryData || activityData || (flightsData && type === 'flight') ||
+        (hotelsData && type === 'hotel') ||
+        (transportationsData && type === 'transportation') ? (
             type === 'itinerary' ? (
               <div>
                 <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>

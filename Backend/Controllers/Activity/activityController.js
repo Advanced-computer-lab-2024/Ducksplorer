@@ -24,7 +24,6 @@ const getAllActivitiesByUsername = async (req, res) => {
   }
 };
 
-
 //Get activities that have flag false ie they are appropriate
 const getAppropriateActivities = async (req, res) => {
   try {
@@ -50,34 +49,28 @@ const updateActivity = async (req, res) => {
 };
 
 const deleteOnlyNotBookedActivity = async (req, res) => {
-
   try {
-    const { activityId } =  req.params;
+    const { activityId } = req.params;
     if (!mongoose.Types.ObjectId.isValid(activityId)) {
       return res.status(400).json({ error: "ID invalid" });
-    }
-    else {
+    } else {
       const activity = await Activity.findById(activityId);
       if (!activity) {
         return res.status(404).json({ error: "Activity not found" });
-      }
-      else if (activity.bookedCount >= 1) {
+      } else if (activity.bookedCount >= 1) {
         activity.deletedActivity = true; // not actually deleting from DB since it is booked but making it invisible to future tourists
         await activity.save();
         return res.status(200).json({ message: "Activity deleted" });
-      }
-      else {
+      } else {
         // If bookedCount is less than 1, proceed to delete from database normally
         await Activity.findByIdAndDelete(activityId);
         return res.status(200).json({ message: "Activity deleted" });
       }
     }
-  }
-  catch (error) {
+  } catch (error) {
     res.status(400).json({ error: error.message });
   }
-
-}
+};
 
 // const searchActivities = async (req, res) => {
 //   const searchParams = req.query;
@@ -109,10 +102,10 @@ const deleteOnlyNotBookedActivity = async (req, res) => {
 //     }
 //   };
 const searchActivities = async (req, res) => {
-  const { search, showPreferences, favCategory} = req.query;
+  const { search, showPreferences, favCategory } = req.query;
   const filters = {};
-   
-  if(showPreferences === 'false'){
+
+  if (showPreferences === "false") {
     try {
       // If the user is searching, check both the activity name, category, and related tags in respective schemas
       if (search) {
@@ -121,7 +114,7 @@ const searchActivities = async (req, res) => {
           name: { $regex: search, $options: "i" },
         });
         const matchingTagNames = matchingTags.map((tag) => tag.name); // Get array of matching tag names
-  
+
         // Find matching categories in the Category schema
         const matchingCategories = await Category.find({
           name: { $regex: search, $options: "i" },
@@ -129,20 +122,20 @@ const searchActivities = async (req, res) => {
         const matchingCategoryNames = matchingCategories.map(
           (category) => category.name
         ); // Get array of matching category names
-  
+
         console.log("Matching Tags:", matchingTagNames);
         console.log("Matching Categories:", matchingCategoryNames);
-  
+
         // Construct the filters to include name, matching categories, and matching preference tags
         filters.$or = [
           { name: { $regex: search, $options: "i" } }, // Search by name (case-insensitive)
         ];
-  
+
         // Only add the category filter if there are matching categories
         if (matchingCategoryNames.length > 0) {
           filters.$or.push({ category: { $in: matchingCategoryNames } }); // Search by matching category names
         }
-  
+
         // Only add the tag filter if there are matching tags
         if (matchingTagNames.length > 0) {
           filters.$or.push({ tags: { $in: matchingTagNames } }); // Search by matching preference tags
@@ -154,7 +147,7 @@ const searchActivities = async (req, res) => {
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
-  }else{
+  } else {
     try {
       // If the user is searching, check both the activity name, category, and related tags in respective schemas
       if (search) {
@@ -163,7 +156,7 @@ const searchActivities = async (req, res) => {
           name: { $regex: search, $options: "i" },
         });
         const matchingTagNames = matchingTags.map((tag) => tag.name); // Get array of matching tag names
-  
+
         // Find matching categories in the Category schema
         const matchingCategories = await Category.find({
           name: { $regex: search, $options: "i" },
@@ -171,26 +164,26 @@ const searchActivities = async (req, res) => {
         const matchingCategoryNames = matchingCategories.map(
           (category) => category.name
         ); // Get array of matching category names
-  
+
         console.log("Matching Tags:", matchingTagNames);
         console.log("Matching Categories:", matchingCategoryNames);
-  
+
         // Construct the filters to include name, matching categories, and matching preference tags
         filters.$or = [
           { name: { $regex: search, $options: "i" } }, // Search by name (case-insensitive)
         ];
-  
+
         // Only add the category filter if there are matching categories
         if (matchingCategoryNames.length > 0) {
           filters.$or.push({ category: { $in: matchingCategoryNames } }); // Search by matching category names
         }
-  
+
         // Only add the tag filter if there are matching tags
         if (matchingTagNames.length > 0) {
           filters.$or.push({ tags: { $in: matchingTagNames } }); // Search by matching preference tags
         }
       }
-  
+
       // Fetch the activities based on the search filters
       let activities = await Activity.find(filters);
       activities = activities.sort((a, b) => {
@@ -207,20 +200,18 @@ const searchActivities = async (req, res) => {
       res.status(400).json({ error: error.message });
     }
   }
-
-  
 };
 
 const viewUpcomingActivities = async (req, res) => {
-  const {showPreferences, favCategory} = req.query;
-  if(showPreferences){
+  const { showPreferences, favCategory } = req.query;
+  if (showPreferences) {
     try {
       const upcomingActivities = await activityService.viewUpcomingActivities();
       res.json(upcomingActivities);
     } catch (error) {
       res.status(500).json({ message: "Error fetching upcoming activities" });
     }
-  }else{
+  } else {
     try {
       let upcomingActivities = await activityService.viewUpcomingActivities();
       upcomingActivities = upcomingActivities.sort((a, b) => {
@@ -237,7 +228,6 @@ const viewUpcomingActivities = async (req, res) => {
       res.status(500).json({ message: "Error fetching upcoming activities" });
     }
   }
-  
 };
 
 const filterActivity = async (req, res) => {
@@ -304,7 +294,6 @@ const sortActivities = async (req, res) => {
   const { sortBy, order } = req.query;
   const currentDate = new Date();
 
-  
   let sortCriteria = {};
   if (sortBy) {
     sortCriteria[sortBy] = order === "desc" ? -1 : 1;
@@ -329,14 +318,16 @@ const rateActivity = async (req, res) => {
     const activityBooking = await ActivityBooking.findById(bookingId);
     if (!activityBooking) return res.status(404).send("Booking not found");
 
-    activityBooking.rating = rating
+    activityBooking.rating = rating;
     await activityBooking.save();
 
     const activity = await Activity.findById(activityBooking.activity);
     if (!activity) return res.status(404).send("Activity not found");
 
     // Update or add the rating specific to the booking
-    const existingRating = activity.ratings.find(r => r.bookingId.toString() === bookingId);
+    const existingRating = activity.ratings.find(
+      (r) => r.bookingId.toString() === bookingId
+    );
     if (existingRating) {
       existingRating.rating = rating;
     } else {
@@ -359,11 +350,9 @@ const rateActivity = async (req, res) => {
   }
 };
 
-
 const toggleFlagActivity = async (req, res) => {
   try {
     const { id } = req.params;
-
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: "Invalid ID" });
@@ -386,13 +375,14 @@ const toggleFlagActivity = async (req, res) => {
     res.status(200).json({
       status: 200,
       activity: updatedActivity,
-      message: `Activity flagged as ${updatedActivity.flag ? "inappropriate" : "appropriate"}`,
+      message: `Activity flagged as ${
+        updatedActivity.flag ? "inappropriate" : "appropriate"
+      }`,
     });
   } catch (error) {
     res.status(400).json({ error: error.message + "error in toggleFlag" });
   }
 };
-
 
 const deletePastActivities = async (req, res) => {
   try {
@@ -403,18 +393,16 @@ const deletePastActivities = async (req, res) => {
     console.log("Activities to delete:", pastActivities);
 
     const result = await Activity.deleteMany({
-      date: { $lt: currentDate }
+      date: { $lt: currentDate },
     });
     res.status(200).json({
-      message: `Deleted ${result.deletedCount} past activities.`
+      message: `Deleted ${result.deletedCount} past activities.`,
     });
   } catch (error) {
     console.error("Error deleting past activities:", error);
     res.status(500).json({ message: "Failed to delete past activities" });
   }
 };
-
-
 
 module.exports = {
   createActivity,
@@ -428,5 +416,5 @@ module.exports = {
   rateActivity,
   getAppropriateActivities,
   toggleFlagActivity,
-  deletePastActivities
+  deletePastActivities,
 };

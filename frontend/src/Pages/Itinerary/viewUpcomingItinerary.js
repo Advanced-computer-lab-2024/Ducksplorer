@@ -259,7 +259,7 @@ const ViewUpcomingItinerary = () => {
         message.error("User information is missing.");
         return null;
       }
-      const userName = user.username;
+      // const userName = user.username;
       const type = "itinerary";
 
       localStorage.setItem("itineraryId", itineraryId);

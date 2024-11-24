@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Table,
@@ -21,7 +21,7 @@ import { Link } from "react-router-dom";
 import Help from "../../Components/HelpIcon";
 
 const PastBookingDetails = () => {
-  const userName = JSON.parse(localStorage.getItem("user")).username
+  const userName = JSON.parse(localStorage.getItem("user")).username;
   //const [booking, setBooking] = useState(null);
   const [activityBookings, setActivityBookings] = useState(null);
   const [itineraryBookings, setItineraryBookings] = useState(null);
@@ -38,7 +38,9 @@ const PastBookingDetails = () => {
 
   const fetchTourGuideName = async (bookingId) => {
     try {
-      const response = await axios.get(`http://localhost:8000/tourGuideRate/getUserNameById/${bookingId}`);
+      const response = await axios.get(
+        `http://localhost:8000/tourGuideRate/getUserNameById/${bookingId}`
+      );
       console.log("Tour Guide Name Response:", response.data);
       return response.data.userName;
     } catch (error) {
@@ -62,13 +64,15 @@ const PastBookingDetails = () => {
 
         const initialActivityRatings = {};
         activityBookings?.forEach((activityBooking) => {
-          initialActivityRatings[activityBooking._id] = activityBooking.activity.averageRating;
+          initialActivityRatings[activityBooking._id] =
+            activityBooking.activity.averageRating;
         });
         setSelectedActivityRatings(initialActivityRatings);
 
         const initialItineraryRatings = {};
         itineraryBookings?.forEach((itineraryBooking) => {
-          initialItineraryRatings[itineraryBooking._id] = itineraryBooking.itinerary.averageRating || 0;
+          initialItineraryRatings[itineraryBooking._id] =
+            itineraryBooking.itinerary.averageRating || 0;
         });
         setSelectedItineraryRatings(initialItineraryRatings);
 
@@ -91,7 +95,10 @@ const PastBookingDetails = () => {
   }, [userName]);
 
   const handleActivityRatingChange = async (bookingId, newRating) => {
-    console.log(`Submitting rating for activity of booking ${bookingId}:`, newRating);
+    console.log(
+      `Submitting rating for activity of booking ${bookingId}:`,
+      newRating
+    );
     try {
       const response = await axios.patch(
         `http://localhost:8000/activity/rate/${bookingId}`,
@@ -106,10 +113,11 @@ const PastBookingDetails = () => {
       }));
 
       setActivityBookings((prevActivityBookings) =>
-        prevActivityBookings.map((activityBooking) =>
-          activityBooking._id === bookingId
-            ? { ...activityBooking, rating: newRating } // Update the rating for the specific booking
-            : activityBooking // Keep other bookings unchanged
+        prevActivityBookings.map(
+          (activityBooking) =>
+            activityBooking._id === bookingId
+              ? { ...activityBooking, rating: newRating } // Update the rating for the specific booking
+              : activityBooking // Keep other bookings unchanged
         )
       );
     } catch (error) {
@@ -124,7 +132,10 @@ const PastBookingDetails = () => {
   };
 
   const handleItineraryRatingChange = async (bookingId, newRating) => {
-    console.log(`Submitting rating for booking for itinerary ${bookingId}:`, newRating);
+    console.log(
+      `Submitting rating for booking for itinerary ${bookingId}:`,
+      newRating
+    );
     try {
       const response = await axios.patch(
         `http://localhost:8000/itinerary/rateItinerary/${bookingId}`,
@@ -139,10 +150,11 @@ const PastBookingDetails = () => {
       }));
 
       setItineraryBookings((prevItineraryBookings) =>
-        prevItineraryBookings.map((itineraryBooking) =>
-          itineraryBooking._id === bookingId
-            ? { ...itineraryBooking, rating: newRating } // Update the rating for the specific booking
-            : itineraryBooking // Keep other bookings unchanged
+        prevItineraryBookings.map(
+          (itineraryBooking) =>
+            itineraryBooking._id === bookingId
+              ? { ...itineraryBooking, rating: newRating } // Update the rating for the specific booking
+              : itineraryBooking // Keep other bookings unchanged
         )
       );
     } catch (error) {
@@ -164,9 +176,12 @@ const PastBookingDetails = () => {
 
   const handleActivityCommentSubmit = async (bookingId) => {
     try {
-      await axios.patch(`http://localhost:8000/activity/commentActivity/${bookingId}`, {
-        comment: activityComments[bookingId],
-      });
+      await axios.patch(
+        `http://localhost:8000/activity/commentActivity/${bookingId}`,
+        {
+          comment: activityComments[bookingId],
+        }
+      );
       alert("Comment submitted successfully!");
       setActivityComments((prev) => ({ ...prev, [bookingId]: "" })); // Clear the comment input after submission
     } catch (error) {
@@ -181,9 +196,12 @@ const PastBookingDetails = () => {
 
   const handleItineraryCommentSubmit = async (bookingId) => {
     try {
-      await axios.patch(`http://localhost:8000/itinerary/commentItinerary/${bookingId}`, {
-        comment: itineraryComments[bookingId],
-      });
+      await axios.patch(
+        `http://localhost:8000/itinerary/commentItinerary/${bookingId}`,
+        {
+          comment: itineraryComments[bookingId],
+        }
+      );
       alert("Comment submitted successfully!");
       setItineraryComments((prev) => ({ ...prev, [bookingId]: "" })); // Clear the comment input after submission
     } catch (error) {
@@ -244,16 +262,22 @@ const PastBookingDetails = () => {
     setOpenDialog(false);
   };
 
-  if (activityBookings === null || itineraryBookings === null) return <p>Loading...</p>;
+  if (activityBookings === null || itineraryBookings === null)
+    return <p>Loading...</p>;
 
   if (!Array.isArray(activityBookings) || !Array.isArray(itineraryBookings)) {
     return <p>No booking details available.</p>;
   }
 
-
   return (
-    <div style={{ overflowY: 'visible', height: "120vh" }}>
-      <Button component={Link} to="/touristDashboard" variant="contained" color="primary" style={{ marginBottom: '20px' }}>
+    <div style={{ overflowY: "visible", height: "120vh", width: "100vw" }}>
+      <Button
+        component={Link}
+        to="/touristDashboard"
+        variant="contained"
+        color="primary"
+        style={{ marginBottom: "20px" }}
+      >
         Back to Dashboard
       </Button>
       <Typography variant="h4" gutterBottom>
@@ -287,14 +311,22 @@ const PastBookingDetails = () => {
             {activityBookings.map((activityBooking) => (
               <TableRow key={activityBooking.activity._id}>
                 <TableCell>{activityBooking.activity.name}</TableCell>
-                <TableCell>{activityBooking.activity.isOpen ? "Yes" : "No"}</TableCell>
+                <TableCell>
+                  {activityBooking.activity.isOpen ? "Yes" : "No"}
+                </TableCell>
                 <TableCell>{activityBooking.activity.advertiser}</TableCell>
-                <TableCell>{new Date(activityBooking.activity.date).toLocaleDateString()}</TableCell>
+                <TableCell>
+                  {new Date(activityBooking.activity.date).toLocaleDateString()}
+                </TableCell>
                 <TableCell>{activityBooking.activity.location}</TableCell>
                 <TableCell>{activityBooking.chosenPrice}</TableCell>
                 <TableCell>{activityBooking.activity.category}</TableCell>
-                <TableCell>{activityBooking.activity.tags.join(", ")}</TableCell>
-                <TableCell>{activityBooking.activity.specialDiscount}%</TableCell>
+                <TableCell>
+                  {activityBooking.activity.tags.join(", ")}
+                </TableCell>
+                <TableCell>
+                  {activityBooking.activity.specialDiscount}%
+                </TableCell>
                 <TableCell>{activityBooking.activity.duration} mins</TableCell>
                 <TableCell>{activityBooking.rating}/5</TableCell>
                 <TableCell>
@@ -302,7 +334,9 @@ const PastBookingDetails = () => {
                     name={`activity-rating-${activityBooking._id}`}
                     value={activityBooking.rating}
                     precision={0.5} // Set precision to 0.5 for half-star ratings
-                    onChange={(event, newValue) => handleActivityRatingChange(activityBooking._id, newValue)} // Pass the new value from the Rating component
+                    onChange={(event, newValue) =>
+                      handleActivityRatingChange(activityBooking._id, newValue)
+                    } // Pass the new value from the Rating component
                   />
                 </TableCell>
 
@@ -311,11 +345,18 @@ const PastBookingDetails = () => {
                     variant="outlined"
                     size="small"
                     value={activityComments[activityBooking._id] || ""}
-                    onChange={(e) => handleActivityCommentChange(activityBooking._id, e.target.value)}
+                    onChange={(e) =>
+                      handleActivityCommentChange(
+                        activityBooking._id,
+                        e.target.value
+                      )
+                    }
                     placeholder="Comment"
                   />
                   <Button
-                    onClick={() => handleActivityCommentSubmit(activityBooking._id)}
+                    onClick={() =>
+                      handleActivityCommentSubmit(activityBooking._id)
+                    }
                     variant="contained"
                     color="primary"
                     size="small"
@@ -343,6 +384,7 @@ const PastBookingDetails = () => {
               <TableCell>Language</TableCell>
               <TableCell>Price</TableCell>
               <TableCell>Available Dates & Times</TableCell>
+              <TableCell>Chosen Date</TableCell>
               <TableCell>Accessibility</TableCell>
               <TableCell>Pick-Up Location</TableCell>
               <TableCell>Drop-Off Location</TableCell>
@@ -356,21 +398,46 @@ const PastBookingDetails = () => {
           <TableBody>
             {itineraryBookings.map((itineraryBooking) => (
               <TableRow key={itineraryBooking._id}>
-                <TableCell>{itineraryBooking.itinerary.activity.map((act) => act.name).join(", ")}</TableCell>
-                <TableCell>{itineraryBooking.itinerary.locations.join(", ")}</TableCell>
+                <TableCell>
+                  {itineraryBooking.itinerary.activity
+                    .map((act) => act.name)
+                    .join(", ")}
+                </TableCell>
+                <TableCell>
+                  {itineraryBooking.itinerary.locations.join(", ")}
+                </TableCell>
                 <TableCell>{itineraryBooking.itinerary.timeline}</TableCell>
                 <TableCell>{itineraryBooking.itinerary.language}</TableCell>
                 <TableCell>{itineraryBooking.chosenPrice}</TableCell>
-                <TableCell>{itineraryBooking.itinerary.availableDatesAndTimes.map((date) => new Date(date).toLocaleDateString()).join(", ")}</TableCell>
-                <TableCell>{itineraryBooking.itinerary.accessibility}</TableCell>
-                <TableCell>{itineraryBooking.itinerary.pickUpLocation}</TableCell>
-                <TableCell>{itineraryBooking.itinerary.dropOffLocation}</TableCell>
-                <TableCell>{itineraryBooking.itinerary.tags.join(", ")}</TableCell>
                 <TableCell>
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  {itineraryBooking.itinerary.availableDatesAndTimes
+                    .map((date) => new Date(date).toLocaleDateString())
+                    .join(", ")}
+                </TableCell>
+                <TableCell>
+                  {new Date(itineraryBooking.chosenDate).toLocaleDateString()}
+                </TableCell>
+                <TableCell>
+                  {itineraryBooking.itinerary.accessibility}
+                </TableCell>
+                <TableCell>
+                  {itineraryBooking.itinerary.pickUpLocation}
+                </TableCell>
+                <TableCell>
+                  {itineraryBooking.itinerary.dropOffLocation}
+                </TableCell>
+                <TableCell>
+                  {itineraryBooking.itinerary.tags.join(", ")}
+                </TableCell>
+                <TableCell>
+                  <div style={{ display: "flex", flexDirection: "column" }}>
                     {tourGuideNames[itineraryBooking._id] || "Loading..."}
                     <Button
-                      onClick={() => handleOpenDialog(itineraryBooking.itinerary.tourGuideModel)}
+                      onClick={() =>
+                        handleOpenDialog(
+                          itineraryBooking.itinerary.tourGuideModel
+                        )
+                      }
                       variant="contained"
                       color="primary"
                       size="small"
@@ -386,7 +453,12 @@ const PastBookingDetails = () => {
                     name={`itinerary-rating-${itineraryBooking._id}`}
                     value={itineraryBooking.rating}
                     precision={0.5} // Set precision to 0.5 for half-star ratings
-                    onChange={(event, newValue) => handleItineraryRatingChange(itineraryBooking._id, newValue)} // Pass the new value from the Rating component
+                    onChange={(event, newValue) =>
+                      handleItineraryRatingChange(
+                        itineraryBooking._id,
+                        newValue
+                      )
+                    } // Pass the new value from the Rating component
                   />
                 </TableCell>
                 <TableCell>
@@ -394,11 +466,18 @@ const PastBookingDetails = () => {
                     variant="outlined"
                     size="small"
                     value={itineraryComments[itineraryBooking._id] || ""}
-                    onChange={(e) => handleItineraryCommentChange(itineraryBooking._id, e.target.value)}
+                    onChange={(e) =>
+                      handleItineraryCommentChange(
+                        itineraryBooking._id,
+                        e.target.value
+                      )
+                    }
                     placeholder="Comment"
                   />
                   <Button
-                    onClick={() => handleItineraryCommentSubmit(itineraryBooking._id)}
+                    onClick={() =>
+                      handleItineraryCommentSubmit(itineraryBooking._id)
+                    }
                     variant="contained"
                     color="primary"
                     size="small"

@@ -11,12 +11,12 @@ import axios from "axios";
 import { message } from "antd";
 import { Link } from "react-router-dom";
 import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+// import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FileUpload from "../../Components/FileUpload";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Iconify from "../../Components/TopNav/iconify.js";
-import ProfilePictureUpload from "../../Components/pp";
+// import ProfilePictureUpload from "../../Components/pp";
 import DownloadButton from "../../Components/DownloadButton";
 
 const AdvertiserEditProfile = () => {
@@ -172,21 +172,30 @@ const AdvertiserEditProfile = () => {
   };
 
   return (
-    <div style={{ display: "flex" }}>
+    <box sx={{ height: "100vh" }}>
       <AdvertiserSidebar />
       <Box
-        sx={{ flexGrow: 1, p: 5, display: "flex", justifyContent: "center" }}
+        sx={{
+          p: 5,
+          display: "flex",
+          flexDirection: "column",
+        }}
       >
+        <Link
+          to="/advertiserDashboard"
+          style={{ textDecoration: "none", color: "primary.main" }}
+        >
+          Back to Dashboard
+        </Link>
         <Paper
           elevation={4}
           sx={{
+            marginTop: "30px",
             p: 4,
             width: "700px",
             borderRadius: 3,
             boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
-            "@media (max-width: 768px)": {
-              width: "500%",
-            },
+            height: "100%",
           }}
         >
           <Box
@@ -363,17 +372,9 @@ const AdvertiserEditProfile = () => {
               </Button>
             )}
           </Box>
-          <Box sx={{ textAlign: "center", mt: 2 }}>
-            <Link
-              to="/advertiserDashboard"
-              style={{ textDecoration: "none", color: "primary.main" }}
-            >
-              Back to Dashboard
-            </Link>
-          </Box>
         </Paper>
       </Box>
-    </div>
+    </box>
   );
 };
 

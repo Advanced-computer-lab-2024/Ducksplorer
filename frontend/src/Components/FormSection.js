@@ -21,7 +21,6 @@ import {
   DialogActions,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import FileUpload from "./FileUpload";
 
 const FormSection = () => {
@@ -101,7 +100,7 @@ const FormSection = () => {
       message.error("All fields are required for Seller");
       return false;
     }
-    if (!acceptTerms) {
+    if (!acceptTerms && type !== "Tourist") {
       message.error("You must Accept Terms & Conditions");
       return false;
     }

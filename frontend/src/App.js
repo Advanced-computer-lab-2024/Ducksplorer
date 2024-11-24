@@ -59,9 +59,9 @@ import MyComplaints from "./Components/Complaints/MyComplaints.js";
 
 import FlightsBooking from "./Pages/ThirdParty/FlightsBooking.js";
 import HotelsBooking from "./Pages/ThirdParty/HotelsBooking.js";
-import TouristNavBar from "./Components/TouristNavBar.js";
+//import TouristNavBar from "./Components/TouristNavBar.js";
 import BookingDetails from "./Pages/Bookings/myBookings.js";
-import CheckoutForm from "./Pages/Payment/checkout.js";
+//import CheckoutForm from "./Pages/Payment/checkout.js";
 import Completion from "./Pages/Payment/completion.js";
 import Payment from "./Pages/Payment/payment2.js";
 import PaymentPage from "./Pages/Payment/mailAmount.js";
@@ -72,6 +72,7 @@ import PastBookingDetails from "./Pages/Bookings/myPastBookings.js";
 import GuestDashboard from "./Pages/Dashboards/GuestDashboard.js";
 
 import TransportationBooking from "./Pages/ThirdParty/TransportationBooking.js";
+import ChangePassword from "./Pages/Admin/ChangePassword.js";
 
 function App() {
   return (
@@ -79,7 +80,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           {/* <Route index element={<Hotels />} /> */}
-          <Route path="/" element={<TouristNavBar />} />
+          <Route path="/changePassword" element={<ChangePassword/>} />
+          <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signUp" element={<Signup />} />
           <Route path="/createItinerary" element={<CreateItinerary />} />

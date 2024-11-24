@@ -80,6 +80,7 @@ const HotelBookingForm = () => {
   const [checkOutDate, setCheckOutDate] = useState(null);
   const [adults, setAdults] = useState('');
 
+  //c7ca2a8100mshd130920df3324d6p1981b5jsnd001bc3dd180
   const handleSearch = async () => {
     if (validateFields()) {
       const formattedCheckInDate = checkInDate.toISOString().split('T')[0]; // Format date as yyyy-mm-dd
@@ -91,7 +92,7 @@ const HotelBookingForm = () => {
         console.log(encodedQuery);
         const locationResponse = await axios.get(`https://tripadvisor16.p.rapidapi.com/api/v1/hotels/searchLocation?query=${encodedQuery}`, {
           headers: {
-            'x-rapidapi-key': '3bfcb9b73fmshef1b90262efc940p1fdb52jsn3fa77589cdab',
+            'x-rapidapi-key': 'c7ca2a8100mshd130920df3324d6p1981b5jsnd001bc3dd180',
             'x-rapidapi-host': 'tripadvisor16.p.rapidapi.com'
           }
         });
@@ -108,7 +109,7 @@ const HotelBookingForm = () => {
               adults: adults
             },
             headers: {
-              'x-rapidapi-key': '3bfcb9b73fmshef1b90262efc940p1fdb52jsn3fa77589cdab',
+              'x-rapidapi-key': 'c7ca2a8100mshd130920df3324d6p1981b5jsnd001bc3dd180',
               'x-rapidapi-host': 'tripadvisor16.p.rapidapi.com'
             }
           });

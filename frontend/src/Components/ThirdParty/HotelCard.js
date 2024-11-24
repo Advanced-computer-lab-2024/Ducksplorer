@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, Typography, Box, Grid, Button, CardMedia, CardHeader, Avatar, IconButton } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
-import axios from 'axios';
 import CurrencyConverterGeneral from './CurrencyConverterGeneral'; // Adjust the import path as needed
 import PersonIcon from '@mui/icons-material/Person';
 import PaymentIcon from '@mui/icons-material/Payment';

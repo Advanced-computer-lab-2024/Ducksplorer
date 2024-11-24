@@ -14,6 +14,7 @@ import MuseumIcon from '@mui/icons-material/Museum';
 // import PersonIcon from '@mui/icons-material/Person';
 // import CasinoIcon from '@mui/icons-material/Casino';
 import AddIcon from '@mui/icons-material/Add';
+import LockIcon from '@mui/icons-material/Lock';
 
 const drawerWidth = 300;
 
@@ -34,6 +35,12 @@ const GovernorSidebar = () => {
         </Typography>
         <Divider />
         <List>
+        <ListItem button component={Link} to="/changePassword">
+            <ListItemIcon>
+              <LockIcon />
+            </ListItemIcon>
+            <ListItemText primary="Change Password" />
+          </ListItem>
           <ListItem button component={Link} to="/RUDMuseum">
             <ListItemIcon>
               <MuseumIcon />

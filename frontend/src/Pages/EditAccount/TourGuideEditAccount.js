@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Link } from "react-router-dom";
 import FileUpload from "../../Components/FileUpload";
 import IconButton from "@mui/material/IconButton";
@@ -31,9 +30,6 @@ const TourGuideEditProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
 
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [nationalIdFiles, setNationalIdFiles] = useState(null);
-  const [certificatesFiles, setCertificatesFiles] = useState(null);
 
   const handlePhotoUpload = async () => {
     const photoFile = document.getElementById("photo").files[0];
@@ -183,207 +179,216 @@ const TourGuideEditProfile = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+    <Box sx={{ height: "100vh" }}>
       <Link to="/tourGuideDashboard"> Back </Link>
-      <Paper
-        elevation={4}
-        sx={{
-          p: 4,
-          width: 500,
-          borderRadius: 3,
-          boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
-        }}
-      >
-        <Box sx={{ textAlign: "center", mb: 3 }}>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Avatar
-              src={tourGuideDetails.photo}
-              sx={{ width: 80, height: 80 }}
-            />
-            {isEditing && (
-              <>
-                <input
-                  type="file"
-                  id="photo"
-                  onChange={handlePhotoUpload}
-                  style={{ display: "none" }}
-                />
-                <label htmlFor="photo">
-                  <Button component="span" color="primary" variant="contained">
-                    Upload New Photo
-                  </Button>
-                </label>
-                {tourGuideDetails.photo && (
-                  <Button
-                    onClick={handlePhotoDelete}
-                    color="secondary"
-                    variant="contained"
-                  >
-                    Delete Photo
-                  </Button>
-                )}
-              </>
-            )}
-          </Box>
-
-          <Typography variant="h5" sx={{ mt: 2 }}>
-            Edit Tour Guide Profile
-          </Typography>
-        </Box>
-
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-          <TextField
-            label="Username"
-            name="userName"
-            value={tourGuideDetails.userName}
-            onChange={handleChange}
-            InputProps={{ readOnly: true }}
-            variant="outlined"
-            fullWidth
-          />
-          <TextField
-            label="Email"
-            name="email"
-            value={tourGuideDetails.email}
-            onChange={handleChange}
-            InputProps={{ readOnly: !isEditing }}
-            variant="outlined"
-            fullWidth
-          />
-          <TextField
-            name="password"
-            label="Password"
-            type={showPassword ? "text" : "password"} // Toggle password visibility
-            value={tourGuideDetails.password}
-            height="50"
-            width="20"
-            onChange={handleChange}
-            InputProps={{
-              readOnly: !isEditing,
-
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => setShowPassword(!showPassword)}
-                    edge="end"
-                  >
-                    <Iconify
-                      icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
-                      style={{ color: "#602b37", fontSize: "40px" }}
-                    />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            label="Mobile Number"
-            name="mobileNumber"
-            value={tourGuideDetails.mobileNumber}
-            onChange={handleChange}
-            InputProps={{ readOnly: !isEditing }}
-            variant="outlined"
-            fullWidth
-          />
-          <TextField
-            label="Years of Experience"
-            name="yearsOfExperience"
-            value={tourGuideDetails.yearsOfExperience}
-            type="number"
-            onChange={handleChange}
-            InputProps={{ readOnly: !isEditing }}
-            variant="outlined"
-            fullWidth
-          />
-          <TextField
-            label="Previous Work"
-            name="previousWork"
-            value={tourGuideDetails.previousWork}
-            onChange={handleChange}
-            InputProps={{ readOnly: !isEditing }}
-            variant="outlined"
-            fullWidth
-            multiline
-            rows={3}
-          />
-          <Box disabled={!isEditing} sx={{ display: "flex", gap: 2, mt: 3 }}>
-            <label>National ID</label>
-            <DownloadButton
-              fileUrl={tourGuideDetails.nationalId}
-              label="Download National ID"
-            />
-            {isEditing && (
-              <>
-                <Button onClick={() => handleFileDelete("nationalId")}>
-                  Delete National ID
-                </Button>
-                <FileUpload
-                  inputId="nationalIdUpload"
-                  onFileSelect={handleNationalIdSelect}
-                />
-              </>
-            )}
-          </Box>
-
-          <Box disabled={!isEditing} sx={{ display: "flex", gap: 2, mt: 3 }}>
-            <label>Certificates</label>
-            <DownloadButton
-              fileUrl={tourGuideDetails.certificates}
-              label="Download Certificates"
-            />
-            {isEditing && (
-              <>
-                <Button onClick={() => handleFileDelete("certificates")}>
-                  Delete Certificates
-                </Button>
-                <FileUpload
-                  inputId="certificateUpload"
-                  onFileSelect={handleCertificatesSelect}
-                />
-              </>
-            )}
-          </Box>
-        </Box>
-
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-          {isEditing ? (
-            <Button
-              variant="contained"
-              color="success"
-              onClick={handleSaveClick}
-              fullWidth
-              sx={{ py: 1.5 }}
+      <Box sx={{ p: 4, justifyContent: "center" }}>
+        <Paper
+          elevation={4}
+          sx={{
+            p: 4,
+            width: 500,
+            borderRadius: 3,
+            boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
+            height: "100%",
+          }}
+        >
+          <Box sx={{ textAlign: "center", mb: 3 }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
             >
-              Save Changes
-            </Button>
-          ) : (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleEditClick}
-              fullWidth
-              sx={{ py: 1.5 }}
-            >
-              Edit Profile
-            </Button>
-          )}
-        </Box>
+              <Avatar
+                src={tourGuideDetails.photo}
+                sx={{ width: 80, height: 80 }}
+              />
+              {isEditing && (
+                <>
+                  <input
+                    type="file"
+                    id="photo"
+                    onChange={handlePhotoUpload}
+                    style={{ display: "none" }}
+                  />
+                  <label htmlFor="photo">
+                    <Button
+                      component="span"
+                      color="primary"
+                      variant="contained"
+                    >
+                      Upload New Photo
+                    </Button>
+                  </label>
+                  {tourGuideDetails.photo && (
+                    <Button
+                      onClick={handlePhotoDelete}
+                      color="secondary"
+                      variant="contained"
+                    >
+                      Delete Photo
+                    </Button>
+                  )}
+                </>
+              )}
+            </Box>
 
-        <Box sx={{ textAlign: "center", mt: 2 }}>
-          <Link
-            to="/tourGuideDashboard"
-            style={{ textDecoration: "none", color: "primary.main" }}
-          >
-            Back to Dashboard
-          </Link>
-        </Box>
-      </Paper>
+            <Typography variant="h5" sx={{ mt: 2 }}>
+              Edit Tour Guide Profile
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+            <TextField
+              label="Username"
+              name="userName"
+              value={tourGuideDetails.userName}
+              onChange={handleChange}
+              InputProps={{ readOnly: true }}
+              variant="outlined"
+              fullWidth
+            />
+            <TextField
+              label="Email"
+              name="email"
+              value={tourGuideDetails.email}
+              onChange={handleChange}
+              InputProps={{ readOnly: !isEditing }}
+              variant="outlined"
+              fullWidth
+            />
+            <TextField
+              name="password"
+              label="Password"
+              type={showPassword ? "text" : "password"} // Toggle password visibility
+              value={tourGuideDetails.password}
+              height="50"
+              width="20"
+              onChange={handleChange}
+              InputProps={{
+                readOnly: !isEditing,
+
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPassword(!showPassword)}
+                      edge="end"
+                    >
+                      <Iconify
+                        icon={
+                          showPassword ? "eva:eye-fill" : "eva:eye-off-fill"
+                        }
+                        style={{ color: "#602b37", fontSize: "40px" }}
+                      />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <TextField
+              label="Mobile Number"
+              name="mobileNumber"
+              value={tourGuideDetails.mobileNumber}
+              onChange={handleChange}
+              InputProps={{ readOnly: !isEditing }}
+              variant="outlined"
+              fullWidth
+            />
+            <TextField
+              label="Years of Experience"
+              name="yearsOfExperience"
+              value={tourGuideDetails.yearsOfExperience}
+              type="number"
+              onChange={handleChange}
+              InputProps={{ readOnly: !isEditing }}
+              variant="outlined"
+              fullWidth
+            />
+            <TextField
+              label="Previous Work"
+              name="previousWork"
+              value={tourGuideDetails.previousWork}
+              onChange={handleChange}
+              InputProps={{ readOnly: !isEditing }}
+              variant="outlined"
+              fullWidth
+              multiline
+              rows={3}
+            />
+            <Box disabled={!isEditing} sx={{ display: "flex", gap: 2, mt: 3 }}>
+              <label>National ID</label>
+              <DownloadButton
+                fileUrl={tourGuideDetails.nationalId}
+                label="Download National ID"
+              />
+              {isEditing && (
+                <>
+                  <Button onClick={() => handleFileDelete("nationalId")}>
+                    Delete National ID
+                  </Button>
+                  <FileUpload
+                    inputId="nationalIdUpload"
+                    onFileSelect={handleNationalIdSelect}
+                  />
+                </>
+              )}
+            </Box>
+
+            <Box disabled={!isEditing} sx={{ display: "flex", gap: 2, mt: 3 }}>
+              <label>Certificates</label>
+              <DownloadButton
+                fileUrl={tourGuideDetails.certificates}
+                label="Download Certificates"
+              />
+              {isEditing && (
+                <>
+                  <Button onClick={() => handleFileDelete("certificates")}>
+                    Delete Certificates
+                  </Button>
+                  <FileUpload
+                    inputId="certificateUpload"
+                    onFileSelect={handleCertificatesSelect}
+                  />
+                </>
+              )}
+            </Box>
+          </Box>
+
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+            {isEditing ? (
+              <Button
+                variant="contained"
+                color="success"
+                onClick={handleSaveClick}
+                fullWidth
+                sx={{ py: 1.5 }}
+              >
+                Save Changes
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleEditClick}
+                fullWidth
+                sx={{ py: 1.5 }}
+              >
+                Edit Profile
+              </Button>
+            )}
+          </Box>
+
+          <Box sx={{ textAlign: "center", mt: 2 }}>
+            <Link
+              to="/tourGuideDashboard"
+              style={{ textDecoration: "none", color: "primary.main" }}
+            >
+              Back to Dashboard
+            </Link>
+          </Box>
+        </Paper>
+      </Box>
     </Box>
   );
 };
