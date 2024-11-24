@@ -33,7 +33,6 @@ import {
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
-import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar.js";
 const ActivityReport = () => {
     // Accept userNameId as a prop
     const userName = JSON.parse(localStorage.getItem("user")).username;
@@ -96,7 +95,6 @@ const ActivityReport = () => {
     };
 
     const fetchFilteredActivities = async () => {
-        message.success("inside the filter function");
         setLoading(true);
         setErrorMessage(""); // Reset error message before fetching
 
@@ -136,9 +134,7 @@ const ActivityReport = () => {
     };
 
     useEffect(() => {
-        message.success("inside the filter useEffect");
         if (!filtersApplied) return;
-        message.success("inside the filter useEffect filtersApplied is true");
         if (!date && !month && !year) return;
         fetchFilteredActivities();
     }, [filtersApplied, date, month, year]);
@@ -169,8 +165,6 @@ const ActivityReport = () => {
     const changeDate = (newDate) => {
         setDate(newDate);
         setFiltersApplied(true);
-        message.success("date changed");
-        message.success(newDate);
     }
 
     const changeMonth = (newMonth) => {
