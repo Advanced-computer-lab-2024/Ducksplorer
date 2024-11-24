@@ -7,6 +7,7 @@ const cron = require("node-cron");
 const nodemailer = require("nodemailer");
 const send = require("send");
 const PromoCode = require("../Models/promoCodeModel.js");
+const {createNotification} = require("./Notifications/NotificationsController.js");
 
 const transporter = nodemailer.createTransport({
   service: "gmail", // Or another email service provider
@@ -192,6 +193,10 @@ const bod = async (res) => {
       try {
         // Send the email
         console.log(tourist.email);
+        //send notification on site
+        await createNotification(emailMessage,tourist.userName,"Birthday Promo Code");
+        
+        //send email
         await sendEmail(tourist.email, "Birthday Promo Code", emailMessage);
         await newPromoCode.save();
 
