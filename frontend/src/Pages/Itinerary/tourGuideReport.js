@@ -37,6 +37,7 @@ export const TagsContext = createContext();
 const ItineraryReport = () => {
     const [itineraries, setItineraries] = useState([]); //holds the list of itineraries
     const [loading, setLoading] = useState(true); //indicates if data is fetched
+    //filtering consts
 
     const [month, setMonth] = useState("");
     const [year, setYear] = useState("");
@@ -129,7 +130,7 @@ const ItineraryReport = () => {
             queryString = queryString.endsWith('&') ? queryString.slice(0, -1) : queryString;
 
             // Fetch activities with the constructed query string
-            const response = await axios.get(`http://localhost:8000/tourGuideAccount/filterItReport?${queryString}`);
+            const response = await axios.get(`http://localhost:8000/tourGuideAccount/filterItReport/${userName}?${queryString}`);
 
             setItineraries(response.data);
 
@@ -149,10 +150,10 @@ const ItineraryReport = () => {
     };
 
     useEffect(() => {
-        if (!filtersApplied) return;
+        //if (!filtersApplied) return;
         fetchFilteredItineraries();
     }, [filtersApplied, date, month, year]);
-    
+
 
     const generateYearOptions = () => {
         const startYear = 2030;
@@ -272,12 +273,7 @@ const ItineraryReport = () => {
                         </FormControl>
                     </MenuItem>
 
-                    {/* Apply and Clear Buttons */}
-                    <MenuItem>
-                        <Button onClick={handleApplyFilters} disabled={!date && !month && !year}>
-                            Apply Filters
-                        </Button>
-                    </MenuItem>
+                    {/* Clear Buttons */}
                     <MenuItem>
                         <Button onClick={handleClearAllFilters}>Clear All Filters</Button>
                     </MenuItem>

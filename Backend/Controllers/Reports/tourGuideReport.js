@@ -26,10 +26,20 @@ const viewMyItineraries = async (req, res) => {
     }
 };
 
-const filterMyItineraries = async (req, res) => {
+const  filterMyItineraries = async (req, res) => {
+    const { tourGuideName } = req.params;
     const { date, month, year } = req.query;
-    const filters = {};
     const dateFilters = [];
+
+    const tourGuide = await TourGuide.findOne({ userName: tourGuideName });
+
+    const tourGuideId = tourGuide._id;
+
+    if (!mongoose.Types.ObjectId.isValid(tourGuideId)) {
+        return res.status(400).json({ error: "ID invalid" });
+    }
+
+    const filters = { tourGuideModel: tourGuideId };
 
     if (date) {
         const dateObject = new Date(date); // Input date

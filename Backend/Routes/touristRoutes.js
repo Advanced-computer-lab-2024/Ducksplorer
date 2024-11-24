@@ -12,6 +12,7 @@ const {
 const {
   getMyPurchases,
   updatePurchase,
+  purchaseProduct
 } = require("../Controllers/purchasesController");
 
 const { createBooking, viewMyUpcomingBookings, viewMyPastBookings, viewDesiredActivity, viewDesiredItinerary, getMyBookings, cancelMyBooking, receiveLoyaltyPoints, getLevel, updateLevel,
@@ -42,5 +43,7 @@ router.put("/updatePurchases/:buyer", updatePurchase);
 router.put("/updateProducts/:id", touristUpdateProductRating);
 router.get("/getRating/:id/rating/:buyer", getProductRating);
 router.put("/addReview/:id", touristUpdateProductReview);
+router.post("/createPurchase/:buyer",  purchaseProduct); // jana alya
+
 
 module.exports = router;

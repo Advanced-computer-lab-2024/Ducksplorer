@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.route("/").post(activity.createActivity).get(activity.searchActivities);
 router.route("/filter").get(activity.filterActivity);
-router.route("/filterReport").get(filterMyActivities);
+router.route("/filterReport/:advertiserName").get(filterMyActivities);
 router.route("/sort").get(activity.sortActivities);
 router.route("/upcoming").get(activity.viewUpcomingActivities);
 router.delete("/deletePast", activity.deletePastActivities);

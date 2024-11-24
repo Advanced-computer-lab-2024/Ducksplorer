@@ -6,6 +6,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CurrencyConvertor from '../../Components/CurrencyConvertor';
 import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar.js";
+import { message } from 'antd';
 
 import {
     Box,
@@ -60,8 +61,10 @@ const ActivityReport = () => {
                     `http://localhost:8000/activity/report/${userName}`
                 );
                 setActivities(response.data);
+                console.log(response.data);
             } catch (error) {
                 console.error("There was an error fetching the activities!", error);
+                message.error("error in fetching");
             }
         };
         fetchActivities();
@@ -76,25 +79,24 @@ const ActivityReport = () => {
     };
 
     //clear all filters
-    const handleClearAllFilters = () => {
+    const handleClearAllFilters = async () => {
         setDate("");
         setMonth("");
         setYear("");
         setSelectedFilters([]);
+        setFiltersApplied(false);
 
-        axios.get
-            `http://localhost:8000/activity/report/${userName}`
-            .then((response) => {
-                setActivities(response.data);
-            })
-            .catch((error) => {
-                console.error("There was an error fetching the activities!", error);
-            });
-
+        try {
+            const response = await axios.get(`http://localhost:8000/activity/report/${userName}`);
+            setActivities(response.data);
+        } catch (error) {
+            console.error("Error resetting activities:", error);
+        }
         handleFilterClose();
     };
 
     const fetchFilteredActivities = async () => {
+        message.success("inside the filter function");
         setLoading(true);
         setErrorMessage(""); // Reset error message before fetching
 
@@ -119,7 +121,7 @@ const ActivityReport = () => {
             queryString = queryString.endsWith('&') ? queryString.slice(0, -1) : queryString;
 
             // Fetch activities with the constructed query string
-            const response = await axios.get(`http://localhost:8000/activity/filterReport?${queryString}`);
+            const response = await axios.get(`http://localhost:8000/activity/filterReport/${userName}?${queryString}`);
 
             setActivities(response.data);
 
@@ -133,13 +135,11 @@ const ActivityReport = () => {
         }
     };
 
-    const handleApplyFilters = () => {
-        // Assuming `setFiltersApplied` is a state setter for the `filtersApplied` variable
-        setFiltersApplied(true);
-    };
-
     useEffect(() => {
+        message.success("inside the filter useEffect");
         if (!filtersApplied) return;
+        message.success("inside the filter useEffect filtersApplied is true");
+        if (!date && !month && !year) return;
         fetchFilteredActivities();
     }, [filtersApplied, date, month, year]);
 
@@ -165,6 +165,27 @@ const ActivityReport = () => {
         setEarningsExchangeRates(rates);
         setEarningsCurrency(selectedCurrency);
     };
+
+    const changeDate = (newDate) => {
+        setDate(newDate);
+        setFiltersApplied(true);
+        message.success("date changed");
+        message.success(newDate);
+    }
+
+    const changeMonth = (newMonth) => {
+        setMonth(newMonth);
+        setDate(""); // Reset date if month is selected
+        setFiltersApplied(true);
+    }
+
+    const changeYear = (newYear) => {
+        setYear(newYear);
+        setDate(""); // Reset date if month is selected
+        setFiltersApplied(true);
+    }
+
+
 
     return (
         <>
@@ -205,7 +226,7 @@ const ActivityReport = () => {
                                         <TextField
                                             type="date"
                                             value={date}
-                                            onChange={(e) => setDate(e.target.value)}
+                                            onChange={(e) => changeDate(e.target.value)}
                                             style={{ marginTop: "10px", width: "100%" }}
                                         />
                                     )}
@@ -225,8 +246,7 @@ const ActivityReport = () => {
                                                     <Select
                                                         value={month}
                                                         onChange={(e) => {
-                                                            setMonth(e.target.value);
-                                                            setDate(""); // Reset date if month is selected
+                                                            changeMonth(e.target.value)
                                                         }}
                                                     >
                                                         {Array.from({ length: 12 }, (_, i) => (
@@ -242,8 +262,7 @@ const ActivityReport = () => {
                                                     <Select
                                                         value={year}
                                                         onChange={(e) => {
-                                                            setYear(e.target.value);
-                                                            setDate(""); // Reset date if year is selected
+                                                            changeYear(e.target.value)
                                                         }}
                                                     >
                                                         {generateYearOptions().map((yr) => (
@@ -261,12 +280,7 @@ const ActivityReport = () => {
                             </FormControl>
                         </MenuItem>
 
-                        {/* Apply and Clear Buttons */}
-                        <MenuItem>
-                            <Button onClick={handleApplyFilters} disabled={!date && !month && !year}>
-                                Apply Filters
-                            </Button>
-                        </MenuItem>
+                        {/* Clear Buttons */}
                         <MenuItem>
                             <Button onClick={handleClearAllFilters}>Clear All Filters</Button>
                         </MenuItem>
@@ -283,12 +297,11 @@ const ActivityReport = () => {
                                     <TableCell>Category</TableCell>
                                     <TableCell>Tags</TableCell>
                                     <TableCell>Discount</TableCell>
-                                    <TableCell>Dates and Times</TableCell>
+                                    <TableCell>Date and Time</TableCell>
                                     <TableCell>Duration</TableCell>
                                     <TableCell>Location</TableCell>
                                     <TableCell>Rating</TableCell>
                                     <TableCell>Flag</TableCell>
-                                    <TableCell>Number of Bookings</TableCell>
                                     <TableCell>Earnings
                                         <CurrencyConvertor onCurrencyChange={handleEarningsCurrencyChange} />
                                     </TableCell>
@@ -296,20 +309,20 @@ const ActivityReport = () => {
                             </TableHead>
                             <TableBody>
                                 {activities.length > 0 ? (
-                                    activities.map((activity) =>
-                                        activity.deletedActivity === false ? (
-                                            <TableRow key={activity._id}>
-                                                <TableCell>{activity.name}</TableCell>
+                                    activities.map((activityBooking) =>
+                                        activityBooking.activity ? (
+                                            <TableRow key={activityBooking.activity._id}>
+                                                <TableCell>{activityBooking.activity.name}</TableCell>
                                                 <TableCell>
-                                                    {(activity.price * (priceExchangeRates[priceCurrency] || 1)).toFixed(2)} {priceCurrency}
+                                                    {(activityBooking.chosenPrice * (priceExchangeRates[priceCurrency] || 1)).toFixed(2)} {priceCurrency}
                                                 </TableCell>
-                                                <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
-                                                <TableCell>{activity.category}</TableCell>
-                                                <TableCell>{activity.tags.join(", ")}</TableCell>
-                                                <TableCell>{activity.specialDiscount}</TableCell>
+                                                <TableCell>{activityBooking.activity.isOpen ? "Yes" : "No"}</TableCell>
+                                                <TableCell>{activityBooking.activity.category}</TableCell>
+                                                <TableCell>{activityBooking.activity.tags.join(", ")}</TableCell>
+                                                <TableCell>{activityBooking.activity.specialDiscount}</TableCell>
                                                 <TableCell>
-                                                    {activity.date ? (() => {
-                                                        const dateObj = new Date(activity.date);
+                                                    {activityBooking.chosenDate ? (() => {
+                                                        const dateObj = new Date(activityBooking.chosenDate);
                                                         const date = dateObj.toISOString().split('T')[0];
                                                         const time = dateObj.toTimeString().split(' ')[0];
                                                         return (
@@ -319,18 +332,18 @@ const ActivityReport = () => {
                                                         );
                                                     })() : 'No available date'}
                                                 </TableCell>
-                                                <TableCell>{activity.duration}</TableCell>
-                                                <TableCell>{activity.location}</TableCell>
+                                                <TableCell>{activityBooking.activity.duration}</TableCell>
+                                                <TableCell>{activityBooking.activity.location}</TableCell>
                                                 <TableCell>
                                                     <Rating
-                                                        value={calculateAverageRating(activity.ratings)}
+                                                        value={calculateAverageRating(activityBooking.activity.ratings)}
                                                         precision={0.1}
                                                         readOnly
                                                     />
                                                 </TableCell>
 
                                                 <TableCell>
-                                                    {activity.flag ? (
+                                                    {activityBooking.activity.flag ? (
                                                         <span style={{ color: 'red', display: 'flex', alignItems: 'center' }}>
                                                             <WarningIcon style={{ marginRight: '4px' }} />
                                                             Inappropriate
@@ -342,9 +355,8 @@ const ActivityReport = () => {
                                                         </span>
                                                     )}
                                                 </TableCell>
-                                                <TableCell>{activity.bookedCount}</TableCell>
                                                 <TableCell>
-                                                    {((activity.bookedCount * activity.price * 0.9) * (earningsExchangeRates[earningsCurrency] || 1)).toFixed(2)} {earningsCurrency}
+                                                    {((activityBooking.chosenPrice * 0.9) * (earningsExchangeRates[earningsCurrency] || 1)).toFixed(2)} {earningsCurrency}
                                                 </TableCell>
                                             </TableRow>
                                         ) : null // Don't render the row for deleted activities
