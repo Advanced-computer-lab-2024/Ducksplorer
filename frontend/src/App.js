@@ -76,6 +76,7 @@ import ChangePassword from "./Pages/Admin/ChangePassword.js";
 
 
 import CreatePromoCode from "./Pages/Admin/CreatePromoCode.js";
+import MySavedItems from "./Pages/SavedItems.js";
 
 function App() {
   return (
@@ -197,6 +198,7 @@ function App() {
 
 
           <Route path="/addPromoCode" element={<CreatePromoCode/>} />
+          <Route path="/mySaved" element={<MySavedItems/>} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

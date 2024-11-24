@@ -362,6 +362,18 @@ function TouristNavBar() {
                   </Typography>
                 </IconButton>
               </MenuItem>
+              <MenuItem onClick={handleCloseUserMenu}>
+                <IconButton
+                  component="a"
+                  href="/mySaved"
+                  sx={{ textAlign: "center", p: 0.5 }}
+                >
+                  <BookmarksIcon sx={{ fontSize: 20, color: "grey" }} />
+                  <Typography sx={{ ml: 1 }} variant="body2">
+                    Saved
+                  </Typography>
+                </IconButton>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>

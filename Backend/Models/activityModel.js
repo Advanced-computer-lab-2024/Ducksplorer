@@ -96,8 +96,8 @@ const activitySchema = new Schema(
       required: false,
     },
     saved: {
-      user: {type: String, required: false},
-      isSaved: {type: Boolean, required: false}
+      user: {type: String, required: false, default: null},
+      isSaved: {type: Boolean, required: false, default: false}
     }
   },
 
