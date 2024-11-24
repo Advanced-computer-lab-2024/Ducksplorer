@@ -10,7 +10,7 @@ const Advertiser = require("../../Models/advertiserModel.js");
 const send = require("send");
 const nodemailer = require("nodemailer");
 const {
-  createNotification,
+  createNotification
 } = require("../Notifications/NotificationsController.js");
 const Tourist = require("../../Models/touristModel.js");
 
@@ -302,6 +302,8 @@ const remindUpcomingActivities = async (req, res) => {
         const emailMessage = `Reminder: Your activity "${activityName}" is happening on ${new Date(
           booking.chosenDate
         ).toLocaleDateString()}. Get ready!`;
+
+        await createNotification(emailMessage, touristData.userName, "Upcoming Activity Reminder");
 
         // Send the email notification
         await sendEmail(userEmail, "Upcoming Activity Reminder", emailMessage);
