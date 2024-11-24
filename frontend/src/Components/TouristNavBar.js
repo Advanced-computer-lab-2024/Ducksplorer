@@ -22,16 +22,16 @@ import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import LockIcon from "@mui/icons-material/Lock";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import MyNotifications from "./myNotifications";
 import Cookies from 'js-cookie';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+import { Badge } from "@mui/material";
 
 function TouristNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [image, setImage] = React.useState("");
-  const [storedPicture, setStoredPicture] = React.useState(localStorage.getItem('profilePicture'));
   const navigate = useNavigate();
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -42,6 +42,8 @@ function TouristNavBar() {
   //call the getImage in a useEffect
   const userName = JSON.parse(localStorage.getItem("user")).username;
 
+//get the notifications length periodically
+  
   const handleLogout = () => {
     handleCloseUserMenu();
     const response = axios.post("http://localhost:8000/signUp/logout")
@@ -76,6 +78,8 @@ function TouristNavBar() {
         console.error("There was an error fetching the image!", error);
       });
     }, [userName]);
+
+
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
@@ -302,15 +306,10 @@ function TouristNavBar() {
               </IconButton>
             </Tooltip>
           </Box>
-          <Box sx={{ flexGrow: 0  }}>
-            <Tooltip title="Notifications">
-              <IconButton
-                onClick={() => handleNavigation("notifications")}
-                sx={{ p: 0, ml: 4, width: 40, height: 40 }}
-              >
-                <NotificationsIcon />
-              </IconButton>
-            </Tooltip>
+          <Box sx={{ flexGrow: 0 }}>
+          <Tooltip title="Notifications">
+              <MyNotifications  />
+          </Tooltip>
             <Tooltip title="Open Account settings">
               <IconButton
                 onClick={handleOpenUserMenu}

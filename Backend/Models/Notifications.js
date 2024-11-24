@@ -19,6 +19,10 @@ const notificationSchema = new Schema({
         type: Boolean,
         required: false
     },
+    title: {
+        type: String,
+        required: false
+    }
 });
 
 const Notification = mongoose.model('Notification', notificationSchema);
