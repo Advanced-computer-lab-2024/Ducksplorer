@@ -31,7 +31,7 @@ const filterMyActivities = async (req, res) => {
 
     // Exact date filter
     if (date) {
-        const dateObject = new Date(date); 
+        const dateObject = new Date(date);
         const startOfDay = new Date(dateObject.setHours(0, 0, 0, 0));
         const endOfDay = new Date(dateObject.setHours(23, 59, 59, 999));
         dateFilters.push({ date: { $gte: startOfDay, $lte: endOfDay } });
@@ -71,9 +71,9 @@ const filterMyActivities = async (req, res) => {
 
     try {
         const activities = await Activity.find(filters);
-        if (activities.length === 0) {
-            return res.status(404).json({ message: "No activities found" });
-        }
+        // if (activities.length === 0) {
+        //     return res.status(404).json({ message: "No activities found" });
+        // }
         res.status(200).json(activities);
     } catch (error) {
         console.error("Error fetching activities:", error);

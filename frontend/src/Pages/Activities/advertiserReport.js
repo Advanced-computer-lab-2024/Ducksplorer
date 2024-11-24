@@ -5,7 +5,6 @@ import { calculateAverageRating } from "../../Utilities/averageRating.js";
 import WarningIcon from '@mui/icons-material/Warning';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CurrencyConvertor from '../../Components/CurrencyConvertor';
-import { message } from 'antd';
 
 import {
     Box,
@@ -17,7 +16,6 @@ import {
     TableHead,
     TableRow,
     Paper,
-    Checkbox,
     Menu,
     MenuItem,
     IconButton,
@@ -47,6 +45,10 @@ const ActivityReport = () => {
     const [selectedFilters, setSelectedFilters] = useState([]);
 
     const [filterType, setFilterType] = useState("");
+    const [filtersApplied, setFiltersApplied] = useState(false);
+
+    const [loading, setLoading] = useState(false);  // State for loading status
+    const [errorMessage, setErrorMessage] = useState("");  // State for error message
 
     // Handle fetching activities by userName ID
     useEffect(() => {
@@ -72,33 +74,6 @@ const ActivityReport = () => {
         setFilterAnchorEl(null);
     };
 
-    const handleFilterToggle = (filter) => {
-        const newFilters = [...selectedFilters];
-        if (newFilters.includes(filter)) {
-            // Remove filter if it's already selected
-            const index = newFilters.indexOf(filter);
-            newFilters.splice(index, 1);
-
-            switch (filter) {
-                case "date":
-                    setDate("");
-                    break;
-                case "month":
-                    setMonth("");
-                    break;
-                case "year":
-                    setYear("");
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            // Add filter if not selected
-            newFilters.push(filter);
-        }
-        setSelectedFilters(newFilters);
-    };
-
     //clear all filters
     const handleClearAllFilters = () => {
         setDate("");
@@ -118,43 +93,56 @@ const ActivityReport = () => {
         handleFilterClose();
     };
 
-    const handleApplyFilters = (filters) => {
-        let dateQuery = "";
-        let monthQuery = "";
-        let yearQuery = "";
+    useEffect(() => {
+        if (!filtersApplied) return; // Do nothing if filters are not applied
 
+        const fetchFilteredActivities = async () => {
+            setLoading(true);
+            setErrorMessage(""); // Reset error message before fetching
 
-        if (date) {
-            // Try to convert date to a Date object
-            const selectedDate = new Date(date);
+            try {
+                let queryString = '';
 
-            // Check if the conversion is successful and the date is valid
-            if (!isNaN(selectedDate.getTime())) {
-                dateQuery = selectedDate.toISOString();  // Full date (to match exact date)
-                monthQuery = selectedDate.getMonth() + 1;  // Get the month as 1-based (1-12)
-                yearQuery = selectedDate.getFullYear();   // Get the year (e.g., 2024)
-            }
-        }
+                // Apply date filter if selected
+                if (date) {
+                    queryString += `date=${date}&`;
+                }
 
-        // Construct query string with optional parameters
-        let queryString = `date=${dateQuery}&month=${monthQuery}&year=${yearQuery}`;
+                // Apply month and year filters only if selected
+                else if (month) {
+                    queryString += `month=${month}&`;
+                }
 
-        // Append date, month, or year if they exist
-        if (dateQuery) queryString += `&date=${dateQuery}`;
-        if (monthQuery) queryString += `&month=${monthQuery}`;
-        if (yearQuery) queryString += `&year=${yearQuery}`;
+                if (year) {
+                    queryString += `year=${year}&`;
+                }
 
-        axios
-            .get(`http://localhost:8000/activity/filterReport?${queryString}`)
-            .then((response) => {
+                // Remove the trailing '&' if it exists
+                queryString = queryString.endsWith('&') ? queryString.slice(0, -1) : queryString;
+
+                // Fetch activities with the constructed query string
+                const response = await axios.get(`http://localhost:8000/activity/filterReport?${queryString}`);
+
                 setActivities(response.data);
-            })
-            .catch((error) => {
-                message.error("Error fetching activities!");
-            });
-        handleFilterClose();
-        console.log("Applied filters:", filters);
+
+                if (response.data.length === 0) {
+                    setErrorMessage("No activities found for the selected filters.");
+                }
+            } catch (error) {
+                setErrorMessage("Error fetching activities!");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchFilteredActivities(); // Trigger the fetching when the effect runs
+    }, [filtersApplied, date, month, year]); // Re-run the effect if any of the filters change or filters are applied
+
+    const handleApplyFilters = () => {
+        // Assuming `setFiltersApplied` is a state setter for the `filtersApplied` variable
+        setFiltersApplied(true);
     };
+
 
     const generateYearOptions = () => {
         const startYear = 2030;
@@ -292,7 +280,13 @@ const ActivityReport = () => {
                             <Button onClick={handleClearAllFilters}>Clear All Filters</Button>
                         </MenuItem>
                     </Menu>
-
+                    {/* <div>
+                        {errorMessage && (
+                            <div style={{ color: 'red', marginBottom: '20px' }}>
+                                {errorMessage}
+                            </div>
+                        )}
+                    </div> */}
                     <TableContainer style={{ borderRadius: 20 }} component={Paper}>
                         <Table>
                             <TableHead>
@@ -317,55 +311,66 @@ const ActivityReport = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {activities.map((activity) => activity.deletedActivity === false ? (
-                                    <TableRow key={activity._id}>
-                                        <TableCell>{activity.name}</TableCell>
-                                        <TableCell>
-                                            {(activity.price * (priceExchangeRates[priceCurrency] || 1)).toFixed(2)} {priceCurrency}
-                                        </TableCell>
-                                        <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
-                                        <TableCell>{activity.category}</TableCell>
-                                        <TableCell>{activity.tags.join(", ")}</TableCell>
-                                        <TableCell>{activity.specialDiscount}</TableCell>
-                                        <TableCell>{activity.date ? (() => {
-                                            const dateObj = new Date(activity.date);
-                                            const date = dateObj.toISOString().split('T')[0];
-                                            const time = dateObj.toTimeString().split(' ')[0];
-                                            return (
-                                                <div>
-                                                    {date} at {time}
-                                                </div>
-                                            );
-                                        })()
-                                            : 'No available date'}</TableCell>
-                                        <TableCell>{activity.duration}</TableCell>
-                                        <TableCell>{activity.location}</TableCell>
-                                        <TableCell>
-                                            <Rating
-                                                value={calculateAverageRating(activity.ratings)}
-                                                precision={0.1}
-                                                readOnly
-                                            />
-                                        </TableCell>
+                                {activities.length > 0 ? (
+                                    activities.map((activity) =>
+                                        activity.deletedActivity === false ? (
+                                            <TableRow key={activity._id}>
+                                                <TableCell>{activity.name}</TableCell>
+                                                <TableCell>
+                                                    {(activity.price * (priceExchangeRates[priceCurrency] || 1)).toFixed(2)} {priceCurrency}
+                                                </TableCell>
+                                                <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
+                                                <TableCell>{activity.category}</TableCell>
+                                                <TableCell>{activity.tags.join(", ")}</TableCell>
+                                                <TableCell>{activity.specialDiscount}</TableCell>
+                                                <TableCell>
+                                                    {activity.date ? (() => {
+                                                        const dateObj = new Date(activity.date);
+                                                        const date = dateObj.toISOString().split('T')[0];
+                                                        const time = dateObj.toTimeString().split(' ')[0];
+                                                        return (
+                                                            <div>
+                                                                {date} at {time}
+                                                            </div>
+                                                        );
+                                                    })() : 'No available date'}
+                                                </TableCell>
+                                                <TableCell>{activity.duration}</TableCell>
+                                                <TableCell>{activity.location}</TableCell>
+                                                <TableCell>
+                                                    <Rating
+                                                        value={calculateAverageRating(activity.ratings)}
+                                                        precision={0.1}
+                                                        readOnly
+                                                    />
+                                                </TableCell>
 
-                                        <TableCell> {activity.flag ? (
-                                            <span style={{ color: 'red', display: 'flex', alignItems: 'center' }}>
-                                                <WarningIcon style={{ marginRight: '4px' }} />
-                                                Inappropriate
-                                            </span>
-                                        ) : (
-                                            <span style={{ color: 'green', display: 'flex', alignItems: 'center' }}>
-                                                <CheckCircleIcon style={{ marginRight: '4px' }} />
-                                                Appropriate
-                                            </span>
-                                        )}</TableCell>
-                                        <TableCell>{activity.bookedCount}</TableCell>
-                                        <TableCell>
-                                            {((activity.bookedCount * activity.price * 0.9) * (earningsExchangeRates[earningsCurrency] || 1)).toFixed(2)} {earningsCurrency}
-                                        </TableCell>
+                                                <TableCell>
+                                                    {activity.flag ? (
+                                                        <span style={{ color: 'red', display: 'flex', alignItems: 'center' }}>
+                                                            <WarningIcon style={{ marginRight: '4px' }} />
+                                                            Inappropriate
+                                                        </span>
+                                                    ) : (
+                                                        <span style={{ color: 'green', display: 'flex', alignItems: 'center' }}>
+                                                            <CheckCircleIcon style={{ marginRight: '4px' }} />
+                                                            Appropriate
+                                                        </span>
+                                                    )}
+                                                </TableCell>
+                                                <TableCell>{activity.bookedCount}</TableCell>
+                                                <TableCell>
+                                                    {((activity.bookedCount * activity.price * 0.9) * (earningsExchangeRates[earningsCurrency] || 1)).toFixed(2)} {earningsCurrency}
+                                                </TableCell>
+                                            </TableRow>
+                                        ) : null // Don't render the row for deleted activities
+                                    )
+                                ) : (
+                                    <TableRow>
+                                        <TableCell colSpan={12}>No activities found</TableCell>
                                     </TableRow>
-                                ) : null)// We don't output a row when the activity has been deleted but cannot be removed from database since it is booked by previous tourists
-                                }
+                                )}
+
                             </TableBody>
                         </Table>
                     </TableContainer>
