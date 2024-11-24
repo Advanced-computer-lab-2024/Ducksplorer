@@ -1,6 +1,8 @@
 const express = require("express");
 const { deleteUser, addAdmin, addGovernor , approveUser ,getPendingUsers , getUsers, rejectUser, getPendingUserDetails , changePassword } = require("../../Controllers/Admin/AdminController.js");
 
+const { viewAllProducts,viewAllItineraries,viewAllActivities } = require("../../Controllers/Reports/adminReport.js");
+
 const router = express.Router();
 
 router.post("/addAdmin", addAdmin);
@@ -19,6 +21,10 @@ router.get("/pendingDetails", getPendingUserDetails) //done
 
 router.post("/changePassword", changePassword);
 
+router.get("/reportItineraries", viewAllItineraries);
 
+router.get("/reportActivities", viewAllActivities);
+
+router.get("/reportProducts", viewAllProducts);
 
 module.exports = router;

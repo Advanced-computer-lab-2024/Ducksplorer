@@ -104,6 +104,13 @@ const Sidebar = () => {
             <ListItemText primary="View All Itineraries " />
           </ListItem>
 
+          <ListItem button component={Link} to="/adminReport">
+            <ListItemIcon>
+            <EventNoteIcon />
+            </ListItemIcon>
+            <ListItemText primary="Revenue Report " />
+          </ListItem>
+
         </List>
         <Divider />
       </div>

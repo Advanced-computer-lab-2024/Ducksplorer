@@ -5,6 +5,7 @@ import { calculateAverageRating } from "../../Utilities/averageRating.js";
 import WarningIcon from '@mui/icons-material/Warning';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CurrencyConvertor from '../../Components/CurrencyConvertor';
+import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar.js";
 
 import {
     Box,
