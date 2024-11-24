@@ -35,6 +35,10 @@ const activityBookingSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    reminderSent: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

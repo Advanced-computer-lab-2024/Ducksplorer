@@ -6,6 +6,7 @@ const { schedule } = require("node-cron");
 const cron = require("node-cron");
 const nodemailer = require("nodemailer");
 const send = require("send");
+const PromoCode = require("../Models/promoCodeModel.js");
 
 const transporter = nodemailer.createTransport({
   service: "gmail", // Or another email service provider
@@ -153,7 +154,7 @@ const deleteMyTouristAccount = async (req, res) => {
 };
 // Scheduler to check birthdays daily
 //cron.schedule("0 0 * * *", async () => {
-const bod = async () => {
+const bod = async (res) => {
   const today = new Date();
   const todayMonth = today.getMonth() + 1; // Months are zero-based
   const todayDay = today.getDate(); // Get today's day
@@ -176,15 +177,23 @@ const bod = async () => {
 
     // Loop through each birthday tourist and send them an email
     for (const tourist of birthdayTourists) {
-      const promoCode = `PROMO-${Math.random()
+      const promoCode = `${Math.random()
         .toString(36)
         .substr(2, 9)
         .toUpperCase()}`; // Generate promo code
+
       const emailMessage = `🎉 Happy Birthday ya sa7by! 5od el promo dah le 2agl 3eyoonak dol: ${promoCode} 🎉`;
 
+      // Save the promo code to the database
+      const newPromoCode = new PromoCode({
+        code: promoCode,
+        value: 20, // Assign a value to the promo code
+      });
       try {
         // Send the email
+        console.log(tourist.email);
         await sendEmail(tourist.email, "Birthday Promo Code", emailMessage);
+        await newPromoCode.save();
 
         // Optionally, save the promo code to the tourist's document in the database
         await Tourist.updateOne(

@@ -9,6 +9,7 @@ const TourGuide = require("../../Models/tourGuideModel");
 
 const send = require("send");
 const nodemailer = require("nodemailer");
+const Tourist = require("../../Models/touristModel");
 
 const sendEmail = async (to, subject, message) => {
   try {
@@ -37,11 +38,74 @@ const sendEmail = async (to, subject, message) => {
   }
 };
 
+const remindUpcomingItineraries = async (req, res) => {
+  try {
+    const today = new Date();
+    const twoDaysLater = new Date();
+    twoDaysLater.setDate(today.getDate() + 2);
+
+    // Fetch bookings with chosenDate within 2 days and where reminderSent is false
+    const bookingsToRemind = await ItineraryBooking.find({
+      chosenDate: { $gte: today, $lte: twoDaysLater },
+      reminderSent: false,
+    });
+    console.log("Bookings to remind:", bookingsToRemind);
+
+    if (!bookingsToRemind || bookingsToRemind.length === 0) {
+      return res
+        .status(200)
+        .json({ message: "No upcoming activity reminders to send." });
+    }
+
+    for (const booking of bookingsToRemind) {
+      const tourist = booking.user; // Reference to the Tourist object
+      console.log("Tourist:", tourist);
+      const itinerary = booking.itinerary; // Reference to the Activity object
+      console.log("Itinerary:", itinerary);
+
+      // Ensure both tourist and activity data are available
+      if (tourist && itinerary) {
+        const touristData = await Tourist.findOne({ userName: tourist });
+        const userEmail = touristData.email; // Extract email from the Tourist object
+        console.log("User Email:", userEmail);
+        const itineraryData = await Itinerary.findOne({ _id: itinerary });
+        const itineraryName = itineraryData.name; // Extract name from the Activity object
+
+        const emailMessage = `Reminder: Your activity "${itineraryName}" is happening on ${new Date(
+          booking.chosenDate
+        ).toLocaleDateString()}. Get ready!`;
+
+        // Send the email notification
+        await sendEmail(userEmail, "Upcoming Activity Reminder", emailMessage);
+
+        // Mark the reminder as sent
+        booking.reminderSent = true;
+        await booking.save();
+      }
+    }
+
+    res.status(200).json({
+      message: "Reminders sent successfully.",
+      bookingsReminded: bookingsToRemind.map((booking) => ({
+        userEmail: booking.user.email,
+        activityName: booking.itinerary.name,
+        chosenDate: booking.chosenDate,
+      })),
+    });
+  } catch (error) {
+    console.error("Error sending reminders:", error);
+    res
+      .status(500)
+      .json({ message: "Error sending reminders", error: error.message });
+  }
+};
+
 const createItinerary = async (req, res) => {
   //create
   //add a new itinerary to the database with
   //activity,locations,timeline,language,price,availableDates,availableTimes,accessibility,pickUpLocation,dropOffLocation
   const {
+    name,
     activity,
     locations,
     timeline,
@@ -68,6 +132,7 @@ const createItinerary = async (req, res) => {
     }
 
     const itinerary = await itineraryModel.create({
+      name,
       activity,
       locations,
       timeline,
@@ -346,4 +411,5 @@ module.exports = {
   getAllItineraries,
   toggleFlagItinerary,
   deletePastItineraries,
+  remindUpcomingItineraries,
 };

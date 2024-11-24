@@ -1,7 +1,11 @@
 const express = require("express");
 const activity = require("../Controllers/Activity/activityController.js");
-const { toggleFlagActivity } = require('../Controllers/Activity/activityController');
-const { commentActivity } = require('../Controllers/Activity/activityCommentController');
+const {
+  toggleFlagActivity,
+} = require("../Controllers/Activity/activityController");
+const {
+  commentActivity,
+} = require("../Controllers/Activity/activityCommentController");
 
 const router = express.Router();
 
@@ -15,11 +19,11 @@ router
   .patch(activity.updateActivity)
   .delete(activity.deleteOnlyNotBookedActivity);
 router.get("/my/:advertiser", activity.getAllActivitiesByUsername);
+router.post("/reminder", activity.remindUpcomingActivities);
 router.get("/myAppropriate", activity.getAppropriateActivities);
 router.post("/:activityId", activity.rateActivity);
 router.route("/rate/:bookingId").patch(activity.rateActivity);
 router.route("/toggleFlagActivity/:id").put(toggleFlagActivity);
 router.route("/commentActivity/:bookingId").patch(commentActivity);
-
 
 module.exports = router;
