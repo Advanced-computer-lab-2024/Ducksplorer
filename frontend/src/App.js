@@ -72,6 +72,8 @@ import PastBookingDetails from "./Pages/Bookings/myPastBookings.js";
 import GuestDashboard from "./Pages/Dashboards/GuestDashboard.js";
 
 import TransportationBooking from "./Pages/ThirdParty/TransportationBooking.js";
+//cart page
+import CartPage from "./Pages/Products/CartPage.js";
 
 function App() {
   return (
@@ -185,6 +187,7 @@ function App() {
           <Route path="/transportation" element={<TransportationBooking />} />
           <Route path="/hotels" element={<HotelsBooking />} />
           <Route path="/myPurchases" element={<MyPurchases />} />
+          <Route path="/myCart" element={<CartPage />} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

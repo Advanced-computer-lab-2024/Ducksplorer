@@ -7,6 +7,7 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart"; // Import the shopping cart icon
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Tooltip from "@mui/material/Tooltip";
@@ -156,9 +157,15 @@ function TouristNavBar() {
                   alignItems: "center",
                 }}
               >
+                <MenuItem onClick={() => handleNavigation("myCart")}>
+                  <IconButton>
+                    <ShoppingCartIcon />
+                  </IconButton>
+                  <Typography textAlign="center">Cart</Typography>
+                </MenuItem>
                 <MenuItem onClick={() => handleNavigation("activities")}>
                   <IconButton>
-                    <FestivalIcon />
+                    < FestivalIcon/>
                   </IconButton>
                   <Typography textAlign="center">Activities</Typography>
                 </MenuItem>
@@ -224,6 +231,16 @@ function TouristNavBar() {
               alignItems: "center",
             }}
           >
+            <Tooltip title="My Cart">
+              <IconButton
+                onClick={() => handleNavigation("myCart")}
+              >
+                <ShoppingCartIcon />
+                <Typography textAlign="center" marginRight={3}>
+                  Cart
+                </Typography>
+              </IconButton>
+            </Tooltip>
             <Tooltip title="Book Activities">
               <IconButton
                 onClick={() => handleNavigation("activity/sortFilter")}
