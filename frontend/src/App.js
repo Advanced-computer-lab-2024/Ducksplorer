@@ -56,7 +56,7 @@ import MyPurchases from "./Pages/Products/MyPurchases.js";
 import ComplaintsDashboard from "./Components/Complaints/ComplaintDashboard.js";
 import ComplaintDetails from "./Components/Complaints/ComplaintDetails.js";
 import MyComplaints from "./Components/Complaints/MyComplaints.js";
-
+import "bootstrap/dist/css/bootstrap.min.css";
 import FlightsBooking from "./Pages/ThirdParty/FlightsBooking.js";
 import HotelsBooking from "./Pages/ThirdParty/HotelsBooking.js";
 //import TouristNavBar from "./Components/TouristNavBar.js";
