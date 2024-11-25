@@ -68,10 +68,11 @@ const testNotification = async (req, res) => {
     try{
         const message = req.body.message;
         const user = req.body.user;
+        const title = req.body.title;
         if(!message || !user){
             return res.status(400).json({err: "Message or user not found"});
         }
-        await createNotification(message, user);
+        await createNotification(message, user, title);
         res.status(200).json({message: "Notification added"});
     }catch(err){
         res.status(400).json({err: err.message});
