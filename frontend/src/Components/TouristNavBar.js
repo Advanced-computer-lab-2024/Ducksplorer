@@ -26,7 +26,6 @@ import MyNotifications from "./myNotifications";
 import Cookies from 'js-cookie';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
-import { Badge } from "@mui/material";
 
 function TouristNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -46,7 +45,7 @@ function TouristNavBar() {
   
   const handleLogout = () => {
     handleCloseUserMenu();
-    const response = axios.post("http://localhost:8000/signUp/logout")
+    axios.post("http://localhost:8000/signUp/logout")
     .then((response) => {
       console.log(response.data);
       localStorage.removeItem("user");

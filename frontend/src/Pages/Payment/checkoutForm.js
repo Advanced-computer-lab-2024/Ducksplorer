@@ -31,11 +31,12 @@ export default function CheckoutForm() {
     e.preventDefault();
 
     if (!stripe || !elements) {
+      message.error("Fields are not loaded.");
       return;
     }
-
     setIsProcessing(true);
-
+    console.log("stripe", stripe);
+    console.log("elements", elements);
     try {
       const response = await fetch(
         "http://localhost:8000/payment/create-payment-intent",
@@ -53,6 +54,7 @@ export default function CheckoutForm() {
       if (data.sent) {
         setShowOtpPopup(true);
         setMessage1("OTP sent to your email. Please enter it to confirm.");
+        message.success("OTP sent to your email.");
       } else {
         setMessage1("Failed to create payment intent.");
       }
@@ -117,6 +119,7 @@ export default function CheckoutForm() {
       //       return_url: `${window.location.origin}/completion`,
       //     },
       //  });
+      // }
 
       if (true) {
         const userJson = localStorage.getItem("user");
