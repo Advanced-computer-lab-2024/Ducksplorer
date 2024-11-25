@@ -1,23 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { message } from "antd";
 import { Typography } from "@mui/material";
 import { Button } from "@mui/material";
-import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
-import Help from "../../Components/HelpIcon";
+import ProductCard from "../Components/Products/ProductCard"; // Import the ProductCard component
+import Help from "../Components/HelpIcon";
+import TouristNavBar from "../Components/TouristNavBar";
+import { useNavigate } from "react-router-dom";
 
-function AllProducts() {
+function Wishlist() {
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
+    const user = JSON.parse(userJson);
+    const userName = user.username;
+
     axios
-      .get("http://localhost:8000/adminRoutes/getproducts")
+      .get(`http://localhost:8000/touristRoutes/myWishlist/${userName}`)
+
       .then((response) => {
-        message.success("Products fetched successfully");
-        setProducts(response.data);
+        message.success("wishlist fetched successfully");
+        setProducts(response.data[0].products);
+        console.log("these are the products", response.data[0].products);
       })
       .catch((error) => {
-        console.error("There was an error fetching the products!", error);
+        console.error("There was an error fetching the wishlist!", error);
       });
   }, []);
 
@@ -27,6 +36,7 @@ function AllProducts() {
 
   return (
     <>
+      <TouristNavBar />
       <Button onClick={handleBackButtonClick}>Back</Button>
       <div
         style={{
@@ -42,23 +52,22 @@ function AllProducts() {
             overflowY: "visible",
             padding: "10px",
             marginTop: "20px",
-            gridGap: "40px",
           }}
         >
           {/* Render the filtered products using the ProductCard component */}
-          {products.length > 0 ? (
+          {products && products.length > 0 ? (
             products.map((product) => (
               <div
                 key={product._id}
-                style={{
-                  position: "relative",
-                  marginBottom: "20px",
-                  height: "60vh",
-                  width: "30vw",
-                  maxHeight: "100%",
-                }}
+                style={{ position: "relative", marginBottom: "20px" }}
               >
-                <ProductCard key={product._id} product={product} />
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                  productID={product._id}
+                  showRating={true}
+                  showAverageRatingNo={true}
+                />
               </div>
             ))
           ) : (
@@ -73,4 +82,4 @@ function AllProducts() {
   );
 }
 
-export default AllProducts;
+export default Wishlist;

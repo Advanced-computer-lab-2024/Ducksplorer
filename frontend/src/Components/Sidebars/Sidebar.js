@@ -1,7 +1,7 @@
 import React from 'react';
 import { Drawer, Typography, Divider, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import { Link } from 'react-router-dom';
-import DashboardIcon from '@mui/icons-material/Dashboard';
+//import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -11,6 +11,8 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import ReportIcon from '@mui/icons-material/Report'; // Icon for Complaints
+import LockIcon from '@mui/icons-material/Lock'; // Icon for Change Password
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 
 const drawerWidth = 300;
 
@@ -31,11 +33,11 @@ const Sidebar = () => {
         </Typography>
         <Divider />
         <List>
-          <ListItem button component={Link} to="/AdminDashboard">
+          <ListItem button component={Link} to="/changePassword">
             <ListItemIcon>
-              <DashboardIcon />
+              <LockIcon />
             </ListItemIcon>
-            <ListItemText primary="Dashboard" />
+            <ListItemText primary="Change Password" />
           </ListItem>
           <ListItem button component={Link} to="/pendingusers">
             <ListItemIcon>
@@ -101,6 +103,13 @@ const Sidebar = () => {
             <EventNoteIcon />
             </ListItemIcon>
             <ListItemText primary="View All Itineraries " />
+          </ListItem>
+
+          <ListItem button component={Link} to="/addPromoCode">
+            <ListItemIcon>
+              <LocalOfferIcon />
+            </ListItemIcon>
+            <ListItemText primary="Create Promo Code" />
           </ListItem>
 
         </List>

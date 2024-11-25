@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Drawer,
   Typography,
@@ -11,30 +11,31 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Button
+  Button,
 } from "@mui/material";
-import { Link, useNavigate } from 'react-router-dom';
-import EventNoteIcon from '@mui/icons-material/EventNote';
-import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import MuseumIcon from '@mui/icons-material/Museum';
-import PersonIcon from '@mui/icons-material/Person';
+import { Link, useNavigate } from "react-router-dom";
+import EventNoteIcon from "@mui/icons-material/EventNote";
+import EventAvailableIcon from "@mui/icons-material/EventAvailable";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import MuseumIcon from "@mui/icons-material/Museum";
+import PersonIcon from "@mui/icons-material/Person";
 import WidgetsIcon from "@mui/icons-material/Widgets";
 // import SearchIcon from '@mui/icons-material/Search';
-import DirectionsRunIcon from '@mui/icons-material/DirectionsRun'; // Import the new icon
-import DeleteIcon from '@mui/icons-material/Delete';
-import BookIcon from '@mui/icons-material/Book'; // Import an icon for "My Past Bookings"
-import axios from 'axios';import ReportIcon from '@mui/icons-material/Report'; // Import icon for "My Complaints"
+import DirectionsRunIcon from "@mui/icons-material/DirectionsRun"; // Import the new icon
+import DeleteIcon from "@mui/icons-material/Delete";
+import BookIcon from "@mui/icons-material/Book"; // Import an icon for "My Past Bookings"
+import axios from "axios";
+import ReportIcon from "@mui/icons-material/Report"; // Import icon for "My Complaints"
 
 const drawerWidth = 300;
 
 const TouristSidebar = () => {
   const [open, setOpen] = useState(false); // State for the dialog
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState("");
   const navigate = useNavigate(); // Initialize the useNavigate hook
 
   const handleDeleteClick = () => {
-    const userJson = localStorage.getItem('user');
+    const userJson = localStorage.getItem("user");
     const user = JSON.parse(userJson);
     setUserName(user.username);
     setOpen(true); // Open the confirmation dialog
@@ -47,9 +48,11 @@ const TouristSidebar = () => {
   const handleDeleteAccount = async () => {
     if (userName) {
       try {
-        const response = await axios.delete(`http://localhost:8000/touristAccount/deleteMyTouristAccount/${userName}`);
+        const response = await axios.delete(
+          `http://localhost:8000/touristAccount/deleteMyTouristAccount/${userName}`
+        );
         alert(response.data.message); // Show success message
-        navigate('/login'); // Redirect to the login page
+        navigate("/login"); // Redirect to the login page
       } catch (error) {
         console.error("Error deleting account:", error);
         alert("Failed to delete account. Please try again.");
@@ -64,7 +67,7 @@ const TouristSidebar = () => {
       sx={{
         width: drawerWidth,
         flexShrink: 0,
-        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" },
       }}
     >
       <div>
@@ -73,14 +76,13 @@ const TouristSidebar = () => {
         </Typography>
         <Divider />
         <List>
-
           <ListItem
             button
             onClick={handleDeleteClick}
-            sx={{ color: 'red', cursor: 'pointer' }}
+            sx={{ color: "red", cursor: "pointer" }}
           >
             <ListItemIcon>
-              <DeleteIcon sx={{ color: 'red' }} />
+              <DeleteIcon sx={{ color: "red" }} />
             </ListItemIcon>
             <ListItemText primary="Delete My Account" />
           </ListItem>
@@ -140,7 +142,6 @@ const TouristSidebar = () => {
             </ListItemIcon>
             <ListItemText primary="View Upcoming Historical Places" />
           </ListItem>
-          
 
           <ListItem button component={Link} to="/activity/searchActivities">
             <ListItemIcon>
@@ -150,7 +151,7 @@ const TouristSidebar = () => {
             <ListItemText primary="View All Activities" />
           </ListItem>
 
-          <ListItem button component={Link} to="/activity/sortFilter">
+          <ListItem button component={Link} to="/activity/SortFilter">
             <ListItemIcon>
               <WidgetsIcon />
             </ListItemIcon>
@@ -181,17 +182,18 @@ const TouristSidebar = () => {
           Are you sure you want to delete your account?
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary" variant="outlined">Cancel</Button>
+          <Button onClick={handleClose} color="primary" variant="outlined">
+            Cancel
+          </Button>
           <Button
             onClick={handleDeleteAccount}
-            sx={{ color: 'white', backgroundColor: 'error.main' }} // Set red background
+            sx={{ color: "white", backgroundColor: "error.main" }} // Set red background
             variant="contained"
           >
             Yes, Delete
           </Button>
         </DialogActions>
       </Dialog>
-
     </Drawer>
   );
 };

@@ -170,6 +170,28 @@ const getUsers = async (req, res) => {
   }
 };
 
+//change password
+const changePassword = async (req, res) => {
+  const { userName, password, newPassword } = req.body;
+  console.log(req.body);
+  try {
+    const user = await User.findOne({ userName });
+    if (!user) {
+      return res.status(400).json({ error: 'User not found' });
+    }
+    if (user.password !== password) {
+      return res.status(400).json({ error: 'Incorrect password' });
+    }
+    user.password = newPassword;
+    await user.save();
+    return res.status(200).json({ message: 'Password changed successfully' });
+  }
+  catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 module.exports = {
     deleteUser,
     addAdmin,
@@ -178,5 +200,6 @@ module.exports = {
     getPendingUsers,
     getUsers,
     rejectUser,
-    getPendingUserDetails
+    getPendingUserDetails,
+    changePassword
 };

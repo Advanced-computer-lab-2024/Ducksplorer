@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { TextField, Button, Stack } from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
-import { get } from "mongoose";
 import UploadFile from "../ProductUploadImage";
 
 let picture = "";

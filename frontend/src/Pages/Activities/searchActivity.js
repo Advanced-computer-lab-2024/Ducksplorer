@@ -15,6 +15,7 @@ import {
   TextField,
   Button,
   Rating,
+  IconButton,
 } from "@mui/material";
 
 import { Link, useParams } from "react-router-dom";
@@ -22,6 +23,8 @@ import { Link, useParams } from "react-router-dom";
 // import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 
 const SearchActivities = () => {
   const { id } = useParams();
@@ -32,23 +35,32 @@ const SearchActivities = () => {
   const isGuest = localStorage.getItem("guest") === "true";
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
+  const [isSaved, setIsSaved] = useState(false);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const username = user?.username;
 
   // Fetch all activities when component mounts
   useEffect(() => {
-    const showPreferences = localStorage.getItem("showPreferences");
-    const favCategory = localStorage.getItem("category");
-    console.log(showPreferences, favCategory);
-    axios
-      .get("http://localhost:8000/activity/", {
-        params: {
-          showPreferences: showPreferences.toString(),
-          favCategory,
-        },
-      })
-      .then((response) => {
+    const fetchActivities = async () => {
+      const showPreferences = localStorage.getItem("showPreferences");
+      const favCategory = localStorage.getItem("category");
+      console.log(showPreferences, favCategory);
+      try {
+        const response = await axios.get("http://localhost:8000/activity/", {
+          params: {
+            showPreferences: showPreferences.toString(),
+            favCategory,
+          },
+        });
+        const data = response.data.map((activity) => ({
+          ...activity,
+          saved: activity.saved || { isSaved: false, user: null },
+        }));
         if (id === undefined) {
-          setAllActivities(response.data);
-          setActivities(response.data); // Set initial activities to all fetched activities
+          setAllActivities(data);
+          setActivities(data); // Set initial activities to all fetched activities
         } else {
           const tempActivities = response.data.filter(
             (activity) => activity._id === id
@@ -56,10 +68,11 @@ const SearchActivities = () => {
           setAllActivities(tempActivities);
           setActivities(tempActivities);
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("There was an error fetching the activities!", error);
-      });
+      }
+    };
+    fetchActivities();
   }, [id]);
 
   // Function to fetch activities based on search criteria
@@ -82,7 +95,7 @@ const SearchActivities = () => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
   };
-  // Share itinerary functionality
+  // Share activity functionality
   const handleShareLink = (activityId) => {
     const link = `${window.location.origin}/activity/searchActivities/${activityId}`; // Update with your actual route
     navigator.clipboard
@@ -103,6 +116,77 @@ const SearchActivities = () => {
       subject
     )}&body=${encodeURIComponent(body)}`;
   };
+
+  const handleSaveActivity = async (activityId, currentIsSaved) => {
+    try {
+      const newIsSaved = !currentIsSaved;
+
+      const response = await axios.put(
+        `http://localhost:8000/activity/save/${activityId}`,
+        {
+          username: username,
+          save: newIsSaved,
+        }
+      );
+      if (response.status === 200) {
+        message.success("Activity saved successfully");
+        setActivities((prevActivities) =>
+          prevActivities.map((activity) =>
+            activity._id === activityId
+              ? {
+                  ...activity,
+                  saved: { ...activity.saved, isSaved: newIsSaved },
+                }
+              : activity
+          )
+        );
+      } else {
+        message.error("Failed to save");
+      }
+      setIsSaved(isSaved);
+    } catch (error) {
+      console.error("Error toggling save state:", error);
+    }
+  };
+
+  const [saveStates, setSaveStates] = useState({});
+
+  useEffect(() => {
+    const fetchSaveStates = async () => {
+      const userJson = localStorage.getItem("user");
+      const user = JSON.parse(userJson);
+      const userName = user.username;
+
+      const newSaveStates = {};
+      await Promise.all(
+        activities.map(async (activity) => {
+          try {
+            const response = await axios.get(
+              `http://localhost:8000/activity/getSave/${activity._id}/${userName}`
+            );
+            
+            console.log("hal heya saved: ", response.data);
+            console.log("what is the status ", response.status);
+
+            if (response.status === 200) {
+              newSaveStates[activity._id] = response.data.saved; // Save the state
+            }
+          } catch (error) {
+            console.error(
+              `Failed to fetch save state for ${activity._id}:`,
+              error
+            );
+          }
+        })
+      );
+
+      setSaveStates(newSaveStates); // Update state with all fetched save states
+    };
+
+    if (activities.length > 0) {
+      fetchSaveStates();
+    }
+  }, [activities]);
 
   return (
     <>
@@ -169,10 +253,16 @@ const SearchActivities = () => {
                 <TableCell>Duration</TableCell>
                 <TableCell>Location</TableCell>
                 <TableCell>Rating</TableCell>
+                <TableCell></TableCell>
+                <TableCell>Bookmark</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {activities.map((activity) => activity.flag===false && activity.advertiserDeleted===false && activity.deletedActivity===false? (
+              {
+                activities.map((activity) =>
+                  activity.flag === false &&
+                  activity.advertiserDeleted === false &&
+                  activity.deletedActivity === false ? (
                     <TableRow key={activity._id}>
                       <TableCell>{activity.name}</TableCell>
                       <TableCell>
@@ -224,10 +314,31 @@ const SearchActivities = () => {
                           </Button>
                         </TableCell>
                       ) : null}
+                      <TableCell>
+                        <span
+                          onClick={() =>
+                            handleSaveActivity(
+                              activity._id,
+                              activity.saved?.isSaved
+                            )
+                          }
+                        >
+                          {saveStates[activity._id] ? (
+                            <IconButton>
+                              <BookmarkIcon />
+                            </IconButton>
+                          ) : (
+                            <IconButton>
+                              <BookmarkBorderIcon />
+                            </IconButton>
+                          )}
+                        </span>
+                      </TableCell>
                     </TableRow>
-                  ):null)// We don't output a row when it has `activity.flag` is true (ie activity is inappropriate) or when the activity's advertiser has left the system or the activity has been deleted but cannot be removed from database since it is booked my previous tourists
-                }
-                 </TableBody>
+                  ) : null
+                ) // We don't output a row when it has `activity.flag` is true (ie activity is inappropriate) or when the activity's advertiser has left the system or the activity has been deleted but cannot be removed from database since it is booked my previous tourists
+              }
+            </TableBody>
           </Table>
         </TableContainer>
       </Box>

@@ -29,7 +29,7 @@ const ProductCard = ({
   showAddToCart=false,
   onProductRemove,
   onQuantityChange,
-  showAverageRating, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
+  showAverageRatingNo, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
 }) => {
   const [isFormVisible, setFormVisible] = useState(false); // Controls form visibility
   const [quantity, setQuantity] = useState(1); // Holds the selected quantity
@@ -154,6 +154,13 @@ const ProductCard = ({
   const [rating, setRating] = useState(product.rating || 0);
   const [review, setReview] = useState("");
   const [showReviewBox, setShowReviewBox] = useState(false);
+  const [showWishlist, setShowWishlist] = useState(false);
+  const getReviewerRating = (reviewer) => {
+    const ratingEntry = product.ratings.find(
+      (rating) => rating.buyer === reviewer
+    );
+    return ratingEntry ? ratingEntry.rating : "No rating available";
+  };
 
   useEffect(() => {
     setArchived(product.isArchived);
@@ -228,6 +235,29 @@ const ProductCard = ({
     }
   };
 
+  const addToWishlist = async (product) => {
+    const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
+    const user = JSON.parse(userJson);
+    const userName = user.username;
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/touristRoutes/updateWishlist/${userName}`,
+        {
+          products: [product],
+        }
+      );
+      if (response.status === 200) {
+        message.success("Product added to wishlist successfully!");
+        setShowWishlist(false);
+
+      } else {
+        message.error("Failed to add the product to the wishlist.");
+      }
+    } catch (error) {
+      message.error("An error occurred while adding the product to the wishlist.");
+    }
+
+  }
   const handlePurchase = async (product) => {
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
     const user = JSON.parse(userJson);
@@ -300,11 +330,12 @@ const ProductCard = ({
     >
       <CardMedia
         component="img"
-        height="60%" // Adjust the height as needed
         width="100%"
+        height="60%" // Adjust the height as needed
         image={product.picture}
         alt={product.name}
         style={{
+          maxHeight: "500px",
           objectFit: "cover",
           boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
           borderRadius: "3cap",
@@ -342,7 +373,7 @@ const ProductCard = ({
             Description: {product.description}
           </Typography>
           <Typography variant="body1">Seller: {product.seller}</Typography>
-          {showAverageRating && (
+          {!showAverageRatingNo && (
             <Rating
               value={calculateProductRating(product.ratings)}
               precision={0.1}
@@ -353,10 +384,12 @@ const ProductCard = ({
           {Object.entries(product.reviews).length > 0 ? (
             Object.entries(product.reviews).map(([user, review]) => (
               <div key={user}>
-                <Typography variant="body2">User: {user}</Typography>
-                <Typography variant="body2">Rating: {review.rating}</Typography>
+                <Typography variant="body2">User: {review.buyer}</Typography>
                 <Typography variant="body2">
-                  Comment: {review.comment}
+                  Rating: {getReviewerRating(review.buyer)}
+                </Typography>
+                <Typography variant="body2">
+                  Comment: {review.review}
                 </Typography>
               </div>
             ))
@@ -506,6 +539,18 @@ const ProductCard = ({
             </Button>
           </form>
           )}
+          <div>
+          {role === "Tourist" && showPurchase && (
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ position: "relative", left: "75%" ,bottom: "100%"}} // Place the button at the bottom-right corner
+              onClick={() => addToWishlist(product)}
+            >
+              {showWishlist ? "remove from wishlist" : "Add to Wishlist"}
+            </Button>
+          )}
+          </div>
         </CardContent>
       </div>
     </Card>

@@ -59,9 +59,9 @@ import MyComplaints from "./Components/Complaints/MyComplaints.js";
 
 import FlightsBooking from "./Pages/ThirdParty/FlightsBooking.js";
 import HotelsBooking from "./Pages/ThirdParty/HotelsBooking.js";
-import TouristNavBar from "./Components/TouristNavBar.js";
+//import TouristNavBar from "./Components/TouristNavBar.js";
 import BookingDetails from "./Pages/Bookings/myBookings.js";
-import CheckoutForm from "./Pages/Payment/checkout.js";
+//import CheckoutForm from "./Pages/Payment/checkout.js";
 import Completion from "./Pages/Payment/completion.js";
 import Payment from "./Pages/Payment/payment2.js";
 import PaymentPage from "./Pages/Payment/mailAmount.js";
@@ -70,10 +70,15 @@ import ViewAllItineraries from "./Pages/Admin/ViewAllItineraries.js";
 import ViewAllActivities from "./Pages/Admin/ViewAllActivities.js";
 import PastBookingDetails from "./Pages/Bookings/myPastBookings.js";
 import GuestDashboard from "./Pages/Dashboards/GuestDashboard.js";
-
+import Wishlist from "./Pages/Wishlist.js";
 import TransportationBooking from "./Pages/ThirdParty/TransportationBooking.js";
 //cart page
 import CartPage from "./Pages/Products/CartPage.js";
+import ChangePassword from "./Pages/Admin/ChangePassword.js";
+
+
+import CreatePromoCode from "./Pages/Admin/CreatePromoCode.js";
+import MySavedItems from "./Pages/SavedItems.js";
 
 function App() {
   return (
@@ -81,6 +86,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           {/* <Route index element={<Hotels />} /> */}
+          <Route path="/changePassword" element={<ChangePassword/>} />
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signUp" element={<Signup />} />
@@ -143,7 +149,7 @@ function App() {
           <Route path="/admin/complaints/:id" element={<ComplaintDetails />} />
           <Route path="/myComplaints" element={<MyComplaints />} />
           <Route path="/touristProducts" element={<TouristProducts />} />
-
+          <Route path="/Wishlist" element={<Wishlist />} />
           <Route
             path="/advertiserDashboard"
             element={<AdvertiserDashboard />}
@@ -153,6 +159,10 @@ function App() {
           <Route path="/activity/upcoming" element={<UpcomingActivities />} />
           <Route
             path="/activity/searchActivities"
+            element={<SearchActivities />}
+          />
+          <Route
+            path="/activity/searchActivities/:id"
             element={<SearchActivities />}
           />
           <Route path="/activity/SortFilter" element={<SortFilterActivity />} />
@@ -188,6 +198,10 @@ function App() {
           <Route path="/hotels" element={<HotelsBooking />} />
           <Route path="/myPurchases" element={<MyPurchases />} />
           <Route path="/myCart" element={<CartPage />} />
+
+
+          <Route path="/addPromoCode" element={<CreatePromoCode/>} />
+          <Route path="/mySaved" element={<MySavedItems/>} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

@@ -99,7 +99,7 @@ const GuestSidebar = () => {
             <ListItemText primary="View Upcoming Historical Places" />
           </ListItem>
 
-          <ListItem button component={Link} to="/activity/sortFilter">
+          <ListItem button component={Link} to="/activity/SortFilter">
             <ListItemIcon>
               <WidgetsIcon />
             </ListItemIcon>

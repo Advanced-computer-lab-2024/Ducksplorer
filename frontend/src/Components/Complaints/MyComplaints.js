@@ -110,6 +110,19 @@ const MyComplaints = () => {
                       {complaint.status ? "Resolved" : "Pending"}
                     </span>
                   </Typography>
+                  <Divider sx={{ my: 1 }} />
+                  <Typography                     
+                    variant="body2"
+                    color="textSecondary"
+                    sx={{ mt: 1 }}>
+                    <strong>Replies:</strong>
+                  </Typography>
+                  {complaint.replies.map((reply, index) => (
+                    <Typography key={index} variant="body2" color="textSecondary">
+                      <strong>Date:</strong> {reply.date} - {reply.text}
+                    </Typography>
+                  ))}
+
                 </CardContent>
               </Card>
             </Grid>

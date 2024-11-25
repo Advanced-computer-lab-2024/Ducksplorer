@@ -454,7 +454,6 @@ const updateLevel = async (userName, points) => {
         }
 
         await user.save();
-        await tourist.save();
 
     } catch (error) {
         console.error('Error updating level:', error);
@@ -491,6 +490,8 @@ const redeemPoints = async (req, res) => {
 
 const payVisa = async (req, res) => {
     try {
+        console.log("entered function pay visa");
+        console.log(req.body);
         const { userName } = req.params;
         const { price } = req.body;
         const tourist = await Tourist.findOne({ userName });
@@ -503,14 +504,13 @@ const payVisa = async (req, res) => {
         else if (tourist.level === 3) {
             tourist.points += (price * 1.5)
         }
-        if (tourist.points >= 10000 && tourist.points < 50000) {
+        if (tourist.points >= 100000 && tourist.points < 500000) {
             tourist.level = 2;
-        } else if (tourist.points >= 50000) {
+        } else if (tourist.points >= 500000) {
             tourist.level = 3;
         } else {
             tourist.level = 1;
         }
-        await tourist.save();
         await tourist.save();
         res.status(200).json({
             status: 200,
@@ -530,6 +530,9 @@ const payWallet = async (req, res) => {
         const tourist = await Tourist.findOne({ userName });
         const level = tourist.level;
         console.log(tourist);
+        console.log("body",req.body);
+        console.log("wallet",tourist.wallet);
+        console.log("price",price);
         let myWallet = tourist.wallet;
         if (myWallet >= price) {
             myWallet -= price;
@@ -544,9 +547,9 @@ const payWallet = async (req, res) => {
             else if (tourist.level === 3) {
                 tourist.points += (price * 1.5)
             }
-            if (tourist.points >= 10000 && tourist.points < 50000) {
+            if (tourist.points >= 100000 && tourist.points < 500000) {
                 tourist.level = 2;
-            } else if (tourist.points >= 50000) {
+            } else if (tourist.points >= 500000) {
                 tourist.level = 3;
             } else {
                 tourist.level = 1;
@@ -561,6 +564,7 @@ const payWallet = async (req, res) => {
         } else {
             res.status(400).json({ message: "Not enough money in the wallet" });
         }
+
     } catch (error) {
         return res.status(500).json({ message: "An error occurred", error });
     }
