@@ -365,36 +365,51 @@ const AddItinerary = () => {
           <AddCircleIcon color="primary" />
         </IconButton>
         <h3>Locations:</h3>
-        {locations.map((location, index) => (
-          <div class="input-group mb-3">
-            <span class="input-group-text" id="inputGroup-sizing-default">
-              Location
-            </span>
-            <input
-              class="form-control"
-              type="text"
-              key={index}
-              value={location}
-              onChange={(e) => {
-                const newLocations = [...locations];
-                newLocations[index] = e.target.value;
-                setLocations(newLocations);
-              }}
-              required
-            />
-          </div>
-        ))}
-        <IconButton
-          onClick={handleAddLocation}
-          sx={{
-            height: "50px",
-            width: "50px",
-            borderRadius: "100%",
-            alignSelf: "center",
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
           }}
         >
-          <AddCircleIcon color="primary" />
-        </IconButton>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              flex: 1,
+            }}
+          >
+            {locations.map((location, index) => (
+              <div class="input-group mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-default">
+                  Location
+                </span>
+                <input
+                  class="form-control"
+                  type="text"
+                  key={index}
+                  value={location}
+                  onChange={(e) => {
+                    const newLocations = [...locations];
+                    newLocations[index] = e.target.value;
+                    setLocations(newLocations);
+                  }}
+                  required
+                />
+              </div>
+            ))}
+          </div>
+          <IconButton
+            onClick={handleAddLocation}
+            sx={{
+              height: "50px",
+              width: "50px",
+              borderRadius: "100%",
+            }}
+          >
+            <AddCircleIcon color="primary" />
+          </IconButton>
+        </div>
         <div class="input-group mb-3">
           <span class="input-group-text" id="inputGroup-sizing-default">
             Timeline in days

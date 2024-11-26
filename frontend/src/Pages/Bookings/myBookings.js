@@ -49,6 +49,7 @@ const BookingDetails = () => {
   const [tourGuideNames, setTourGuideNames] = useState({});
   const [selectedCategory, setSelectedCategory] = useState(null);
   const chipNames = [
+    "All",
     "Activities",
     "Hotels",
     "Itineraries",
@@ -263,10 +264,9 @@ const BookingDetails = () => {
         <br></br>
         <MyChips chipNames={chipNames} onChipClick={handleChipClick} />
         {/* Activities Table */}
-        {selectedCategory === "Activities" && (
+        {(selectedCategory === "Activities" || selectedCategory === "All") && (
           <div>
             {" "}
-            <ActivityCard />
             <Typography
               variant="h5"
               sx={{ fontWeight: "bold", marginBottom: "20px" }}
@@ -399,7 +399,7 @@ const BookingDetails = () => {
           </div>
         )}
         {/* Itineraries Table */}
-        {selectedCategory === "Itineraries" && (
+        {(selectedCategory === "Itineraries" || selectedCategory === "All") && (
           <div>
             {" "}
             <Typography variant="h5" sx={{ fontWeight: "bold" }} gutterBottom>
@@ -583,7 +583,7 @@ const BookingDetails = () => {
           </div>
         )}
         {/* Flights Table */}
-        {selectedCategory === "Flights" && (
+        {(selectedCategory === "Flights" || selectedCategory === "All") && (
           <div>
             {" "}
             <Typography
@@ -729,7 +729,7 @@ const BookingDetails = () => {
           </div>
         )}
         {/* Hotels Table */}
-        {selectedCategory === "Hotels" && (
+        {(selectedCategory === "Hotels" || selectedCategory === "All") && (
           <div>
             <Typography
               variant="h5"
@@ -824,7 +824,8 @@ const BookingDetails = () => {
           </div>
         )}
         {/* Transportation Table */}
-        {selectedCategory === "Transportation" && (
+        {(selectedCategory === "Transportation" ||
+          selectedCategory === "All") && (
           <div>
             {" "}
             <Typography
