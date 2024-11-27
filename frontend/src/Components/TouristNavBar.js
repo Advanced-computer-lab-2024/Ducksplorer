@@ -20,17 +20,20 @@ import TempleBuddhistIcon from "@mui/icons-material/TempleBuddhist";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import LockIcon from "@mui/icons-material/Lock";
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import PersistentDrawerLeft from "./Drawer";
 
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 function TouristNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [image, setImage] = React.useState("");
-  const [storedPicture, setStoredPicture] = React.useState(localStorage.getItem('profilePicture'));
+  const [storedPicture, setStoredPicture] = React.useState(
+    localStorage.getItem("profilePicture")
+  );
   const navigate = useNavigate();
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -43,11 +46,12 @@ function TouristNavBar() {
 
   useEffect(() => {
     //const storedPicture = localStorage.getItem('profilePicture');
-  
-        axios.get(`http://localhost:8000/touristRoutes/getLevel/${userName}`)
-        .then((response) => {
-          console.log(response.data);
-          const level = response.data;
+
+    axios
+      .get(`http://localhost:8000/touristRoutes/getLevel/${userName}`)
+      .then((response) => {
+        console.log(response.data);
+        const level = response.data;
         if (level === 1) {
           setImage("level1.png");
         } else if (level === 2) {
@@ -55,12 +59,12 @@ function TouristNavBar() {
         } else if (level === 3) {
           setImage("level3.png");
         }
-      }) 
-      .catch ((error) => {
+      })
+      .catch((error) => {
         console.log("Error: ", error.message);
         console.error("There was an error fetching the image!", error);
       });
-    }, [userName]);
+  }, [userName]);
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
@@ -74,7 +78,7 @@ function TouristNavBar() {
   };
 
   const [showPreferences, setShowPreferences] = React.useState(() => {
-    const savedPreference = localStorage.getItem('showPreferences');
+    const savedPreference = localStorage.getItem("showPreferences");
     return savedPreference !== null ? JSON.parse(savedPreference) : false;
   });
   const handleTogglePreferences = () => {
@@ -86,18 +90,7 @@ function TouristNavBar() {
     <AppBar position="fixed" sx={{ backgroundColor: "#FFD700", width: "100%" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Tooltip title="Badge">
-            <img
-              src={image}
-              alt="Avatar"
-              style={{
-                width: 70,
-                height: 70,
-                borderRadius: "50%",
-                marginRight: 10,
-              }}
-            />
-          </Tooltip>
+          <PersistentDrawerLeft />
           <Tooltip title="Ducksplorer Home Page">
             <TravelExploreIcon
               sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
@@ -106,7 +99,7 @@ function TouristNavBar() {
               variant="h6"
               noWrap
               component="a"
-              onClick={() => navigate('/touristDashboard')}
+              onClick={() => navigate("/touristDashboard")}
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
