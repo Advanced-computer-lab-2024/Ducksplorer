@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { message } from "antd";
+import TouristNavBar from "../../Components/TouristNavBar.js";
 import {
   TextField,
   IconButton,
@@ -142,7 +143,13 @@ const PreferenceTags = () => {
   };
 
   return (
-    <>
+    <Box
+    sx={{
+      height: "100vh",
+      backgroundColor: "#f5f5f5",
+      paddingTop: "64px", // Adjusted for fixed navbar spacing
+    }}
+  >
       <Sidebar />
       <div style={{ height: "80vh", transform: "translateX(125px)" }}>
         <Box sx={{ p: 6, maxWidth: 1200 }}>
@@ -252,7 +259,7 @@ const PreferenceTags = () => {
           </Dialog>
         </Box>
       </div>
-    </>
+    </Box>
   );
 };
 

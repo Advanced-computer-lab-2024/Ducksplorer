@@ -28,6 +28,8 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { Link, useParams } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
 import Help from "../../Components/HelpIcon.js";
+import TouristNavBar from "../../Components/TouristNavBar";
+
 
 function SearchItineraries() {
   const { id } = useParams();
@@ -256,6 +258,14 @@ function SearchItineraries() {
   };
 
   return (
+    <Box
+    sx={{
+      height: "100vh",
+      backgroundColor: "#f9f9f9", // Light background for better contrast
+      paddingTop: "64px", // Adjust for navbar height
+    }}
+  >
+        <TouristNavBar />
     <Box
       sx={{
         padding: "20px",
@@ -535,6 +545,7 @@ function SearchItineraries() {
                     </Typography>
                 )}
             </div>
+            </Box>
             <Help />
         </Box>
     );

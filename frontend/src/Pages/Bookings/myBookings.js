@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
+  Box,
   Table,
   TableBody,
   TableCell,
@@ -239,6 +240,14 @@ const BookingDetails = () => {
   }
 
   return (
+    <Box
+    sx={{
+      height: "100vh",
+      backgroundColor: "#f9f9f9",
+      paddingTop: "64px", // Adjust for navbar height
+    }}
+  >
+    <TouristNavBar />
     <div
       style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
     >
@@ -933,6 +942,7 @@ const BookingDetails = () => {
       </div>
       <Help />
     </div>
+    </Box>
   );
 };
 

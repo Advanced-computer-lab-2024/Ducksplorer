@@ -20,7 +20,6 @@ import StandAloneToggleButton from "../../Components/ToggleButton.js";
 import TouristCategoryDropDown from "../../Components/TouristComponents/TouristCategoryDropDown.js";
 import TagsToggleButtons from "../../Components/MuseumHistoricalPlaceComponent/TagsToggleButtons.js";
 import Help from "../../Components/HelpIcon.js";
-
 const EditProfile = () => {
   const [touristDetails, setTouristDetails] = useState({
     userName: "",
@@ -200,6 +199,13 @@ const EditProfile = () => {
   };
 
   return (
+    <Box
+    sx={{
+      height: "100vh",
+      backgroundColor: "#f5f5f5",
+      paddingTop: "64px", // Adjusted for fixed navbar spacing
+    }}
+  >
     <Box
       sx={{
         height: "100vh",
@@ -448,6 +454,7 @@ const EditProfile = () => {
         </Paper>
       </Box>
       <Help />
+    </Box>
     </Box>
   );
 };

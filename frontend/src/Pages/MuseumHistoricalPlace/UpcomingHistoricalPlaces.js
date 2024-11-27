@@ -5,6 +5,7 @@ import { message } from "antd";
 import { Link } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon.js";
+import TouristNavBar from "../../Components/TouristNavBar.js";
 
 import {
   Box,
@@ -46,6 +47,14 @@ const UpcomingHistoricalPlaces = () => {
   };
 
   return (
+    <Box
+    sx={{
+      height: "100vh",
+      backgroundColor: "#f9f9f9",
+      paddingTop: "64px", // Adjust for navbar height
+    }}
+  >
+    <TouristNavBar />
     <Box sx={{ p: 6, maxWidth: 1200, overflowY: "visible", height: "100vh" }}>
       <Link to="/HistoricalPlaceTouristPov"> Back </Link>
       <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
@@ -115,6 +124,7 @@ const UpcomingHistoricalPlaces = () => {
         </Table>
       </TableContainer>
       <Help />
+    </Box>
     </Box>
   );
 };

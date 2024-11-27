@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { message } from "antd";
 import { Typography } from "@mui/material";
-import { Button } from "@mui/material";
+import { Button, Box } from "@mui/material";
 import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
 import { useNavigate } from "react-router-dom"; // Import to navigate to the edit page
+import TouristNavBar from "../../Components/TouristNavBar";
 
 function ViewMyProducts() {
   const [products, setProducts] = useState([]);
@@ -35,8 +36,14 @@ function ViewMyProducts() {
   };
 
   return (
-    <>
-      <Button onClick={handleBackButtonClick}>Back</Button>
+    <Box
+    sx={{
+      height: "100vh",
+      backgroundColor: "#f9f9f9",
+      paddingTop: "64px", // Adjust for navbar height
+    }}
+  >
+    <TouristNavBar />      <Button onClick={handleBackButtonClick}>Back</Button>
       <div
         style={{
           padding: "20px",
@@ -84,7 +91,7 @@ function ViewMyProducts() {
           )}
         </div>
       </div>
-    </>
+    </Box>
   );
 }
 

@@ -116,6 +116,7 @@ const TouristSidebar = () => {
             </ListItemIcon>
             {isSidebarOpen && <ListItemText primary="Profile" />}
           </ListItem>
+          
 
           <ListItem
             button
@@ -137,46 +138,34 @@ const TouristSidebar = () => {
             {isSidebarOpen && <ListItemText primary="View All Itineraries" />}
           </ListItem>
 
-          <ListItem
-            button
-            component={Link}
-            to="/viewUpcomingItinerary"
-            sx={{
-              "&:hover": {
-                backgroundColor: "#f0f8ff", // Light blue hover effect
-              },
-              borderRadius: 1, // Rounded corners
-              margin: "4px 0", // Add spacing between items
-              padding: "8px 16px", // Improve padding for touch-friendly interaction
-            }}
-          >
-            <ListItemIcon>
-              <EventAvailableIcon sx={{ color: "success.main" }} />{" "}
-              {/* Theme-based success color */}
-            </ListItemIcon>
-            {isSidebarOpen && <ListItemText primary="View Upcoming Itineraries" />}
-          </ListItem>
+          
+       
+
+       
+            
+
+      
 
           <ListItem
             button
             component={Link}
-            to="/TouristAllProducts"
+            to="/HistoricalPlaceTouristPov"
             sx={{
               "&:hover": {
-                backgroundColor: "#f9f9f9", // Light hover effect
+                backgroundColor: "#f9f9f9", // Light hover background
               },
               borderRadius: 1, // Rounded corners
               margin: "4px 0", // Add spacing between items
               padding: "8px 16px", // Improve touch-friendly interaction
             }}
           >
-            <ListItemIcon>
-              <ShoppingCartIcon sx={{ color: "secondary.main" }} />{" "}
-              {/* Secondary color for the icon */}
-            </ListItemIcon>
-            {isSidebarOpen && <ListItemText primary="Products Actions" />}
-          </ListItem>
 
+            <ListItemIcon>
+              <MuseumIcon sx={{ color: "warning.main" }} />{" "}
+              {/* Use warning color for variety */}
+            </ListItemIcon>
+            {isSidebarOpen && <ListItemText primary="View Historical Places" />}
+          </ListItem>
           <ListItem
             button
             component={Link}
@@ -195,26 +184,6 @@ const TouristSidebar = () => {
               {/* Info color for icon */}
             </ListItemIcon>
             {isSidebarOpen && <ListItemText primary="View Museums" />}
-          </ListItem>
-
-          <ListItem
-            button
-            component={Link}
-            to="/HistoricalPlaceTouristPov"
-            sx={{
-              "&:hover": {
-                backgroundColor: "#f9f9f9", // Light hover background
-              },
-              borderRadius: 1, // Rounded corners
-              margin: "4px 0", // Add spacing between items
-              padding: "8px 16px", // Improve touch-friendly interaction
-            }}
-          >
-            <ListItemIcon>
-              <MuseumIcon sx={{ color: "warning.main" }} />{" "}
-              {/* Use warning color for variety */}
-            </ListItemIcon>
-            {isSidebarOpen && <ListItemText primary="View Historical Places" />}
           </ListItem>
 
           <ListItem
@@ -277,25 +246,8 @@ const TouristSidebar = () => {
             {isSidebarOpen && <ListItemText primary="View All Activities" />}
           </ListItem>
 
-          <ListItem
-            button
-            component={Link}
-            to="/activity/sortFilter"
-            sx={{
-              "&:hover": {
-                backgroundColor: "#f9f9f9", // Light hover background
-              },
-              borderRadius: 1, // Smooth rounded corners
-              margin: "4px 0", // Spacing between items
-              padding: "8px 16px", // Improved padding for better interaction
-            }}
-          >
-            <ListItemIcon>
-              <WidgetsIcon sx={{ color: "info.main" }} />{" "}
-              {/* Blue for upcoming activities */}
-            </ListItemIcon>
-            {isSidebarOpen && <ListItemText primary="View Upcoming Activities" />}
-          </ListItem>
+         
+           
 
           <ListItem
             button

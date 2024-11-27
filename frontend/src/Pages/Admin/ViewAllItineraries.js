@@ -5,6 +5,7 @@ import FlagIcon from '@mui/icons-material/Flag';
 import { Link } from 'react-router-dom';
 import WarningIcon from '@mui/icons-material/Warning';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import TouristNavBar from '../../Components/TouristNavBar';
 
 import {
     Box,
@@ -68,6 +69,13 @@ const ViewAllItineraries = () => {
 
 
     return (
+        <Box
+        sx={{
+          height: "100vh",
+          backgroundColor: "#f5f5f5",
+          paddingTop: "64px", // Adjusted for fixed navbar spacing
+        }}
+      >
         <Box sx={{ padding: '20px', maxWidth: '1200px', margin: 'auto', display: 'flex', flexDirection: 'column', overflowY: 'visible', height: '100vh' }}>
             <Link to="/AdminDashboard"> Back </Link>
             <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
@@ -201,6 +209,7 @@ const ViewAllItineraries = () => {
                     </Typography>
                 )}
             </div>
+        </Box>
         </Box>
     );
 }

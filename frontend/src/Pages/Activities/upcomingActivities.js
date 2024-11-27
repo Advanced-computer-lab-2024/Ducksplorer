@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon";
 import { Link } from "react-router-dom";
+import TouristNavBar from "../../Components/TouristNavBar";
 const UpcomingActivities = () => {
   const [activities, setActivities] = useState([]);
   const navigate = useNavigate();
@@ -80,7 +81,14 @@ const UpcomingActivities = () => {
     }
   };
   return (
-    <>
+    <Box
+    sx={{
+      height: "100vh",
+      backgroundColor: "#f9f9f9", // Light background for better contrast
+      paddingTop: "64px", // Adjust for navbar height
+    }}
+  >
+        <TouristNavBar />
       <Box sx={{ p: 6, maxWidth: 1200, overflowY: "auto", height: "100vh" }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <Typography variant="h4">Upcoming Activities</Typography>
@@ -155,7 +163,7 @@ const UpcomingActivities = () => {
         </TableContainer>
       </Box>
       <Help />
-    </>
+      </Box>
   );
 };
 

@@ -8,7 +8,7 @@ import { calculateAverageRating } from "../../Utilities/averageRating.js";
 import StandAloneToggleButton from "../../Components/ToggleButton.js";
 import WarningIcon from '@mui/icons-material/Warning';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-
+import TouristNavBar from "../../Components/TouristNavBar.js";
 import {
   Rating,
   Checkbox,
@@ -148,8 +148,14 @@ const MyActivities = () => {
   };
 
   return (
-    <>
-      <AdvertiserSidebar />
+    <Box
+    sx={{
+      height: "100vh",
+      backgroundColor: "#f9f9f9",
+      paddingTop: "64px", // Adjust for navbar height
+    }}
+  >
+    <TouristNavBar />      <AdvertiserSidebar />
       <div>
         <Box
           sx={{
@@ -373,7 +379,7 @@ const MyActivities = () => {
           </Dialog>
         </Box>
       </div>
-    </>
+    </Box>
   );
 };
 

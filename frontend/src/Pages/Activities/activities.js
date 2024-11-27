@@ -176,7 +176,15 @@ const DeleteCategory = () => {
   };
 
   return (
-    <>
+    <Box
+    sx={{
+      height: "100vh",
+      backgroundColor: "#f4f6f9", // Light grey background for better contrast
+      paddingTop: "64px", // Adjust for navbar height
+    }}
+  >
+    <TouristNavBar />
+  
       <Sidebar />
       <Box sx={{ p: 6, maxWidth: 1200 }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
@@ -290,7 +298,9 @@ const DeleteCategory = () => {
         </Dialog>
       </Box>
       <Help />
-    </>
+      </Box>
+
+    
   );
 };
 

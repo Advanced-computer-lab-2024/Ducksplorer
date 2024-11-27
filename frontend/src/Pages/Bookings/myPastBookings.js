@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import TouristNavBar from "../../Components/TouristNavBar";
 import {
+  Box,
   Table,
   TableBody,
   TableCell,
@@ -270,6 +272,14 @@ const PastBookingDetails = () => {
   }
 
   return (
+    <Box
+    sx={{
+      height: "100vh",
+      backgroundColor: "#f9f9f9",
+      paddingTop: "64px", // Adjust for navbar height
+    }}
+  >
+    <TouristNavBar />
     <div style={{ overflowY: "visible", height: "120vh", width: "100vw" }}>
       <Button
         component={Link}
@@ -521,6 +531,7 @@ const PastBookingDetails = () => {
       </Dialog>
       <Help />
     </div>
+    </Box>
   );
 };
 
