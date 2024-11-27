@@ -205,34 +205,34 @@ const confirmOTP = async (req, res) => {
 };
 
 const sendConfirmation = async (req, res) => {
-  const { email, itemId, type, hotel, flight, transporation } = req.body;
+  const { email, itemId, type } = req.body;
 
   let booking;
   switch (type) {
-    case "Activity":
+    case "activity":
       booking = await Activity.findOne({ _id: itemId }).select(
         "name date location price category tags duartion averageRating -_id"
       );
       break;
-    case "Itinerary":
+    case "itinerary":
       booking = await Itinerary.findOne({ _id: itemId }).select(
-        "activity date location price category tags duartion averageRating -_id"
+        "name activity date location price category tags duartion averageRating -_id"
       );
       break;
-    case "Product":
-      booking = await Product.findOne({ _id: itemId }).select(
-        "name price -_id"
-      );
-      break;
-    case "Hotel":
-      booking = hotel;
-      break;
-    case "Flight":
-      booking = flight;
-      break;
-    case "Transporation":
-      booking = transporation;
-      break;
+    // case "Product":
+    //   booking = await Product.findOne({ _id: itemId }).select(
+    //     "name price -_id"
+    //   );
+    //   break;
+    // case "Hotel":
+    //   booking = hotel;
+    //   break;
+    // case "Flight":
+    //   booking = flight;
+    //   break;
+    // case "Transporation":
+    //   booking = transporation;
+    //   break;
     default:
       return res.status(400).json({ message: "Invalid booking type" });
   }

@@ -85,6 +85,52 @@ export default function CheckoutForm() {
     }
   };
 
+  const sendConfirmationEmail = async () => {
+    try {
+      // Retrieve necessary data from localStorage
+      const email = localStorage.getItem("paymentEmail");
+      const itemId =
+        localStorage.getItem("activityId") ||
+        localStorage.getItem("itineraryId");
+      const type = localStorage.getItem("type");
+      // const hotel = localStorage.getItem("hotelBooking"); // Example: add this if relevant
+      // const flight = localStorage.getItem("flightBooking"); // Example: add this if relevant
+      // const transportation = localStorage.getItem("transportationBooking"); // Example: add this if relevant
+      console.log("email,item,type:", email, itemId, type);
+      // Make a POST request to the backend
+      const response = await fetch(
+        "http://localhost:8000/payment/send-confirmation",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            itemId,
+            type,
+            // hotel,
+            // flight,
+            // transportation,
+          }),
+        }
+      );
+      console.log(response);
+
+      const result = await response.json();
+      if (response.ok) {
+        message.success("Confirmation email sent successfully!");
+        console.log("Email Response:", result);
+      } else {
+        message.error("Failed to send confirmation email.");
+        console.error("Error sending email:", result);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      message.error("An error occurred while sending the email.");
+    }
+  };
+
   const handleOtpSubmit = async () => {
     if (!otp) {
       setMessage1("Please enter the OTP.");
@@ -211,6 +257,7 @@ export default function CheckoutForm() {
         message.success("Payment completed and loyalty points updated");
         console.log("Points Result", pointsResult);
         navigate("/myBookings");
+        sendConfirmationEmail();
       }
     } catch (error) {
       setMessage1("Failed to confirm OTP.");
