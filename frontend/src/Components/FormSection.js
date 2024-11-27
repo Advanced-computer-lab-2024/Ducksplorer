@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   IconButton,
@@ -6,6 +6,7 @@ import {
   Button,
   Stack,
   Typography,
+  Box,
 } from "@mui/material";
 import Iconify from "./TopNav/iconify.js";
 import axios from "axios";
@@ -20,7 +21,7 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FileUpload from "./FileUpload";
 
 const FormSection = () => {
@@ -53,6 +54,21 @@ const FormSection = () => {
   const [uploadsFiles, setUploadsFiles] = useState(null);
   // const [acceptTerms, setAcceptTerms] = useState(false);
   // const [openTerms, setOpenTerms] = useState(false);
+  const navigate = useNavigate();
+
+  // Prevent scrolling and white border
+  useEffect(() => {
+    document.body.style.margin = "0";
+    document.body.style.padding = "0";
+    document.body.style.overflow = "hidden"; // Disable scrolling
+    document.body.style.height = "100%"; // Ensure full height
+    document.body.style.width = "100%";
+
+    return () => {
+      // Reset styles when the component is unmounted
+      document.body.style.overflow = "auto";
+    };
+  }, []);
 
   // Handler for nationalId file selection
   const handleNationalIdSelect = (files) => {
@@ -342,366 +358,392 @@ const FormSection = () => {
     }
   };
 
-  return (
-    <div
-      style={{
-        backgroundImage: "url(airplaneBG.jpg)", // Update with your image path
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        minHeight: "100vh",
-        height: "140vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        overflowY: "auto",
-        margin: 0,
-      }}
-    >
-      <Stack
-        spacing={1}
-        sx={{
-          width: "600px",
-          padding: "10px",
-          backgroundColor: "rgba(255, 255, 255, 0.8)",
-          //backgroundSize: "cover",
-          borderRadius: "10px",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <img
-            src="logo3.png" // Update with your image path
-            alt="logo"
-            style={{ width: "200px", height: "200px" }}
-          />
-          <h1 style={{ color: "Black", fontSize: "40px" }}>
-            Ducksplorer Sign Up form
-          </h1>
-        </div>
-        <TextField
-          name="username"
-          label="Username"
-          type="text"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-        />
-        <TextField
-          name="email"
-          label="Email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <TextField
-          name="password"
-          label="Password"
-          type={showPassword ? "text" : "password"} // Toggle password visibility
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => setShowPassword(!showPassword)}
-                  edge="end"
-                >
-                  <Iconify
-                    icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
-                    style={{ color: "#602b37", fontSize: "40px" }}
+  const handleBackToHome = () => {
+    navigate("/"); // Navigate to the homepage
+  };
+
+    return (
+      <div style={styles.container}>
+        <div style={styles.overlay}></div>
+        <Box style={styles.content}>
+          <Typography variant="h4" style={styles.title}>
+            Ducksplorer Sign Up Form
+          </Typography>
+          <Stack spacing={2} mt={3} style={styles.form}>
+            <TextField
+              name="username"
+              label="Username"
+              type="text"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              fullWidth
+            />
+            <TextField
+              name="email"
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              fullWidth
+            />
+            <TextField
+              name="password"
+              label="Password"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              fullWidth
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={() => setShowPassword(!showPassword)}>
+                      <Iconify icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"} />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <TextField
+              name="confirmPassword"
+              label="Confirm Password"
+              type={showConfirmPassword ? "text" : "password"}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              fullWidth
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                      <Iconify icon={showConfirmPassword ? "eva:eye-fill" : "eva:eye-off-fill"} />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            {type === "Tourist" && (
+              <>
+                <TextField
+                  name="mobileNumber"
+                  label="Mobile Number"
+                  type="text"
+                  value={mobileNumber}
+                  onChange={(e) => setMobileNumber(e.target.value)}
+                  fullWidth
+                />
+                <TextField
+                  name="nationality"
+                  label="Nationality"
+                  type="text"
+                  value={nationality}
+                  onChange={(e) => setNationality(e.target.value)}
+                  fullWidth
+                />
+                <TextField
+                  name="DOB"
+                  label="Date of Birth"
+                  type="date"
+                  value={DOB}
+                  onChange={(e) => setDOB(e.target.value)}
+                  InputLabelProps={{ shrink: true }}
+                  fullWidth
+                />
+                <TextField
+                  name="employmentStatus"
+                  label="Employment Status"
+                  type="text"
+                  value={employmentStatus}
+                  onChange={(e) => setEmploymentStatus(e.target.value)}
+                  fullWidth
+                />
+              </>
+            )}
+            {type === "Guide" && (
+              <>
+                <TextField
+                  name="mobileNumber"
+                  label="Mobile Number"
+                  type="text"
+                  value={mobileNumber}
+                  onChange={(e) => setMobileNumber(e.target.value)}
+                  fullWidth
+                />
+                <label>National Id:</label>
+                <FileUpload
+                  inputId="nationalIdUpload"
+                  onFileSelect={(files) => handleNationalIdFileSelect(files)}
+                />
+                <label>Certificates</label>
+                <FileUpload
+                  inputId="certificateUpload"
+                  onFileSelect={(files) => handleNationalIdFileSelect(files)}
+                />
+                <TextField
+                  name="yearsOfExperience"
+                  label="Years of Experience"
+                  type="text"
+                  value={yearsOfExperience}
+                  onChange={(e) => setYearsOfExperience(e.target.value)}
+                  fullWidth
+                />
+                <TextField
+                  name="previousWork"
+                  label="Previous Work"
+                  type="text"
+                  value={previousWork}
+                  onChange={(e) => setPreviousWork(e.target.value)}
+                  fullWidth
+                />
+              </>
+            )}
+            {type === "Advertiser" && (
+              <>
+                <TextField
+                  name="websiteLink"
+                  label="Website Link"
+                  type="text"
+                  value={websiteLink}
+                  onChange={(e) => setWebsiteLink(e.target.value)}
+                  fullWidth
+                />
+                <TextField
+                  name="hotline"
+                  label="Hotline"
+                  type="text"
+                  value={hotline}
+                  onChange={(e) => setHotline(e.target.value)}
+                  fullWidth
+                />
+                <label>Uploads:</label>
+                <FileUpload
+                  inputId="uploads"
+                  onFileSelect={(files) => handleNationalIdFileSelect(files)}
+                />
+                <TextField
+                  name="companyProfile"
+                  label="Company Profile"
+                  type="text"
+                  value={companyProfile}
+                  onChange={(e) => setCompanyProfile(e.target.value)}
+                  fullWidth
+                />
+              </>
+            )}
+            {type === "Seller" && (
+              <>
+                <TextField
+                  name="name"
+                  label="Name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  fullWidth
+                />
+                <label>Uploads:</label>
+                <FileUpload
+                  inputId="uploads"
+                  onFileSelect={(files) => handleNationalIdFileSelect(files)}
+                />
+                <TextField
+                  name="description"
+                  label="Description"
+                  type="text"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  fullWidth
+                />
+              </>
+            )}
+            <DropDown />
+            {type && (type === "Seller" || type === "Advertiser" || type === "Guide" || type === "Tourist") && (
+              <FormControlLabel
+                sx={{ justifyContent: "center" }}
+                control={
+                  <Checkbox
+                    checked={acceptTerms}
+                    onChange={(e) => setAcceptTerms(e.target.checked)}
+                    color="primary"
                   />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-        <TextField
-          name="confirmPassword"
-          label="Confirm Password"
-          type={showConfirmPassword ? "text" : "password"} // Toggle password visibility
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  edge="end"
-                >
-                  <Iconify
-                    icon={
-                      showConfirmPassword ? "eva:eye-fill" : "eva:eye-off-fill"
-                    }
-                    style={{ color: "#602b37", fontSize: "40px" }}
-                  />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-        {type === "Tourist" && (
-          <>
-            <TextField
-              name="mobileNumber"
-              label="Mobile Number"
-              type="text"
-              value={mobileNumber}
-              onChange={(e) => setMobileNumber(e.target.value)}
-            />
-            <TextField
-              name="nationality"
-              label="Nationality"
-              type="text"
-              value={nationality}
-              onChange={(e) => setNationality(e.target.value)}
-            />
-            <TextField
-              name="DOB"
-              label="Date of Birth"
-              type="date"
-              value={DOB}
-              onChange={(e) => setDOB(e.target.value)}
-              InputLabelProps={{ shrink: true }}
-            />
-            <TextField
-              name="employmentStatus"
-              label="Employment Status"
-              type="text"
-              value={employmentStatus}
-              onChange={(e) => setEmploymentStatus(e.target.value)}
-            />
-          </>
-        )}
-        {type === "Guide" && (
-          <>
-            <TextField
-              name="mobileNumber"
-              label="Mobile Number"
-              type="text"
-              value={mobileNumber}
-              onChange={(e) => setMobileNumber(e.target.value)}
-            />
-            <label>National Id:</label>
-            <FileUpload
-              inputId="nationalIdUpload"
-              onFileSelect={(files) => handleNationalIdFileSelect(files)}
-            />
-            <label>Certificates</label>
-            <FileUpload
-              inputId="certificateUpload"
-              onFileSelect={(files) => handleCertificatesFileSelect(files)}
-            />
-            <TextField
-              name="yearsOfExperience"
-              label="Years of Experience"
-              type="text"
-              value={yearsOfExperience}
-              onChange={(e) => setYearsOfExperience(e.target.value)}
-            />
-            <TextField
-              name="previousWork"
-              label="Previous Work"
-              type="text"
-              value={previousWork}
-              onChange={(e) => setPreviousWork(e.target.value)}
-            />
-          </>
-        )}
-        {type === "Advertiser" && (
-          <>
-            <TextField
-              name="websiteLink"
-              label="Website Link"
-              type="text"
-              value={websiteLink}
-              onChange={(e) => setWebsiteLink(e.target.value)}
-            />
-            <TextField
-              name="hotline"
-              label="Hotline"
-              type="text"
-              value={hotline}
-              onChange={(e) => setHotline(e.target.value)}
-            />
-            <label>Uploads:</label>
-            <FileUpload
-              inputId="uploads"
-              onFileSelect={(files) => handleUploadsFileSelect(files)}
-            />
-            <TextField
-              name="companyProfile"
-              label="Company Profile"
-              type="text"
-              value={companyProfile}
-              onChange={(e) => setCompanyProfile(e.target.value)}
-            />
-          </>
-        )}
-        {type === "Seller" && (
-          <>
-            <TextField
-              name="name"
-              label="Name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <label>Uploads:</label>
-            <FileUpload
-              inputId="uploads"
-              onFileSelect={(files) => handleUploadsFileSelect(files)}
-            />
-
-            <TextField
-              name="description"
-              label="Description"
-              type="text"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </>
-        )}
-        <DropDown />
-        {type && (type === "Seller" || type === "Advertiser" || type === "Guide") && (
-        <FormControlLabel
-          sx={{ justifyContent: "center" }}
-          control={
-            <Checkbox
-              checked={acceptTerms}
-              onChange={(e) => setAcceptTerms(e.target.checked)}
-              color="primary"
-            />
-          }
-          label={
-            <span>
-              I accept the{" "}
-              <a
-                href="#"
-                onClick={handleOpenTerms}
-                style={{ textDecoration: "underline", cursor: "pointer" }}
-              >
-                Terms & Conditions
-              </a>
-            </span>
-          }
-        />
-        )}
-        <Dialog open={openTerms} onClose={handleCloseTerms}>
-          <DialogTitle>Terms and Conditions</DialogTitle>
-          <DialogContent>
-            <Typography variant="h6" gutterBottom>
-              1. Acceptance of Terms
-            </Typography>
-            <Typography paragraph>
-              By using our Site, you affirm that you are at least 18 years old
-              and capable of entering into a legally binding agreement. If you
-              are using the Site on behalf of a company or other legal entity,
-              you represent that you have the authority to bind that entity to
-              these Terms.
-            </Typography>
-
-            <Typography variant="h6" gutterBottom>
-              2. Changes to Terms
-            </Typography>
-            <Typography paragraph>
-              We reserve the right to modify or replace these Terms at any time.
-              If we make material changes, we will provide notice on our Site.
-              Your continued use of the Site after any such changes constitutes
-              your acceptance of the new Terms.
-            </Typography>
-
-            <Typography variant="h6" gutterBottom>
-              3. Services Offered
-            </Typography>
-            <Typography paragraph>
-              Ducksplorer provides trip planning services, including but not
-              limited to travel itineraries, booking information, and
-              destination recommendations. We do not act as a travel agent, and
-              we do not provide travel services directly.
-            </Typography>
-
-            <Typography variant="h6" gutterBottom>
-              4. User Responsibilities
-            </Typography>
-            <Typography paragraph>
-              When using our Site, you agree to:
-            </Typography>
-            <ul>
-              <li>
-                <Typography>
-                  Provide accurate and complete information when creating an
-                  account or making bookings.
+                }
+                label={
+                  <span>
+                    I accept the{" "}
+                    <a
+                      href="#"
+                      onClick={handleOpenTerms}
+                      style={{ textDecoration: "underline", cursor: "pointer" }}
+                    >
+                      Terms & Conditions
+                    </a>
+                  </span>
+                }
+              />
+            )}
+            <Dialog open={openTerms} onClose={handleCloseTerms}>
+              <DialogTitle>Terms and Conditions</DialogTitle>
+              <DialogContent>
+                <Typography variant="h6" gutterBottom>
+                  1. Acceptance of Terms
                 </Typography>
-              </li>
-              <li>
-                <Typography>
-                  Maintain the confidentiality of your account and password.
-                </Typography>
-              </li>
-              <li>
-                <Typography>
-                  Notify us immediately of any unauthorized use of your account.
-                </Typography>
-              </li>
-              <li>
-                <Typography>
-                  Use the Site only for lawful purposes and in accordance with
+                <Typography paragraph>
+                  By using our Site, you affirm that you are at least 18 years old
+                  and capable of entering into a legally binding agreement. If you
+                  are using the Site on behalf of a company or other legal entity,
+                  you represent that you have the authority to bind that entity to
                   these Terms.
                 </Typography>
-              </li>
-            </ul>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseTerms} color="primary">
-              Close
-            </Button>
-          </DialogActions>
-                 
-        </Dialog>
-        <Button
-          variant="contained"
-          onClick={handleAdd}
-          style={{
-            width: "580px",
-            backgroundColor: "Green",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            fontSize: "16px",
-            cursor: "pointer",
-            padding: "10px",
-            justifyContent: "center",
-          }}
-        >
-          Sign Up
-        </Button>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "20px",
-          }}
-        >
-          <p style={{ marginRight: "10px" }}>Already have an account? </p>
-          <Link to="/login" style={{ textDecoration: "none" }}>
-            <p
-              style={{
-                color: "blue",
-                cursor: "pointer",
-                textDecoration: "underline",
-              }}
+  
+                <Typography variant="h6" gutterBottom>
+                  2. Changes to Terms
+                </Typography>
+                <Typography paragraph>
+                  We reserve the right to modify or replace these Terms at any time.
+                  If we make material changes, we will provide notice on our Site.
+                  Your continued use of the Site after any such changes constitutes
+                  your acceptance of the new Terms.
+                </Typography>
+  
+                <Typography variant="h6" gutterBottom>
+                  3. Services Offered
+                </Typography>
+                <Typography paragraph>
+                  Ducksplorer provides trip planning services, including but not
+                  limited to travel itineraries, booking information, and
+                  destination recommendations. We do not act as a travel agent, and
+                  we do not provide travel services directly.
+                </Typography>
+  
+                <Typography variant="h6" gutterBottom>
+                  4. User Responsibilities
+                </Typography>
+                <Typography paragraph>
+                  When using our Site, you agree to:
+                </Typography>
+                <ul>
+                  <li>
+                    <Typography>
+                      Provide accurate and complete information when creating an
+                      account or making bookings.
+                    </Typography>
+                  </li>
+                  <li>
+                    <Typography>
+                      Maintain the confidentiality of your account and password.
+                    </Typography>
+                  </li>
+                  <li>
+                    <Typography>
+                      Notify us immediately of any unauthorized use of your account.
+                    </Typography>
+                  </li>
+                  <li>
+                    <Typography>
+                      Use the Site only for lawful purposes and in accordance with
+                      these Terms.
+                    </Typography>
+                  </li>
+                </ul>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseTerms} color="primary">
+                  Close
+                </Button>
+              </DialogActions>
+            </Dialog>
+            <Button
+              variant="contained"
+              onClick={handleAdd}
+              style={styles.button}
             >
-              Login
-            </p>
-          </Link>
-        </div>
-      </Stack>
-    </div>
-  );
-};
-
+              Sign Up
+            </Button>
+            <Typography variant="body2" style={styles.linkText}>
+              Already have an account?{" "}
+              <Link to="/login" style={styles.link}>
+                Login
+              </Link>
+            </Typography>
+            {/* Back to Homepage Button */}
+            <Button
+              variant="outlined"
+              color="secondary"
+              fullWidth
+              style={styles.backButton}
+              onClick={handleBackToHome}
+            >
+              Back to Homepage
+            </Button>
+          </Stack>
+        </Box>
+      </div>
+    );
+  };
+  
+  const styles = {
+    container: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100vw",
+      height: "100vh",
+      background: "url('/travelbg.jpg') no-repeat center center fixed",
+      backgroundSize: "cover",
+      overflow: "hidden", // Prevent scrolling on the main page
+      display: "flex",
+      justifyContent: "center", // Center the form horizontally
+      alignItems: "center", // Center the form vertically
+    },
+    overlay: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      zIndex: 1,
+    },
+    content: {
+      position: "relative",
+      zIndex: 2,
+      background: "rgba(255, 255, 255, 0.9)",
+      padding: "30px",
+      borderRadius: "10px",
+      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
+      width: "100%",
+      maxWidth: "500px", // Widen the container
+      margin: "auto",
+      marginTop: "10vh", // Adjusted to fit everything on the page
+      textAlign: "center",
+      overflowY: "auto", // Allow scrolling within the form
+      maxHeight: "80vh", // Limit the height of the form container
+    },
+    title: {
+      color: "#ff8c00",
+      fontWeight: "bold",
+      marginBottom: "10px",
+    },
+    subtitle: {
+      color: "#555",
+      marginBottom: "20px",
+    },
+    button: {
+      backgroundColor: "#ff8c00",
+      color: "#fff",
+      marginTop: "20px",
+    },
+    linkText: {
+      marginTop: "10px",
+      color: "#555",
+    },
+    link: {
+      color: "#007bff",
+      textDecoration: "none",
+      fontWeight: "bold",
+    },
+    backButton: {
+      marginTop: "15px",
+      backgroundColor: "#fff",
+      color: "#007bff",
+    },
+  };
+  
 export default FormSection;

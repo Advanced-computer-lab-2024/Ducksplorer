@@ -1,168 +1,187 @@
-import React, { useState } from "react";
-import Button from "@mui/material/Button";
-import { message } from "antd";
-import IconButton from "@mui/material/IconButton";
-import InputAdornment from "@mui/material/InputAdornment";
+import React, { useState, useEffect } from "react";
+import { Button, Typography, TextField, Box, Stack, IconButton, InputAdornment } from "@mui/material";
 import Iconify from "../Components/TopNav/iconify.js";
-import TextField from "@mui/material/TextField";
-import Stack from "@mui/material/Stack";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { message } from "antd";
 
 function Login() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const handleContinueAsGuest = () => {
-    localStorage.setItem("guest", "true");
-    navigate("/guestDashboard"); // Navigate to guest dashboard
-  };
+
+  // Prevent scrolling and white border
+  useEffect(() => {
+    document.body.style.margin = "0";
+    document.body.style.padding = "0";
+    document.body.style.overflow = "hidden"; // Disable scrolling
+    document.body.style.height = "100%"; // Ensure full height
+    document.body.style.width = "100%";
+
+    return () => {
+      // Reset styles when the component is unmounted
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
   const handleLogin = async () => {
     try {
-      localStorage.setItem("guest", "false");
       setLoading(true);
-      //console.log(localStorage.getItem('user'));
-      const response = await axios.post("http://localhost:8000/signUp/login", {
-        userName,
-        password,
-      });
-      console.log(response);
+      const response = await axios.post("http://localhost:8000/signUp/login", { userName, password });
       if (response.status === 200) {
         message.success("Logged in successfully");
-        switch (response.data.role) {
-          case "Admin":
-            window.location.href = "/AdminDashboard";
-            break;
-          case "Tourist":
-            window.location.href = "/touristDashboard";
-            break;
-          case "Guide":
-            window.location.href = "/tourGuideDashboard";
-            break;
-          case "Governor":
-            window.location.href = "/governorDashboard";
-            break;
-          case "Advertiser":
-            window.location.href = "/advertiserDashboard";
-            break;
-          case "Seller":
-            window.location.href = "/sellerDashboard";
-            break;
-          default:
-            message.error("Unknown role");
-        }
-
+        const userRole = response.data.role;
+        const roleToDashboard = {
+          Admin: "/AdminDashboard",
+          Tourist: "/touristDashboard",
+          Guide: "/tourGuideDashboard",
+          Governor: "/governorDashboard",
+          Advertiser: "/advertiserDashboard",
+          Seller: "/sellerDashboard",
+        };
+        window.location.href = roleToDashboard[userRole] || "/";
         localStorage.setItem("user", JSON.stringify(response.data));
-        localStorage.setItem("showPreferences", "false");
-      } else if (response.status === 400) {
+      } else {
         throw new Error(response.error);
       }
     } catch (error) {
-      message.error(error.response.data.error);
+      message.error(error.response?.data?.error || "Login failed");
     } finally {
       setLoading(false);
     }
   };
 
+  const handleBackToHome = () => {
+    navigate("/"); // Navigate to the homepage
+  };
+
   return (
-    <>
-      <div className="text-center">
-        <img
-          src="logo3.png"
-          style={{ width: "300px", height: "200px", justifyContent: "center" }}
-          alt="logo"
-        />
-        <h4
-          className="mt-1 mb-5 pb-1"
-          style={{
-            color: "orange",
-            textAlign: "center",
-            fontSize: "24px",
-            fontWeight: "bold",
-            textShadow: "2px 2px 4px #aaa",
-          }}
-        >
-          Login
-        </h4>
-      </div>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <Stack spacing={3}>
+    <div style={styles.container}>
+      <div style={styles.overlay}></div>
+      <Box style={styles.content}>
+        <Typography variant="h4" style={styles.title}>
+          Welcome Back to Ducksplorer
+        </Typography>
+        <Typography variant="h6" style={styles.subtitle}>
+          Login to continue your adventure
+        </Typography>
+        <Stack spacing={2} mt={3}>
           <TextField
-            name="username"
             label="Username"
-            type="text"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
+            fullWidth
           />
-
           <TextField
-            name="password"
             label="Password"
-            type={showPassword ? "text" : "password"} // Toggle password visibility
+            type={showPassword ? "text" : "password"}
             value={password}
-            height="50"
-            width="20"
             onChange={(e) => setPassword(e.target.value)}
+            fullWidth
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => setShowPassword(!showPassword)}
-                    edge="end"
-                  >
-                    <Iconify
-                      icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
-                      style={{ color: "#602b37", fontSize: "40px" }}
-                    />
+                  <IconButton onClick={() => setShowPassword(!showPassword)}>
+                    <Iconify icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"} />
                   </IconButton>
                 </InputAdornment>
               ),
             }}
           />
-          <p className="text-sm hover:undrline hover:text-blue-600 mt-2 inline-block">
-            Dont have an account?
-          </p>
-          <Link
-            to="/signUp"
-            className="text-sm hover:undrline hover:text-blue-600 mt-2 inline-block"
-          >
+        </Stack>
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          style={styles.button}
+          onClick={handleLogin}
+          disabled={loading}
+        >
+          {loading ? "Logging in..." : "Login"}
+        </Button>
+        <Typography variant="body2" style={styles.linkText}>
+          Don't have an account?{" "}
+          <Link to="/signUp" style={styles.link}>
             Sign Up
           </Link>
-          <div
-            onClick={handleContinueAsGuest}
-            className="text-sm hover:underline hover:text-blue-600 mt-2 inline-block cursor-pointer"
-          >
-            Continue as a Guest
-          </div>
-
-          <Button
-            variant="contained"
-            onClick={handleLogin}
-            style={{
-              width: "300px",
-              backgroundColor: "orange",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              padding: "10px 20px",
-              fontSize: "16px",
-              cursor: "pointer",
-            }}
-            disabled={loading}
-          >
-            {loading ? (
-              <span className="loading loading-spinner"></span>
-            ) : (
-              "Login"
-            )}
-          </Button>
-        </Stack>
-      </div>
-    </>
+        </Typography>
+        {/* Back to Homepage Button */}
+        <Button
+          variant="outlined"
+          color="secondary"
+          fullWidth
+          style={styles.backButton}
+          onClick={handleBackToHome}
+        >
+          Back to Homepage
+        </Button>
+      </Box>
+    </div>
   );
 }
+
+const styles = {
+  container: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100vw",
+    height: "100vh",
+    background: "url('/travelbg.jpg') no-repeat center center fixed",
+    backgroundSize: "cover",
+  },
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    zIndex: 1,
+  },
+  content: {
+    position: "relative",
+    zIndex: 2,
+    background: "rgba(255, 255, 255, 0.9)",
+    padding: "30px",
+    borderRadius: "10px",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
+    width: "100%",
+    maxWidth: "400px",
+    margin: "auto",
+    marginTop: "20vh",
+    textAlign: "center",
+  },
+  title: {
+    color: "#ff8c00",
+    fontWeight: "bold",
+    marginBottom: "10px",
+  },
+  subtitle: {
+    color: "#555",
+    marginBottom: "20px",
+  },
+  button: {
+    backgroundColor: "#ff8c00",
+    color: "#fff",
+    marginTop: "20px",
+  },
+  linkText: {
+    marginTop: "10px",
+    color: "#555",
+  },
+  link: {
+    color: "#007bff",
+    textDecoration: "none",
+    fontWeight: "bold",
+  },
+  backButton: {
+    marginTop: "15px", // Add some spacing between buttons
+    backgroundColor: "#fff",
+    color: "#007bff",
+  },
+};
 
 export default Login;
