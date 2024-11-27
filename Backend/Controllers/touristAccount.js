@@ -7,7 +7,9 @@ const cron = require("node-cron");
 const nodemailer = require("nodemailer");
 const send = require("send");
 const PromoCode = require("../Models/promoCodeModel.js");
-const {createNotification} = require("./Notifications/NotificationsController.js");
+const {
+  createNotification,
+} = require("./Notifications/NotificationsController.js");
 
 const transporter = nodemailer.createTransport({
   service: "gmail", // Or another email service provider
@@ -194,8 +196,12 @@ const bod = async (res) => {
         // Send the email
         console.log(tourist.email);
         //send notification on site
-        await createNotification(emailMessage,tourist.userName,"Birthday Promo Code");
-        
+        await createNotification(
+          emailMessage,
+          tourist.userName,
+          "Birthday Promo Code"
+        );
+
         //send email
         await sendEmail(tourist.email, "Birthday Promo Code", emailMessage);
         await newPromoCode.save();
@@ -206,20 +212,10 @@ const bod = async (res) => {
           { $set: { promoCode: promoCode } }
         );
 
-        responses.push({
-          email: tourist.email,
-          promoCode: promoCode,
-          status: "success",
+        res.status(200).json({
           message: `Promo code sent to ${tourist.email}`,
         });
-      } catch (emailError) {
-        responses.push({
-          email: tourist.email,
-          promoCode: null,
-          status: "error",
-          message: `Failed to send promo code to ${tourist.email}: ${emailError.message}`,
-        });
-      }
+      } catch (emailError) {}
     }
 
     return {
