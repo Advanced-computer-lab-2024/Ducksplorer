@@ -9,6 +9,7 @@ import FilterActivities from "./filterActivities";
 import Help from "../../Components/HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar.js";
 import { Box } from "@mui/material";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 
 function SortFilterActivity() {
   const [sort, setSort] = useState(true);
@@ -22,6 +23,8 @@ function SortFilterActivity() {
       }}
     >
       <TouristNavBar />
+      <TouristSidebar/>
+
       <div
         style={{
           padding: "300px",

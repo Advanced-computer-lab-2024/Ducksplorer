@@ -14,6 +14,7 @@ import {
   Paper,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon";
 import { Link } from "react-router-dom";
@@ -89,6 +90,8 @@ const UpcomingActivities = () => {
     }}
   >
         <TouristNavBar />
+        <TouristSidebar/>
+
       <Box sx={{ p: 6, maxWidth: 1200, overflowY: "auto", height: "100vh" }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <Typography variant="h4">Upcoming Activities</Typography>

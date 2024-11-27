@@ -11,14 +11,15 @@ import axios from "axios";
 import { message } from "antd";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import IconButton from "@mui/material/IconButton";
+import TouristNavBar from "../../Components/TouristNavBar.js";
 import InputAdornment from "@mui/material/InputAdornment";
 import Iconify from "../../Components/TopNav/iconify.js";
-import TouristNavBar from "../../Components/TouristNavBar.js";
 // import ProfilePictureUpload from "../../Components/pp.js"; // Import ProfilePictureUpload component
 import { Link } from "react-router-dom";
 import StandAloneToggleButton from "../../Components/ToggleButton.js";
 import TouristCategoryDropDown from "../../Components/TouristComponents/TouristCategoryDropDown.js";
 import TagsToggleButtons from "../../Components/MuseumHistoricalPlaceComponent/TagsToggleButtons.js";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 import Help from "../../Components/HelpIcon.js";
 const EditProfile = () => {
   const [touristDetails, setTouristDetails] = useState({
@@ -199,6 +200,13 @@ const EditProfile = () => {
   };
 
   return (
+    <Box
+    sx={{
+      height: "100vh",
+    }}
+  >
+    <TouristNavBar />
+    <TouristSidebar/>
     <Box
     sx={{
       height: "100vh",
@@ -454,6 +462,7 @@ const EditProfile = () => {
         </Paper>
       </Box>
       <Help />
+    </Box>
     </Box>
     </Box>
   );

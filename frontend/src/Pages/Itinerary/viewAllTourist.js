@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { message } from "antd";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 import {
   Button,
   Stack,
@@ -265,7 +266,8 @@ function SearchItineraries() {
       paddingTop: "64px", // Adjust for navbar height
     }}
   >
-        <TouristNavBar />
+         <TouristNavBar />
+         <TouristSidebar/>
     <Box
       sx={{
         padding: "20px",

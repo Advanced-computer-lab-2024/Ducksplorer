@@ -5,6 +5,7 @@ import { Typography, Box, Button } from "@mui/material";
 import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
 import Help from "../../Components/HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 
 function AllProducts() {
   const [products, setProducts] = useState([]);
@@ -33,7 +34,8 @@ function AllProducts() {
         paddingTop: "64px", // Adjust for navbar height
       }}
     >
-      <TouristNavBar />
+ <TouristNavBar />
+ <TouristSidebar/>      
       <Box
         sx={{
           padding: "20px",

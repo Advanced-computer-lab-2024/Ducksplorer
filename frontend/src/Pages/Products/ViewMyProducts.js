@@ -6,6 +6,8 @@ import { Button, Box } from "@mui/material";
 import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
 import { useNavigate } from "react-router-dom"; // Import to navigate to the edit page
 import TouristNavBar from "../../Components/TouristNavBar";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
+
 
 function ViewMyProducts() {
   const [products, setProducts] = useState([]);
@@ -43,7 +45,10 @@ function ViewMyProducts() {
       paddingTop: "64px", // Adjust for navbar height
     }}
   >
-    <TouristNavBar />      <Button onClick={handleBackButtonClick}>Back</Button>
+    <TouristNavBar />    
+    <TouristSidebar/>
+
+      <Button onClick={handleBackButtonClick}>Back</Button>
       <div
         style={{
           padding: "20px",

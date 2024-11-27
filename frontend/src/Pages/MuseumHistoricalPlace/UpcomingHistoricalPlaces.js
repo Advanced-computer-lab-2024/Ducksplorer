@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon.js";
 import TouristNavBar from "../../Components/TouristNavBar.js";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 
 import {
   Box,
@@ -55,6 +56,7 @@ const UpcomingHistoricalPlaces = () => {
     }}
   >
     <TouristNavBar />
+    <TouristSidebar/>
     <Box sx={{ p: 6, maxWidth: 1200, overflowY: "visible", height: "100vh" }}>
       <Link to="/HistoricalPlaceTouristPov"> Back </Link>
       <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>

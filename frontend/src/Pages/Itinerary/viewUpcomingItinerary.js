@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 import {
   Box,
   Typography,
@@ -287,8 +288,8 @@ const ViewUpcomingItinerary = () => {
       height: "100vh",
     }}
   >
-    <TouristNavBar />
-
+ <TouristNavBar />
+ <TouristSidebar/>
     <div>
     <Link
   to={isGuest ? "/guestDashboard" : "/touristDashboard"}

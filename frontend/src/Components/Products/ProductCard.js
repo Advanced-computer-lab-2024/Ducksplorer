@@ -18,6 +18,7 @@ import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { calculateProductRating } from "../../Utilities/averageRating";
 import { useLocation } from "react-router-dom";
 import TouristNavBar from "../TouristNavBar";
+import TouristSidebar from "../Sidebars/TouristSidebar";
 
 const ProductCard = ({
   product,
@@ -190,6 +191,8 @@ const ProductCard = ({
     }}
   >
     <TouristNavBar />
+    <TouristSidebar/>
+
     <Card
       className="product-card"
       style={{

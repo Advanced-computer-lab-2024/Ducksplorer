@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { message } from "antd";
 import TouristNavBar from "../../Components/TouristNavBar";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 import {
   Box,
   Table,
@@ -113,7 +114,9 @@ const SearchActivities = () => {
       paddingTop: "64px", // Adjust for navbar height
     }}
   >
-    <TouristNavBar />      <Box
+     <TouristNavBar />
+     <TouristSidebar/>
+     <Box
         sx={{
           // p: 6,
           maxWidth: "150vh",

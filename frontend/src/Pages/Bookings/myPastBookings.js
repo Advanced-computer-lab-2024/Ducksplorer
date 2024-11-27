@@ -21,6 +21,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import Help from "../../Components/HelpIcon";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 
 const PastBookingDetails = () => {
   const userName = JSON.parse(localStorage.getItem("user")).username;
@@ -280,6 +281,8 @@ const PastBookingDetails = () => {
     }}
   >
     <TouristNavBar />
+    <TouristSidebar/>
+
     <div style={{ overflowY: "visible", height: "120vh", width: "100vw" }}>
       <Button
         component={Link}

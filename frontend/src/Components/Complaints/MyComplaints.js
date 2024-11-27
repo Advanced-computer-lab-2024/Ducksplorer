@@ -14,6 +14,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import Help from "../HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar.js";
+import TouristSidebar from "../Sidebars/TouristSidebar.js";
 
 const MyComplaints = () => {
   const [complaints, setComplaints] = useState([]);
@@ -67,6 +68,8 @@ const MyComplaints = () => {
       }}
     >
       <TouristNavBar />
+      <TouristSidebar/>
+
       <Container
         maxWidth="md"
         sx={{ mt: 1, mb: 4, overflowY: "auto", height: "calc(100vh - 100px)" }}

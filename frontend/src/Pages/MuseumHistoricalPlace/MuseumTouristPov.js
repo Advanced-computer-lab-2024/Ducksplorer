@@ -8,6 +8,7 @@ import MuseumFilterComponent from "../../Components/MuseumHistoricalPlaceCompone
 import { Link, useParams } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon.js";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 import TouristNavBar from "../../Components/TouristNavBar.js";
 import {
   Box,
@@ -103,7 +104,8 @@ const MuseumTouristPov = () => {
         paddingTop: "64px", // Adjust for navbar height
       }}
     >
-      <TouristNavBar />     
+ <TouristNavBar />
+ <TouristSidebar/>      
       <Button
         component={Link}
         to={isGuest ? "/guestDashboard" : "/touristDashboard"}

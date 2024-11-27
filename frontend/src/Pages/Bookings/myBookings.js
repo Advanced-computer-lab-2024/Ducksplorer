@@ -25,7 +25,7 @@ import TouristNavBar from "../../Components/TouristNavBar";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon";
 import { Link } from "react-router-dom";
-
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 const BookingDetails = () => {
   const userName = JSON.parse(localStorage.getItem("user")).username;
   //const [booking, setBooking] = useState(null);
@@ -248,6 +248,8 @@ const BookingDetails = () => {
     }}
   >
     <TouristNavBar />
+    <TouristSidebar/>
+
     <div
       style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
     >

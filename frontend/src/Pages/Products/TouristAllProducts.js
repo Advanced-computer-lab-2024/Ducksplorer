@@ -15,6 +15,7 @@ import axios from "axios";
 import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
 import Help from "../../Components/HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 
 // Inline styles
 // const pageStyle = {
@@ -107,8 +108,8 @@ const TouristAllProducts = () => {
       paddingTop: "64px", // Adjust for navbar height
     }}
   >
-        <TouristNavBar />
-
+ <TouristNavBar />
+ <TouristSidebar/>
     <div>
       {/* Search Container at the Top */}
       <Button onClick={handleBackButtonClick}>Back</Button>

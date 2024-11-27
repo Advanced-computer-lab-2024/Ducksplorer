@@ -9,6 +9,7 @@ import { Link, useParams } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
 import Help from "../../Components/HelpIcon.js";
 import TouristNavBar from "../../Components/TouristNavBar.js";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 
 import {
   Box,
@@ -117,7 +118,8 @@ const HistoricalPlaceTouristPov = () => {
       paddingTop: "64px", // Adjust for navbar height
     }}
   >
-    <TouristNavBar />
+ <TouristNavBar />
+ <TouristSidebar/>    
       <Button
         component={Link}
         to={isGuest ? "/guestDashboard" : "/touristDashboard"}

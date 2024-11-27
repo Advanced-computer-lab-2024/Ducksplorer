@@ -6,6 +6,7 @@ import { Button } from "@mui/material";
 import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
 import Help from "../../Components/HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -55,8 +56,8 @@ function TouristProducts() {
         paddingTop: "64px", // Adjust for navbar height
       }}
     >
-      <TouristNavBar />
-      <Box
+ <TouristNavBar />
+ <TouristSidebar/>      <Box
         sx={{
           padding: "20px",
           margin: "auto",
