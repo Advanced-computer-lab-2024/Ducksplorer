@@ -87,21 +87,25 @@ function TouristNavBar() {
   };
 
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: "#FFD700", width: "100%" }}>
+    <AppBar position="fixed" sx={{ backgroundColor: "#FFD700", width: "100%", height: "10%" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <PersistentDrawerLeft />
-          <Tooltip title="Ducksplorer Home Page">
-            <TravelExploreIcon
-              sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-            />
+          {/* <PersistentDrawerLeft /> */}
+          {/* <Tooltip title="Ducksplorer Home Page">
+          <TravelExploreIcon
+            sx={{
+              display: { xs: "none", md: "flex" },
+              ml: "auto",  // This pushes it to the right in a flex container
+              mr: 1,
+            }}
+          />
             <Typography
               variant="h6"
               noWrap
               component="a"
               onClick={() => navigate("/touristDashboard")}
               sx={{
-                mr: 2,
+                ml: 11,  // Increase the margin-left value to move the text further to the right
                 display: { xs: "none", md: "flex" },
                 fontFamily: "monospace",
                 fontWeight: 700,
@@ -113,7 +117,8 @@ function TouristNavBar() {
             >
               Ducksplorer
             </Typography>
-          </Tooltip>
+
+          </Tooltip> */}
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -287,9 +292,20 @@ function TouristNavBar() {
                 sx={{ p: 0, ml: 4, width: 40, height: 40 }}
               >
                 <img
-                  src={"duckAvatar.png"} // Check if profilePicture exists, else use default
+                  src={image} // Fallback to a default image if image is undefined
                   alt="Avatar"
-                  style={{ width: 40, height: 40, borderRadius: "50%" }}
+                  style={{
+                    width: 60, // Use consistent units
+                    height: 60,
+                    borderRadius: "50%", // Circular shape
+                    marginTop: 5,
+                    marginRight: 10,
+                    border: "2px solid #FFD700", // Add a gold border for a premium feel
+                    objectFit: "cover", // Ensures image maintains aspect ratio
+                  
+                  }}
+                  onError={(e) => { e.target.src = "defaultAvatar.png"; }} // Fallback in case of image load error
+                  title="User Avatar" // Tooltip for accessibility
                 />
               </IconButton>
             </Tooltip>

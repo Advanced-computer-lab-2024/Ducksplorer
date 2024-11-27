@@ -68,6 +68,7 @@ const TouristSidebar = () => {
         width: isSidebarOpen ? 300 : 80, // Sidebar width based on state
         transition: "width 0.3s ease-in-out", // Smooth transition
         "& .MuiDrawer-paper": {
+          marginTop: "5.2%", // Keep the sidebar below the app bar
           width: isSidebarOpen ? 300 : 80,
           boxSizing: "border-box",
           overflowX: "hidden", // Prevent horizontal scrolling
@@ -75,8 +76,9 @@ const TouristSidebar = () => {
           color: "#ffffff", // White text for contrast
         },
       }}
+      onMouseEnter={() => setIsSidebarOpen(true)} // Open sidebar on hover
+      onMouseLeave={() => setIsSidebarOpen(false)} // Close sidebar on mouse leave
     >
-      <div>
         <List>
           <ListItem
             button
@@ -93,12 +95,7 @@ const TouristSidebar = () => {
             <ListItemIcon>
               <DeleteIcon sx={{ color: "error.main" }} />
             </ListItemIcon>
-            <ListItemText
-              primary="Delete My Account"
-              sx={{
-                fontWeight: "bold",
-              }}
-            />
+            {isSidebarOpen && <ListItemText primary="Delete My Account" />}
           </ListItem>
 
           <ListItem
@@ -117,13 +114,7 @@ const TouristSidebar = () => {
               <PersonIcon sx={{ color: "primary.main" }} />{" "}
               {/* Styled with theme color */}
             </ListItemIcon>
-            <ListItemText
-              primary="Profile"
-              sx={{
-                fontWeight: "500", // Slightly bold for emphasis
-                color: "text.primary", // Theme-based text color
-              }}
-            />
+            {isSidebarOpen && <ListItemText primary="Profile" />}
           </ListItem>
 
           <ListItem
@@ -143,13 +134,7 @@ const TouristSidebar = () => {
               <EventNoteIcon sx={{ color: "primary.main" }} />{" "}
               {/* Theme-based color */}
             </ListItemIcon>
-            <ListItemText
-              primary="View All Itineraries"
-              sx={{
-                fontWeight: "500", // Slight emphasis on text
-                color: "text.primary", // Ensure consistent theme color
-              }}
-            />
+            {isSidebarOpen && <ListItemText primary="View All Itineraries" />}
           </ListItem>
 
           <ListItem
@@ -169,13 +154,7 @@ const TouristSidebar = () => {
               <EventAvailableIcon sx={{ color: "success.main" }} />{" "}
               {/* Theme-based success color */}
             </ListItemIcon>
-            <ListItemText
-              primary="View Upcoming Itineraries"
-              sx={{
-                fontWeight: "500", // Slightly bold text
-                color: "text.primary", // Theme-consistent text color
-              }}
-            />
+            {isSidebarOpen && <ListItemText primary="View Upcoming Itineraries" />}
           </ListItem>
 
           <ListItem
@@ -195,13 +174,7 @@ const TouristSidebar = () => {
               <ShoppingCartIcon sx={{ color: "secondary.main" }} />{" "}
               {/* Secondary color for the icon */}
             </ListItemIcon>
-            <ListItemText
-              primary="Products Actions"
-              sx={{
-                fontWeight: "500", // Slightly bold text
-                color: "text.primary", // Theme-consistent text color
-              }}
-            />
+            {isSidebarOpen && <ListItemText primary="Products Actions" />}
           </ListItem>
 
           <ListItem
@@ -221,13 +194,7 @@ const TouristSidebar = () => {
               <MuseumIcon sx={{ color: "info.main" }} />{" "}
               {/* Info color for icon */}
             </ListItemIcon>
-            <ListItemText
-              primary="View Museums"
-              sx={{
-                fontWeight: "500", // Slightly bold text
-                color: "text.primary", // Theme-consistent text color
-              }}
-            />
+            {isSidebarOpen && <ListItemText primary="View Museums" />}
           </ListItem>
 
           <ListItem
@@ -247,13 +214,7 @@ const TouristSidebar = () => {
               <MuseumIcon sx={{ color: "warning.main" }} />{" "}
               {/* Use warning color for variety */}
             </ListItemIcon>
-            <ListItemText
-              primary="View Historical Places"
-              sx={{
-                fontWeight: "500", // Slightly bold text
-                color: "text.primary", // Theme-consistent text color
-              }}
-            />
+            {isSidebarOpen && <ListItemText primary="View Historical Places" />}
           </ListItem>
 
           <ListItem
@@ -273,13 +234,7 @@ const TouristSidebar = () => {
               <EventAvailableIcon sx={{ color: "success.main" }} />{" "}
               {/* Green color for upcoming events */}
             </ListItemIcon>
-            <ListItemText
-              primary="View Upcoming Museums"
-              sx={{
-                fontWeight: "500", // Slightly bold text
-                color: "text.primary", // Theme-consistent text color
-              }}
-            />
+            {isSidebarOpen && <ListItemText primary="View Upcoming Museums" />}
           </ListItem>
 
           <ListItem
@@ -299,13 +254,7 @@ const TouristSidebar = () => {
               <EventAvailableIcon sx={{ color: "info.main" }} />{" "}
               {/* Blue color for upcoming historical events */}
             </ListItemIcon>
-            <ListItemText
-              primary="View Upcoming Historical Places"
-              sx={{
-                fontWeight: "500", // Slightly bold text for emphasis
-                color: "text.primary", // Theme-consistent text color
-              }}
-            />
+            {isSidebarOpen && <ListItemText primary="View Upcoming Historical Places" />}
           </ListItem>
 
           <ListItem
@@ -325,13 +274,7 @@ const TouristSidebar = () => {
               <DirectionsRunIcon sx={{ color: "success.main" }} />{" "}
               {/* Green for activities */}
             </ListItemIcon>
-            <ListItemText
-              primary="View All Activities"
-              sx={{
-                fontWeight: "500", // Slightly bold text for emphasis
-                color: "text.primary", // Theme-based text color
-              }}
-            />
+            {isSidebarOpen && <ListItemText primary="View All Activities" />}
           </ListItem>
 
           <ListItem
@@ -351,13 +294,7 @@ const TouristSidebar = () => {
               <WidgetsIcon sx={{ color: "info.main" }} />{" "}
               {/* Blue for upcoming activities */}
             </ListItemIcon>
-            <ListItemText
-              primary="View Upcoming Activities"
-              sx={{
-                fontWeight: "500", // Slightly bold text for emphasis
-                color: "text.primary", // Consistent text color
-              }}
-            />
+            {isSidebarOpen && <ListItemText primary="View Upcoming Activities" />}
           </ListItem>
 
           <ListItem
@@ -377,13 +314,7 @@ const TouristSidebar = () => {
               <BookIcon sx={{ color: "secondary.main" }} />{" "}
               {/* Use secondary color for bookings */}
             </ListItemIcon>
-            <ListItemText
-              primary="My Past Bookings"
-              sx={{
-                fontWeight: "500", // Slightly bold text for emphasis
-                color: "text.primary", // Theme-consistent text color
-              }}
-            />
+            {isSidebarOpen && <ListItemText primary="My Past Bookings" />}
           </ListItem>
 
           <ListItem
@@ -403,18 +334,11 @@ const TouristSidebar = () => {
               <ReportIcon sx={{ color: "error.main" }} />{" "}
               {/* Red color to indicate complaints */}
             </ListItemIcon>
-            <ListItemText
-              primary="My Complaints"
-              sx={{
-                fontWeight: "500", // Slightly bold text for emphasis
-                color: "text.primary", // Consistent text color with the theme
-              }}
-            />
+            {isSidebarOpen && <ListItemText primary="My Complaints" />}
           </ListItem>
         </List>
         <Divider />
-      </div>
-
+        
       <Dialog
         open={open}
         onClose={handleClose}
