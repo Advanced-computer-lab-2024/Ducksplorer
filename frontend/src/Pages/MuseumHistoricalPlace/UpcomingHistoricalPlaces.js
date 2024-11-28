@@ -58,7 +58,6 @@ const UpcomingHistoricalPlaces = () => {
     <TouristNavBar />
     <TouristSidebar/>
     <Box sx={{ p: 6, maxWidth: 1200, overflowY: "visible", height: "100vh" }}>
-      <Link to="/HistoricalPlaceTouristPov"> Back </Link>
       <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
         <Typography variant="h4">Upcoming Historical Place Visits</Typography>
       </Box>

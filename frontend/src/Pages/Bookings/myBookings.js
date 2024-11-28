@@ -254,16 +254,7 @@ const BookingDetails = () => {
       style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
     >
       <TouristNavBar />
-      <Button
-        component={Link}
-        to={isGuest ? "/guestDashboard" : "/touristDashboard"}
-        variant="contained"
-        color="primary"
-        style={{ marginBottom: "20px" }}
-      >
-        Back to Dashboard
-      </Button>
-
+      
       <div style={{ overflowY: "visible", height: "100vh" }}>
         <Typography
           variant="h2"

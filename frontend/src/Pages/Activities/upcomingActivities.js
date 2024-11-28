@@ -97,12 +97,7 @@ const UpcomingActivities = () => {
           <Typography variant="h4">Upcoming Activities</Typography>
         </Box>
         <TableContainer component={Paper}>
-          <Link
-            to={isGuest ? "/guestDashboard" : "/touristDashboard"}
-            className="text-sm hover:underline hover:text-blue-600 mt-2 inline-block"
-          >
-            Back
-          </Link>
+          
 
           <Table>
             <TableHead>

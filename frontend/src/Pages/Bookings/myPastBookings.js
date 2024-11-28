@@ -283,105 +283,160 @@ const PastBookingDetails = () => {
     <TouristNavBar />
     <TouristSidebar/>
 
-    <div style={{ overflowY: "visible", height: "120vh", width: "100vw" }}>
-      <Button
-        component={Link}
-        to="/touristDashboard"
-        variant="contained"
-        color="primary"
-        style={{ marginBottom: "20px" }}
+    <div style={{ overflowY: "visible", height: "120vh", width: "85vw" }}>
+    
+          <Typography
+        variant="h4"
+        gutterBottom
+        sx={{
+          fontWeight: 700,
+          textAlign: "center",
+          color: "#333",
+          textTransform: "uppercase",
+          letterSpacing: "0.05em",
+          mb: 4, // Additional margin for better spacing
+        }}
       >
-        Back to Dashboard
-      </Button>
-      <Typography variant="h4" gutterBottom>
         Bookings History
       </Typography>
 
-      {/* Activities Table */}
-      <Typography variant="h5" gutterBottom>
-        Activities
-      </Typography>
-      <TableContainer component={Paper} sx={{ marginBottom: 4 }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Is Open</TableCell>
-              <TableCell>Advertiser</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Location</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell>Tags</TableCell>
-              <TableCell>Special Discount</TableCell>
-              <TableCell>Duration</TableCell>
-              <TableCell>Rating</TableCell>
-              <TableCell>Rate</TableCell>
-              <TableCell>Comment</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {activityBookings.map((activityBooking) => (
-              <TableRow key={activityBooking.activity._id}>
-                <TableCell>{activityBooking.activity.name}</TableCell>
-                <TableCell>
-                  {activityBooking.activity.isOpen ? "Yes" : "No"}
-                </TableCell>
-                <TableCell>{activityBooking.activity.advertiser}</TableCell>
-                <TableCell>
-                  {new Date(activityBooking.activity.date).toLocaleDateString()}
-                </TableCell>
-                <TableCell>{activityBooking.activity.location}</TableCell>
-                <TableCell>{activityBooking.chosenPrice}</TableCell>
-                <TableCell>{activityBooking.activity.category}</TableCell>
-                <TableCell>
-                  {activityBooking.activity.tags.join(", ")}
-                </TableCell>
-                <TableCell>
-                  {activityBooking.activity.specialDiscount}%
-                </TableCell>
-                <TableCell>{activityBooking.activity.duration} mins</TableCell>
-                <TableCell>{activityBooking.rating}/5</TableCell>
-                <TableCell>
-                  <Rating
-                    name={`activity-rating-${activityBooking._id}`}
-                    value={activityBooking.rating}
-                    precision={0.5} // Set precision to 0.5 for half-star ratings
-                    onChange={(event, newValue) =>
-                      handleActivityRatingChange(activityBooking._id, newValue)
-                    } // Pass the new value from the Rating component
-                  />
-                </TableCell>
 
-                <TableCell>
-                  <TextField
-                    variant="outlined"
-                    size="small"
-                    value={activityComments[activityBooking._id] || ""}
-                    onChange={(e) =>
-                      handleActivityCommentChange(
-                        activityBooking._id,
-                        e.target.value
-                      )
-                    }
-                    placeholder="Comment"
-                  />
-                  <Button
-                    onClick={() =>
-                      handleActivityCommentSubmit(activityBooking._id)
-                    }
-                    variant="contained"
-                    color="primary"
-                    size="small"
-                  >
-                    Submit
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+                <Typography
+            variant="h5"
+            gutterBottom
+            sx={{
+              fontWeight: 600,
+              textAlign: "center",
+              color: "#333", // Slightly darker color for better contrast
+              textTransform: "capitalize",
+              letterSpacing: "0.05em", // Slightly increased spacing for readability
+              borderBottom: "3px solid #ddd", // Thicker and softer underline for modern design
+              display: "inline-block",
+              paddingBottom: "10px", // Slightly increased padding for better balance
+              mb: 4, // More spacing below the title for separation
+            }}
+          >
+            Activities
+          </Typography>
+
+
+          <TableContainer
+  component={Paper}
+  sx={{
+    marginBottom: 4,
+    borderRadius: 2,
+    boxShadow: 3,
+    overflow: "hidden",
+  }}
+>
+  <Table>
+    <TableHead>
+      <TableRow sx={{ backgroundColor: "#f0f0f0" }}>
+        {[
+          "Name",
+          "Is Open",
+          "Advertiser",
+          "Date",
+          "Location",
+          "Price",
+          "Category",
+          "Tags",
+          "Special Discount",
+          "Duration",
+          "Rating",
+          "Rate",
+          "Comment",
+        ].map((header) => (
+          <TableCell
+            key={header}
+            sx={{
+              fontWeight: 700,
+              textAlign: "center",
+              color: "#333",
+            }}
+          >
+            {header}
+          </TableCell>
+        ))}
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      {activityBookings.map((activityBooking) => (
+        <TableRow
+          key={activityBooking.activity._id}
+          sx={{
+            "&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
+            "&:hover": { backgroundColor: "#f5f5f5" },
+          }}
+        >
+          <TableCell>{activityBooking.activity.name}</TableCell>
+          <TableCell>
+            {activityBooking.activity.isOpen ? "Yes" : "No"}
+          </TableCell>
+          <TableCell>{activityBooking.activity.advertiser}</TableCell>
+          <TableCell>
+            {new Date(activityBooking.activity.date).toLocaleDateString()}
+          </TableCell>
+          <TableCell>{activityBooking.activity.location}</TableCell>
+          <TableCell>{activityBooking.chosenPrice}</TableCell>
+          <TableCell>{activityBooking.activity.category}</TableCell>
+          <TableCell>
+            {activityBooking.activity.tags.join(", ")}
+          </TableCell>
+          <TableCell>
+            {activityBooking.activity.specialDiscount}%
+          </TableCell>
+          <TableCell>{activityBooking.activity.duration} mins</TableCell>
+          <TableCell>{activityBooking.rating}/5</TableCell>
+          <TableCell>
+            <Rating
+              name={`activity-rating-${activityBooking._id}`}
+              value={activityBooking.rating}
+              precision={0.5}
+              onChange={(event, newValue) =>
+                handleActivityRatingChange(activityBooking._id, newValue)
+              }
+              sx={{ color: "#FFD700" }} // Golden color for stars
+            />
+          </TableCell>
+          <TableCell>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <TextField
+                variant="outlined"
+                size="small"
+                value={activityComments[activityBooking._id] || ""}
+                onChange={(e) =>
+                  handleActivityCommentChange(
+                    activityBooking._id,
+                    e.target.value
+                  )
+                }
+                placeholder="Add a comment"
+                sx={{
+                  flexGrow: 1,
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                  },
+                }}
+              />
+              <Button
+                onClick={() =>
+                  handleActivityCommentSubmit(activityBooking._id)
+                }
+                variant="contained"
+                color="primary"
+                size="small"
+              >
+                Submit
+              </Button>
+            </Box>
+          </TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
+</TableContainer>
+
 
       {/* Itineraries Table */}
       <Typography variant="h5" gutterBottom>
