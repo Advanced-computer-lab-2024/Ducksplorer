@@ -8,6 +8,8 @@ import MuseumFilterComponent from "../../Components/MuseumHistoricalPlaceCompone
 import { Link, useParams } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon.js";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
+import TouristNavBar from "../../Components/TouristNavBar.js";
 import {
   Box,
   Button,
@@ -95,7 +97,15 @@ const MuseumTouristPov = () => {
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        height: "100vh",
+        backgroundColor: "#f9f9f9",
+        paddingTop: "64px", // Adjust for navbar height
+      }}
+    >
+ <TouristNavBar />
+ <TouristSidebar/>      
       <Button
         component={Link}
         to={isGuest ? "/guestDashboard" : "/touristDashboard"}
@@ -212,7 +222,7 @@ const MuseumTouristPov = () => {
         </TableContainer>
       </Box>
       <Help />
-    </>
+    </Box>
   );
 };
 

@@ -87,7 +87,17 @@ function TouristNavBar() {
   };
 
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: "#d4ebf8", width: "100%", height: "10%" }}>
+    <AppBar
+      position="fixed"
+      sx={{
+        backgroundColor: "#d4ebf8",
+        width: "100%",
+        height: "9%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           {/* <PersistentDrawerLeft /> */}
@@ -225,9 +235,10 @@ function TouristNavBar() {
             <Tooltip title="Book Activities">
               <IconButton
                 onClick={() => handleNavigation("activity/sortFilter")}
+                sx={{ margin: "3px" }}
               >
                 <FestivalIcon />
-                <Typography textAlign="center" marginRight={3}>
+                <Typography textAlign="center" marginLeft={1}>
                   Activities
                 </Typography>
               </IconButton>
@@ -235,33 +246,43 @@ function TouristNavBar() {
             <Tooltip title="Book Itineraries">
               <IconButton
                 onClick={() => handleNavigation("viewUpcomingItinerary")}
+                sx={{ margin: "3px" }}
               >
                 <TempleBuddhistIcon />
-                <Typography textAlign="center" marginRight={1}>
+                <Typography textAlign="center" marginLeft={1}>
                   Itineraries
                 </Typography>
               </IconButton>
             </Tooltip>
             <Tooltip title="Book Flights">
-              <IconButton onClick={() => handleNavigation("flights")}>
+              <IconButton
+                onClick={() => handleNavigation("flights")}
+                sx={{ margin: "3px" }}
+              >
                 <FlightIcon />
-                <Typography textAlign="center" marginRight={1}>
+                <Typography textAlign="center" marginLeft={1}>
                   Flights
                 </Typography>
               </IconButton>
             </Tooltip>
             <Tooltip title="Book Hotels">
-              <IconButton onClick={() => handleNavigation("hotels")}>
+              <IconButton
+                onClick={() => handleNavigation("hotels")}
+                sx={{ margin: "3px" }}
+              >
                 <HotelIcon />
-                <Typography textAlign="center" marginRight={1}>
+                <Typography textAlign="center" marginLeft={1}>
                   Hotels
                 </Typography>
               </IconButton>
             </Tooltip>
             <Tooltip title="Book Transportation">
-              <IconButton onClick={() => handleNavigation("transportation")}>
+              <IconButton
+                onClick={() => handleNavigation("transportation")}
+                sx={{ margin: "3px" }}
+              >
                 <DirectionsCarIcon />
-                <Typography textAlign="center" marginRight={1}>
+                <Typography textAlign="center" marginLeft={1}>
                   Transportation
                 </Typography>
               </IconButton>
@@ -269,17 +290,21 @@ function TouristNavBar() {
             <Tooltip title="View Products">
               <IconButton
                 onClick={() => handleNavigation("TouristAllProducts")}
+                sx={{ margin: "3px" }}
               >
                 <StorefrontIcon />
-                <Typography textAlign="center" marginRight={1}>
+                <Typography textAlign="center" marginLeft={1}>
                   Products
                 </Typography>
               </IconButton>
             </Tooltip>
             <Tooltip title="View My Bookings">
-              <IconButton onClick={() => handleNavigation("mybookings")}>
+              <IconButton
+                onClick={() => handleNavigation("mybookings")}
+                sx={{ margin: "3px" }}
+              >
                 <BookmarkAddedIcon />
-                <Typography textAlign="center" marginRight={1}>
+                <Typography textAlign="center" marginLeft={1}>
                   My Bookings
                 </Typography>
               </IconButton>
@@ -295,16 +320,14 @@ function TouristNavBar() {
                   src={image} // Fallback to a default image if image is undefined
                   alt="Avatar"
                   style={{
-                    width: 60, // Use consistent units
-                    height: 60,
-                    borderRadius: "50%", // Circular shape
-                    marginTop: 5,
-                    marginRight: 10,
+                    maxWidth: "60px", // Use consistent units
+                    maxHeight: "60px",
+                    borderRadius: "100%", // Circular shape
                     border: "2px solid #FFD700", // Add a gold border for a premium feel
-                    objectFit: "cover", // Ensures image maintains aspect ratio
-                  
                   }}
-                  onError={(e) => { e.target.src = "defaultAvatar.png"; }} // Fallback in case of image load error
+                  onError={(e) => {
+                    e.target.src = "defaultAvatar.png";
+                  }} // Fallback in case of image load error
                   title="User Avatar" // Tooltip for accessibility
                 />
               </IconButton>

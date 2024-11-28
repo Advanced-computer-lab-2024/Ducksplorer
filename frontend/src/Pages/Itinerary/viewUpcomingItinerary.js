@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 import {
   Box,
   Typography,
@@ -29,6 +30,7 @@ import { message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon.js";
+import TouristNavBar from "../../Components/TouristNavBar.js";
 
 const ViewUpcomingItinerary = () => {
   const navigate = useNavigate();
@@ -281,17 +283,75 @@ const ViewUpcomingItinerary = () => {
   };
 
   return (
+    <Box
+    sx={{
+      height: "100vh",
+    }}
+  >
+ <TouristNavBar />
+ <TouristSidebar/>
     <div>
-      <Link
-        to={isGuest ? "/guestDashboard" : "/touristDashboard"}
-        className="text-sm hover:underline hover:text-blue-600 mt-2 inline-block"
-      >
-        Back
-      </Link>
-      <Box sx={{ p: 6, maxWidth: 1200, overflowY: "visible", height: "100vh" }}>
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Typography variant="h4">Upcoming Itineraries</Typography>
-        </Box>
+    <Link
+  to={isGuest ? "/guestDashboard" : "/touristDashboard"}
+  style={{
+    display: "inline-block",
+    padding: "10px 20px",
+    backgroundColor: "#1a237e", // Dark blue background
+    color: "#ffffff", // White text
+    fontWeight: "bold",
+    textDecoration: "none",
+    borderRadius: "8px", // Rounded corners
+    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)", // Subtle shadow for depth
+    transition: "background-color 0.3s ease, transform 0.2s ease", // Smooth hover effect
+  }}
+  onMouseOver={(e) => {
+    e.currentTarget.style.backgroundColor = "#0d47a1"; // Lighter blue on hover
+    e.currentTarget.style.transform = "translateY(-2px)"; // Slight lift on hover
+  }}
+  onMouseOut={(e) => {
+    e.currentTarget.style.backgroundColor = "#1a237e"; // Revert to original background color
+    e.currentTarget.style.transform = "translateY(0)"; // Reset lift
+  }}
+>
+  Back
+</Link>
+
+      
+    
+<Box
+  sx={{
+    padding: 6,
+    maxWidth: 1200,
+    margin: "20px auto", // Centers the box with some margin at the top and bottom
+    backgroundColor: "#f9f9f9", // Light background for better contrast
+    borderRadius: "12px", // Rounded corners for a sleek look
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)", // Subtle shadow for depth
+    height: "auto", // Ensures it adjusts to the content height
+    overflowY: "visible",
+  }}
+>
+  <Box
+    sx={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: 3,
+    }}
+  >
+    <Typography
+      variant="h4"
+      sx={{
+        fontWeight: "bold",
+        color: "#1a237e", // Dark blue for emphasis
+        textAlign: "center",
+        textShadow: "1px 1px 2px rgba(0, 0, 0, 0.2)", // Adds subtle text shadow
+        letterSpacing: "0.05rem", // Slight spacing for readability
+      }}
+    >
+      Upcoming Itineraries
+    </Typography>
+  </Box>
+
         <Box sx={{ display: "flex", justifyContent: "normal", mb: 2 }}>
           {/* Sort By Icon Button */}
           <IconButton onClick={handleSortByClick}>
@@ -582,12 +642,13 @@ const ViewUpcomingItinerary = () => {
                             ))}
                         </TableBody>
                     </Table>
+
                 </TableContainer>
             </Box>
-            <Help />
+           <Help />
         </div>
+        </Box>
     );
-
 }
 
 

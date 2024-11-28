@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { message } from "antd";
+import TouristNavBar from "../../Components/TouristNavBar";
 import {
   Box,
   Button,
@@ -81,8 +82,13 @@ const DeleteUser = () => {
   };
 
   return (
-    <>
-      <Sidebar />
+    <Box
+    sx={{
+      height: "100vh",
+      backgroundColor: "#f5f5f5",
+      paddingTop: "64px", // Adjusted for fixed navbar spacing
+    }}
+  >      <Sidebar />
       <Box
         sx={{
           p: 6,
@@ -143,7 +149,7 @@ const DeleteUser = () => {
           </DialogActions>
         </Dialog>
       </Box>
-    </>
+    </Box>
   );
 };
 

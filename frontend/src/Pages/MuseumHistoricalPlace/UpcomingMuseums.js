@@ -5,7 +5,7 @@ import { message } from "antd";
 import { Link } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon.js";
-
+import TouristNavBar from "../../Components/TouristNavBar.js";
 import {
   Box,
   Table,
@@ -17,6 +17,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 
 const UpcomingMuseums = () => {
   const [upcomingMuseums, setUpcomingMuseums] = useState([]);
@@ -45,6 +46,15 @@ const UpcomingMuseums = () => {
   }, []);
 
   return (
+    <Box
+    sx={{
+      height: "100vh",
+      backgroundColor: "#f9f9f9",
+      paddingTop: "64px", // Adjust for navbar height
+    }}
+  >
+    <TouristNavBar />
+    <TouristSidebar/>
     <Box sx={{ p: 6, maxWidth: 1200, overflowY: "visible", height: "100vh" }}>
       <Link to="/MuseumTouristPov"> Back </Link>
       <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
@@ -111,6 +121,7 @@ const UpcomingMuseums = () => {
         </Table>
       </TableContainer>
       <Help />
+    </Box>
     </Box>
   );
 };

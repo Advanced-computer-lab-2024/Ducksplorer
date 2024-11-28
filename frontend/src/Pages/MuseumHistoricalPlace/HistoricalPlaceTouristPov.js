@@ -8,6 +8,8 @@ import HistoricalPlaceFilterComponent from "../../Components/MuseumHistoricalPla
 import { Link, useParams } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
 import Help from "../../Components/HelpIcon.js";
+import TouristNavBar from "../../Components/TouristNavBar.js";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 
 import {
   Box,
@@ -109,7 +111,15 @@ const HistoricalPlaceTouristPov = () => {
   };
 
   return (
-    <>
+    <Box
+    sx={{
+      height: "100vh",
+      backgroundColor: "#f9f9f9",
+      paddingTop: "64px", // Adjust for navbar height
+    }}
+  >
+ <TouristNavBar />
+ <TouristSidebar/>    
       <Button
         component={Link}
         to={isGuest ? "/guestDashboard" : "/touristDashboard"}
@@ -232,7 +242,7 @@ const HistoricalPlaceTouristPov = () => {
         </TableContainer>
       </Box>
       <Help />
-    </>
+    </Box>
   );
 };
 

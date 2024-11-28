@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import TouristNavBar from "../../Components/TouristNavBar";
 import {
+  Box,
   Table,
   TableBody,
   TableCell,
@@ -19,6 +21,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import Help from "../../Components/HelpIcon";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 
 const PastBookingDetails = () => {
   const userName = JSON.parse(localStorage.getItem("user")).username;
@@ -270,6 +273,16 @@ const PastBookingDetails = () => {
   }
 
   return (
+    <Box
+    sx={{
+      height: "100vh",
+      backgroundColor: "#f9f9f9",
+      paddingTop: "64px", // Adjust for navbar height
+    }}
+  >
+    <TouristNavBar />
+    <TouristSidebar/>
+
     <div style={{ overflowY: "visible", height: "120vh", width: "100vw" }}>
       <Button
         component={Link}
@@ -521,6 +534,7 @@ const PastBookingDetails = () => {
       </Dialog>
       <Help />
     </div>
+    </Box>
   );
 };
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
+  Box,
   Table,
   TableBody,
   TableCell,
@@ -24,7 +25,7 @@ import TouristNavBar from "../../Components/TouristNavBar";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon";
 import { Link } from "react-router-dom";
-
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 const BookingDetails = () => {
   const userName = JSON.parse(localStorage.getItem("user")).username;
   //const [booking, setBooking] = useState(null);
@@ -239,6 +240,16 @@ const BookingDetails = () => {
   }
 
   return (
+    <Box
+    sx={{
+      height: "100vh",
+      backgroundColor: "#f9f9f9",
+      paddingTop: "64px", // Adjust for navbar height
+    }}
+  >
+    <TouristNavBar />
+    <TouristSidebar/>
+
     <div
       style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
     >
@@ -933,6 +944,7 @@ const BookingDetails = () => {
       </div>
       <Help />
     </div>
+    </Box>
   );
 };
 
