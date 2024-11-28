@@ -87,7 +87,10 @@ function TouristNavBar() {
   };
 
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: "#FFD700", width: "100%", height: "10%" }}>
+    <AppBar
+      position="fixed"
+      sx={{ backgroundColor: "#FFD700", width: "100%", height: "10%" }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           {/* <PersistentDrawerLeft /> */}
@@ -295,16 +298,14 @@ function TouristNavBar() {
                   src={image} // Fallback to a default image if image is undefined
                   alt="Avatar"
                   style={{
-                    width: 60, // Use consistent units
-                    height: 60,
-                    borderRadius: "50%", // Circular shape
-                    marginTop: 5,
-                    marginRight: 10,
+                    maxWidth: "60px", // Use consistent units
+                    maxHeight: "60px",
+                    borderRadius: "100%", // Circular shape
                     border: "2px solid #FFD700", // Add a gold border for a premium feel
-                    objectFit: "cover", // Ensures image maintains aspect ratio
-                  
                   }}
-                  onError={(e) => { e.target.src = "defaultAvatar.png"; }} // Fallback in case of image load error
+                  onError={(e) => {
+                    e.target.src = "defaultAvatar.png";
+                  }} // Fallback in case of image load error
                   title="User Avatar" // Tooltip for accessibility
                 />
               </IconButton>
