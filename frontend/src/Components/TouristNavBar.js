@@ -89,7 +89,14 @@ function TouristNavBar() {
   return (
     <AppBar
       position="fixed"
-      sx={{ backgroundColor: "#FFD700", width: "100%", height: "10%" }}
+      sx={{
+        backgroundColor: "#d4ebf8",
+        width: "100%",
+        height: "9%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
