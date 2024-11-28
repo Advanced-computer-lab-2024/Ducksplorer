@@ -23,6 +23,7 @@
     "cors": "^2.8.5",
     "css-loader": "^7.1.2",
     "date-fns": "^2.29.2",
+    "flowbite-react": "^0.10.2",
     "formik": "^2.4.6",
     "frontend": "file:",
     "install": "^0.13.0",
