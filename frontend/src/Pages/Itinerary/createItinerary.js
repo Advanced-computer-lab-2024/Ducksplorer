@@ -5,7 +5,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { IconButton, Box, Paper } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import StandAloneToggleButtonIt from "../../Components/ToggleItinerary";
-
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeadCell,
+  TableRow,
+} from "flowbite-react";
 export const TagsContext = createContext();
 let tags = [];
 
@@ -216,7 +223,7 @@ const AddItinerary = () => {
       }}
     >
       <Link
-        to={isGuest ? "/guestDashboard" : "/touristDashboard"}
+        to={isGuest ? "/guestDashboard" : "/tourGuideDashboard"}
         className="text-sm hover:underline hover:text-blue-600 mt-2 inline-block"
       >
         Back

@@ -265,3 +265,8 @@ button[type="submit"]:hover {
 ::-webkit-file-upload-button {
   display: none;
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "flowbite";
