@@ -72,7 +72,7 @@ const TouristSidebar = () => {
           width: isSidebarOpen ? 300 : 80,
           boxSizing: "border-box",
           overflowX: "hidden", // Prevent horizontal scrolling
-          background: "linear-gradient(180deg, #1a237e, #0d47a1)", // Gradient background
+          background: "#bce4e4", // Gradient background
           color: "#ffffff", // White text for contrast
         },
       }}

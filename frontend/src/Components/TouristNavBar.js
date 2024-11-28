@@ -87,7 +87,7 @@ function TouristNavBar() {
   };
 
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: "#FFD700", width: "100%", height: "10%" }}>
+    <AppBar position="fixed" sx={{ backgroundColor: "#d4ebf8", width: "100%", height: "10%" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           {/* <PersistentDrawerLeft /> */}
