@@ -235,10 +235,9 @@ function TouristNavBar() {
             <Tooltip title="Book Activities">
               <IconButton
                 onClick={() => handleNavigation("activity/sortFilter")}
-                sx={{ margin: "3px" }}
               >
                 <FestivalIcon />
-                <Typography textAlign="center" marginLeft={1}>
+                <Typography textAlign="center" marginRight={3}>
                   Activities
                 </Typography>
               </IconButton>
@@ -246,43 +245,33 @@ function TouristNavBar() {
             <Tooltip title="Book Itineraries">
               <IconButton
                 onClick={() => handleNavigation("viewUpcomingItinerary")}
-                sx={{ margin: "3px" }}
               >
                 <TempleBuddhistIcon />
-                <Typography textAlign="center" marginLeft={1}>
+                <Typography textAlign="center" marginRight={1}>
                   Itineraries
                 </Typography>
               </IconButton>
             </Tooltip>
             <Tooltip title="Book Flights">
-              <IconButton
-                onClick={() => handleNavigation("flights")}
-                sx={{ margin: "3px" }}
-              >
+              <IconButton onClick={() => handleNavigation("flights")}>
                 <FlightIcon />
-                <Typography textAlign="center" marginLeft={1}>
+                <Typography textAlign="center" marginRight={1}>
                   Flights
                 </Typography>
               </IconButton>
             </Tooltip>
             <Tooltip title="Book Hotels">
-              <IconButton
-                onClick={() => handleNavigation("hotels")}
-                sx={{ margin: "3px" }}
-              >
+              <IconButton onClick={() => handleNavigation("hotels")}>
                 <HotelIcon />
-                <Typography textAlign="center" marginLeft={1}>
+                <Typography textAlign="center" marginRight={1}>
                   Hotels
                 </Typography>
               </IconButton>
             </Tooltip>
             <Tooltip title="Book Transportation">
-              <IconButton
-                onClick={() => handleNavigation("transportation")}
-                sx={{ margin: "3px" }}
-              >
+              <IconButton onClick={() => handleNavigation("transportation")}>
                 <DirectionsCarIcon />
-                <Typography textAlign="center" marginLeft={1}>
+                <Typography textAlign="center" marginRight={1}>
                   Transportation
                 </Typography>
               </IconButton>
@@ -290,21 +279,17 @@ function TouristNavBar() {
             <Tooltip title="View Products">
               <IconButton
                 onClick={() => handleNavigation("TouristAllProducts")}
-                sx={{ margin: "3px" }}
               >
                 <StorefrontIcon />
-                <Typography textAlign="center" marginLeft={1}>
+                <Typography textAlign="center" marginRight={1}>
                   Products
                 </Typography>
               </IconButton>
             </Tooltip>
             <Tooltip title="View My Bookings">
-              <IconButton
-                onClick={() => handleNavigation("mybookings")}
-                sx={{ margin: "3px" }}
-              >
+              <IconButton onClick={() => handleNavigation("mybookings")}>
                 <BookmarkAddedIcon />
-                <Typography textAlign="center" marginLeft={1}>
+                <Typography textAlign="center" marginRight={1}>
                   My Bookings
                 </Typography>
               </IconButton>

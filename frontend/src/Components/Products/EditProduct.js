@@ -100,7 +100,6 @@ const EditProduct = () => {
         alignItems: "center",
       }}
     >
-      <Button onClick={handleBackButtonClick}>Back</Button>
 
       <Stack
         spacing={1}

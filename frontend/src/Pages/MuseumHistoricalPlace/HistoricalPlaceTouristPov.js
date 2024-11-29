@@ -114,21 +114,13 @@ const HistoricalPlaceTouristPov = () => {
     <Box
     sx={{
       height: "100vh",
-      backgroundColor: "#f9f9f9",
-      paddingTop: "64px", // Adjust for navbar height
+      backgroundColor: "#ffffff",
+      paddingTop: "100px", // Adjust for navbar height
     }}
   >
  <TouristNavBar />
  <TouristSidebar/>    
-      <Button
-        component={Link}
-        to={isGuest ? "/guestDashboard" : "/touristDashboard"}
-        variant="contained"
-        color="primary"
-        style={{ marginBottom: "20px" }}
-      >
-        Back to Dashboard
-      </Button>
+    
       <Box sx={{ p: 6, maxWidth: 1200, overflowY: "visible", height: "100vh" }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <Typography variant="h4">

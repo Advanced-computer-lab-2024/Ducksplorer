@@ -80,7 +80,6 @@ const ViewAllItineraries = () => {
          <TouristNavBar />
          <TouristSidebar/>
         <Box sx={{ padding: '20px', maxWidth: '1200px', margin: 'auto', display: 'flex', flexDirection: 'column', overflowY: 'visible', height: '100vh' }}>
-            <Link to="/AdminDashboard"> Back </Link>
             <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
                 <Typography variant="h4">
                     Available itineraries

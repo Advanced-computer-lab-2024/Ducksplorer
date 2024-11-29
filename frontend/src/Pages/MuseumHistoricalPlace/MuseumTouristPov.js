@@ -99,73 +99,105 @@ const MuseumTouristPov = () => {
   return (
     <Box
       sx={{
-        height: "100vh",
+        minHeight: "100vh",
         backgroundColor: "#f9f9f9",
         paddingTop: "64px", // Adjust for navbar height
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 3,
       }}
     >
- <TouristNavBar />
- <TouristSidebar/>      
-      <Button
-        component={Link}
-        to={isGuest ? "/guestDashboard" : "/touristDashboard"}
-        variant="contained"
-        color="primary"
-        style={{ marginBottom: "20px" }}
+      <TouristNavBar />
+      <TouristSidebar />
+  
+    
+  
+      <Box
+        sx={{
+          p: { xs: 2, sm: 6 },
+          maxWidth: 1200,
+          width: "100%",
+          height:"100vh",
+          backgroundColor: "#ffffff",
+          borderRadius: 2,
+          boxShadow: 3,
+          overflowY: "visible",
+        }}
       >
-        Back to Dashboard
-      </Button>
-      <Box sx={{ p: 6, maxWidth: 1200, overflowY: "visible", height: "100vh" }}>
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Typography variant="h4">Available Museum Visits</Typography>
-        </Box>
-
-        {/* Render the search component and pass the callback */}
-        <div>
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Typography variant="h4" fontWeight="700">
+            Available Museum Visits
+          </Typography>
+        
+  
+        {/* Render the search component */}
+        <Box sx={{ mb: 3 }}>
           <MuseumSearch onSearch={handleSearchResults} />
-        </div>
-
-        {/* Render the filter component and pass the callback */}
-        <div>
+        
+  
+        {/* Render the filter component */}
+        <Box sx={{ mb: 3 }}>
           <MuseumFilterComponent onFilter={handleFilterResults} />
-        </div>
-
+        </Box>
+  
         {/* Button to navigate to upcoming museums */}
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <Button
             variant="contained"
-            color="primary"
+            color="secondary"
+            sx={{
+              paddingX: 4,
+              fontWeight: 600,
+              textTransform: "capitalize",
+            }}
             onClick={goToUpcomingPage}
           >
             Get Upcoming Museum Visits
           </Button>
         </Box>
-
-        <TableContainer component={Paper}>
+  
+        <TableContainer
+          component={Paper}
+          sx={{
+            borderRadius: 2,
+            boxShadow: 2,
+            overflow: "hidden",
+          }}
+        >
           <Table>
             <TableHead>
-              <TableRow>
-                <TableCell>Description</TableCell>
-                <TableCell>Location</TableCell>
-                <TableCell>Pictures</TableCell>
-                <TableCell>
-                  Ticket Price
-                  <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
-                </TableCell>
-                <TableCell>Opening Time</TableCell>
-                <TableCell>Closing Time</TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Tags</TableCell>
-                <TableCell>Created By</TableCell>
+              <TableRow sx={{ backgroundColor: "#f0f0f0" }}>
+                {[
+                  "Description",
+                  "Location",
+                  "Pictures",
+                  "Ticket Price",
+                  "Opening Time",
+                  "Closing Time",
+                  "Date",
+                  "Name",
+                  "Category",
+                  "Tags",
+                  "Created By",
+                ].map((heading) => (
+                  <TableCell key={heading} sx={{ fontWeight: 700 }}>
+                    {heading}
+                  </TableCell>
+                ))}
               </TableRow>
             </TableHead>
-
+  
             <TableBody>
               {Array.isArray(Museums) && Museums.length > 0 ? (
                 Museums.map((museum) => (
-                  <TableRow key={museum._id}>
+                  <TableRow
+                    key={museum._id}
+                    sx={{
+                      "&:nth-of-type(odd)": { backgroundColor: "#f9f9f9" },
+                      "&:hover": { backgroundColor: "#f1f1f1" },
+                    }}
+                  >
                     <TableCell>{museum.description}</TableCell>
                     <TableCell>{museum.location}</TableCell>
                     <TableCell>
@@ -176,7 +208,9 @@ const MuseumTouristPov = () => {
                           width: "100px",
                           height: "auto",
                           objectFit: "cover",
-                        }} // Adjust as needed
+                          borderRadius: "8px",
+                          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                        }}
                       />
                     </TableCell>
                     <TableCell>
@@ -192,10 +226,11 @@ const MuseumTouristPov = () => {
                     <TableCell>{museum.museumCategory}</TableCell>
                     <TableCell>{museum.tags.join(", ")}</TableCell>
                     <TableCell>{museum.createdBy}</TableCell>
-                    {id === undefined ? (
+                    {id === undefined && (
                       <TableCell>
                         <Button
                           variant="outlined"
+                          sx={{ mr: 1 }}
                           onClick={() => handleShareLink(museum._id)}
                         >
                           Share Via Link
@@ -207,23 +242,28 @@ const MuseumTouristPov = () => {
                           Share Via Email
                         </Button>
                       </TableCell>
-                    ) : null}
+                    )}
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={11} align="center">
-                    No museums available
+                  <TableCell colSpan={11} align="center" sx={{ py: 5 }}>
+                    <Typography variant="body1" color="textSecondary">
+                      No museums available
+                    </Typography>
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
-          </Table>
+         </Table>
+         
         </TableContainer>
+        </Box>
+      </Box>
       </Box>
       <Help />
     </Box>
   );
-};
+}  
 
 export default MuseumTouristPov;

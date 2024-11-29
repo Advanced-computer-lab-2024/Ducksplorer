@@ -207,26 +207,14 @@ const EditProfile = () => {
   >
     <TouristNavBar />
     <TouristSidebar/>
-    <Box
-    sx={{
-      height: "100vh",
-      backgroundColor: "#f5f5f5",
-      paddingTop: "64px", // Adjusted for fixed navbar spacing
-    }}
-  >
-    <Box
-      sx={{
-        height: "100vh",
-      }}
-    >
-      <TouristNavBar />
+   
+ 
       <Box
         sx={{
           p: 4,
           justifyContent: "center",
         }}
       >
-        <Link to="/touristDashboard">Back to Dashboard</Link>
         <Paper
           elevation={4}
           sx={{
@@ -462,8 +450,6 @@ const EditProfile = () => {
         </Paper>
       </Box>
       <Help />
-    </Box>
-    </Box>
     </Box>
   );
 };
