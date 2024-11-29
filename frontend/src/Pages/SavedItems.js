@@ -14,11 +14,13 @@ import {
   TableBody,
   IconButton,
   Rating,
+  Tooltip,
 } from "@mui/material";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import CurrencyConvertor from "../Components/CurrencyConvertor.js";
 import MyChips from "../Components/MyChips.js";
+import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
 
 function MySavedItems() {
   const { id } = useParams();
@@ -151,17 +153,13 @@ function MySavedItems() {
 
   useEffect(() => {
     const fetchSaveStates = async () => {
-      const userJson = localStorage.getItem("user");
-      const user = JSON.parse(userJson);
-      const userName = user.username;
-
       // Loop through itineraries to fetch save states
       const newSaveStates = {};
       await Promise.all(
         itineraries.map(async (itinerary) => {
           try {
             const response = await axios.get(
-              `http://localhost:8000/itinerary/getSave/${itinerary._id}/${userName}`
+              `http://localhost:8000/itinerary/getSave/${itinerary._id}/${username}`
             );
 
             if (response.status === 200) {
@@ -219,16 +217,13 @@ function MySavedItems() {
 
   useEffect(() => {
     const fetchSaveStatesActivity = async () => {
-      const userJson = localStorage.getItem("user");
-      const user = JSON.parse(userJson);
-      const userName = user.username;
 
       const newSaveStatesActivity = {};
       await Promise.all(
         activities.map(async (activity) => {
           try {
             const response = await axios.get(
-              `http://localhost:8000/activity/getSave/${activity._id}/${userName}`
+              `http://localhost:8000/activity/getSave/${activity._id}/${username}`
             );
             console.log("hal heya saved: ", response.data);
             console.log("what is the status ", response.status);
@@ -252,6 +247,24 @@ function MySavedItems() {
       fetchSaveStatesActivity();
     }
   }, [activities]);
+
+  const requestNotification = async (itineraryId) => {
+    try {
+      const response = await axios.post('http://localhost:8000/notification/request', {
+        user: username, 
+        eventId: itineraryId,
+      });
+  
+      if (response.status === 201) {
+        message.success('You will be notified when this itinerary starts accepting bookings.');
+      } else {
+        message.error(response.data.message);
+      }
+    } catch (error) {
+      console.error('Error requesting notification:', error);
+      message.error('Failed to request notification.');
+    }
+  };
 
   return (
     <>
@@ -304,6 +317,7 @@ function MySavedItems() {
                           <TableCell>Ratings</TableCell>
                           <TableCell>Tags</TableCell>
                           <TableCell>Bookmark</TableCell>
+                          <TableCell>Notify Me</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -431,6 +445,19 @@ function MySavedItems() {
                                     )}
                                   </span>
                                 </TableCell>
+                                <TableCell>
+                                  <Tooltip title="Notify me when active">
+                                    <IconButton
+                                      color="error"
+                                      aria-label="notify me"
+                                        onClick={() =>
+                                            requestNotification(itinerary._id)
+                                        }
+                                    >
+                                      <NotificationAddIcon />
+                                    </IconButton>
+                                  </Tooltip>
+                                </TableCell>
                               </TableRow>
                             ) : null
                           ) // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists
@@ -482,6 +509,7 @@ function MySavedItems() {
                         <TableCell>Location</TableCell>
                         <TableCell>Rating</TableCell>
                         <TableCell>Bookmark</TableCell>
+                        <TableCell>Notify Me</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -552,6 +580,19 @@ function MySavedItems() {
                                     </IconButton>
                                   )}
                                 </span>
+                              </TableCell>
+                              <TableCell>
+                                <Tooltip title="Notify me when active">
+                                  <IconButton
+                                    color="error"
+                                    aria-label="notify me"
+                                    //   onClick={() =>
+                                    //     handleClickOpen(itinerary._id)
+                                    //   }
+                                  >
+                                    <NotificationAddIcon />
+                                  </IconButton>
+                                </Tooltip>
                               </TableCell>
                             </TableRow>
                           ) : null

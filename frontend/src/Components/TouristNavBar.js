@@ -28,6 +28,7 @@ import BookmarksIcon from '@mui/icons-material/Bookmarks';
 
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+import MyNotifications from "./myNotifications";
 
 function TouristNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -233,6 +234,7 @@ function TouristNavBar() {
               alignItems: "center",
             }}
           >
+            <MyNotifications/>
             <Tooltip title="My Cart">
               <IconButton
                 onClick={() => handleNavigation("myCart")}
@@ -305,14 +307,14 @@ function TouristNavBar() {
                 </Typography>
               </IconButton>
             </Tooltip>
-            <Tooltip title="View My Wishlist">
+            {/* <Tooltip title="View My Wishlist">
               <IconButton onClick={() => handleNavigation("wishlist")}>
                 <FavoriteBorderIcon />
                 <Typography textAlign="center" marginRight={1}>
                   Wishlist
                 </Typography>
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open Account settings">
