@@ -76,6 +76,7 @@ import ChangePassword from "./Pages/Admin/ChangePassword.js";
 import EditItinerary from "./Pages/Itinerary/editItinerary.js";
 
 import LandingPage from "./Pages/LandingPage.js";
+import ActivityCard from "./Pages/activityCard.js";
 
 function App() {
   return (
@@ -190,6 +191,7 @@ function App() {
             element={<AdvertiserEditProfile />}
           />
           <Route path="/sellerEditAccount" element={<SellerEditProfile />} />
+          <Route path="/ActivityCardTest" element={<ActivityCard />} />
           <Route path="/sellerDashboard" element={<SellerDashboard />} />
           <Route path="/flights" element={<FlightsBooking />} />
           <Route path="/transportation" element={<TransportationBooking />} />
