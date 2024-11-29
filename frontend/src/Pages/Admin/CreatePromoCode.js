@@ -9,6 +9,7 @@ import Sidebar from "../../Components/Sidebars/Sidebar.js";
 function CreatePromoCode() {
   const [code, setCode] = useState("");
   const [value, setValue] = useState("");
+  const [date, setDate] = useState("");
 
   const handleAdd = async () => {
     try {
@@ -16,7 +17,8 @@ function CreatePromoCode() {
         "http://localhost:8000/admin/addPromoCode",
         {
           code,
-          value
+          value,
+          date
         }
       );
       if (response.status === 200) {
@@ -72,6 +74,14 @@ function CreatePromoCode() {
               type="number"
               value={value}
               onChange={(e) => setValue(e.target.value)}
+            />
+
+            <TextField
+              name="date"
+              label="Expiry Date"
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
             />
 
             <Button
