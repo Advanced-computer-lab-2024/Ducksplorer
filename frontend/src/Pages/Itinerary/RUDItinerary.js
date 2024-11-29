@@ -365,6 +365,7 @@ const RUDItinerary = () => {
           <Table>
             <TableHead>
               <TableRow>
+                <TableCell>Name</TableCell>
                 <TableCell>Activities
                   <CurrencyConvertor onCurrencyChange={handleActivityCurrencyChange} />
                 </TableCell>
@@ -388,6 +389,7 @@ const RUDItinerary = () => {
             <TableBody>
               {itineraries.map(itinerary => itinerary.deletedItinerary === false ? (
                 <TableRow key={itinerary._id}>
+                  <TableCell>itinerary.name</TableCell>
                   <TableCell>
                     {itinerary.activity && itinerary.activity.length > 0
                       ? itinerary.activity.map((activity, index) => (
