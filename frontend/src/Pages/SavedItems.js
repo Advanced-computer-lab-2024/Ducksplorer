@@ -327,6 +327,7 @@ function MySavedItems() {
                             itinerary.isDeactivated === false &&
                             itinerary.tourGuideDeleted === false &&
                             itinerary.deletedItinerary === false &&
+                            itinerary.saved.user === username &&
                             itinerary.saved.isSaved === true ? (
                               <TableRow key={itinerary._id}>
                                 <TableCell>
@@ -518,6 +519,7 @@ function MySavedItems() {
                           activity.flag === false &&
                           activity.advertiserDeleted === false &&
                           activity.deletedActivity === false &&
+                          activity.saved.user === username &&
                           activity.saved.isSaved ? (
                             <TableRow key={activity._id}>
                               <TableCell>{activity.name}</TableCell>
