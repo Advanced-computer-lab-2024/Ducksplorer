@@ -487,7 +487,7 @@ function PaymentPage() {
                   />
                   <Button onClick={applyPromoCode}>Apply Promo Code</Button>
                   {discount > 0 && <p>Discount Applied: {discount}%</p>}
-                  <h2>Final Price: ${finalPrice}</h2>
+                  <h2>Final Price: {finalPrice}EGP</h2>
                 </Form>
               </div>
             ) : type === "activity" && activityData ? (
@@ -609,7 +609,7 @@ function PaymentPage() {
                   />
                   <Button onClick={applyPromoCode}>Apply Promo Code</Button>
                   {discount > 0 && <p>Discount Applied: {discount}%</p>}
-                  <h2>Final Price: ${finalPrice}</h2>
+                  <h2>Final Price: {finalPrice}EGP</h2>
                 </Form>
               </div>
             ) : type === "flight" ? (
@@ -712,7 +712,7 @@ function PaymentPage() {
                   />
                   <Button onClick={applyPromoCode}>Apply Promo Code</Button>
                   {discount > 0 && <p>Discount Applied: {discount}%</p>}
-                  <h2>Final Price: ${finalPrice}</h2>
+                  <h2>Final Price: {finalPrice}EGP</h2>
                 </Form>
               </div>
             ) : type === "hotel" ? (
@@ -803,7 +803,7 @@ function PaymentPage() {
                   />
                   <Button onClick={applyPromoCode}>Apply Promo Code</Button>
                   {discount > 0 && <p>Discount Applied: {discount}%</p>}
-                  <h2>Final Price: ${finalPrice}</h2>
+                  <h2>Final Price: {finalPrice}EGP</h2>
                 </Form>
               </div>
             ) : type === "transportation" ? (
@@ -895,7 +895,7 @@ function PaymentPage() {
                   />
                   <Button onClick={applyPromoCode}>Apply Promo Code</Button>
                   {discount > 0 && <p>Discount Applied: {discount}%</p>}
-                  <h2>Final Price: ${finalPrice}</h2>
+                  <h2>Final Price: {finalPrice}EGP</h2>
                 </Form>
               </div>
             ) : null
