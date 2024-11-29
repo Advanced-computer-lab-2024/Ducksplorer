@@ -79,6 +79,7 @@ import ProtectedRoute from "./Components/ProtectedRoute"; // Import the Protecte
 
 import CreatePromoCode from "./Pages/Admin/CreatePromoCode.js";
 import MyNotifications from "./Components/myNotifications.js";
+import ForgetPassword from "./Pages/EditAccount/ForgetPassword.js";
 
 function App() {
   const { authUser } = useAuthContext();
@@ -87,7 +88,20 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/notifications" element={<MyNotifications />} />
-          <Route path="/changePassword" element={<ChangePassword />} />
+          <Route path="/changePassword" 
+          element={
+            <ProtectedRoute>  
+              <ChangePassword />
+            </ProtectedRoute> 
+            } 
+          />
+          <Route path="/forgetPassword" 
+          element={
+            <ProtectedRoute>  
+              <ForgetPassword />
+            </ProtectedRoute> 
+            } 
+          />
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signUp" element={<Signup />} />

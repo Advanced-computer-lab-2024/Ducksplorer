@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Button, Typography, TextField, Box, Stack, IconButton, InputAdornment } from "@mui/material";
-import Iconify from "../Components/TopNav/iconify.js";
-import { Link, useNavigate } from "react-router-dom";
+import Iconify from "../../Components/TopNav/iconify.js";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { message } from "antd";
 
-function Login() {
-  const [userName, setUserName] = useState("");
+function ForgetPassword() {
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const userName =  JSON.parse(localStorage.getItem("user")).username;
 
   // Prevent scrolling and white border
   useEffect(() => {
@@ -26,28 +28,25 @@ function Login() {
     };
   }, []);
 
-  const handleLogin = async () => {
+  const handleChangePassword = async () => {
+    if (password !== confirmPassword) {
+      message.error("Passwords do not match");
+      return;
+    }
     try {
       setLoading(true);
-      const response = await axios.post("http://localhost:8000/signUp/login", { userName, password });
+      const response = await axios.post("http://localhost:8000/signUp/forgetPassword", {
+        userName,
+        password
+      });
       if (response.status === 200) {
-        message.success("Logged in successfully");
-        const userRole = response.data.role;
-        const roleToDashboard = {
-          Admin: "/AdminDashboard",
-          Tourist: "/touristDashboard",
-          Guide: "/tourGuideDashboard",
-          Governor: "/governorDashboard",
-          Advertiser: "/advertiserDashboard",
-          Seller: "/sellerDashboard",
-        };
-        window.location.href = roleToDashboard[userRole] || "/";
-        localStorage.setItem("user", JSON.stringify(response.data));
+        message.success("Password changed successfully");
+        navigate("/login");
       } else {
         throw new Error(response.error);
       }
     } catch (error) {
-      message.error(error.response?.data?.error || "Login failed");
+      message.error(error.response?.data?.error || "Password change failed");
     } finally {
       setLoading(false);
     }
@@ -62,23 +61,33 @@ function Login() {
       <div style={styles.overlay}></div>
       <Box style={styles.content}>
         <Typography variant="h4" style={styles.title}>
-          Welcome Back to Ducksplorer
+          Change Your Password
         </Typography>
         <Typography variant="h6" style={styles.subtitle}>
-          Login to continue your adventure
+          Enter your new password below
         </Typography>
         <Stack spacing={2} mt={3}>
           <TextField
-            label="Username"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-            fullWidth
-          />
-          <TextField
-            label="Password"
+            label="New Password"
             type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            fullWidth
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => setShowPassword(!showPassword)}>
+                    <Iconify icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"} />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+          <TextField
+            label="Confirm New Password"
+            type={showPassword ? "text" : "password"}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             fullWidth
             InputProps={{
               endAdornment: (
@@ -96,29 +105,11 @@ function Login() {
           color="primary"
           fullWidth
           style={styles.button}
-          onClick={handleLogin}
+          onClick={handleChangePassword}
           disabled={loading}
         >
-          {loading ? "Logging in..." : "Login"}
+          {loading ? "Changing Password..." : "Change Password"}
         </Button>
-        <Typography variant="body2" style={styles.linkText}>
-          Don't have an account?{" "}
-          <Link to="/signUp" style={styles.link}>
-            Sign Up
-          </Link>
-        </Typography>
-        <Typography variant="body2" style={styles.linkText}>
-          Forgot your password?{" "}
-          <Link to="/forgetPassword" style={styles.link}>
-            Reset Password
-          </Link>
-        </Typography>
-        <Typography variant="body2" style={styles.linkText}>
-          Continue as a guest?{" "}
-          <Link to="/guestDashboard" style={styles.link}>
-            Try as Guest
-          </Link>
-        </Typography>
         {/* Back to Homepage Button */}
         <Button
           variant="outlined"
@@ -127,7 +118,7 @@ function Login() {
           style={styles.backButton}
           onClick={handleBackToHome}
         >
-          Back to Homepage
+          Back to Login
         </Button>
       </Box>
     </div>
@@ -180,15 +171,6 @@ const styles = {
     color: "#fff",
     marginTop: "20px",
   },
-  linkText: {
-    marginTop: "10px",
-    color: "#555",
-  },
-  link: {
-    color: "#007bff",
-    textDecoration: "none",
-    fontWeight: "bold",
-  },
   backButton: {
     marginTop: "15px", // Add some spacing between buttons
     backgroundColor: "#fff",
@@ -196,4 +178,4 @@ const styles = {
   },
 };
 
-export default Login;
+export default ForgetPassword;
