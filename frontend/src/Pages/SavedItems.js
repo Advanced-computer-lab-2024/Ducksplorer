@@ -248,15 +248,15 @@ function MySavedItems() {
     }
   }, [activities]);
 
-  const requestNotification = async (itineraryId) => {
+  const requestNotification = async (eventId) => {
     try {
       const response = await axios.post('http://localhost:8000/notification/request', {
         user: username, 
-        eventId: itineraryId,
+        eventId: eventId,
       });
   
       if (response.status === 201) {
-        message.success('You will be notified when this itinerary starts accepting bookings.');
+        message.success('You will be notified when this event starts accepting bookings.');
       } else {
         message.error(response.data.message);
       }
@@ -586,9 +586,9 @@ function MySavedItems() {
                                   <IconButton
                                     color="error"
                                     aria-label="notify me"
-                                    //   onClick={() =>
-                                    //     handleClickOpen(itinerary._id)
-                                    //   }
+                                      onClick={() =>
+                                        requestNotification(activity._id)
+                                      }
                                   >
                                     <NotificationAddIcon />
                                   </IconButton>

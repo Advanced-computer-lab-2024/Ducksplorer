@@ -1,5 +1,4 @@
 const purchases = require("../Models/purchasesModel");
-const productModel = require("../Models/productModel");
 
 const getMyPurchases = async (req, res) => {
   try {

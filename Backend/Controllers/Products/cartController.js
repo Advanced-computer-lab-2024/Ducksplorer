@@ -153,7 +153,7 @@ const updateProductQuantity = async (req, res) => {
 };
 
 
-const addPurchase = async (req, res) => {
+const addPurchase2 = async (req, res) => {
   try {
     const { userName, productId, chosenQuantity } = req.body;
 
@@ -194,4 +194,4 @@ const addPurchase = async (req, res) => {
   }
 };
 
-module.exports = {addProductToCart, removeProductFromCart,updateProductQuantity, viewCart, addPurchase};
+module.exports = {addProductToCart, removeProductFromCart,updateProductQuantity, viewCart, addPurchase2};

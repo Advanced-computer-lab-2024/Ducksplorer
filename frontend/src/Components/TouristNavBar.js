@@ -235,7 +235,7 @@ function TouristNavBar() {
             }}
           >
             <MyNotifications/>
-            <Tooltip title="My Cart">
+            {/* <Tooltip title="My Cart">
               <IconButton
                 onClick={() => handleNavigation("myCart")}
               >
@@ -244,7 +244,7 @@ function TouristNavBar() {
                   Cart
                 </Typography>
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip title="Book Activities">
               <IconButton
                 onClick={() => handleNavigation("activity/sortFilter")}

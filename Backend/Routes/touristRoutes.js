@@ -23,7 +23,7 @@ const {
 const { createBooking, viewMyUpcomingBookings, viewMyPastBookings, viewDesiredActivity, viewDesiredItinerary, getMyBookings, cancelMyBooking, receiveLoyaltyPoints, getLevel, updateLevel,
   redeemPoints, payVisa, payWallet } = require("../Controllers/bookingController");
   
-const {addProductToCart,removeProductFromCart,updateProductQuantity,viewCart,addPurchase} = require("../Controllers/Products/cartController");
+const {addProductToCart,removeProductFromCart,updateProductQuantity,viewCart,addPurchase2} = require("../Controllers/Products/cartController");
 const router = express.Router();
 
 router.get("/getproducts", getProducts);
@@ -52,7 +52,7 @@ router.delete("/cart",removeProductFromCart);
 //edit the product quantity in the product
 router.patch("/cart",updateProductQuantity);
 //add purchases from cart
-router.put("/addPurchase",addPurchase);
+router.put("/addPurchase",addPurchase2);
 
 //router.patch("/loyalty/:name/:userName",receiveLoyaltyPoints);
 router.get("/myPurchases/:buyer", getMyPurchases);

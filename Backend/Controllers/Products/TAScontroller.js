@@ -1,6 +1,4 @@
-const mongoose = require("mongoose");
 const productModel = require("../../Models/productModel");
-const { $regex } = require("sift");
 const purchases = require("../../Models/purchasesModel");
 
 const getProducts = async (req, res) => {
