@@ -27,7 +27,7 @@ export default function ActivityCard({
           variant="outlined"
           sx={{
             width: "20vw",
-            maxHeight: "40vh",
+            height: "100%",
           }}
         >
           <CardOverflow>
@@ -85,7 +85,13 @@ export default function ActivityCard({
             </div>
           </div>
           <div>
-            <div style={{ display: "flex", flexDirection: "row" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                marginTop: "20px",
+              }}
+            >
               {tags.map((tag, index) => (
                 <Chip
                   component="span"
@@ -98,12 +104,16 @@ export default function ActivityCard({
                 </Chip>
               ))}
             </div>
+
             <div
               style={{
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
+                position: "absolute",
+                bottom: 10,
+                width: "90%",
               }}
             >
               <Typography
@@ -132,30 +142,9 @@ export default function ActivityCard({
               </Button>
             </div>
           </div>
-          <CardOverflow variant="soft">
-            <Divider inset="context" />
-          </CardOverflow>
         </Card>
       </div>
     );
   };
-  return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(4, 1fr)",
-        gap: "24px", // Adjust the gap between items as needed
-      }}
-    >
-      <TheCard />
-      <TheCard />
-      <TheCard />
-      <TheCard />
-      <TheCard />
-      <TheCard />
-      <TheCard />
-      <TheCard />
-      <TheCard />
-    </div>
-  );
+  return <TheCard />;
 }
