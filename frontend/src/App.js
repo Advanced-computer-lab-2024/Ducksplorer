@@ -72,10 +72,13 @@ import PastBookingDetails from "./Pages/Bookings/myPastBookings.js";
 import GuestDashboard from "./Pages/Dashboards/GuestDashboard.js";
 import Wishlist from "./Pages/Products/Wishlist.js";
 import TransportationBooking from "./Pages/ThirdParty/TransportationBooking.js";
+//cart page
+import CartPage from "./Pages/Products/CartPage.js";
 import ChangePassword from "./Pages/Admin/ChangePassword.js";
 
 
 import CreatePromoCode from "./Pages/Admin/CreatePromoCode.js";
+import MySavedItems from "./Pages/SavedItems.js";
 
 function App() {
   return (
@@ -194,9 +197,11 @@ function App() {
           <Route path="/transportation" element={<TransportationBooking />} />
           <Route path="/hotels" element={<HotelsBooking />} />
           <Route path="/myPurchases" element={<MyPurchases />} />
+          <Route path="/myCart" element={<CartPage />} />
 
 
           <Route path="/addPromoCode" element={<CreatePromoCode/>} />
+          <Route path="/mySaved" element={<MySavedItems/>} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

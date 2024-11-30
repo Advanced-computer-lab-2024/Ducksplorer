@@ -65,7 +65,7 @@ function TouristProducts() {
                     maxHeight: "100%",
                   }}
                 >
-                  <ProductCard product={product} showRating={false} showPurchase={true} />
+                  <ProductCard product={product} showRating={true} showAddToCart={true} />
 
                 </div>
               ))

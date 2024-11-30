@@ -284,7 +284,10 @@ function SearchItineraries() {
         setItineraries((prevItineraries) =>
           prevItineraries.map((itinerary) =>
             itinerary._id === itineraryId
-              ? { ...itinerary, saved: { ...itinerary.saved, isSaved: newIsSaved } }
+              ? {
+                  ...itinerary,
+                  saved: { ...itinerary.saved, isSaved: newIsSaved },
+                }
               : itinerary
           )
         );
@@ -318,7 +321,10 @@ function SearchItineraries() {
               newSaveStates[itinerary._id] = response.data.saved; // Save the state
             }
           } catch (error) {
-            console.error(`Failed to fetch save state for ${itinerary._id}:`, error);
+            console.error(
+              `Failed to fetch save state for ${itinerary._id}:`,
+              error
+            );
           }
         })
       );
@@ -633,7 +639,12 @@ function SearchItineraries() {
                           ) : null}
                           <TableCell>
                             <span
-                              onClick={() => handleSaveItinerary(itinerary._id, itinerary.saved?.isSaved)}
+                              onClick={() =>
+                                handleSaveItinerary(
+                                  itinerary._id,
+                                  itinerary.saved?.isSaved
+                                )
+                              }
                             >
                               {saveStates[itinerary._id] ? (
                                 <IconButton>

@@ -23,6 +23,9 @@ const {
 const { createBooking, viewMyUpcomingBookings, viewMyPastBookings, viewDesiredActivity, viewDesiredItinerary, getMyBookings, cancelMyBooking, receiveLoyaltyPoints, getLevel, updateLevel,
   redeemPoints, payVisa, payWallet } = require("../Controllers/bookingController");
   
+const {addProductToCart,removeProductFromCart,updateProductQuantity,viewCart,addPurchase2} = require("../Controllers/Products/cartController");
+
+const { validatePromoCode } = require("../Controllers/promoCodeController");
 
 const router = express.Router();
 
@@ -42,6 +45,18 @@ router.route("/viewDesiredItinerary/:itineraryId").get(viewDesiredItinerary);
 router.patch("/payWallet/:userName", payWallet);
 router.patch("/payVisa/:userName", payVisa);
 
+
+//view cart
+router.get("/myCart",viewCart);
+//add to cart
+router.put("/cart",addProductToCart);
+//remove from cart
+router.delete("/cart",removeProductFromCart);
+//edit the product quantity in the product
+router.patch("/cart",updateProductQuantity);
+//add purchases from cart
+router.put("/addPurchase",addPurchase2);
+
 //router.patch("/loyalty/:name/:userName",receiveLoyaltyPoints);
 router.get("/myPurchases/:buyer", getMyPurchases);
 router.put("/updatePurchases/:buyer", updatePurchase);
@@ -52,5 +67,7 @@ router.put("/addReview/:id", touristUpdateProductReview);
 router.get("/myWishlist/:username", getMyWishlist);
 router.put("/updateWishlist/:username", updateWishlist);
 router.put("/removeFromWishlist/:username/:productId", removeFromWishlist);
+
+router.post("/validCode", validatePromoCode);
 
 module.exports = router;

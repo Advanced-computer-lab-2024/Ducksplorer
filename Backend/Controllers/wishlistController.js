@@ -1,6 +1,5 @@
 const Wishlist = require("../Models/wishlistModel");
 const Product = require("../Models/productModel");
-const mongoose = require("mongoose");
 
 const getMyWishlist = async (req, res) => { //tested done
     try {

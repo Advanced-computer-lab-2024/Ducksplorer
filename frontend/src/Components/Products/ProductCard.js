@@ -25,15 +25,129 @@ const ProductCard = ({
   productID,
   showRating, //shows the user review , also for myPurchases as a tourist
   showReview,
-  showPurchase,
+  inCartQuantity,
+  isConfirmButtonVisible=false,
+  showAddToCart=false,
+  onProductRemove,
+  onQuantityChange,
   showRemoveWishlist,
   showAverageRatingNo, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
   removeProductFromWishlist,
+  showPurchase
 }) => {
+  const [isFormVisible, setFormVisible] = useState(false); // Controls form visibility
+  const [quantity, setQuantity] = useState(1); // Holds the selected quantity
+  const [neededQuantity, setNeededQuantity] = useState(inCartQuantity || 1);
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
   const location = useLocation();
   const isGuest = localStorage.getItem("guest") === "true";
+
+  useEffect(() => {
+    if (inCartQuantity !== undefined) {
+      setNeededQuantity(inCartQuantity);
+    }
+  }, [inCartQuantity]);
+
+
+
+  const handleCartConfirmQuantity = async (e) => {
+    e.preventDefault();
+    console.log(neededQuantity);
+    if(neededQuantity>0){
+      try{
+        const userJson = localStorage.getItem("user");
+        const user = JSON.parse(userJson);
+        const userName = user.username;
+        const newQuantity = neededQuantity;
+        const response = await axios.patch("http://localhost:8000/touristRoutes/cart", {
+          userName,
+          productId: product._id,
+          newQuantity,
+        });
+        if (response.status === 200) {
+          message.success("Product quantity updated successfully!");
+        } else {
+          message.error("Failed to update quantity in cart.");
+        }
+      }catch(error){
+        console.error(error);
+        message.error("An error occurred while adding the product to the cart.");
+      }
+    }else{
+      try{
+        const userJson = localStorage.getItem("user");
+        const user = JSON.parse(userJson);
+        const userName = user.username;
+        const response = await axios.delete("http://localhost:8000/touristRoutes/cart", {
+          params: {
+            userName,
+            productId: product._id,
+          },
+        });
+        if (response.status === 200) {
+          message.success("Product removed successfully!");
+          onProductRemove(product._id);
+        } else {
+          message.error("Failed to update quantity in cart.");
+        }
+      }catch(error){
+        console.error(error);
+        message.error("An error occurred while adding the product to the cart.");
+      }
+    }
+    onQuantityChange(product._id, neededQuantity); // Notify the parent
+  }
+
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const userJson = localStorage.getItem("user");
+      const user = JSON.parse(userJson);
+      const userName = user.username;
+      const newQuantity = quantity;
+      // Send the selected quantity and product details to the backend
+      const response = await axios.put("http://localhost:8000/touristRoutes/cart", {
+        userName,
+        productId: product._id,
+        newQuantity,
+      });
+
+      if (response.status === 200) {
+        message.success("Product added to cart successfully!");
+        setFormVisible(false); // Hide the form after submission
+      } else {
+        message.error("Failed to add product to cart.");
+      }
+    } catch (error) {
+      console.error(error);
+      message.error("An error occurred while adding the product to the cart.");
+    }
+  };
+
+
+
+  const handleIncrement = () => {
+    setQuantity((prev) => prev + 1); // Increment the quantity by 1
+  };
+
+  const handleDecrement = () => {
+    setQuantity((prev) => (prev > 1 ? prev - 1 : 1)); // Decrement the quantity but not below 1
+  };
+
+  const handleDecrementForCart = () => {
+    setNeededQuantity((prev) => (prev > 0 ? prev - 1 : 0)); // Decrement the quantity but not below 1
+  }
+
+
+  const handleIncrementForCart = () => {
+    setNeededQuantity((prev) => prev + 1); // Increment the quantity by 1
+  }
+
+  const handleAddToCartClick = () => {
+    setFormVisible(true); // Show the form when the button is clicked
+  };
   
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
@@ -350,15 +464,112 @@ const ProductCard = ({
               </Button>
             </div>
           )}
-          {!isGuest && showPurchase && (
+          {!isGuest && showAddToCart && (
             <Button
               variant="contained"
               color="secondary"
-              onClick={() => handlePurchase(product)}
+              onClick={handleAddToCartClick}
               style={{ position: "relative", left: "75%" }} // Place the button at the bottom-right corner
             >
-              Purchase
+              Add To Cart
             </Button>
+            
+          )} 
+          {isConfirmButtonVisible &&(
+            <form
+            onSubmit={handleCartConfirmQuantity}
+            style={{
+              marginTop: "10px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "10px",
+            }}
+          >
+            {/* Quantity Selector */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+              }}
+            >
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleDecrementForCart}
+                style={{ minWidth: "40px", minHeight: "40px" }}
+              >
+                -
+              </Button>
+              <Typography variant="h6">{neededQuantity}</Typography>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleIncrementForCart}
+                style={{ minWidth: "40px", minHeight: "40px" }}
+              >
+                +
+              </Button>
+            </div>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              style={{ width: "80%" }}
+            >
+              Confirm
+            </Button>
+          </form>
+          )}
+          {isFormVisible && (
+            <form
+            onSubmit={handleFormSubmit}
+            style={{
+              marginTop: "10px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "10px",
+            }}
+          >
+            {/* Quantity Selector */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+              }}
+            >
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleDecrement}
+                style={{ minWidth: "40px", minHeight: "40px" }}
+              >
+                -
+              </Button>
+              <Typography variant="h6">{quantity}</Typography>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleIncrement}
+                style={{ minWidth: "40px", minHeight: "40px" }}
+              >
+                +
+              </Button>
+            </div>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              style={{ width: "80%" }}
+            >
+              Confirm
+            </Button>
+          </form>
           )}
           <div>
           {role === "Tourist" && (
