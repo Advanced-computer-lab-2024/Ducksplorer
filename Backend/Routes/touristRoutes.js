@@ -51,6 +51,6 @@ router.put("/addReview/:id", touristUpdateProductReview);
 
 router.get("/myWishlist/:username", getMyWishlist);
 router.put("/updateWishlist/:username", updateWishlist);
-router.delete("/removeFromWishlist/:username", removeFromWishlist);
+router.put("/removeFromWishlist/:username/:productId", removeFromWishlist);
 
 module.exports = router;

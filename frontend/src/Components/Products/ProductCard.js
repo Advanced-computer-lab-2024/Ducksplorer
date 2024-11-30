@@ -16,6 +16,7 @@ import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { calculateProductRating } from "../../Utilities/averageRating";
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({
   product,
@@ -25,13 +26,15 @@ const ProductCard = ({
   showRating, //shows the user review , also for myPurchases as a tourist
   showReview,
   showPurchase,
+  showRemoveWishlist,
   showAverageRatingNo, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
+  removeProductFromWishlist,
 }) => {
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
   const location = useLocation();
   const isGuest = localStorage.getItem("guest") === "true";
-
+  
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
@@ -42,6 +45,7 @@ const ProductCard = ({
   const [review, setReview] = useState("");
   const [showReviewBox, setShowReviewBox] = useState(false);
   const [showWishlist, setShowWishlist] = useState(false);
+  const navigate = useNavigate();
   const getReviewerRating = (reviewer) => {
     const ratingEntry = product.ratings.find(
       (rating) => rating.buyer === reviewer
@@ -122,6 +126,33 @@ const ProductCard = ({
     }
   };
 
+  const handleRemoveWishlist = async (product) => {
+    const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
+    const user = JSON.parse(userJson);
+    const userName = user.username;
+    console.log("product:", product._id);
+    const productId = product._id;
+    console.log("username:", userName);
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/touristRoutes/removeFromWishlist/${userName}/${productId}`,
+      );
+  
+      if (response.status === 200) {
+        message.success("Product removed from wishlist successfully");
+        removeProductFromWishlist(product._id);
+        return response.data; 
+
+      } else {
+        message.error("Failed to remove product from wishlist");
+      }
+    } catch (error) {
+      console.error(error);
+      message.error("An error occurred while removing the product");
+    }
+  };
+  
+  
   const addToWishlist = async (product) => {
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
     const user = JSON.parse(userJson);
@@ -330,16 +361,19 @@ const ProductCard = ({
             </Button>
           )}
           <div>
-          {role === "Tourist" && showPurchase && (
+          {role === "Tourist" && (
             <Button
               variant="contained"
               color="primary"
               style={{ position: "relative", left: "75%" ,bottom: "100%"}} // Place the button at the bottom-right corner
-              onClick={() => addToWishlist(product)}
-            >
-              {showWishlist ? "remove from wishlist" : "Add to Wishlist"}
+              onClick={() =>
+                showRemoveWishlist ? handleRemoveWishlist(product) : addToWishlist(product)
+              }            
+              >
+              {showRemoveWishlist ? "remove from wishlist" :"Add to Wishlist" }
             </Button>
           )}
+
           </div>
         </CardContent>
       </div>

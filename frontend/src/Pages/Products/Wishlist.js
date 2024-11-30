@@ -3,14 +3,13 @@ import axios from "axios";
 import { message } from "antd";
 import { Typography } from "@mui/material";
 import { Button } from "@mui/material";
-import ProductCard from "../Components/Products/ProductCard"; // Import the ProductCard component
-import Help from "../Components/HelpIcon";
-import TouristNavBar from "../Components/TouristNavBar";
+import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
+import Help from "../../Components/HelpIcon";
+import TouristNavBar from "../../Components/TouristNavBar";
 import { useNavigate } from "react-router-dom";
 
 function Wishlist() {
   const [products, setProducts] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
@@ -32,6 +31,12 @@ function Wishlist() {
 
   const handleBackButtonClick = () => {
     window.history.back();
+  };
+
+  const removeProductFromWishlist = (productId) => {
+    setProducts((prevProducts) =>
+      prevProducts.filter((product) => product._id !== productId)
+    );
   };
 
   return (
@@ -67,12 +72,14 @@ function Wishlist() {
                   productID={product._id}
                   showRating={true}
                   showAverageRatingNo={true}
+                  showRemoveWishlist={true}
+                  removeProductFromWishlist={removeProductFromWishlist}
                 />
               </div>
             ))
           ) : (
             <Typography variant="body1" style={{ marginTop: "20px" }}>
-              No products found under the specified name.
+              No products found in your wishlist.
             </Typography>
           )}
         </div>
