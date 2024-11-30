@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { message } from "antd";
-import TouristNavBar from "../../Components/TouristNavBar.js";
+import AdminNavbar from "../../Components/TopNav/Adminnavbar.js";
 import {
   TextField,
   IconButton,
@@ -145,6 +145,16 @@ const PreferenceTags = () => {
   return (
     <Box
     sx={{
+      minHeight: "100vh",
+      backgroundColor: "#f9f9f9",
+      paddingTop: "64px", // Adjust for navbar height
+      overflowY: "auto",
+    }}
+  >
+    {/* Navbar */}
+    <AdminNavbar />
+    <Box
+    sx={{
       height: "100vh",
       backgroundColor: "#f5f5f5",
       paddingTop: "64px", // Adjusted for fixed navbar spacing
@@ -259,6 +269,7 @@ const PreferenceTags = () => {
           </Dialog>
         </Box>
       </div>
+    </Box>
     </Box>
   );
 };

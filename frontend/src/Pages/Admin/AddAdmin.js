@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import Button from "@mui/material/Button";
+import { Typography, Box, Button, IconButton, InputAdornment, Stack, TextField } from "@mui/material";
 import { message } from "antd";
-import IconButton from "@mui/material/IconButton";
-import InputAdornment from "@mui/material/InputAdornment";
 import Iconify from "../../Components/TopNav/iconify.js";
-import TextField from "@mui/material/TextField";
-import Stack from "@mui/material/Stack";
 import axios from "axios";
 import Sidebar from "../../Components/Sidebars/Sidebar.js";
+import AdminNavbar from "../../Components/TopNav/Adminnavbar.js";
 
 function AddAdmin() {
   const [userName, setUserName] = useState("");
@@ -26,6 +23,8 @@ function AddAdmin() {
       );
       if (response.status === 200) {
         message.success("Admin added successfully");
+        setUserName("");
+        setPassword("");
       } else {
         message.error("Failed to add admin");
       }
@@ -35,94 +34,156 @@ function AddAdmin() {
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        minHeight: "100vh", // Full viewport height
+        backgroundColor: "#ffffff", // Consistent background
+        display: "flex", // Flex layout
+        justifyContent: "center", // Center horizontally
+        alignItems: "center", // Center vertically
+      }}
+    >
+      {/* Navbar and Sidebar */}
+      <AdminNavbar />
       <Sidebar />
-      <div style={{ height: "80vh", transform: "translateX(125px)" }}>
-        <div
-          className="text-center"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignContent: "center",
+
+      {/* Form Card */}
+      <Box
+        sx={{
+          maxWidth: "500px", // Limit width for responsiveness
+          width: "90%", // Responsive width
+          backgroundColor: "#f9f9f9", // Same as the page background
+          borderRadius: "16px", // Rounded corners
+          boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)", // Subtle shadow
+          padding: "32px",
+          textAlign: "center",
+        }}
+      >
+        {/* Title Section */}
+        <Typography
+          variant="h4"
+          sx={{
+            color: "#ff9800",
+            fontWeight: "bold",
+            textShadow: "2px 2px 6px rgba(0, 0, 0, 0.2)", // Subtle shadow
+            marginBottom: "24px",
           }}
         >
-          <h4
-            className="mt-1 mb-5 pb-1"
-            style={{
-              color: "orange",
-              textAlign: "center",
-              fontSize: "24px",
-              fontWeight: "bold",
-              textShadow: "2px 2px 4px #aaa",
-            }}
-          >
-            Add Admin
-          </h4>
-        </div>
-        <div>
+          Add Admin
+        </Typography>
+
+        {/* Logo Section */}
+        <Box sx={{ marginBottom: "24px" }}>
           <img
             src="logo1.png"
-            style={{ width: "300px", height: "200px", justifySelf: "center" }}
-            alt="logo"
+            alt="Logo"
+            style={{
+              width: "150px",
+              height: "auto",
+            }}
           />
-          <br />
-        </div>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <Stack spacing={3}>
-            <TextField
-              name="username"
-              label="Username"
-              type="text"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-            />
+        </Box>
 
-            <TextField
-              name="password"
-              label="Password"
-              type={showPassword ? "text" : "password"} // Toggle password visibility
-              value={password}
-              height="50"
-              width="20"
-              onChange={(e) => setPassword(e.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword(!showPassword)}
-                      edge="end"
-                    >
-                      <Iconify
-                        icon={
-                          showPassword ? "eva:eye-fill" : "eva:eye-off-fill"
-                        }
-                        style={{ color: "orange", fontSize: "40px" }}
-                      />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <Button
-              variant="contained"
-              onClick={handleAdd}
-              style={{
-                width: "300px",
-                backgroundColor: "orange",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                padding: "10px 20px",
+        {/* Form Section */}
+        <Stack spacing={3}>
+          {/* Username Field */}
+          <TextField
+            name="username"
+            label="Username"
+            type="text"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+            fullWidth
+            InputLabelProps={{ style: { color: "#777" } }}
+            InputProps={{
+              style: {
                 fontSize: "16px",
-                cursor: "pointer",
-              }}
-            >
-              Add Admin
-            </Button>
-          </Stack>
-        </div>
-      </div>
-    </>
+                color: "#333",
+              },
+            }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "#ff9800",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#ff9800",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#ff9800",
+                },
+              },
+            }}
+          />
+
+          {/* Password Field */}
+          <TextField
+            name="password"
+            label="Password"
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            fullWidth
+            InputLabelProps={{ style: { color: "#777" } }}
+            InputProps={{
+              style: {
+                fontSize: "16px",
+                color: "#333",
+              },
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    <Iconify
+                      icon={
+                        showPassword ? "eva:eye-fill" : "eva:eye-off-fill"
+                      }
+                      style={{ color: "#ff9800", fontSize: "20px" }}
+                    />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "#ff9800",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#ff9800",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#ff9800",
+                },
+              },
+            }}
+          />
+
+          {/* Add Admin Button */}
+          <Button
+            variant="contained"
+            onClick={handleAdd}
+            sx={{
+              backgroundColor: "#ff9800",
+              color: "white",
+              fontWeight: "bold",
+              textTransform: "none",
+              borderRadius: "25px",
+              padding: "12px 24px",
+              fontSize: "16px",
+              "&:hover": {
+                backgroundColor: "#e68a00", // Darker hover color
+              },
+            }}
+            fullWidth
+          >
+            Add Admin
+          </Button>
+        </Stack>
+      </Box>
+    </Box>
   );
 }
 

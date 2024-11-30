@@ -8,6 +8,8 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import axios from "axios";
 import Sidebar from "../../Components/Sidebars/Sidebar.js";
+import { Box } from "@mui/material";
+import AdminNavbar from "../../Components/TopNav/Adminnavbar.js";
 
 function AddGovernor() {
   const [userName, setUserName] = useState("");
@@ -35,7 +37,16 @@ function AddGovernor() {
   };
 
   return (
-    <>
+    <Box
+    sx={{
+      minHeight: "100vh",
+      backgroundColor: "#f9f9f9",
+      paddingTop: "64px", // Adjust for navbar height
+      overflowY: "auto",
+    }}
+  >
+    {/* Navbar */}
+    <AdminNavbar />
       <Sidebar />
       <div style={{ height: "80vh", transform: "translateX(125px)" }}>
         <div className="text-center">
@@ -117,7 +128,7 @@ function AddGovernor() {
           </Stack>
         </div>
       </div>
-    </>
+    </Box>
   );
 }
 
