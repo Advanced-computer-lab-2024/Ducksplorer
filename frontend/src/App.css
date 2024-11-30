@@ -266,6 +266,14 @@ button[type="submit"]:hover {
   display: none;
 }
 
+@import url("https://fonts.googleapis.com/css2?family=Handlee&family=Oswald:wght@200..700&family=Parkinsans:wght@300..800&display=swap");
+
+.oswald-Titles {
+  font-family: "Oswald", sans-serif;
+  font-size: 90px;
+  font-weight: 400;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

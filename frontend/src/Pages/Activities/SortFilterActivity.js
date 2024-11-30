@@ -34,6 +34,7 @@ function SortFilterActivity() {
           "&:hover": {
             backgroundColor: "#0d47a1",
           },
+          marginBottom: "20px",
         }}
       >
         Back to Dashboard

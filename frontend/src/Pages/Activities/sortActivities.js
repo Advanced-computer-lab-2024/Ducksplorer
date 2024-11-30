@@ -13,12 +13,15 @@ import {
   TableRow,
   Paper,
   MenuItem,
-  Select,
   InputLabel,
   FormControl,
   Button,
   Rating,
 } from "@mui/material";
+import Select, { selectClasses } from "@mui/joy/Select";
+import Option from "@mui/joy/Option";
+import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
+
 import ActivityCard from "../activityCard";
 import { useNavigate } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
@@ -116,7 +119,16 @@ const SortActivities = () => {
 
   return (
     <>
-      <Typography variant="h4">Upcoming Activities</Typography>
+      <h4
+        variant="h4"
+        className="oswald-Titles"
+        style={{
+          textAlign: "center",
+          marginBottom: "40px",
+        }}
+      >
+        Upcoming Activities
+      </h4>
       {/* Sorting Controls */}
       <Box
         sx={{
@@ -126,33 +138,52 @@ const SortActivities = () => {
         }}
       >
         <FormControl sx={{ minWidth: 150 }}>
-          <InputLabel id="sort-by-label">Sort By</InputLabel>
           <Select
-            labelId="sort-by-label"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            label="Sort By"
+            indicator={<KeyboardArrowDown />}
+            placeholder="Sort By"
+            onChange={(e, newValue) => {
+              setSortBy(newValue);
+            }}
+            sx={{
+              width: 240,
+              [`& .${selectClasses.indicator}`]: {
+                transition: "0.2s",
+                [`&.${selectClasses.expanded}`]: {
+                  transform: "rotate(-180deg)",
+                },
+              },
+            }}
           >
-            <MenuItem value="date">Date</MenuItem>
-            <MenuItem value="price">Price</MenuItem>
-            <MenuItem value="name">Name</MenuItem>
-            <MenuItem value="duration">Duration</MenuItem>
-            <MenuItem value="category">Category</MenuItem>
-            <MenuItem value="specialDiscount">Discount</MenuItem>
-            <MenuItem value="averageRating">Rating</MenuItem>
+            <Option value="date">Date</Option>
+            <Option value="price">Price</Option>
+            <Option value="name">Name</Option>
+            <Option value="duration">Duration</Option>
+            <Option value="category">Category</Option>
+            <Option value="specialDiscount">Discount</Option>
+            <Option value="averageRating">Rating</Option>
           </Select>
         </FormControl>
 
         <FormControl sx={{ minWidth: 150 }}>
-          <InputLabel id="order-label">Order</InputLabel>
           <Select
             labelId="order-label"
-            value={order}
-            onChange={(e) => setOrder(e.target.value)}
-            label="Order"
+            placeholder="Order"
+            onChange={(e, value) => {
+              setOrder(value);
+            }}
+            indicator={<KeyboardArrowDown />}
+            sx={{
+              width: 240,
+              [`& .${selectClasses.indicator}`]: {
+                transition: "0.2s",
+                [`&.${selectClasses.expanded}`]: {
+                  transform: "rotate(-180deg)",
+                },
+              },
+            }}
           >
-            <MenuItem value="asc">Ascending</MenuItem>
-            <MenuItem value="desc">Descending</MenuItem>
+            <Option value="asc">Ascending</Option>
+            <Option value="desc">Descending</Option>
           </Select>
         </FormControl>
 
@@ -175,13 +206,16 @@ const SortActivities = () => {
         {activities.map((activity) =>
           activity.flag === false &&
           activity.advertiserDeleted === false &&
-          activity.deletedActivity === false ? (
-            <ActivityCard
-              title={activity.name}
-              tags={activity.tags}
-              price={`${activity.price} $`}
-            />
-          ) : null
+          activity.deletedActivity === false
+            ? (console.log("this is the average rating ", activity.ratings[1]),
+              (
+                <ActivityCard
+                  title={activity.name}
+                  tags={activity.tags}
+                  price={`${activity.price} $`}
+                />
+              ))
+            : null
         )}
       </div>
       <Help />
