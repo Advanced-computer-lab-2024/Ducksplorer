@@ -74,6 +74,7 @@ function Wishlist() {
                   showAverageRatingNo={true}
                   showRemoveWishlist={true}
                   removeProductFromWishlist={removeProductFromWishlist}
+                  showAddToCart={true}
                 />
               </div>
             ))

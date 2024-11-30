@@ -307,14 +307,15 @@ function TouristNavBar() {
                 </Typography>
               </IconButton>
             </Tooltip>
-            {/* <Tooltip title="View My Wishlist">
+            <Tooltip title="View My Wishlist">
               <IconButton onClick={() => handleNavigation("wishlist")}>
                 <FavoriteBorderIcon />
                 <Typography textAlign="center" marginRight={1}>
                   Wishlist
                 </Typography>
               </IconButton>
-            </Tooltip> */}
+            </Tooltip>
+            
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open Account settings">
