@@ -56,6 +56,10 @@ const productSchema = new mongoose.Schema({
       },
     ],
     default: [],
+  },
+  totalGain: {
+    type: Number,
+    required: false
   }
 });
 

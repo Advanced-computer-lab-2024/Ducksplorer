@@ -37,6 +37,8 @@ const ActivityReport = () => {
     // Accept userNameId as a prop
     const userName = JSON.parse(localStorage.getItem("user")).username;
     const [activities, setActivities] = useState([]);
+    // const [bookings, setBookings] = useState([]);
+    // const [earnings, setEarnings] = useState([]);
     //filtering consts
     const [month, setMonth] = useState("");
     const [year, setYear] = useState("");
@@ -59,6 +61,7 @@ const ActivityReport = () => {
                 const response = await axios.get(
                     `http://localhost:8000/activity/report/${userName}`
                 );
+
                 setActivities(response.data);
                 console.log(response.data);
             } catch (error) {
@@ -87,6 +90,8 @@ const ActivityReport = () => {
 
         try {
             const response = await axios.get(`http://localhost:8000/activity/report/${userName}`);
+            //const activityData = response.data.map((entry) => entry.activity);
+
             setActivities(response.data);
         } catch (error) {
             console.error("Error resetting activities:", error);
@@ -121,7 +126,13 @@ const ActivityReport = () => {
             // Fetch activities with the constructed query string
             const response = await axios.get(`http://localhost:8000/activity/filterReport/${userName}?${queryString}`);
 
+            // const activityData = response.data.map((entry) => entry.activity);
+            // const bookingsData = response.data.map((entry) => entry.numOfBookings);
+            // const earningsData = response.data.map((entry) => entry.totalEarnings);
+
             setActivities(response.data);
+            // setBookings(bookingsData);
+            // setEarnings(earningsData);
 
             if (response.data.length === 0) {
                 setErrorMessage("No activities found for the selected filters.");
@@ -279,91 +290,90 @@ const ActivityReport = () => {
                             <Button onClick={handleClearAllFilters}>Clear All Filters</Button>
                         </MenuItem>
                     </Menu>
-                    <TableContainer style={{ borderRadius: 20 }} component={Paper}>
+                    <TableContainer style={{ borderRadius: 24 }} component={Paper}>
                         <Table>
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Name</TableCell>
-                                    <TableCell>Price
+                                    <TableCell>
+                                        Price
                                         <CurrencyConvertor onCurrencyChange={handlePriceCurrencyChange} />
                                     </TableCell>
                                     <TableCell>Is open</TableCell>
                                     <TableCell>Category</TableCell>
                                     <TableCell>Tags</TableCell>
                                     <TableCell>Discount</TableCell>
-                                    <TableCell>Date and Time</TableCell>
+                                    <TableCell>Dates and Times</TableCell>
                                     <TableCell>Duration</TableCell>
                                     <TableCell>Location</TableCell>
                                     <TableCell>Rating</TableCell>
                                     <TableCell>Flag</TableCell>
-                                    <TableCell>Earnings
+                                    <TableCell>Number of Bookings</TableCell>
+                                    <TableCell>
+                                        Earnings
                                         <CurrencyConvertor onCurrencyChange={handleEarningsCurrencyChange} />
                                     </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {activities.length > 0 ? (
-                                    activities.map((activityBooking) =>
-                                        activityBooking.activity ? (
-                                            <TableRow key={activityBooking.activity._id}>
-                                                <TableCell>{activityBooking.activity.name}</TableCell>
+                                    activities.map((entry) =>
+                                        entry && entry.activity.deletedActivity === false && entry.activity.totalGain !== undefined ? (
+                                            <TableRow key={entry.activity._id}>
+                                                <TableCell>{entry.activity.name}</TableCell>
                                                 <TableCell>
-                                                    {(activityBooking.chosenPrice * (priceExchangeRates[priceCurrency] || 1)).toFixed(2)} {priceCurrency}
+                                                    {(entry.activity.price * (priceExchangeRates[priceCurrency] || 1)).toFixed(2)} {priceCurrency}
                                                 </TableCell>
-                                                <TableCell>{activityBooking.activity.isOpen ? "Yes" : "No"}</TableCell>
-                                                <TableCell>{activityBooking.activity.category}</TableCell>
-                                                <TableCell>{activityBooking.activity.tags.join(", ")}</TableCell>
-                                                <TableCell>{activityBooking.activity.specialDiscount}</TableCell>
+                                                <TableCell>{entry.activity.isOpen ? "Yes" : "No"}</TableCell>
+                                                <TableCell>{entry.activity.category}</TableCell>
+                                                <TableCell>{entry.activity.tags.join(", ")}</TableCell>
+                                                <TableCell>{entry.activity.specialDiscount}</TableCell>
                                                 <TableCell>
-                                                    {activityBooking.chosenDate ? (() => {
-                                                        const dateObj = new Date(activityBooking.chosenDate);
-                                                        const date = dateObj.toISOString().split('T')[0];
-                                                        const time = dateObj.toTimeString().split(' ')[0];
+                                                    {entry.activity.date ? (() => {
+                                                        const dateObj = new Date(entry.activity.date);
+                                                        const date = dateObj.toISOString().split("T")[0];
+                                                        const time = dateObj.toTimeString().split(" ")[0];
                                                         return (
                                                             <div>
                                                                 {date} at {time}
                                                             </div>
                                                         );
-                                                    })() : 'No available date'}
+                                                    })() : "No available date"}
                                                 </TableCell>
-                                                <TableCell>{activityBooking.activity.duration}</TableCell>
-                                                <TableCell>{activityBooking.activity.location}</TableCell>
+                                                <TableCell>{entry.activity.duration}</TableCell>
+                                                <TableCell>{entry.activity.location}</TableCell>
                                                 <TableCell>
-                                                    <Rating
-                                                        value={calculateAverageRating(activityBooking.activity.ratings)}
-                                                        precision={0.1}
-                                                        readOnly
-                                                    />
+                                                    <Rating value={calculateAverageRating(entry.activity.ratings)} precision={0.1} readOnly />
                                                 </TableCell>
-
                                                 <TableCell>
-                                                    {activityBooking.activity.flag ? (
-                                                        <span style={{ color: 'red', display: 'flex', alignItems: 'center' }}>
-                                                            <WarningIcon style={{ marginRight: '4px' }} />
+                                                    {entry.activity.flag ? (
+                                                        <span style={{ color: "red", display: "flex", alignItems: "center" }}>
+                                                            <WarningIcon style={{ marginRight: "4px" }} />
                                                             Inappropriate
                                                         </span>
                                                     ) : (
-                                                        <span style={{ color: 'green', display: 'flex', alignItems: 'center' }}>
-                                                            <CheckCircleIcon style={{ marginRight: '4px' }} />
+                                                        <span style={{ color: "green", display: "flex", alignItems: "center" }}>
+                                                            <CheckCircleIcon style={{ marginRight: "4px" }} />
                                                             Appropriate
                                                         </span>
                                                     )}
                                                 </TableCell>
+                                                <TableCell>{entry.numOfBookings}</TableCell>
                                                 <TableCell>
-                                                    {((activityBooking.chosenPrice * 0.9) * (earningsExchangeRates[earningsCurrency] || 1)).toFixed(2)} {earningsCurrency}
+                                                    {((entry.totalEarnings * 0.9) * (earningsExchangeRates[earningsCurrency] || 1)).toFixed(2)} {earningsCurrency}
                                                 </TableCell>
                                             </TableRow>
-                                        ) : null // Don't render the row for deleted activities
+                                        ) : null
                                     )
                                 ) : (
                                     <TableRow>
                                         <TableCell colSpan={12}>No activities found</TableCell>
                                     </TableRow>
                                 )}
-
                             </TableBody>
                         </Table>
                     </TableContainer>
+
                 </Box>
             </div>
         </>

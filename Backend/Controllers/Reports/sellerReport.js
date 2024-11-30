@@ -7,30 +7,19 @@ const myProducts = async (req, res) => {
     const { sellerName } = req.params;
 
     try {
-        // Fetch all activity bookings for the advertiser
-        const productPurchase = await PurchaseBooking.find().populate('product');
 
-        if (!productPurchase || productPurchase.length === 0) {
+        const seller = await Seller.findOne({ userName: sellerName });
+        if (!seller) {
+            return res.status(404).json({ error: "Seller not found" });
+        }
+        // Fetch all activity bookings for the advertiser
+        const products = await Product.find({ seller: sellerName });
+
+        if (!products || products.length === 0) {
             return res.status(404).json({ error: "No purchase bookings found" });
         }
 
-        // Filter bookings by the seller name and fetch products
-        const filteredBookings = productPurchase.filter(
-            (booking) => booking.product.seller === sellerName
-        );
-
-        if (!filteredBookings || filteredBookings.length === 0) {
-            return res.status(404).json({ message: "No products found for the seller" });
-        }
-
-        // Format the response to include activities with chosen price
-        const productsWithPrices = filteredBookings.map((booking) => ({
-            product: booking.product,
-            chosenDate: booking.chosenDate,
-            chosenQuantity: booking.chosenQuantity,
-            chosenPrice: booking.chosenPrice
-        }));
-        res.status(200).json(productsWithPrices);
+        res.status(200).json(products);
     } catch (err) {
         console.error("Error fetching products:", err);
         res.status(500).json({ message: "Internal server error" });
@@ -47,7 +36,7 @@ const filterMyProducts = async (req, res) => {
         const dateObject = new Date(date); // Input date
         const startOfDay = new Date(Date.UTC(dateObject.getUTCFullYear(), dateObject.getUTCMonth(), dateObject.getUTCDate(), 0, 0, 0));
         const endOfDay = new Date(Date.UTC(dateObject.getUTCFullYear(), dateObject.getUTCMonth(), dateObject.getUTCDate(), 23, 59, 59, 999));
-        dateFilters.push({ chosenDate: { $gte: startOfDay, $lte: endOfDay } });
+        dateFilters.push({ createdAt : { $gte: startOfDay, $lte: endOfDay } });
     }
 
     // Month and year filter

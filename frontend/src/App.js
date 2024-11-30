@@ -77,6 +77,7 @@ import ChangePassword from "./Pages/Admin/ChangePassword.js";
 import TourGuideItineraryReport from "./Pages/Itinerary/tourGuideReport.js"
 import AdvertiserActivityReport from "./Pages/Activities/advertiserReport.js"
 import AdminReport from "./Pages/Admin/adminReport.js"
+import UserReport from "./Pages/Admin/UsersReport.js"
 
 
 import SellerProductReport from "./Pages/Products/sellerReport.js"
@@ -99,6 +100,7 @@ function App() {
           />
           <Route path="/tourGuideReport" element={<TourGuideItineraryReport />} />
           <Route path="/adminReport" element={<AdminReport />} />
+          <Route path="/userReport" element={<UserReport />} />
           <Route path="/viewAllTourist" element={<ViewAllTourist />} />
           <Route path="/viewAllTourist/:id" element={<ViewAllTourist />} />
           <Route path="/tourGuideDashboard" element={<TourGuideDashboard />} />

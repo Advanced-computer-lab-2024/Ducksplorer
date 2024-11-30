@@ -68,7 +68,7 @@ const Sidebar = () => {
             </ListItemIcon>
             <ListItemText primary="Categories" />
           </ListItem>
-          
+
           {/* Complaints Button */}
           <ListItem button component={Link} to="/admin/complaints">
             <ListItemIcon>
@@ -92,23 +92,30 @@ const Sidebar = () => {
 
           <ListItem button component={Link} to="/ViewAllActivities">
             <ListItemIcon>
-            <WidgetsIcon />
+              <WidgetsIcon />
             </ListItemIcon>
             <ListItemText primary="View all Activities " />
           </ListItem>
 
           <ListItem button component={Link} to="/ViewAllItineraries">
             <ListItemIcon>
-            <EventNoteIcon />
+              <EventNoteIcon />
             </ListItemIcon>
             <ListItemText primary="View All Itineraries " />
           </ListItem>
 
           <ListItem button component={Link} to="/adminReport">
             <ListItemIcon>
-            <EventNoteIcon />
+              <EventNoteIcon />
             </ListItemIcon>
             <ListItemText primary="Revenue Report " />
+          </ListItem>
+
+          <ListItem button component={Link} to="/userReport">
+            <ListItemIcon>
+              <EventNoteIcon />
+            </ListItemIcon>
+            <ListItemText primary="Users Report " />
           </ListItem>
 
         </List>

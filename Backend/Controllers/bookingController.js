@@ -9,7 +9,7 @@ const ThirdPartyBookings = require('../Models/ThirdPartyBookingsModel.js');
 
 const createBooking = async (req, res) => {
     const { user } = req.params;
-    const { activityId, itineraryId ,hotel, transportation, flight , type, date } = req.body;
+    const { activityId, itineraryId, hotel, transportation, flight, type, date } = req.body;
     console.log("requestBody", req.body);
 
     try {
@@ -23,6 +23,9 @@ const createBooking = async (req, res) => {
 
         const activity = activityId ? await Activity.findById(activityId) : null;
         const itinerary = itineraryId ? await Itinerary.findById(itineraryId) : null;
+
+        activity.totalGain += activity.price;
+        itinerary.totalGain += itinerary.price;
 
         console.log(activityId, itineraryId, type);
 
@@ -69,7 +72,7 @@ const createBooking = async (req, res) => {
                 points: tourist.points
             });
         }
-        else if(type === 'hotel' && hotel){
+        else if (type === 'hotel' && hotel) {
             const newHotelBooking = await ThirdPartyBookings.create({
                 user: tourist.userName,
                 hotels: hotel
@@ -83,7 +86,7 @@ const createBooking = async (req, res) => {
                 points: tourist.points
             });
         }
-        else if(type === 'transportation' && transportation){
+        else if (type === 'transportation' && transportation) {
             const newtransportationBooking = await ThirdPartyBookings.create({
                 user: tourist.userName,
                 transportations: transportation
@@ -97,7 +100,7 @@ const createBooking = async (req, res) => {
                 points: tourist.points
             });
         }
-        else if(type === 'flight' && flight){
+        else if (type === 'flight' && flight) {
             const newFlightBooking = await ThirdPartyBookings.create({
                 user: tourist.userName,
                 flights: flight
@@ -238,39 +241,39 @@ const getMyBookings = async (req, res) => {
         }).populate('itinerary');
 
         //fetch third party bookings
-        const thirdPartyBookings = await ThirdPartyBookings.find({user: tourist});
+        const thirdPartyBookings = await ThirdPartyBookings.find({ user: tourist });
 
         // Check if there are no bookings
         if (!activityBookings.length && !itineraryBookings.length && !thirdPartyBookings.length) {
             return res.status(404).json({ message: "No bookings found." });
         }
-        console.log("ThirdPartyBookings",thirdPartyBookings);
+        console.log("ThirdPartyBookings", thirdPartyBookings);
 
         // Extract flights, hotels, and transportations from third party bookings
         // const flights = thirdPartyBookings
         // .filter(booking => booking.flights)
         // .map(booking => booking.flights);
-       
+
         const flights = thirdPartyBookings
-        .filter(booking => booking.flights)
-        .map(booking => ({
-            id: booking._id,
-            flights: booking.flights
-        }));
+            .filter(booking => booking.flights)
+            .map(booking => ({
+                id: booking._id,
+                flights: booking.flights
+            }));
 
         const hotels = thirdPartyBookings
-        .filter(booking => booking.hotels)
-        .map(booking => ({
-            id: booking._id,
-            hotels: booking.hotels
-        }));
+            .filter(booking => booking.hotels)
+            .map(booking => ({
+                id: booking._id,
+                hotels: booking.hotels
+            }));
 
         const transportations = thirdPartyBookings
-        .filter(booking => booking.transportations)
-        .map(booking => ({
-            id: booking._id,
-            transportations: booking.transportations
-        }))
+            .filter(booking => booking.transportations)
+            .map(booking => ({
+                id: booking._id,
+                transportations: booking.transportations
+            }))
 
         // Return bookings as a response
         res.status(200).json({
@@ -288,7 +291,7 @@ const getMyBookings = async (req, res) => {
 
 const cancelMyBooking = async (req, res) => {
     const { user } = req.params;
-    const { type, itemId, price , booking } = req.body;
+    const { type, itemId, price, booking } = req.body;
     // const { booking } = req.body.booking || "";
     const currentDate = new Date();
     console.log("requestBody", req.body);
@@ -299,11 +302,11 @@ const cancelMyBooking = async (req, res) => {
         if (!tourist) {
             return res.status(404).json({ message: 'Tourist not found' });
         }
-        if(itemId){
-         itemObjectId = new mongoose.Types.ObjectId(itemId);
+        if (itemId) {
+            itemObjectId = new mongoose.Types.ObjectId(itemId);
         }
-        else if(booking){
-        itemObjectId = new mongoose.Types.ObjectId(booking);
+        else if (booking) {
+            itemObjectId = new mongoose.Types.ObjectId(booking);
         }
         let itemDate;
 
@@ -360,13 +363,13 @@ const cancelMyBooking = async (req, res) => {
             if (!thirdPartyBooking) {
                 return res.status(404).json({ message: 'Booking not found in the ThirdPartyBookings' });
             }
-            console.log("Booking itemObjectId",booking);
+            console.log("Booking itemObjectId", booking);
 
             await ThirdPartyBookings.findByIdAndDelete(booking);
-            
+
             tourist.wallet += parseFloat(price);
             await tourist.save();
-        } 
+        }
         else {
             return res.status(400).json({ message: 'Invalid type for cancellation. Must be "activity" or "itinerary".' });
         }
@@ -427,13 +430,13 @@ const getLevel = async (req, res) => {
         const level = user.level || 1;
         if (!user) {
             console.error('User not found');
-         res.status(404).json({ message: "User not found" });
+            res.status(404).json({ message: "User not found" });
         }
-        else{
-         res.status(200).json(level);
+        else {
+            res.status(200).json(level);
         }
     } catch (error) {
-       return  res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 }
 const updateLevel = async (userName, points) => {
@@ -530,9 +533,9 @@ const payWallet = async (req, res) => {
         const tourist = await Tourist.findOne({ userName });
         const level = tourist.level;
         console.log(tourist);
-        console.log("body",req.body);
-        console.log("wallet",tourist.wallet);
-        console.log("price",price);
+        console.log("body", req.body);
+        console.log("wallet", tourist.wallet);
+        console.log("price", price);
         let myWallet = tourist.wallet;
         if (myWallet >= price) {
             myWallet -= price;
