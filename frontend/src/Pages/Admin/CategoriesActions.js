@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { message } from "antd";
+import AdminNavbar from "../../Components/TopNav/Adminnavbar.js";
 import {
   TextField,
   IconButton,
@@ -145,7 +146,16 @@ const DeleteCategory = () => {
   };
 
   return (
-    <>
+    <Box
+    sx={{
+      minHeight: "100vh",
+      backgroundColor: "#f9f9f9",
+      paddingTop: "64px", // Adjust for navbar height
+      overflowY: "auto",
+    }}
+  >
+    {/* Navbar */}
+    <AdminNavbar />
       <Sidebar />
       <div style={{ height: "80vh", transform: "translateX(125px)" }}>
         <Box sx={{ p: 6, maxWidth: 1200 }}>
@@ -260,7 +270,7 @@ const DeleteCategory = () => {
           </Dialog>
         </Box>
       </div>
-    </>
+    </Box>
   );
 };
 

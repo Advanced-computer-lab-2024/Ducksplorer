@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, CssBaseline } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../../Components/Sidebars/Sidebar";
+import AdminNavbar from "../../Components/TopNav/Adminnavbar";
 
 const AdminDashboard = () => {
   const [videoEnded, setVideoEnded] = useState(false);
@@ -98,6 +99,7 @@ const AdminDashboard = () => {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <Sidebar />
+      <AdminNavbar/>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Outlet />
       </Box>

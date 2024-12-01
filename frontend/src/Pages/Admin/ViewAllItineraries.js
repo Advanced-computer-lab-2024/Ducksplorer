@@ -7,6 +7,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import TouristNavBar from '../../Components/TouristNavBar';
 import TouristSidebar from '../../Components/Sidebars/TouristSidebar';
+import AdminNavbar from '../../Components/TopNav/Adminnavbar';
 
 import {
     Box,
@@ -70,6 +71,16 @@ const ViewAllItineraries = () => {
 
 
     return (
+        <Box
+        sx={{
+          minHeight: "100vh",
+          backgroundColor: "#f9f9f9",
+          paddingTop: "64px", // Adjust for navbar height
+          overflowY: "auto",
+        }}
+      >
+        {/* Navbar */}
+        <AdminNavbar />
         <Box
         sx={{
           height: "100vh",
@@ -211,6 +222,7 @@ const ViewAllItineraries = () => {
                     </Typography>
                 )}
             </div>
+        </Box>
         </Box>
         </Box>
     );

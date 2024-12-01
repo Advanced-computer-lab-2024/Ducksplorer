@@ -130,7 +130,14 @@ const ApproveUsers = () => {
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        backgroundColor: "#f9f9f9",
+        paddingTop: "64px", // Adjust for navbar height
+        overflowY: "auto",
+      }}
+    >
       <Sidebar />
       <Box sx={{ p: 6 }}>
         <Box
@@ -265,7 +272,7 @@ const ApproveUsers = () => {
           </DialogActions>
         </Dialog>
       </Box>
-    </>
+    </Box>
   );
 };
 
