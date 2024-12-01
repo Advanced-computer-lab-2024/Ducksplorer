@@ -8,7 +8,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import TouristNavBar from '../../Components/TouristNavBar';
 import TouristSidebar from '../../Components/Sidebars/TouristSidebar';
 import AdminNavbar from '../../Components/TopNav/Adminnavbar';
-
+import Sidebar from '../../Components/Sidebars/Sidebar';
 import {
     Box,
     Table,
@@ -71,160 +71,217 @@ const ViewAllItineraries = () => {
 
 
     return (
-        <Box
-        sx={{
-          minHeight: "100vh",
-          backgroundColor: "#f9f9f9",
-          paddingTop: "64px", // Adjust for navbar height
-          overflowY: "auto",
-        }}
-      >
-        {/* Navbar */}
-        <AdminNavbar />
-        <Box
-        sx={{
-          height: "100vh",
-          backgroundColor: "#f5f5f5",
-          paddingTop: "64px", // Adjusted for fixed navbar spacing
-        }}
-      >
-         <TouristNavBar />
-         <TouristSidebar/>
-        <Box sx={{ padding: '20px', maxWidth: '1200px', margin: 'auto', display: 'flex', flexDirection: 'column', overflowY: 'visible', height: '100vh' }}>
-            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
-                <Typography variant="h4">
-                    Available itineraries
-                </Typography>
-            </Box>
+<Box
+  sx={{
+    minHeight: "100vh",
+    backgroundColor: "#ffffff",
+    overflowY: "auto",
+    display: "flex", // Flex layout for Navbar and Sidebar
+    height:"10vh"
+  }}
+>
+  {/* Navbar */}
+  <AdminNavbar />
 
-            <div style={{ flex: 1 }}>
-                {itineraries.length > 0 ? (
-                    <Box >
-                        <TableContainer component={Paper}>
-                            <Table stickyHeader>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>Activities</TableCell>
-                                        <TableCell>Locations</TableCell>
-                                        <TableCell>Timeline</TableCell>
-                                        <TableCell>Language</TableCell>
-                                        <TableCell>Price</TableCell>
-                                        <TableCell>Available Dates and Times</TableCell>
-                                        <TableCell>Accessibility</TableCell>
-                                        <TableCell>Pick Up Location</TableCell>
-                                        <TableCell>Drop Off Location</TableCell>
-                                        <TableCell>Ratings</TableCell>
-                                        <TableCell>Tags</TableCell>
-                                        <TableCell>Flag</TableCell>
-                                        <TableCell>Action</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {itineraries.map(itinerary => (
-                                        <TableRow key={itinerary._id}
-                                            style={{ backgroundColor: itinerary.flag ? '#ffdddd' : 'transparent' }} // Change background for flagged itineraries
-                                        >
-                                            <TableCell>
-                                                {itinerary.activity && itinerary.activity.length > 0
-                                                    ? itinerary.activity.map((activity, index) => (
-                                                        <div key={index}>
-                                                            {activity.name || 'N/A'} - Price: {activity.price !== undefined ? activity.price : 'N/A'},<br />
-                                                            Location: {activity.location || 'N/A'},<br />
-                                                            Category: {activity.category || 'N/A'}
-                                                            <br /><br />
-                                                        </div>
-                                                    ))
-                                                    : 'No activities available'}
-                                            </TableCell>
-                                            <TableCell>
-                                                {itinerary.locations && itinerary.locations.length > 0 ? (
-                                                    itinerary.locations.map((location, index) => (
-                                                        <div key={index}>
-                                                            <Typography variant="body1">
-                                                                Location {index + 1}: {location.trim()}
-                                                            </Typography>
-                                                            <br />
-                                                        </div>
-                                                    ))
-                                                ) : 'No locations available'}
-                                            </TableCell>
-                                            <TableCell>{itinerary.timeline}</TableCell>
-                                            <TableCell>{itinerary.language}</TableCell>
-                                            <TableCell>{itinerary.price}</TableCell>
-                                            <TableCell>
-                                                {itinerary.availableDatesAndTimes.length > 0
-                                                    ? itinerary.availableDatesAndTimes.map((dateTime, index) => {
-                                                        const dateObj = new Date(dateTime);
-                                                        const date = dateObj.toISOString().split('T')[0];
-                                                        const time = dateObj.toTimeString().split(' ')[0];
-                                                        return (
-                                                            <div key={index}>
-                                                                Date {index + 1}: {date}<br />
-                                                                Time {index + 1}: {time}
-                                                            </div>
-                                                        );
-                                                    })
-                                                    : 'No available dates and times'}
-                                            </TableCell>
-                                            <TableCell>{itinerary.accessibility}</TableCell>
-                                            <TableCell>{itinerary.pickUpLocation}</TableCell>
-                                            <TableCell>{itinerary.dropOffLocation}</TableCell>
-                                            <TableCell>{itinerary.rating}</TableCell>
-                                            <TableCell>
-                                                {itinerary.tags && itinerary.tags.length > 0
-                                                    ? itinerary.tags.map((tag, index) => (
-                                                        <div key={index}>
-                                                            {tag || 'N/A'}
-                                                            <br /><br />
-                                                        </div>
-                                                    ))
-                                                    : 'No tags available'}
-                                            </TableCell>
+  {/* Sidebar */}
+  <Sidebar />
 
-                                            <TableCell>
-                                                {itinerary.flag ? (
-                                                    <span style={{ color: 'red', display: 'flex', alignItems: 'center' }}>
-                                                        <WarningIcon style={{ marginRight: '4px' }} />
-                                                        Inappropriate
-                                                    </span>
-                                                ) : (
-                                                    <span style={{ color: 'green', display: 'flex', alignItems: 'center' }}>
-                                                        <CheckCircleIcon style={{ marginRight: '4px' }} />
-                                                        Appropriate
-                                                    </span>
-                                                )}
-                                            </TableCell>
-                                            
-                                            <TableCell>
-                                                <Tooltip title="Change Itinerary Flag">
-                                                    <IconButton
-                                                        color="error"
-                                                        aria-label="Flag Itinerary"
-                                                        onClick={() => {
-                                                            setEditingItinerary(itinerary); // Set the itinerary to be flagged
-                                                            flagItinerary(itinerary); // Update the itinerary immediately
-                                                        }}
-                                                    >
-                                                        <FlagIcon />
-                                                    </IconButton>
-                                                </Tooltip>
-                                            </TableCell>
+  {/* Main Content */}
+  <Box
+    sx={{
+      flex: 1, // Take the remaining width
+      padding: "32px", // Inner padding
+      maxWidth: "1200px", // Content width limit
+      margin: "0 auto", // Center content horizontally
+      backgroundColor: "#ffffff", // White background for main content
+      borderRadius: "12px", // Rounded corners
+      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
+    }}
+  >
+    {/* Page Title */}
+    <Typography
+      variant="h4"
+      sx={{
+        fontWeight: "bold",
+        color: "#3f51b5", // Primary color
+        textAlign: "center",
+        marginBottom: "24px", // Space below the title
+      }}
+    >
+      Available Itineraries
+    </Typography>
 
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Box>
-                ) : (
-                    <Typography variant="body1" style={{ marginTop: '20px' }}>
-                        No itineraries found.
+    {/* Table Container */}
+    <TableContainer
+      component={Paper}
+      sx={{
+        borderRadius: "12px", // Rounded corners
+        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
+        overflow: "hidden", // Prevent content overflow
+      }}
+    >
+      <Table>
+        <TableHead
+          sx={{
+            backgroundColor: "#3f51b5", // Header background color
+          }}
+        >
+          <TableRow>
+            {[
+              "Activities",
+              "Locations",
+              "Timeline",
+              "Language",
+              "Price",
+              "Available Dates and Times",
+              "Accessibility",
+              "Pick Up Location",
+              "Drop Off Location",
+              "Ratings",
+              "Tags",
+              "Flag",
+              "Action",
+            ].map((header) => (
+              <TableCell
+                key={header}
+                sx={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: "14px",
+                }}
+              >
+                {header}
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {itineraries.length > 0 ? (
+            itineraries.map((itinerary) => (
+              <TableRow
+                key={itinerary._id}
+                sx={{
+                  backgroundColor: itinerary.flag ? "#ffdddd" : "transparent", // Highlight flagged rows
+                  "&:hover": {
+                    backgroundColor: "#f1f1f1", // Highlight on hover
+                  },
+                }}
+              >
+                {/* Activities */}
+                <TableCell>
+                  {itinerary.activity?.length > 0 ? (
+                    itinerary.activity.map((activity, index) => (
+                      <Box key={index} sx={{ marginBottom: "8px" }}>
+                        <Typography variant="body2">
+                          <strong>Name:</strong> {activity.name || "N/A"}
+                        </Typography>
+                        <Typography variant="body2">
+                          <strong>Price:</strong> {activity.price || "N/A"}
+                        </Typography>
+                        <Typography variant="body2">
+                          <strong>Location:</strong> {activity.location || "N/A"}
+                        </Typography>
+                        <Typography variant="body2">
+                          <strong>Category:</strong> {activity.category || "N/A"}
+                        </Typography>
+                      </Box>
+                    ))
+                  ) : (
+                    <Typography variant="body2">No activities available</Typography>
+                  )}
+                </TableCell>
+
+                {/* Other Columns */}
+                <TableCell>
+                  {itinerary.locations?.length > 0 ? (
+                    itinerary.locations.map((location, index) => (
+                      <Typography key={index} variant="body2">
+                        {location.trim()}
+                      </Typography>
+                    ))
+                  ) : (
+                    "No locations available"
+                  )}
+                </TableCell>
+                <TableCell>{itinerary.timeline || "N/A"}</TableCell>
+                <TableCell>{itinerary.language || "N/A"}</TableCell>
+                <TableCell>{itinerary.price || "N/A"}</TableCell>
+                <TableCell>
+                  {itinerary.availableDatesAndTimes?.length > 0
+                    ? itinerary.availableDatesAndTimes.map((dateTime, index) => {
+                        const dateObj = new Date(dateTime);
+                        const date = dateObj.toISOString().split("T")[0];
+                        const time = dateObj.toTimeString().split(" ")[0];
+                        return (
+                          <Typography key={index} variant="body2">
+                            {date} {time}
+                          </Typography>
+                        );
+                      })
+                    : "No available dates and times"}
+                </TableCell>
+                <TableCell>{itinerary.accessibility || "N/A"}</TableCell>
+                <TableCell>{itinerary.pickUpLocation || "N/A"}</TableCell>
+                <TableCell>{itinerary.dropOffLocation || "N/A"}</TableCell>
+                <TableCell>{itinerary.rating || "N/A"}</TableCell>
+                <TableCell>
+                  {itinerary.tags?.length > 0
+                    ? itinerary.tags.map((tag, index) => (
+                        <Typography key={index} variant="body2">
+                          {tag}
+                        </Typography>
+                      ))
+                    : "No tags available"}
+                </TableCell>
+                <TableCell>
+                  {itinerary.flag ? (
+                    <Typography
+                      sx={{ display: "flex", alignItems: "center", color: "red" }}
+                    >
+                      <WarningIcon sx={{ marginRight: "4px" }} />
+                      Inappropriate
                     </Typography>
-                )}
-            </div>
-        </Box>
-        </Box>
-        </Box>
+                  ) : (
+                    <Typography
+                      sx={{ display: "flex", alignItems: "center", color: "green" }}
+                    >
+                      <CheckCircleIcon sx={{ marginRight: "4px" }} />
+                      Appropriate
+                    </Typography>
+                  )}
+                </TableCell>
+                <TableCell>
+                  <Tooltip title="Change Itinerary Flag">
+                    <IconButton
+                      color="error"
+                      aria-label="Flag Itinerary"
+                      onClick={() => {
+                        setEditingItinerary(itinerary); // Set the itinerary to be flagged
+                        flagItinerary(itinerary); // Update the itinerary immediately
+                      }}
+                    >
+                      <FlagIcon />
+                    </IconButton>
+                  </Tooltip>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={13}>
+                <Typography variant="body2" align="center">
+                  No itineraries found.
+                </Typography>
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  </Box>
+</Box>
+
+
     );
 }
 
