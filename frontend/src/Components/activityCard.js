@@ -1,210 +1,228 @@
-import { React, useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  Typography,
-  CardMedia,
-  Button,
-  TextField,
-} from "@mui/material";
+import * as React from "react";
+import AspectRatio from "@mui/joy/AspectRatio";
+import Card from "@mui/joy/Card";
+import CardContent from "@mui/joy/CardContent";
+import CardOverflow from "@mui/joy/CardOverflow";
+import Divider from "@mui/joy/Divider";
+import Typography from "@mui/joy/Typography";
+import IconButton from "@mui/joy/IconButton";
+import Chip from "@mui/joy/Chip";
+import Link from "@mui/joy/Link";
+import Add from "@mui/icons-material/Add";
+import StarIcon from "@mui/icons-material/Star";
+import Done from "@mui/icons-material/Done";
+import StarOutlineIcon from "@mui/icons-material/StarOutline";
+import { Rating, Tooltip } from "@mui/material";
+import Button from "@mui/joy/Button";
+import axios from "axios";
+import { message } from "antd";
+import { useNavigate } from "react-router-dom";
 
-const ActivityCard = ({ activity }) => {
-  const [activities, setActivities] = useState([]);
+// ActivityCard component
+export default function ActivityCard({ activity = {} }) {
+  const navigate = useNavigate();
+  const [saved, setSaved] = React.useState(false);
+  const [image, setImage] = React.useState("https://picsum.photos/200/300");
 
-  const getActivities = async () => {
+  const handleBooking = async (activityId) => {
     try {
-      const response = await fetch("http://localhost:8000/activities");
-      const data = await response.json();
-      setActivities(data);
-      console.log(data);
+      const userJson = localStorage.getItem("user");
+      const isGuest = localStorage.getItem("guest") === "true";
+      if (isGuest) {
+        message.error("User is not logged in, Please login or sign up.");
+        navigate("/guestDashboard");
+        return;
+      }
+      if (!userJson) {
+        message.error("User is not logged in.");
+        return null;
+      }
+      const user = JSON.parse(userJson);
+      if (!user || !user.username) {
+        message.error("User information is missing.");
+        return null;
+      }
+
+      const type = "activity";
+
+      localStorage.setItem("activityId", activityId);
+      localStorage.setItem("type", type);
+
+      const response = await axios.get(
+        `http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}`
+      );
+
+      if (response.status === 200) {
+        navigate("/payment");
+      } else {
+        message.error("Booking failed.");
+      }
     } catch (error) {
-      console.error(error.message);
+      console.error("Error:", error);
+      message.error("An error occurred while booking.");
     }
   };
 
-  return (
-    <Card
-      className="product-card"
-      style={{
-        position: "relative",
-        borderRadius: "3cap",
-        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
-        height: "600px",
-        maxWidth: "30%",
-      }}
-    >
-      <div style={{ overflow: "auto", height: "100%" }}>
-        <div
-          style={{
-            backgroundColor: "hsl(51, 100%, 50%)",
-            height: "75px",
-            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
-            display: "flex",
-            justifyContent: "center",
-
-            alignItems: "center",
+  React.useEffect(() => {
+    setImage(
+      `https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`
+    );
+  }, []);
+  const handleSaveClick = () => {
+    setSaved(!saved);
+  };
+  const TheCard = () => {
+    return (
+      <div>
+        <Card
+          variant="outlined"
+          sx={{
+            width: "20vw",
+            height: "400px",
           }}
         >
-          <h2 style={{ textAlign: "center" }}>Activity Test</h2>
-        </div>
-        <CardContent>
-          <Typography variant="h5" style={{ fontWeight: "bold" }}>
-            test
-          </Typography>
-          <div
-            id="myCarousel"
-            class="carousel slide mb-6"
-            data-bs-ride="carousel"
-            style={{ height: "100%", width: "100%", margin: "0px" }}
-          >
-            <div class="carousel-indicators">
-              <button
-                type="button"
-                data-bs-target="#myCarousel"
-                data-bs-slide-to="0"
-                class=""
-                aria-label="Slide 1"
-              ></button>
-              <button
-                type="button"
-                data-bs-target="#myCarousel"
-                data-bs-slide-to="1"
-                aria-label="Slide 2"
-                class="active"
-                aria-current="true"
-              ></button>
-              <button
-                type="button"
-                data-bs-target="#myCarousel"
-                data-bs-slide-to="2"
-                aria-label="Slide 3"
-                class=""
-              ></button>
-            </div>
-            <div class="carousel-inner">
-              <div class="carousel-item">
-                <svg
-                  class="bd-placeholder-img"
-                  width="100%"
-                  height="100%"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                  preserveAspectRatio="xMidYMid slice"
-                  focusable="false"
-                >
-                  <rect
-                    width="100%"
-                    height="100%"
-                    fill="var(--bs-secondary-color)"
-                  ></rect>
-                </svg>
-                <div class="container">
-                  <div class="carousel-caption text-start">
-                    <h1>Example headline.</h1>
-                    <p class="opacity-75">
-                      Some representative placeholder content for the first
-                      slide of the carousel.
-                    </p>
-                    <p>
-                      <a class="btn btn-lg btn-primary" href="#">
-                        Sign up today
-                      </a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div class="carousel-item active">
-                <svg
-                  class="bd-placeholder-img"
-                  width="100%"
-                  height="100%"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                  preserveAspectRatio="xMidYMid slice"
-                  focusable="false"
-                >
-                  <rect
-                    width="100%"
-                    height="100%"
-                    fill="var(--bs-secondary-color)"
-                  ></rect>
-                </svg>
-                <div class="container">
-                  <div class="carousel-caption">
-                    <h1>Another example headline.</h1>
-                    <p>
-                      Some representative placeholder content for the second
-                      slide of the carousel.
-                    </p>
-                    <p>
-                      <a class="btn btn-lg btn-primary" href="#">
-                        Learn more
-                      </a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div class="carousel-item">
-                <svg
-                  class="bd-placeholder-img"
-                  width="100%"
-                  height="100%"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                  preserveAspectRatio="xMidYMid slice"
-                  focusable="false"
-                >
-                  <rect
-                    width="100%"
-                    height="100%"
-                    fill="var(--bs-secondary-color)"
-                  ></rect>
-                </svg>
-                <div class="container">
-                  <div class="carousel-caption text-end">
-                    <h1>One more for good measure.</h1>
-                    <p>
-                      Some representative placeholder content for the third
-                      slide of this carousel.
-                    </p>
-                    <p>
-                      <a class="btn btn-lg btn-primary" href="#">
-                        Browse gallery
-                      </a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <button
-              class="carousel-control-prev"
-              type="button"
-              data-bs-target="#myCarousel"
-              data-bs-slide="prev"
-            >
-              <span
-                class="carousel-control-prev-icon"
-                aria-hidden="true"
-              ></span>
-              <span class="visually-hidden">Previous</span>
-            </button>
-            <button
-              class="carousel-control-next"
-              type="button"
-              data-bs-target="#myCarousel"
-              data-bs-slide="next"
-            >
-              <span
-                class="carousel-control-next-icon"
-                aria-hidden="true"
-              ></span>
-              <span class="visually-hidden">Next</span>
-            </button>
-          </div>
-        </CardContent>
-      </div>
-    </Card>
-  );
-};
+          <CardOverflow>
+            <AspectRatio ratio="2">
+              <img src={image} loading="lazy" alt="" />
+            </AspectRatio>
+            <Tooltip title="Save Activity">
+              <IconButton
+                size="md"
+                variant="solid"
+                color="primary"
+                sx={{
+                  position: "absolute",
+                  zIndex: 2,
+                  borderRadius: "50%",
+                  right: "1rem",
+                  bottom: 0,
+                  transform: "translateY(50%)",
+                }}
+              >
+                <Add />
+              </IconButton>
+            </Tooltip>
 
-export default ActivityCard;
+            <IconButton
+              size="md"
+              variant={saved ? "soft" : "solid"}
+              color={saved ? "neutral" : "primary"}
+              onClick={handleSaveClick}
+              sx={{
+                position: "absolute",
+                zIndex: 2,
+                borderRadius: "50%",
+                right: "1rem",
+                bottom: 0,
+                transform: "translateY(50%)",
+                transition: "transform 0.3s",
+                "&:active": {
+                  transform: "translateY(50%) scale(0.9)",
+                },
+              }}
+            >
+              {saved ? <Done color="primary" /> : <Add />}
+            </IconButton>
+          </CardOverflow>
+          <div style={{ height: "10%" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+
+                  flexDirection: "column",
+                }}
+              >
+                <h4
+                  style={{
+                    fontWeight: "bold",
+                    margin: 0,
+                    marginRight: 20,
+                  }}
+                >
+                  {activity.name}
+                </h4>
+
+                <Rating
+                  value={activity.rating}
+                  icon={<StarIcon sx={{ color: "orange" }} />}
+                  emptyIcon={<StarOutlineIcon />}
+                  readOnly
+                  precision={0.5}
+                />
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginTop: "5px",
+                  }}
+                >
+                  {activity.tags.map((tag, index) => (
+                    <Chip
+                      component="span"
+                      size="sm"
+                      variant="outlined"
+                      color="primary"
+                      sx={{ marginRight: 1 }}
+                    >
+                      {tag}
+                    </Chip>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                position: "absolute",
+                bottom: 10,
+                width: "90%",
+              }}
+            >
+              <Typography
+                level="title-lg"
+                sx={{
+                  mt: 1,
+                  fontSize: 25,
+                  fontWeight: "xl",
+                  justifySelf: "flex-start",
+                }}
+                endDecorator={
+                  <Chip
+                    component="span"
+                    size="sm"
+                    variant="soft"
+                    color="success"
+                  >
+                    Lowest price
+                  </Chip>
+                }
+              >
+                {activity.price}$
+              </Typography>
+              <Button
+                size="md"
+                variant="solid"
+                color="primary"
+                onClick={() => handleBooking(activity._id)}
+              >
+                Book Now
+              </Button>
+            </div>
+          </div>
+        </Card>
+      </div>
+    );
+  };
+  return <TheCard />;
+}

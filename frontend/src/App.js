@@ -76,7 +76,7 @@ import ChangePassword from "./Pages/Admin/ChangePassword.js";
 import EditItinerary from "./Pages/Itinerary/editItinerary.js";
 
 import LandingPage from "./Pages/LandingPage.js";
-import ActivityCard from "./Pages/activityCard.js";
+import ActivityCard from "../src/Components/activityCard";
 
 function App() {
   return (
