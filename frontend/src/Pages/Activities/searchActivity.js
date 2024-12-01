@@ -132,7 +132,7 @@ const SearchActivities = () => {
           Back to Dashboard
         </Button>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <h4 className="oswald-Titles">Search Activities</h4>
+          <h4 className="oswald-Titles">Activities</h4>
         </Box>
 
         {/* Search Form */}
@@ -173,7 +173,6 @@ const SearchActivities = () => {
             display: "grid",
             gridTemplateColumns: "repeat(4, 1fr)",
             gap: "24px", // Adjust the gap between items as needed
-
             paddingBottom: 24,
           }}
         >
@@ -182,11 +181,7 @@ const SearchActivities = () => {
               activity.flag === false &&
               activity.advertiserDeleted === false &&
               activity.deletedActivity === false ? (
-                <ActivityCard
-                  title={activity.name}
-                  tags={activity.tags}
-                  price={`${activity.price} $`}
-                />
+                <ActivityCard activity={activity} />
               ) : null
             ) // We don't output a row when it has `activity.flag` is true (ie activity is inappropriate) or when the activity's advertiser has left the system or the activity has been deleted but cannot be removed from database since it is booked my previous tourists
           }

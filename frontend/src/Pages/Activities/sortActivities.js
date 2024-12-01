@@ -208,13 +208,7 @@ const SortActivities = () => {
           activity.advertiserDeleted === false &&
           activity.deletedActivity === false
             ? (console.log("this is the average rating ", activity.ratings[1]),
-              (
-                <ActivityCard
-                  title={activity.name}
-                  tags={activity.tags}
-                  price={`${activity.price} $`}
-                />
-              ))
+              (<ActivityCard activity={activity} />))
             : null
         )}
       </div>

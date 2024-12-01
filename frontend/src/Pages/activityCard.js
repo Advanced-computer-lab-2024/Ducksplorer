@@ -14,18 +14,60 @@ import Done from "@mui/icons-material/Done";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { Rating, Tooltip } from "@mui/material";
 import Button from "@mui/joy/Button";
+import axios from "axios";
+import { message } from "antd";
+import { useNavigate } from "react-router-dom";
 
 // ActivityCard component
-export default function ActivityCard({
-  image = "https://images.unsplash.com/photo-1532614338840-ab30cf10ed36?auto=format&fit=crop&w=318",
-  title = "Mountain Hiking",
-  location = "Himalayas",
-  price = "$100",
-  tags = ["pool", "Budget friendly"],
-  rating = "3.5",
-}) {
+export default function ActivityCard({ activity = {} }) {
+  const navigate = useNavigate();
   const [saved, setSaved] = React.useState(false);
+  const [image, setImage] = React.useState("https://picsum.photos/200/300");
 
+  const handleBooking = async (activityId) => {
+    try {
+      const userJson = localStorage.getItem("user");
+      const isGuest = localStorage.getItem("guest") === "true";
+      if (isGuest) {
+        message.error("User is not logged in, Please login or sign up.");
+        navigate("/guestDashboard");
+        return;
+      }
+      if (!userJson) {
+        message.error("User is not logged in.");
+        return null;
+      }
+      const user = JSON.parse(userJson);
+      if (!user || !user.username) {
+        message.error("User information is missing.");
+        return null;
+      }
+
+      const type = "activity";
+
+      localStorage.setItem("activityId", activityId);
+      localStorage.setItem("type", type);
+
+      const response = await axios.get(
+        `http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}`
+      );
+
+      if (response.status === 200) {
+        navigate("/payment");
+      } else {
+        message.error("Booking failed.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      message.error("An error occurred while booking.");
+    }
+  };
+
+  React.useEffect(() => {
+    setImage(
+      `https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`
+    );
+  }, []);
   const handleSaveClick = () => {
     setSaved(!saved);
   };
@@ -103,11 +145,11 @@ export default function ActivityCard({
                     marginRight: 20,
                   }}
                 >
-                  {title}
+                  {activity.name}
                 </h4>
 
                 <Rating
-                  value={rating}
+                  value={activity.rating}
                   icon={<StarIcon sx={{ color: "orange" }} />}
                   emptyIcon={<StarOutlineIcon />}
                   readOnly
@@ -120,7 +162,7 @@ export default function ActivityCard({
                     marginTop: "5px",
                   }}
                 >
-                  {tags.map((tag, index) => (
+                  {activity.tags.map((tag, index) => (
                     <Chip
                       component="span"
                       size="sm"
@@ -166,9 +208,14 @@ export default function ActivityCard({
                   </Chip>
                 }
               >
-                {price}
+                {activity.price}$
               </Typography>
-              <Button size="md" variant="solid" color="primary" style={{}}>
+              <Button
+                size="md"
+                variant="solid"
+                color="primary"
+                onClick={() => handleBooking(activity._id)}
+              >
                 Book Now
               </Button>
             </div>
