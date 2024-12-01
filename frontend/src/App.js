@@ -80,6 +80,14 @@ import CreatePromoCode from "./Pages/Admin/CreatePromoCode.js";
 import MyNotifications from "./Components/myNotifications.js";
 import ForgetPassword from "./Pages/EditAccount/ForgetPassword.js";
 
+import TourGuideItineraryReport from "./Pages/Itinerary/tourGuideReport.js"
+import AdvertiserActivityReport from "./Pages/Activities/advertiserReport.js"
+import AdminReport from "./Pages/Admin/adminReport.js"
+import UserReport from "./Pages/Admin/UsersReport.js"
+
+
+import SellerProductReport from "./Pages/Products/sellerReport.js"
+
 function App() {
   const { authUser } = useAuthContext();
   return (
@@ -123,6 +131,9 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/tourGuideReport" element={<TourGuideItineraryReport />} />
+          <Route path="/adminReport" element={<AdminReport />} />
+          <Route path="/userReport" element={<UserReport />} />
           <Route
             path="/viewAllTourist"
             element={
@@ -603,6 +614,8 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route path="/sellerReport" element={<SellerProductReport />} />
           <Route
             path="/sellerEditAccount"
             element={

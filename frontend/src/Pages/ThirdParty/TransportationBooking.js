@@ -1,5 +1,5 @@
 import React from 'react';
-import TouristNavBar from 'Ducksplorer/frontend/src/Components/TouristNavBar';
+import TouristNavBar from '../../Components/TouristNavBar';
 import TransportationBookingForm from '../../Components/ThirdParty/TransportationBookingForm';
 
 

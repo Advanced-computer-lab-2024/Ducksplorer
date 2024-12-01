@@ -5,6 +5,7 @@ import { Button } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import FilterActivities from "./filterActivities";
+// import { Link } from "react-router-dom";
 // import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 import Help from "../../Components/HelpIcon";
 
