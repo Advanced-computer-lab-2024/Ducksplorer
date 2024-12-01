@@ -1,8 +1,7 @@
 const Wishlist = require("../Models/wishlistModel");
 const Product = require("../Models/productModel");
-const mongoose = require("mongoose");
 
-const getMyWishlist = async (req, res) => {
+const getMyWishlist = async (req, res) => { //tested done
     try {
       const myWishlist = await Wishlist.find({ username: req.params.username });
       res.status(200).json(myWishlist);
@@ -11,7 +10,7 @@ const getMyWishlist = async (req, res) => {
     }
   };
 
-const updateWishlist = async (req, res) => {
+const updateWishlist = async (req, res) => { //tested done
   const { username } = req.params;
   const { products } = req.body;
 
@@ -35,27 +34,30 @@ const updateWishlist = async (req, res) => {
 };
 
 const removeFromWishlist = async (req, res) => {
-    const { username } = req.params; // Get the username from the URL
-    const { products } = req.body; // Get the product ID from the request body
-    const productObjectId = mongoose.Types.ObjectId(products);
+  const { username , productId } = req.params;
+  //const { productId } = req.body; // Ensure you pass `productId` from the frontend
+  console.log("productId:", productId);
+  console.log("username:", username);
   
-    try {
-      // Find and update the wishlist by removing the specified product ID
-      const updatedWishlist = await Wishlist.findOneAndUpdate(
-        { username }, // Find the wishlist by username
-        { $pull: { products: productObjectId } }, // Remove the product ID from the 'products' array
-        { new: true } // Return the updated document
-      ).populate("products"); // Populate product details
-  
-      if (!updatedWishlist) {
-        return res.status(404).json({ message: "Wishlist not found" });
-      }
-  
-      res.status(200).json(updatedWishlist);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
+  try {
+    // const productObjectId = mongoose.Types.ObjectId(productId);
+    // console.log("productObjectId:", productObjectId);
+    const updatedWishlist = await Wishlist.findOneAndUpdate(
+      { username },
+      { $pull: { products: { _id: productId } } }, // Pull by product ID
+      { new: true }
+    );
+
+    if (!updatedWishlist) {
+      return res.status(404).json({ message: "Wishlist not found" });
     }
-  };
+
+    res.status(200).json(updatedWishlist);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 
 // Controller to remove a product from the wishlist
 // const removeFromWishlist = async (req, res) => {

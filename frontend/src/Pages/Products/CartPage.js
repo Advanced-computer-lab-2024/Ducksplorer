@@ -3,6 +3,7 @@ import axios from "axios";
 import ProductCard from "../../Components/Products/ProductCard"; // Adjust the path as necessary
 import { message , Button , Modal} from "antd";
 import TouristNavBar from "../../Components/TouristNavBar";
+import { useNavigate } from "react-router-dom";
 
 
 const CartPage = () => {
@@ -12,6 +13,7 @@ const CartPage = () => {
   const userJson = localStorage.getItem("user"); // Get the logged-in user's details
   const user = JSON.parse(userJson);
   const userName = user.username;
+  const navigate = useNavigate();
 
 
   const handleRemoveProduct = (productId) => {
@@ -32,20 +34,31 @@ const CartPage = () => {
 
   const handleConfirmCheckout = async () => {
     try {
+      const orderNumberStr = localStorage.getItem('orderNumber') || 0; // Get the order number from localStorage
+      const orderNumber = +orderNumberStr;
+      localStorage.setItem('orderNumber', orderNumber + 1); // Increment the order number
+      
       for (const item of cartProducts) {
         // Extract details
         const { product, quantity } = item;
         
         // Call the backend API
-        await axios.put("http://localhost:8000/touristRoutes/addPurchase", {
+        const response = await axios.put("http://localhost:8000/touristRoutes/addPurchase", {
           userName,
           productId: product._id,
           chosenQuantity: quantity,
+          orderNumber: orderNumber,
+          
         });
-        await axios.delete("http://localhost:8000/touristRoutes/cart", { params: { userName ,productId: product._id } }); // Clear product from cart
+        //await axios.delete("http://localhost:8000/touristRoutes/cart", { params: { userName ,productId: product._id } }); // Clear product from cart
+        const type = "product";
+
+        localStorage.setItem("cartId", cartProducts._id);
+        localStorage.setItem("type", type);
+        if(response.status === 201){
+          navigate("/payment");
+        }
       }
-  
-      message.success("Checkout successful! Purchases recorded.");
       
       // Optionally clear the cart (both frontend and backend)
       setCartProducts([]); // Clear frontend cart state      
@@ -67,6 +80,7 @@ const CartPage = () => {
     };
 
     calculateTotalPrice();
+    localStorage.setItem("totalPrice", totalPrice);
   }, [cartProducts]);
 
 

@@ -7,17 +7,18 @@ import Help from "../../Components/HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar";
 function MyPurchases() {
   const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
     const user = JSON.parse(userJson);
     const username = user.username;
     axios
-      .get(`http://localhost:8000/touristRoutes/myPurchases/${username}`)
+      .get(`http://localhost:8000/touristRoutes/myOrders/${username}`)
       .then((response) => {
         message.success("Purchases fetched successfully");
-        setProducts(response.data[0].products);
-        console.log("these are the products", response.data[0].products);
+        setProducts(response.data);
+        console.log("these are the products", response.data);
       })
       .catch((error) => {
         console.error("There was an error fetching the products!", error);
@@ -48,28 +49,29 @@ function MyPurchases() {
             marginTop: "20px",
           }}
         >
-          {/* Render the filtered products using the ProductCard component */}
-          {products && products.length > 0 ? (
-            products.map((product) => (
-              <div
-                key={product._id}
-                style={{ position: "relative", marginBottom: "20px" }}
-              >
-                <ProductCard
-                  key={product._id}
-                  product={product}
-                  productID={product._id}
-                  showRating={true}
-                  showReview={true}
-                  showAverageRatingNo={true}
-                />
-              </div>
-            ))
-          ) : (
-            <Typography variant="body1" style={{ marginTop: "20px" }}>
-              No products found under the specified name.
-            </Typography>
-          )}
+        {products.length > 0 ? (
+          products.map((item, index) => (
+          <div
+            key={item.product._id || index}
+            style={{
+              maxWidth: "600px", // Decrease card size
+              margin: "auto", // Center each card
+            }}
+          >
+            <ProductCard
+              product={item.product}
+              productID={item.product._id}
+              showAddToCart={false}
+              showReview={true}
+              showRating={true}
+              showAverageRating={true}   
+              hideWishlist={true}         
+            />
+          </div>
+        ))
+      ) : (
+        <h2>Your cart is empty!</h2>
+      )}
         </div>
         <Help />
       </div>
