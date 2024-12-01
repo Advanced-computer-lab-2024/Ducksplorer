@@ -34,6 +34,11 @@ function PaymentPage() {
   const [discount, setDiscount] = useState(0);
   const [finalPrice, setFinalPrice] = useState(price);
 
+  const [cartData, setCartData] = useState(null);
+  const userJson = localStorage.getItem("user"); // Get the logged-in user's details
+  const user = JSON.parse(userJson);
+  const userName = user.username;
+
   const handleVisaSubmit = async (e) => {
     if (itineraryData && !chosenDate) {
       message.error("Please select a date and time before proceeding.");
@@ -116,6 +121,9 @@ function PaymentPage() {
       console.log(data);
       if (response.status === 200) {
         message.success("Payment successfully completed!");
+        if(itineraryOrActivity === "product"){
+          navigate("/myPurchases");
+        }
         // Payment succeeded; now create the booking in the backend
         const bookingResponse = await fetch(
           `http://localhost:8000/touristRoutes/booking/${userName}`,
@@ -144,9 +152,7 @@ function PaymentPage() {
           console.error("Booking creation failed:", bookingResult.message);
         }
       } else {
-        message.error(
-          "Error creating payment. Not enough money in the wallet."
-        );
+        message.error("Error creating payment. Not enough money in the wallet.");
       }
     } catch (error) {
       console.error("Payment initiation failed:", error);
@@ -170,6 +176,7 @@ function PaymentPage() {
       const itineraryOrActivity = localStorage.getItem("type");
       const activityId = localStorage.getItem("activityId");
       const itineraryId = localStorage.getItem("itineraryId");
+      const cartId = localStorage.getItem("cartId");
 
       if (!itineraryOrActivity) {
         message.error("Type information is missing.");
@@ -222,7 +229,26 @@ function PaymentPage() {
         // setTransportation(transportation);
         setPrice(transportationsData.price);
         setFinalPrice(transportationsData.price);
-      } else {
+      } else if (itineraryOrActivity === "product" && cartId){
+        console.log("Fetching activity data for ID:", cartId); // Debugging
+        const response = await axios.get(
+          "http://localhost:8000/touristRoutes/myCart",
+          {
+            params: { userName }, // Pass data as query parameters
+          }
+        );
+        if (response.status === 200) {
+          console.log("Cart data fetched:", response.data); // Debugging
+          setCartData(response.data.cart);
+          const totalPrice = localStorage.getItem("totalPrice");
+          setPrice(totalPrice);
+          setFinalPrice(totalPrice);
+          localStorage.setItem("price", finalPrice);
+        } else {
+          message.error("Failed to retrieve activity details.");
+        }
+      }
+      else {
         message.error("Failed to retrieve details");
       }
       //console.log(response);
@@ -298,7 +324,8 @@ function PaymentPage() {
           activityData ||
           (flightsData && type === "flight") ||
           (hotelsData && type === "hotel") ||
-          (transportationsData && type === "transportation") ? (
+          (transportationsData && type === "transportation") ||
+          (cartData && type === "product") ? (
             type === "itinerary" ? (
               <div>
                 <Card
@@ -869,6 +896,90 @@ function PaymentPage() {
                     type="number"
                     placeholder="Amount"
                     value={transportationsData.price}
+                    onChange={(e) => setAmount(e.target.value * 100)}
+                    required
+                    readOnly
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ddd",
+                    }}
+                  />
+
+                  <p>Promo Code</p>
+                  <input
+                    type="text"
+                    placeholder="Promo Code"
+                    value={promoCode}
+                    onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ddd",
+                    }}
+                  />
+                  <Button onClick={applyPromoCode}>Apply Promo Code</Button>
+                  {discount > 0 && <p>Discount Applied: {discount}%</p>}
+                  <h2>Final Price: {finalPrice}EGP</h2>
+                </Form>
+              </div>
+            ) : type === "product" && cartData ? (
+              <div>
+                <Card
+                  style={{
+                    maxWidth: "600px",
+                    margin: "20px auto",
+                    borderRadius: "8px",
+                  }}
+                >
+                  <Space
+                    direction="vertical"
+                    size="middle"
+                    style={{ display: "flex" }}
+                  >
+                    <Title level={3}>Booked Details</Title>
+                    <p>
+                      <strong>Order Details:</strong>{" "}
+                    </p>
+                    {cartData && cartData.products && cartData.products.length > 0 ? (
+                      cartData.products.map((product, index) => (
+                        <div key={index} style={{ marginBottom: "10px" }}>
+                          <p><strong>Product {index + 1}:</strong></p>
+                          <p><strong>Name:</strong> {product.product.name}</p>
+                          <p><strong>Price:</strong> {product.product.price}</p>
+                          <p><strong>Quantity:</strong> {product.quantity}</p>
+                        </div>
+                      ))
+                    ) : (
+                      <p>No products in the cart.</p>
+                    )}
+                  </Space>
+                </Card>
+                <Form>
+                  <h1>Payment Details</h1>
+
+                  <p>Email</p>
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value * 100)}
+                    required
+                    readOnly
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ddd",
+                    }}
+                  />
+                  <p>Amount</p>
+                  <input
+                    type="number"
+                    placeholder="Amount"
+                    value={price}
                     onChange={(e) => setAmount(e.target.value * 100)}
                     required
                     readOnly
