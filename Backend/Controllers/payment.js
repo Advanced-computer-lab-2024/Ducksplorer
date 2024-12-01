@@ -186,6 +186,14 @@ const createPaymentIntent = async (req, res) => {
   }
 };
 
+const sendOtp = async (req, res) => {
+  const { email } = req.body;
+  const OTP = Math.floor(100000 + Math.random() * 900000);
+  OTPStore[email] = OTP;
+  await sendEmail(email, "OTP for Payment Verification", `Your OTP is: ${OTP}`);
+  res.status(200).json({ message: "OTP sent successfully" });
+};
+
 const getConfig = (req, res) => {
   res.send({
     publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
@@ -300,4 +308,5 @@ module.exports = {
   getConfig,
   createPaymentIntent,
   notifyUpcomingActivities,
+  sendOtp,
 };
