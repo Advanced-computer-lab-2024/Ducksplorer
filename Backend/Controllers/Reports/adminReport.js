@@ -122,7 +122,7 @@ const filterAllActivities = async (req, res) => {
     const endOfMonth = new Date(
       Date.UTC(yearNum, monthNum + 1, 0, 23, 59, 59, 999)
     ); // End of the month
-
+    
     dateFilters.push({ chosenDate: { $gte: startOfMonth, $lte: endOfMonth } });
   }
 

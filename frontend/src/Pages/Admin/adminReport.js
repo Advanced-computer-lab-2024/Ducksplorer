@@ -333,7 +333,7 @@ const AdminReport = () => {
   };
 
   useEffect(() => {
-    if (activityFiltersApplied) return;
+    if (!activityFiltersApplied) return;
     if (!activityDate && !activityMonth && !activityYear) return;
     if (selectedCategory == "Activities Report")
       fetchFilteredActivities();
@@ -374,7 +374,7 @@ const AdminReport = () => {
     activitySetDate(""); // Reset date if month is selected
     activitySetFiltersApplied(true);
   };
-
+  
   const changeActivityYear = (newYear) => {
     activitySetYear(newYear);
     activitySetDate(""); // Reset date if month is selected
