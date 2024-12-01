@@ -33,7 +33,7 @@ const ProductCard = ({
   showRemoveWishlist,
   showAverageRatingNo, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
   removeProductFromWishlist,
-  showPurchase,,
+  showPurchase,
   hideWishlist
 }) => {
   const [isFormVisible, setFormVisible] = useState(false); // Controls form visibility
