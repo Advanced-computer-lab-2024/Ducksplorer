@@ -65,7 +65,8 @@ function MyPurchases() {
               showReview={true}
               showRating={true}
               showAverageRating={true}   
-              hideWishlist={true}         
+              hideWishlist={true}  
+              showPurchase={true}       
             />
           </div>
         ))
