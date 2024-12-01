@@ -59,7 +59,7 @@ const ActivityReport = () => {
         const fetchActivities = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:8000/activity/report/${userName}`
+                    `http://localhost:8000/advertiserAccount/report/${userName}`
                 );
 
                 setActivities(response.data);
@@ -89,7 +89,7 @@ const ActivityReport = () => {
         setFiltersApplied(false);
 
         try {
-            const response = await axios.get(`http://localhost:8000/activity/report/${userName}`);
+            const response = await axios.get(`http://localhost:8000/advertiserAccount/report/${userName}`);
             //const activityData = response.data.map((entry) => entry.activity);
 
             setActivities(response.data);
@@ -124,7 +124,7 @@ const ActivityReport = () => {
             queryString = queryString.endsWith('&') ? queryString.slice(0, -1) : queryString;
 
             // Fetch activities with the constructed query string
-            const response = await axios.get(`http://localhost:8000/activity/filterReport/${userName}?${queryString}`);
+            const response = await axios.get(`http://localhost:8000/advertiserAccount/filterReport/${userName}?${queryString}`);
 
             // const activityData = response.data.map((entry) => entry.activity);
             // const bookingsData = response.data.map((entry) => entry.numOfBookings);
@@ -198,7 +198,7 @@ const ActivityReport = () => {
             <div>
                 <Box sx={{ p: 6, maxWidth: "120vh", overflowY: "visible", height: "100vh", marginLeft: "350px", }}>
                     <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-                        <Typography variant="h4">Advertiser Report</Typography>
+                        <Typography variant="h4">Activities Report</Typography>
                     </Box>
                     {/* Filtering */}
                     <IconButton onClick={handleFilterChoiceClick}>

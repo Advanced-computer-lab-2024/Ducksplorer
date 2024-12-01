@@ -126,7 +126,7 @@ const ItineraryReport = () => {
             queryString = queryString.endsWith('&') ? queryString.slice(0, -1) : queryString;
 
             // Fetch itineraries with the constructed query string
-            const response = await axios.get(`http://localhost:8000/tourGuideAccount/filterItReport/${userName}?${queryString}`);
+            const response = await axios.get(`http://localhost:8000/tourGuideAccount/filterReport/${userName}?${queryString}`);
 
             setItineraries(response.data);
 
@@ -202,7 +202,7 @@ const ItineraryReport = () => {
             <div>
                 <Box sx={{ p: 6, maxWidth: "120vh", overflowY: "visible", height: "100vh", marginLeft: "350px", }}>
                     <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-                        <Typography variant="h4">Tour Guide Report</Typography>
+                        <Typography variant="h4"> Itineraries Report</Typography>
                     </Box>
                     {/* Filtering */}
                     <IconButton onClick={handleFilterChoiceClick}>
@@ -323,11 +323,11 @@ const ItineraryReport = () => {
                             </TableHead>
                             <TableBody>
                                 {itineraries.length > 0 ? (
-                                    itineraries.map(itinerary => itinerary.deletedItinerary === false && itinerary.totalGain !== undefined ? (
-                                        <TableRow key={itinerary._id}>
+                                    itineraries.map((entry) => entry && entry.itinerary.deletedItinerary === false && entry.itinerary.totalGain !== undefined ? (
+                                        <TableRow key={entry.itinerary._id}>
                                             <TableCell>
-                                                {itinerary.activity && itinerary.activity.length > 0
-                                                    ? itinerary.activity.map((activity, index) => (
+                                                {entry.itinerary.activity && entry.itinerary.activity.length > 0
+                                                    ? entry.itinerary.activity.map((activity, index) => (
                                                         <div key={index}>
                                                             {activity.name || 'N/A'} -
                                                             Price: {(activity.price * (activityExchangeRates[activityCurrency] || 1)).toFixed(2)} {activityCurrency},<br />
@@ -340,8 +340,8 @@ const ItineraryReport = () => {
                                             </TableCell>
 
                                             <TableCell>
-                                                {itinerary.locations && itinerary.locations.length > 0 ? (
-                                                    itinerary.locations.map((location, index) => (
+                                                {entry.itinerary.locations && entry.itinerary.locations.length > 0 ? (
+                                                    entry.itinerary.locations.map((location, index) => (
                                                         <div key={index}>
                                                             <Typography variant="body1">
                                                                 {index + 1}: {location.trim()}
@@ -352,14 +352,14 @@ const ItineraryReport = () => {
                                                 ) : 'No locations available'}
                                             </TableCell>
 
-                                            <TableCell>{itinerary.timeline}</TableCell>
-                                            <TableCell>{itinerary.language}</TableCell>
+                                            <TableCell>{entry.itinerary.timeline}</TableCell>
+                                            <TableCell>{entry.itinerary.language}</TableCell>
                                             <TableCell>
-                                                {(itinerary.price * (priceExchangeRates[priceCurrency] || 1)).toFixed(2)} {priceCurrency}
+                                                {(entry.itinerary.price * (priceExchangeRates[priceCurrency] || 1)).toFixed(2)} {priceCurrency}
                                             </TableCell>
                                             <TableCell>
-                                                {itinerary.availableDatesAndTimes.length > 0
-                                                    ? itinerary.availableDatesAndTimes.map((dateTime, index) => {
+                                                {entry.itinerary.availableDatesAndTimes.length > 0
+                                                    ? entry.itinerary.availableDatesAndTimes.map((dateTime, index) => {
                                                         const dateObj = new Date(dateTime);
                                                         const date = dateObj.toISOString().split('T')[0]; // YYYY-MM-DD format
                                                         const time = dateObj.toTimeString().split(' ')[0]; // HH:MM:SS format
@@ -373,18 +373,18 @@ const ItineraryReport = () => {
                                                     : 'No available dates and times'}
                                             </TableCell>
 
-                                            <TableCell>{itinerary.accessibility}</TableCell>
-                                            <TableCell>{itinerary.pickUpLocation}</TableCell>
-                                            <TableCell>{itinerary.dropOffLocation}</TableCell>
+                                            <TableCell>{entry.itinerary.accessibility}</TableCell>
+                                            <TableCell>{entry.itinerary.pickUpLocation}</TableCell>
+                                            <TableCell>{entry.itinerary.dropOffLocation}</TableCell>
                                             <TableCell><Rating
-                                                value={itinerary.averageRating}
+                                                value={entry.itinerary.averageRating}
                                                 precision={0.1}
                                                 readOnly
                                             /></TableCell>
 
                                             <TableCell>
-                                                {itinerary.tags && itinerary.tags.length > 0
-                                                    ? itinerary.tags.map((tag, index) => (
+                                                {entry.itinerary.tags && entry.itinerary.tags.length > 0
+                                                    ? entry.itinerary.tags.map((tag, index) => (
                                                         <div key={index}>
                                                             {tag || 'N/A'}
                                                             <br /><br />
@@ -394,7 +394,7 @@ const ItineraryReport = () => {
                                             </TableCell>
 
                                             <TableCell>
-                                                {itinerary.flag ? (
+                                                {entry.itinerary.flag ? (
                                                     <span style={{ color: 'red', display: 'flex', alignItems: 'center' }}>
                                                         <WarningIcon style={{ marginRight: '4px' }} />
                                                         Inappropriate
@@ -408,11 +408,11 @@ const ItineraryReport = () => {
                                             </TableCell>
 
                                             <TableCell>
-                                                {itinerary.isDeactivated ? 'Activated' : 'Deactivated'}
+                                                {entry.itinerary.isDeactivated ? 'Deactivated' : 'Activated'}
                                             </TableCell>
-                                            <TableCell>{itinerary.bookedCount}</TableCell>
+                                            <TableCell>{entry.numOfBookings}</TableCell>
                                             <TableCell>
-                                                {((itinerary.totalGain * 0.9) * (earningsExchangeRates[earningsCurrency] || 1)).toFixed(2)} {earningsCurrency}
+                                                {((entry.totalEarnings * 0.9) * (earningsExchangeRates[earningsCurrency] || 1)).toFixed(2)} {earningsCurrency}
                                             </TableCell>
                                         </TableRow>
                                     ) : null //We don't output a row when the itinerary has been deleted but cannot be removed from the database since it is booked by previous tourists

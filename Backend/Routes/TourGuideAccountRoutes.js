@@ -8,7 +8,7 @@ router.get("/viewaccount/:userName", getTourGuideDetails);
 
 router.get("/report/:tourGuideName", viewMyItineraries);
 
-router.get("/filterItReport/:tourGuideName", filterMyItineraries);
+router.get("/filterReport/:tourGuideName", filterMyItineraries);
 
 router.put("/editaccount", updateTourGuideDetails);
 

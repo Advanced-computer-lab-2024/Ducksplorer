@@ -193,7 +193,7 @@ const MyPurchases = () => {
       <div>
         <Box sx={{ p: 6, maxWidth: "120vh", overflowY: "visible", height: "100vh", marginLeft: "350px", }}>
           <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-            <Typography variant="h4">Seller Report</Typography>
+            <Typography variant="h4">Products Report</Typography>
           </Box>
           {/* Filtering */}
           <IconButton onClick={handleFilterChoiceClick}>
@@ -304,24 +304,24 @@ const MyPurchases = () => {
               </TableHead>
               <TableBody>
                 {products.length > 0 ? (
-                  products.map((productBooking) =>
-                    productBooking && productBooking.totalGain !== undefined ? (
-                      <TableRow key={productBooking._id}>
-                        <TableCell>{productBooking.name}</TableCell>
+                  products.map((entry) =>
+                    entry && entry.product.totalGain !== undefined ? (
+                      <TableRow key={entry.product._id}>
+                        <TableCell>{entry.product.name}</TableCell>
                         <TableCell>
-                          {(productBooking.chosenPrice * (priceExchangeRates[priceCurrency] || 1)).toFixed(2)} {priceCurrency}
+                          {(entry.product.price * (priceExchangeRates[priceCurrency] || 1)).toFixed(2)} {priceCurrency}
                         </TableCell>
                         <TableCell>
                           <Rating
-                            value={calculateAverageRating(productBooking.ratings)}
+                            value={calculateAverageRating(entry.product.ratings)}
                             precision={0.1}
                             readOnly
                           />
                         </TableCell>
-                        <TableCell>{productBooking.availableQuantity}</TableCell>
-                        <TableCell>{productBooking.description}</TableCell>
-                        <TableCell>{Object.entries(productBooking.reviews).length > 0 ? (
-                          Object.entries(productBooking.reviews).map(([user, review]) => (
+                        <TableCell>{entry.product.availableQuantity}</TableCell>
+                        <TableCell>{entry.product.description}</TableCell>
+                        <TableCell>{Object.entries(entry.product.reviews).length > 0 ? (
+                          Object.entries(entry.product.reviews).map(([user, review]) => (
                             <div key={user}>
                               <Typography variant="body2">User: {review.buyer}</Typography>
                               <Typography variant="body2">
@@ -337,7 +337,7 @@ const MyPurchases = () => {
                         )}
                         </TableCell>
                         <TableCell>
-                          {((productBooking.totalGain * 0.9) * (earningsExchangeRates[earningsCurrency] || 1)).toFixed(2)} {earningsCurrency}
+                          {((entry.totalEarnings * 0.9) * (earningsExchangeRates[earningsCurrency] || 1)).toFixed(2)} {earningsCurrency}
                         </TableCell>
                       </TableRow>
                     ) : null // Don't render the row for deleted products

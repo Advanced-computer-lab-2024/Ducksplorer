@@ -67,7 +67,7 @@ const filterMyActivities = async (req, res) => {
     }
 
     try {
-        // Find all Activities for the given advertiser with filters
+        // Find all Activities for the given advertiser
         const activities = await Activity.find({
             advertiser: advertiserName,
             // ...filters, // Apply date filters

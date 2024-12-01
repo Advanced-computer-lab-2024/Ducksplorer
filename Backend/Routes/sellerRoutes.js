@@ -12,7 +12,7 @@ const {
 } = require("../Controllers/Products/AScontroller");
 const sellerModel = require("../Models/sellerModel");
 const { getProductById } = require("../Controllers/Products/TAScontroller"); // Adjust path if necessary
-const { myProducts, filterMyProducts } = require("../Controllers/Reports/sellerReport");
+const { viewMyProducts, filterMyProducts } = require("../Controllers/Reports/sellerReport");
 const upload = require("../Controllers/uploadMiddleware");
 
 const addSeller = async (req, res) => {
@@ -36,7 +36,7 @@ const router = express.Router();
 router.get("/getProducts", getProducts);
 router.post("/addSeller", addSeller);
 router.get("/product/:productId", getProductById);
-router.get("/report/:sellerName", myProducts);
+router.get("/report/:sellerName", viewMyProducts);
 router.route("/filterReport/:sellerName").get(filterMyProducts);
 router.get("/ViewMyProducts/:seller", ViewMyProducts);
 //router.post("/createProducts", createProduct);
