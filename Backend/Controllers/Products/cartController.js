@@ -255,6 +255,8 @@ const addPurchase2 = async (req, res) => {
   }
 };
 
+
+
 const getMyOrders = async (req, res) => {
   try {
     const myPurchases = await PurchaseBooking.find({ buyer: req.params.buyer }).populate("product");

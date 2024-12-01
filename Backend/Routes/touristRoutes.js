@@ -22,6 +22,7 @@ const {
   removeFromWishlist,
 } = require("../Controllers/wishlistController");
 
+const{placeOrder, removeProductFromOrder, getOrdersByUsername} = require("../Controllers/orderController")
 const {
   createBooking,
   viewMyUpcomingBookings,
@@ -48,7 +49,6 @@ const {
 } = require("../Controllers/Products/cartController");
 
 const { validatePromoCode } = require("../Controllers/promoCodeController");
-
 const router = express.Router();
 
 router.get("/getproducts", getProducts);
