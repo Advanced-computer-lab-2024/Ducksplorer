@@ -132,7 +132,7 @@ const SearchActivities = () => {
           Back to Dashboard
         </Button>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <h4 className="oswald-Titles">Search Activities</h4>
+          <h4 className="oswald-Titles">Activities</h4>
         </Box>
 
         {/* Search Form */}
@@ -173,7 +173,6 @@ const SearchActivities = () => {
             display: "grid",
             gridTemplateColumns: "repeat(4, 1fr)",
             gap: "24px", // Adjust the gap between items as needed
-
             paddingBottom: 24,
           }}
         >
