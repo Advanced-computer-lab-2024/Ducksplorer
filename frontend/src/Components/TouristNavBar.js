@@ -237,7 +237,7 @@ function TouristNavBar() {
                 onClick={() => handleNavigation("activity/sortFilter")}
               >
                 <FestivalIcon />
-                <Typography textAlign="center" marginRight={3}>
+                <Typography textAlign="center" marginLeft={2}>
                   Activities
                 </Typography>
               </IconButton>
@@ -247,7 +247,7 @@ function TouristNavBar() {
                 onClick={() => handleNavigation("viewUpcomingItinerary")}
               >
                 <TempleBuddhistIcon />
-                <Typography textAlign="center" marginRight={1}>
+                <Typography textAlign="center" marginLeft={2}>
                   Itineraries
                 </Typography>
               </IconButton>
@@ -255,7 +255,7 @@ function TouristNavBar() {
             <Tooltip title="Book Flights">
               <IconButton onClick={() => handleNavigation("flights")}>
                 <FlightIcon />
-                <Typography textAlign="center" marginRight={1}>
+                <Typography textAlign="center" marginLeft={1}>
                   Flights
                 </Typography>
               </IconButton>
@@ -263,7 +263,7 @@ function TouristNavBar() {
             <Tooltip title="Book Hotels">
               <IconButton onClick={() => handleNavigation("hotels")}>
                 <HotelIcon />
-                <Typography textAlign="center" marginRight={1}>
+                <Typography textAlign="center" marginLeft={2}>
                   Hotels
                 </Typography>
               </IconButton>
@@ -271,7 +271,7 @@ function TouristNavBar() {
             <Tooltip title="Book Transportation">
               <IconButton onClick={() => handleNavigation("transportation")}>
                 <DirectionsCarIcon />
-                <Typography textAlign="center" marginRight={1}>
+                <Typography textAlign="center" marginLeft={2}>
                   Transportation
                 </Typography>
               </IconButton>
@@ -281,7 +281,7 @@ function TouristNavBar() {
                 onClick={() => handleNavigation("TouristAllProducts")}
               >
                 <StorefrontIcon />
-                <Typography textAlign="center" marginRight={1}>
+                <Typography textAlign="center" marginLeft={2}>
                   Products
                 </Typography>
               </IconButton>
@@ -289,7 +289,7 @@ function TouristNavBar() {
             <Tooltip title="View My Bookings">
               <IconButton onClick={() => handleNavigation("mybookings")}>
                 <BookmarkAddedIcon />
-                <Typography textAlign="center" marginRight={1}>
+                <Typography textAlign="center" marginLeft={2}>
                   My Bookings
                 </Typography>
               </IconButton>
