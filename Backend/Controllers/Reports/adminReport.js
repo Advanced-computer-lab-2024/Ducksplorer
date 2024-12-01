@@ -502,7 +502,7 @@ const getAllUsersWithEmailsFilteredByMonth = async (req, res) => {
     }
 
     if (!results || results.length === 0) {
-      return res.status(200).json(""); // Returning an empty string
+      return res.status(200).json([]);
     }
 
     // Return the results

@@ -104,13 +104,18 @@ const ActivityReport = () => {
             // Fetch users with the constructed query string
             const response = await axios.get(`http://localhost:8000/admin/getAllUsersWithEmailsFilteredByMonth?${queryString}`);
 
-            setUsers(response.data);
+            setUsers(response.data || []);
 
             if (response.data.length === 0) {
                 setErrorMessage("No users found for the selected filters.");
             }
         } catch (error) {
-            setErrorMessage("Error fetching users!");
+            if (error.response && error.response.status === 404) {
+                setUsers([]); // Ensure users is cleared on 404
+                setErrorMessage("No users found for the selected filters.");
+            } else {
+                setErrorMessage("Error fetching users!");
+            }
         } finally {
             setLoading(false);
         }
@@ -206,7 +211,7 @@ const ActivityReport = () => {
                                                 <TableCell>{userAdded.email}</TableCell>
                                                 <TableCell>{new Date(userAdded.date).toLocaleDateString()}</TableCell>
                                             </TableRow>
-                                        ) : null 
+                                        ) : null
                                     )
                                 ) : (
                                     <TableRow>
