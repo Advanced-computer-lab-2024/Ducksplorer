@@ -5,6 +5,8 @@ const app = express(); //el kol fel kol
 const PORT = process.env.PORT || 8000; //tells us to get port from env file or law ma3refsh yegebha it's 3000
 const cors = require("cors");
 const path = require("path");
+const cookieParser = require("cookie-parser");
+const protectRoute = require("./Backend/Middleware/protectRoute.js");
 const touristRoutes = require("./Backend/Routes/touristRoutes.js");
 const sellerRoutes = require("./Backend/Routes/sellerRoutes.js");
 const adminProductRoutes = require("./Backend/Routes/adminRoutes.js");
@@ -33,6 +35,7 @@ const sellerAccountRoutes = require("./Backend/Routes/SellerAccountRoutes.js");
 const transportationBookingThirdPartyRoutes = require("./Backend/Routes/ThirdParty/transportationBookingRoutes.js");
 const complaintRoutes = require("./Backend/Routes/complaintRoutes.js");
 const uploadImage = require("./Backend/Middleware/uploadImageMW.js");
+const notificationRoutes = require("./Backend/Routes/Notifications/NotificationRoutes.js");
 app.use(cors());
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ limit: "25mb" }));
@@ -49,6 +52,9 @@ app.use(
 
 app.use(bodyParser.json());
 //app.use("/uploads", express.static("uploads"));
+
+
+app.use(cookieParser());
 
 console.log(process.env.PORT);
 app.use(express.json());
@@ -100,6 +106,7 @@ app.use("/api/documents", documentRoutes);
 app.use("/tourGuideRate", tourGuideRateRoutes);
 app.use("/tourGuideComment", tourGuideCommentRoutes);
 app.use("/transportBook", transportationBookingThirdPartyRoutes);
+app.use("/notification", notificationRoutes);
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*"); // Allow requests from any origin

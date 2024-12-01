@@ -4,6 +4,42 @@ const Tags = require("../../Models/preferenceTagsModels.js");
 const Category = require("../../Models/activityCategory.js");
 const mongoose = require("mongoose");
 const ActivityBooking = require("../../Models/activityBookingModel.js");
+const ItineraryBooking = require("../../Models/itineraryBookingModel.js");
+const User = require("../../Models/userModel.js");
+const Advertiser = require("../../Models/advertiserModel.js");
+const send = require("send");
+const nodemailer = require("nodemailer");
+const {
+  createNotification
+} = require("../Notifications/NotificationsController.js");
+const Tourist = require("../../Models/touristModel.js");
+
+const sendEmail = async (to, subject, message) => {
+  try {
+    // Configure the email transporter
+    const transporter = nodemailer.createTransport({
+      service: "Gmail", // You can replace it with another service like SendGrid, etc.
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    // Email options
+    const mailOptions = {
+      from: "Ducksplorer@gmail.com", // Sender address
+      to, // Receiver's email address
+      subject, // Email subject
+      text: message, // Email message
+    };
+
+    // Send email
+    await transporter.sendMail(mailOptions);
+    console.log(`Email sent to ${to}`);
+  } catch (error) {
+    console.error(`Failed to send email: ${error.message}`);
+  }
+};
 
 const createActivity = async (req, res) => {
   try {
@@ -230,6 +266,70 @@ const viewUpcomingActivities = async (req, res) => {
   }
 };
 
+const remindUpcomingActivities = async (req, res) => {
+  try {
+    const today = new Date();
+    const twoDaysLater = new Date();
+    twoDaysLater.setDate(today.getDate() + 2);
+
+    // Fetch bookings with chosenDate within 2 days and where reminderSent is false
+    const bookingsToRemind = await ActivityBooking.find({
+      chosenDate: { $gte: today, $lte: twoDaysLater },
+      reminderSent: false,
+    });
+    console.log("Bookings to remind:", bookingsToRemind);
+
+    if (!bookingsToRemind || bookingsToRemind.length === 0) {
+      return res
+        .status(200)
+        .json({ message: "No upcoming activity reminders to send." });
+    }
+
+    for (const booking of bookingsToRemind) {
+      const tourist = booking.user; // Reference to the Tourist object
+      console.log("Tourist:", tourist);
+      const activity = booking.activity; // Reference to the Activity object
+      console.log("Activity:", activity);
+
+      // Ensure both tourist and activity data are available
+      if (tourist && activity) {
+        const touristData = await Tourist.findOne({ userName: tourist });
+        const userEmail = touristData.email; // Extract email from the Tourist object
+        console.log("User Email:", userEmail);
+        const activityData = await Activity.findOne({ _id: activity });
+        const activityName = activityData.name; // Extract name from the Activity object
+
+        const emailMessage = `Reminder: Your activity "${activityName}" is happening on ${new Date(
+          booking.chosenDate
+        ).toLocaleDateString()}. Get ready!`;
+
+        await createNotification(emailMessage, touristData.userName, "Upcoming Activity Reminder");
+
+        // Send the email notification
+        await sendEmail(userEmail, "Upcoming Activity Reminder", emailMessage);
+
+        // Mark the reminder as sent
+        booking.reminderSent = true;
+        await booking.save();
+      }
+    }
+
+    res.status(200).json({
+      message: "Reminders sent successfully.",
+      bookingsReminded: bookingsToRemind.map((booking) => ({
+        userEmail: booking.user.email,
+        activityName: booking.activity.name,
+        chosenDate: booking.chosenDate,
+      })),
+    });
+  } catch (error) {
+    console.error("Error sending reminders:", error);
+    res
+      .status(500)
+      .json({ message: "Error sending reminders", error: error.message });
+  }
+};
+
 const filterActivity = async (req, res) => {
   const { price, date, category, averageRating } = req.query;
   const filters = {};
@@ -359,6 +459,15 @@ const toggleFlagActivity = async (req, res) => {
     }
 
     const activity = await Activity.findById(id);
+    const activityAdvertiser = activity.advertiser;
+
+    if (!activityAdvertiser) {
+      return res.status(404).json({ error: "Tour guide not found" });
+    }
+
+    const advertiser = await Advertiser.findOne({
+      userName: activityAdvertiser,
+    });
 
     if (!activity) {
       return res.status(404).json({ error: "Activity not found" });
@@ -372,9 +481,28 @@ const toggleFlagActivity = async (req, res) => {
     // Save the updated activity because it is not just changed in memory not on server
     const updatedActivity = await activity.save();
 
+    // Send email to the advertiser if flagged as inappropriate
+    if (updatedActivity.flag) {
+      const emailMessage = `Your activity titled "${activity.name}" has been flagged as inappropriate.`;
+
+      // Create a notification for the advertiser on site
+      await createNotification(
+        `Your activity titled "${activity.name}" has been flagged as inappropriate.`,
+        advertiser.userName,
+        "Activity Flagged"
+      );
+
+      await sendEmail(
+        advertiser.email,
+        "Activity Flagged as Inappropriate",
+        emailMessage
+      );
+    }
+
     res.status(200).json({
       status: 200,
       activity: updatedActivity,
+      advetiserMail: advertiser.email,
       message: `Activity flagged as ${
         updatedActivity.flag ? "inappropriate" : "appropriate"
       }`,
@@ -383,6 +511,14 @@ const toggleFlagActivity = async (req, res) => {
     res.status(400).json({ error: error.message + "error in toggleFlag" });
   }
 };
+
+// const notiFlaginAppropriate = async (req, res) =>{
+//   const {itemId, type, userName, } = req.body;
+//   try{
+//     userBookings = await ItineraryBooking.find(userName);
+
+//   }
+// };
 
 const deletePastActivities = async (req, res) => {
   try {
@@ -416,5 +552,6 @@ module.exports = {
   rateActivity,
   getAppropriateActivities,
   toggleFlagActivity,
+  remindUpcomingActivities,
   deletePastActivities,
 };

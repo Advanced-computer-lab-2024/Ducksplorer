@@ -175,7 +175,7 @@ const ViewUpcomingItinerary = () => {
 
   //get upcoming itineraries
   useEffect(() => {
-    const showPreferences = localStorage.getItem("showPreferences");
+    const showPreferences = localStorage.getItem("showPreferences") || "false";
     const user = JSON.parse(localStorage.getItem("user"));
     const username = user?.username;
     const role = user?.role;

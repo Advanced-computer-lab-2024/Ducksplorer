@@ -19,6 +19,7 @@ const addPurchase = async (req, res) => {
       products: products,
     });
     const savedPurchase = await newPurchase.save();
+
     res.status(200).json(savedPurchase);
   } catch (error) {
     res.status(400).json({ message: error.message });

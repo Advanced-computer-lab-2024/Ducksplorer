@@ -6,7 +6,7 @@ const {
   sortProducts,
   touristUpdateProductRating,
   getProductRating,
-  touristUpdateProductReview
+  touristUpdateProductReview,
 } = require("../Controllers/Products/TAScontroller");
 
 const {
@@ -15,21 +15,34 @@ const {
   purchaseProduct
 } = require("../Controllers/purchasesController");
 
-const { createBooking, viewMyUpcomingBookings, viewMyPastBookings, viewDesiredActivity, viewDesiredItinerary, getMyBookings, cancelMyBooking, receiveLoyaltyPoints, getLevel, updateLevel,
-  redeemPoints, payVisa, payWallet } = require("../Controllers/bookingController");
-  
+const {
+  createBooking,
+  viewMyUpcomingBookings,
+  viewMyPastBookings,
+  viewDesiredActivity,
+  viewDesiredItinerary,
+  getMyBookings,
+  cancelMyBooking,
+  receiveLoyaltyPoints,
+  getLevel,
+  updateLevel,
+  redeemPoints,
+  payVisa,
+  payWallet,
+} = require("../Controllers/bookingController");
+const { bod } = require("../Controllers/touristAccount");
 
 const router = express.Router();
 
 router.get("/getproducts", getProducts);
 router.get("/findProduct", findProduct);
-router.put("/sortProducts",  sortProducts);
-router.get("/filterProducts",  filterProducts);
+router.put("/sortProducts", sortProducts);
+router.get("/filterProducts", filterProducts);
 router.patch("/loyalty/:price/:userName", receiveLoyaltyPoints);
 router.patch("/redeemPoints/:userName", redeemPoints);
 router.get("/myPastBookings", viewMyPastBookings);
 router.get("/getLevel/:userName", getLevel);
-router.route("/booking").get(getMyBookings)
+router.route("/booking").get(getMyBookings);
 router.route("/booking/:user").post(createBooking).patch(cancelMyBooking);
 router.route("/myUpcomingBookings").get(viewMyUpcomingBookings);
 router.route("/viewDesiredActivity/:activityId").get(viewDesiredActivity);

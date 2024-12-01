@@ -11,6 +11,9 @@ const { viewAllProducts,
      getAllUsersWithEmailsFilteredByMonth
      } = require("../../Controllers/Reports/adminReport.js");
 
+     const { createPromoCode } = require("../../Controllers/promoCodeController.js");
+
+
 const router = express.Router();
 
 router.post("/addAdmin", addAdmin);
@@ -44,5 +47,7 @@ router.route("/filterReportProducts").get(filterAllProducts);
 router.get("/getAllUsersWithEmails", getAllUsersWithEmails);
 
 router.get("/getAllUsersWithEmailsFilteredByMonth", getAllUsersWithEmailsFilteredByMonth);
+
+router.post("/addPromoCode", createPromoCode);
 
 module.exports = router;
