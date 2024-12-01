@@ -62,23 +62,6 @@ function TouristNavBar() {
       });
   };
 
-  //get the notifications length periodically
-
-  const handleLogout = () => {
-    handleCloseUserMenu();
-    axios
-      .post("http://localhost:8000/signUp/logout")
-      .then((response) => {
-        console.log(response.data);
-        localStorage.removeItem("user");
-        Cookies.remove("jwt");
-        window.location.href = "/login";
-      })
-      .catch((error) => {
-        console.error("There was an error logging out!", error);
-      });
-  };
-
   useEffect(() => {
     //const storedPicture = localStorage.getItem('profilePicture');
 
@@ -383,7 +366,7 @@ function TouristNavBar() {
                   </Typography>
                 </IconButton>
               </MenuItem>
-              <MenuItem onClick={handleCloseUserMenu}>
+              <MenuItem onClick={handleLogout}>
                 <IconButton component="a" sx={{ textAlign: "center", p: 0.5 }}>
                   <LockIcon sx={{ fontSize: 20, color: "gold" }} />
                   <Typography sx={{ ml: 1 }} variant="body2">
