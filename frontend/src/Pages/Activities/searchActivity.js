@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { message } from "antd";
+import TouristNavBar from "../../Components/TouristNavBar";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 import {
   Box,
   Table,
@@ -13,9 +15,11 @@ import {
   TableRow,
   Paper,
   TextField,
-  Button,
   Rating,
 } from "@mui/material";
+import ActivityCard from "../../Components/activityCard";
+import Input from "@mui/joy/Input";
+import Button from "@mui/joy/Button";
 
 import { Link, useParams } from "react-router-dom";
 
@@ -105,7 +109,9 @@ const SearchActivities = () => {
   };
 
   return (
-    <>
+    <div style={{ height: "100vh" }}>
+      <TouristNavBar />
+      <TouristSidebar />
       <Box
         sx={{
           // p: 6,
@@ -113,36 +119,46 @@ const SearchActivities = () => {
           overflowY: "visible",
           height: "110vh",
           marginLeft: 0,
+          marginBottom: 20,
         }}
       >
         <Button
           component={Link}
           to={isGuest ? "/guestDashboard" : "/touristDashboard"}
-          variant="contained"
+          variant="solid"
           color="primary"
           style={{ marginBottom: "20px" }}
         >
           Back to Dashboard
         </Button>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Typography variant="h4">Search Activities</Typography>
+          <h4 className="oswald-Titles">Activities</h4>
         </Box>
 
         {/* Search Form */}
         <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
           {/* Single Search Bar */}
-          <TextField
+          {/* <TextField
             label="Search"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by name, category, or tag"
             fullWidth
             sx={{ minWidth: 150 }}
+          /> */}
+          <Input
+            color="primary"
+            variant="outlined"
+            placeholder="Search for an activity..."
+            fullWidth
+            onChange={(e) => setSearchQuery(e.target.value)}
+            value={searchQuery}
+            size="lg"
           />
 
           {/* Search Button */}
           <Button
-            variant="contained"
+            variant="solid"
             color="primary"
             onClick={fetchSearchedActivities}
             sx={{ ml: 2 }}
@@ -152,87 +168,27 @@ const SearchActivities = () => {
         </Box>
 
         {/* Activity Table */}
-        <TableContainer component={Paper} style={{ borderRadius: 20 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>
-                  Price
-                  <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
-                </TableCell>
-                <TableCell>Is Open</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Tags</TableCell>
-                <TableCell>Discount</TableCell>
-                <TableCell>Dates and Times</TableCell>
-                <TableCell>Duration</TableCell>
-                <TableCell>Location</TableCell>
-                <TableCell>Rating</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {activities.map((activity) => activity.flag===false && activity.advertiserDeleted===false && activity.deletedActivity===false? (
-                    <TableRow key={activity._id}>
-                      <TableCell>{activity.name}</TableCell>
-                      <TableCell>
-                        {(
-                          activity.price * (exchangeRates[currency] || 1)
-                        ).toFixed(2)}{" "}
-                        {currency}
-                      </TableCell>
-                      <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
-                      <TableCell>{activity.category}</TableCell>
-                      <TableCell>{activity.tags.join(", ")}</TableCell>
-                      <TableCell>{activity.specialDiscount}</TableCell>
-                      <TableCell>
-                        {activity.date
-                          ? (() => {
-                              const dateObj = new Date(activity.date);
-                              const date = dateObj.toISOString().split("T")[0];
-                              const time = dateObj.toTimeString().split(" ")[0];
-                              return (
-                                <div>
-                                  {date} at {time}
-                                </div>
-                              );
-                            })()
-                          : "No available date and time"}
-                      </TableCell>
-                      <TableCell>{activity.duration}</TableCell>
-                      <TableCell>{activity.location}</TableCell>
-                      <TableCell>
-                        <Rating
-                          value={activity.averageRating}
-                          precision={0.1}
-                          readOnly
-                        />
-                      </TableCell>
-                      {id === undefined ? (
-                        <TableCell>
-                          <Button
-                            variant="outlined"
-                            onClick={() => handleShareLink(activity._id)}
-                          >
-                            Share Via Link
-                          </Button>
-                          <Button
-                            variant="outlined"
-                            onClick={() => handleShareEmail(activity._id)}
-                          >
-                            Share Via Email
-                          </Button>
-                        </TableCell>
-                      ) : null}
-                    </TableRow>
-                  ):null)// We don't output a row when it has `activity.flag` is true (ie activity is inappropriate) or when the activity's advertiser has left the system or the activity has been deleted but cannot be removed from database since it is booked my previous tourists
-                }
-                 </TableBody>
-          </Table>
-        </TableContainer>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: "24px", // Adjust the gap between items as needed
+            paddingBottom: 24,
+          }}
+        >
+          {
+            activities.map((activity) =>
+              activity.flag === false &&
+              activity.advertiserDeleted === false &&
+              activity.deletedActivity === false ? (
+                <ActivityCard activity={activity} />
+              ) : null
+            ) // We don't output a row when it has `activity.flag` is true (ie activity is inappropriate) or when the activity's advertiser has left the system or the activity has been deleted but cannot be removed from database since it is booked my previous tourists
+          }
+        </div>
       </Box>
       <Help />
-    </>
+    </div>
   );
 };
 

@@ -26,6 +26,7 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import Sidebar from "../../Components/Sidebar.js";
 import Help from "../../Components/HelpIcon.js";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 
 const DeleteCategory = () => {
   const [categories, setCategories] = useState([]);
@@ -176,7 +177,17 @@ const DeleteCategory = () => {
   };
 
   return (
-    <>
+    <Box
+    sx={{
+      height: "100vh",
+      backgroundColor: "#f4f6f9", // Light grey background for better contrast
+      paddingTop: "64px", // Adjust for navbar height
+    }}
+  >
+    <TouristNavBar />
+    <TouristSidebar/>
+
+  
       <Sidebar />
       <Box sx={{ p: 6, maxWidth: 1200 }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
@@ -290,7 +301,9 @@ const DeleteCategory = () => {
         </Dialog>
       </Box>
       <Help />
-    </>
+      </Box>
+
+    
   );
 };
 

@@ -13,12 +13,16 @@ import {
   TableRow,
   Paper,
   MenuItem,
-  Select,
   InputLabel,
   FormControl,
   Button,
   Rating,
 } from "@mui/material";
+import Select, { selectClasses } from "@mui/joy/Select";
+import Option from "@mui/joy/Option";
+import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
+
+import ActivityCard from "../../Components/activityCard";
 import { useNavigate } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon";
@@ -115,149 +119,101 @@ const SortActivities = () => {
 
   return (
     <>
-      <Box
-        sx={{
-          p: 6,
-          maxWidth: "110vh",
-          height: "100vh",
+      <h4
+        variant="h4"
+        className="oswald-Titles"
+        style={{
+          textAlign: "center",
+          marginBottom: "40px",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            mb: 3,
-          }}
-        >
-          <Typography variant="h4">Upcoming Activities</Typography>
-        </Box>
-
-        {/* Sorting Controls */}
-        <Box
-          sx={{
-            display: "flex",
-            overflowY: "visible",
-            justifyContent: "space-between",
-            mb: 3,
-          }}
-        >
-          <FormControl sx={{ minWidth: 150 }}>
-            <InputLabel id="sort-by-label">Sort By</InputLabel>
-            <Select
-              labelId="sort-by-label"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              label="Sort By"
-            >
-              <MenuItem value="date">Date</MenuItem>
-              <MenuItem value="price">Price</MenuItem>
-              <MenuItem value="name">Name</MenuItem>
-              <MenuItem value="duration">Duration</MenuItem>
-              <MenuItem value="category">Category</MenuItem>
-              <MenuItem value="specialDiscount">Discount</MenuItem>
-              <MenuItem value="averageRating">Rating</MenuItem>
-            </Select>
-          </FormControl>
-
-          <FormControl sx={{ minWidth: 150 }}>
-            <InputLabel id="order-label">Order</InputLabel>
-            <Select
-              labelId="order-label"
-              value={order}
-              onChange={(e) => setOrder(e.target.value)}
-              label="Order"
-            >
-              <MenuItem value="asc">Ascending</MenuItem>
-              <MenuItem value="desc">Descending</MenuItem>
-            </Select>
-          </FormControl>
-
-          <Button
-            variant="contained"
+        Upcoming Activities
+      </h4>
+      {/* Sorting Controls */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          mb: 3,
+        }}
+      >
+        <FormControl sx={{ minWidth: 150 }}>
+          <Select
+            indicator={<KeyboardArrowDown />}
+            placeholder="Sort By"
             color="primary"
-            onClick={fetchSortedActivities}
-          >
-            Sort
-          </Button>
-        </Box>
-
-        {/* Activity Table */}
-        <TableContainer style={{ borderRadius: 20 }} component={Paper}>
-          <Table
-            style={{
-              width: "100%",
-              textAlign: "center",
-              borderSpacing: "10px 5px",
+            onChange={(e, newValue) => {
+              setSortBy(newValue);
+            }}
+            sx={{
+              width: 240,
+              [`& .${selectClasses.indicator}`]: {
+                transition: "0.2s",
+                [`&.${selectClasses.expanded}`]: {
+                  transform: "rotate(-180deg)",
+                },
+              },
             }}
           >
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>
-                  Price
-                  <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
-                </TableCell>
-                <TableCell>Is open</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Tags</TableCell>
-                <TableCell>Discount</TableCell>
-                <TableCell>Dates and Times</TableCell>
-                <TableCell>Duration</TableCell>
-                <TableCell>Location</TableCell>
-                <TableCell>Rating</TableCell>
-                <TableCell>Booking</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {activities.map((activity) => activity.flag === false && activity.advertiserDeleted === false && activity.deletedActivity === false ? (
-                <TableRow key={activity._id}>
-                  <TableCell>{activity.name}</TableCell>
-                  <TableCell>
-                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
-                  </TableCell>
-                  <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
-                  <TableCell>{activity.category}</TableCell>
-                  <TableCell>{activity.tags.join(", ")}</TableCell>
-                  <TableCell>{activity.specialDiscount}</TableCell>
-                  <TableCell>{activity.date ? (() => {
-                    const dateObj = new Date(activity.date);
-                    const date = dateObj.toISOString().split('T')[0];
-                    const time = dateObj.toTimeString().split(' ')[0];
-                    return (
-                      <div>
-                        {date} at {time}
-                      </div>
-                    );
-                  })()
-                    : 'No available date and time' ? (() => {
-                      const dateObj = new Date(activity.date);
-                      const date = dateObj.toISOString().split('T')[0];
-                      const time = dateObj.toTimeString().split(' ')[0];
-                      return (
-                        <div>
-                          {date} at {time}
-                        </div>
-                      );
-                    })()
-                      : 'No available date and time'}</TableCell>
+            <Option value="date">Date</Option>
+            <Option value="price">Price</Option>
+            <Option value="name">Name</Option>
+            <Option value="duration">Duration</Option>
+            <Option value="category">Category</Option>
+            <Option value="specialDiscount">Discount</Option>
+            <Option value="averageRating">Rating</Option>
+          </Select>
+        </FormControl>
 
-                  <TableCell>{activity.duration}</TableCell>
-                  <TableCell>{activity.location}</TableCell>
-                  <TableCell>
-                    <Rating value={activity.averageRating} precision={0.1} readOnly />
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={() => handleBooking(activity._id)}>
-                      Book Now
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ) : null) // We don't output a row when it has `activity.flag` is true (ie activity is inappropriate) or when the activity's advertiser has left the system or the activity has been deleted but cannot be removed from database since it is booked my previous tourists
-              }
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <FormControl sx={{ minWidth: 150 }}>
+          <Select
+            labelId="order-label"
+            placeholder="Order"
+            onChange={(e, value) => {
+              setOrder(value);
+            }}
+            color="primary"
+            indicator={<KeyboardArrowDown />}
+            sx={{
+              width: 240,
+              [`& .${selectClasses.indicator}`]: {
+                transition: "0.2s",
+                [`&.${selectClasses.expanded}`]: {
+                  transform: "rotate(-180deg)",
+                },
+              },
+            }}
+          >
+            <Option value="asc">Ascending</Option>
+            <Option value="desc">Descending</Option>
+          </Select>
+        </FormControl>
+
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={fetchSortedActivities}
+        >
+          Sort
+        </Button>
       </Box>
+      {/* Activity Table */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          gap: "24px", // Adjust the gap between items as needed
+        }}
+      >
+        {activities.map((activity) =>
+          activity.flag === false &&
+          activity.advertiserDeleted === false &&
+          activity.deletedActivity === false
+            ? (console.log("this is the average rating ", activity.ratings[1]),
+              (<ActivityCard activity={activity} />))
+            : null
+        )}
+      </div>
       <Help />
     </>
   );
