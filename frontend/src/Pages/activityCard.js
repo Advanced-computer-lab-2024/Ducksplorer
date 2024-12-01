@@ -8,18 +8,27 @@ import Typography from "@mui/joy/Typography";
 import IconButton from "@mui/joy/IconButton";
 import Chip from "@mui/joy/Chip";
 import Link from "@mui/joy/Link";
-import Notifications from "@mui/icons-material/Notifications";
+import Add from "@mui/icons-material/Add";
 import StarIcon from "@mui/icons-material/Star";
+import Done from "@mui/icons-material/Done";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
-import { Rating } from "@mui/material";
+import { Rating, Tooltip } from "@mui/material";
 import Button from "@mui/joy/Button";
+
+// ActivityCard component
 export default function ActivityCard({
   image = "https://images.unsplash.com/photo-1532614338840-ab30cf10ed36?auto=format&fit=crop&w=318",
   title = "Mountain Hiking",
   location = "Himalayas",
   price = "$100",
   tags = ["pool", "Budget friendly"],
+  rating = "3.5",
 }) {
+  const [saved, setSaved] = React.useState(false);
+
+  const handleSaveClick = () => {
+    setSaved(!saved);
+  };
   const TheCard = () => {
     return (
       <div>
@@ -27,17 +36,36 @@ export default function ActivityCard({
           variant="outlined"
           sx={{
             width: "20vw",
-            maxHeight: "40vh",
+            height: "400px",
           }}
         >
           <CardOverflow>
             <AspectRatio ratio="2">
               <img src={image} loading="lazy" alt="" />
             </AspectRatio>
+            <Tooltip title="Save Activity">
+              <IconButton
+                size="md"
+                variant="solid"
+                color="primary"
+                sx={{
+                  position: "absolute",
+                  zIndex: 2,
+                  borderRadius: "50%",
+                  right: "1rem",
+                  bottom: 0,
+                  transform: "translateY(50%)",
+                }}
+              >
+                <Add />
+              </IconButton>
+            </Tooltip>
+
             <IconButton
               size="md"
-              variant="solid"
-              color="primary"
+              variant={saved ? "soft" : "solid"}
+              color={saved ? "neutral" : "primary"}
+              onClick={handleSaveClick}
               sx={{
                 position: "absolute",
                 zIndex: 2,
@@ -45,9 +73,13 @@ export default function ActivityCard({
                 right: "1rem",
                 bottom: 0,
                 transform: "translateY(50%)",
+                transition: "transform 0.3s",
+                "&:active": {
+                  transform: "translateY(50%) scale(0.9)",
+                },
               }}
             >
-              <Notifications />
+              {saved ? <Done color="primary" /> : <Add />}
             </IconButton>
           </CardOverflow>
           <div style={{ height: "10%" }}>
@@ -55,16 +87,15 @@ export default function ActivityCard({
               style={{
                 display: "flex",
                 flexDirection: "column",
-                marginBottom: 10,
               }}
             >
-              {/* <Typography
-            level="body-sm"
-            sx={{ height: "20%", transform: "translateY(2px)" }}
-          >
-            <Link href="#multiple-actions">{location}</Link>
-          </Typography> */}
-              <div style={{ display: "flex", alignItems: "center" }}>
+              <div
+                style={{
+                  display: "flex",
+
+                  flexDirection: "column",
+                }}
+              >
                 <h4
                   style={{
                     fontWeight: "bold",
@@ -74,36 +105,46 @@ export default function ActivityCard({
                 >
                   {title}
                 </h4>
+
+                <Rating
+                  value={rating}
+                  icon={<StarIcon sx={{ color: "orange" }} />}
+                  emptyIcon={<StarOutlineIcon />}
+                  readOnly
+                  precision={0.5}
+                />
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginTop: "5px",
+                  }}
+                >
+                  {tags.map((tag, index) => (
+                    <Chip
+                      component="span"
+                      size="sm"
+                      variant="outlined"
+                      color="primary"
+                      sx={{ marginRight: 1 }}
+                    >
+                      {tag}
+                    </Chip>
+                  ))}
+                </div>
               </div>
-              <Rating
-                value="3.5"
-                icon={<StarIcon sx={{ color: "orange" }} />}
-                emptyIcon={<StarOutlineIcon />}
-                readOnly
-                precision={0.5}
-              />
             </div>
           </div>
           <div>
-            <div style={{ display: "flex", flexDirection: "row" }}>
-              {tags.map((tag, index) => (
-                <Chip
-                  component="span"
-                  size="sm"
-                  variant="outlined"
-                  color="primary"
-                  sx={{ marginRight: 1 }}
-                >
-                  {tag}
-                </Chip>
-              ))}
-            </div>
             <div
               style={{
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
+                position: "absolute",
+                bottom: 10,
+                width: "90%",
               }}
             >
               <Typography
@@ -132,30 +173,9 @@ export default function ActivityCard({
               </Button>
             </div>
           </div>
-          <CardOverflow variant="soft">
-            <Divider inset="context" />
-          </CardOverflow>
         </Card>
       </div>
     );
   };
-  return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(4, 1fr)",
-        gap: "24px", // Adjust the gap between items as needed
-      }}
-    >
-      <TheCard />
-      <TheCard />
-      <TheCard />
-      <TheCard />
-      <TheCard />
-      <TheCard />
-      <TheCard />
-      <TheCard />
-      <TheCard />
-    </div>
-  );
+  return <TheCard />;
 }
