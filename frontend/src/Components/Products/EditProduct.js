@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { TextField, Button, Stack } from "@mui/material";
+import { TextField, Button, Stack , Box} from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
 import UploadFile from "../ProductUploadImage";
+import TouristNavBar from "../TouristNavBar";
+import TouristSidebar from "../Sidebars/TouristSidebar";
 
 let picture = "";
 
@@ -77,6 +79,16 @@ const EditProduct = () => {
   };
 
   return (
+    <Box
+    sx={{
+      height: "100vh",
+      backgroundColor: "#f4f6f9", // Light grey background for better contrast
+      paddingTop: "64px", // Adjust for navbar height
+    }}
+  >
+    <TouristNavBar />
+    <TouristSidebar/>
+
     <div
       style={{
         backgroundImage: "url(../../public/Images/bg-intro-desktop.png)", // Update with your image path
@@ -88,7 +100,6 @@ const EditProduct = () => {
         alignItems: "center",
       }}
     >
-      <Button onClick={handleBackButtonClick}>Back</Button>
 
       <Stack
         spacing={1}
@@ -154,6 +165,7 @@ const EditProduct = () => {
         </Button>
       </Stack>
     </div>
+    </Box>
   );
 };
 

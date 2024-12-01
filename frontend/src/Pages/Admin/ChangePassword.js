@@ -7,7 +7,9 @@ import Iconify from "../../Components/TopNav/iconify.js";
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import axios from 'axios';
+import AdminNavbar from '../../Components/TopNav/Adminnavbar.js';
 import Sidebar from '../../Components/Sidebars/Sidebar';
+import { Box } from '@mui/material';
 
 
 function ChangePassword() {
@@ -49,8 +51,17 @@ const validatePassword = () => {
 
 
   return (
-    <>
-    <Sidebar />
+    <Box
+  sx={{
+    minHeight: "100vh",
+    backgroundColor: "#ffffff",
+    paddingTop: "64px", // Adjust for navbar height
+    overflowY: "auto",
+  }}
+>
+  {/* Navbar */}
+  <AdminNavbar />
+      <Sidebar />
        <div className="text-center">
         <img
           src="logo3.png"
@@ -137,7 +148,7 @@ const validatePassword = () => {
           </Button>
         </Stack>
       </div>
-    </>
+    </Box>
   );
 }
 

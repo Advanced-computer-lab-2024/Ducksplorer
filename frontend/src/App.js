@@ -56,7 +56,7 @@ import MyPurchases from "./Pages/Products/MyPurchases.js";
 import ComplaintsDashboard from "./Components/Complaints/ComplaintDashboard.js";
 import ComplaintDetails from "./Components/Complaints/ComplaintDetails.js";
 import MyComplaints from "./Components/Complaints/MyComplaints.js";
-
+import "bootstrap/dist/css/bootstrap.min.css";
 import FlightsBooking from "./Pages/ThirdParty/FlightsBooking.js";
 import HotelsBooking from "./Pages/ThirdParty/HotelsBooking.js";
 //import TouristNavBar from "./Components/TouristNavBar.js";
@@ -87,6 +87,10 @@ import UserReport from "./Pages/Admin/UsersReport.js"
 
 
 import SellerProductReport from "./Pages/Products/sellerReport.js"
+import EditItinerary from "./Pages/Itinerary/editItinerary.js";
+
+import LandingPage from "./Pages/LandingPage.js";
+import ActivityCard from "../src/Components/activityCard";
 
 function App() {
   const { authUser } = useAuthContext();
@@ -94,6 +98,7 @@ function App() {
     <React.StrictMode>
       <BrowserRouter>
         <Routes>
+          {/* <Route index element={<Hotels />} /> */}
           <Route path="/notifications" element={<MyNotifications />} />
           <Route
             path="/changePassword"
@@ -123,6 +128,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/editItinerary" element={<EditItinerary />} />
           <Route
             path="/viewUpcomingItinerary"
             element={
@@ -131,7 +137,16 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/tourGuideReport" element={<TourGuideItineraryReport />} />
+          <Route
+            path="/tourGuideReport"
+            element={<TourGuideItineraryReport />}
+          />
+          <Route path="/adminReport" element={<AdminReport />} />
+          <Route path="/userReport" element={<UserReport />} />
+          <Route
+            path="/tourGuideReport"
+            element={<TourGuideItineraryReport />}
+          />
           <Route path="/adminReport" element={<AdminReport />} />
           <Route path="/userReport" element={<UserReport />} />
           <Route
@@ -624,6 +639,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/ActivityCardTest" element={<ActivityCard />} />
           <Route
             path="/sellerDashboard"
             element={

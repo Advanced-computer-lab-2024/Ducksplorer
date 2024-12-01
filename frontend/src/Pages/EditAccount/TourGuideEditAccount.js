@@ -180,7 +180,6 @@ const TourGuideEditProfile = () => {
 
   return (
     <Box sx={{ height: "100vh" }}>
-      <Link to="/tourGuideDashboard"> Back </Link>
       <Box sx={{ p: 4, justifyContent: "center" }}>
         <Paper
           elevation={4}
@@ -380,12 +379,7 @@ const TourGuideEditProfile = () => {
           </Box>
 
           <Box sx={{ textAlign: "center", mt: 2 }}>
-            <Link
-              to="/tourGuideDashboard"
-              style={{ textDecoration: "none", color: "primary.main" }}
-            >
-              Back to Dashboard
-            </Link>
+          
           </Box>
         </Paper>
       </Box>
