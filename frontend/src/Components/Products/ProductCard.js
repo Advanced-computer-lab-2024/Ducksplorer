@@ -33,7 +33,7 @@ const ProductCard = ({
   showRemoveWishlist,
   showAverageRatingNo, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
   removeProductFromWishlist,
-  showPurchase
+  showPurchase,
 }) => {
   const [isFormVisible, setFormVisible] = useState(false); // Controls form visibility
   const [quantity, setQuantity] = useState(1); // Holds the selected quantity
@@ -42,14 +42,34 @@ const ProductCard = ({
   const [currency, setCurrency] = useState("EGP");
   const location = useLocation();
   const isGuest = localStorage.getItem("guest") === "true";
-
+  const [purchaseStatus, setPurchaseStatus] = useState(null);
   useEffect(() => {
     if (inCartQuantity !== undefined) {
       setNeededQuantity(inCartQuantity);
     }
   }, [inCartQuantity]);
 
+  useEffect(() => {
+    const fetchPurchaseStatus = async () => {
+      const userJson = localStorage.getItem("user");
+      const user = JSON.parse(userJson);
+      const username = user.username;
 
+      try {
+        const response = await axios.get(`http://localhost:8000/touristRoutes/myPurchases/${username}`);
+        console.log(response.data);
+        if (response.status === 200) {
+          setPurchaseStatus(response.data[0].status);
+        } else {
+          setPurchaseStatus("Not Purchased");
+        }
+      } catch (error) {
+        console.error("Failed to fetch purchase status:", error);
+        setPurchaseStatus("Error fetching status");
+      }
+    };
+    fetchPurchaseStatus();
+  }, [product._id]);
 
   const handleCartConfirmQuantity = async (e) => {
     e.preventDefault();
@@ -464,6 +484,14 @@ const ProductCard = ({
               </Button>
             </div>
           )}
+          <div>
+          {role === "Tourist" && showPurchase &&(
+            <Typography variant="body1">
+            Status: {purchaseStatus}
+          </Typography>
+          )}
+
+          </div>
           {!isGuest && showAddToCart && (
             <Button
               variant="contained"
@@ -586,6 +614,7 @@ const ProductCard = ({
           )}
 
           </div>
+          
         </CardContent>
       </div>
     </Card>

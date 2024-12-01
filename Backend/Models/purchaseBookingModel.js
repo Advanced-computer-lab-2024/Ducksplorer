@@ -24,7 +24,18 @@ const purchaseBookingSchema = new Schema(
         chosenQuantity: {
             type: Number,
             required: true
-        }
+        },
+        status: {
+            type: String,
+            enum: ["Processing", "Delivering", "Delivered"], // Predefined status options
+            default: "Processing", // Default status
+        },
+        orderNumber: {
+            type: Number,
+            required: false,
+            default: null,
+        },
+
     },
     { timestamps: true }
 );

@@ -155,10 +155,10 @@ const updateProductQuantity = async (req, res) => {
 
 const addPurchase2 = async (req, res) => {
   try {
-    const { userName, productId, chosenQuantity } = req.body;
+    const { userName, productId, chosenQuantity, orderNumber } = req.body;
 
     // Validate request body
-    if (!userName || !productId || !chosenQuantity) {
+    if (!userName || !productId || !chosenQuantity || !orderNumber) {
       return res.status(400).json({ error: "Missing required fields" });
     }
     const chosenQuantitynum = +chosenQuantity;
@@ -178,6 +178,7 @@ const addPurchase2 = async (req, res) => {
       chosenDate: new Date(), // Current date
       chosenPrice,
       chosenQuantity,
+      orderNumber,
     });
 
     // Save the purchase booking to the database

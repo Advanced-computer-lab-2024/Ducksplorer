@@ -32,6 +32,10 @@ const CartPage = () => {
 
   const handleConfirmCheckout = async () => {
     try {
+      const orderNumberStr = localStorage.getItem('orderNumber') || 0; // Get the order number from localStorage
+      const orderNumber = +orderNumberStr;
+      localStorage.setItem('orderNumber', orderNumber + 1); // Increment the order number
+      
       for (const item of cartProducts) {
         // Extract details
         const { product, quantity } = item;
@@ -41,6 +45,8 @@ const CartPage = () => {
           userName,
           productId: product._id,
           chosenQuantity: quantity,
+          orderNumber: orderNumber,
+          
         });
         await axios.delete("http://localhost:8000/touristRoutes/cart", { params: { userName ,productId: product._id } }); // Clear product from cart
       }

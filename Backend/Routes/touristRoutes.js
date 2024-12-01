@@ -12,6 +12,8 @@ const {
 const {
   getMyPurchases,
   updatePurchase,
+  getGroupedPurchases,
+  // getMyOrder,
 } = require("../Controllers/purchasesController");
 
 const {
@@ -59,6 +61,9 @@ router.put("/addPurchase",addPurchase2);
 
 //router.patch("/loyalty/:name/:userName",receiveLoyaltyPoints);
 router.get("/myPurchases/:buyer", getMyPurchases);
+// router.get("/myOrder", getMyOrder);
+router.get("/groupedPurchases/:buyer", getGroupedPurchases);
+
 router.put("/updatePurchases/:buyer", updatePurchase);
 router.put("/updateProducts/:id", touristUpdateProductRating);
 router.get("/getRating/:id/rating/:buyer", getProductRating);

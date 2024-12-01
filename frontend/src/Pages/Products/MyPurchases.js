@@ -7,6 +7,7 @@ import Help from "../../Components/HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar";
 function MyPurchases() {
   const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
@@ -62,6 +63,7 @@ function MyPurchases() {
                   showRating={true}
                   showReview={true}
                   showAverageRatingNo={true}
+                  showPurchase={true}
                 />
               </div>
             ))
