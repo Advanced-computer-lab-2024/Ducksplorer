@@ -22,7 +22,7 @@ import Select, { selectClasses } from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 
-import ActivityCard from "../activityCard";
+import ActivityCard from "../../Components/activityCard";
 import { useNavigate } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon";
@@ -141,6 +141,7 @@ const SortActivities = () => {
           <Select
             indicator={<KeyboardArrowDown />}
             placeholder="Sort By"
+            color="primary"
             onChange={(e, newValue) => {
               setSortBy(newValue);
             }}
@@ -171,6 +172,7 @@ const SortActivities = () => {
             onChange={(e, value) => {
               setOrder(value);
             }}
+            color="primary"
             indicator={<KeyboardArrowDown />}
             sx={{
               width: 240,
