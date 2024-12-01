@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  Box,
   Button,
   Menu,
   MenuItem,
@@ -13,6 +14,9 @@ import { message } from "antd";
 import axios from "axios";
 import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
 import Help from "../../Components/HelpIcon";
+import TouristNavBar from "../../Components/TouristNavBar";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
+
 // Inline styles
 // const pageStyle = {
 //   backgroundColor: 'yellow',
@@ -97,6 +101,15 @@ const TouristAllProducts = () => {
   };
 
   return (
+    <Box
+    sx={{
+      height: "100vh",
+      backgroundColor: "#f9f9f9", // Light background for better contrast
+      paddingTop: "64px", // Adjust for navbar height
+    }}
+  >
+ <TouristNavBar />
+ <TouristSidebar/>
     <div>
       {/* Search Container at the Top */}
       <Button onClick={handleBackButtonClick}>Back</Button>
@@ -106,7 +119,7 @@ const TouristAllProducts = () => {
             label="Search for a product"
             variant="outlined"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
             style={{ marginRight: "10px" }}
           />
           <Button
@@ -150,76 +163,154 @@ const TouristAllProducts = () => {
 
       {/* Sidebar with Drawer */}
       <Drawer
-        variant="permanent"
+  variant="permanent"
+  sx={{
+    width: 280, // Increased width for better spacing
+    flexShrink: 0,
+    [`& .MuiDrawer-paper`]: {
+      width: 280,
+      boxSizing: "border-box",
+      backgroundColor: "#ffffff", // Clean white background
+      boxShadow: "2px 0 8px rgba(0, 0, 0, 0.1)", // Subtle shadow for depth
+      padding: "16px", // Padding inside the drawer
+    },
+  }}
+>
+  <Box>
+    {/* Sidebar Title */}
+    <Typography
+      variant="h6"
+      sx={{
+        fontWeight: "bold",
+        marginBottom: 3,
+        color: "#1a237e", // Dark blue for emphasis
+        textAlign: "center", // Centered title
+      }}
+    >
+      Actions
+    </Typography>
+
+    {/* Buttons */}
+    <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+      <Button
+        fullWidth
+        variant="contained"
+        onClick={handleViewAllProducts}
         sx={{
-          width: sidebarStyle.width,
-          flexShrink: 0,
-          [`& .MuiDrawer-paper`]: {
-            width: sidebarStyle.width,
-            boxSizing: "border-box",
-            backgroundColor: sidebarStyle.backgroundColor,
+          backgroundColor: "#1a237e",
+          color: "white",
+          fontWeight: "bold",
+          borderRadius: "8px",
+          padding: "12px 16px",
+          textTransform: "none",
+          "&:hover": {
+            backgroundColor: "#0d47a1",
           },
         }}
       >
-        <div style={{ padding: "10px" }}>
-          <Typography variant="h6" sx={{ paddingBottom: 2 }}>
-            Actions
-          </Typography>
+        View All Products
+      </Button>
 
-          <Button
-            fullWidth
-            variant="contained"
-            onClick={handleViewAllProducts}
-            style={sidebarButtonStyle}
-          >
-            View All Products
-          </Button>
-          <Button
-            fullWidth
-            variant="contained"
-            onClick={handleFilterClick}
-            style={sidebarButtonStyle}
-          >
-            Filter Products
-          </Button>
-          <Button
-            fullWidth
-            variant="contained"
-            onClick={handleSearchProduct}
-            style={sidebarButtonStyle}
-          >
-            Search Products
-          </Button>
-          <Button
+      <Button
+        fullWidth
+        variant="contained"
+        onClick={handleFilterClick}
+        sx={{
+          backgroundColor: "#1a237e",
+          color: "white",
+          fontWeight: "bold",
+          borderRadius: "8px",
+          padding: "12px 16px",
+          textTransform: "none",
+          "&:hover": {
+            backgroundColor: "#0d47a1",
+          },
+        }}
+      >
+        Filter Products
+      </Button>
+
+      <Button
+        fullWidth
+        variant="contained"
+        onClick={handleSearchProduct}
+        sx={{
+          backgroundColor: "#1a237e",
+          color: "white",
+          fontWeight: "bold",
+          borderRadius: "8px",
+          padding: "12px 16px",
+          textTransform: "none",
+          "&:hover": {
+            backgroundColor: "#0d47a1",
+          },
+        }}
+      >
+        Search Products
+      </Button>
+
+      <Button
+        fullWidth
+        variant="contained"
+        color="primary"
+        onClick={handleSortProducts}
+        sx={{
+          backgroundColor: "#1a237e",
+          color: "white",
+          fontWeight: "bold",
+          borderRadius: "8px",
+          padding: "12px 16px",
+          textTransform: "none",
+          "&:hover": {
+            backgroundColor: "#0d47a1",
+          },
+        }}
+      >
+        Sort Products
+      </Button>
+
+      {!isGuest && (
+        <Button
           fullWidth
           variant="contained"
-          color="primary"
-          onClick={handleSortProducts}
-          style={sidebarButtonStyle}
+          onClick={handleMyPurchases}
+          sx={{
+            backgroundColor: "#1a237e",
+            color: "white",
+            fontWeight: "bold",
+            borderRadius: "8px",
+            padding: "12px 16px",
+            textTransform: "none",
+            "&:hover": {
+              backgroundColor: "#0d47a1",
+            },
+          }}
         >
-          Sort Products
+          My Purchases
         </Button>
-        {!isGuest && (
-          <Button
-            fullWidth
-            variant="contained"
-            onClick={handleMyPurchases}
-            style={sidebarButtonStyle}
-          >
-            My Purchases
-          </Button>
-        )}
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleFilterClose}
-          >
-            <MenuItem onClick={handleFilterClose}>Price</MenuItem>
-          </Menu>
-        </div>
-      </Drawer>
+      )}
+    </Box>
+
+    {/* Filter Menu */}
+    <Menu
+      anchorEl={anchorEl}
+      open={Boolean(anchorEl)}
+      onClose={handleFilterClose}
+      sx={{
+        "& .MuiPaper-root": {
+          borderRadius: "8px",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+        },
+      }}
+    >
+      <MenuItem onClick={handleFilterClose}>Price</MenuItem>
+    </Menu>
+  </Box>
+</Drawer>
+
       <Help />
     </div>
+  </Box>
   );
 };
 

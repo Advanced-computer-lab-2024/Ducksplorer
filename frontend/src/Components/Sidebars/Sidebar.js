@@ -1,18 +1,26 @@
-import React from 'react';
-import { Drawer, Typography, Divider, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
-import { Link } from 'react-router-dom';
+import React from "react";
+import {
+  Drawer,
+  Typography,
+  Divider,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+import { Link } from "react-router-dom";
 //import DashboardIcon from '@mui/icons-material/Dashboard';
-import PeopleIcon from '@mui/icons-material/People';
-import DeleteIcon from '@mui/icons-material/Delete';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import CategoryIcon from '@mui/icons-material/Category';
-import LabelIcon from '@mui/icons-material/Label';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import EventNoteIcon from '@mui/icons-material/EventNote';
+import PeopleIcon from "@mui/icons-material/People";
+import DeleteIcon from "@mui/icons-material/Delete";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import CategoryIcon from "@mui/icons-material/Category";
+import LabelIcon from "@mui/icons-material/Label";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import EventNoteIcon from "@mui/icons-material/EventNote";
 import WidgetsIcon from "@mui/icons-material/Widgets";
-import ReportIcon from '@mui/icons-material/Report'; // Icon for Complaints
-import LockIcon from '@mui/icons-material/Lock'; // Icon for Change Password
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import ReportIcon from "@mui/icons-material/Report"; // Icon for Complaints
+import LockIcon from "@mui/icons-material/Lock"; // Icon for Change Password
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 
 const drawerWidth = 300;
 
@@ -23,7 +31,7 @@ const Sidebar = () => {
       sx={{
         width: drawerWidth,
         flexShrink: 0,
-        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" },
       }}
     >
       <div>
@@ -118,7 +126,6 @@ const Sidebar = () => {
             </ListItemIcon>
             <ListItemText primary="Users Report " />
           </ListItem>
-
         </List>
         <Divider />
       </div>
