@@ -57,17 +57,41 @@ const AdminReport = () => {
   const [activityCurrency, setActivityCurrency] = useState("EGP");
 
   //filtering consts
-  const [month, setMonth] = useState("");
-  const [year, setYear] = useState("");
-  const [date, setDate] = useState(null);
-  const [filterAnchorEl, setFilterAnchorEl] = useState(null);
+  const [activityMonth, activitySetMonth] = useState("");
+  const [activityYear, activitySetYear] = useState("");
+  const [activityDate, activitySetDate] = useState(null);
+  const [activityFilterAnchorEl, activitySetFilterAnchorEl] = useState(null);
 
-  const [selectedFilters, setSelectedFilters] = useState([]);
+  const [itineraryMonth, itinerarySetMonth] = useState("");
+  const [itineraryYear, itinerarySetYear] = useState("");
+  const [itineraryDate, itinerarySetDate] = useState(null);
+  const [itineraryFilterAnchorEl, itinerarySetFilterAnchorEl] = useState(null);
 
-  const [filterType, setFilterType] = useState("");
-  const [filtersApplied, setFiltersApplied] = useState(false);
-  const [loading, setLoading] = useState(false); // State for loading status
-  const [errorMessage, setErrorMessage] = useState("");  // State for error message
+  const [productMonth, productSetMonth] = useState("");
+  const [productYear, productSetYear] = useState("");
+  const [productDate, productSetDate] = useState(null);
+  const [productFilterAnchorEl, productSetFilterAnchorEl] = useState(null);
+
+  const [activitySelectedFilters, activitySetSelectedFilters] = useState([]);
+  const [itinerarySelectedFilters, itinerarySetSelectedFilters] = useState([]);
+  const [productSelectedFilters, productSetSelectedFilters] = useState([]);
+
+  const [activityFilterType, activitySetFilterType] = useState("");
+  const [activityFiltersApplied, activitySetFiltersApplied] = useState(false);
+
+  const [itineraryFilterType, itinerarySetFilterType] = useState("");
+  const [itineraryFiltersApplied, itinerarySetFiltersApplied] = useState(false);
+
+  const [productFilterType, productSetFilterType] = useState("");
+  const [productFiltersApplied, productSetFiltersApplied] = useState(false);
+
+  const [activityLoading, activitySetLoading] = useState(false); // State for loading status
+  const [itineraryLoading, itinerarySetLoading] = useState(false); // State for loading status
+  const [productLoading, productSetLoading] = useState(false); // State for loading status
+
+  const [errorActivityMessage, activitySetErrorMessage] = useState("");  // State for error message
+  const [itineraryErrorMessage, itinerarySetErrorMessage] = useState("");  // State for error message
+  const [productErrorMessage, productSetErrorMessage] = useState("");  // State for error message
 
   useEffect(() => {
     axios
@@ -103,41 +127,52 @@ const AdminReport = () => {
   }, []);
 
   //Filtering handlers
-  const handleFilterChoiceClick = (event) => {
-    setFilterAnchorEl(event.currentTarget);
+  const activityHandleFilterChoiceClick = (event) => {
+    activitySetFilterAnchorEl(event.currentTarget);
   };
-  const handleFilterClose = () => {
-    setFilterAnchorEl(null);
+  const activityHandleFilterClose = () => {
+    activitySetFilterAnchorEl(null);
+  };
+  const itineraryHandleFilterChoiceClick = (event) => {
+    itinerarySetFilterAnchorEl(event.currentTarget);
+  };
+  const itineraryHandleFilterClose = () => {
+    itinerarySetFilterAnchorEl(null);
+  };
+  const productHandleFilterChoiceClick = (event) => {
+    productSetFilterAnchorEl(event.currentTarget);
+  };
+  const productHandleFilterClose = () => {
+    productSetFilterAnchorEl(null);
   };
 
   //clear all filters
-  const handleClearActivityFilters = async () => {
-    setDate("");
-    setMonth("");
-    setYear("");
-    setSelectedFilters([]);
-    setFiltersApplied(false);
+  const activityHandleClearFilters = async () => {
+    activitySetDate("");
+    activitySetMonth("");
+    activitySetYear("");
+    activitySetSelectedFilters([]);
+    activitySetFiltersApplied(false);
 
     try {
       const response = await axios.get(
         `http://localhost:8000/admin/reportActivities`
       );
-      //const activityData = response.data.map((entry) => entry.activity);
-
+      
       setActivities(response.data);
     } catch (error) {
       console.error("Error resetting activities:", error);
     }
-    handleFilterClose();
+    activityHandleFilterClose();
   };
 
   //clear all filters
-  const handleClearItineraryFilters = async () => {
-    setDate("");
-    setMonth("");
-    setYear("");
-    setSelectedFilters([]);
-    setFiltersApplied(false);
+  const itineraryHandleClearFilters = async () => {
+    itinerarySetDate("");
+    itinerarySetMonth("");
+    itinerarySetYear("");
+    itinerarySetSelectedFilters([]);
+    itinerarySetFiltersApplied(false);
 
     try {
       const response = await axios.get(
@@ -148,48 +183,48 @@ const AdminReport = () => {
     } catch (error) {
       console.error("Error resetting itineraries:", error);
     }
-    handleFilterClose();
+    itineraryHandleFilterClose();
   };
 
   //clear all filters
-  const handleClearProductFilters = async () => {
-    setDate("");
-    setMonth("");
-    setYear("");
-    setSelectedFilters([]);
-    setFiltersApplied(false);
+  const productHandleClearFilters = async () => {
+    productSetDate("");
+    productSetMonth("");
+    productSetYear("");
+    productSetSelectedFilters([]);
+    productSetFiltersApplied(false);
 
     try {
       const response = await axios.get(
         `http://localhost:8000/admin/reportProducts`
       );
 
-      setItineraries(response.data);
+      setProducts(response.data);
     } catch (error) {
       console.error("Error resetting products:", error);
     }
-    handleFilterClose();
+    productHandleFilterClose();
   };
 
   const fetchFilteredActivities = async () => {
-    setLoading(true);
-    setErrorMessage(""); // Reset error message before fetching
+    activitySetLoading(true);
+    activitySetErrorMessage(""); // Reset error message before fetching
 
     try {
       let queryString = "";
 
       // Apply date filter if selected
-      if (date) {
-        queryString += `date=${date}&`;
+      if (activityDate) {
+        queryString += `date=${activityDate}&`;
       }
 
       // Apply month and year filters only if selected
-      else if (month) {
-        queryString += `month=${month}&`;
+      else if (activityMonth) {
+        queryString += `month=${activityMonth}&`;
       }
 
-      if (year) {
-        queryString += `year=${year}&`;
+      if (activityYear) {
+        queryString += `year=${activityYear}&`;
       }
 
       // Remove the trailing '&' if it exists
@@ -204,34 +239,34 @@ const AdminReport = () => {
       setActivities(response.data);
 
       if (response.data.length === 0) {
-        setErrorMessage("No activities found for the selected filters.");
+        activitySetErrorMessage("No activities found for the selected filters.");
       }
     } catch (error) {
-      setErrorMessage("Error fetching activities!");
+      activitySetErrorMessage("Error fetching activities!");
     } finally {
-      setLoading(false);
+      activitySetLoading(false);
     }
   };
 
   const fetchFilteredItineraries = async () => {
-    setLoading(true);
-    setErrorMessage(""); // Reset error message before fetching
+    itinerarySetLoading(true);
+    itinerarySetErrorMessage(""); // Reset error message before fetching
 
     try {
       let queryString = "";
 
       // Apply date filter if selected
-      if (date) {
-        queryString += `date=${date}&`;
+      if (itineraryDate) {
+        queryString += `date=${itineraryDate}&`;
       }
 
       // Apply month and year filters only if selected
-      else if (month) {
-        queryString += `month=${month}&`;
+      else if (itineraryMonth) {
+        queryString += `month=${itineraryMonth}&`;
       }
 
-      if (year) {
-        queryString += `year=${year}&`;
+      if (itineraryYear) {
+        queryString += `year=${itineraryYear}&`;
       }
 
       // Remove the trailing '&' if it exists
@@ -246,34 +281,34 @@ const AdminReport = () => {
       setItineraries(response.data);
 
       if (response.data.length === 0) {
-        setErrorMessage("No itineraries found for the selected filters.");
+        itinerarySetErrorMessage("No itineraries found for the selected filters.");
       }
     } catch (error) {
-      setErrorMessage("Error fetching itineraries!");
+      itinerarySetErrorMessage("Error fetching itineraries!");
     } finally {
-      setLoading(false);
+      itinerarySetLoading(false);
     }
   };
 
   const fetchFilteredProducts = async () => {
-    setLoading(true);
-    setErrorMessage(""); // Reset error message before fetching
+    productSetLoading(true);
+    productSetErrorMessage(""); // Reset error message before fetching
 
     try {
       let queryString = "";
 
       // Apply date filter if selected
-      if (date) {
-        queryString += `date=${date}&`;
+      if (productDate) {
+        queryString += `date=${productDate}&`;
       }
 
       // Apply month and year filters only if selected
-      else if (month) {
-        queryString += `month=${month}&`;
+      else if (productMonth) {
+        queryString += `month=${productMonth}&`;
       }
 
-      if (year) {
-        queryString += `year=${year}&`;
+      if (productYear) {
+        queryString += `year=${productYear}&`;
       }
 
       // Remove the trailing '&' if it exists
@@ -288,35 +323,35 @@ const AdminReport = () => {
       setProducts(response.data);
 
       if (response.data.length === 0) {
-        setErrorMessage("No products found for the selected filters.");
+        productSetErrorMessage("No products found for the selected filters.");
       }
     } catch (error) {
-      setErrorMessage("Error fetching products!");
+      productSetErrorMessage("Error fetching products!");
     } finally {
-      setLoading(false);
+      productSetLoading(false);
     }
   };
 
   useEffect(() => {
-    if (!filtersApplied) return;
-    if (!date && !month && !year) return;
-    if(selectedCategory== "Activities Report")
-    fetchFilteredActivities();
-  }, [filtersApplied, date, month, year]);
+    if (activityFiltersApplied) return;
+    if (!activityDate && !activityMonth && !activityYear) return;
+    if (selectedCategory == "Activities Report")
+      fetchFilteredActivities();
+  }, [activityFiltersApplied, activityDate, activityMonth, activityYear]);
 
   useEffect(() => {
-    if (!filtersApplied) return;
-    if (!date && !month && !year) return;
-    if(selectedCategory== "Itineraries Report")
-    fetchFilteredItineraries();
-}, [filtersApplied, date, month, year]);
+    if (!itineraryFiltersApplied) return;
+    if (!itineraryDate && !itineraryMonth && !itineraryYear) return;
+    if (selectedCategory == "Itineraries Report")
+      fetchFilteredItineraries();
+  }, [itineraryFiltersApplied, itineraryDate, itineraryMonth, itineraryYear]);
 
-useEffect(() => {
-  if (!filtersApplied) return;
-  if (!date && !month && !year) return;
-  if(selectedCategory== "Products Report")
-  fetchFilteredProducts();
-}, [filtersApplied, date, month, year]);
+  useEffect(() => {
+    if (!productFiltersApplied) return;
+    if (!productDate && !productMonth && !productYear) return;
+    if (selectedCategory == "Products Report")
+      fetchFilteredProducts();
+  }, [productFiltersApplied, productDate, productMonth, productYear]);
 
 
   const generateYearOptions = () => {
@@ -327,21 +362,61 @@ useEffect(() => {
     );
   };
 
-  const changeDate = (newDate) => {
-    setDate(newDate);
-    setFiltersApplied(true);
+  const changeActivityDate = (newDate) => {
+    activitySetDate(newDate);
+    activitySetMonth("");
+    activitySetYear("");
+    activitySetFiltersApplied(true);
   };
 
-  const changeMonth = (newMonth) => {
-    setMonth(newMonth);
-    setDate(""); // Reset date if month is selected
-    setFiltersApplied(true);
+  const changeActivityMonth = (newMonth) => {
+    activitySetMonth(newMonth);
+    activitySetDate(""); // Reset date if month is selected
+    activitySetFiltersApplied(true);
   };
 
-  const changeYear = (newYear) => {
-    setYear(newYear);
-    setDate(""); // Reset date if month is selected
-    setFiltersApplied(true);
+  const changeActivityYear = (newYear) => {
+    activitySetYear(newYear);
+    activitySetDate(""); // Reset date if month is selected
+    activitySetFiltersApplied(true);
+  };
+
+  const changeItineraryDate = (newDate) => {
+    itinerarySetDate(newDate);
+    itinerarySetMonth("");
+    itinerarySetYear("");
+    itinerarySetFiltersApplied(true);
+  };
+
+  const changeItineraryMonth = (newMonth) => {
+    itinerarySetMonth(newMonth);
+    itinerarySetDate(""); // Reset date if month is selected
+    itinerarySetFiltersApplied(true);
+  };
+
+  const changeItineraryYear = (newYear) => {
+    itinerarySetYear(newYear);
+    itinerarySetDate(""); // Reset date if month is selected
+    itinerarySetFiltersApplied(true);
+  };
+
+  const changeProductDate = (newDate) => {
+    productSetDate(newDate);
+    productSetMonth("");
+    productSetYear("");
+    productSetFiltersApplied(true);
+  };
+
+  const changeProductMonth = (newMonth) => {
+    productSetMonth(newMonth);
+    productSetDate(""); // Reset date if month is selected
+    productSetFiltersApplied(true);
+  };
+
+  const changeProductYear = (newYear) => {
+    productSetYear(newYear);
+    productSetDate(""); // Reset date if month is selected
+    productSetFiltersApplied(true);
   };
 
   const handlePriceCurrencyChange = (rates, selectedCurrency) => {
@@ -388,522 +463,583 @@ useEffect(() => {
       <Link to="/AdminDashboard">Back</Link>
 
       {selectedCategory === "Activities Report" && (
-       <div>
-       <Box sx={{ p: 6, maxWidth: "120vh", overflowY: "visible", height: "100vh", marginLeft: "350px", }}>
-           <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-               <Typography variant="h4">Activities Report</Typography>
-           </Box>
-           {/* Filtering */}
-           <IconButton onClick={handleFilterChoiceClick}>
-               <FilterAltIcon />
-           </IconButton>
-           <Menu
-               anchorEl={filterAnchorEl}
-               open={Boolean(filterAnchorEl)}
-               onClose={handleFilterClose}
-           >
-               {/* Radio Buttons for Filter Selection */}
-               <MenuItem>
-                   <FormControl>
-                       <RadioGroup
-                           value={filterType} // This should be managed in state
-                           onChange={(e) => {
-                               setFilterType(e.target.value); // Update the selected filter type
-                               setDate(""); // Clear previous values
-                               setMonth("");
-                               setYear("");
-                           }}
-                       >
-                           {/* Date Filter */}
-                           <FormControlLabel
-                               value="date"
-                               control={<Radio />}
-                               label="Choose a Date"
-                           />
-                           {filterType === "date" && (
-                               <TextField
-                                   type="date"
-                                   value={date}
-                                   onChange={(e) => changeDate(e.target.value)}
-                                   style={{ marginTop: "10px", width: "100%" }}
-                               />
-                           )}
-
-                           {/* Month and/or Year Filter */}
-                           <FormControlLabel
-                               value="monthYear"
-                               control={<Radio />}
-                               label="Choose Month/Year"
-                           />
-                           {filterType === "monthYear" && (
-                               <div>
-                                   {/* Month Dropdown */}
-                                   <div style={{ display: "flex", flexDirection: "column", gap: "10px", width: "100%" }}>
-                                       <FormControl fullWidth>
-                                           <InputLabel>Month</InputLabel>
-                                           <Select
-                                               value={month}
-                                               onChange={(e) => {
-                                                   changeMonth(e.target.value)
-                                               }}
-                                           >
-                                               {Array.from({ length: 12 }, (_, i) => (
-                                                   <MenuItem key={i + 1} value={i + 1}>
-                                                       {i + 1}
-                                                   </MenuItem>
-                                               ))}
-                                           </Select>
-                                       </FormControl>
-                                       {/* Year Dropdown */}
-                                       <FormControl fullWidth>
-                                           <InputLabel>Year</InputLabel>
-                                           <Select
-                                               value={year}
-                                               onChange={(e) => {
-                                                   changeYear(e.target.value)
-                                               }}
-                                           >
-                                               {generateYearOptions().map((yr) => (
-                                                   <MenuItem key={yr} value={yr}>
-                                                       {yr}
-                                                   </MenuItem>
-                                               ))}
-                                           </Select>
-                                       </FormControl>
-                                   </div>
-
-                               </div>
-                           )}
-                       </RadioGroup>
-                   </FormControl>
-               </MenuItem>
-
-               {/* Clear Buttons */}
-               <MenuItem>
-                   <Button onClick={handleClearActivityFilters}>Clear All Filters</Button>
-               </MenuItem>
-           </Menu>
-           <TableContainer style={{ borderRadius: 24 }} component={Paper}>
-               <Table>
-                   <TableHead>
-                       <TableRow>
-                           <TableCell>Name</TableCell>
-                           <TableCell>
-                               Price
-                               <CurrencyConvertor onCurrencyChange={handlePriceCurrencyChange} />
-                           </TableCell>
-                           <TableCell>Is open</TableCell>
-                           <TableCell>Category</TableCell>
-                           <TableCell>Tags</TableCell>
-                           <TableCell>Discount</TableCell>
-                           <TableCell>Dates and Times</TableCell>
-                           <TableCell>Duration</TableCell>
-                           <TableCell>Location</TableCell>
-                           <TableCell>Rating</TableCell>
-                           <TableCell>Flag</TableCell>
-                           <TableCell>Number of Bookings</TableCell>
-                           <TableCell>
-                               Earnings
-                               <CurrencyConvertor onCurrencyChange={handleEarningsCurrencyChange} />
-                           </TableCell>
-                       </TableRow>
-                   </TableHead>
-                   <TableBody>
-                       {activities.length > 0 ? (
-                           activities.map((entry) =>
-                               entry && entry.activity.deletedActivity === false && entry.activity.totalGain !== undefined ? (
-                                   <TableRow key={entry.activity._id}>
-                                       <TableCell>{entry.activity.name}</TableCell>
-                                       <TableCell>
-                                           {(entry.activity.price * (priceExchangeRates[priceCurrency] || 1)).toFixed(2)} {priceCurrency}
-                                       </TableCell>
-                                       <TableCell>{entry.activity.isOpen ? "Yes" : "No"}</TableCell>
-                                       <TableCell>{entry.activity.category}</TableCell>
-                                       <TableCell>{entry.activity.tags.join(", ")}</TableCell>
-                                       <TableCell>{entry.activity.specialDiscount}</TableCell>
-                                       <TableCell>
-                                           {entry.activity.date ? (() => {
-                                               const dateObj = new Date(entry.activity.date);
-                                               const date = dateObj.toISOString().split("T")[0];
-                                               const time = dateObj.toTimeString().split(" ")[0];
-                                               return (
-                                                   <div>
-                                                       {date} at {time}
-                                                   </div>
-                                               );
-                                           })() : "No available date"}
-                                       </TableCell>
-                                       <TableCell>{entry.activity.duration}</TableCell>
-                                       <TableCell>{entry.activity.location}</TableCell>
-                                       <TableCell>
-                                           <Rating value={calculateAverageRating(entry.activity.ratings)} precision={0.1} readOnly />
-                                       </TableCell>
-                                       <TableCell>
-                                           {entry.activity.flag ? (
-                                               <span style={{ color: "red", display: "flex", alignItems: "center" }}>
-                                                   <WarningIcon style={{ marginRight: "4px" }} />
-                                                   Inappropriate
-                                               </span>
-                                           ) : (
-                                               <span style={{ color: "green", display: "flex", alignItems: "center" }}>
-                                                   <CheckCircleIcon style={{ marginRight: "4px" }} />
-                                                   Appropriate
-                                               </span>
-                                           )}
-                                       </TableCell>
-                                       <TableCell>{entry.numOfBookings}</TableCell>
-                                       <TableCell>
-                                           {((entry.totalEarnings * 0.1) * (earningsExchangeRates[earningsCurrency] || 1)).toFixed(2)} {earningsCurrency}
-                                       </TableCell>
-                                   </TableRow>
-                               ) : null
-                           )
-                       ) : (
-                           <TableRow>
-                               <TableCell colSpan={12}>No activities found</TableCell>
-                           </TableRow>
-                       )}
-                   </TableBody>
-               </Table>
-           </TableContainer>
-
-       </Box>
-   </div>
-      )}
-
-      {selectedCategory === "Itineraries Report" && (
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Typography variant="h4"> Itineraries Report</Typography>
-        </Box>
-      )}
-
-      {selectedCategory === "Itineraries Report" && (
-        <div style={{ flex: 1 }}>
-          {itineraries.length > 0 ? (
-            <Box>
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>
-                        Activities
-                        <CurrencyConvertor
-                          onCurrencyChange={handleActivityCurrencyChange}
-                        />
-                      </TableCell>
-                      <TableCell>Locations</TableCell>
-                      <TableCell>Timeline</TableCell>
-                      <TableCell>Language</TableCell>
-                      <TableCell>
-                        Price
-                        <CurrencyConvertor
-                          onCurrencyChange={handlePriceCurrencyChange}
-                        />
-                      </TableCell>
-                      <TableCell>Available Dates And Times</TableCell>
-                      <TableCell>Accessibility</TableCell>
-                      <TableCell>Pick Up Location</TableCell>
-                      <TableCell>Drop Off Location</TableCell>
-                      <TableCell>Ratings</TableCell>
-                      <TableCell>Tags</TableCell>
-                      <TableCell>Flag</TableCell>
-                      <TableCell>Active Status</TableCell>
-                      <TableCell>Number of Bookings</TableCell>
-                      <TableCell>
-                        Earnings
-                        <CurrencyConvertor
-                          onCurrencyChange={handleEarningsCurrencyChange}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {itineraries.length > 0 ? (
-                      itineraries.map(
-                        (entry) =>
-                          entry &&
-                          entry.itinerary.deletedItinerary === false &&
-                          entry.itinerary.totalGain !== undefined ? (
-                            <TableRow key={entry.itinerary._id}>
-                              <TableCell>
-                                {entry.itinerary.activity &&
-                                entry.itinerary.activity.length > 0
-                                  ? entry.itinerary.activity.map(
-                                      (activity, index) => (
-                                        <div key={index}>
-                                          {activity.name || "N/A"} - Price:{" "}
-                                          {(
-                                            activity.price *
-                                            (activityExchangeRates[
-                                              activityCurrency
-                                            ] || 1)
-                                          ).toFixed(2)}{" "}
-                                          {activityCurrency},<br />
-                                          Location: {activity.location || "N/A"}
-                                          ,<br />
-                                          Category: {activity.category || "N/A"}
-                                          <br />
-                                          <br />{" "}
-                                          {/* Adds an extra line break between activities */}
-                                        </div>
-                                      )
-                                    )
-                                  : "No activities available"}
-                              </TableCell>
-
-                              <TableCell>
-                                {entry.itinerary.locations &&
-                                entry.itinerary.locations.length > 0
-                                  ? entry.itinerary.locations.map(
-                                      (location, index) => (
-                                        <div key={index}>
-                                          <Typography variant="body1">
-                                            {index + 1}: {location.trim()}
-                                          </Typography>
-                                          <br />
-                                        </div>
-                                      )
-                                    )
-                                  : "No locations available"}
-                              </TableCell>
-
-                              <TableCell>{entry.itinerary.timeline}</TableCell>
-                              <TableCell>{entry.itinerary.language}</TableCell>
-                              <TableCell>
-                                {(
-                                  entry.itinerary.price *
-                                  (priceExchangeRates[priceCurrency] || 1)
-                                ).toFixed(2)}{" "}
-                                {priceCurrency}
-                              </TableCell>
-                              <TableCell>
-                                {entry.itinerary.availableDatesAndTimes.length >
-                                0
-                                  ? entry.itinerary.availableDatesAndTimes.map(
-                                      (dateTime, index) => {
-                                        const dateObj = new Date(dateTime);
-                                        const date = dateObj
-                                          .toISOString()
-                                          .split("T")[0]; // YYYY-MM-DD format
-                                        const time = dateObj
-                                          .toTimeString()
-                                          .split(" ")[0]; // HH:MM:SS format
-                                        return (
-                                          <div key={index}>
-                                            Date {index + 1}: {date}
-                                            <br />
-                                            Time {index + 1}: {time}
-                                          </div>
-                                        );
-                                      }
-                                    )
-                                  : "No available dates and times"}
-                              </TableCell>
-
-                              <TableCell>
-                                {entry.itinerary.accessibility}
-                              </TableCell>
-                              <TableCell>
-                                {entry.itinerary.pickUpLocation}
-                              </TableCell>
-                              <TableCell>
-                                {entry.itinerary.dropOffLocation}
-                              </TableCell>
-                              <TableCell>
-                                <Rating
-                                  value={entry.itinerary.averageRating}
-                                  precision={0.1}
-                                  readOnly
-                                />
-                              </TableCell>
-
-                              <TableCell>
-                                {entry.itinerary.tags &&
-                                entry.itinerary.tags.length > 0
-                                  ? entry.itinerary.tags.map((tag, index) => (
-                                      <div key={index}>
-                                        {tag || "N/A"}
-                                        <br />
-                                        <br />
-                                      </div>
-                                    ))
-                                  : "No tags available"}
-                              </TableCell>
-
-                              <TableCell>
-                                {entry.itinerary.flag ? (
-                                  <span
-                                    style={{
-                                      color: "red",
-                                      display: "flex",
-                                      alignItems: "center",
-                                    }}
-                                  >
-                                    <WarningIcon
-                                      style={{ marginRight: "4px" }}
-                                    />
-                                    Inappropriate
-                                  </span>
-                                ) : (
-                                  <span
-                                    style={{
-                                      color: "green",
-                                      display: "flex",
-                                      alignItems: "center",
-                                    }}
-                                  >
-                                    <CheckCircleIcon
-                                      style={{ marginRight: "4px" }}
-                                    />
-                                    Appropriate
-                                  </span>
-                                )}
-                              </TableCell>
-
-                              <TableCell>
-                                {entry.itinerary.isDeactivated
-                                  ? "Deactivated"
-                                  : "Activated"}
-                              </TableCell>
-                              <TableCell>{entry.numOfBookings}</TableCell>
-                              <TableCell>
-                                {(
-                                  entry.totalEarnings *
-                                  0.1 *
-                                  (earningsExchangeRates[earningsCurrency] || 1)
-                                ).toFixed(2)}{" "}
-                                {earningsCurrency}
-                              </TableCell>
-                            </TableRow>
-                          ) : null //We don't output a row when the itinerary has been deleted but cannot be removed from the database since it is booked by previous tourists
-                      )
-                    ) : (
-                      <TableRow>
-                        <TableCell colSpan={12}>No itineraries found</TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+        <div>
+          <Box sx={{ p: 6, maxWidth: "120vh", overflowY: "visible", height: "100vh", marginLeft: "350px", }}>
+            <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+              <Typography variant="h4">Activities Report</Typography>
             </Box>
-          ) : (
-            <Typography variant="body1" style={{ marginTop: "20px" }}>
-              No Itineraries found.
-            </Typography>
-          )}
+            {/* Filtering */}
+            <IconButton onClick={activityHandleFilterChoiceClick}>
+              <FilterAltIcon />
+            </IconButton>
+            <Menu
+              anchorEl={activityFilterAnchorEl}
+              open={Boolean(activityFilterAnchorEl)}
+              onClose={activityHandleFilterClose}
+            >
+              {/* Radio Buttons for Filter Selection */}
+              <MenuItem>
+                <FormControl>
+                  <RadioGroup
+                    value={activityFilterType} // This should be managed in state
+                    onChange={(e) => {
+                      activitySetFilterType(e.target.value); // Update the selected filter type
+                      activitySetDate(""); // Clear previous values
+                      activitySetMonth("");
+                      activitySetYear("");
+                    }}
+                  >
+                    {/* Date Filter */}
+                    <FormControlLabel
+                      value="activityDate"
+                      control={<Radio />}
+                      label="Choose a Date"
+                    />
+                    {activityFilterType === "date" && (
+                      <TextField
+                        type="date"
+                        value={activityDate}
+                        onChange={(e) => changeActivityDate(e.target.value)}
+                        style={{ marginTop: "10px", width: "100%" }}
+                      />
+                    )}
+
+                    {/* Month and/or Year Filter */}
+                    <FormControlLabel
+                      value="monthYear"
+                      control={<Radio />}
+                      label="Choose Month/Year"
+                    />
+                    {activityFilterType === "monthYear" && (
+                      <div>
+                        {/* Month Dropdown */}
+                        <div style={{ display: "flex", flexDirection: "column", gap: "10px", width: "100%" }}>
+                          <FormControl fullWidth>
+                            <InputLabel>Month</InputLabel>
+                            <Select
+                              value={activityMonth}
+                              onChange={(e) => {
+                                changeActivityMonth(e.target.value)
+                              }}
+                            >
+                              {Array.from({ length: 12 }, (_, i) => (
+                                <MenuItem key={i + 1} value={i + 1}>
+                                  {i + 1}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                          {/* Year Dropdown */}
+                          <FormControl fullWidth>
+                            <InputLabel>Year</InputLabel>
+                            <Select
+                              value={activityYear}
+                              onChange={(e) => {
+                                changeActivityYear(e.target.value)
+                              }}
+                            >
+                              {generateYearOptions().map((yr) => (
+                                <MenuItem key={yr} value={yr}>
+                                  {yr}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </div>
+
+                      </div>
+                    )}
+                  </RadioGroup>
+                </FormControl>
+              </MenuItem>
+
+              {/* Clear Buttons */}
+              <MenuItem>
+                <Button onClick={activityHandleClearFilters}>Clear All Filters</Button>
+              </MenuItem>
+            </Menu>
+            <TableContainer style={{ borderRadius: 24 }} component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell>
+                      Price
+                      <CurrencyConvertor onCurrencyChange={handlePriceCurrencyChange} />
+                    </TableCell>
+                    <TableCell>Is open</TableCell>
+                    <TableCell>Category</TableCell>
+                    <TableCell>Tags</TableCell>
+                    <TableCell>Discount</TableCell>
+                    <TableCell>Dates and Times</TableCell>
+                    <TableCell>Duration</TableCell>
+                    <TableCell>Location</TableCell>
+                    <TableCell>Rating</TableCell>
+                    <TableCell>Flag</TableCell>
+                    <TableCell>Number of Bookings</TableCell>
+                    <TableCell>
+                      Earnings
+                      <CurrencyConvertor onCurrencyChange={handleEarningsCurrencyChange} />
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {activities.length > 0 ? (
+                    activities.map((entry) =>
+                      entry && entry.activity.deletedActivity === false && entry.activity.totalGain !== undefined ? (
+                        <TableRow key={entry.activity._id}>
+                          <TableCell>{entry.activity.name}</TableCell>
+                          <TableCell>
+                            {(entry.activity.price * (priceExchangeRates[priceCurrency] || 1)).toFixed(2)} {priceCurrency}
+                          </TableCell>
+                          <TableCell>{entry.activity.isOpen ? "Yes" : "No"}</TableCell>
+                          <TableCell>{entry.activity.category}</TableCell>
+                          <TableCell>{entry.activity.tags.join(", ")}</TableCell>
+                          <TableCell>{entry.activity.specialDiscount}</TableCell>
+                          <TableCell>
+                            {entry.activity.date ? (() => {
+                              const dateObj = new Date(entry.activity.date);
+                              const date = dateObj.toISOString().split("T")[0];
+                              const time = dateObj.toTimeString().split(" ")[0];
+                              return (
+                                <div>
+                                  {date} at {time}
+                                </div>
+                              );
+                            })() : "No available date"}
+                          </TableCell>
+                          <TableCell>{entry.activity.duration}</TableCell>
+                          <TableCell>{entry.activity.location}</TableCell>
+                          <TableCell>
+                            <Rating value={calculateAverageRating(entry.activity.ratings)} precision={0.1} readOnly />
+                          </TableCell>
+                          <TableCell>
+                            {entry.activity.flag ? (
+                              <span style={{ color: "red", display: "flex", alignItems: "center" }}>
+                                <WarningIcon style={{ marginRight: "4px" }} />
+                                Inappropriate
+                              </span>
+                            ) : (
+                              <span style={{ color: "green", display: "flex", alignItems: "center" }}>
+                                <CheckCircleIcon style={{ marginRight: "4px" }} />
+                                Appropriate
+                              </span>
+                            )}
+                          </TableCell>
+                          <TableCell>{entry.numOfBookings}</TableCell>
+                          <TableCell>
+                            {((entry.totalEarnings * 0.1) * (earningsExchangeRates[earningsCurrency] || 1)).toFixed(2)} {earningsCurrency}
+                          </TableCell>
+                        </TableRow>
+                      ) : null
+                    )
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={12}>No activities found</TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+
+          </Box>
+        </div>
+      )}
+
+      {selectedCategory === "Itineraries Report" && (
+        <div>
+          <Box sx={{ p: 6, maxWidth: "120vh", overflowY: "visible", height: "100vh", marginLeft: "350px", }}>
+            <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+              <Typography variant="h4"> Itineraries Report</Typography>
+            </Box>
+            {/* Filtering */}
+            <IconButton onClick={itineraryHandleFilterChoiceClick}>
+              <FilterAltIcon />
+            </IconButton>
+            <Menu
+              anchorEl={itineraryFilterAnchorEl}
+              open={Boolean(itineraryFilterAnchorEl)}
+              onClose={itineraryHandleFilterClose}
+            >
+              {/* Radio Buttons for Filter Selection */}
+              <MenuItem>
+                <FormControl>
+                  <RadioGroup
+                    value={itineraryFilterType} // This should be managed in state
+                    onChange={(e) => {
+                      itinerarySetFilterType(e.target.value); // Update the selected filter type
+                      itinerarySetDate(""); // Clear previous values
+                      itinerarySetMonth("");
+                      itinerarySetYear("");
+                    }}
+                  >
+                    {/* Date Filter */}
+                    <FormControlLabel
+                      value="date"
+                      control={<Radio />}
+                      label="Choose a Date"
+                    />
+                    {itineraryFilterType === "date" && (
+                      <TextField
+                        type="date"
+                        value={itineraryDate}
+                        onChange={(e) => changeItineraryDate(e.target.value)}
+                        style={{ marginTop: "10px", width: "100%" }}
+                      />
+                    )}
+
+                    {/* Month and/or Year Filter */}
+                    <FormControlLabel
+                      value="monthYear"
+                      control={<Radio />}
+                      label="Choose Month/Year"
+                    />
+                    {itineraryFilterType === "monthYear" && (
+                      <div>
+                        {/* Month Dropdown */}
+                        <div style={{ display: "flex", flexDirection: "column", gap: "10px", width: "100%" }}>
+                          <FormControl fullWidth>
+                            <InputLabel>Month</InputLabel>
+                            <Select
+                              value={itineraryMonth}
+                              onChange={(e) => {
+                                changeItineraryMonth(e.target.value)
+                              }}
+                            >
+                              {Array.from({ length: 12 }, (_, i) => (
+                                <MenuItem key={i + 1} value={i + 1}>
+                                  {i + 1}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                          {/* Year Dropdown */}
+                          <FormControl fullWidth>
+                            <InputLabel>Year</InputLabel>
+                            <Select
+                              value={itineraryYear}
+                              onChange={(e) => {
+                                changeItineraryYear(e.target.value)
+                              }}
+                            >
+                              {generateYearOptions().map((yr) => (
+                                <MenuItem key={yr} value={yr}>
+                                  {yr}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </div>
+
+                      </div>
+                    )}
+                  </RadioGroup>
+                </FormControl>
+              </MenuItem>
+
+              {/* Clear Buttons */}
+              <MenuItem>
+                <Button onClick={itineraryHandleClearFilters}>Clear All Filters</Button>
+              </MenuItem>
+            </Menu>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Activities
+                      <CurrencyConvertor onCurrencyChange={handleActivityCurrencyChange} />
+                    </TableCell>
+                    <TableCell>Locations</TableCell>
+                    <TableCell>Timeline</TableCell>
+                    <TableCell>Language</TableCell>
+                    <TableCell>Price
+                      <CurrencyConvertor onCurrencyChange={handlePriceCurrencyChange} />
+                    </TableCell>
+                    <TableCell>Available Dates And Times</TableCell>
+                    <TableCell>Accessibility</TableCell>
+                    <TableCell>Pick Up Location</TableCell>
+                    <TableCell>Drop Off Location</TableCell>
+                    <TableCell>Ratings</TableCell>
+                    <TableCell>Tags</TableCell>
+                    <TableCell>Flag</TableCell>
+                    <TableCell>Active Status</TableCell>
+                    <TableCell>Number of Bookings</TableCell>
+                    <TableCell>Earnings
+                      <CurrencyConvertor onCurrencyChange={handleEarningsCurrencyChange} />
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {itineraries.length > 0 ? (
+                    itineraries.map((entry) => entry && entry.itinerary.deletedItinerary === false && entry.itinerary.totalGain !== undefined ? (
+                      <TableRow key={entry.itinerary._id}>
+                        <TableCell>
+                          {entry.itinerary.activity && entry.itinerary.activity.length > 0
+                            ? entry.itinerary.activity.map((activity, index) => (
+                              <div key={index}>
+                                {activity.name || 'N/A'} -
+                                Price: {(activity.price * (activityExchangeRates[activityCurrency] || 1)).toFixed(2)} {activityCurrency},<br />
+                                Location: {activity.location || 'N/A'},<br />
+                                Category: {activity.category || 'N/A'}
+                                <br /><br /> {/* Adds an extra line break between activities */}
+                              </div>
+                            ))
+                            : 'No activities available'}
+                        </TableCell>
+
+                        <TableCell>
+                          {entry.itinerary.locations && entry.itinerary.locations.length > 0 ? (
+                            entry.itinerary.locations.map((location, index) => (
+                              <div key={index}>
+                                <Typography variant="body1">
+                                  {index + 1}: {location.trim()}
+                                </Typography>
+                                <br />
+                              </div>
+                            ))
+                          ) : 'No locations available'}
+                        </TableCell>
+
+                        <TableCell>{entry.itinerary.timeline}</TableCell>
+                        <TableCell>{entry.itinerary.language}</TableCell>
+                        <TableCell>
+                          {(entry.itinerary.price * (priceExchangeRates[priceCurrency] || 1)).toFixed(2)} {priceCurrency}
+                        </TableCell>
+                        <TableCell>
+                          {entry.itinerary.availableDatesAndTimes.length > 0
+                            ? entry.itinerary.availableDatesAndTimes.map((dateTime, index) => {
+                              const dateObj = new Date(dateTime);
+                              const date = dateObj.toISOString().split('T')[0]; // YYYY-MM-DD format
+                              const time = dateObj.toTimeString().split(' ')[0]; // HH:MM:SS format
+                              return (
+                                <div key={index}>
+                                  Date {index + 1}: {date}<br />
+                                  Time {index + 1}: {time}
+                                </div>
+                              );
+                            })
+                            : 'No available dates and times'}
+                        </TableCell>
+
+                        <TableCell>{entry.itinerary.accessibility}</TableCell>
+                        <TableCell>{entry.itinerary.pickUpLocation}</TableCell>
+                        <TableCell>{entry.itinerary.dropOffLocation}</TableCell>
+                        <TableCell><Rating
+                          value={entry.itinerary.averageRating}
+                          precision={0.1}
+                          readOnly
+                        /></TableCell>
+
+                        <TableCell>
+                          {entry.itinerary.tags && entry.itinerary.tags.length > 0
+                            ? entry.itinerary.tags.map((tag, index) => (
+                              <div key={index}>
+                                {tag || 'N/A'}
+                                <br /><br />
+                              </div>
+                            ))
+                            : 'No tags available'}
+                        </TableCell>
+
+                        <TableCell>
+                          {entry.itinerary.flag ? (
+                            <span style={{ color: 'red', display: 'flex', alignItems: 'center' }}>
+                              <WarningIcon style={{ marginRight: '4px' }} />
+                              Inappropriate
+                            </span>
+                          ) : (
+                            <span style={{ color: 'green', display: 'flex', alignItems: 'center' }}>
+                              <CheckCircleIcon style={{ marginRight: '4px' }} />
+                              Appropriate
+                            </span>
+                          )}
+                        </TableCell>
+
+                        <TableCell>
+                          {entry.itinerary.isDeactivated ? 'Deactivated' : 'Activated'}
+                        </TableCell>
+                        <TableCell>{entry.numOfBookings}</TableCell>
+                        <TableCell>
+                          {((entry.totalEarnings * 0.1) * (earningsExchangeRates[earningsCurrency] || 1)).toFixed(2)} {earningsCurrency}
+                        </TableCell>
+                      </TableRow>
+                    ) : null //We don't output a row when the itinerary has been deleted but cannot be removed from the database since it is booked by previous tourists
+                    )
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={12}>No itineraries found</TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
         </div>
       )}
 
       {selectedCategory === "Products Report" && (
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Typography variant="h4"> Products report</Typography>
-        </Box>
-      )}
-
-      {selectedCategory === "Products Report" && (
-        <div style={{ flex: 1 }}>
-          {products.length > 0 ? (
-            <Box>
-              <TableContainer component={Paper} style={{ borderRadius: 20 }}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Name</TableCell>
-                      <TableCell>
-                        Price
-                        <CurrencyConvertor
-                          onCurrencyChange={handlePriceCurrencyChange}
-                        />
-                      </TableCell>
-                      <TableCell>Rating</TableCell>
-                      <TableCell>Available Quantity</TableCell>
-                      <TableCell>Description</TableCell>
-                      <TableCell>Reviews</TableCell>
-                      <TableCell>
-                        Earnings
-                        <CurrencyConvertor
-                          onCurrencyChange={handleEarningsCurrencyChange}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {products.length > 0 ? (
-                      products.map(
-                        (entry) =>
-                          entry && entry.product.totalGain !== undefined ? (
-                            <TableRow key={entry.product._id}>
-                              <TableCell>{entry.product.name}</TableCell>
-                              <TableCell>
-                                {(
-                                  entry.product.price *
-                                  (priceExchangeRates[priceCurrency] || 1)
-                                ).toFixed(2)}{" "}
-                                {priceCurrency}
-                              </TableCell>
-                              <TableCell>
-                                <Rating
-                                  value={calculateAverageRating(
-                                    entry.product.ratings
-                                  )}
-                                  precision={0.1}
-                                  readOnly
-                                />
-                              </TableCell>
-                              <TableCell>
-                                {entry.product.availableQuantity}
-                              </TableCell>
-                              <TableCell>{entry.product.description}</TableCell>
-                              <TableCell>
-                                {Object.entries(entry.product.reviews).length >
-                                0 ? (
-                                  Object.entries(entry.product.reviews).map(
-                                    ([user, review]) => (
-                                      <div key={user}>
-                                        <Typography variant="body2">
-                                          User: {review.buyer}
-                                        </Typography>
-                                        <Typography variant="body2">
-                                          Rating:{" "}
-                                          {getReviewerRating(review.buyer)}
-                                        </Typography>
-                                        <Typography variant="body2">
-                                          Comment: {review.review}
-                                        </Typography>
-                                      </div>
-                                    )
-                                  )
-                                ) : (
-                                  <Typography variant="body2">
-                                    No reviews available.
-                                  </Typography>
-                                )}
-                              </TableCell>
-                              <TableCell>
-                                {(
-                                  entry.totalEarnings *
-                                  0.1 *
-                                  (earningsExchangeRates[earningsCurrency] || 1)
-                                ).toFixed(2)}{" "}
-                                {earningsCurrency}
-                              </TableCell>
-                            </TableRow>
-                          ) : null // Don't render the row for deleted products
-                      )
-                    ) : (
-                      <TableRow>
-                        <TableCell colSpan={12}>No products found</TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+        <div>
+          <Box sx={{ p: 6, maxWidth: "120vh", overflowY: "visible", height: "100vh", marginLeft: "350px", }}>
+            <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+              <Typography variant="h4">Products Report</Typography>
             </Box>
-          ) : (
-            <Typography variant="body1" style={{ marginTop: "20px" }}>
-              No Products found.
-            </Typography>
-          )}
+            {/* Filtering */}
+            <IconButton onClick={productHandleFilterChoiceClick}>
+              <FilterAltIcon />
+            </IconButton>
+            <Menu
+              anchorEl={productFilterAnchorEl}
+              open={Boolean(productFilterAnchorEl)}
+              onClose={productHandleFilterClose}
+            >
+              {/* Radio Buttons for Filter Selection */}
+              <MenuItem>
+                <FormControl>
+                  <RadioGroup
+                    value={productFilterType} // This should be managed in state
+                    onChange={(e) => {
+                      productSetFilterType(e.target.value); // Update the selected filter type
+                      productSetDate(""); // Clear previous values
+                      productSetMonth("");
+                      productSetYear("");
+                    }}
+                  >
+                    {/* Date Filter */}
+                    <FormControlLabel
+                      value="date"
+                      control={<Radio />}
+                      label="Choose a Date"
+                    />
+                    {productFilterType === "date" && (
+                      <TextField
+                        type="date"
+                        value={productDate}
+                        onChange={(e) => changeProductDate(e.target.value)}
+                        style={{ marginTop: "10px", width: "100%" }}
+                      />
+                    )}
+
+                    {/* Month and/or Year Filter */}
+                    <FormControlLabel
+                      value="monthYear"
+                      control={<Radio />}
+                      label="Choose Month/Year"
+                    />
+                    {productFilterType === "monthYear" && (
+                      <div>
+                        {/* Month Dropdown */}
+                        <div style={{ display: "flex", flexDirection: "column", gap: "10px", width: "100%" }}>
+                          <FormControl fullWidth>
+                            <InputLabel>Month</InputLabel>
+                            <Select
+                              value={productMonth}
+                              onChange={(e) => {
+                                changeProductMonth(e.target.value)
+                              }}
+                            >
+                              {Array.from({ length: 12 }, (_, i) => (
+                                <MenuItem key={i + 1} value={i + 1}>
+                                  {i + 1}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                          {/* Year Dropdown */}
+                          <FormControl fullWidth>
+                            <InputLabel>Year</InputLabel>
+                            <Select
+                              value={productYear}
+                              onChange={(e) => {
+                                changeProductYear(e.target.value)
+                              }}
+                            >
+                              {generateYearOptions().map((yr) => (
+                                <MenuItem key={yr} value={yr}>
+                                  {yr}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </div>
+
+                      </div>
+                    )}
+                  </RadioGroup>
+                </FormControl>
+              </MenuItem>
+
+              {/* Clear Buttons */}
+              <MenuItem>
+                <Button onClick={productHandleClearFilters}>Clear All Filters</Button>
+              </MenuItem>
+            </Menu>
+            <TableContainer style={{ borderRadius: 20 }} component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Price
+                      <CurrencyConvertor onCurrencyChange={handlePriceCurrencyChange} />
+                    </TableCell>
+                    <TableCell>Rating</TableCell>
+                    <TableCell>Available Quantity</TableCell>
+                    <TableCell>Description</TableCell>
+                    <TableCell>Reviews</TableCell>
+                    <TableCell>Earnings
+                      <CurrencyConvertor onCurrencyChange={handleEarningsCurrencyChange} />
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {products.length > 0 ? (
+                    products.map((entry) =>
+                      entry && entry.product.totalGain !== undefined ? (
+                        <TableRow key={entry.product._id}>
+                          <TableCell>{entry.product.name}</TableCell>
+                          <TableCell>
+                            {(entry.product.price * (priceExchangeRates[priceCurrency] || 1)).toFixed(2)} {priceCurrency}
+                          </TableCell>
+                          <TableCell>
+                            <Rating
+                              value={calculateAverageRating(entry.product.ratings)}
+                              precision={0.1}
+                              readOnly
+                            />
+                          </TableCell>
+                          <TableCell>{entry.product.availableQuantity}</TableCell>
+                          <TableCell>{entry.product.description}</TableCell>
+                          <TableCell>{Object.entries(entry.product.reviews).length > 0 ? (
+                            Object.entries(entry.product.reviews).map(([user, review]) => (
+                              <div key={user}>
+                                <Typography variant="body2">User: {review.buyer}</Typography>
+                                <Typography variant="body2">
+                                  Rating: {getReviewerRating(review.buyer)}
+                                </Typography>
+                                <Typography variant="body2">
+                                  Comment: {review.review}
+                                </Typography>
+                              </div>
+                            ))
+                          ) : (
+                            <Typography variant="body2">No reviews available.</Typography>
+                          )}
+                          </TableCell>
+                          <TableCell>
+                            {((entry.totalEarnings * 0.1) * (earningsExchangeRates[earningsCurrency] || 1)).toFixed(2)} {earningsCurrency}
+                          </TableCell>
+                        </TableRow>
+                      ) : null // Don't render the row for deleted products
+                    )
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={12}>No products found</TableCell>
+                    </TableRow>
+                  )}
+
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
         </div>
       )}
     </Box>
