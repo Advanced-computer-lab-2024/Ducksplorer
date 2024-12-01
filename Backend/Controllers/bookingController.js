@@ -247,7 +247,6 @@ const getMyBookings = async (req, res) => {
         if (!activityBookings.length && !itineraryBookings.length && !thirdPartyBookings.length) {
             return res.status(404).json({ message: "No bookings found." });
         }
-        console.log("ThirdPartyBookings", thirdPartyBookings);
 
         // Extract flights, hotels, and transportations from third party bookings
         // const flights = thirdPartyBookings
@@ -295,6 +294,8 @@ const cancelMyBooking = async (req, res) => {
     // const { booking } = req.body.booking || "";
     const currentDate = new Date();
     console.log("requestBody", req.body);
+    console.log("username;", user);
+    console.log("booking", booking);
     let itemObjectId;
 
     try {
@@ -323,19 +324,28 @@ const cancelMyBooking = async (req, res) => {
             if (timeDifference <= 48) {
                 return res.status(400).json({ message: 'Cannot cancel within 48 hours of the activity' });
             }
+            const activity = await Activity.findOne({ _id: itemObjectId });
 
             tourist.wallet += parseFloat(price);
             await tourist.save();
-
+            console.log("price:", activityBooking.chosenPrice);
+            const newCount = activity.bookedCount - 1;
+            const newGain = activity.totalGain - activityBooking.chosenPrice;
             await Activity.updateOne(
                 { _id: itemObjectId },
-                { $inc: { bookedCount: -1 } }
+                { bookedCount: newCount, totalGain: newGain },
             );
+
 
             await ActivityBooking.deleteOne({ user, activity: itemObjectId });
 
         } else if (type === 'itinerary') {
             const itineraryBooking = await ItineraryBooking.findOne({ user, itinerary: itemObjectId });
+            console.log(itineraryBooking);
+
+            const itinerary = await Itinerary.findOne({ _id: itemObjectId });
+
+            console.log(itinerary);
 
             if (!itineraryBooking) {
                 return res.status(404).json({ message: 'Itinerary not found in the booking' });
@@ -350,11 +360,20 @@ const cancelMyBooking = async (req, res) => {
 
             tourist.wallet += parseFloat(price);
             await tourist.save();
+            console.log("price before:", itineraryBooking.chosenPrice);
+            console.log("Gain before:", itinerary.totalGain);
+            console.log("booked before:", itinerary.bookedCount);
+            const newCount = itinerary.bookedCount - 1;
+            const newGain = itinerary.totalGain - itineraryBooking.chosenPrice;
 
             await Itinerary.updateOne(
                 { _id: itemObjectId },
-                { $inc: { bookedCount: -1 } }
+                { bookedCount: newCount, totalGain: newGain },
             );
+
+            console.log("price after:", itineraryBooking.chosenPrice);
+            console.log("Gain after:", itinerary.totalGain)
+            console.log("booked after:", itinerary.bookedCount);
 
             await ItineraryBooking.deleteOne({ user, itinerary: itemObjectId });
 

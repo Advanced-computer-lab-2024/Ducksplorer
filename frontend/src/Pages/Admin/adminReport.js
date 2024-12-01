@@ -158,7 +158,7 @@ const AdminReport = () => {
       const response = await axios.get(
         `http://localhost:8000/admin/reportActivities`
       );
-      
+
       setActivities(response.data);
     } catch (error) {
       console.error("Error resetting activities:", error);
@@ -450,7 +450,6 @@ const AdminReport = () => {
     <Box
       sx={{
         padding: "20px",
-        maxWidth: "1200px",
         margin: "auto",
         display: "flex",
         flexDirection: "column",
@@ -464,7 +463,7 @@ const AdminReport = () => {
 
       {selectedCategory === "Activities Report" && (
         <div>
-          <Box sx={{ p: 6, maxWidth: "120vh", overflowY: "visible", height: "100vh", marginLeft: "350px", }}>
+          <Box sx={{ p: 6, width: "2000", overflowY: "visible", height: "100vh", marginLeft: "350px", }}>
             <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
               <Typography variant="h4">Activities Report</Typography>
             </Box>
@@ -491,7 +490,7 @@ const AdminReport = () => {
                   >
                     {/* Date Filter */}
                     <FormControlLabel
-                      value="activityDate"
+                      value="date"
                       control={<Radio />}
                       label="Choose a Date"
                     />

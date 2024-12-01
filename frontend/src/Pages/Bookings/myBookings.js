@@ -121,7 +121,7 @@ const BookingDetails = () => {
   }, []);
   if (loading) return <p>Loading...</p>;
 
-  const handleDeleteBooking = async (type, itemId, price) => {
+  const handleDeleteBooking = async (type, itemId, price,booking) => {
     try {
       const response = await axios.patch(
         `http://localhost:8000/touristRoutes/booking/${userName}`,
@@ -129,6 +129,7 @@ const BookingDetails = () => {
           type,
           itemId,
           price,
+          booking
         }
       );
 
@@ -157,7 +158,7 @@ const BookingDetails = () => {
       console.error("Error cancelling booking:", error);
       message.error(
         error.response?.data?.message ||
-          "Cannot cancel the booking within 48 hours of the start date or after the start of the activity/itinerary."
+        "Cannot cancel the booking within 48 hours of the start date or after the start of the activity/itinerary."
       );
     }
   };
@@ -203,7 +204,7 @@ const BookingDetails = () => {
       console.error("Error cancelling booking:", error);
       message.error(
         error.response?.data?.message ||
-          "Cannot cancel the booking within 48 hours of the start date or after the start of the activity/itinerary."
+        "Cannot cancel the booking within 48 hours of the start date or after the start of the activity/itinerary."
       );
     }
   };
@@ -280,8 +281,8 @@ const BookingDetails = () => {
                   <TableCell>
                     {activityBooking.activity?.date
                       ? new Date(
-                          activityBooking.activity.date
-                        ).toLocaleDateString()
+                        activityBooking.activity.date
+                      ).toLocaleDateString()
                       : "N/A"}
                   </TableCell>
                   <TableCell>
@@ -322,7 +323,8 @@ const BookingDetails = () => {
                           handleDeleteBooking(
                             "activity",
                             activityBooking.activity?._id,
-                            activityBooking.activity?.price
+                            activityBooking.activity?.price,
+                            activityBooking._id
                           )
                         }
                       >
@@ -370,57 +372,57 @@ const BookingDetails = () => {
                 <TableRow key={itineraryBooking._id}>
                   <TableCell>
                     {itineraryBooking.itinerary &&
-                    itineraryBooking.itinerary.activity
+                      itineraryBooking.itinerary.activity
                       ? itineraryBooking.itinerary.activity
-                          .map((act) => act.name)
-                          .join(", ")
+                        .map((act) => act.name)
+                        .join(", ")
                       : "N/A"}
                   </TableCell>
                   <TableCell>
                     {itineraryBooking.itinerary &&
-                    itineraryBooking.itinerary.locations
+                      itineraryBooking.itinerary.locations
                       ? itineraryBooking.itinerary.locations.join(", ")
                       : "N/A"}
                   </TableCell>
                   <TableCell>
                     {itineraryBooking.itinerary &&
-                    itineraryBooking.itinerary.timeline
+                      itineraryBooking.itinerary.timeline
                       ? itineraryBooking.itinerary.timeline
                       : "N/A"}
                   </TableCell>
                   <TableCell>
                     {" "}
                     {itineraryBooking.itinerary &&
-                    itineraryBooking.itinerary.language
+                      itineraryBooking.itinerary.language
                       ? itineraryBooking.itinerary.language
                       : "N/A"}
                   </TableCell>
                   <TableCell>
-                  {itineraryBooking.itinerary && itineraryBooking.chosenPrice
-          ? (itineraryBooking.chosenPrice * (exchangeRatesIt[currencyIt] || 1)).toFixed(2) + ` ${currencyIt}`
-          : "N/A"}                  </TableCell>
+                    {itineraryBooking.itinerary && itineraryBooking.chosenPrice
+                      ? (itineraryBooking.chosenPrice * (exchangeRatesIt[currencyIt] || 1)).toFixed(2) + ` ${currencyIt}`
+                      : "N/A"}                  </TableCell>
                   <TableCell> {itineraryBooking.itinerary && itineraryBooking.itinerary.availableDatesAndTimes
-          ? itineraryBooking.itinerary.availableDatesAndTimes.map((date) => new Date(date).toLocaleDateString()).join(", ")
-          : "N/A"}</TableCell>
+                    ? itineraryBooking.itinerary.availableDatesAndTimes.map((date) => new Date(date).toLocaleDateString()).join(", ")
+                    : "N/A"}</TableCell>
                   <TableCell>{itineraryBooking.itinerary && itineraryBooking.chosenDate
-          ? new Date(itineraryBooking.chosenDate).toLocaleDateString()
-          : "N/A"}</TableCell>
+                    ? new Date(itineraryBooking.chosenDate).toLocaleDateString()
+                    : "N/A"}</TableCell>
                   <TableCell>{itineraryBooking.itinerary && itineraryBooking.itinerary.accessibility
-          ? itineraryBooking.itinerary.accessibility
-          : "N/A"}</TableCell>
+                    ? itineraryBooking.itinerary.accessibility
+                    : "N/A"}</TableCell>
                   <TableCell>{itineraryBooking.itinerary && itineraryBooking.itinerary.pickUpLocation
-          ? itineraryBooking.itinerary.pickUpLocation
-          : "N/A"}</TableCell>
+                    ? itineraryBooking.itinerary.pickUpLocation
+                    : "N/A"}</TableCell>
                   <TableCell> {itineraryBooking.itinerary && itineraryBooking.itinerary.dropOffLocation
-          ? itineraryBooking.itinerary.dropOffLocation
-          : "N/A"}</TableCell>
+                    ? itineraryBooking.itinerary.dropOffLocation
+                    : "N/A"}</TableCell>
                   {/* <TableCell>{ itineraryBooking.itinerary && itineraryBooking.itinerary.tourGuideModel?.userName ? itineraryBooking.itinerary.tourGuideModel.userName : "N/A"}</TableCell> */}
                   <TableCell>
                     {tourGuideNames[itineraryBooking._id] || "N/A"}
                   </TableCell>
                   <TableCell>
                     <Rating
-                      value={itineraryBooking.itinerary.averageRating}
+                      value={itineraryBooking.rating}
                       precision={0.1}
                       readOnly
                     />
@@ -428,7 +430,7 @@ const BookingDetails = () => {
                   <TableCell>
                     {" "}
                     {itineraryBooking.itinerary &&
-                    itineraryBooking.itinerary.tags
+                      itineraryBooking.itinerary.tags
                       ? itineraryBooking.itinerary.tags.join(", ")
                       : "N/A"}
                   </TableCell>
@@ -441,7 +443,8 @@ const BookingDetails = () => {
                           handleDeleteBooking(
                             "itinerary",
                             itineraryBooking.itinerary._id,
-                            itineraryBooking.itinerary.price
+                            itineraryBooking.itinerary.price,
+                            itineraryBooking._id
                           )
                         }
                       >

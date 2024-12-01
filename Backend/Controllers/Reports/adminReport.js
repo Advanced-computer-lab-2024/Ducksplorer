@@ -132,6 +132,7 @@ const filterAllActivities = async (req, res) => {
     filters.$and = dateFilters;
   }
 
+
   try {
     // Find all Activities
     const activities = await Activity.find();
