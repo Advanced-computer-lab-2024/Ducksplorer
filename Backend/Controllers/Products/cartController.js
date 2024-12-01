@@ -2,11 +2,11 @@ const Cart = require("../../Models/cartModel");
 const Product = require("../../Models/productModel");
 const Tourist = require("../../Models/touristModel");
 const PurchaseBooking = require("../../Models/purchaseBookingModel");
-
+const mongoose = require("mongoose");
 
 const viewCart = async (req, res) => {
   try {
-    const {userName}  = req.query;
+    const { userName } = req.query;
     console.log(userName);
     console.log("request body:", req.query);
     // Validate input
@@ -15,10 +15,14 @@ const viewCart = async (req, res) => {
     }
 
     // Find the cart for the given userName and populate product details
-    const cart = await Cart.findOne({ username: userName }).populate("products.product");
+    const cart = await Cart.findOne({ username: userName }).populate(
+      "products.product"
+    );
 
     if (!cart) {
-      return res.status(404).json({ message: "Cart not found for the given userName." });
+      return res
+        .status(404)
+        .json({ message: "Cart not found for the given userName." });
     }
 
     // Respond with the cart details, including populated products
@@ -31,12 +35,19 @@ const viewCart = async (req, res) => {
 
 const addProductToCart = async (req, res) => {
   try {
-    const { userName, productId , newQuantity } = req.body;
+    const { userName, productId, newQuantity } = req.body;
     const quantity = +newQuantity;
-    console.log(userName,productId);
+    console.log(userName, productId);
     // Validate input
+    if (!userName || typeof userName !== "string" || userName.trim() === "") {
+      console.log("is this the issue?");
+      return res.status(400).json({ message: "Invalid or missing username." });
+    }
     if (!userName || !productId) {
-      return res.status(400).json({ message: "Username and Product ID are required." });
+      console.log("or this?");
+      return res
+        .status(400)
+        .json({ message: "Username and Product ID are required." });
     }
 
     // Ensure the product exists
@@ -45,35 +56,70 @@ const addProductToCart = async (req, res) => {
       return res.status(404).json({ message: "Product not found." });
     }
 
+
     // Find or create the cart
     let cart = await Cart.findOne({ username: userName });
     if (!cart) {
-      cart = new Cart({ username: userName, products: [] });
+      await createCart(req, res);
+      return;
     }
 
-    // Check if the product is already in the cart
-    const productIndex = cart.products.findIndex(
-      (item) => item.product.toString() === productId
-    );
+    if (cart.products) {
+      // Check if the product is already in the cart
+      const productIndex = cart.products.findIndex(
+        (item) => item.product.toString() === productId
+      );
 
-    if (productIndex !== -1) {
-      // add the quantity to the quantity existing if already there
-      cart.products[productIndex].quantity += quantity;
-    } else {
-      // Add the product to the cart
-      cart.products.push({ product: productId , quantity: quantity });
+      if (productIndex !== -1) {
+        // add the quantity to the quantity existing if already there
+        cart.products[productIndex].quantity += quantity;
+      } else {
+        // Add the product to the cart
+        cart.products.push({ product: productId, quantity: quantity });
+      }
     }
+    console.log("cart is", cart);
 
     // Save the cart
-    await cart.save();
+    //await cart.save();
 
-    res.status(200).json({ message: "Product added to cart successfully.", cart });
+    await Cart.updateOne(
+      { _id: cart._id },
+      { $set: { products: cart.products } }
+    );
+
+    res
+      .status(200)
+      .json({ message: "Product added to cart successfully.", cart });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error.", error });
   }
 };
 
+const createCart = async (req, res) => {
+  const { userName, productId, newQuantity } = req.body;
+  const quantity = +newQuantity;
+  console.log("req body inside", userName);
+  try {
+
+    console.log("before create");
+
+    const newCart = new Cart({
+      username: userName,
+      products: [],
+    });
+
+    newCart.products.push({ product: productId, quantity: quantity });
+    const cart = await newCart.save();
+    res.status(200).json(cart);
+  } catch (error) {
+    console.log("maybe here?");
+    console.log(error);
+
+    res.status(400).json(error);
+  }
+};
 
 const removeProductFromCart = async (req, res) => {
   try {
@@ -81,13 +127,17 @@ const removeProductFromCart = async (req, res) => {
     console.log(productId, userName);
     // Validate input
     if (!userName || !productId) {
-      return res.status(400).json({ message: "UserName and Product ID are required." });
+      return res
+        .status(400)
+        .json({ message: "UserName and Product ID are required." });
     }
 
     // Find the user's cart
-    const cart = await Cart.findOne({ username:userName });
+    const cart = await Cart.findOne({ username: userName });
     if (!cart) {
-      return res.status(404).json({ message: "Cart not found for the given userName." });
+      return res
+        .status(404)
+        .json({ message: "Cart not found for the given userName." });
     }
 
     // Find the product index in the cart
@@ -96,7 +146,9 @@ const removeProductFromCart = async (req, res) => {
     );
 
     if (productIndex === -1) {
-      return res.status(404).json({ message: "Product not found in the cart." });
+      return res
+        .status(404)
+        .json({ message: "Product not found in the cart." });
     }
 
     // Remove the product from the cart
@@ -105,29 +157,33 @@ const removeProductFromCart = async (req, res) => {
     // Save the updated cart
     await cart.save();
 
-    res.status(200).json({ message: "Product removed from cart successfully.", cart });
+    res
+      .status(200)
+      .json({ message: "Product removed from cart successfully.", cart });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error.", error });
   }
 };
 
-
 const updateProductQuantity = async (req, res) => {
   try {
-    const { userName, productId} = req.body;
+    const { userName, productId } = req.body;
     const newQuantity = Number(req.body.newQuantity); // Converts to a number
-
 
     // Validate input
     if (!userName || !productId || newQuantity === undefined) {
-      return res.status(400).json({ message: "UserName, Product ID, and new quantity are required." });
+      return res.status(400).json({
+        message: "UserName, Product ID, and new quantity are required.",
+      });
     }
 
     // Find the user's cart
     const cart = await Cart.findOne({ username: userName });
     if (!cart) {
-      return res.status(404).json({ message: "Cart not found for the given userName." });
+      return res
+        .status(404)
+        .json({ message: "Cart not found for the given userName." });
     }
 
     // Find the product in the cart
@@ -136,22 +192,24 @@ const updateProductQuantity = async (req, res) => {
     );
 
     if (productIndex === -1) {
-      return res.status(404).json({ message: "Product not found in the cart." });
+      return res
+        .status(404)
+        .json({ message: "Product not found in the cart." });
     }
 
     cart.products[productIndex].quantity = newQuantity;
 
-
     // Save the updated cart
     await cart.save();
 
-    res.status(200).json({ message: "Product quantity updated successfully.", cart });
+    res
+      .status(200)
+      .json({ message: "Product quantity updated successfully.", cart });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error.", error });
   }
 };
-
 
 const addPurchase2 = async (req, res) => {
   try {
@@ -190,8 +248,26 @@ const addPurchase2 = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "An error occurred while processing the purchase." });
+    res
+      .status(500)
+      .json({ error: "An error occurred while processing the purchase." });
   }
 };
 
-module.exports = {addProductToCart, removeProductFromCart,updateProductQuantity, viewCart, addPurchase2};
+const getMyOrders = async (req, res) => {
+  try {
+    const myPurchases = await PurchaseBooking.find({ buyer: req.params.buyer }).populate("product");
+    res.status(200).json(myPurchases);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = {
+  addProductToCart,
+  removeProductFromCart,
+  updateProductQuantity,
+  viewCart,
+  addPurchase2,
+  getMyOrders
+};
