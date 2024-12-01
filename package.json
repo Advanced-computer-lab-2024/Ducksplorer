@@ -5,9 +5,10 @@
   "proxy": "http://localhost:8000",
   "dependencies": {
     "@date-io/date-fns": "^3.0.0",
-    "@emotion/react": "^11.13.3",
-    "@emotion/styled": "^11.13.0",
+    "@emotion/react": "^11.13.5",
+    "@emotion/styled": "^11.13.5",
     "@mui/icons-material": "^6.1.2",
+    "@mui/joy": "^5.0.0-beta.48",
     "@mui/lab": "^6.0.0-beta.14",
     "@mui/material": "^6.1.4",
     "@mui/x-date-pickers": "^7.22.1",
