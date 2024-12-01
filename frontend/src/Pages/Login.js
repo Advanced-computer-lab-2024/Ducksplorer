@@ -59,6 +59,16 @@ function Login() {
           Seller: "/sellerDashboard",
         };
         window.location.href = roleToDashboard[userRole] || "/";
+        const userRole = response.data.role;
+        const roleToDashboard = {
+          Admin: "/AdminDashboard",
+          Tourist: "/touristDashboard",
+          Guide: "/tourGuideDashboard",
+          Governor: "/governorDashboard",
+          Advertiser: "/advertiserDashboard",
+          Seller: "/sellerDashboard",
+        };
+        window.location.href = roleToDashboard[userRole] || "/";
         localStorage.setItem("user", JSON.stringify(response.data));
       } else {
         throw new Error(response.error);
@@ -140,6 +150,10 @@ function Login() {
         error.response?.data?.message || "OTP verification failed."
       );
     }
+  };
+
+  const handleBackToHome = () => {
+    navigate("/"); // Navigate to the homepage
   };
 
   return (
