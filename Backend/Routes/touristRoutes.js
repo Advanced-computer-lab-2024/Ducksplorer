@@ -20,6 +20,8 @@ const {
   removeFromWishlist,
 } = require("../Controllers/wishlistController");
 
+const{placeOrder} = require("../Controllers/orderController")
+
 const { createBooking, viewMyUpcomingBookings, viewMyPastBookings, viewDesiredActivity, viewDesiredItinerary, getMyBookings, cancelMyBooking, receiveLoyaltyPoints, getLevel, updateLevel,
   redeemPoints, payVisa, payWallet } = require("../Controllers/bookingController");
   
@@ -64,5 +66,8 @@ router.put("/addReview/:id", touristUpdateProductReview);
 router.get("/myWishlist/:username", getMyWishlist);
 router.put("/updateWishlist/:username", updateWishlist);
 router.delete("/removeFromWishlist/:username", removeFromWishlist);
+
+
+router.put("/putOrder",placeOrder);
 
 module.exports = router;
