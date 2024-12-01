@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Button, Typography, TextField, Box, Stack, IconButton, InputAdornment } from "@mui/material";
+import {
+  Button,
+  Typography,
+  TextField,
+  Box,
+  Stack,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
 import Iconify from "../../Components/TopNav/iconify.js";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -12,7 +20,7 @@ function ForgetPassword() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const userName =  JSON.parse(localStorage.getItem("user")).username;
+  const userName = JSON.parse(localStorage.getItem("userName"));
 
   // Prevent scrolling and white border
   useEffect(() => {
@@ -35,10 +43,13 @@ function ForgetPassword() {
     }
     try {
       setLoading(true);
-      const response = await axios.post("http://localhost:8000/signUp/forgetPassword", {
-        userName,
-        password
-      });
+      const response = await axios.post(
+        "http://localhost:8000/signUp/forgetPassword",
+        {
+          userName,
+          password,
+        }
+      );
       if (response.status === 200) {
         message.success("Password changed successfully");
         navigate("/login");
@@ -77,7 +88,9 @@ function ForgetPassword() {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton onClick={() => setShowPassword(!showPassword)}>
-                    <Iconify icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"} />
+                    <Iconify
+                      icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
+                    />
                   </IconButton>
                 </InputAdornment>
               ),
@@ -93,7 +106,9 @@ function ForgetPassword() {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton onClick={() => setShowPassword(!showPassword)}>
-                    <Iconify icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"} />
+                    <Iconify
+                      icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
+                    />
                   </IconButton>
                 </InputAdornment>
               ),

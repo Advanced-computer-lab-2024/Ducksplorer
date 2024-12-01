@@ -16,6 +16,7 @@ import Iconify from "../Components/TopNav/iconify.js";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { message } from "antd";
+import Cookies from "js-cookie";
 
 function Login() {
   const [userName, setUserName] = useState("");
@@ -49,6 +50,7 @@ function Login() {
       });
       if (response.status === 200) {
         message.success("Logged in successfully");
+        Cookies.set("jwt", response.data.token, { expires: 60 / 1440 });
         const userRole = response.data.role;
         const roleToDashboard = {
           Admin: "/AdminDashboard",
@@ -58,16 +60,16 @@ function Login() {
           Advertiser: "/advertiserDashboard",
           Seller: "/sellerDashboard",
         };
-        window.location.href = roleToDashboard[userRole] || "/";
-        const userRole = response.data.role;
-        const roleToDashboard = {
-          Admin: "/AdminDashboard",
-          Tourist: "/touristDashboard",
-          Guide: "/tourGuideDashboard",
-          Governor: "/governorDashboard",
-          Advertiser: "/advertiserDashboard",
-          Seller: "/sellerDashboard",
-        };
+        // window.location.href = roleToDashboard[userRole] || "/";
+        // const userRole = response.data.role;
+        // const roleToDashboard = {
+        //   Admin: "/AdminDashboard",
+        //   Tourist: "/touristDashboard",
+        //   Guide: "/tourGuideDashboard",
+        //   Governor: "/governorDashboard",
+        //   Advertiser: "/advertiserDashboard",
+        //   Seller: "/sellerDashboard",
+        // };
         window.location.href = roleToDashboard[userRole] || "/";
         localStorage.setItem("user", JSON.stringify(response.data));
       } else {
@@ -82,6 +84,7 @@ function Login() {
   const handleForgotPassword = async () => {
     try {
       console.log(userName);
+      setUserName(JSON.parse(localStorage.getItem("userName")));
       const response = await axios.get(
         `http://localhost:8000/signUp/getMail/${userName}`
       );
@@ -141,9 +144,11 @@ function Login() {
       );
       console.log(response, email, otp);
       if (response.status === 200) {
+        console.log("username", userName);
+        localStorage.setItem("userName", userName);
         message.success("OTP verified. Redirecting to reset password page.");
         setForgotPasswordOpen(false);
-        navigate("/forgotPassword");
+        navigate("/forgetPassword");
       }
     } catch (error) {
       message.error(

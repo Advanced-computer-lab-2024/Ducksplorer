@@ -208,4 +208,47 @@ const getMail = async (req, res) => {
   }
 };
 
-module.exports = { signUp, login, logout, getMail };
+//forget password
+const forgetPassword = async (req, res) => {
+  try {
+    const { userName, password } = req.body;
+    console.log(req.body);
+    console.log(userName);
+    console.log(password);
+    const user = await User.findOne({ userName });
+    if (!user) {
+      return res.status(400).json({ error: "User does not exist" });
+    }
+
+    user.password = password;
+    await user.save();
+
+    switch (user.role) {
+      case "Tourist":
+        const tourist = await Tourist.findOne({ userName });
+        tourist.password = password;
+        await tourist.save();
+        break;
+      case "Guide":
+        const guide = await TourGuide.findOne({ userName });
+        guide.password = password;
+        await guide.save();
+        break;
+      case "Seller":
+        const seller = await Seller.findOne({ userName });
+        seller.password = password;
+        await seller.save();
+        break;
+      case "Advertiser":
+        const advertiser = await Advertiser.findOne({ userName });
+        advertiser.password = password;
+        await advertiser.save();
+        break;
+    }
+    res.status(200).json({ message: "Password changed successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { signUp, login, logout, getMail, forgetPassword };

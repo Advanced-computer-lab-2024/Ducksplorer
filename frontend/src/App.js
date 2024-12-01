@@ -76,7 +76,6 @@ import ChangePassword from "./Pages/Admin/ChangePassword.js";
 import { useAuthContext } from "./context/AuthContext.js";
 import ProtectedRoute from "./Components/ProtectedRoute"; // Import the ProtectedRoute component
 
-
 import CreatePromoCode from "./Pages/Admin/CreatePromoCode.js";
 import MyNotifications from "./Components/myNotifications.js";
 import ForgetPassword from "./Pages/EditAccount/ForgetPassword.js";
@@ -88,20 +87,15 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/notifications" element={<MyNotifications />} />
-          <Route path="/changePassword" 
-          element={
-            <ProtectedRoute>  
-              <ChangePassword />
-            </ProtectedRoute> 
-            } 
+          <Route
+            path="/changePassword"
+            element={
+              <ProtectedRoute>
+                <ChangePassword />
+              </ProtectedRoute>
+            }
           />
-          <Route path="/forgetPassword" 
-          element={
-            <ProtectedRoute>  
-              <ForgetPassword />
-            </ProtectedRoute> 
-            } 
-          />
+          <Route path="/forgetPassword" element={<ForgetPassword />} />
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signUp" element={<Signup />} />
@@ -124,8 +118,8 @@ function App() {
           <Route
             path="/viewUpcomingItinerary"
             element={
-              <ProtectedRoute  allowGuest={true}>
-                <ViewUpcomingItinerary/>
+              <ProtectedRoute allowGuest={true}>
+                <ViewUpcomingItinerary />
               </ProtectedRoute>
             }
           />
@@ -172,9 +166,9 @@ function App() {
           <Route
             path="/guestDashboard"
             element={
-            <ProtectedRoute allowGuest={true}>
-              <GuestDashboard />
-            </ProtectedRoute>
+              <ProtectedRoute allowGuest={true}>
+                <GuestDashboard />
+              </ProtectedRoute>
             }
           />
           <Route
@@ -220,7 +214,7 @@ function App() {
           <Route
             path="/MuseumTouristPov"
             element={
-              <ProtectedRoute  allowGuest={true}>
+              <ProtectedRoute allowGuest={true}>
                 <MuseumTouristPov />
               </ProtectedRoute>
             }
@@ -228,7 +222,7 @@ function App() {
           <Route
             path="/HistoricalPlaceTouristPov"
             element={
-              <ProtectedRoute  allowGuest={true}>
+              <ProtectedRoute allowGuest={true}>
                 <HistoricalPlaceTouristPov />
               </ProtectedRoute>
             }
@@ -252,7 +246,7 @@ function App() {
           <Route
             path="/UpcomingHistoricalPlaces"
             element={
-              <ProtectedRoute  allowGuest={true}>
+              <ProtectedRoute allowGuest={true}>
                 <UpcomingHistoricalPlaces />
               </ProtectedRoute>
             }
@@ -589,7 +583,7 @@ function App() {
             path="/TouristAllProducts"
             element={
               <ProtectedRoute allowGuest={true}>
-                <TouristAllProducts/>
+                <TouristAllProducts />
               </ProtectedRoute>
             }
           />
@@ -658,7 +652,7 @@ function App() {
             }
           />
 
-          <Route path="/addPromoCode" element={<CreatePromoCode/>} />
+          <Route path="/addPromoCode" element={<CreatePromoCode />} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>
