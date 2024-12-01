@@ -3,6 +3,7 @@ const Product = require("../../Models/productModel");
 const Tourist = require("../../Models/touristModel");
 const PurchaseBooking = require("../../Models/purchaseBookingModel");
 const mongoose = require("mongoose");
+const touristModel = require("../../Models/touristModel");
 
 const viewCart = async (req, res) => {
   try {
@@ -266,11 +267,49 @@ const getMyOrders = async (req, res) => {
   }
 };
 
+const getAddresses = async (req, res) => {
+  try{
+    const tourist = await touristModel.findOne({userName: req.params.userName});
+    if(!tourist){
+      res.status(400).json({message: "tourist not found"});
+    }
+    res.status(200).json(tourist.addresses);
+  }
+  catch(error){
+    res.status(500).json({ message: error.message });
+  }
+}
+
+const addAddress = async (req, res) => {
+  try{
+    const { street, city, state, postalCode, country } = req.body;
+    if (!street || !city || !postalCode || !country || !state) {
+      return res.status(400).json({ error: "All required fields must be provided" });
+    }
+
+    const tourist = await touristModel.findOne({ userName: req.params.userName });
+    if (!tourist) return res.status(404).json({ error: "Tourist not found" });
+
+    // Add the new address
+    tourist.addresses.push({ street, city, state, postalCode, country });
+
+    // Save the updated document
+    await tourist.save();
+
+    res.status(200).json({ message: "Address added successfully", addresses: tourist.addresses });
+  }
+  catch(error){
+    res.status(400).json(error);
+  }
+}
+
 module.exports = {
   addProductToCart,
   removeProductFromCart,
   updateProductQuantity,
   viewCart,
   addPurchase2,
-  getMyOrders
+  getMyOrders,
+  getAddresses,
+  addAddress
 };

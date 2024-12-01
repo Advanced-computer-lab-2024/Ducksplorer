@@ -1,3 +1,4 @@
+import AddressDropdown from "../../Components/AddressDropdown.js";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -6,6 +7,7 @@ import { Card, Typography, Space, message, Select, Form, Button } from "antd";
 import Help from "../../Components/HelpIcon.js";
 const { Title } = Typography;
 const { Option } = Select;
+
 
 function PaymentPage() {
   const flight = localStorage.getItem("flight");
@@ -38,6 +40,22 @@ function PaymentPage() {
   const userJson = localStorage.getItem("user"); // Get the logged-in user's details
   const user = JSON.parse(userJson);
   const userName = user.username;
+
+  const [selectedAddress, setSelectedAddress] = useState("");
+  const [addresses, setAddresses] = useState([]);
+
+  const handleAddressSelect = (addressIndex) => {
+    setSelectedAddress(addressIndex); // Update the selected address index
+  };
+
+  const addNewAddress = async (address) => {
+    try {
+      setAddresses((prev) => [...prev, address]); // Update the address list
+      message.success("Address added successfully!");
+    } catch (error) {
+      console.error("Error adding address:", error);
+    }
+  };
 
   const handleVisaSubmit = async (e) => {
     if (itineraryData && !chosenDate) {
@@ -959,6 +977,11 @@ function PaymentPage() {
                 </Card>
                 <Form>
                   <h1>Payment Details</h1>
+
+                  <AddressDropdown onAddressSelect={handleAddressSelect} onAddAddress={addNewAddress}/>
+                  {/* {selectedAddress && <p>Selected Address: 
+                    {`${selectedAddress.street}, ${selectedAddress.city}, ${selectedAddress.state || ""}, ${selectedAddress.country} (${selectedAddress.postalCode})`}
+                  </p>} */}
 
                   <p>Email</p>
                   <input

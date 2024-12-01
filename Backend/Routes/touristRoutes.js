@@ -45,7 +45,9 @@ const {
   updateProductQuantity,
   viewCart,
   addPurchase2,
-  getMyOrders
+  getMyOrders,
+  getAddresses,
+  addAddress
 } = require("../Controllers/Products/cartController");
 
 const { validatePromoCode } = require("../Controllers/promoCodeController");
@@ -96,5 +98,8 @@ router.put("/updateWishlist/:username", updateWishlist);
 router.put("/removeFromWishlist/:username/:productId", removeFromWishlist);
 
 router.post("/validCode", validatePromoCode);
+
+router.get("/addresses/:userName", getAddresses);
+router.post("/newAddress/:userName", addAddress);
 
 module.exports = router;

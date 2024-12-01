@@ -74,7 +74,16 @@ const touristSchema = new Schema(
     historicalPlacestags : {
         type : Array,
         required : false
-    }
+    },
+    addresses: [
+      {
+        street: String,
+        city: String,
+        state: String,
+        postalCode: String,
+        country: String,
+      },
+    ],
   
 },{timestamps: true})
 
