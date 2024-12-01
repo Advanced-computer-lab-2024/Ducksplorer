@@ -49,23 +49,27 @@ const addProductToCart = async (req, res) => {
     let cart = await Cart.findOne({ username: userName });
     if (!cart) {
       cart = new Cart({ username: userName, products: [] });
+      cart.products.push({product: productId , quantity: quantity});
+      await cart.save();
+    }else{
+      const productIndex = cart.products.findIndex(
+        (item) => item.product.toString() === productId
+      );
+  
+      if (productIndex !== -1) {
+        // add the quantity to the quantity existing if already there
+        cart.products[productIndex].quantity += quantity;
+      } else {
+        // Add the product to the cart
+        cart.products.push({ product: productId , quantity: quantity });
+      }
+  
+      // Save the cart
+      await cart.save();
     }
 
     // Check if the product is already in the cart
-    const productIndex = cart.products.findIndex(
-      (item) => item.product.toString() === productId
-    );
-
-    if (productIndex !== -1) {
-      // add the quantity to the quantity existing if already there
-      cart.products[productIndex].quantity += quantity;
-    } else {
-      // Add the product to the cart
-      cart.products.push({ product: productId , quantity: quantity });
-    }
-
-    // Save the cart
-    await cart.save();
+    
 
     res.status(200).json({ message: "Product added to cart successfully.", cart });
   } catch (error) {
@@ -193,5 +197,8 @@ const addPurchase = async (req, res) => {
     res.status(500).json({ error: "An error occurred while processing the purchase." });
   }
 };
+
+
+
 
 module.exports = {addProductToCart, removeProductFromCart,updateProductQuantity, viewCart, addPurchase};

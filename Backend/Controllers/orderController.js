@@ -4,13 +4,12 @@ const Order = require('../Models/orderModel'); // Adjust the path to your Order 
 // Controller function to create a new order
 const placeOrder = async (req, res) => {
     try {
-        const { date, productId, quantity, username } = req.body;
-
+        const { date, productId,  username } = req.body;
+        let quantity = +req.body.quantity;
         // Validate required fields
         if (!date || !productId || !quantity || !username) {
             return res.status(400).json({ message: 'All fields are required.' });
         }
-
         // Validate quantity
         if (quantity <= 0) {
             return res.status(400).json({ message: 'Quantity must be greater than zero.' });
@@ -45,4 +44,38 @@ const placeOrder = async (req, res) => {
     }
 };
 
-module.exports = { placeOrder };
+
+const removeProductFromOrder = async (username, productId) => {
+  try {
+      const result = await Order.deleteOne({ username, productId });
+
+      if (result.deletedCount === 0) {
+          return { success: false, message: 'Product not found in the order.' };
+      }
+
+      return { success: true, message: 'Product removed successfully.' };
+  } catch (error) {
+      console.error('Error removing product from order:', error);
+      return { success: false, message: 'An error occurred while removing the product from the order.' };
+  }
+};
+
+
+const getOrdersByUsername = async (req, res) => {
+  const  username  = req.query; // Get the username from the request body
+  
+  try {
+      const orders = await Order.find({ username });
+
+      if (orders.length === 0) {
+          return res.status(404).json({ success: false, message: 'No orders found for this username.' });
+      }
+
+      return res.status(200).json({ success: true, orders });
+  } catch (error) {
+      console.error('Error retrieving orders:', error);
+      return res.status(500).json({ success: false, message: 'An error occurred while retrieving the orders.' });
+  }
+};
+
+module.exports = { placeOrder , removeProductFromOrder, getOrdersByUsername };

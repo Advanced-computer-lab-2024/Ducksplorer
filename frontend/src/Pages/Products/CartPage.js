@@ -35,7 +35,7 @@ const CartPage = () => {
       for (const item of cartProducts) {
         // Extract details
         const { product, quantity } = item;
-  
+        
         // Call the backend API
         await axios.put("http://localhost:8000/touristRoutes/addPurchase", {
           userName,
