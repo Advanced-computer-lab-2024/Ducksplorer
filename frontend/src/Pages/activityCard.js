@@ -17,7 +17,6 @@ import Button from "@mui/joy/Button";
 
 // ActivityCard component
 export default function ActivityCard({
-  image = "https://images.unsplash.com/photo-1532614338840-ab30cf10ed36?auto=format&fit=crop&w=318",
   title = "Mountain Hiking",
   location = "Himalayas",
   price = "$100",
@@ -25,7 +24,12 @@ export default function ActivityCard({
   rating = "3.5",
 }) {
   const [saved, setSaved] = React.useState(false);
-
+  const [image, setImage] = React.useState("https://picsum.photos/200/300");
+  React.useEffect(() => {
+    setImage(
+      `https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`
+    );
+  }, []);
   const handleSaveClick = () => {
     setSaved(!saved);
   };

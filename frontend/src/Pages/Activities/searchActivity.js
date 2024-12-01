@@ -185,6 +185,7 @@ const SearchActivities = () => {
                   title={activity.name}
                   tags={activity.tags}
                   price={`${activity.price} $`}
+                  image="https://picsum.photos/200/300"
                 />
               ) : null
             ) // We don't output a row when it has `activity.flag` is true (ie activity is inappropriate) or when the activity's advertiser has left the system or the activity has been deleted but cannot be removed from database since it is booked my previous tourists
