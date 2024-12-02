@@ -28,6 +28,7 @@ import Sidebar from "../../Components/Sidebars/Sidebar";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
+import AdminNavbar from "../../Components/TopNav/Adminnavbar";
 
 const ApproveUsers = () => {
   const [pendingUsers, setPendingUsers] = useState([]);
@@ -131,148 +132,260 @@ const ApproveUsers = () => {
 
   return (
     <Box
+    sx={{
+      width: "100%", // Full width of the viewport
+      minHeight: "100vh", // Full height of the viewport
+      background: "linear-gradient(to bottom, #fffff, #eaeaea)", // Gradient background
+      paddingTop: "64px", // Adjust for navbar height
+      overflow: "hidden", // Disable scroll bar
+      display: "flex",
+      justifyContent: "center", // Center the content horizontally
+      padding: "16px",
+      height:"5vh"
+    }}
+  >
+    <Sidebar />
+  
+    <Box
       sx={{
-        minHeight: "100vh",
-        backgroundColor: "#f9f9f9",
-        paddingTop: "64px", // Adjust for navbar height
-        overflowY: "auto",
+        maxWidth: "1400px", // Increase max width for a wider layout
+        width: "100%", // Full width on smaller screens
+        backgroundColor: "#ffffff", // White background for the content
+        borderRadius: "12px", // Rounded corners
+        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
+        padding: "32px", // Inner padding
+        overflow:"hidden"
       }}
     >
-      <Sidebar />
-      <Box sx={{ p: 6 }}>
+      <AdminNavbar/>
+      {/* Page Title */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          marginBottom: "24px",
+        }}
+      >
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: "bold",
+            color: "#3f51b5", // Primary color
+            textAlign: "center",
+          }}
+        >
+          Pending Users
+        </Typography>
+      </Box>
+  
+      {/* Table Container */}
+      <TableContainer
+        component={Paper}
+        sx={{
+          borderRadius: "12px",
+          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Table shadow
+        }}
+      >
+        <Table>
+          <TableHead
+            sx={{
+              backgroundColor: "#3f51bf", // Header background
+            }}
+          >
+            <TableRow>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                User Name
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                Role
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                Status
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                Approve
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                Reject
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                Files
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {pendingUsers.map((user, index) => (
+              <TableRow
+                key={user._id}
+                sx={{
+                  backgroundColor: index % 2 === 0 ? "#ffffff" : "white", // Alternate row colors
+                  "&:hover": {
+                    backgroundColor: "#f1f1f1", // Highlight on hover
+                  },
+                }}
+              >
+                <TableCell>{user.userName}</TableCell>
+                <TableCell>{user.role}</TableCell>
+                <TableCell>{user.status}</TableCell>
+                <TableCell>
+                  <Tooltip title="Approve User">
+                    <IconButton
+                      color="success"
+                      aria-label="Approve user"
+                      onClick={() =>
+                        openConfirmDialog("approve", user.userName)
+                      }
+                      disabled={loading}
+                    >
+                      <CheckCircleIcon />
+                    </IconButton>
+                  </Tooltip>
+                </TableCell>
+                <TableCell>
+                  <Tooltip title="Reject User">
+                    <IconButton
+                      color="error"
+                      aria-label="Reject user"
+                      onClick={() =>
+                        openConfirmDialog("reject", user.userName)
+                      }
+                      disabled={loading}
+                    >
+                      <CancelIcon />
+                    </IconButton>
+                  </Tooltip>
+                </TableCell>
+                <TableCell>
+                  <Tooltip title="View Files">
+                    <IconButton
+                      color="primary"
+                      onClick={() => handleDetails(user.userName)}
+                      disabled={loading}
+                    >
+                      <FolderOpenIcon />
+                    </IconButton>
+                  </Tooltip>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+  
+      {/* File List Display */}
+      {selectedUser && (
+        <Box
+          sx={{
+            marginTop: "24px",
+            padding: "16px",
+            backgroundColor: "#f9f9f9",
+            borderRadius: "8px",
+            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <Typography variant="h6" sx={{ marginBottom: "16px" }}>
+            Files for {selectedUser}
+          </Typography>
+          <List>
+            {userFiles.map((file, index) => (
+              <ListItem
+                key={index}
+                sx={{
+                  padding: "8px",
+                  borderBottom: "1px solid #e0e0e0",
+                  "&:last-child": {
+                    borderBottom: "none",
+                  },
+                }}
+              >
+                <Typography sx={{ flex: 1 }}>{file.filename}</Typography>
+                <Link
+                  href={file.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{
+                    color: "#3f51b5",
+                    textDecoration: "none",
+                    "&:hover": {
+                      textDecoration: "underline",
+                    },
+                  }}
+                >
+                  View File
+                </Link>
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+      )}
+  
+      {/* Loading Spinner */}
+      {loading && (
         <Box
           sx={{
             display: "flex",
             justifyContent: "center",
-            mb: 3,
-            overflowY: "visible",
-            height: "100vh",
+            marginTop: "16px",
           }}
         >
-          <Typography variant="h4">Pending Users</Typography>
+          <CircularProgress />
         </Box>
-        <TableContainer
-          component={Paper}
+      )}
+  
+      {/* Confirmation Dialog */}
+      <Dialog
+        open={confirmDialog.open}
+        onClose={() => setConfirmDialog({ ...confirmDialog, open: false })}
+        sx={{
+          "& .MuiDialog-paper": {
+            borderRadius: "12px",
+            padding: "16px",
+          },
+        }}
+      >
+        <DialogTitle
           sx={{
-            maxWidth: "100%",
-            margin: "0 auto",
+            fontWeight: "bold",
+            fontSize: "20px",
+            color: "#f44336",
           }}
         >
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>User Name</TableCell>
-                <TableCell>Role</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Approve</TableCell>
-                <TableCell>Reject</TableCell>
-                <TableCell>Files</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {pendingUsers.map((user) => (
-                <TableRow key={user._id}>
-                  <TableCell>{user.userName}</TableCell>
-                  <TableCell>{user.role}</TableCell>
-                  <TableCell>{user.status}</TableCell>
-                  <TableCell>
-                    <Tooltip title="Approve User">
-                      <IconButton
-                        color="success"
-                        aria-label="Approve user"
-                        onClick={() =>
-                          openConfirmDialog("approve", user.userName)
-                        }
-                        disabled={loading}
-                      >
-                        <CheckCircleIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
-                  <TableCell>
-                    <Tooltip title="Reject User">
-                      <IconButton
-                        color="error"
-                        aria-label="Reject user"
-                        onClick={() =>
-                          openConfirmDialog("reject", user.userName)
-                        }
-                        disabled={loading}
-                      >
-                        <CancelIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
-                  <TableCell>
-                    <Tooltip title="View Files">
-                      <IconButton
-                        color="primary"
-                        onClick={() => handleDetails(user.userName)}
-                        disabled={loading}
-                      >
-                        <FolderOpenIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-
-        {/* File List Display */}
-        {selectedUser && (
-          <Box sx={{ mt: 4 }}>
-            <Typography variant="h6">Files for {selectedUser}</Typography>
-            <List>
-              {userFiles.map((file, index) => (
-                <ListItem key={index}>
-                  <Typography>{file.filename}</Typography>
-                  <Link
-                    href={file.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    View File
-                  </Link>
-                </ListItem>
-              ))}
-            </List>
-          </Box>
-        )}
-
-        {/* Loading Spinner */}
-        {loading && <CircularProgress sx={{ mt: 2 }} />}
-
-        {/* Confirmation Dialog */}
-        <Dialog
-          open={confirmDialog.open}
-          onClose={() => setConfirmDialog({ ...confirmDialog, open: false })}
-        >
-          <DialogTitle>{`Confirm ${
-            confirmDialog.action === "approve" ? "Approval" : "Rejection"
-          }`}</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Are you sure you want to {confirmDialog.action} this user?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={() =>
-                setConfirmDialog({ ...confirmDialog, open: false })
-              }
-              color="secondary"
-            >
-              Cancel
-            </Button>
-            <Button onClick={handleConfirmAction} color="primary">
-              Confirm
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Box>
+          Confirm {confirmDialog.action === "approve" ? "Approval" : "Rejection"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to {confirmDialog.action} this user?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setConfirmDialog({ ...confirmDialog, open: false })}
+            sx={{
+              backgroundColor: "#e0e0e0",
+              color: "#333",
+              "&:hover": { backgroundColor: "#d6d6d6" },
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleConfirmAction}
+            sx={{
+              backgroundColor: confirmDialog.action === "approve" ? "#4caf50" : "#f44336",
+              color: "white",
+              "&:hover": {
+                backgroundColor:
+                  confirmDialog.action === "approve" ? "#388e3c" : "#d32f2f",
+              },
+            }}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
+  </Box>
+  
   );
 };
 

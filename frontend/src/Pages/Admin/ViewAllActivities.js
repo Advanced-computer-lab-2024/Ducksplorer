@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { message } from 'antd';
-import FlagIcon from '@mui/icons-material/Flag';
-import { Link } from 'react-router-dom';
-import WarningIcon from '@mui/icons-material/Warning';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import TouristSidebar from '../../Components/Sidebars/TouristSidebar';
-import AdminNavbar from '../../Components/TopNav/Adminnavbar';
-import TouristNavBar from '../../Components/TouristNavBar';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { message } from "antd";
+import FlagIcon from "@mui/icons-material/Flag";
+import { Link } from "react-router-dom";
+import WarningIcon from "@mui/icons-material/Warning";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
+import AdminNavbar from "../../Components/TopNav/Adminnavbar";
+import TouristNavBar from "../../Components/TouristNavBar";
 import {
   Box,
   Table,
@@ -20,8 +20,8 @@ import {
   Paper,
   IconButton,
   Tooltip,
-  Rating
-} from '@mui/material';
+  Rating,
+} from "@mui/material";
 
 const ViewAllActivities = () => {
   const [activities, setActivities] = useState([]);
@@ -29,26 +29,34 @@ const ViewAllActivities = () => {
 
   // Default rendering of all activities
   useEffect(() => {
-    axios.get('http://localhost:8000/activity/')
-      .then(response => {
+    axios
+      .get("http://localhost:8000/activity/")
+      .then((response) => {
         setActivities(response.data);
       })
-      .catch(error => {
-        console.error('There was an error fetching the activities!', error);
+      .catch((error) => {
+        console.error("There was an error fetching the activities!", error);
       });
   }, []);
 
-
-
   const handleSetFlag = (activityId, newFlagState) => {
-    axios.put(`http://localhost:8000/activity/toggleFlagActivity/${activityId}`, { flag: newFlagState })
-      .then(response => {
-        const action = newFlagState ? 'Set as inappropriate' : 'Set as appropriate';
+    axios
+      .put(`http://localhost:8000/activity/toggleFlagActivity/${activityId}`, {
+        flag: newFlagState,
+      })
+      .then((response) => {
+        const action = newFlagState
+          ? "Set as inappropriate"
+          : "Set as appropriate";
         message.success(`Activity ${action}!`);
       })
-      .catch(error => {
-        console.error('Error changing the flag of activity!', error);
-        message.error(`Error changing the flag of activity: ${error.response ? error.response.data.message : error.message}`);
+      .catch((error) => {
+        console.error("Error changing the flag of activity!", error);
+        message.error(
+          `Error changing the flag of activity: ${
+            error.response ? error.response.data.message : error.message
+          }`
+        );
       });
   };
 
@@ -64,37 +72,26 @@ const ViewAllActivities = () => {
     handleSetFlag(activity._id, newFlagState);
   };
 
-
   return (
     <Box
-    sx={{
-      minHeight: "100vh",
-      backgroundColor: "#f9f9f9",
-      paddingTop: "64px", // Adjust for navbar height
-      overflowY: "auto",
-    }}
-  >
-    {/* Navbar */}
-    <AdminNavbar />   
-    <Box
-    sx={{
-      height: "100vh",
-      backgroundColor: "#f9f9f9",
-      paddingTop: "64px", // Adjust for navbar height
-    }}
-  >
-    <TouristNavBar />
-    <TouristSidebar/>
-    <Box sx={{ padding: '20px', maxWidth: '1200px', margin: 'auto', display: 'flex', flexDirection: 'column', overflowY: 'visible', height: '100vh' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
-        <Typography variant="h4">
-          Available activities
-        </Typography>
+      sx={{
+        padding: "20px",
+        maxWidth: "1200px",
+        margin: "auto",
+        display: "flex",
+        flexDirection: "column",
+        overflowY: "visible",
+        height: "100vh",
+      }}
+    >
+      <Link to="/AdminDashboard"> Back </Link>
+      <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+        <Typography variant="h4">Available activities</Typography>
       </Box>
 
       <div style={{ flex: 1 }}>
         {activities.length > 0 ? (
-          <Box >
+          <Box>
             <TableContainer component={Paper} style={{ borderRadius: 20 }}>
               <Table>
                 <TableHead>
@@ -112,43 +109,67 @@ const ViewAllActivities = () => {
                     <TableCell>Flag</TableCell>
                     <TableCell>Action</TableCell>
                   </TableRow>
-
                 </TableHead>
 
                 <TableBody>
                   {activities.map((activity) => (
-                    <TableRow key={activity._id}
-                      style={{ backgroundColor: activity.flag ? '#ffdddd' : 'transparent' }}> {/* Change background for flagged activities */}
-
+                    <TableRow
+                      key={activity._id}
+                      style={{
+                        backgroundColor: activity.flag
+                          ? "#ffdddd"
+                          : "transparent",
+                      }}
+                    >
+                      {" "}
+                      {/* Change background for flagged activities */}
                       <TableCell>{activity.name}</TableCell>
                       <TableCell>{activity.price}</TableCell>
                       <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
                       <TableCell>{activity.category}</TableCell>
                       <TableCell>{activity.tags.join(", ")}</TableCell>
                       <TableCell>{activity.specialDiscount}</TableCell>
-                      <TableCell>{new Date(activity.date).toLocaleDateString()}</TableCell>
+                      <TableCell>
+                        {new Date(activity.date).toLocaleDateString()}
+                      </TableCell>
                       <TableCell>{activity.duration}</TableCell>
                       <TableCell>{activity.location}</TableCell>
                       <TableCell>
                         {/* Display Rating on one line */}
-                        <Rating value={activity.averageRating} precision={0.1} readOnly />
+                        <Rating
+                          value={activity.averageRating}
+                          precision={0.1}
+                          readOnly
+                        />
                       </TableCell>
-
                       <TableCell>
                         {/* Display Flag status in a separate line */}
                         {activity.flag ? (
-                          <span style={{ color: 'red', display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                            <WarningIcon style={{ marginRight: '4px' }} />
+                          <span
+                            style={{
+                              color: "red",
+                              display: "flex",
+                              alignItems: "center",
+                              flexDirection: "column",
+                            }}
+                          >
+                            <WarningIcon style={{ marginRight: "4px" }} />
                             Inappropriate
                           </span>
                         ) : (
-                          <span style={{ color: 'green', display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                            <CheckCircleIcon style={{ marginRight: '4px' }} />
+                          <span
+                            style={{
+                              color: "green",
+                              display: "flex",
+                              alignItems: "center",
+                              flexDirection: "column",
+                            }}
+                          >
+                            <CheckCircleIcon style={{ marginRight: "4px" }} />
                             Appropriate
                           </span>
                         )}
                       </TableCell>
-
                       <TableCell>
                         {/* Display Flag icon on a separate line */}
                         <Tooltip title="Change Activity Flag">
@@ -167,22 +188,17 @@ const ViewAllActivities = () => {
                     </TableRow>
                   ))}
                 </TableBody>
-
               </Table>
             </TableContainer>
           </Box>
         ) : (
-          <Typography variant="body1" style={{ marginTop: '20px' }}>
+          <Typography variant="body1" style={{ marginTop: "20px" }}>
             No Activities found.
           </Typography>
         )}
       </div>
     </Box>
-    </Box>
-    </Box>
   );
-}
+};
 
 export default ViewAllActivities;
-
-

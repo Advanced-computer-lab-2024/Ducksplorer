@@ -4,6 +4,7 @@ const { $gte } = require("sift");
 const Category = require("../Models/activityCategory.js");
 const Tags = require("../Models/preferenceTagsModels.js");
 const getAllActivitiesByUsername = require("../Controllers/Activity/activityController.js");
+const ActivityBooking = require("../Models/activityBookingModel.js");
 
 const createActivity = async (activityData) => {
   const {
@@ -96,6 +97,12 @@ const searchActivities = async (searchParams) => {
   return await Activity.find(query);
 };
 
+const getActivitiesWithinDateRange = async (startDate, endDate) => {
+  return await ActivityBooking.find({
+    date: { $gte: startDate, $lte: endDate },
+  });
+};
+
 const viewUpcomingActivities = async () => {
   const currentDate = new Date();
   const upcomingActivities = await Activity.find({
@@ -107,6 +114,7 @@ const viewUpcomingActivities = async () => {
 module.exports = {
   createActivity,
   getAllActivitiesByUsername,
+  getActivitiesWithinDateRange,
   updateActivity,
   deleteActivity,
   searchActivities,

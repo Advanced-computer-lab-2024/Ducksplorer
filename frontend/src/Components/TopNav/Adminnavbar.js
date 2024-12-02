@@ -8,6 +8,9 @@ import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useNavigate } from "react-router-dom";
+import { IconButton } from "@mui/material"; // Import IconButton from Material-UI
+import LogoutIcon from "@mui/icons-material/Logout"; // Import LogoutIcon from Material-UI Icons
+
 
 const AdminNavbar = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -116,17 +119,43 @@ const AdminNavbar = () => {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-            <MenuItem onClick={() => handleNavigation("profile")}>
-              <Typography textAlign="center">Profile</Typography>
-            </MenuItem>
-            <MenuItem onClick={handleTogglePreferences}>
-              <Typography textAlign="center">
-                {showPreferences ? "Hide Preferences" : "Show Preferences"}
-              </Typography>
-            </MenuItem>
-            <MenuItem onClick={() => handleNavigation("logout")}>
-              <Typography textAlign="center">Logout</Typography>
-            </MenuItem>
+           
+           
+           <MenuItem
+  onClick={() => handleNavigation("logout")}
+  sx={{
+    display: "flex",
+    alignItems: "center",
+    gap: "10px", // Space between icon and text
+    padding: "10px 20px", // Add padding for a larger click area
+    borderRadius: "8px", // Rounded corners
+    "&:hover": {
+      backgroundColor: "#f44336", // Highlight color on hover
+      color: "white", // Change text color on hover
+    },
+  }}
+>
+  <IconButton
+    sx={{
+      color: "#f44336", // Initial icon color
+      "&:hover": {
+        color: "white", // Change icon color on hover
+      },
+    }}
+  >
+    <LogoutIcon /> {/* Replace with a logout icon from Material-UI */}
+  </IconButton>
+  <Typography
+    textAlign="center"
+    sx={{
+      fontWeight: "bold",
+      fontSize: "16px",
+    }}
+  >
+    Logout
+  </Typography>
+</MenuItem>
+
           </Menu>
         </Box>
       </Toolbar>

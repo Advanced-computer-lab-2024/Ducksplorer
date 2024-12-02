@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
 import {
   Drawer,
   Typography,
@@ -8,23 +7,24 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-} from '@mui/material';
-import { Link } from 'react-router-dom';
-import LockIcon from '@mui/icons-material/Lock';
-import PeopleIcon from '@mui/icons-material/People';
-import DeleteIcon from '@mui/icons-material/Delete';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import CategoryIcon from '@mui/icons-material/Category';
-import ReportIcon from '@mui/icons-material/Report';
-import LabelIcon from '@mui/icons-material/Label';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import WidgetsIcon from '@mui/icons-material/Widgets';
-import EventNoteIcon from '@mui/icons-material/EventNote';
+} from "@mui/material";
+import { Link } from "react-router-dom";
+//import DashboardIcon from '@mui/icons-material/Dashboard';
+import PeopleIcon from "@mui/icons-material/People";
+import DeleteIcon from "@mui/icons-material/Delete";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import CategoryIcon from "@mui/icons-material/Category";
+import LabelIcon from "@mui/icons-material/Label";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import EventNoteIcon from "@mui/icons-material/EventNote";
+import WidgetsIcon from "@mui/icons-material/Widgets";
+import ReportIcon from "@mui/icons-material/Report"; // Icon for Complaints
+import LockIcon from "@mui/icons-material/Lock"; // Icon for Change Password
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+
+const drawerWidth = 300;
 
 const Sidebar = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for sidebar toggle
-  const navigate = useNavigate(); // Initialize the useNavigate hook
-
   return (
     <Drawer
     variant="permanent"
@@ -32,7 +32,7 @@ const Sidebar = () => {
       width: isSidebarOpen ? 300 : 80, // Sidebar width based on state
       transition: 'width 0.3s ease-in-out', // Smooth transition for opening/closing
       '& .MuiDrawer-paper': {
-        width: isSidebarOpen ? 300 : 76, // Dynamic width for the drawer
+        width: isSidebarOpen ? 300 : 80, // Dynamic width for the drawer
         boxSizing: 'border-box',
         marginTop: '9vh', // Keep the sidebar below the app bar
 
@@ -60,6 +60,9 @@ const Sidebar = () => {
           { text: 'Products Management', icon: <ShoppingCartIcon />, link: '/Adminproducts', color: '#5d4037' },
           { text: 'View all Activities', icon: <WidgetsIcon />, link: '/ViewAllActivities', color: '#0097a7' },
           { text: 'View All Itineraries', icon: <EventNoteIcon />, link: '/ViewAllItineraries', color: '#f57c00' },
+          { text: 'Revenue Report', icon: <EventNoteIcon />, link: '/adminReport', color: '#f57c00' },
+          { text: 'Users Report', icon: <EventNoteIcon />, link: '/userReport', color: '#f57c00' },
+
         ].map((item, index) => (
           <ListItem
             button
@@ -80,8 +83,14 @@ const Sidebar = () => {
                 justifyContent: 'center', // Center icons when sidebar is closed
               }}
             >
+              <ListItemIcon
+              sx={{
+                color: item.color,
+                justifyContent: 'center', // Center icons when sidebar is closed
+              }}
+            ></ListItemIcon>
               {item.icon}
-            </ListItemIcon>
+              </ListItemIcon>
             <ListItemText
               primary={item.text}
               sx={{

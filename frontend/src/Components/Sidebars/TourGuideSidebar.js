@@ -13,6 +13,7 @@ import {
   DialogTitle,
   Button
 } from '@mui/material';
+import SummarizeIcon from '@mui/icons-material/Summarize';
 import { Link, useNavigate } from 'react-router-dom';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import PersonIcon from '@mui/icons-material/Person';
@@ -26,6 +27,9 @@ const TourGuideSidebar = () => {
   const [open, setOpen] = useState(false); // State for the dialog
   const [userName, setUserName] = useState('');
   const navigate = useNavigate(); // Initialize the useNavigate hook
+
+  const user = JSON.parse(localStorage.getItem('user')); // Fetch user from localStorage
+  const userId = user ? user._id : null; // Safely extract the ID
 
   const handleDeleteClick = () => {
     const userJson = localStorage.getItem('user');
@@ -147,6 +151,13 @@ const TourGuideSidebar = () => {
           </ListItemIcon>
           {isSidebarOpen && <ListItemText primary="Create a new Itinerary" />}
         </ListItem>
+
+        <ListItem button component={Link} to="/tourGuideReport">
+            <ListItemIcon>
+              <SummarizeIcon />
+            </ListItemIcon>
+            <ListItemText primary="Report" />
+          </ListItem>
       </List>
       <Divider />
 

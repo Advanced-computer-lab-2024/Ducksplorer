@@ -33,6 +33,7 @@ const FilterActivities = () => {
   const [averageRating, setAverageRating] = useState(0); // Set default value to 0
   const [categories, setCategories] = useState([]); // Store fetched categories
 
+
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
   // Fetch categories from backend
@@ -165,70 +166,70 @@ const FilterActivities = () => {
             </Button>
           </Box>
 
-          <TableContainer style={{ borderRadius: 20 }} component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Name</TableCell>
+        {/* Activity Table */}
+        <TableContainer style={{ borderRadius: 20 }} component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell>
+                  Price
+                  <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                </TableCell>
+                <TableCell>Is Open</TableCell>
+                <TableCell>Category</TableCell>
+                <TableCell>Tags</TableCell>
+                <TableCell>Discount</TableCell>
+                <TableCell>Dates and Times</TableCell>
+                <TableCell>Duration</TableCell>
+                <TableCell>Location</TableCell>
+                <TableCell>Rating</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {activities.map((activity) => activity.flag === false && activity.advertiserDeleted === false && activity.deletedActivity === false ? (
+                <TableRow key={activity._id}>
+                  <TableCell>{activity.name}</TableCell>
                   <TableCell>
-                    Price
-                    <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
                   </TableCell>
-                  <TableCell>Is Open</TableCell>
-                  <TableCell>Category</TableCell>
-                  <TableCell>Tags</TableCell>
-                  <TableCell>Discount</TableCell>
-                  <TableCell>Dates and Times</TableCell>
-                  <TableCell>Duration</TableCell>
-                  <TableCell>Location</TableCell>
-                  <TableCell>Rating</TableCell>
+                  <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
+                  <TableCell>{activity.category}</TableCell>
+                  <TableCell>{activity.tags.join(", ")}</TableCell>
+                  <TableCell>{activity.specialDiscount}</TableCell>
+                  <TableCell>{activity.date ? (() => {
+                    const dateObj = new Date(activity.date);
+                    const date = dateObj.toISOString().split('T')[0];
+                    const time = dateObj.toTimeString().split(' ')[0];
+                    return (
+                      <div>
+                        {date} at {time}
+                      </div>
+                    );
+                  })()
+                    : 'No available date and time' ? (() => {
+                      const dateObj = new Date(activity.date);
+                      const date = dateObj.toISOString().split('T')[0];
+                      const time = dateObj.toTimeString().split(' ')[0];
+                      return (
+                        <div>
+                          {date} at {time}
+                        </div>
+                      );
+                    })()
+                      : 'No available date and time'}</TableCell>
+                  <TableCell>{activity.duration}</TableCell>
+                  <TableCell>{activity.location}</TableCell>
+                  <TableCell>
+                    <Rating value={activity.averageRating} precision={0.1} readOnly />
+                  </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {activities.map((activity) =>
-                  activity.flag === false &&
-                  activity.advertiserDeleted === false &&
-                  activity.deletedActivity === false ? (
-                    <TableRow key={activity._id}>
-                      <TableCell>{activity.name}</TableCell>
-                      <TableCell>
-                        {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)}{" "}
-                      </TableCell>
-                      <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
-                      <TableCell>{activity.category}</TableCell>
-                      <TableCell>{activity.tags.join(", ")}</TableCell>
-                      <TableCell>{activity.specialDiscount}</TableCell>
-                      <TableCell>
-                        {activity.date
-                          ? (() => {
-                              const dateObj = new Date(activity.date);
-                              const date = dateObj.toISOString().split("T")[0];
-                              const time = dateObj.toTimeString().split(" ")[0];
-                              return (
-                                <div>
-                                  {date} at {time}
-                                </div>
-                              );
-                            })()
-                          : "No available date and time"}
-                      </TableCell>
-                      <TableCell>{activity.duration}</TableCell>
-                      <TableCell>{activity.location}</TableCell>
-                      <TableCell>
-                        <Rating
-                          value={activity.averageRating}
-                          precision={0.1}
-                          readOnly
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ) : null
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Container>
-        <Help />
+              ) : null
+              ) // We don't output a row when it has `activity.flag` is true (ie activity is inappropriate) or when the activity's advertiser has left the system or the activity has been deleted but cannot be removed from database since it is booked my previous tourists
+              }
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Box>
     </>
   );

@@ -19,7 +19,7 @@ import {
   Container,
   Grid,
 } from "@mui/material";
-import ActivityCard from "../activityCard";
+import ActivityCard from "../../Components/activityCard";
 import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
 

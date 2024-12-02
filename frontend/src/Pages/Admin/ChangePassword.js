@@ -54,7 +54,7 @@ const validatePassword = () => {
     <Box
   sx={{
     minHeight: "100vh",
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#ffffff",
     paddingTop: "64px", // Adjust for navbar height
     overflowY: "auto",
   }}

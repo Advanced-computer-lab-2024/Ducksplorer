@@ -8,7 +8,7 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import axios from "axios";
 import Sidebar from "../../Components/Sidebars/Sidebar.js";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import AdminNavbar from "../../Components/TopNav/Adminnavbar.js";
 
 function AddGovernor() {
@@ -39,97 +39,154 @@ function AddGovernor() {
   return (
     <Box
     sx={{
-      minHeight: "100vh",
-      backgroundColor: "#f9f9f9",
+      minHeight: "100vh", // Full viewport height
+      width: "130%", // Full viewport width
+      display: "flex",
+      justifyContent: "center", // Center horizontally
+      alignItems: "center", // Center vertically
+      backgroundColor: "#ffffff",
       paddingTop: "64px", // Adjust for navbar height
-      overflowY: "auto",
+      overflowY: "hidden", // Disable scrolling for cleaner centering
     }}
   >
     {/* Navbar */}
     <AdminNavbar />
-      <Sidebar />
-      <div style={{ height: "80vh", transform: "translateX(125px)" }}>
-        <div className="text-center">
-          <h4
-            className="mt-1 mb-5 pb-1"
-            style={{
-              color: "orange",
-              textAlign: "center",
-              fontSize: "24px",
-              fontWeight: "bold",
-              textShadow: "2px 2px 4px #aaa",
-            }}
-          >
-            Add Governor
-          </h4>
-          <img
-            src="logo1.png"
-            style={{
-              width: "300px",
-              height: "200px",
-              justifyContent: "center",
-            }}
-            alt="logo"
-          />
-        </div>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <Stack spacing={3}>
-            <TextField
-              name="username"
-              label="Username"
-              type="text"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-            />
-
-            <TextField
-              name="password"
-              label="Password"
-              type={showPassword ? "text" : "password"} // Toggle password visibility
-              value={password}
-              height="50"
-              width="20"
-              onChange={(e) => setPassword(e.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword(!showPassword)}
-                      edge="end"
-                    >
-                      <Iconify
-                        icon={
-                          showPassword ? "eva:eye-fill" : "eva:eye-off-fill"
-                        }
-                        style={{ color: "#602b37", fontSize: "40px" }}
-                      />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-
-            <Button
-              variant="contained"
-              onClick={handleAdd}
-              style={{
-                width: "300px",
-                backgroundColor: "orange",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                padding: "10px 20px",
-                fontSize: "16px",
-                cursor: "pointer",
-              }}
-            >
-              Add Governor
-            </Button>
-          </Stack>
-        </div>
-      </div>
+    <Sidebar />
+  
+    {/* Main Content */}
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: "500px",
+        backgroundColor: "#ffffff", // White card background
+        borderRadius: "12px", // Rounded corners
+        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
+        padding: "32px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
+      }}
+    >
+      {/* Title */}
+      <Typography
+        variant="h4"
+        sx={{
+          color: "orange",
+          fontWeight: "bold",
+          textShadow: "2px 2px 4px #aaa",
+          marginBottom: "24px",
+        }}
+      >
+        Add Governor
+      </Typography>
+  
+      {/* Logo */}
+      <img
+        src="logo1.png"
+        style={{
+          width: "150px",
+          height: "150px",
+          marginBottom: "24px",
+        }}
+        alt="Logo"
+      />
+  
+      {/* Form */}
+      <Stack spacing={3} sx={{ width: "100%" }}>
+        <TextField
+          name="username"
+          label="Username"
+          type="text"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+          fullWidth
+          InputLabelProps={{ style: { color: "#777" } }}
+          InputProps={{
+            style: {
+              fontSize: "16px",
+              color: "#333",
+            },
+          }}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "orange",
+              },
+              "&:hover fieldset": {
+                borderColor: "orange",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "orange",
+              },
+            },
+          }}
+        />
+  
+        <TextField
+          name="password"
+          label="Password"
+          type={showPassword ? "text" : "password"}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          fullWidth
+          InputLabelProps={{ style: { color: "#777" } }}
+          InputProps={{
+            style: {
+              fontSize: "16px",
+              color: "#333",
+            },
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                >
+                  <Iconify
+                    icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
+                    style={{ color: "orange", fontSize: "24px" }}
+                  />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "orange",
+              },
+              "&:hover fieldset": {
+                borderColor: "orange",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "orange",
+              },
+            },
+          }}
+        />
+  
+        <Button
+          variant="contained"
+          onClick={handleAdd}
+          sx={{
+            backgroundColor: "orange",
+            color: "white",
+            fontWeight: "bold",
+            textTransform: "none",
+            borderRadius: "25px",
+            padding: "10px 0",
+            fontSize: "16px",
+            "&:hover": {
+              backgroundColor: "#e68a00",
+            },
+          }}
+          fullWidth
+        >
+          Add Governor
+        </Button>
+      </Stack>
     </Box>
+  </Box>
   );
-}
-
+}  
 export default AddGovernor;

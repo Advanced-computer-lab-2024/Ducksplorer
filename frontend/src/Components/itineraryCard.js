@@ -17,50 +17,29 @@ import Button from "@mui/joy/Button";
 import axios from "axios";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
+import Select, { selectClasses } from "@mui/joy/Select";
+import Option from "@mui/joy/Option";
 
-// ActivityCard component
-export default function ActivityCard({ activity = {} }) {
+export default function ItineraryCard({ itinerary = {} }) {
   const navigate = useNavigate();
   const [saved, setSaved] = React.useState(false);
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
 
-  const handleBooking = async (activityId) => {
-    try {
-      const userJson = localStorage.getItem("user");
-      const isGuest = localStorage.getItem("guest") === "true";
-      if (isGuest) {
-        message.error("User is not logged in, Please login or sign up.");
-        navigate("/guestDashboard");
-        return;
-      }
-      if (!userJson) {
-        message.error("User is not logged in.");
-        return null;
-      }
-      const user = JSON.parse(userJson);
-      if (!user || !user.username) {
-        message.error("User information is missing.");
-        return null;
-      }
+  const handleShareLink = (itineraryId) => {
+    const link = `${window.location.origin}/viewAllTourist/${itineraryId}`; // Update with your actual route
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        message.success("Link copied to clipboard!");
+      })
+      .catch(() => {
+        message.error("Failed to copy link.");
+      });
+  };
 
-      const type = "activity";
-
-      localStorage.setItem("activityId", activityId);
-      localStorage.setItem("type", type);
-
-      const response = await axios.get(
-        `http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}`
-      );
-
-      if (response.status === 200) {
-        navigate("/payment");
-      } else {
-        message.error("Booking failed.");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      message.error("An error occurred while booking.");
-    }
+  const handleShareEmail = (itineraryId) => {
+    const link = `${window.location.origin}/viewAllTourist/${itineraryId}`; // Update with your actual route
+    window.location.href = `mailto:?subject=Check out this itinerary&body=Here is the link to the itinerary: ${link}`;
   };
 
   React.useEffect(() => {
@@ -85,7 +64,7 @@ export default function ActivityCard({ activity = {} }) {
             <AspectRatio ratio="2">
               <img src={image} loading="lazy" alt="" />
             </AspectRatio>
-            <Tooltip title="Save Activity">
+            <Tooltip title="Save itinerary">
               <IconButton
                 size="md"
                 variant="solid"
@@ -134,7 +113,6 @@ export default function ActivityCard({ activity = {} }) {
               <div
                 style={{
                   display: "flex",
-
                   flexDirection: "column",
                 }}
               >
@@ -145,11 +123,11 @@ export default function ActivityCard({ activity = {} }) {
                     marginRight: 20,
                   }}
                 >
-                  {activity.name}
+                  Itinerary Name
                 </h4>
 
                 <Rating
-                  value={activity.rating}
+                  value={itinerary.rating}
                   icon={<StarIcon sx={{ color: "orange" }} />}
                   emptyIcon={<StarOutlineIcon />}
                   readOnly
@@ -162,7 +140,7 @@ export default function ActivityCard({ activity = {} }) {
                     marginTop: "5px",
                   }}
                 >
-                  {activity.tags.map((tag, index) => (
+                  {itinerary.tags.map((tag, index) => (
                     <Chip
                       component="span"
                       size="sm"
@@ -208,14 +186,9 @@ export default function ActivityCard({ activity = {} }) {
                   </Chip>
                 }
               >
-                {activity.price}$
+                {itinerary.price}$
               </Typography>
-              <Button
-                size="md"
-                variant="solid"
-                color="primary"
-                onClick={() => handleBooking(activity._id)}
-              >
+              <Button size="md" variant="solid" color="primary">
                 Book Now
               </Button>
             </div>

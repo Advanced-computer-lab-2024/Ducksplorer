@@ -16,6 +16,8 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import PeopleIcon from "@mui/icons-material/People";
+// import WidgetsIcon from "@mui/icons-material/Widgets";
+import SummarizeIcon from '@mui/icons-material/Summarize';
 import PersonIcon from '@mui/icons-material/Person';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
@@ -147,6 +149,13 @@ const AdvertiserSidebar = () => {
           </ListItemIcon>
           {isSidebarOpen && <ListItemText primary="My Activities" />}
         </ListItem>
+
+        <ListItem component={Link} to="/advertiserReport">
+            <ListItemIcon>
+              <SummarizeIcon />
+            </ListItemIcon>
+            <ListItemText primary="Report" />
+          </ListItem>
       </List>
       <Divider />
 
