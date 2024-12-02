@@ -77,7 +77,7 @@ const MuseumTouristPov = () => {
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography variant="h4" fontWeight="700">
-            Available Museum Visits
+            Museums
           </Typography>
         </Box>
 

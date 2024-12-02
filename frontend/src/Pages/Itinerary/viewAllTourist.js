@@ -287,7 +287,7 @@ function SearchItineraries() {
           Back
         </Link>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Typography variant="h4">Available itineraries</Typography>
+          <Typography variant="h4"> Itineraries</Typography>
         </Box>
         <Stack spacing={2} style={{ marginBottom: "20px" }}>
           <Input
@@ -449,9 +449,9 @@ function SearchItineraries() {
             {
               itineraries.map((itinerary) =>
                 itinerary.flag === false &&
-                itinerary.isDeactivated === false &&
-                itinerary.tourGuideDeleted === false &&
-                itinerary.deletedItinerary === false ? (
+                  itinerary.isDeactivated === false &&
+                  itinerary.tourGuideDeleted === false &&
+                  itinerary.deletedItinerary === false ? (
                   <ItineraryCard itinerary={itinerary} />
                 ) : null
               ) // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists

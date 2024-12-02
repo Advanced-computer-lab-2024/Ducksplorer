@@ -34,7 +34,7 @@ const RUDMuseum = () => {
     const [selectedMuseum, setSelectedMuseum] = useState(null);
     const [editingMuseum, setEditingMuseum] = useState(null);
     const [museumTagsOptions, setMuseumTagsOptions] = useState([]); // State to store fetched museum tags
-    
+
     const [exchangeRates, setExchangeRates] = useState({});
     const [currency, setCurrency] = useState('EGP');
     const [formData, setFormData] = useState({
@@ -48,18 +48,18 @@ const RUDMuseum = () => {
         museumName: '',
         museumCategory: '',
         tags: [],
-       // createdBy: ''
+        // createdBy: ''
     });
     // const [createdBy, setCreatedBy] = useState("alya");
 
     // Fetch museums on component mount
     useEffect(() => {
         const userJson = localStorage.getItem('user'); // Get the 'user' item as a JSON string  to get the currently logged in user
-        const user = JSON.parse(userJson); 
-        const userName = user.username;
+        const user = JSON.parse(userJson);
+        const userName = user.username;
         console.log(userName);
         // console.log(createdBy);
-        if (userName){
+        if (userName) {
             axios.get(`http://localhost:8000/museum/getAllMyMuseums/${userName}`)
                 .then(response => {
                     setMuseums(response.data);
@@ -73,7 +73,7 @@ const RUDMuseum = () => {
     const handleCurrencyChange = (rates, selectedCurrency) => {
         setExchangeRates(rates);
         setCurrency(selectedCurrency);
-      };
+    };
 
     useEffect(() => {//fetching all the tags because they will be used in the dropdown that appears when we try to  edit the tags of a particular museum visit
         const fetchMuseumTags = async () => {
@@ -98,13 +98,13 @@ const RUDMuseum = () => {
         setFormData(prevData => ({ ...prevData, [name]: value }));
     };
 
-// Responsible for when the user clicks on edit icon
+    // Responsible for when the user clicks on edit icon
     const handleEditClick = (museum) => {
         setFormData(museum);
         setEditingMuseum(museum);
     };
 
-// When the edit icon is clicked the handleUpdate method calls the backend to execute this update
+    // When the edit icon is clicked the handleUpdate method calls the backend to execute this update
     const handleUpdate = (event) => {
         event.preventDefault();
         axios.put(`http://localhost:8000/museum/updateMuseum/${editingMuseum._id}`, formData)
@@ -117,13 +117,13 @@ const RUDMuseum = () => {
     };
 
 
- // When the delete icon is clicked a popup saying are you sure appears, this method opens it
+    // When the delete icon is clicked a popup saying are you sure appears, this method opens it
     const handleClickOpen = (museum) => {
         setSelectedMuseum(museum);
         setOpen(true);
     };
 
-//Calls the backend to actually delete
+    //Calls the backend to actually delete
     const handleDelete = (id) => {
         axios.delete(`http://localhost:8000/museum/deleteMuseum/${id}`)
             .then(() => {
@@ -148,7 +148,7 @@ const RUDMuseum = () => {
         handleClose();
     };
 
-// New function to reset editing state and form data
+    // New function to reset editing state and form data
     const handleCancelEdit = () => {
         setEditingMuseum(null);
         setFormData({
@@ -176,7 +176,7 @@ const RUDMuseum = () => {
             <Link to="/governorDashboard"> Back </Link>
             <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'visible', height: '100vh' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
-                    <Typography variant="h4">Available Museum Visits</Typography>
+                    <Typography variant="h4">Museums</Typography>
                 </Box>
 
                 {/* Button to navigate to page to create tags */}
@@ -185,7 +185,7 @@ const RUDMuseum = () => {
                         Create Tag for Museum Visits
                     </Button>
                 </Box>
-                
+
 
                 <TableContainer component={Paper}>
                     <Table>
@@ -195,7 +195,7 @@ const RUDMuseum = () => {
                                 <TableCell>Location</TableCell>
                                 <TableCell>Pictures</TableCell>
                                 <TableCell>Ticket Price
-                                <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                                    <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
                                 </TableCell>
                                 <TableCell>Opening Time</TableCell>
                                 <TableCell>Closing Time</TableCell>
@@ -216,10 +216,10 @@ const RUDMuseum = () => {
                                         <img
                                             src={museum.pictures} // Assuming this is a string URL
                                             alt="Museum"
-                                            style={{ width: '100px', height: 'auto', objectFit: 'cover' }} 
+                                            style={{ width: '100px', height: 'auto', objectFit: 'cover' }}
                                         />
                                     </TableCell>
-                                    <TableCell>                    
+                                    <TableCell>
                                         {(museum.ticketPrices * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
                                     </TableCell>
                                     <TableCell>{museum.openingTime}</TableCell>
@@ -333,31 +333,31 @@ const RUDMuseum = () => {
                             required
                         />
                         {/* Tags dropdown */}
-            <label>Tags:</label>
-            <Select
-              mode="multiple"
-              allowClear
-              style={{ width: '100%' }}
-              placeholder="Select tags"
-              value={formData.tags} // Ensure the current tags are displayed in the dropdown
-              onChange={(selectedTags) => setFormData({ ...formData, tags: selectedTags })} // Handle adding/removing tags
-            >
-              {museumTagsOptions.map((tag) => (
-                <Select.Option key={tag._id} value={tag.museumTag}>
-                  {tag.museumTag}
-                </Select.Option>
-              ))}
-            </Select>
+                        <label>Tags:</label>
+                        <Select
+                            mode="multiple"
+                            allowClear
+                            style={{ width: '100%' }}
+                            placeholder="Select tags"
+                            value={formData.tags} // Ensure the current tags are displayed in the dropdown
+                            onChange={(selectedTags) => setFormData({ ...formData, tags: selectedTags })} // Handle adding/removing tags
+                        >
+                            {museumTagsOptions.map((tag) => (
+                                <Select.Option key={tag._id} value={tag.museumTag}>
+                                    {tag.museumTag}
+                                </Select.Option>
+                            ))}
+                        </Select>
 
-            <Box sx={{ mt: 2 }}>
-              <Button type="submit" variant="contained" color="primary">
-                Update
-              </Button>
-              <Button onClick={handleCancelEdit} variant="contained" color="secondary" sx={{ ml: 2 }}>
-                Cancel
-              </Button>
-            </Box>
-          </form>
+                        <Box sx={{ mt: 2 }}>
+                            <Button type="submit" variant="contained" color="primary">
+                                Update
+                            </Button>
+                            <Button onClick={handleCancelEdit} variant="contained" color="secondary" sx={{ ml: 2 }}>
+                                Cancel
+                            </Button>
+                        </Box>
+                    </form>
                 )}
 
                 {/* Confirmation dialog for delete */}

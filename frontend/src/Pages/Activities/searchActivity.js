@@ -123,7 +123,7 @@ const SearchActivities = () => {
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography variant="h4" fontWeight="700">
-            All Available Activities
+            Activities
           </Typography>
         </Box>
 
@@ -151,8 +151,8 @@ const SearchActivities = () => {
           {Array.isArray(activities) && activities.length > 0 ? (
             activities.map((activity) =>
               activity.flag === false &&
-              activity.advertiserDeleted === false &&
-              activity.deletedActivity === false ? (
+                activity.advertiserDeleted === false &&
+                activity.deletedActivity === false ? (
                 <Grid item xs={12} sm={6} md={4} key={activity._id}>
                   <ActivityCard activity={activity} />
                 </Grid>
