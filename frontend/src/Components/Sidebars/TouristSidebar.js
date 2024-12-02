@@ -68,8 +68,9 @@ const TouristSidebar = () => {
         width: isSidebarOpen ? 300 : 80, // Sidebar width based on state
         transition: "width 0.3s ease-in-out", // Smooth transition
         "& .MuiDrawer-paper": {
-          marginTop: "5.2%", // Keep the sidebar below the app bar
-          width: isSidebarOpen ? 300 : 80,
+           // Keep the sidebar below the app bar
+          marginTop:"9vh",
+          width: isSidebarOpen ? 300 : 76,
           boxSizing: "border-box",
           overflowX: "hidden", // Prevent horizontal scrolling
           background: "#bce4e4", // Gradient background
@@ -137,14 +138,6 @@ const TouristSidebar = () => {
             </ListItemIcon>
             {isSidebarOpen && <ListItemText primary="View All Itineraries" />}
           </ListItem>
-
-          
-       
-
-       
-            
-
-      
 
           <ListItem
             button

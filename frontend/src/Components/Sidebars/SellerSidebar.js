@@ -13,31 +13,22 @@ import {
   DialogTitle,
   Button,
 } from "@mui/material";
-import { Link, useNavigate } from 'react-router-dom';
-// import DashboardIcon from '@mui/icons-material/Dashboard';
-// import PeopleIcon from '@mui/icons-material/People';
-// import PersonAddIcon from '@mui/icons-material/PersonAdd';
-// import CategoryIcon from '@mui/icons-material/Category';
-// import LabelIcon from '@mui/icons-material/Label';
-// import EventNoteIcon from '@mui/icons-material/EventNote';
-// import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import { Link, useNavigate } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-// import MuseumIcon from '@mui/icons-material/Museum';
 import PersonIcon from "@mui/icons-material/Person";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 
-const drawerWidth = 300;
-
 const SellerSidebar = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for sidebar toggle
   const [open, setOpen] = useState(false); // State for the dialog
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState("");
   const navigate = useNavigate(); // Initialize the useNavigate hook
 
   const handleDeleteClick = () => {
     const userJson = localStorage.getItem("user");
     const user = JSON.parse(userJson);
-    setUserName(user.username);
+    setUserName(user?.username || "");
     setOpen(true); // Open the confirmation dialog
   };
 
@@ -52,7 +43,7 @@ const SellerSidebar = () => {
           `http://localhost:8000/sellerAccount/deleteMySellerAccount/${userName}`
         );
         alert(response.data.message); // Show success message
-        navigate('/login'); // Redirect to the login page
+        navigate("/login"); // Redirect to the login page
       } catch (error) {
         console.error("Error deleting account:", error);
         alert("Failed to delete account. Please try again.");
@@ -65,59 +56,157 @@ const SellerSidebar = () => {
     <Drawer
       variant="permanent"
       sx={{
-        width: drawerWidth,
-        flexShrink: 0,
-        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" },
+        width: isSidebarOpen ? 300 : 80, // Sidebar width based on state
+        transition: "width 0.3s ease-in-out", // Smooth transition
+        "& .MuiDrawer-paper": {
+          marginTop: "9vh", // Keep the sidebar below the app bar
+          width: isSidebarOpen ? 300 : 76,
+          boxSizing: "border-box",
+          overflowX: "hidden", // Prevent horizontal scrolling
+          background: "#bce4e4", // Gradient background
+          color: "#ffffff", // White text for contrast
+        },
       }}
+      onMouseEnter={() => setIsSidebarOpen(true)} // Open sidebar on hover
+      onMouseLeave={() => setIsSidebarOpen(false)} // Close sidebar on mouse leave
     >
-      <div>
-        {/* <img src="logo1.png" style={{ width: '120px' , height: '120px' , padding: '10px', marginLeft: '50px'}} alt="logo" /> */}
-        <Typography variant="h6" noWrap sx={{ padding: 2 }}>
-          Seller Dashboard
-        </Typography>
-        <Divider />
-        <List>
-          <ListItem
-            button
-            onClick={handleDeleteClick}
-            sx={{ color: 'red', cursor: 'pointer' }}
+      <List>
+        <ListItem
+          button
+          onClick={handleDeleteClick}
+          sx={{
+            color: "error.main",
+            cursor: "pointer",
+            "&:hover": {
+              backgroundColor: "#ffe6e6",
+              color: "error.dark",
+            },
+          }}
+        >
+          <ListItemIcon>
+            <DeleteIcon sx={{ color: "error.main" }} />
+          </ListItemIcon>
+          {isSidebarOpen && <ListItemText primary="Delete My Account" />}
+        </ListItem>
+
+        <ListItem
+          button
+          component={Link}
+          to="/sellerEditAccount"
+          sx={{
+            "&:hover": {
+              backgroundColor: "#f0f8ff", // Light blue hover background
+            },
+            borderRadius: 1, // Slightly round edges for better aesthetics
+            margin: "4px 0", // Add some spacing between list items
+          }}
+        >
+          <ListItemIcon>
+            <PersonIcon sx={{ color: "primary.main" }} />{" "}
+            {/* Styled with theme color */}
+          </ListItemIcon>
+          {isSidebarOpen && <ListItemText primary="Edit Profile" />}
+        </ListItem>
+
+        <ListItem
+          button
+          component={Link}
+          to="/ProductDashboard"
+          sx={{
+            "&:hover": {
+              backgroundColor: "#f0f8ff", // Light blue hover effect
+            },
+            borderRadius: 1, // Rounded corners for better aesthetics
+            margin: "4px 0", // Add spacing between items
+            padding: "8px 16px", // Better padding for touch interaction
+          }}
+        >
+          <ListItemIcon>
+            <ShoppingCartIcon sx={{ color: "primary.main" }} />{" "}
+            {/* Theme-based color */}
+          </ListItemIcon>
+          {isSidebarOpen && <ListItemText primary="Manage Products" />}
+        </ListItem>
+      </List>
+      <Divider />
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        fullWidth
+        maxWidth="sm" // Keeps the width manageable; adjust if needed
+        sx={{
+          "& .MuiDialog-paper": {
+            borderRadius: 2, // Rounded corners
+            padding: 2, // Padding inside the dialog
+            boxShadow: 3, // Subtle shadow for better aesthetics
+            height: "300px", // Increased height for more space
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{
+            fontWeight: "bold",
+            textAlign: "center",
+            borderBottom: "1px solid #e0e0e0", // Subtle separator
+            paddingBottom: 2,
+          }}
+        >
+          Confirm Deletion
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            textAlign: "center",
+            color: "text.secondary", // Theme-based secondary text color
+            padding: "24px", // Spacing inside the content
+            display: "flex",
+            flexDirection: "column", // Align content vertically
+            justifyContent: "center", // Center vertically
+            height: "100%", // Utilize full height
+          }}
+        >
+          <Typography variant="body1" sx={{ marginBottom: 1 }}>
+            Are you sure you want to delete your account?
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{ color: "error.main", fontWeight: "bold" }}
           >
-            <ListItemIcon>
-              <DeleteIcon />
-            </ListItemIcon>
-            <ListItemText primary="Delete My Account" />
-          </ListItem>
-
-          <ListItem button component={Link} to="/sellerEditAccount">
-            <ListItemIcon>
-              <PersonIcon />
-            </ListItemIcon>
-            <ListItemText primary="Edit Profile" />
-          </ListItem>
-
-          <ListItem button component={Link} to="/ProductDashboard">
-            <ListItemIcon>
-              <ShoppingCartIcon />
-            </ListItemIcon>
-            <ListItemText primary="Manage Products" />
-          </ListItem>
-        </List>
-        <Divider />
-      </div>
-
-      {/* Confirmation Dialog */}
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          Are you sure you want to delete your account?
+            This action cannot be undone.
+          </Typography>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary" variant="outlined">
+        <DialogActions
+          sx={{
+            justifyContent: "center", // Center buttons
+            padding: "8px 24px", // Spacing around buttons
+          }}
+        >
+          <Button
+            onClick={handleClose}
+            color="primary"
+            variant="outlined"
+            sx={{
+              fontWeight: "bold",
+              padding: "8px 16px", // Add padding for better appearance
+              borderColor: "primary.main",
+              "&:hover": {
+                backgroundColor: "primary.light",
+              },
+            }}
+          >
             Cancel
           </Button>
           <Button
             onClick={handleDeleteAccount}
-            sx={{ color: "white", backgroundColor: "error.main" }} // Set red background
+            sx={{
+              color: "white",
+              backgroundColor: "error.main",
+              fontWeight: "bold",
+              padding: "8px 16px",
+              "&:hover": {
+                backgroundColor: "error.dark",
+              },
+            }}
             variant="contained"
           >
             Yes, Delete

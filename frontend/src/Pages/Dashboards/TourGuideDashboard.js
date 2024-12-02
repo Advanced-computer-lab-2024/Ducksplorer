@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, CssBaseline } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import TourGuideSidebar from "../../Components/Sidebars/TourGuideSidebar";
+import TourGuideNavbar from "../../Components/TopNav/TourGuideNavbar"; // Import the TourGuideNavbar
 
 const TourGuideDashboard = () => {
   const [videoEnded, setVideoEnded] = useState(false);
@@ -15,10 +16,13 @@ const TourGuideDashboard = () => {
   useEffect(() => {
     // Disable scrolling on mount
     document.body.style.overflow = "hidden";
+    // Set background color for the whole page
+    document.body.style.backgroundColor = "#bce4e4";
 
-    // Re-enable scrolling on unmount
+    // Re-enable scrolling and reset background color on unmount
     return () => {
       document.body.style.overflow = "auto";
+      document.body.style.backgroundColor = "";
     };
   }, []);
 
@@ -95,6 +99,8 @@ const TourGuideDashboard = () => {
       </Box>
     )}
     
+      <TourGuideNavbar /> {/* Add the TourGuideNavbar component here */}
+      
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <TourGuideSidebar />

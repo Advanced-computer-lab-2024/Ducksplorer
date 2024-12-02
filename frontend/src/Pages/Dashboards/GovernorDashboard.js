@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, CssBaseline } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import GovernorSidebar from "../../Components/Sidebars/GovernorSidebar";
+import GovernorNavbar from "../../Components/TopNav/GovernorNavbar"; // Import GovernorNavbar
 
 const GovernorDashboard = () => {
   const [videoEnded, setVideoEnded] = useState(false);
@@ -15,13 +16,16 @@ const GovernorDashboard = () => {
   useEffect(() => {
     // Disable scrolling on mount
     document.body.style.overflow = "hidden";
+    // Set background color for the whole page
+    document.body.style.backgroundColor = "#bce4e4";
 
-    // Re-enable scrolling on unmount
+    // Re-enable scrolling and reset background color on unmount
     return () => {
       document.body.style.overflow = "auto";
+      document.body.style.backgroundColor = "";
     };
   }, []);
-
+  
   return (
     <Box
     sx={{
@@ -95,11 +99,14 @@ const GovernorDashboard = () => {
       </Box>
     )}
 
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <CssBaseline />
-      <GovernorSidebar />
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <Outlet />
+      <GovernorNavbar /> {/* Add GovernorNavbar */}
+      <Box sx={{ display: "flex", flexGrow: 1 }}>
+        <GovernorSidebar />
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <Outlet />
+        </Box>
       </Box>
     </Box>
   </Box>

@@ -63,7 +63,7 @@ const MyComplaints = () => {
     <Box
       sx={{
         height: "100vh",
-        backgroundColor: "#f5f5f5",
+        backgroundColor: "#ffffff",
         paddingTop: "64px", // Adjusted for fixed navbar spacing
       }}
     >
@@ -78,7 +78,7 @@ const MyComplaints = () => {
           variant="h4"
           align="center"
           gutterBottom
-          sx={{ fontWeight: "bold", color: "#00796b" }}
+          sx={{ fontWeight: "bold", color: "#000000" }}
         >
           My Complaints
         </Typography>

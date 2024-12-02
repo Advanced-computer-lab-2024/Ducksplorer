@@ -16,6 +16,8 @@ import {
   Paper,
   TextField,
   Rating,
+  Container,
+  Grid,
 } from "@mui/material";
 import ActivityCard from "../activityCard";
 import Input from "@mui/joy/Input";
@@ -109,43 +111,23 @@ const SearchActivities = () => {
   };
 
   return (
-    <div style={{ height: "100vh" }}>
+    <Box
+      sx={{
+        height: "100vh",
+        backgroundColor: "#ffffff",
+        paddingTop: "2vh", // Adjust for navbar height
+      }}
+    >
       <TouristNavBar />
       <TouristSidebar />
-      <Box
-        sx={{
-          // p: 6,
-          maxWidth: "150vh",
-          overflowY: "visible",
-          height: "110vh",
-          marginLeft: 0,
-          marginBottom: 20,
-        }}
-      >
-        <Button
-          component={Link}
-          to={isGuest ? "/guestDashboard" : "/touristDashboard"}
-          variant="solid"
-          color="primary"
-          style={{ marginBottom: "20px" }}
-        >
-          Back to Dashboard
-        </Button>
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <h4 className="oswald-Titles">Activities</h4>
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Typography variant="h4" fontWeight="700">
+            All Available Activities
+          </Typography>
         </Box>
 
-        {/* Search Form */}
-        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
-          {/* Single Search Bar */}
-          {/* <TextField
-            label="Search"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by name, category, or tag"
-            fullWidth
-            sx={{ minWidth: 150 }}
-          /> */}
+        <Box sx={{ mb: 3, display: "flex", alignItems: "center" }}>
           <Input
             color="primary"
             variant="outlined"
@@ -155,8 +137,6 @@ const SearchActivities = () => {
             value={searchQuery}
             size="lg"
           />
-
-          {/* Search Button */}
           <Button
             variant="solid"
             color="primary"
@@ -167,28 +147,28 @@ const SearchActivities = () => {
           </Button>
         </Box>
 
-        {/* Activity Table */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: "24px", // Adjust the gap between items as needed
-            paddingBottom: 24,
-          }}
-        >
-          {
+        <Grid container spacing={3}>
+          {Array.isArray(activities) && activities.length > 0 ? (
             activities.map((activity) =>
               activity.flag === false &&
               activity.advertiserDeleted === false &&
               activity.deletedActivity === false ? (
-                <ActivityCard activity={activity} />
+                <Grid item xs={12} sm={6} md={4} key={activity._id}>
+                  <ActivityCard activity={activity} />
+                </Grid>
               ) : null
-            ) // We don't output a row when it has `activity.flag` is true (ie activity is inappropriate) or when the activity's advertiser has left the system or the activity has been deleted but cannot be removed from database since it is booked my previous tourists
-          }
-        </div>
-      </Box>
+            )
+          ) : (
+            <Grid item xs={12}>
+              <Typography variant="body1" color="textSecondary" align="center">
+                No activities available
+              </Typography>
+            </Grid>
+          )}
+        </Grid>
+      </Container>
       <Help />
-    </div>
+    </Box>
   );
 };
 

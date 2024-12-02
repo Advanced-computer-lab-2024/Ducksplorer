@@ -119,7 +119,7 @@ const SortActivities = () => {
 
   return (
     <>
-      <h4
+      {/* <h4
         variant="h4"
         className="oswald-Titles"
         style={{
@@ -128,7 +128,7 @@ const SortActivities = () => {
         }}
       >
         Upcoming Activities
-      </h4>
+      </h4> */}
       {/* Sorting Controls */}
       <Box
         sx={{

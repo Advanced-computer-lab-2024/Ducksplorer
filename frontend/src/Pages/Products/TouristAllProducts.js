@@ -1,28 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
-  Menu,
-  MenuItem,
   TextField,
   Typography,
   Drawer,
   Stack,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  Container,
+  Grid,
 } from "@mui/material";
 import { message } from "antd";
 import axios from "axios";
-import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
+import ProductCard from "../../Components/Products/ProductCard";
 import Help from "../../Components/HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
-
-// Inline styles
-// const pageStyle = {
-//   backgroundColor: 'yellow',
-//   minHeight: '100vh',
-//   padding: '20px',
-// };
 
 const searchContainerStyle = {
   display: "flex",
@@ -30,56 +27,40 @@ const searchContainerStyle = {
   marginBottom: "20px",
 };
 
-const sidebarStyle = {
-  width: 240,
-  padding: "10px",
-  backgroundColor: "lightblue", // Set the background color of the sidebar to be visible
-};
-
-const sidebarButtonStyle = {
-  marginBottom: "10px",
-  backgroundColor: "blue",
-  color: "white", // White text for contrast
-};
-
 const TouristAllProducts = () => {
-  // State for managing the dropdown menu
-  const [anchorEl, setAnchorEl] = useState(null);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const isGuest = localStorage.getItem('guest') === 'true';
 
-  const handleFilterClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleFilterClose = () => {
-    navigate("/FilterProducts");
-  };
-
-  const handleViewAllProducts = () => {
-    navigate("/TouristProducts");
-  };
-
-  const handleSearchProduct = () => {
-    navigate("/SearchProducts");
-  };
-
   const [name, setName] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [sortOrder, setSortOrder] = useState("");
   const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/adminRoutes/getproducts")
+      .then((response) => {
+        message.success("Products fetched successfully");
+        setProducts(response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the products!", error);
+        message.error("Failed to fetch products.");
+      });
+  }, []);
+
   const handleSearchProducts = async () => {
     try {
       const response = await axios.get(
         "http://localhost:8000/sellerRoutes/findProduct",
         {
-          params: {
-            name, // Send price as a query parameter
-          },
+          params: { name },
         }
       );
-
       if (response.status === 200) {
         message.success("Products viewed successfully");
-        setProducts(response.data); // Store the filtered products
+        setProducts(response.data);
       } else {
         message.error("Failed to search products");
       }
@@ -88,12 +69,42 @@ const TouristAllProducts = () => {
     }
   };
 
-  const handleSortProducts = () => {
-    navigate("/SortProducts");
+  const handleFilterProducts = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/adminRoutes/filterProducts",
+        {
+          params: { minPrice, maxPrice },
+        }
+      );
+      if (response.status === 200) {
+        message.success("Products filtered successfully");
+        setProducts(response.data);
+      } else {
+        message.error("Failed to filter products");
+      }
+    } catch (error) {
+      message.error("An error occurred: " + error.message);
+    }
   };
 
-  const handleMyPurchases = () => {
-    navigate("/myPurchases");
+  const handleSortProducts = async (order) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/adminRoutes/sortProducts",
+        {
+          params: { sortingDecider: order },
+        }
+      );
+      if (response.status === 200) {
+        message.success("Products sorted successfully");
+        setProducts(response.data);
+      } else {
+        message.error("Failed to sort products");
+      }
+    } catch (error) {
+      message.error("An error occurred: " + error.message);
+    }
   };
 
   const handleBackButtonClick = () => {
@@ -102,215 +113,119 @@ const TouristAllProducts = () => {
 
   return (
     <Box
-    sx={{
-      height: "100vh",
-      backgroundColor: "#f9f9f9", // Light background for better contrast
-      paddingTop: "64px", // Adjust for navbar height
-    }}
-  >
- <TouristNavBar />
- <TouristSidebar/>
-    <div>
-      {/* Search Container at the Top */}
-      <Button onClick={handleBackButtonClick}>Back</Button>
-      <div style={searchContainerStyle}>
-        <Stack spacing={2}>
+      sx={{
+        height: "100vh",
+        backgroundColor: "#ffffff",
+        paddingTop: "64px",
+      }}
+    >
+      <TouristNavBar />
+      <TouristSidebar />
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Typography variant="h4" fontWeight="700">
+            Available Products
+          </Typography>
+        </Box>
+
+        <Box sx={{ mb: 3, display: "flex", justifyContent: "center", alignItems: "center" }}>
           <TextField
             label="Search for a product"
             variant="outlined"
             value={name}
-              onChange={(e) => setName(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
             style={{ marginRight: "10px" }}
           />
           <Button
             variant="contained"
             color="primary"
             onClick={handleSearchProducts}
-            style={{ backgroundColor: "#3f51b5", color: "white" }} // Blue color for better visibility
+            style={{ backgroundColor: "#3f51b5", color: "white" }}
           >
             Search
           </Button>
+        </Box>
 
-          <div
-            style={{
-              maxHeight: "400px",
-              overflowY: "visible",
-              padding: "10px",
-              marginTop: "20px",
-            }}
+        <Box sx={{ mb: 3, display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <TextField
+            label="Min Price"
+            type="number"
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
+            style={{ marginRight: "10px" }}
+          />
+          <TextField
+            label="Max Price"
+            type="number"
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
+            style={{ marginRight: "10px" }}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleFilterProducts}
+            style={{ backgroundColor: "#3f51b5", color: "white" }}
           >
-            {/* Render the filtered products using the ProductCard component */}
-            {products.filter((product) => product.isArchived !== true).length >
-            0 ? (
-              products
-                .filter((product) => product.isArchived !== true)
-                .map((product) => (
-                  <div
-                    key={product._id}
-                    style={{ position: "relative", marginBottom: "20px" }}
-                  >
-                    <ProductCard product={product} />
-                  </div>
-                ))
-            ) : (
-              <Typography variant="body1" style={{ marginTop: "20px" }}>
+            Filter
+          </Button>
+        </Box>
+
+        <Box sx={{ mb: 3, display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <FormControl variant="outlined" style={{ minWidth: 120 }}>
+            <InputLabel>Sort By</InputLabel>
+            <Select
+              value={sortOrder}
+              onChange={(e) => {
+                setSortOrder(e.target.value);
+                handleSortProducts(e.target.value);
+              }}
+              label="Sort By"
+            >
+              <MenuItem value="1">Price Ascending</MenuItem>
+              <MenuItem value="0">Price Descending</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+          {!isGuest && (
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{
+                paddingX: 4,
+                fontWeight: 600,
+                textTransform: "capitalize",
+                marginLeft: "10px",
+              }}
+              onClick={() => navigate("/myPurchases")}
+            >
+              My Purchases
+            </Button>
+          )}
+        </Box>
+
+        <Grid container spacing={3}>
+          {products.filter((product) => product.isArchived !== true).length > 0 ? (
+            products
+              .filter((product) => product.isArchived !== true)
+              .map((product) => (
+                <Grid item xs={12} sm={6} md={4} key={product._id}>
+                  <ProductCard product={product} />
+                </Grid>
+              ))
+          ) : (
+            <Grid item xs={12}>
+              <Typography variant="body1" color="textSecondary" align="center">
                 No products found.
               </Typography>
-            )}
-          </div>
-        </Stack>
-      </div>
-
-      {/* Sidebar with Drawer */}
-      <Drawer
-  variant="permanent"
-  sx={{
-    width: 280, // Increased width for better spacing
-    flexShrink: 0,
-    [`& .MuiDrawer-paper`]: {
-      width: 280,
-      boxSizing: "border-box",
-      backgroundColor: "#ffffff", // Clean white background
-      boxShadow: "2px 0 8px rgba(0, 0, 0, 0.1)", // Subtle shadow for depth
-      padding: "16px", // Padding inside the drawer
-    },
-  }}
->
-  <Box>
-    {/* Sidebar Title */}
-    <Typography
-      variant="h6"
-      sx={{
-        fontWeight: "bold",
-        marginBottom: 3,
-        color: "#1a237e", // Dark blue for emphasis
-        textAlign: "center", // Centered title
-      }}
-    >
-      Actions
-    </Typography>
-
-    {/* Buttons */}
-    <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-      <Button
-        fullWidth
-        variant="contained"
-        onClick={handleViewAllProducts}
-        sx={{
-          backgroundColor: "#1a237e",
-          color: "white",
-          fontWeight: "bold",
-          borderRadius: "8px",
-          padding: "12px 16px",
-          textTransform: "none",
-          "&:hover": {
-            backgroundColor: "#0d47a1",
-          },
-        }}
-      >
-        View All Products
-      </Button>
-
-      <Button
-        fullWidth
-        variant="contained"
-        onClick={handleFilterClick}
-        sx={{
-          backgroundColor: "#1a237e",
-          color: "white",
-          fontWeight: "bold",
-          borderRadius: "8px",
-          padding: "12px 16px",
-          textTransform: "none",
-          "&:hover": {
-            backgroundColor: "#0d47a1",
-          },
-        }}
-      >
-        Filter Products
-      </Button>
-
-      <Button
-        fullWidth
-        variant="contained"
-        onClick={handleSearchProduct}
-        sx={{
-          backgroundColor: "#1a237e",
-          color: "white",
-          fontWeight: "bold",
-          borderRadius: "8px",
-          padding: "12px 16px",
-          textTransform: "none",
-          "&:hover": {
-            backgroundColor: "#0d47a1",
-          },
-        }}
-      >
-        Search Products
-      </Button>
-
-      <Button
-        fullWidth
-        variant="contained"
-        color="primary"
-        onClick={handleSortProducts}
-        sx={{
-          backgroundColor: "#1a237e",
-          color: "white",
-          fontWeight: "bold",
-          borderRadius: "8px",
-          padding: "12px 16px",
-          textTransform: "none",
-          "&:hover": {
-            backgroundColor: "#0d47a1",
-          },
-        }}
-      >
-        Sort Products
-      </Button>
-
-      {!isGuest && (
-        <Button
-          fullWidth
-          variant="contained"
-          onClick={handleMyPurchases}
-          sx={{
-            backgroundColor: "#1a237e",
-            color: "white",
-            fontWeight: "bold",
-            borderRadius: "8px",
-            padding: "12px 16px",
-            textTransform: "none",
-            "&:hover": {
-              backgroundColor: "#0d47a1",
-            },
-          }}
-        >
-          My Purchases
-        </Button>
-      )}
+            </Grid>
+          )}
+        </Grid>
+        <Help />
+      </Container>
     </Box>
-
-    {/* Filter Menu */}
-    <Menu
-      anchorEl={anchorEl}
-      open={Boolean(anchorEl)}
-      onClose={handleFilterClose}
-      sx={{
-        "& .MuiPaper-root": {
-          borderRadius: "8px",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-        },
-      }}
-    >
-      <MenuItem onClick={handleFilterClose}>Price</MenuItem>
-    </Menu>
-  </Box>
-</Drawer>
-
-      <Help />
-    </div>
-  </Box>
   );
 };
 

@@ -32,9 +32,9 @@ const Sidebar = () => {
       width: isSidebarOpen ? 300 : 80, // Sidebar width based on state
       transition: 'width 0.3s ease-in-out', // Smooth transition for opening/closing
       '& .MuiDrawer-paper': {
-        width: isSidebarOpen ? 300 : 80, // Dynamic width for the drawer
+        width: isSidebarOpen ? 300 : 76, // Dynamic width for the drawer
         boxSizing: 'border-box',
-        marginTop: '5.2%', // Keep the sidebar below the app bar
+        marginTop: '9vh', // Keep the sidebar below the app bar
 
         overflowX: 'hidden', // Prevent horizontal scrolling
         background: '#bce4e4', // Background color

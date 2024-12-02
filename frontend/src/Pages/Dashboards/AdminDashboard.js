@@ -16,10 +16,13 @@ const AdminDashboard = () => {
   useEffect(() => {
     // Disable scrolling on mount
     document.body.style.overflow = "hidden";
+    // Set background color for the whole page
+    document.body.style.backgroundColor = "#bce4e4";
 
-    // Re-enable scrolling on unmount
+    // Re-enable scrolling and reset background color on unmount
     return () => {
       document.body.style.overflow = "auto";
+      document.body.style.backgroundColor = "";
     };
   }, []);
 

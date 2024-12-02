@@ -1,4 +1,5 @@
 import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar";
+import AdvertiserNavbar from "../../Components/TopNav/AdvertiserNavbar"; // Import the Navbar
 import React, { useState, useEffect } from "react";
 import { Box, Typography, CssBaseline } from "@mui/material";
 import { Outlet } from "react-router-dom";
@@ -15,10 +16,13 @@ function AdvertiserDashboard() {
   useEffect(() => {
     // Disable scrolling on mount
     document.body.style.overflow = "hidden";
+    // Set background color for the whole page
+    document.body.style.backgroundColor = "#bce4e4";
 
-    // Re-enable scrolling on unmount
+    // Re-enable scrolling and reset background color on unmount
     return () => {
       document.body.style.overflow = "auto";
+      document.body.style.backgroundColor = "";
     };
   }, []);
 
@@ -35,6 +39,7 @@ function AdvertiserDashboard() {
       backgroundRepeat: "no-repeat",
     }}
   >
+    <AdvertiserNavbar /> {/* Add the Navbar */}
     {/* Background Video */}
     <video
       autoPlay
@@ -97,8 +102,10 @@ function AdvertiserDashboard() {
 
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AdvertiserSidebar />
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}></Box>
+      <AdvertiserSidebar /> {/* Add the Sidebar */}
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Outlet /> {/* Ensure the Outlet is inside the main Box */}
+      </Box>
     </Box>
   </Box>
   );

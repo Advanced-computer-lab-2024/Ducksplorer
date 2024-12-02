@@ -9,7 +9,7 @@ import Tooltip from "@mui/material/Tooltip";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useNavigate } from "react-router-dom";
 
-const AdminNavbar = () => {
+const GovernorNavbar = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [showPreferences, setShowPreferences] = useState(() => {
     const savedPreference = localStorage.getItem("showPreferences");
@@ -75,7 +75,7 @@ const AdminNavbar = () => {
                 color: "#00695c", // Darker green on hover
               },
             }}
-            onClick={() => navigate("/admin")}
+            onClick={() => navigate("/governor")}
           >
             Ducksplorer
           </Typography>
@@ -134,4 +134,4 @@ const AdminNavbar = () => {
   );
 };
 
-export default AdminNavbar;
+export default GovernorNavbar;
