@@ -75,6 +75,8 @@ export default function ActivityCard({ activity = {} }) {
     return (
       <div>
         <Card
+          onClick={() => navigate(`/activity/${activity._id}`)}
+          className="activity-card"
           variant="outlined"
           sx={{
             width: "20vw",

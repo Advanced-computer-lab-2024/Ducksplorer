@@ -4,9 +4,7 @@ import { message } from "antd";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 import ItineraryCard from "../../Components/itineraryCard.js";
 import {
-  Button,
   Stack,
-  TextField,
   Typography,
   Box,
   TableContainer,
@@ -31,6 +29,8 @@ import { Link, useParams } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
 import Help from "../../Components/HelpIcon.js";
 import TouristNavBar from "../../Components/TouristNavBar";
+import Input from "@mui/joy/Input";
+import Button from "@mui/joy/Button";
 
 function SearchItineraries() {
   const { id } = useParams();
@@ -290,14 +290,16 @@ function SearchItineraries() {
           <Typography variant="h4">Available itineraries</Typography>
         </Box>
         <Stack spacing={2} style={{ marginBottom: "20px" }}>
-          <TextField
-            label="Enter Name or Category or Tag"
+          <Input
+            placeholder="Enter Name or Category or Tag"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             fullWidth
+            variant="outlined"
+            color="primary"
           />
           <Button
-            variant="contained"
+            variant="solid"
             color="primary"
             onClick={handleSearchItineraries}
           >
