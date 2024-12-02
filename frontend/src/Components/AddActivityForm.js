@@ -40,7 +40,7 @@ const AddActivityForm = () => {
         duration: storedDuration,
         tags: storedTags,
       } = JSON.parse(storedFormData);
-      
+
       setName(storedName || "");
       setDate(storedDate || "");
       setIsOpen(storedIsOpen || false);
@@ -154,7 +154,7 @@ const AddActivityForm = () => {
           justifyContent: "center",
           alignItems: "center",
           transform: "translateY(-10px)",
-          overflowY: 'visible'
+          overflowY: "visible",
         }}
       >
         <div style={{ transform: "translateY(-100px)" }}>
@@ -168,8 +168,8 @@ const AddActivityForm = () => {
             }}
           >
             <div
-               className="trial-btn text-white"
-                style={{
+              className="trial-btn text-white"
+              style={{
                 textAlign: "center",
                 backgroundColor: "black",
                 borderRadius: "1cap",
@@ -186,7 +186,6 @@ const AddActivityForm = () => {
                   alignSelf: "center",
                   fontSize: 30,
                   cursor: "default",
-
                 }}
               >
                 Add Activity
@@ -259,7 +258,7 @@ const AddActivityForm = () => {
               onChange={(e) => {
                 setDuration(e.target.value);
                 // setCategory(localStorage.getItem("category") ? localStorage.getItem("category").trim() : "");
-                setCategory(localStorage.getItem("category").trim());
+                setCategory(localStorage.getItem("category"));
               }}
             />
             <TextField

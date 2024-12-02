@@ -139,7 +139,7 @@ const BookingDetails = () => {
   }, []);
   if (loading) return <p>Loading...</p>;
 
-  const handleDeleteBooking = async (type, itemId, price) => {
+  const handleDeleteBooking = async (type, itemId, price, booking) => {
     try {
       const response = await axios.patch(
         `http://localhost:8000/touristRoutes/booking/${userName}`,
@@ -147,6 +147,7 @@ const BookingDetails = () => {
           type,
           itemId,
           price,
+          booking,
         }
       );
 

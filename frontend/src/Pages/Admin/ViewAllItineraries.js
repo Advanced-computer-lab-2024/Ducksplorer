@@ -45,8 +45,8 @@ const ViewAllItineraries = () => {
                 message.success(`Itinerary ${action}!`);
             })
             .catch(error => {
-                console.error('Error changing the flag of itinerary!', error);
-                message.error(`Error changing the flag of itinerary: ${error.response ? error.response.data.message : error.message}`);
+                console.error('Error changing the flag of itinerary!', error.response ? error.response.data : error.message);
+                message.error(`Error changing the flag of itinerary: ${error.response ? error.response.data : error.message}`);
             });
     };
 

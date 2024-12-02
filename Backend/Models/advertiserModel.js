@@ -1,54 +1,55 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const advertiserSchema = new Schema({
+const advertiserSchema = new Schema(
+  {
     email: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
-    userName:{
-        type : String,
-        required : true,
-        unique : true,
-        immutable : true
+    userName: {
+      type: String,
+      required: true,
+      unique: true,
+      immutable: true,
     },
     password: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     websiteLink: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     hotline: {
-        type: Number,
-        required: true
+      type: Number,
+      required: true,
     },
     companyProfile: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
-    uploads: {  
-        type: String,
+    uploads: {
+      type: String,
     },
     photo: {
-        type: String,
+      type: String,
     },
     profilePicture: {
-        filename: { type: String },
-        filepath: { type: String },
-        uploadedAt: { type: Date },
+      filename: { type: String },
+      filepath: { type: String },
+      uploadedAt: { type: Date },
+    },
+    files: [
+      {
+        filename: String,
+        filepath: String,
+        uploadedAt: { type: Date, default: Date.now },
       },
-      files: [
-        {
-          filename: String,
-          filepath: String,
-          uploadedAt: { type: Date, default: Date.now },
-        },
-      ],
-},
-    { timestamps: true })
-
+    ],
+  },
+  { timestamps: true }
+);
 
 const Advertiser = mongoose.model("Advertiser", advertiserSchema);
 

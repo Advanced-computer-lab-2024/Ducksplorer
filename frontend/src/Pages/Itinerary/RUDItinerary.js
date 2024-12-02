@@ -48,6 +48,9 @@ const RUDItinerary = () => {
   const navigate = useNavigate();
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
+  const [activityExchangeRates, setActivityExchangeRates] = useState({});
+  const [activityCurrency, setActivityCurrency] = useState("EGP");
+
   const [formData, setFormData] = useState({
     activity: {
       name: "",
@@ -97,6 +100,11 @@ const RUDItinerary = () => {
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
+  };
+
+  const handleActivityCurrencyChange = (rates, selectedCurrency) => {
+    setActivityExchangeRates(rates);
+    setActivityCurrency(selectedCurrency);
   };
 
   //updates general input fields based on user input
@@ -435,7 +443,12 @@ const RUDItinerary = () => {
       >
         <Table striped style={{ borderRadius: "3cap" }}>
           <TableHead>
-            <TableHeadCell>Activities</TableHeadCell>
+            <TableHeadCell>
+              Activities
+              <CurrencyConvertor
+                onCurrencyChange={handleActivityCurrencyChange}
+              />
+            </TableHeadCell>
             <TableHeadCell>Locations</TableHeadCell>
             <TableHeadCell>Timeline</TableHeadCell>
             <TableHeadCell>Language</TableHeadCell>
@@ -462,10 +475,12 @@ const RUDItinerary = () => {
                       {itinerary.activity && itinerary.activity.length > 0
                         ? itinerary.activity.map((activity, index) => (
                             <div key={index}>
-                              {activity.name || "N/A"} - Price:{" "}
-                              {activity.price !== undefined
-                                ? activity.price
-                                : "N/A"}
+                              {activity.name || "N/A"} - Price:
+                              {(
+                                activity.price *
+                                (activityExchangeRates[activityCurrency] || 1)
+                              ).toFixed(2)}{" "}
+                              {activityCurrency}
                               ,<br />
                               Location: {activity.location || "N/A"},<br />
                               Category: {activity.category || "N/A"}

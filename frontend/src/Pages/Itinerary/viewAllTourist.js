@@ -51,6 +51,9 @@ function SearchItineraries() {
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
 
+  const [activityExchangeRates, setActivityExchangeRates] = useState({});
+  const [activityCurrency, setActivityCurrency] = useState("EGP");
+
   const [filterAnchorEl, setFilterAnchorEl] = useState(null);
 
   const [selectedFilters, setSelectedFilters] = useState([]);
@@ -256,6 +259,11 @@ function SearchItineraries() {
   const handleShareEmail = (itineraryId) => {
     const link = `${window.location.origin}/viewAllTourist/${itineraryId}`; // Update with your actual route
     window.location.href = `mailto:?subject=Check out this itinerary&body=Here is the link to the itinerary: ${link}`;
+  };
+
+  const handleActivityCurrencyChange = (rates, selectedCurrency) => {
+    setActivityExchangeRates(rates);
+    setActivityCurrency(selectedCurrency);
   };
 
   return (
