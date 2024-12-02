@@ -63,7 +63,7 @@ const MyComplaints = () => {
     <Box
       sx={{
         height: "100vh",
-        backgroundColor: "#f5f5f5",
+        backgroundColor: "#ffffff",
         paddingTop: "64px", // Adjusted for fixed navbar spacing
       }}
     >

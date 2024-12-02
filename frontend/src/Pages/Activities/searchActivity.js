@@ -109,15 +109,15 @@ const SearchActivities = () => {
   };
 
   return (
-    <div style={{ height: "100vh" }}>
+    <div >
       <TouristNavBar />
       <TouristSidebar />
       <Box
         sx={{
           // p: 6,
-          maxWidth: "150vh",
+          maxWidth: "100%",
           overflowY: "visible",
-          height: "110vh",
+          height: "100vh",
           marginLeft: 0,
           marginBottom: 20,
         }}
@@ -174,6 +174,7 @@ const SearchActivities = () => {
             gridTemplateColumns: "repeat(4, 1fr)",
             gap: "24px", // Adjust the gap between items as needed
             paddingBottom: 24,
+            
           }}
         >
           {

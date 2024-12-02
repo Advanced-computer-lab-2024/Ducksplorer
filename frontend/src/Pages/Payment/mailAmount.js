@@ -245,12 +245,7 @@ function PaymentPage() {
       overflowY: 'visible',
       height: '120vh'
     }}>
-      <Button
-        onClick={() => navigate(-1)}
-        style={{ marginLeft: '0%' }}  // Add margin to position the button to the left
-      >
-        Go Back
-      </Button>
+    
       <div style={{
         display: 'flex',
         flexDirection: 'column',

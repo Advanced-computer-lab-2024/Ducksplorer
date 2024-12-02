@@ -202,6 +202,7 @@ const EditProfile = () => {
   return (
     <Box
     sx={{
+     
       height: "100vh",
     }}
   >

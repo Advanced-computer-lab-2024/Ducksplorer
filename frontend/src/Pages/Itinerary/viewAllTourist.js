@@ -268,18 +268,25 @@ function SearchItineraries() {
           margin: "auto",
           display: "flex",
           flexDirection: "column",
-          overflowY: "visible",
           height: "100vh",
         }}
       >
-        <Link
-          to={isGuest ? "/guestDashboard" : "/touristDashboard"}
-          className="text-sm hover:underline hover:text-blue-600 mt-2 inline-block"
-        >
-          Back
-        </Link>
+        
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Typography variant="h4">Available itineraries</Typography>
+                <Typography
+          variant="h4"
+          sx={{
+            fontWeight: "bold",
+            color: "#3f51b5", // Primary color
+            textAlign: "center",
+            marginBottom: "24px", // Add space below the title
+            textShadow: "1px 1px 4px rgba(0, 0, 0, 0.2)", // Add subtle text shadow
+            fontFamily: "'Poppins', sans-serif", // Modern font family
+            letterSpacing: "1.2px", // Improve spacing between letters
+          }}
+        >
+          Available Itineraries
+        </Typography>
         </Box>
         <Stack spacing={2} style={{ marginBottom: "20px" }}>
           <TextField
