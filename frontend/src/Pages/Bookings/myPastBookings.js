@@ -446,6 +446,7 @@ const PastBookingDetails = () => {
           <Table>
             <TableHead>
               <TableRow>
+                <TableCell>Name</TableCell>
                 <TableCell>Activity Names</TableCell>
                 <TableCell>Locations</TableCell>
                 <TableCell>Timeline</TableCell>
@@ -466,6 +467,7 @@ const PastBookingDetails = () => {
             <TableBody>
               {itineraryBookings.map((itineraryBooking) => (
                 <TableRow key={itineraryBooking._id}>
+                  <TableCell>{itineraryBooking.itinerary?.name || "Still doesn't have a name"}</TableCell>
                   <TableCell>
                     {itineraryBooking.itinerary && Array.isArray(itineraryBooking.itinerary.activity)
                       ? itineraryBooking.itinerary.activity
