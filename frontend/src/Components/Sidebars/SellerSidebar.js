@@ -84,6 +84,9 @@ const SellerSidebar = () => {
               backgroundColor: "#ffe6e6",
               color: "error.dark",
             },
+            borderRadius: 1,
+            margin: "4px 0",
+            padding: "8px 16px",
           }}
         >
           <ListItemIcon>
@@ -102,6 +105,7 @@ const SellerSidebar = () => {
             },
             borderRadius: 1, // Slightly round edges for better aesthetics
             margin: "4px 0", // Add some spacing between list items
+            padding: "8px 16px",
           }}
         >
           <ListItemIcon>
@@ -131,12 +135,24 @@ const SellerSidebar = () => {
           {isSidebarOpen && <ListItemText primary="Manage Products" />}
         </ListItem>
 
-        <ListItem button component={Link} to="/sellerReport">
-            <ListItemIcon>
-              <SummarizeIcon />
-            </ListItemIcon>
-            <ListItemText primary="Report" />
-          </ListItem>
+        <ListItem
+          button
+          component={Link}
+          to="/sellerReport"
+          sx={{
+            "&:hover": {
+              backgroundColor: "#f9f9f9", // Light hover background
+            },
+            borderRadius: 1, // Rounded corners
+            margin: "4px 0", // Add spacing between items
+            padding: "8px 16px", // Improve touch-friendly interaction
+          }}
+        >
+          <ListItemIcon>
+            <SummarizeIcon sx={{ color: "info.main" }} />
+          </ListItemIcon>
+          {isSidebarOpen && <ListItemText primary="Report" />}
+        </ListItem>
       </List>
       <Divider />
 

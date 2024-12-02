@@ -230,6 +230,7 @@ const FilterActivities = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        </Container>
       </Box>
     </>
   );

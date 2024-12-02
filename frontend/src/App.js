@@ -109,7 +109,7 @@ function App() {
             }
           />
           <Route path="/forgetPassword" element={<ForgetPassword />} />
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signUp" element={<Signup />} />
           <Route
