@@ -56,7 +56,7 @@ router.put("/updatePurchases/:buyer", updatePurchase);
 router.put("/updateProducts/:id", touristUpdateProductRating);
 router.get("/getRating/:id/rating/:buyer", getProductRating);
 router.put("/addReview/:id", touristUpdateProductReview);
-router.post("/createPurchase/:buyer",  purchaseProduct); // jana alya
+router.post("/createPurchase/:buyer", purchaseProduct); // jana alya
 
 
 module.exports = router;

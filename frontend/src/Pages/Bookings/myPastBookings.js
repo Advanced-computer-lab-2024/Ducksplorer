@@ -467,35 +467,42 @@ const PastBookingDetails = () => {
               {itineraryBookings.map((itineraryBooking) => (
                 <TableRow key={itineraryBooking._id}>
                   <TableCell>
-                    {itineraryBooking.itinerary.activity
-                      .map((act) => act.name)
-                      .join(", ")}
+                    {itineraryBooking.itinerary && Array.isArray(itineraryBooking.itinerary.activity)
+                      ? itineraryBooking.itinerary.activity
+                        .map((act) => act.name)
+                        .join(", ")
+                      : "No activities"}
                   </TableCell>
                   <TableCell>
-                    {itineraryBooking.itinerary.locations.join(", ")}
+                    {itineraryBooking.itinerary && Array.isArray(itineraryBooking.itinerary.locations)
+                      ? itineraryBooking.itinerary.locations.join(", ")
+                      : "No locations"}
                   </TableCell>
-                  <TableCell>{itineraryBooking.itinerary.timeline}</TableCell>
-                  <TableCell>{itineraryBooking.itinerary.language}</TableCell>
-                  <TableCell>{itineraryBooking.chosenPrice}</TableCell>
+
+                  <TableCell>{itineraryBooking.itinerary?.timeline}</TableCell>
+                  <TableCell>{itineraryBooking.itinerary?.language}</TableCell>
+                  <TableCell>{itineraryBooking?.chosenPrice}</TableCell>
                   <TableCell>
-                    {itineraryBooking.itinerary.availableDatesAndTimes
-                      .map((date) => new Date(date).toLocaleDateString())
-                      .join(", ")}
+                    {itineraryBooking.itinerary && Array.isArray(itineraryBooking.itinerary.availableDatesAndTimes) && itineraryBooking.itinerary.availableDatesAndTimes.length > 0
+                      ? itineraryBooking.itinerary.availableDatesAndTimes
+                        .map((date) => new Date(date).toLocaleDateString())
+                        .join(", ")
+                      : "No dates available"}
                   </TableCell>
                   <TableCell>
                     {new Date(itineraryBooking.chosenDate).toLocaleDateString()}
                   </TableCell>
                   <TableCell>
-                    {itineraryBooking.itinerary.accessibility}
+                    {itineraryBooking.itinerary?.accessibility}
                   </TableCell>
                   <TableCell>
-                    {itineraryBooking.itinerary.pickUpLocation}
+                    {itineraryBooking.itinerary?.pickUpLocation}
                   </TableCell>
                   <TableCell>
-                    {itineraryBooking.itinerary.dropOffLocation}
+                    {itineraryBooking.itinerary?.dropOffLocation}
                   </TableCell>
                   <TableCell>
-                    {itineraryBooking.itinerary.tags.join(", ")}
+                    {itineraryBooking.itinerary?.tags.join(", ")}
                   </TableCell>
                   <TableCell>
                     <div style={{ display: "flex", flexDirection: "column" }}>
