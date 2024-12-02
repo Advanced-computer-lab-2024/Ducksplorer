@@ -551,7 +551,7 @@ const BookingDetails = () => {
                         </TableCell>
                         <TableCell>
                           <Rating
-                            value={itineraryBooking.itinerary.averageRating}
+                            value={itineraryBooking.averageRating}
                             precision={0.1}
                             readOnly
                           />

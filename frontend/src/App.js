@@ -630,6 +630,15 @@ function App() {
             }
           />
 
+          <Route
+            path="/advertiserReport"
+            element={
+              <ProtectedRoute>
+                <AdvertiserActivityReport />
+              </ProtectedRoute>
+            }
+          />
+
           <Route path="/sellerReport" element={<SellerProductReport />} />
           <Route
             path="/sellerEditAccount"

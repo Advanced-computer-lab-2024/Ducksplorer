@@ -11,7 +11,7 @@ import {
   TableCell,
   TableHead,
   TableHeadCell,
-  TableRow,
+  TableRow
 } from "flowbite-react";
 export const TagsContext = createContext();
 let tags = [];
