@@ -1,29 +1,29 @@
-//This page from inside RUDMuseum
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { message } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon.js";
 import TouristNavBar from "../../Components/TouristNavBar.js";
 import {
   Box,
-  Table,
   Typography,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
+  Grid,
+  Container,
+  Button,
 } from "@mui/material";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
+import MuseumHistoricalPlaceCard from "../../Components/MuseumHistoricalPlaceCard";
+import MuseumSearch from "../../Components/MuseumHistoricalPlaceComponent/MuseumSearch";
+import MuseumFilterComponent from "../../Components/MuseumHistoricalPlaceComponent/MuseumFilterComponent";
+import Input from "@mui/joy/Input";
 
 const UpcomingMuseums = () => {
   const [upcomingMuseums, setUpcomingMuseums] = useState([]);
-
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
+  const [searchQuery, setSearchQuery] = useState(""); // Ensure this line is present
+  const navigate = useNavigate();
 
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
@@ -45,125 +45,58 @@ const UpcomingMuseums = () => {
       });
   }, []);
 
+  const handleSearchResults = (searchResults) => {
+    setUpcomingMuseums(searchResults);
+  };
+
+  const handleFilterResults = (filterResults) => {
+    setUpcomingMuseums(filterResults);
+  };
+
+  const goToUpcomingPage = () => {
+    navigate("/UpcomingMuseums");
+  };
+
   return (
-<Box
-  sx={{
-    minHeight: "100vh",
-    backgroundColor: "#f9f9f9",
-    paddingTop: "64px", // Adjust for navbar height
-    overflowY: "auto",
-  }}
->
-  {/* Navbar */}
-  <TouristNavBar />
-
-  {/* Sidebar */}
-  <TouristSidebar />
-
-  {/* Main Content */}
-  <Box
-    sx={{
-      maxWidth: 1200,
-      margin: "0 auto",
-      backgroundColor: "#ffffff",
-      borderRadius: 2,
-      boxShadow: 3,
-      p: 4,
-      mt: 4,
-    }}
-  >
-    {/* Header Section */}
-    <Box sx={{ textAlign: "center", mb: 4 }}>
-      <Typography variant="h4" fontWeight="700">
-        Upcoming Museum Visits
-      </Typography>
-      <Typography variant="body1" color="textSecondary">
-        Explore the list of upcoming museum visits and plan your trip!
-      </Typography>
-    </Box>
-
-    {/* Table Container */}
-    <TableContainer
-      component={Paper}
+    <Box
       sx={{
-        borderRadius: 2,
-        boxShadow: 2,
-        overflow: "hidden",
+        height: "100vh",
+        width: "100vw",
+        backgroundColor: "#ffffff",
+        paddingTop: "2vh", // Adjust for navbar height
       }}
     >
-      <Table>
-        <TableHead>
-          <TableRow sx={{ backgroundColor: "#f0f0f0" }}>
-            <TableCell sx={{ fontWeight: 700 }}>Description</TableCell>
-            <TableCell sx={{ fontWeight: 700 }}>Location</TableCell>
-            <TableCell sx={{ fontWeight: 700 }}>Pictures</TableCell>
-            <TableCell sx={{ fontWeight: 700 }}>
-              Ticket Price
-              <CurrencyConvertor
-                exchangeRates={exchangeRates}
-                currency={currency}
-                onCurrencyChange={handleCurrencyChange}
-              />
-            </TableCell>
-            <TableCell sx={{ fontWeight: 700 }}>Opening Time</TableCell>
-            <TableCell sx={{ fontWeight: 700 }}>Closing Time</TableCell>
-            <TableCell sx={{ fontWeight: 700 }}>Date</TableCell>
-            <TableCell sx={{ fontWeight: 700 }}>Name</TableCell>
-            <TableCell sx={{ fontWeight: 700 }}>Category</TableCell>
-            <TableCell sx={{ fontWeight: 700 }}>Tags</TableCell>
-            <TableCell sx={{ fontWeight: 700 }}>Created By</TableCell>
-          </TableRow>
-        </TableHead>
+      <TouristNavBar />
+      <TouristSidebar />
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Typography variant="h4" fontWeight="700">
+            Upcoming Museum Visits
+          </Typography>
+        </Box>
 
-        <TableBody>
-          {upcomingMuseums.map((museum) => (
-            <TableRow
-              key={museum._id}
-              sx={{
-                "&:nth-of-type(odd)": { backgroundColor: "#f9f9f9" },
-                "&:hover": { backgroundColor: "#f1f1f1" },
-              }}
-            >
-              <TableCell>{museum.description}</TableCell>
-              <TableCell>{museum.location}</TableCell>
-              <TableCell>
-                <img
-                  src={museum.pictures}
-                  alt="Museum"
-                  style={{
-                    width: "100px",
-                    height: "auto",
-                    objectFit: "cover",
-                    borderRadius: "8px",
-                    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                  }}
-                />
-              </TableCell>
-              <TableCell>
-                {(
-                  museum.ticketPrices * (exchangeRates[currency] || 1)
-                ).toFixed(2)}{" "}
-                {currency}
-              </TableCell>
-              <TableCell>{museum.openingTime}</TableCell>
-              <TableCell>{museum.closingTime}</TableCell>
-              <TableCell>{museum.museumDate}</TableCell>
-              <TableCell>{museum.museumName}</TableCell>
-              <TableCell>{museum.museumCategory}</TableCell>
-              <TableCell>{museum.tags.join(", ")}</TableCell>
-              <TableCell>{museum.createdBy}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+        <Grid container spacing={3}>
+          {Array.isArray(upcomingMuseums) && upcomingMuseums.length > 0 ? (
+            upcomingMuseums.map((museum) => (
+              <Grid item xs={12} sm={6} md={4} key={museum._id}>
+                <MuseumHistoricalPlaceCard place={museum} />
+              </Grid>
+            ))
+          ) : (
+            <Grid item xs={12}>
+              <Typography variant="body1" color="textSecondary" align="center">
+                No museums available
+              </Typography>
+            </Grid>
+          )}
+        </Grid>
 
-    {/* Help Section */}
-    <Box sx={{ mt: 4, textAlign: "center" }}>
-      <Help />
+        <Box sx={{ mt: 4, textAlign: "center" }}>
+          <Help />
+        </Box>
+      </Container>
     </Box>
-  </Box>
-</Box>
   );
-}
+};
+
 export default UpcomingMuseums;

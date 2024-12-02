@@ -210,6 +210,7 @@ const filterActivity = async (req, res) => {
   }
 };
 
+
 const sortActivities = async (req, res) => {
   const { sortBy, order } = req.query;
   const currentDate = new Date();

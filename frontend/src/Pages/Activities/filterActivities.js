@@ -19,9 +19,11 @@ import {
   Button,
   Rating,
   Slider,
+  Container,
 } from "@mui/material";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon";
+
 const FilterActivities = () => {
   const [activities, setActivities] = useState([]);
   const [allActivities, setAllActivities] = useState([]); // Store all activities
@@ -30,6 +32,7 @@ const FilterActivities = () => {
   const [category, setCategory] = useState("");
   const [averageRating, setAverageRating] = useState(0); // Set default value to 0
   const [categories, setCategories] = useState([]); // Store fetched categories
+
 
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
@@ -67,7 +70,6 @@ const FilterActivities = () => {
       price,
       date,
       category,
-      ...(averageRating > 0 && { averageRating }), // Only include averageRating if it's greater than 0
     }).toString();
 
     axios
@@ -83,73 +85,86 @@ const FilterActivities = () => {
   return (
     <>
       <Box
-        sx={{ p: 6, maxWidth: "120vh", overflowY: "visible", height: "100vh" }}
+        sx={{
+          height: "100vh",
+          backgroundColor: "#ffffff",
+          paddingTop: "2vh", // Adjust for navbar height
+        }}
       >
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Typography variant="h4">Filter Activities</Typography>
-        </Box>
-
-        {/* Filter Form */}
-        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
-          <TextField
-            label="Price"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            type="number"
-            sx={{ minWidth: 150 }}
-          />
-          <TextField
-            label="Date"
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            InputLabelProps={{ shrink: true }}
-            sx={{ minWidth: 150 }}
-          />
-          <FormControl sx={{ minWidth: 150 }}>
-            <InputLabel id="category-label">Category</InputLabel>
-            <Select
-              labelId="category-label"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              label="Category"
-            >
-              <MenuItem value="">
-                <em>Any</em>
-              </MenuItem>
-              {categories.map((cat) => (
-                <MenuItem key={cat._id} value={cat.name}>
-                  {cat.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          {/* Rating Slider */}
-          <Box sx={{ minWidth: 150 }}>
-            <Typography variant="body1">Rating: {averageRating}</Typography>
-            <Slider
-              value={averageRating}
-              onChange={(e, newValue) => setAverageRating(newValue)}
-              step={1}
-              marks={[0, 1, 2, 3, 4, 5].map((value) => ({
-                value,
-                label: value,
-              }))}
-              min={0}
-              max={5}
-              valueLabelDisplay="auto"
-            />
+        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+          <Box sx={{ textAlign: "center", mb: 4 }}>
+            <Typography variant="h4" fontWeight="700">
+              Filter Activities
+            </Typography>
           </Box>
 
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={fetchFilteredActivities}
+          <Box
+            sx={{
+              mb: 3,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: "20px", // Adds space between the filter fields
+            }}
           >
-            Filter
-          </Button>
-        </Box>
+            <TextField
+              label="Price"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              type="number"
+              sx={{ minWidth: 150 }}
+            />
+            <TextField
+              label="Date"
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              sx={{ minWidth: 150 }}
+            />
+            <FormControl sx={{ minWidth: 150 }}>
+              <InputLabel id="category-label">Category</InputLabel>
+              <Select
+                labelId="category-label"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                label="Category"
+              >
+                <MenuItem value="">
+                  <em>Any</em>
+                </MenuItem>
+                {categories.map((cat) => (
+                  <MenuItem key={cat._id} value={cat.name}>
+                    {cat.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <Box sx={{ minWidth: 150 }}>
+              <Typography variant="body1">Rating: {averageRating}</Typography>
+              <Slider
+                value={averageRating}
+                onChange={(e, newValue) => setAverageRating(newValue)}
+                step={1}
+                marks={[0, 1, 2, 3, 4, 5].map((value) => ({
+                  value,
+                  label: value,
+                }))}
+                min={0}
+                max={5}
+                valueLabelDisplay="auto"
+              />
+            </Box>
+
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={fetchFilteredActivities}
+            >
+              Filter
+            </Button>
+          </Box>
 
         {/* Activity Table */}
         <TableContainer style={{ borderRadius: 20 }} component={Paper}>
@@ -176,7 +191,7 @@ const FilterActivities = () => {
                 <TableRow key={activity._id}>
                   <TableCell>{activity.name}</TableCell>
                   <TableCell>
-                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {" "}
+                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {currency}
                   </TableCell>
                   <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
                   <TableCell>{activity.category}</TableCell>
@@ -215,8 +230,8 @@ const FilterActivities = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        </Container>
       </Box>
-      <Help />
     </>
   );
 };

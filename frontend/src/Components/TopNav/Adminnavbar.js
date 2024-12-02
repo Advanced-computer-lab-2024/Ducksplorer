@@ -44,7 +44,7 @@ const AdminNavbar = () => {
       sx={{
         backgroundColor: "#d4ebf8",
         width: "100%",
-        height: "9%",
+        height: "9vh",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",

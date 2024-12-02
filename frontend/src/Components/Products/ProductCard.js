@@ -8,17 +8,15 @@ import {
   CardMedia,
   Button,
   TextField,
+  Rating,
 } from "@mui/material";
 import useUserRole from "../getRole";
 import { message } from "antd";
 import axios from "axios";
-import { Rating } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { calculateProductRating } from "../../Utilities/averageRating";
 import { useLocation } from "react-router-dom";
-import TouristNavBar from "../TouristNavBar";
-import TouristSidebar from "../Sidebars/TouristSidebar";
 
 const ProductCard = ({
   product,
@@ -183,146 +181,128 @@ const ProductCard = ({
   };
 
   return (
-    <Box
-    sx={{
-      height: "100vh",
-      backgroundColor: "#f4f6f9", // Light grey background for better contrast
-      paddingTop: "64px", // Adjust for navbar height
-    }}
-  >
-    <TouristNavBar />
-    <TouristSidebar/>
-
     <Card
-      className="product-card"
       style={{
-        margin: "20px",
         position: "relative",
-        filter: archived ? "grayscale(100%)" : "none", // Greyscale effect when archived
+        borderRadius: "8px",
+        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+        margin: "16px",
+        width: "100%",
+        maxWidth: "300px",
+        height: "70vh",
+        filter: archived ? "grayscale(100%)" : "none",
         opacity: archived ? 0.6 : 1,
-        borderRadius: "3cap",
-        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
-        height: "100%",
       }}
     >
       <CardMedia
         component="img"
-        width="100%"
-        height="60%" // Adjust the height as needed
+        height="140"
         image={product.picture}
         alt={product.name}
-        style={{
-          maxHeight: "500px",
-          objectFit: "cover",
-          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
-          borderRadius: "3cap",
-        }} // Ensure the image covers the container
+        style={{ objectFit: "cover" }}
       />
-      <div style={{ overflow: "auto", height: "40%" }}>
-        <CardContent>
-          <Typography variant="h5" style={{ fontWeight: "bold" }}>
-            {product.name}
-          </Typography>
-          {role === "Tourist" && showRating && (
-            <div key={product._id}>
-              <Rating
-                value={rating}
-                onChange={handleRatingChange}
-                icon={<StarIcon sx={{ color: "orange" }} />}
-                emptyIcon={<StarOutlineIcon />}
-                readOnly={false}
-                precision={0.5}
-              />
-            </div>
-          )}
-          <Typography variant="body1">
-            Price <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />:
-            {(product.price * (exchangeRates[currency] || 1)).toFixed(2)}{" "}
-            {currency}
-          </Typography>
-          <Typography variant="body1">
-            Available Quantity: {product.availableQuantity}
-          </Typography>
-          {(role === "Admin" || role === "Seller") && (
-            <Typography variant="body1">Sales: {product.sales}</Typography>
-          )}
-          <Typography variant="body1">
-            Description: {product.description}
-          </Typography>
-          <Typography variant="body1">Seller: {product.seller}</Typography>
-          {!showAverageRatingNo && (
+      <CardContent>
+        <Typography variant="h5" component="div">
+          {product.name}
+        </Typography>
+        {role === "Tourist" && showRating && (
+          <div key={product._id}>
             <Rating
-              value={calculateProductRating(product.ratings)}
-              precision={0.1}
-              readOnly
+              value={rating}
+              onChange={handleRatingChange}
+              icon={<StarIcon sx={{ color: "orange" }} />}
+              emptyIcon={<StarOutlineIcon />}
+              readOnly={false}
+              precision={0.5}
             />
-          )}
-          <h4>Reviews:</h4>
-          {Object.entries(product.reviews).length > 0 ? (
-            Object.entries(product.reviews).map(([user, review]) => (
-              <div key={user}>
-                <Typography variant="body2">User: {review.buyer}</Typography>
-                <Typography variant="body2">
-                  Rating: {getReviewerRating(review.buyer)}
-                </Typography>
-                <Typography variant="body2">
-                  Comment: {review.review}
-                </Typography>
-              </div>
-            ))
-          ) : (
-            <Typography variant="body2">No reviews available.</Typography>
-          )}
-          {(role === "Admin" || role === "Seller") &&
-            showArchive &&
-            !archived && <Button onClick={handleArchive}> Archive </Button>}
-          {archived && showUnarchive && (
-            <Button onClick={handleUnarchive}> Unarchive </Button>
-          )}
-          {role === "Tourist" && showReview && (
+          </div>
+        )}
+        <Typography variant="body1">
+          Price <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />:
+          {(product.price * (exchangeRates[currency] || 1)).toFixed(2)}{" "}
+          {currency}
+        </Typography>
+        <Typography variant="body1">
+          Available Quantity: {product.availableQuantity}
+        </Typography>
+        {(role === "Admin" || role === "Seller") && (
+          <Typography variant="body1">Sales: {product.sales}</Typography>
+        )}
+        <Typography variant="body1">
+          Description: {product.description}
+        </Typography>
+        <Typography variant="body1">Seller: {product.seller}</Typography>
+        {!showAverageRatingNo && (
+          <Rating
+            value={calculateProductRating(product.ratings)}
+            precision={0.1}
+            readOnly
+          />
+        )}
+        <h4>Reviews:</h4>
+        {Object.entries(product.reviews).length > 0 ? (
+          Object.entries(product.reviews).map(([user, review]) => (
+            <div key={user}>
+              <Typography variant="body2">User: {review.buyer}</Typography>
+              <Typography variant="body2">
+                Rating: {getReviewerRating(review.buyer)}
+              </Typography>
+              <Typography variant="body2">
+                Comment: {review.review}
+              </Typography>
+            </div>
+          ))
+        ) : (
+          <Typography variant="body2">No reviews available.</Typography>
+        )}
+        {(role === "Admin" || role === "Seller") &&
+          showArchive &&
+          !archived && <Button onClick={handleArchive}> Archive </Button>}
+        {archived && showUnarchive && (
+          <Button onClick={handleUnarchive}> Unarchive </Button>
+        )}
+        {role === "Tourist" && showReview && (
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ position: "absolute", right: "10px", bottom: "10px" }}
+            onClick={() => setShowReviewBox(!showReviewBox)}
+          >
+            {showReviewBox ? "Cancel" : "Add Review"}
+          </Button>
+        )}
+        {showReviewBox && (
+          <div>
+            <TextField
+              label="Write your review"
+              variant="outlined"
+              fullWidth
+              multiline
+              rows={4}
+              value={review}
+              onChange={(e) => setReview(e.target.value)}
+            />
             <Button
+              onClick={handleAddReview}
               variant="contained"
               color="primary"
-              style={{ position: "absolute", right: "10px", bottom: "10px" }}
-              onClick={() => setShowReviewBox(!showReviewBox)}
             >
-              {showReviewBox ? "Cancel" : "Add Review"}
+              Submit Review
             </Button>
-          )}
-          {showReviewBox && (
-            <div>
-              <TextField
-                label="Write your review"
-                variant="outlined"
-                fullWidth
-                multiline
-                rows={4}
-                value={review}
-                onChange={(e) => setReview(e.target.value)}
-              />
-              <Button
-                onClick={handleAddReview}
-                variant="contained"
-                color="primary"
-              >
-                Submit Review
-              </Button>
-            </div>
-          )}
-          {!isGuest && showPurchase && (
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => handlePurchase(product)}
-              style={{ position: "relative", left: "75%" }} // Place the button at the bottom-right corner
-            >
-              Purchase
-            </Button>
-          )}
-        </CardContent>
-      </div>
+          </div>
+        )}
+        {!isGuest && showPurchase && (
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => handlePurchase(product)}
+            style={{ position: "relative", left: "75%" }}
+          >
+            Purchase
+          </Button>
+        )}
+      </CardContent>
     </Card>
-    </Box>
   );
 };
 

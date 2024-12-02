@@ -22,6 +22,8 @@ import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import LockIcon from "@mui/icons-material/Lock";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import MyNotifications from "./myNotifications";
+import Cookies from "js-cookie";
 import PersistentDrawerLeft from "./Drawer";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -42,6 +44,23 @@ function TouristNavBar() {
   };
   //call the getImage in a useEffect
   const userName = JSON.parse(localStorage.getItem("user")).username;
+
+  //get the notifications length periodically
+
+  const handleLogout = () => {
+    handleCloseUserMenu();
+    axios
+      .post("http://localhost:8000/signUp/logout")
+      .then((response) => {
+        console.log(response.data);
+        localStorage.removeItem("user");
+        Cookies.remove("jwt");
+        window.location.href = "/login";
+      })
+      .catch((error) => {
+        console.error("There was an error logging out!", error);
+      });
+  };
 
   useEffect(() => {
     //const storedPicture = localStorage.getItem('profilePicture');
@@ -91,7 +110,7 @@ function TouristNavBar() {
       sx={{
         backgroundColor: "#d4ebf8",
         width: "100%",
-        height: "9%",
+        height: "9vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -295,6 +314,9 @@ function TouristNavBar() {
             </Tooltip>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Notifications">
+              <MyNotifications />
+            </Tooltip>
             <Tooltip title="Open Account settings">
               <IconButton
                 onClick={handleOpenUserMenu}
@@ -344,12 +366,8 @@ function TouristNavBar() {
                   </Typography>
                 </IconButton>
               </MenuItem>
-              <MenuItem onClick={handleCloseUserMenu}>
-                <IconButton
-                  component="a"
-                  href="/login"
-                  sx={{ textAlign: "center", p: 0.5 }}
-                >
+              <MenuItem onClick={handleLogout}>
+                <IconButton component="a" sx={{ textAlign: "center", p: 0.5 }}>
                   <LockIcon sx={{ fontSize: 20, color: "gold" }} />
                   <Typography sx={{ ml: 1 }} variant="body2">
                     Logout

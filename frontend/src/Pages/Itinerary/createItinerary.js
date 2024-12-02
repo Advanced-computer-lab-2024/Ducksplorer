@@ -178,6 +178,7 @@ const AddItinerary = () => {
     setLocations([""]);
     setAvailableDatesAndTimes([""]);
     setFormData({
+      name: "",
       locations: [],
       timeline: "",
       language: "",
@@ -190,26 +191,6 @@ const AddItinerary = () => {
       },
     });
   };
-  useEffect(() => {
-    // Apply styles to the body when the component mounts
-    document.body.style.overflow = "hidden";
-    document.body.style.margin = "0";
-    document.body.style.display = "flex";
-    document.body.style.justifyContent = "center";
-    document.body.style.alignItems = "center";
-    document.body.style.height = "100vh";
-
-    // Clean up styles when the component unmounts
-    return () => {
-      document.body.style.overflow = "";
-      document.body.style.backgroundColor = "";
-      document.body.style.margin = "";
-      document.body.style.display = "";
-      document.body.style.justifyContent = "";
-      document.body.style.alignItems = "";
-      document.body.style.height = "";
-    };
-  }, []);
 
   return (
     <Paper
@@ -223,134 +204,84 @@ const AddItinerary = () => {
       }}
     >
       <Link
-        to={isGuest ? "/guestDashboard" : "/tourGuideDashboard"}
+        to={isGuest ? "/guestDashboard" : "/touristDashboard"}
         className="text-sm hover:underline hover:text-blue-600 mt-2 inline-block"
       >
         Back
       </Link>
-
-      <h1>Create an Itinerary</h1>
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "16px",
-          width: "100%",
-        }}
-      >
-        {activities.map((activity, index) => (
-          <div key={index}>
-            <div class="input-group mb-3">
-              <span class="input-group-text" id="inputGroup-sizing-default">
-                Activity Name
-              </span>
+      <Box sx={{ overflowY: "visible", height: "100vh" }}>
+        <h1>Create an Itinerary</h1>
+        <form
+          onSubmit={handleSubmit}
+          style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+        >
+          {activities.map((activity, index) => (
+            <div key={index}>
               <input
                 type="text"
-                class="form-control"
-                aria-label="Sizing example input"
+                placeholder="Activity Name"
                 value={activity.name}
                 onChange={(e) =>
                   handleActivityChange(index, "name", e.target.value)
                 }
                 required
-                aria-describedby="inputGroup-sizing-default"
               />
-            </div>
-            <div class="form-check mb-3">
+              <label>Activity Is Open?</label>
               <input
-                class="form-check-input"
                 type="checkbox"
-                value=""
-                id="flexCheckDefault"
                 checked={activity.isOpen}
                 onChange={(e) =>
                   handleActivityChange(index, "isOpen", e.target.checked)
                 }
               />
-              <label class="form-check-label" for="flexCheckDefault">
-                Activity Is Open?
-              </label>
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text" id="inputGroup-sizing-default">
-                Activity Date
-              </span>
               <input
                 type="datetime-local"
                 placeholder="Activity Date"
-                class="form-control"
                 value={activity.date}
                 onChange={(e) =>
                   handleActivityChange(index, "date", e.target.value)
                 }
                 required
               />
-            </div>
-
-            <div class="input-group mb-3">
-              <span class="input-group-text" id="inputGroup-sizing-default">
-                Activity Location
-              </span>
               <input
                 type="text"
+                placeholder="Activity Location"
                 value={activity.location}
-                class="form-control"
                 onChange={(e) =>
                   handleActivityChange(index, "location", e.target.value)
                 }
                 required
               />
-            </div>
-
-            <div class="input-group mb-3">
               <input
-                class="form-control"
                 type="number"
-                value={activity.price}
                 placeholder="Activity Price"
+                value={activity.price}
                 onChange={(e) =>
                   handleActivityChange(index, "price", e.target.value)
                 }
                 required
               />
-              <span class="input-group-text">$</span>
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text" id="inputGroup-sizing-default">
-                Activity Category
-              </span>
               <input
-                class="form-control"
                 type="text"
+                placeholder="Activity Category"
                 value={activity.category}
                 onChange={(e) =>
                   handleActivityChange(index, "category", e.target.value)
                 }
                 required
               />
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text" id="inputGroup-sizing-default">
-                Activity Tags
-              </span>
               <input
                 type="text"
-                class="form-control"
+                placeholder="Activity Tags"
                 value={activity.tags}
                 onChange={(e) =>
                   handleActivityChange(index, "tags", e.target.value)
                 }
                 required
               />
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text" id="inputGroup-sizing-default">
-                Activity Duration
-              </span>
               <input
                 type="text"
-                class="form-control"
+                placeholder="Activity Duration"
                 value={activity.duration}
                 onChange={(e) =>
                   handleActivityChange(index, "duration", e.target.value)
@@ -358,98 +289,47 @@ const AddItinerary = () => {
                 required
               />
             </div>
-          </div>
-        ))}
-        <IconButton
-          onClick={handleAddActivity}
-          sx={{
-            borderRadius: "100%",
-            width: "50px",
-            height: "50px",
-            alignSelf: "center",
-          }}
-        >
-          <AddCircleIcon color="primary" />
-        </IconButton>
-        <h3>Locations:</h3>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              flex: 1,
-            }}
-          >
-            {locations.map((location, index) => (
-              <div class="input-group mb-3">
-                <span class="input-group-text" id="inputGroup-sizing-default">
-                  Location
-                </span>
-                <input
-                  class="form-control"
-                  type="text"
-                  key={index}
-                  value={location}
-                  onChange={(e) => {
-                    const newLocations = [...locations];
-                    newLocations[index] = e.target.value;
-                    setLocations(newLocations);
-                  }}
-                  required
-                />
-              </div>
-            ))}
-          </div>
-          <IconButton
-            onClick={handleAddLocation}
-            sx={{
-              height: "50px",
-              width: "50px",
-              borderRadius: "100%",
-            }}
-          >
+          ))}
+          <IconButton onClick={handleAddActivity}>
             <AddCircleIcon color="primary" />
           </IconButton>
-        </div>
-        <div class="input-group mb-3">
-          <span class="input-group-text" id="inputGroup-sizing-default">
-            Timeline in days
-          </span>
+          <h3>Locations:</h3>
+          {locations.map((location, index) => (
+            <input
+              key={index}
+              type="text"
+              placeholder="Location"
+              value={location}
+              onChange={(e) => {
+                const newLocations = [...locations];
+                newLocations[index] = e.target.value;
+                setLocations(newLocations);
+              }}
+              required
+            />
+          ))}
+          <IconButton onClick={handleAddLocation}>
+            <AddCircleIcon color="primary" />
+          </IconButton>
           <input
             type="text"
-            class="form-control"
             name="timeline"
+            placeholder="Timeline in days"
             value={formData.timeline}
             onChange={handleChange}
             required
           />
-        </div>
-
-        <div class="input-group mb-3">
-          <span class="input-group-text" id="inputGroup-sizing-default">
-            Language
-          </span>
           <input
             type="text"
             name="language"
-            class="form-control"
+            placeholder="Language"
             value={formData.language}
             onChange={handleChange}
             required
           />
-        </div>
-
-        <div class="input-group mb-3">
           <input
             type="number"
             name="price"
-            class="form-control"
             placeholder="Price"
             value={formData.price}
             onChange={handleChange}
@@ -457,101 +337,66 @@ const AddItinerary = () => {
             step="0.01"
             required
           />
-          <span class="input-group-text">$</span>
-        </div>
-        <h3>Available Dates And Times:</h3>
-
-        {availableDatesAndTimes.map((dateTime, index) => (
-          <div class="input-group mb-3">
-            <span class="input-group-text" id="inputGroup-sizing-default">
-              Available Date and Time
-            </span>
+          <h3>Available Dates and Times:</h3>
+          {availableDatesAndTimes.map((dateTime, index) => (
             <input
               key={index}
-              class="form-control"
               type="datetime-local"
               placeholder="Available Date and Time"
               value={dateTime}
               onChange={(e) => handleAvailableDateChange(index, e.target.value)} // Update date/time
               required
             />
-          </div>
-        ))}
-        <IconButton
-          onClick={handleAddAvailableDate}
-          sx={{
-            height: "50px",
-            width: "50px",
-            borderRadius: "100%",
-            alignSelf: "center",
-          }}
-        >
-          <AddCircleIcon color="primary" />
-        </IconButton>
-
-        <div class="input-group mb-3">
-          <span class="input-group-text" id="inputGroup-sizing-default">
-            Accessibility
-          </span>
+          ))}
+          <IconButton onClick={handleAddAvailableDate}>
+            <AddCircleIcon color="primary" />
+          </IconButton>
           <input
             type="text"
             name="accessibility"
-            class="form-control"
+            placeholder="Accessibility"
             value={formData.accessibility}
             onChange={handleChange}
             required
           />
-        </div>
-
-        <div class="input-group mb-3">
-          <span class="input-group-text" id="inputGroup-sizing-default">
-            Pick Up Location
-          </span>
           <input
             type="text"
             name="pickUpLocation"
+            placeholder="Pick Up Location"
             value={formData.pickUpLocation}
             onChange={handleChange}
-            class="form-control"
             required
           />
-        </div>
-        <div class="input-group mb-3">
-          <span class="input-group-text" id="inputGroup-sizing-default">
-            Pick Up Location
-          </span>
           <input
             type="text"
             name="dropOffLocation"
             placeholder="Drop Off Location"
             value={formData.dropOffLocation}
-            class="form-control"
             onChange={handleChange}
             required
           />
-        </div>
-
-        <div
-          style={{
-            display: "Flex",
-            flexDirection: "row",
-            flexWrap: "wrap",
-            flexBasis: 10,
-          }}
-        >
-          {prefTagsOptions.map((element) => {
-            return (
-              <TagsContext.Provider key={element._id} value={tags}>
-                <StandAloneToggleButtonIt
-                  key={element._id}
-                  name={element.name}
-                />
-              </TagsContext.Provider>
-            );
-          })}
-        </div>
-        <button type="submit">Add Itinerary</button>
-      </form>
+          <div
+            style={{
+              display: "Flex",
+              flexDirection: "row",
+              flexWrap: "wrap",
+              flexBasis: 10,
+            }}
+          >
+            {prefTagsOptions.map((element) => {
+              return (
+                <TagsContext.Provider key={element._id} value={tags}>
+                  <StandAloneToggleButtonIt
+                    key={element._id}
+                    name={element.name}
+                  />
+                </TagsContext.Provider>
+              );
+            })}
+          </div>
+          <button type="submit">Add Itinerary</button>
+        </form>
+      </Box>
     </Paper>
   );
 };

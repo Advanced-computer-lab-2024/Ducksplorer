@@ -78,7 +78,7 @@ const MyComplaints = () => {
           variant="h4"
           align="center"
           gutterBottom
-          sx={{ fontWeight: "bold", color: "#00796b" }}
+          sx={{ fontWeight: "bold", color: "#000000" }}
         >
           My Complaints
         </Typography>

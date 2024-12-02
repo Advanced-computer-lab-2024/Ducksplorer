@@ -31,6 +31,7 @@ import { Link, useNavigate } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon.js";
 import TouristNavBar from "../../Components/TouristNavBar.js";
+import ItineraryCard from "../../Components/itineraryCard.js";
 
 const ViewUpcomingItinerary = () => {
   const navigate = useNavigate();
@@ -55,6 +56,9 @@ const ViewUpcomingItinerary = () => {
 
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
+  const [activityExchangeRates, setActivityExchangeRates] = useState({});
+  const [activityCurrency, setActivityCurrency] = useState("EGP");
+
   const [filterAnchorEl, setFilterAnchorEl] = useState(null);
 
   const [selectedFilters, setSelectedFilters] = useState([]);
@@ -174,7 +178,7 @@ const ViewUpcomingItinerary = () => {
 
   //get upcoming itineraries
   useEffect(() => {
-    const showPreferences = localStorage.getItem("showPreferences");
+    const showPreferences = localStorage.getItem("showPreferences") || "false";
     const user = JSON.parse(localStorage.getItem("user"));
     const username = user?.username;
     const role = user?.role;
@@ -281,76 +285,33 @@ const ViewUpcomingItinerary = () => {
       message.error("An error occurred while booking.");
     }
   };
-
+  const handleActivityCurrencyChange = (rates, selectedCurrency) => {
+    setActivityExchangeRates(rates);
+    setActivityCurrency(selectedCurrency);
+  };
   return (
-    <Box
-    sx={{
-      height: "100vh",
-    }}
-  >
- <TouristNavBar />
- <TouristSidebar/>
     <div>
-    <Link
-  to={isGuest ? "/guestDashboard" : "/touristDashboard"}
-  style={{
-    display: "inline-block",
-    padding: "10px 20px",
-    backgroundColor: "#1a237e", // Dark blue background
-    color: "#ffffff", // White text
-    fontWeight: "bold",
-    textDecoration: "none",
-    borderRadius: "8px", // Rounded corners
-    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)", // Subtle shadow for depth
-    transition: "background-color 0.3s ease, transform 0.2s ease", // Smooth hover effect
-  }}
-  onMouseOver={(e) => {
-    e.currentTarget.style.backgroundColor = "#0d47a1"; // Lighter blue on hover
-    e.currentTarget.style.transform = "translateY(-2px)"; // Slight lift on hover
-  }}
-  onMouseOut={(e) => {
-    e.currentTarget.style.backgroundColor = "#1a237e"; // Revert to original background color
-    e.currentTarget.style.transform = "translateY(0)"; // Reset lift
-  }}
->
-  Back
-</Link>
-
-      
-    
-<Box
-  sx={{
-    padding: 6,
-    maxWidth: 1200,
-    margin: "20px auto", // Centers the box with some margin at the top and bottom
-    backgroundColor: "#f9f9f9", // Light background for better contrast
-    borderRadius: "12px", // Rounded corners for a sleek look
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)", // Subtle shadow for depth
-    height: "auto", // Ensures it adjusts to the content height
-    overflowY: "visible",
-  }}
->
-  <Box
-    sx={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      marginBottom: 3,
-    }}
-  >
-    <Typography
-      variant="h4"
-      sx={{
-        fontWeight: "bold",
-        color: "#1a237e", // Dark blue for emphasis
-        textAlign: "center",
-        textShadow: "1px 1px 2px rgba(0, 0, 0, 0.2)", // Adds subtle text shadow
-        letterSpacing: "0.05rem", // Slight spacing for readability
-      }}
-    >
-      Upcoming Itineraries
-    </Typography>
-  </Box>
+      <TouristNavBar />
+      <TouristSidebar />
+      <Box
+        sx={{
+          padding: "20px",
+          margin: "auto",
+          display: "flex",
+          flexDirection: "column",
+          overflowY: "visible",
+          height: "100vh",
+        }}
+      >
+        <Link
+          to={isGuest ? "/guestDashboard" : "/touristDashboard"}
+          className="text-sm hover:underline hover:text-blue-600 mt-2 inline-block"
+        >
+          Back
+        </Link>
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+          <Typography variant="h4">Upcoming Itineraries</Typography>
+        </Box>
 
         <Box sx={{ display: "flex", justifyContent: "normal", mb: 2 }}>
           {/* Sort By Icon Button */}
@@ -534,122 +495,45 @@ const ViewUpcomingItinerary = () => {
               </FormControl>
             </MenuItem>
 
-                        <MenuItem>
-                            <Button onClick={handleFilter}>Apply Filters</Button>
-                        </MenuItem>
-                        <MenuItem>
-                            <Button onClick={handleClearAllFilters}>Clear All Filters</Button>
-                        </MenuItem>
-                    </Menu>
-
-                </Box>
-                <TableContainer component={Paper}>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Activities</TableCell>
-                                <TableCell>Locations</TableCell>
-                                <TableCell>Timeline</TableCell>
-                                <TableCell>Language</TableCell>
-                                <TableCell>Price
-                                    <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
-                                </TableCell>
-                                <TableCell>Available Dates And Times</TableCell>
-                                <TableCell>Accessibility</TableCell>
-                                <TableCell>Pick Up Location</TableCell>
-                                <TableCell>Drop Off Location</TableCell>
-                                <TableCell>Rating</TableCell>
-                                <TableCell>Tags</TableCell>
-                                <TableCell>Booking</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {itineraries.map(itinerary => (
-                                itinerary.flag===false  && itinerary.isDeactivated===false && itinerary.tourGuideDeleted===false && itinerary.deletedItinerary===false ? (
-                                    <TableRow key={itinerary._id}>
-                                        <TableCell>
-                                            {itinerary.activity && itinerary.activity.length > 0
-                                                ? itinerary.activity.map((activity, index) => (
-                                                    <div key={index}>
-                                                        {activity.name || 'N/A'}- Price:{" "} 
-                                                        {activity.price !== undefined ? activity.price : 'N/A'},<br />
-                                                        Location: {activity.location || 'N/A'},<br />
-                                                        Category: {activity.category || 'N/A'}
-                                                        <br /><br />
-                                                    </div>
-                                                ))
-                                                : 'No activities available'}
-                                        </TableCell>
-                                        <TableCell>
-                                            {itinerary.locations && itinerary.locations.length > 0 ? (
-                                                itinerary.locations.map((location, index) => (
-                                                    <div key={index}>
-                                                        <Typography variant="body1">
-                                                            Location  {index + 1}: {location.trim()}
-                                                        </Typography>
-                                                        <br />
-                                                    </div>
-                                                ))
-                                            ) : 'No locations available'}
-
-                                        </TableCell>
-                                        <TableCell>{itinerary.timeline}</TableCell>
-                                        <TableCell>{itinerary.language}</TableCell>
-                                        <TableCell>
-                                            {(itinerary.price * (exchangeRates[currency] || 1)).toFixed(2)} {" "}
-                                            {currency}
-                                        </TableCell>
-                                        <TableCell>
-                                            {itinerary.availableDatesAndTimes.length > 0
-                                                ? itinerary.availableDatesAndTimes.map((dateTime, index) => {
-                                                    const dateObj = new Date(dateTime);
-                                                    const date = dateObj.toISOString().split('T')[0];
-                                                    const time = dateObj.toTimeString().split(' ')[0];
-                                                    return (
-                                                        <div key={index}>
-                                                            Date {index + 1}: {date}<br />
-                                                            Time {index + 1}: {time}
-                                                        </div>
-                                                    );
-                                                })
-                                                : 'No available dates and times'}
-                                        </TableCell>
-                                        <TableCell>{itinerary.accessibility}</TableCell>
-                                        <TableCell>{itinerary.pickUpLocation}</TableCell>
-                                        <TableCell>{itinerary.dropOffLocation}</TableCell>
-                                        <TableCell><Rating
-                                            value={itinerary.averageRating}
-                                            precision={0.1}
-                                            readOnly
-                                        /></TableCell>
-                                        <TableCell>
-                                            {itinerary.tags && itinerary.tags.length > 0
-                                                ? itinerary.tags.map((tag, index) => (
-                                                    <div key={index}>
-                                                        {tag || 'N/A'}
-                                                        <br /><br />
-                                                    </div>
-                                                ))
-                                                : 'No tags available'}
-                                        </TableCell>
-                                        <TableCell>
-                                            <Button onClick={() => handleBooking(itinerary._id)}>
-                                                Book Now
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                ) : null // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists
-                            ))}
-                        </TableBody>
-                    </Table>
-
-                </TableContainer>
-            </Box>
-           <Help />
-        </div>
+            <MenuItem>
+              <Button onClick={handleFilter}>Apply Filters</Button>
+            </MenuItem>
+            <MenuItem>
+              <Button onClick={handleClearAllFilters}>
+                Clear All Filters
+              </Button>
+            </MenuItem>
+          </Menu>
         </Box>
-    );
-}
 
+        {itineraries.length > 0 ? (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gap: "24px", // Adjust the gap between items as needed
+              paddingBottom: 24,
+            }}
+          >
+            {itineraries.map((itinerary) =>
+              itinerary.flag === false &&
+              itinerary.isDeactivated === false &&
+              itinerary.tourGuideDeleted === false &&
+              itinerary.deletedItinerary === false ? (
+                <ItineraryCard itinerary={itinerary} />
+              ) : null
+            )}
+          </div>
+        ) : (
+          <Typography variant="body1" style={{ marginTop: "20px" }}>
+            No itineraries found.
+          </Typography>
+        )}
+
+        <Help />
+      </Box>
+    </div>
+  );
+};
 
 export default ViewUpcomingItinerary;
