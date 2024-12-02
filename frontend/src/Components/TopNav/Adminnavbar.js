@@ -119,42 +119,42 @@ const AdminNavbar = () => {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-           
-           
-           <MenuItem
-  onClick={() => handleNavigation("logout")}
-  sx={{
-    display: "flex",
-    alignItems: "center",
-    gap: "10px", // Space between icon and text
-    padding: "10px 20px", // Add padding for a larger click area
-    borderRadius: "8px", // Rounded corners
-    "&:hover": {
-      backgroundColor: "#f44336", // Highlight color on hover
-      color: "white", // Change text color on hover
-    },
-  }}
->
-  <IconButton
-    sx={{
-      color: "#f44336", // Initial icon color
-      "&:hover": {
-        color: "white", // Change icon color on hover
-      },
-    }}
-  >
-    <LogoutIcon /> {/* Replace with a logout icon from Material-UI */}
-  </IconButton>
-  <Typography
-    textAlign="center"
-    sx={{
-      fontWeight: "bold",
-      fontSize: "16px",
-    }}
-  >
-    Logout
-  </Typography>
-</MenuItem>
+
+
+            <MenuItem
+              onClick={() => handleNavigation("login")}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px", // Space between icon and text
+                padding: "10px 20px", // Add padding for a larger click area
+                borderRadius: "8px", // Rounded corners
+                "&:hover": {
+                  backgroundColor: "#f44336", // Highlight color on hover
+                  color: "white", // Change text color on hover
+                },
+              }}
+            >
+              <IconButton
+                sx={{
+                  color: "#f44336", // Initial icon color
+                  "&:hover": {
+                    color: "white", // Change icon color on hover
+                  },
+                }}
+              >
+                <LogoutIcon /> {/* Replace with a logout icon from Material-UI */}
+              </IconButton>
+              <Typography
+                textAlign="center"
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: "16px",
+                }}
+              >
+                Logout
+              </Typography>
+            </MenuItem>
 
           </Menu>
         </Box>

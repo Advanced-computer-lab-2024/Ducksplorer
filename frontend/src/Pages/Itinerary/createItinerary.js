@@ -2,7 +2,7 @@ import React, { useState, useEffect, createContext } from "react";
 import axios from "axios";
 import { message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { IconButton, Box } from "@mui/material";
+import { IconButton, Box, Paper } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import StandAloneToggleButtonIt from "../../Components/ToggleItinerary";
 import {
@@ -11,7 +11,7 @@ import {
   TableCell,
   TableHead,
   TableHeadCell,
-  TableRow,
+  TableRow
 } from "flowbite-react";
 export const TagsContext = createContext();
 let tags = [];
