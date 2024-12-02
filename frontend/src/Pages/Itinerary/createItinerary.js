@@ -50,6 +50,7 @@ const AddItinerary = () => {
   ]);
 
   const [formData, setFormData] = useState({
+    name: "",
     locations: [],
     timeline: "",
     language: "",
@@ -215,6 +216,14 @@ const AddItinerary = () => {
           onSubmit={handleSubmit}
           style={{ display: "flex", flexDirection: "column", gap: "16px" }}
         >
+          <input
+            type="text"
+            name="name"
+            placeholder="Itinerary Name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
           {activities.map((activity, index) => (
             <div key={index}>
               <input
