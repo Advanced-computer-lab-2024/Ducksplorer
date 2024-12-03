@@ -47,7 +47,8 @@ const {
   addPurchase2,
   getMyOrders,
   getAddresses,
-  addAddress
+  addAddress,
+  emptyCart
 } = require("../Controllers/Products/cartController");
 
 const { validatePromoCode } = require("../Controllers/promoCodeController");
@@ -70,7 +71,7 @@ router.patch("/payWallet/:userName", payWallet);
 router.patch("/payVisa/:userName", payVisa);
 
 //view cart
-router.get("/myCart", viewCart);
+router.get("/myCart/:userName", viewCart);
 //add to cart
 router.put("/cart", addProductToCart);
 //remove from cart
@@ -79,6 +80,8 @@ router.delete("/cart", removeProductFromCart);
 router.patch("/cart", updateProductQuantity);
 //add purchases from cart
 router.put("/addPurchase", addPurchase2);
+
+router.delete("/emptyCart", emptyCart);
 
 //router.patch("/loyalty/:name/:userName",receiveLoyaltyPoints);
 router.get("/myPurchases/:buyer", getMyPurchases);

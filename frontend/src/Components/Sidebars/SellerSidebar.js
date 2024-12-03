@@ -26,6 +26,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PersonIcon from "@mui/icons-material/Person";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
+import MyNotifications from "../myNotifications";
 
 const drawerWidth = 300;
 
@@ -77,6 +78,7 @@ const SellerSidebar = () => {
         </Typography>
         <Divider />
         <List>
+          <MyNotifications/>
           <ListItem
             button
             onClick={handleDeleteClick}

@@ -140,6 +140,7 @@ function PaymentPage() {
       if (response.status === 200) {
         message.success("Payment successfully completed!");
         if(itineraryOrActivity === "product"){
+          await axios.delete("http://localhost:8000/touristRoutes/emptyCart", userName);
           navigate("/myPurchases");
         }
         // Payment succeeded; now create the booking in the backend
@@ -250,10 +251,7 @@ function PaymentPage() {
       } else if (itineraryOrActivity === "product" && cartId){
         console.log("Fetching activity data for ID:", cartId); // Debugging
         const response = await axios.get(
-          "http://localhost:8000/touristRoutes/myCart",
-          {
-            params: { userName }, // Pass data as query parameters
-          }
+          `http://localhost:8000/touristRoutes/myCart/${userName}`
         );
         if (response.status === 200) {
           console.log("Cart data fetched:", response.data); // Debugging
@@ -309,6 +307,24 @@ function PaymentPage() {
       setFinalPrice(discountedPrice);
     } catch (err) {
       message.error(err.response?.data?.error || "Failed to apply promo code");
+    }
+  };
+
+  const handleCashOnDelivery = async (e) => {
+    e.preventDefault();
+    console.log("outside bla bla bla");
+    try {
+      // Call the empty cart API
+      const response = await axios.delete("http://localhost:8000/touristRoutes/emptyCart", {
+        data: { userName }
+      });
+      console.log("bla bla bla");
+      console.log(response.data.message); // Log success message
+      // Navigate to "My Purchases" on success
+      navigate("/myPurchases");
+    } catch (error) {
+      console.error("Error emptying cart:", error.response?.data || error.message);
+      message.error("Failed to empty the cart. Please try again.");
     }
   };
 
@@ -1061,6 +1077,20 @@ function PaymentPage() {
           >
             Wallet
           </button>
+          {type === "product" && cartData && 
+          <button
+            type="submit"
+            onClick={handleCashOnDelivery}
+            style={{
+              padding: "10px",
+              fontSize: "1rem",
+              flex: 1, // Makes this button take equal space as the first one
+              marginLeft: "1em"
+            }}
+          >
+            Cash on Delivery
+          </button>
+          }
         </form>
         <Help />
       </div>
