@@ -53,7 +53,6 @@ app.use(
 app.use(bodyParser.json());
 //app.use("/uploads", express.static("uploads"));
 
-
 app.use(cookieParser());
 
 console.log(process.env.PORT);
