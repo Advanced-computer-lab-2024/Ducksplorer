@@ -186,12 +186,12 @@ function TouristNavBar() {
                   alignItems: "center",
                 }}
               >
-                <MenuItem onClick={() => handleNavigation("myCart")}>
+                {/* <MenuItem onClick={() => handleNavigation("myCart")}>
                   <IconButton>
                     <ShoppingCartIcon />
                   </IconButton>
                   <Typography textAlign="center">Cart</Typography>
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem onClick={() => handleNavigation("activities")}>
                   <IconButton>
                     <FestivalIcon />
@@ -260,7 +260,6 @@ function TouristNavBar() {
               alignItems: "center",
             }}
           >
-            <MyNotifications />
             {/* <Tooltip title="My Cart">
               <IconButton
                 onClick={() => handleNavigation("myCart")}
@@ -333,14 +332,14 @@ function TouristNavBar() {
                 </Typography>
               </IconButton>
             </Tooltip>
-            <Tooltip title="View My Wishlist">
+            {/* <Tooltip title="View My Wishlist">
               <IconButton onClick={() => handleNavigation("wishlist")}>
                 <FavoriteBorderIcon />
                 <Typography textAlign="center" marginRight={1}>
                   Wishlist
                 </Typography>
               </IconButton>
-            </Tooltip>
+            </Tooltip> */} 
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Notifications">
