@@ -1,3 +1,4 @@
+import AddressDropdown from "../../Components/AddressDropdown.js";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -6,6 +7,7 @@ import { Card, Typography, Space, message, Select, Form, Button } from "antd";
 import Help from "../../Components/HelpIcon.js";
 const { Title } = Typography;
 const { Option } = Select;
+
 
 function PaymentPage() {
   const flight = localStorage.getItem("flight");
@@ -39,7 +41,27 @@ function PaymentPage() {
   const user = JSON.parse(userJson);
   const userName = user.username;
 
+  const [selectedAddress, setSelectedAddress] = useState("");
+  const [addresses, setAddresses] = useState([]);
+
+  const handleAddressSelect = (addressIndex) => {
+    setSelectedAddress(addressIndex); // Update the selected address index
+  };
+
+  const addNewAddress = async (address) => {
+    try {
+      setAddresses((prev) => [...prev, address]); // Update the address list
+      message.success("Address added successfully!");
+    } catch (error) {
+      console.error("Error adding address:", error);
+    }
+  };
+
   const handleVisaSubmit = async (e) => {
+    if (cartData && !selectedAddress) {
+      message.error("Please choose a delivery address first.");
+      return;
+    }
     if (itineraryData && !chosenDate) {
       message.error("Please select a date and time before proceeding.");
       return; // Prevent form submission if no date is selected
@@ -87,6 +109,10 @@ function PaymentPage() {
   };
 
   const handleWalletSubmit = async (e) => {
+    if (cartData && !selectedAddress) {
+      message.error("Please choose a delivery address first.");
+      return;
+    }
     if (itineraryData && !chosenDate) {
       message.error("Please select a date and time before proceeding.");
       return; // Prevent form submission if no date is selected
@@ -122,6 +148,7 @@ function PaymentPage() {
       if (response.status === 200) {
         message.success("Payment successfully completed!");
         if(itineraryOrActivity === "product"){
+          await axios.delete("http://localhost:8000/touristRoutes/emptyCart", userName);
           navigate("/myPurchases");
         }
         // Payment succeeded; now create the booking in the backend
@@ -232,10 +259,7 @@ function PaymentPage() {
       } else if (itineraryOrActivity === "product" && cartId){
         console.log("Fetching activity data for ID:", cartId); // Debugging
         const response = await axios.get(
-          "http://localhost:8000/touristRoutes/myCart",
-          {
-            params: { userName }, // Pass data as query parameters
-          }
+          `http://localhost:8000/touristRoutes/myCart/${userName}`
         );
         if (response.status === 200) {
           console.log("Cart data fetched:", response.data); // Debugging
@@ -291,6 +315,26 @@ function PaymentPage() {
       setFinalPrice(discountedPrice);
     } catch (err) {
       message.error(err.response?.data?.error || "Failed to apply promo code");
+    }
+  };
+
+  const handleCashOnDelivery = async (e) => {
+    e.preventDefault();
+    if (cartData && !selectedAddress) {
+      message.error("Please choose a delivery address first.");
+      return;
+    }
+    try {
+      // Call the empty cart API
+      const response = await axios.delete("http://localhost:8000/touristRoutes/emptyCart", {
+        data: { userName }
+      });
+      console.log(response.data.message); // Log success message
+      // Navigate to "My Purchases" on success
+      navigate("/myPurchases");
+    } catch (error) {
+      console.error("Error emptying cart:", error.response?.data || error.message);
+      message.error("Failed to empty the cart. Please try again.");
     }
   };
 
@@ -960,6 +1004,11 @@ function PaymentPage() {
                 <Form>
                   <h1>Payment Details</h1>
 
+                  <AddressDropdown onAddressSelect={handleAddressSelect} onAddAddress={addNewAddress}/>
+                  {/* {selectedAddress && <p>Selected Address: 
+                    {`${selectedAddress.street}, ${selectedAddress.city}, ${selectedAddress.state || ""}, ${selectedAddress.country} (${selectedAddress.postalCode})`}
+                  </p>} */}
+
                   <p>Email</p>
                   <input
                     type="email"
@@ -1038,6 +1087,20 @@ function PaymentPage() {
           >
             Wallet
           </button>
+          {type === "product" && cartData && 
+          <button
+            type="submit"
+            onClick={handleCashOnDelivery}
+            style={{
+              padding: "10px",
+              fontSize: "1rem",
+              flex: 1, // Makes this button take equal space as the first one
+              marginLeft: "1em"
+            }}
+          >
+            Cash on Delivery
+          </button>
+          }
         </form>
         <Help />
       </div>

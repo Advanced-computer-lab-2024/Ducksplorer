@@ -136,6 +136,16 @@ export default function CheckoutForm() {
         const amount = localStorage.getItem("price");
         const chosenDate = localStorage.getItem("date");
 
+        if(itineraryOrActivity === 'product'){
+          try{
+            await axios.delete("http://localhost:8000/touristRoutes/emptyCart", userName);
+            navigate("/myPurchases");
+          }
+          catch(error){
+            message.error("failed to empty cart");
+          }
+        }
+
         console.log(
           "Creating booking with userName:",
           userName,

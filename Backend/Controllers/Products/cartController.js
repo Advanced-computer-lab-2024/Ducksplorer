@@ -3,12 +3,15 @@ const Product = require("../../Models/productModel");
 const Tourist = require("../../Models/touristModel");
 const PurchaseBooking = require("../../Models/purchaseBookingModel");
 const mongoose = require("mongoose");
+const touristModel = require("../../Models/touristModel");
+const {
+  createNotification,
+} = require("../Notifications/NotificationsController");
 
 const viewCart = async (req, res) => {
   try {
-    const { userName } = req.query;
+    const { userName } = req.params;
     console.log(userName);
-    console.log("request body:", req.query);
     // Validate input
     if (!userName) {
       return res.status(400).json({ message: "UserName is required." });
@@ -21,8 +24,8 @@ const viewCart = async (req, res) => {
 
     if (!cart) {
       return res
-        .status(404)
-        .json({ message: "Cart not found for the given userName." });
+        .status(200)
+        .json({ message: "Cart is empty", cart: null });
     }
 
     // Respond with the cart details, including populated products
@@ -226,8 +229,25 @@ const addPurchase2 = async (req, res) => {
       return res.status(404).json({ error: "Product not found" });
     }
 
+    if (product.availableQuantity < chosenQuantitynum) {
+      return res.status(400).json({ error: "Insufficient stock available." });
+    }
+
     // Calculate the total price for the quantity
     const chosenPrice = product.price * chosenQuantitynum;
+
+    product.availableQuantity -= chosenQuantitynum;
+    product.sales = (product.sales || 0) + chosenPrice;
+
+    if(product.availableQuantity === 0){
+      await createNotification(
+        `Product ${product.name} is out of stock`,
+        product.seller,
+        'Out of stock'
+      )
+    }
+
+    await product.save();
 
     // Create a new purchase booking
     const newPurchase = new PurchaseBooking({
@@ -266,11 +286,65 @@ const getMyOrders = async (req, res) => {
   }
 };
 
+const getAddresses = async (req, res) => {
+  try{
+    const tourist = await touristModel.findOne({userName: req.params.userName});
+    if(!tourist){
+      return res.status(400).json({message: "tourist not found"});
+    }
+    return res.status(200).json(tourist.addresses);
+  }
+  catch(error){
+    return res.status(500).json({ message: error.message });
+  }
+}
+
+const addAddress = async (req, res) => {
+  try{
+    const { street, city, state, postalCode, country } = req.body;
+    if (!street || !city || !postalCode || !country || !state) {
+      return res.status(400).json({ error: "All required fields must be provided" });
+    }
+
+    const tourist = await touristModel.findOne({ userName: req.params.userName });
+    if (!tourist) return res.status(404).json({ error: "Tourist not found" });
+
+    // Add the new address
+    tourist.addresses.push({ street, city, state, postalCode, country });
+
+    // Save the updated document
+    await tourist.save();
+
+    return res.status(200).json({ message: "Address added successfully", addresses: tourist.addresses });
+  }
+  catch(error){
+    return res.status(400).json(error);
+  }
+}
+
+const emptyCart = async (req, res) => {
+  const { userName } = req.body;
+  try{
+    const cart = await Cart.findOne({ username: userName });
+    if(!cart){
+      return res.status(404).json({error: "cart not found"});
+    }
+    await Cart.deleteOne({ _id: cart._id });
+    return res.status(200).json({ message: "cart deleted successfully" });
+  }
+  catch(error){
+    return res.status(400).json(error);
+  }
+}
+
 module.exports = {
   addProductToCart,
   removeProductFromCart,
   updateProductQuantity,
   viewCart,
   addPurchase2,
-  getMyOrders
+  getMyOrders,
+  getAddresses,
+  addAddress,
+  emptyCart
 };

@@ -33,7 +33,6 @@ const ProductCard = ({
   showRemoveWishlist,
   showAverageRatingNo, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
   removeProductFromWishlist,
-  showPurchase,
   hideWishlist
 }) => {
   const [isFormVisible, setFormVisible] = useState(false); // Controls form visibility
@@ -44,6 +43,7 @@ const ProductCard = ({
   const location = useLocation();
   const isGuest = localStorage.getItem("guest") === "true";
   const [purchaseStatus, setPurchaseStatus] = useState(null);
+
   useEffect(() => {
     if (inCartQuantity !== undefined) {
       setNeededQuantity(inCartQuantity);
@@ -148,19 +148,23 @@ const ProductCard = ({
   };
 
 
-
   const handleIncrement = () => {
     setQuantity((prev) => prev + 1); // Increment the quantity by 1
+    if (quantity >= product.availableQuantity){
+      message.error("Cannot purchase with a quantity more than the available");
+    }
   };
 
   const handleDecrement = () => {
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1)); // Decrement the quantity but not below 1
+    if (quantity > (product.availableQuantity + 1)){
+      message.error("Cannot purchase with a quantity more than the available");
+    }
   };
 
   const handleDecrementForCart = () => {
-    setNeededQuantity((prev) => (prev > 0 ? prev - 1 : 0)); // Decrement the quantity but not below 1
+    setNeededQuantity((prev) => (prev > 0 ? prev - 1 : 0)); // Decrement the quantity but not below 0
   }
-
 
   const handleIncrementForCart = () => {
     setNeededQuantity((prev) => prev + 1); // Increment the quantity by 1
@@ -374,8 +378,8 @@ const ProductCard = ({
       style={{
         margin: "20px",
         position: "relative",
-        filter: archived ? "grayscale(100%)" : "none", // Greyscale effect when archived
-        opacity: archived ? 0.6 : 1,
+        filter: archived || product.availableQuantity === 0 ? "grayscale(100%)" : "none", // Greyscale effect when archived
+        opacity: archived || product.availableQuantity === 0 ? 0.6 : 1,
         borderRadius: "3cap",
         boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
         height: "100%",
@@ -490,6 +494,28 @@ const ProductCard = ({
             <Typography variant="body1">
             Status: {purchaseStatus}
           </Typography>
+          )}
+
+          {product.availableQuantity === 0 && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent overlay
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "white",
+                  fontSize: "1.5rem",
+                  fontWeight: "bold",
+                  textTransform: "uppercase",
+                }}
+              >
+                Sold Out
+              </div>
           )}
 
           </div>
