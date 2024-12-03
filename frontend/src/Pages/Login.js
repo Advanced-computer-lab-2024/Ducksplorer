@@ -19,7 +19,7 @@ import { message } from "antd";
 import Cookies from "js-cookie";
 
 function Login() {
-  const [userName, setUserName] = useState("");
+  const [userName, setUserName] = useState(localStorage.getItem("userName") || "");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -86,8 +86,7 @@ function Login() {
   };
   const handleForgotPassword = async () => {
     try {
-      console.log(userName);
-      setUserName(JSON.parse(localStorage.getItem("userName")));
+      localStorage.setItem("userName", userName);
       const response = await axios.get(
         `http://localhost:8000/signUp/getMail/${userName}`
       );
