@@ -265,6 +265,9 @@ button[type="submit"]:hover {
 .activity-card:hover {
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.5) !important;
 }
+.itinerary-card:hover {
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.5) !important;
+}
 
 ::-webkit-file-upload-button {
   display: none;

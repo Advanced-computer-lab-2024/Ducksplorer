@@ -30,7 +30,10 @@ function ItineraryPopover({ anchorEl, handleClose, itineraryData }) {
       anchorEl={anchorEl}
       onClose={handleClose}
       anchorReference="anchorPosition"
-      anchorPosition={{ top: window.innerHeight / 2, left: window.innerWidth / 2 }}
+      anchorPosition={{
+        top: window.innerHeight / 2,
+        left: window.innerWidth / 2,
+      }}
       anchorOrigin={{
         vertical: "center",
         horizontal: "center",
@@ -54,52 +57,80 @@ function ItineraryPopover({ anchorEl, handleClose, itineraryData }) {
       }}
     >
       <div style={{ width: "100%" }}>
-        <Typography variant="h5" sx={{ marginBottom: "10px", fontWeight: "bold" }}>
+        <Typography
+          variant="h5"
+          sx={{ marginBottom: "10px", fontWeight: "bold" }}
+        >
           Itinerary Details
         </Typography>
 
-        <p><strong>Itinerary Name:</strong> {itineraryData.name || "Itinerary Name"}</p>
+        <p>
+          <strong>Itinerary Name:</strong>{" "}
+          {itineraryData.name || "Itinerary Name"}
+        </p>
 
         {itineraryData.activity && itineraryData.activity.length > 0 ? (
           itineraryData.activity.map((activity, index) => (
             <div key={index} style={{ marginBottom: "10px" }}>
-              <p><strong>Activity Name:</strong> {activity.name}</p>
-              <p><strong>Activity Price:</strong> {activity.price}</p>
+              <p>
+                <strong>Activity Name:</strong> {activity.name}
+              </p>
+              <p>
+                <strong>Activity Price:</strong> {activity.price}
+              </p>
             </div>
           ))
         ) : (
           <p>No activities found.</p>
         )}
 
-        <p><strong>Locations:</strong> {itineraryData.locations.join(', ')}</p>
-        <p><strong>Timeline:</strong> {itineraryData.timeline}</p>
-        <p><strong>Language:</strong> {itineraryData.language}</p>
-        <p><strong>Price:</strong> {itineraryData.price}</p>
-
-        <p><strong>Available Dates and Times:</strong>
-          {itineraryData.availableDatesAndTimes.length > 0
-            ? itineraryData.availableDatesAndTimes.map((dateTime, index) => {
-              const dateObj = new Date(dateTime);
-              const date = dateObj.toISOString().split('T')[0];
-              const time = dateObj.toTimeString().split(' ')[0];
-              return (
-                <div key={index}>
-                  Date {index + 1}: {date}<br />
-                  Time {index + 1}: {time}
-                </div>
-              );
-            })
-            : 'No available dates and times'
-          }
+        <p>
+          <strong>Locations:</strong> {itineraryData.locations.join(", ")}
+        </p>
+        <p>
+          <strong>Timeline:</strong> {itineraryData.timeline}
+        </p>
+        <p>
+          <strong>Language:</strong> {itineraryData.language}
+        </p>
+        <p>
+          <strong>Price:</strong> {itineraryData.price}
         </p>
 
-        <p><strong>Accessibility:</strong> {itineraryData.accessibility}</p>
-        <p><strong>Pick Up Location:</strong> {itineraryData.pickUpLocation}</p>
-        <p><strong>Drop Off Location:</strong> {itineraryData.dropOffLocation}</p>
-        <p><strong>Rating:</strong> {(itineraryData.activity.averageRating || itineraryData.activity.averageRating === 0)
-          ? `${itineraryData.activity.averageRating}/5`
-          : `0/5`
-        }</p>
+        <p>
+          <strong>Available Dates and Times:</strong>
+          {itineraryData.availableDatesAndTimes.length > 0
+            ? itineraryData.availableDatesAndTimes.map((dateTime, index) => {
+                const dateObj = new Date(dateTime);
+                const date = dateObj.toISOString().split("T")[0];
+                const time = dateObj.toTimeString().split(" ")[0];
+                return (
+                  <div key={index}>
+                    Date {index + 1}: {date}
+                    <br />
+                    Time {index + 1}: {time}
+                  </div>
+                );
+              })
+            : "No available dates and times"}
+        </p>
+
+        <p>
+          <strong>Accessibility:</strong> {itineraryData.accessibility}
+        </p>
+        <p>
+          <strong>Pick Up Location:</strong> {itineraryData.pickUpLocation}
+        </p>
+        <p>
+          <strong>Drop Off Location:</strong> {itineraryData.dropOffLocation}
+        </p>
+        <p>
+          <strong>Rating:</strong>{" "}
+          {itineraryData.activity.averageRating ||
+          itineraryData.activity.averageRating === 0
+            ? `${itineraryData.activity.averageRating}/5`
+            : `0/5`}
+        </p>
 
         <p>
           <strong>Tags:</strong>{" "}
@@ -211,11 +242,13 @@ export default function ItineraryCard({ itinerary = {} }) {
     return (
       <div>
         <Card
+          className="itinerary-card"
           variant="outlined"
           sx={{
             width: "20vw",
             height: "400px",
           }}
+          onClick={handleOpenPopover}
         >
           <CardOverflow>
             <AspectRatio ratio="2">
@@ -243,7 +276,10 @@ export default function ItineraryCard({ itinerary = {} }) {
               size="md"
               variant={saved ? "soft" : "solid"}
               color={saved ? "neutral" : "primary"}
-              onClick={handleSaveClick}
+              onClick={(event) => {
+                event.stopPropagation();
+                handleSaveClick();
+              }}
               sx={{
                 position: "absolute",
                 zIndex: 2,
@@ -296,7 +332,6 @@ export default function ItineraryCard({ itinerary = {} }) {
                     flexDirection: "row",
                     marginTop: "5px",
                     flexWrap: "wrap",
-                    
                   }}
                 >
                   {itinerary.tags.map((tag, index) => (
@@ -305,16 +340,13 @@ export default function ItineraryCard({ itinerary = {} }) {
                       size="sm"
                       variant="outlined"
                       color="primary"
-                      sx={{ marginRight: 1 , marginBottom: 1}}
+                      sx={{ marginRight: 1, marginBottom: 1 }}
                     >
                       {tag}
                     </Chip>
                   ))}
                 </div>
               </div>
-              <Button variant="outlined" onClick={handleOpenPopover}>
-                View Details
-              </Button>
             </div>
           </div>
           <div>
@@ -354,7 +386,10 @@ export default function ItineraryCard({ itinerary = {} }) {
                 size="md"
                 variant="solid"
                 color="primary"
-                onClick={() => handleBooking(itinerary._id)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleBooking(itinerary._id);
+                }}
               >
                 Book Now
               </Button>
@@ -366,7 +401,6 @@ export default function ItineraryCard({ itinerary = {} }) {
           handleClose={handleClosePopover}
           itineraryData={itinerary}
         />
-
       </div>
     );
   };
