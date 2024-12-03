@@ -6,10 +6,10 @@ const Advertiser = require('../../Models/advertiserModel.js');
 
 
 const deleteUser = async (req, res) => {
-  const {userName} = req.body;
+  const { userName } = req.body;
 
   try {
-    const user = await User.findOne({userName});
+    const user = await User.findOne({ userName });
 
     if (!user) {
       return res.status(404).json({ message: 'User not found in table users' });
@@ -18,7 +18,7 @@ const deleteUser = async (req, res) => {
     const role = user.role;
 
     // Remove the user from the users collection
-    await User.deleteOne({userName});
+    await User.deleteOne({ userName });
 
     // Delete the user from the specific role collection
     switch (role) {
@@ -26,7 +26,7 @@ const deleteUser = async (req, res) => {
         await Tourist.deleteOne({ userName });
         break;
       case 'Guide':
-        await Tourguide.deleteOne({ userName});
+        await Tourguide.deleteOne({ userName });
         break;
       case 'Seller':
         await Seller.deleteOne({ userName });
@@ -46,7 +46,7 @@ const deleteUser = async (req, res) => {
   }
 };
 const addAdmin = async (req, res) => {
-  const { userName, password, role} = req.body;
+  const { userName, password, role } = req.body;
 
   try {
     const user = await User.findOne({ userName });
@@ -54,7 +54,7 @@ const addAdmin = async (req, res) => {
       return res.status(400).json({ error: "Username Already Exists" });
     }
 
-    const newUser = new User({ role, userName, password ,status:"Approved"});
+    const newUser = new User({ role, userName, password, status: "Approved" });
 
     // Save the user to the database
     await newUser.save();
@@ -69,12 +69,11 @@ const addGovernor = async (req, res) => {
   const { userName, password, role } = req.body;
 
   try {
-    const user = await User.findOne({userName});
-    if(user)
-       {
-          return res.status(400).json({error:"Username Already Exists"});
-       }
-    const newuser = new User({ role, userName, password ,status:"Approved"});
+    const user = await User.findOne({ userName });
+    if (user) {
+      return res.status(400).json({ error: "Username Already Exists" });
+    }
+    const newuser = new User({ role, userName, password, status: "Approved" });
 
     await newuser.save();
 
@@ -131,12 +130,12 @@ const approveUser = async (req, res) => {
 };
 
 const getPendingUserDetails = async (req, res) => {
-  try{
+  try {
     const user = req.body;
     if (user.role === 'Guide') {
       const guide = await Tourguide.findOne({ userName: user.userName });
       return res.status(200).json({ guide });
-    } 
+    }
     if (user.role === 'Seller') {
       const seller = await Seller.findOne({ userName: user.userName });
       return res.status(200).json({ seller });
@@ -151,13 +150,13 @@ const getPendingUserDetails = async (req, res) => {
   }
 }
 const getPendingUsers = async (req, res) => {
-try {
-  const users = await User.find({ status: 'Pending' });
-  return res.status(200).json({ users });
-} catch (error) {
-  console.error(error);
-  return res.status(500).json({ error: 'Internal server error' });
-}
+  try {
+    const users = await User.find({ status: 'Pending' });
+    return res.status(200).json({ users });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
 };
 
 const getUsers = async (req, res) => {
@@ -192,14 +191,15 @@ const changePassword = async (req, res) => {
   }
 };
 
+
 module.exports = {
-    deleteUser,
-    addAdmin,
-    addGovernor,
-    approveUser,
-    getPendingUsers,
-    getUsers,
-    rejectUser,
-    getPendingUserDetails,
-    changePassword
+  deleteUser,
+  addAdmin,
+  addGovernor,
+  approveUser,
+  getPendingUsers,
+  getUsers,
+  rejectUser,
+  getPendingUserDetails,
+  changePassword,
 };

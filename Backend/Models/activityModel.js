@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const Tags = require("./preferenceTagsModels")
-const ActivityBooking = require("./activityBookingModel")
 
 const activitySchema = new Schema(
   {
@@ -95,6 +94,11 @@ const activitySchema = new Schema(
       default: false,
       required: false,
     },
+    totalGain: {
+      type: Number,
+      required: false,
+      default: 0
+    }
   },
 
   { timestamps: true }

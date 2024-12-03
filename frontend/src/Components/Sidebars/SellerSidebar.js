@@ -26,6 +26,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PersonIcon from "@mui/icons-material/Person";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
+import SummarizeIcon from '@mui/icons-material/Summarize';
 
 const drawerWidth = 300;
 
@@ -101,6 +102,14 @@ const SellerSidebar = () => {
             </ListItemIcon>
             <ListItemText primary="Manage Products" />
           </ListItem>
+
+          <ListItem button component={Link} to="/sellerReport">
+            <ListItemIcon>
+              <SummarizeIcon />
+            </ListItemIcon>
+            <ListItemText primary="Report" />
+          </ListItem>
+
         </List>
         <Divider />
       </div>

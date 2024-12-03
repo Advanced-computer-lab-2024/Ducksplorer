@@ -1,17 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Avatar, IconButton, Dialog, DialogTitle, DialogActions, DialogContent, Button, Typography } from '@mui/material';
-import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
-import { message } from 'antd';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import {
+  Avatar,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  Button,
+  Typography,
+} from "@mui/material";
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import { message } from "antd";
 
 const ProfilePictureUpload = ({ username }) => {
-  const [profilePicture, setProfilePicture] = useState('/default-profile.png');  // Default profile picture URL
+  const [profilePicture, setProfilePicture] = useState("/default-profile.png"); // Default profile picture URL
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
 
   // Retrieve profile picture from localStorage on mount
   useEffect(() => {
-    const storedPicture = localStorage.getItem('profilePicture');
+    const storedPicture = localStorage.getItem("profilePicture");
     if (storedPicture) {
       setProfilePicture(storedPicture);
     }
@@ -31,19 +40,23 @@ const ProfilePictureUpload = ({ username }) => {
     }
 
     const formData = new FormData();
-    formData.append('userName', username);  // Send userName in the request
-    formData.append('file', selectedFile);
+    formData.append("userName", username); // Send userName in the request
+    formData.append("file", selectedFile);
 
     try {
-      const response = await axios.put('http://localhost:8000/file/user/upload/picture', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await axios.put(
+        "http://localhost:8000/file/user/upload/picture",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       const newProfilePicture = URL.createObjectURL(selectedFile);
-      setProfilePicture(newProfilePicture);  // Update profile picture
-      localStorage.setItem('profilePicture', newProfilePicture);  // Save to localStorage
+      setProfilePicture(newProfilePicture); // Update profile picture
+      localStorage.setItem("profilePicture", newProfilePicture); // Save to localStorage
       message.success(response.data.message);
       handleClose();
     } catch (error) {
@@ -54,10 +67,12 @@ const ProfilePictureUpload = ({ username }) => {
 
   const handleViewProfilePicture = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/file/user/profile/picture/${username}`);
+      const response = await axios.get(
+        `http://localhost:8000/file/user/profile/picture/${username}`
+      );
       if (response.data && response.data.url) {
-        setProfilePicture(response.data.url);  // Update profile picture with the fetched URL
-        localStorage.setItem('profilePicture', response.data.url);  // Save to localStorage
+        setProfilePicture(response.data.url); // Update profile picture with the fetched URL
+        localStorage.setItem("profilePicture", response.data.url); // Save to localStorage
         message.success("Profile picture loaded successfully!");
       }
     } catch (error) {
@@ -71,9 +86,11 @@ const ProfilePictureUpload = ({ username }) => {
       <IconButton onClick={handleClickOpen}>
         <Avatar
           src={profilePicture}
-          sx={{ width: 100, height: 100, cursor: 'pointer' }}
+          sx={{ width: 100, height: 100, cursor: "pointer" }}
         />
-        <PhotoCameraIcon style={{ position: 'absolute', bottom: 0, right: 0 }} />
+        <PhotoCameraIcon
+          style={{ position: "absolute", bottom: 0, right: 0 }}
+        />
       </IconButton>
 
       {/* Dialog to show options to view or upload a picture */}
@@ -82,22 +99,28 @@ const ProfilePictureUpload = ({ username }) => {
         <DialogContent>
           <Avatar
             src={profilePicture}
-            sx={{ width: 150, height: 150, margin: '0 auto' }}
+            sx={{ width: 150, height: 150, margin: "0 auto" }}
           />
-          <Typography variant="subtitle1" sx={{ textAlign: 'center', mt: 2 }}>
+          <Typography variant="subtitle1" sx={{ textAlign: "center", mt: 2 }}>
             {username}
           </Typography>
           <input
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            style={{ marginTop: '10px' }}
+            style={{ marginTop: "10px" }}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleViewProfilePicture} color="primary">View Profile Picture</Button>
-          <Button onClick={handleUpload} color="primary">Upload</Button>
-          <Button onClick={handleClose} color="secondary">Cancel</Button>
+          <Button onClick={handleViewProfilePicture} color="primary">
+            View Profile Picture
+          </Button>
+          <Button onClick={handleUpload} color="primary">
+            Upload
+          </Button>
+          <Button onClick={handleClose} color="secondary">
+            Cancel
+          </Button>
         </DialogActions>
       </Dialog>
     </>

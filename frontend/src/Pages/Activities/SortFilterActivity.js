@@ -1,12 +1,16 @@
-//This is the page that gets called when the upcoming activities button is clicked
+// This is the page that gets called when the upcoming activities button is clicked
 import React from "react";
 import SortActivities from "./sortActivities";
 import { Button } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import FilterActivities from "./filterActivities";
+// import { Link } from "react-router-dom";
 // import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 import Help from "../../Components/HelpIcon";
+import TouristNavBar from "../../Components/TouristNavBar.js";
+import { Box } from "@mui/material";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 
 function SortFilterActivity() {
   const [sort, setSort] = useState(true);
@@ -14,22 +18,51 @@ function SortFilterActivity() {
   const isGuest = localStorage.getItem("guest") === "true";
 
   return (
-    <div>
+    <div className="SortFilterDiv" style={{ height: "100vh" }}>
+      <TouristNavBar />
+      <TouristSidebar />
+      {/* Back to Dashboard Button */}
       <Button
         component={Link}
         to={isGuest ? "/guestDashboard" : "/touristDashboard"}
         variant="contained"
-        color="primary"
-        style={{ marginBottom: "20px" }}
+        sx={{
+          backgroundColor: "#1a237e",
+          color: "white",
+          fontWeight: "bold",
+          textTransform: "none",
+          borderRadius: "8px",
+          "&:hover": {
+            backgroundColor: "#0d47a1",
+          },
+          marginBottom: "20px",
+        }}
       >
         Back to Dashboard
       </Button>
-      <div style={{ marginLeft: 0, maxWidth: "170vh", padding: "0 20px" }}>
+
+      {/* Sorting and Filtering Buttons */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          gap: "20px", // Adds space between the buttons
+          marginBottom: "20px", // Spacing below the buttons
+        }}
+      >
         <Button
-          style={{
-            border: "1.3px solid black",
-            borderRadius: 100,
+          variant="outlined"
+          sx={{
+            border: "2px solid black",
+            borderRadius: "50px",
             color: "black",
+            padding: "10px 20px",
+            fontWeight: "bold",
+            textTransform: "none",
+            "&:hover": {
+              backgroundColor: "#f0f0f0",
+            },
           }}
           onClick={() => {
             setSort(!sort);
@@ -38,15 +71,21 @@ function SortFilterActivity() {
             }
           }}
         >
-          {" "}
-          Sort{" "}
+          Sort
         </Button>
+
         <Button
-          style={{
-            margin: 10,
-            border: "1.3px solid black",
-            borderRadius: 100,
+          variant="outlined"
+          sx={{
+            border: "2px solid black",
+            borderRadius: "50px",
             color: "black",
+            padding: "10px 20px",
+            fontWeight: "bold",
+            textTransform: "none",
+            "&:hover": {
+              backgroundColor: "#f0f0f0",
+            },
           }}
           onClick={() => {
             setFilter(!filter);
@@ -55,11 +94,16 @@ function SortFilterActivity() {
             }
           }}
         >
-          filter
+          Filter
         </Button>
-        {sort && <SortActivities />}
-        {filter && <FilterActivities />}
       </div>
+
+      {/* Sort and Filter Components */}
+
+      {sort && <SortActivities />}
+      {filter && <FilterActivities />}
+
+      {/* Help Icon */}
       <Help />
     </div>
   );

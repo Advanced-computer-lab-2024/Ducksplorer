@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import Iconify from "../Components/TopNav/iconify.js";
 import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { message } from "antd";
 import Cookies from "js-cookie";
@@ -76,6 +77,7 @@ function Login() {
         throw new Error(response.error);
       }
     } catch (error) {
+      message.error(error.response?.data?.error || "Login failed");
       message.error(error.response?.data?.error || "Login failed");
     } finally {
       setLoading(false);
@@ -232,7 +234,7 @@ function Login() {
           color="secondary"
           fullWidth
           style={styles.backButton}
-          onClick={() => navigate("/")}
+          onClick={handleBackToHome}
         >
           Back to Homepage
         </Button>

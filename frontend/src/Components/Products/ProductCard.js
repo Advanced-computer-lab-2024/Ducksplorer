@@ -1,6 +1,7 @@
 import { React, useState, useEffect } from "react";
 import CurrencyConvertor from "../CurrencyConvertor";
 import {
+  Box,
   Card,
   CardContent,
   Typography,
@@ -16,6 +17,8 @@ import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { calculateProductRating } from "../../Utilities/averageRating";
 import { useLocation } from "react-router-dom";
+import TouristNavBar from "../TouristNavBar";
+import TouristSidebar from "../Sidebars/TouristSidebar";
 
 const ProductCard = ({
   product,
@@ -180,6 +183,16 @@ const ProductCard = ({
   };
 
   return (
+    <Box
+    sx={{
+      height: "100vh",
+      backgroundColor: "#f4f6f9", // Light grey background for better contrast
+      paddingTop: "64px", // Adjust for navbar height
+    }}
+  >
+    <TouristNavBar />
+    <TouristSidebar/>
+
     <Card
       className="product-card"
       style={{
@@ -309,6 +322,7 @@ const ProductCard = ({
         </CardContent>
       </div>
     </Card>
+    </Box>
   );
 };
 

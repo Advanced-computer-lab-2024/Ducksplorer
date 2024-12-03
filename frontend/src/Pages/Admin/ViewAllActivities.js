@@ -5,7 +5,9 @@ import FlagIcon from "@mui/icons-material/Flag";
 import { Link } from "react-router-dom";
 import WarningIcon from "@mui/icons-material/Warning";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
+import AdminNavbar from "../../Components/TopNav/Adminnavbar";
+import TouristNavBar from "../../Components/TouristNavBar";
 import {
   Box,
   Table,
