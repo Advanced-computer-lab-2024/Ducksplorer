@@ -70,9 +70,15 @@ import ViewAllItineraries from "./Pages/Admin/ViewAllItineraries.js";
 import ViewAllActivities from "./Pages/Admin/ViewAllActivities.js";
 import PastBookingDetails from "./Pages/Bookings/myPastBookings.js";
 import GuestDashboard from "./Pages/Dashboards/GuestDashboard.js";
-
+import Wishlist from "./Pages/Products/Wishlist.js";
 import TransportationBooking from "./Pages/ThirdParty/TransportationBooking.js";
+//cart page
+import CartPage from "./Pages/Products/CartPage.js";
 import ChangePassword from "./Pages/Admin/ChangePassword.js";
+import MyOrders from "./Pages/Products/OrdersPage.js";
+
+import MySavedItems from "./Pages/SavedItems.js";
+import Orders from "./Pages/orders.js";
 import { useAuthContext } from "./context/AuthContext.js";
 import ProtectedRoute from "./Components/ProtectedRoute"; // Import the ProtectedRoute component
 
@@ -412,7 +418,7 @@ function App() {
                 <TouristProducts />
               </ProtectedRoute>
             }
-          />
+          />          <Route path="/Wishlist" element={<Wishlist />} />
           <Route
             path="/advertiserDashboard"
             element={
@@ -682,7 +688,7 @@ function App() {
             }
           />
           <Route
-            path="/myPurchases"
+            path="/myPurchases/:orderNumber"
             element={
               <ProtectedRoute>
                 <MyPurchases />
@@ -691,6 +697,13 @@ function App() {
           />
 
           <Route path="/addPromoCode" element={<CreatePromoCode />} />
+          <Route path="/myOrders" element={<MyOrders />} />
+          <Route path="/myCart" element={<CartPage />} />
+
+
+          
+          <Route path="/mySaved" element={<MySavedItems/>} />
+          <Route path="/orders" element={<Orders/>} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

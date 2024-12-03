@@ -256,6 +256,7 @@ const getMyBookings = async (req, res) => {
     ) {
       return res.status(404).json({ message: "No bookings found." });
     }
+    console.log("ThirdPartyBookings", thirdPartyBookings);
 
     // Extract flights, hotels, and transportations from third party bookings
     // const flights = thirdPartyBookings
@@ -545,14 +546,14 @@ const payVisa = async (req, res) => {
     console.log("entered function pay visa");
     console.log(req.body);
     const { userName } = req.params;
-    const { price } = req.body;
+    const { finalPrice } = req.body;
     const tourist = await Tourist.findOne({ userName });
     if (tourist.level === 1) {
-      tourist.points += price * 0.5;
+      tourist.points += finalPrice * 0.5;
     } else if (tourist.level === 2) {
-      tourist.points += price * 1.0;
+      tourist.points += finalPrice * 1.0;
     } else if (tourist.level === 3) {
-      tourist.points += price * 1.5;
+      tourist.points += finalPrice * 1.5;
     }
     if (tourist.points >= 100000 && tourist.points < 500000) {
       tourist.level = 2;
@@ -576,24 +577,26 @@ const payVisa = async (req, res) => {
 const payWallet = async (req, res) => {
   try {
     const { userName } = req.params;
-    const { price } = req.body;
+    const { finalPrice } = req.body;
     const tourist = await Tourist.findOne({ userName });
     const level = tourist.level;
     console.log(tourist);
     console.log("body", req.body);
     console.log("wallet", tourist.wallet);
-    console.log("price", price);
+    console.log("price", finalPrice);
     let myWallet = tourist.wallet;
-    if (myWallet >= price) {
-      myWallet -= price;
+    if (myWallet >= finalPrice) {
+      console.log("entered? ", finalPrice);
+      myWallet -= finalPrice;
       tourist.wallet = myWallet;
+      console.log("feloosyy ", myWallet);
       await tourist.save();
       if (tourist.level === 1) {
-        tourist.points += price * 0.5;
+        tourist.points += finalPrice * 0.5;
       } else if (tourist.level === 2) {
-        tourist.points += price * 1.0;
+        tourist.points += finalPrice * 1.0;
       } else if (tourist.level === 3) {
-        tourist.points += price * 1.5;
+        tourist.points += finalPrice * 1.5;
       }
       if (tourist.points >= 100000 && tourist.points < 500000) {
         tourist.level = 2;
@@ -610,9 +613,11 @@ const payWallet = async (req, res) => {
         points: tourist.points,
       });
     } else {
+      console.log("hena bardo wala ehh? ");
       res.status(400).json({ message: "Not enough money in the wallet" });
     }
   } catch (error) {
+    console.log("hena wala ehh");
     return res.status(500).json({ message: "An error occurred", error });
   }
 };

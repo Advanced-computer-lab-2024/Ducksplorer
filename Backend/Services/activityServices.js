@@ -4,6 +4,10 @@ const { $gte } = require("sift");
 const Category = require("../Models/activityCategory.js");
 const Tags = require("../Models/preferenceTagsModels.js");
 const getAllActivitiesByUsername = require("../Controllers/Activity/activityController.js");
+const notificationRequestModel = require("../Models/notificationRequestModel.js");
+const {
+  createNotification,
+} = require("../Controllers/Notifications/NotificationsController.js");
 const ActivityBooking = require("../Models/activityBookingModel.js");
 
 const createActivity = async (activityData) => {
@@ -63,11 +67,38 @@ const createActivity = async (activityData) => {
 };
 
 const updateActivity = async (activityId, updatedData) => {
+  const currActivity = await Activity.findById(activityId);
   const updatedActivity = await Activity.findByIdAndUpdate(
     activityId,
     updatedData,
     { new: true }
   );
+
+  if (currActivity.isOpen == false && updatedActivity.isOpen == true) {
+    console.log("dakhalt?");
+    const notificationRequest = await notificationRequestModel.find({
+      eventId: activityId,
+      notified: false,
+    });
+
+    for (const request of notificationRequest) {
+      try {
+        // Create and send the notification
+        await createNotification(
+          `The activity "${updatedActivity.name}" is now accepting bookings!`,
+          request.user,
+          "Activity open!"
+        );
+
+        // Mark the request as notified to prevent duplicate notifications
+        request.notified = true;
+        await request.save();
+      } catch (err) {
+        console.error(`Failed to notify user ${request.user}:`, err.message);
+      }
+    }
+  }
+
   if (!updatedActivity) {
     throw new Error("Activity not found");
   }

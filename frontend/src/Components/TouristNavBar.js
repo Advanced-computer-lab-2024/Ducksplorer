@@ -7,6 +7,7 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart"; // Import the shopping cart icon
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Tooltip from "@mui/material/Tooltip";
@@ -25,6 +26,9 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import MyNotifications from "./myNotifications";
 import Cookies from "js-cookie";
 import PersistentDrawerLeft from "./Drawer";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import BookmarksIcon from "@mui/icons-material/Bookmarks";
+
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -182,6 +186,12 @@ function TouristNavBar() {
                   alignItems: "center",
                 }}
               >
+                <MenuItem onClick={() => handleNavigation("myCart")}>
+                  <IconButton>
+                    <ShoppingCartIcon />
+                  </IconButton>
+                  <Typography textAlign="center">Cart</Typography>
+                </MenuItem>
                 <MenuItem onClick={() => handleNavigation("activities")}>
                   <IconButton>
                     <FestivalIcon />
@@ -250,6 +260,17 @@ function TouristNavBar() {
               alignItems: "center",
             }}
           >
+            <MyNotifications />
+            {/* <Tooltip title="My Cart">
+              <IconButton
+                onClick={() => handleNavigation("myCart")}
+              >
+                <ShoppingCartIcon />
+                <Typography textAlign="center" marginRight={3}>
+                  Cart
+                </Typography>
+              </IconButton>
+            </Tooltip> */}
             <Tooltip title="Book Activities">
               <IconButton
                 onClick={() => handleNavigation("activity/sortFilter")}
@@ -309,6 +330,14 @@ function TouristNavBar() {
                 <BookmarkAddedIcon />
                 <Typography textAlign="center" marginLeft={2}>
                   My Bookings
+                </Typography>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="View My Wishlist">
+              <IconButton onClick={() => handleNavigation("wishlist")}>
+                <FavoriteBorderIcon />
+                <Typography textAlign="center" marginRight={1}>
+                  Wishlist
                 </Typography>
               </IconButton>
             </Tooltip>
@@ -383,6 +412,18 @@ function TouristNavBar() {
                   )}
                   <Typography sx={{ ml: 1 }} variant="body2">
                     Show Preferences
+                  </Typography>
+                </IconButton>
+              </MenuItem>
+              <MenuItem onClick={handleCloseUserMenu}>
+                <IconButton
+                  component="a"
+                  href="/mySaved"
+                  sx={{ textAlign: "center", p: 0.5 }}
+                >
+                  <BookmarksIcon sx={{ fontSize: 20, color: "grey" }} />
+                  <Typography sx={{ ml: 1 }} variant="body2">
+                    Saved
                   </Typography>
                 </IconButton>
               </MenuItem>
