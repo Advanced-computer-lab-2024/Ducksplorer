@@ -19,8 +19,9 @@ const createBooking = async (req, res) => {
       return;
     }
 
+    let convertedDate;
     if (date) {
-      const convertedDate = new Date(date);
+      convertedDate = new Date(date);
     }
 
     const activity = activityId ? await Activity.findById(activityId) : null;

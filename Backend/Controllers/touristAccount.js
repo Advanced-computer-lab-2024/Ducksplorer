@@ -10,9 +10,6 @@ const PromoCode = require("../Models/promoCodeModel.js");
 const {
   createNotification,
 } = require("./Notifications/NotificationsController.js");
-const TourGuide = require("../Models/tourGuideModel.js");
-const Seller = require("../Models/sellerModel.js");
-const Advertiser = require("../Models/advertiserModel.js");
 
 const transporter = nodemailer.createTransport({
   service: "gmail", // Or another email service provider
@@ -235,33 +232,6 @@ const bod = async (res) => {
   }
 };
 
-const getMail = async (req, res) => {
-  const userName = req.body;
-  try {
-    const userData = await user.findOne(userName);
-    const role = userData.role;
-    let email;
-    switch (role) {
-      case "Tourist":
-        email = await Tourist.findOne({ userName }).select("email");
-        break;
-      case "Guide":
-        email = await TourGuide.findOne({ userName }).select("email");
-        break;
-      case "Seller":
-        email = await Seller.findOne({ userName }).select("email");
-        break;
-      case "Advertiser":
-        email = await Advertiser.findOne({ userName }).select("email");
-        break;
-    }
-    return res.status(200).json({ email });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal server error" });
-  }
-};
-
 module.exports = {
   getTouristDetails,
   updateTouristDetails,
@@ -270,5 +240,4 @@ module.exports = {
   deleteMyTouristAccount,
   schedule,
   bod,
-  getMail,
 };
