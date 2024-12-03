@@ -159,6 +159,18 @@ const CartPage = () => {
             type="primary"
             size="large"
             onClick={() => setIsCheckoutModalVisible(true)}
+            style={{
+              backgroundColor: "#1890ff", // Ensure visible background color
+              color: "#fff", // Ensure text is visible
+              border: "none", // Remove any conflicting borders
+              padding: "10px 20px",
+              fontSize: "1.2rem",
+              borderRadius: "5px", // Add a clear shape
+              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Add a subtle shadow
+              transition: "background-color 0.3s ease", // Smooth transition for hover
+            }}
+            onMouseEnter={(e) => (e.target.style.backgroundColor = "#40a9ff")} // Optional hover effect
+            onMouseLeave={(e) => (e.target.style.backgroundColor = "#1890ff")}
           >
             Checkout
           </Button>
@@ -177,6 +189,18 @@ const CartPage = () => {
             type="primary"
             size="large"
             onClick={handleConfirmCheckout} // Call the handler
+            style={{
+              backgroundColor: "#1890ff", // Ensure visible background color
+              color: "#fff", // Ensure text is visible
+              border: "none", // Remove any conflicting borders
+              padding: "10px 20px",
+              fontSize: "1.2rem",
+              borderRadius: "5px", // Add a clear shape
+              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Add a subtle shadow
+              transition: "background-color 0.3s ease", // Smooth transition for hover
+            }}
+            onMouseEnter={(e) => (e.target.style.backgroundColor = "#40a9ff")} // Optional hover effect
+            onMouseLeave={(e) => (e.target.style.backgroundColor = "#1890ff")}
           >
             Confirm
           </Button>
