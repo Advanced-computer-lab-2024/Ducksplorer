@@ -58,6 +58,10 @@ function PaymentPage() {
   };
 
   const handleVisaSubmit = async (e) => {
+    if (cartData && !selectedAddress) {
+      message.error("Please choose a delivery address first.");
+      return;
+    }
     if (itineraryData && !chosenDate) {
       message.error("Please select a date and time before proceeding.");
       return; // Prevent form submission if no date is selected
@@ -105,6 +109,10 @@ function PaymentPage() {
   };
 
   const handleWalletSubmit = async (e) => {
+    if (cartData && !selectedAddress) {
+      message.error("Please choose a delivery address first.");
+      return;
+    }
     if (itineraryData && !chosenDate) {
       message.error("Please select a date and time before proceeding.");
       return; // Prevent form submission if no date is selected
@@ -312,13 +320,15 @@ function PaymentPage() {
 
   const handleCashOnDelivery = async (e) => {
     e.preventDefault();
-    console.log("outside bla bla bla");
+    if (cartData && !selectedAddress) {
+      message.error("Please choose a delivery address first.");
+      return;
+    }
     try {
       // Call the empty cart API
       const response = await axios.delete("http://localhost:8000/touristRoutes/emptyCart", {
         data: { userName }
       });
-      console.log("bla bla bla");
       console.log(response.data.message); // Log success message
       // Navigate to "My Purchases" on success
       navigate("/myPurchases");
