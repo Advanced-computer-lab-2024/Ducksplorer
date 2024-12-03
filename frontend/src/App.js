@@ -79,6 +79,7 @@ import MyOrders from "./Pages/Products/OrdersPage.js";
 
 import CreatePromoCode from "./Pages/Admin/CreatePromoCode.js";
 import MySavedItems from "./Pages/SavedItems.js";
+import Orders from "./Pages/orders.js";
 
 function App() {
   return (
@@ -196,13 +197,14 @@ function App() {
           <Route path="/flights" element={<FlightsBooking />} />
           <Route path="/transportation" element={<TransportationBooking />} />
           <Route path="/hotels" element={<HotelsBooking />} />
-          <Route path="/myPurchases" element={<MyPurchases />} />
+          <Route path="/myPurchases/:orderNumber" element={<MyPurchases />} />
           <Route path="/myOrders" element={<MyOrders />} />
           <Route path="/myCart" element={<CartPage />} />
 
 
           <Route path="/addPromoCode" element={<CreatePromoCode/>} />
           <Route path="/mySaved" element={<MySavedItems/>} />
+          <Route path="/orders" element={<Orders/>} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

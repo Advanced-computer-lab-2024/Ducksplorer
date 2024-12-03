@@ -1,5 +1,5 @@
 const PurchaseBooking = require("../Models/purchaseBookingModel.js");
-
+const Product = require("../Models/productModel.js");
 const getMyPurchases = async (req, res) => {
   try {
     const myPurchases = await PurchaseBooking.find({ buyer: req.params.buyer });
@@ -9,6 +9,53 @@ const getMyPurchases = async (req, res) => {
   }
 };
 
+const getOrderProducts = async (req, res) => {
+  try {
+    const { productId } = req.params; // Extract productId from request parameters
+
+    // Fetch the product by its ID
+    const product = await Product.findById(productId);
+
+    // If the product doesn't exist, send a 404 response
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    // Respond with the product details
+    res.status(200).json(product);
+  } catch (error) {
+    console.error("Error fetching product:", error);
+
+    // Respond with a 500 status for server errors
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+const getPurchasesByOrderNumber = async (req, res) => {
+  try {
+    const { orderNumber } = req.params; // Assuming the order number is passed as a URL parameter
+    const orderNumberNum = +orderNumber;
+    // Validate input
+    if (!orderNumber) {
+      return res.status(400).json({ message: "Order number is required." });
+    }
+
+    // Query the database
+    const purchases = await PurchaseBooking.find({ orderNumber: orderNumberNum });
+
+    // Check if any purchases were found
+    if (purchases.length === 0) {
+      return res.status(404).json({ message: "No purchases found with this order number." });
+    }
+
+    // Return the results
+    res.status(200).json({ purchases });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error.", error });
+  }
+};
 
 const getGroupedPurchases = async (req, res) => {
   const { buyer } = req.params;
@@ -101,5 +148,7 @@ module.exports = {
   getMyPurchases,
   updatePurchase,
   getGroupedPurchases,
+  getPurchasesByOrderNumber,
+  getOrderProducts,
   // getMyOrder,
 };

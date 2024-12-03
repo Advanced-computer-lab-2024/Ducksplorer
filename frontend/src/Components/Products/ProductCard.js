@@ -25,7 +25,6 @@ const ProductCard = ({
   productID,
   showRating, //shows the user review , also for myPurchases as a tourist
   showReview,
-  showPurchase,
   inCartQuantity,
   isConfirmButtonVisible=false,
   showAddToCart=false,
