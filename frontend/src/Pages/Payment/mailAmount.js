@@ -4,6 +4,7 @@ import axios from "axios";
 import React from "react";
 import { Card, Typography, Space, message, Select, Form, Button } from "antd";
 import Help from "../../Components/HelpIcon.js";
+import TouristNavBar from "../../Components/TouristNavBar.js";
 const { Title } = Typography;
 const { Option } = Select;
 
@@ -245,17 +246,13 @@ function PaymentPage() {
       overflowY: 'visible',
       height: '120vh'
     }}>
-      <Button
-        onClick={() => navigate(-1)}
-        style={{ marginLeft: '0%' }}  // Add margin to position the button to the left
-      >
-        Go Back
-      </Button>
+      <TouristNavBar />
       <div style={{
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         maxWidth: '1500px',
+        paddingTop: '40%',
         margin: 'auto',
         gap: '1rem',
         overflowY: 'visible',
