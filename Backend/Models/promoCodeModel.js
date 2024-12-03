@@ -11,6 +11,13 @@ const promoCodeSchema = new Schema(
       type: Number,
       required: true,
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    expiryDate: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );
