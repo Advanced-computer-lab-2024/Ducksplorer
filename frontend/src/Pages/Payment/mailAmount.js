@@ -21,7 +21,7 @@ function PaymentPage() {
   const [amount, setAmount] = useState("");
   const navigate = useNavigate();
   const [chosenDate, setChosenDate] = useState(null);
-  const [flightsData,setFlight] = useState(JSON.parse(localStorage.getItem('flight')));
+  const [flightsData, setFlight] = useState(JSON.parse(localStorage.getItem('flight')));
   const [hotelsData, setHotel] = useState(JSON.parse(localStorage.getItem('hotel')));
   const [transportationsData, setTransportation] = useState(JSON.parse(localStorage.getItem('transportation')));
 
@@ -202,17 +202,17 @@ function PaymentPage() {
         setPrice(flightsData.price);
         console.log("Flight sada data fetched:", flight); // Debugging
         console.log("FlightData fetched:", flightsData); // Debugging
-        console.log("flight price",flightsData.price )
+        console.log("flight price", flightsData.price)
       }
-      else if (itineraryOrActivity === 'hotel'&& hotel) {
+      else if (itineraryOrActivity === 'hotel' && hotel) {
         //setHotel(hotel);
         setPrice(hotelsData.price);
       }
       else if (itineraryOrActivity === 'transportation' && transportation) {
-       // setTransportation(transportation);
-       setPrice(transportationsData.price);
+        // setTransportation(transportation);
+        setPrice(transportationsData.price);
       }
-       else {
+      else {
         message.error("Failed to retrieve details");
       }
       //console.log(response);
@@ -263,14 +263,14 @@ function PaymentPage() {
       }}>
         <div>
           {itineraryData || activityData || (flightsData && type === 'flight') ||
-        (hotelsData && type === 'hotel') ||
-        (transportationsData && type === 'transportation') ? (
+            (hotelsData && type === 'hotel') ||
+            (transportationsData && type === 'transportation') ? (
             type === 'itinerary' ? (
               <div>
                 <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
                   <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
                     <Title level={3}>Booked Details</Title>
-                    <p><strong>Itinerary Details:</strong> {itineraryData.name}</p>
+                    <p><strong>Itinerary Details:</strong> {itineraryData.name || "Itinerary Name"}</p>
                     {/* Looping through the activities */}
                     {itineraryData.activity && itineraryData.activity.length > 0 ? (
                       itineraryData.activity.map((activity, index) => (
@@ -411,232 +411,232 @@ function PaymentPage() {
                 <Form>
                   <h1>Payment Details</h1>
 
-                <p>Email</p>
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value * 100)}
-                  required
-                  readOnly
+                  <p>Email</p>
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value * 100)}
+                    required
+                    readOnly
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ddd",
+                    }}
+                  />
+                  <p>Amount</p>
+                  <input
+                    type="number"
+                    placeholder="Amount"
+                    value={price}
+                    onChange={(e) => setAmount(e.target.value * 100)}
+                    required
+                    readOnly
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ddd",
+                    }}
+                  />
+                </Form>
+              </div>
+            ) : type === "flight" ? (
+              <div>
+                <Card
                   style={{
-                    width: "100%",
-                    padding: "8px",
-                    borderRadius: "4px",
-                    border: "1px solid #ddd",
+                    maxWidth: "600px",
+                    margin: "20px auto",
+                    borderRadius: "8px",
                   }}
-                />
-                <p>Amount</p>
-                <input
-                  type="number"
-                  placeholder="Amount"
-                  value={price}
-                  onChange={(e) => setAmount(e.target.value * 100)}
-                  required
-                  readOnly
-                  style={{
-                    width: "100%",
-                    padding: "8px",
-                    borderRadius: "4px",
-                    border: "1px solid #ddd",
-                  }}
-                />
-              </Form>
-            </div>
-          ) : type === "flight" ? (
-            <div>
-              <Card
-                style={{
-                  maxWidth: "600px",
-                  margin: "20px auto",
-                  borderRadius: "8px",
-                }}
-              >
-                <Space
-                  direction="vertical"
-                  size="middle"
-                  style={{ display: "flex" }}
                 >
-                  <Title level={3}>Booked Details</Title>
-                  <p>
-                    <strong>Flight Details:</strong>{" "}
-                  </p>
-                  <p>
-                    <strong>Price:</strong> {flightsData.price}
-                    {"  "}
-                    {flightsData.currency}
-                  </p>
-                  <p>
-                    <strong>Departure Date:</strong> {flightsData.departureDate}
-                  </p>
-                  <p>
-                    <strong>Arrival Date:</strong> {flightsData.arrivalDate}
-                  </p>
-                  <p>
-                    <strong>Company Name:</strong> {flightsData.companyName}
-                  </p>
-                  <p>
-                    <strong>Departure City:</strong> {flightsData.departureCity}
-                  </p>
-                  <p>
-                    <strong>Departure Country:</strong>{" "}
-                    {flightsData.departureCountry}
-                  </p>
-                  <p>
-                    <strong>Arrival City:</strong> {flightsData.arrivalCity}
-                  </p>
-                  <p>
-                    <strong>Arrival Country:</strong>{" "}
-                    {flightsData.arrivalCountry}
-                  </p>
-                  {/* <p><strong>Departure Airport:</strong> {flightsData.departureAirport}</p>
+                  <Space
+                    direction="vertical"
+                    size="middle"
+                    style={{ display: "flex" }}
+                  >
+                    <Title level={3}>Booked Details</Title>
+                    <p>
+                      <strong>Flight Details:</strong>{" "}
+                    </p>
+                    <p>
+                      <strong>Price:</strong> {flightsData.price}
+                      {"  "}
+                      {flightsData.currency}
+                    </p>
+                    <p>
+                      <strong>Departure Date:</strong> {flightsData.departureDate}
+                    </p>
+                    <p>
+                      <strong>Arrival Date:</strong> {flightsData.arrivalDate}
+                    </p>
+                    <p>
+                      <strong>Company Name:</strong> {flightsData.companyName}
+                    </p>
+                    <p>
+                      <strong>Departure City:</strong> {flightsData.departureCity}
+                    </p>
+                    <p>
+                      <strong>Departure Country:</strong>{" "}
+                      {flightsData.departureCountry}
+                    </p>
+                    <p>
+                      <strong>Arrival City:</strong> {flightsData.arrivalCity}
+                    </p>
+                    <p>
+                      <strong>Arrival Country:</strong>{" "}
+                      {flightsData.arrivalCountry}
+                    </p>
+                    {/* <p><strong>Departure Airport:</strong> {flightsData.departureAirport}</p>
                   <p><strong>Arrival Airport:</strong> {flightsData.arrivalAirport}</p> */}
-                </Space>
-              </Card>
-              <Form>
-                <h1>Enter Payment Details</h1>
+                  </Space>
+                </Card>
+                <Form>
+                  <h1>Enter Payment Details</h1>
 
-                <p>Email</p>
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value * 100)}
-                  required
-                  readOnly
-                  style={{
-                    width: "100%",
-                    padding: "8px",
-                    borderRadius: "4px",
-                    border: "1px solid #ddd",
-                  }}
-                />
-                <p>Amount</p>
-                <input
-                  type="number"
-                  placeholder="Amount"
-                  value={flightsData.price}
-                  onChange={(e) => setAmount(e.target.value * 100)}
-                  required
-                  readOnly
-                  style={{
-                    width: "100%",
-                    padding: "8px",
-                    borderRadius: "4px",
-                    border: "1px solid #ddd",
-                  }}
-                />
-              </Form>
-            </div>
-          ) : type === 'hotel' ? (
-            <div>
-              <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
-                <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-                  <Title level={3}>Booked Details</Title>
-                  <p><strong>Hotel Details:</strong> </p>
-                  <p><strong>Price:</strong> {hotelsData.price}{'  '}{hotelsData.currency}</p>
-                  <p><strong>Check In Date:</strong> {hotelsData.checkInDate}</p>
-                  <p><strong>Check Out Date:</strong> {hotelsData.checkOutDate}</p>
-                  <p><strong>Hotel Name:</strong> {hotelsData.hotelName}</p>
-                  <p><strong>Location:</strong> {hotelsData.city}{"  ,"}{hotelsData.country}</p>
-                </Space>
-              </Card>
-              <Form>
-              <h1>Enter Payment Details</h1>
+                  <p>Email</p>
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value * 100)}
+                    required
+                    readOnly
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ddd",
+                    }}
+                  />
+                  <p>Amount</p>
+                  <input
+                    type="number"
+                    placeholder="Amount"
+                    value={flightsData.price}
+                    onChange={(e) => setAmount(e.target.value * 100)}
+                    required
+                    readOnly
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ddd",
+                    }}
+                  />
+                </Form>
+              </div>
+            ) : type === 'hotel' ? (
+              <div>
+                <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
+                  <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                    <Title level={3}>Booked Details</Title>
+                    <p><strong>Hotel Details:</strong> </p>
+                    <p><strong>Price:</strong> {hotelsData.price}{'  '}{hotelsData.currency}</p>
+                    <p><strong>Check In Date:</strong> {hotelsData.checkInDate}</p>
+                    <p><strong>Check Out Date:</strong> {hotelsData.checkOutDate}</p>
+                    <p><strong>Hotel Name:</strong> {hotelsData.hotelName}</p>
+                    <p><strong>Location:</strong> {hotelsData.city}{"  ,"}{hotelsData.country}</p>
+                  </Space>
+                </Card>
+                <Form>
+                  <h1>Enter Payment Details</h1>
 
-              <p>Email</p>
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value * 100)}
-                required
-                readOnly
-                style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
-              />
-              <p>Amount</p>
-              <input
-                type="number"
-                placeholder="Amount"
-                value={hotelsData.price}
-                onChange={(e) => setAmount(e.target.value * 100)}
-                required
-                readOnly
-                style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
-              />
-          </Form>
-            </div>
-           ) : type === 'transportation' ? (
-            <div>
-              <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
-                <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-                  <Title level={3}>Booked Details</Title>
-                  <p><strong>Price:</strong> {transportationsData.price}{'  '}{transportationsData.currency}</p>
-                  <p><strong>Departure Date:</strong> {transportationsData.departureDate}</p>
-                  <p><strong>Arrival Date:</strong> {transportationsData.arrivalDate}</p>
-                  <p><strong>Company Name:</strong> {transportationsData.companyName}</p>
-                  {/* <p><strong>Departure City:</strong> {transportationsData.departureCity}</p> */}
-                  <p><strong>Transfer Type:</strong> {transportationsData.transferType}</p>
-                </Space>
-              </Card>
-              <Form>
-              <h1>Enter Payment Details</h1>
+                  <p>Email</p>
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value * 100)}
+                    required
+                    readOnly
+                    style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                  />
+                  <p>Amount</p>
+                  <input
+                    type="number"
+                    placeholder="Amount"
+                    value={hotelsData.price}
+                    onChange={(e) => setAmount(e.target.value * 100)}
+                    required
+                    readOnly
+                    style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                  />
+                </Form>
+              </div>
+            ) : type === 'transportation' ? (
+              <div>
+                <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
+                  <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                    <Title level={3}>Booked Details</Title>
+                    <p><strong>Price:</strong> {transportationsData.price}{'  '}{transportationsData.currency}</p>
+                    <p><strong>Departure Date:</strong> {transportationsData.departureDate}</p>
+                    <p><strong>Arrival Date:</strong> {transportationsData.arrivalDate}</p>
+                    <p><strong>Company Name:</strong> {transportationsData.companyName}</p>
+                    {/* <p><strong>Departure City:</strong> {transportationsData.departureCity}</p> */}
+                    <p><strong>Transfer Type:</strong> {transportationsData.transferType}</p>
+                  </Space>
+                </Card>
+                <Form>
+                  <h1>Enter Payment Details</h1>
 
-              <p>Email</p>
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value * 100)}
-                required
-                readOnly
-                style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
-              />
+                  <p>Email</p>
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value * 100)}
+                    required
+                    readOnly
+                    style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                  />
 
-              <p>Amount</p>
-              <input
-                type="number"
-                placeholder="Amount"
-                value={transportationsData.price}
-                onChange={(e) => setAmount(e.target.value * 100)}
-                required
-                readOnly
-                style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
-              />
+                  <p>Amount</p>
+                  <input
+                    type="number"
+                    placeholder="Amount"
+                    value={transportationsData.price}
+                    onChange={(e) => setAmount(e.target.value * 100)}
+                    required
+                    readOnly
+                    style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                  />
 
-          </Form>
-            </div> ): null
-        ) : (
-          <p>Loading booking details...</p>
-        )}
+                </Form>
+              </div>) : null
+          ) : (
+            <p>Loading booking details...</p>
+          )}
+        </div>
+        <form style={{ display: "flex", width: "100%" }}>
+          <button
+            type="submit"
+            onClick={handleVisaSubmit}
+            style={{
+              padding: "10px",
+              fontSize: "1rem",
+              flex: 1, // Ensures both buttons take equal space
+              marginRight: "12px", // Adds space between the buttons
+            }}
+          >
+            Visa
+          </button>
+          <button
+            type="submit"
+            onClick={handleWalletSubmit}
+            style={{
+              padding: "10px",
+              fontSize: "1rem",
+              flex: 1, // Makes this button take equal space as the first one
+            }}
+          >
+            Wallet
+          </button>
+        </form>
+        <Help />
       </div>
-      <form style={{ display: "flex", width: "100%" }}>
-        <button
-          type="submit"
-          onClick={handleVisaSubmit}
-          style={{
-            padding: "10px",
-            fontSize: "1rem",
-            flex: 1, // Ensures both buttons take equal space
-            marginRight: "12px", // Adds space between the buttons
-          }}
-        >
-          Visa
-        </button>
-        <button
-          type="submit"
-          onClick={handleWalletSubmit}
-          style={{
-            padding: "10px",
-            fontSize: "1rem",
-            flex: 1, // Makes this button take equal space as the first one
-          }}
-        >
-          Wallet
-        </button>
-      </form>
-      <Help />
-    </div>
     </div>
   );
 }
