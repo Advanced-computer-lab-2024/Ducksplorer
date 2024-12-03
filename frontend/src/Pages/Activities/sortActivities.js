@@ -118,18 +118,7 @@ const SortActivities = () => {
   };
 
   return (
-    <>
-      {/* <h4
-        variant="h4"
-        className="oswald-Titles"
-        style={{
-          textAlign: "center",
-          marginBottom: "40px",
-        }}
-      >
-        Upcoming Activities
-      </h4> */}
-      {/* Sorting Controls */}
+    <div className="yassin fouda" style={{ width: "100%" }}>
       <Box
         sx={{
           display: "flex",
@@ -165,7 +154,7 @@ const SortActivities = () => {
           </Select>
         </FormControl>
 
-        <FormControl sx={{ minWidth: 150 }}>
+        <FormControl sx={{ minWidth: 100 }}>
           <Select
             labelId="order-label"
             placeholder="Order"
@@ -197,11 +186,11 @@ const SortActivities = () => {
           Sort
         </Button>
       </Box>
-      {/* Activity Table */}
+
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
+          gridTemplateColumns: "repeat(3, 1fr)",
           gap: "24px", // Adjust the gap between items as needed
         }}
       >
@@ -215,7 +204,7 @@ const SortActivities = () => {
         )}
       </div>
       <Help />
-    </>
+    </div>
   );
 };
 
