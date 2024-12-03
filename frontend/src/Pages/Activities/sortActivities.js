@@ -119,14 +119,14 @@ const SortActivities = () => {
 
   return (
     <div className="yassin fouda" style={{ width: "100%" }}>
-      <Box
-        sx={{
+      <div
+        style={{
           display: "flex",
+          marginBottom: 15,
           justifyContent: "space-between",
-          mb: 3,
         }}
       >
-        <FormControl sx={{ minWidth: 150 }}>
+        <FormControl>
           <Select
             indicator={<KeyboardArrowDown />}
             placeholder="Sort By"
@@ -185,13 +185,14 @@ const SortActivities = () => {
         >
           Sort
         </Button>
-      </Box>
+      </div>
 
       <div
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
           gap: "24px", // Adjust the gap between items as needed
+          width: "100%",
         }}
       >
         {activities.map((activity) =>

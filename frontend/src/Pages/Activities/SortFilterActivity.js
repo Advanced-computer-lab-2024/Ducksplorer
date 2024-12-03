@@ -22,12 +22,15 @@ function SortFilterActivity() {
       sx={{
         height: "100vh",
         backgroundColor: "#ffffff",
+        width: "80vw",
         paddingTop: "2vh", // Adjust for navbar height
+        display: "flex",
+        justifyContent: "center",
       }}
     >
       <TouristNavBar />
       <TouristSidebar />
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <div style={{ width: "80%" }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography variant="h4" fontWeight="700">
             Upcoming Activities
@@ -90,19 +93,9 @@ function SortFilterActivity() {
           </Button>
         </Box>
 
-        <Grid container spacing={3}>
-          {sort && (
-            <Grid item xs={12}>
-              <SortActivities />
-            </Grid>
-          )}
-          {filter && (
-            <Grid item xs={12}>
-              <FilterActivities />
-            </Grid>
-          )}
-        </Grid>
-      </Container>
+        {sort && <SortActivities />}
+        {filter && <FilterActivities />}
+      </div>
       <Help />
     </Box>
   );

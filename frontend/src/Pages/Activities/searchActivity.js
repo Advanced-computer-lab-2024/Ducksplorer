@@ -140,6 +140,7 @@ const SearchActivities = () => {
           <Button
             variant="solid"
             color="primary"
+            size="lg"
             onClick={fetchSearchedActivities}
             sx={{ ml: 2 }}
           >
@@ -151,8 +152,8 @@ const SearchActivities = () => {
           {Array.isArray(activities) && activities.length > 0 ? (
             activities.map((activity) =>
               activity.flag === false &&
-                activity.advertiserDeleted === false &&
-                activity.deletedActivity === false ? (
+              activity.advertiserDeleted === false &&
+              activity.deletedActivity === false ? (
                 <Grid item xs={12} sm={6} md={4} key={activity._id}>
                   <ActivityCard activity={activity} />
                 </Grid>
