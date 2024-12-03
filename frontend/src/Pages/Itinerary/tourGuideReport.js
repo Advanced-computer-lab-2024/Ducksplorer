@@ -33,6 +33,7 @@ import {
     FormControlLabel
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import TourGuideNavbar from "../../Components/TopNav/TourGuideNavbar.js";
 
 const ItineraryReport = () => {
     // Accept userNameId as a prop
@@ -199,15 +200,63 @@ const ItineraryReport = () => {
     return (
         <>
             <TourGuideSidebar />
+            <TourGuideNavbar/>
             <div>
-                <Box sx={{ p: 6, maxWidth: "120vh", overflowY: "visible", height: "100vh", marginLeft: "350px", }}>
-                    <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-                        <Typography variant="h4"> Itineraries Report</Typography>
+            <Box
+            sx={{
+                p: 6,
+                maxWidth: "125vw", // Ensure the width adjusts within the viewport
+                height: "100vh",
+                margin: "auto", // Center the content horizontally
+                backgroundColor: "#f9f9f9", // Light background
+                borderRadius: "12px", // Rounded corners
+                boxShadow: "0px 4px 12px rgba(0,0,0,0.1)", // Subtle shadow for depth
+                display: "flex",
+                flexDirection: "column",
+                gap: 3, // Spacing between elements
+            }}
+            >
+                <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    mb: 3,
+                }}
+                >
+                <Typography
+                variant="h4"
+                sx={{
+                    fontWeight: "bold",
+                    color: "#3f51b5", // Primary color for the title
+                    textShadow: "1px 1px 4px rgba(0, 0, 0, 0.1)", // Subtle text shadow
+                }}
+                >
+                Itineraries Report
+                </Typography>
                     </Box>
                     {/* Filtering */}
-                    <IconButton onClick={handleFilterChoiceClick}>
-                        <FilterAltIcon />
+                     <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  mb: 3,
+                  marginLeft:"125px"
+                }}
+              >
+                
+                <IconButton
+                  onClick={handleFilterChoiceClick}
+                  sx={{
+                    backgroundColor: "#e3f2fd",
+                    color: "#1976d2",
+                    "&:hover": { backgroundColor: "#bbdefb" },
+                  }}
+                >                       
+                 <FilterAltIcon />
                     </IconButton>
+                    </Box>
                     <Menu
                         anchorEl={filterAnchorEl}
                         open={Boolean(filterAnchorEl)}
@@ -215,6 +264,7 @@ const ItineraryReport = () => {
                     >
                         {/* Radio Buttons for Filter Selection */}
                         <MenuItem>
+                        
                             <FormControl>
                                 <RadioGroup
                                     value={filterType} // This should be managed in state
@@ -294,10 +344,23 @@ const ItineraryReport = () => {
                             <Button onClick={handleClearAllFilters}>Clear All Filters</Button>
                         </MenuItem>
                     </Menu>
-                    <TableContainer component={Paper}>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
+                    <TableContainer
+                component={Paper}
+                sx={{
+                  borderRadius: "12px", // Rounded corners
+                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)", // Depth for table container
+                  overflow: "hidden", // Prevent content overflow
+                }}
+              >                        <Table>
+  <TableHead
+                    sx={{
+                      backgroundColor: "#3f51b5", // Primary color for table head
+                      "& .MuiTableCell-root": {
+                        color: "#ffffff", // White text for headers
+                        fontWeight: "bold",
+                      },
+                    }}
+                  >                                <TableRow>
                                     <TableCell>Activities
                                         <CurrencyConvertor onCurrencyChange={handleActivityCurrencyChange} />
                                     </TableCell>

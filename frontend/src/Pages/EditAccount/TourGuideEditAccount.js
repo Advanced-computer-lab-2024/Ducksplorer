@@ -8,8 +8,11 @@ import {
   Avatar,
 } from "@mui/material";
 import axios from "axios";
+import TourGuideSidebar from "../../Components/Sidebars/TourGuideSidebar";
+import TourGuideNavbar from "../../Components/TopNav/TourGuideNavbar"; // Import the TourGuideNavbar
 import { message } from "antd";
 import { Link } from "react-router-dom";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FileUpload from "../../Components/FileUpload";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -179,6 +182,14 @@ const TourGuideEditProfile = () => {
   };
 
   return (
+    <Box
+    sx={{
+     
+      height: "100vh",
+    }}
+  >
+    <TourGuideSidebar />
+    <TourGuideNavbar/>
     <Box sx={{ height: "100vh" }}>
       <Box sx={{ p: 4, justifyContent: "center" }}>
         <Paper
@@ -199,10 +210,9 @@ const TourGuideEditProfile = () => {
                 alignItems: "center",
               }}
             >
-              <Avatar
-                src={tourGuideDetails.photo}
-                sx={{ width: 80, height: 80 }}
-              />
+        <Avatar sx={{ bgcolor: "primary.main", width: 64, height: 64 }}>
+              <AccountCircleIcon fontSize="large" />
+            </Avatar>
               {isEditing && (
                 <>
                   <input
@@ -382,6 +392,8 @@ const TourGuideEditProfile = () => {
           
           </Box>
         </Paper>
+        </Box>
+
       </Box>
     </Box>
   );

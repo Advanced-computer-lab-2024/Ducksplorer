@@ -7,6 +7,8 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import WarningIcon from "@mui/icons-material/Warning";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import TourGuideSidebar from "../../Components/Sidebars/TourGuideSidebar";
+import TourGuideNavbar from "../../Components/TopNav/TourGuideNavbar"; // Import the TourGuideNavbar
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -419,14 +421,21 @@ const RUDItinerary = () => {
     };
   }, []);
   return (
-    <>
-      <Link to="/tourGuideDashboard"> Back </Link>
-      <Typography
+    <Box
+    sx={{
+     
+      height: "100vh",
+    }}
+  >
+    <TourGuideSidebar />
+    <TourGuideNavbar/>      
+    <Typography
         variant="h4"
         style={{
           textAlign: "center",
           marginBottom: "20px",
           fontWeight: "bold",
+          marginTop:"10%"
         }}
       >
         Your Itineraries
@@ -638,8 +647,8 @@ const RUDItinerary = () => {
             Delete
           </Button>
         </DialogActions>
-      </Dialog>
-    </>
+      </Dialog>                               
+    </Box>
   );
 };
 
