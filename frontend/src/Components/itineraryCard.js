@@ -101,17 +101,17 @@ function ItineraryPopover({ anchorEl, handleClose, itineraryData }) {
           <strong>Available Dates and Times:</strong>
           {itineraryData.availableDatesAndTimes.length > 0
             ? itineraryData.availableDatesAndTimes.map((dateTime, index) => {
-                const dateObj = new Date(dateTime);
-                const date = dateObj.toISOString().split("T")[0];
-                const time = dateObj.toTimeString().split(" ")[0];
-                return (
-                  <div key={index}>
-                    Date {index + 1}: {date}
-                    <br />
-                    Time {index + 1}: {time}
-                  </div>
-                );
-              })
+              const dateObj = new Date(dateTime);
+              const date = dateObj.toISOString().split("T")[0];
+              const time = dateObj.toTimeString().split(" ")[0];
+              return (
+                <div key={index}>
+                  Date {index + 1}: {date}
+                  <br />
+                  Time {index + 1}: {time}
+                </div>
+              );
+            })
             : "No available dates and times"}
         </p>
 
@@ -127,7 +127,7 @@ function ItineraryPopover({ anchorEl, handleClose, itineraryData }) {
         <p>
           <strong>Rating:</strong>{" "}
           {itineraryData.activity.averageRating ||
-          itineraryData.activity.averageRating === 0
+            itineraryData.activity.averageRating === 0
             ? `${itineraryData.activity.averageRating}/5`
             : `0/5`}
         </p>
@@ -194,7 +194,12 @@ export default function ItineraryCard({ itinerary = {} }) {
       );
 
       if (response.status === 200) {
-        navigate("/payment");
+        if (response.data.isUpcoming) {
+          navigate("/payment");
+        }
+        else {
+          message.error("You can't book an old itinerary");
+        }
       } else {
         message.error("Booking failed.");
       }

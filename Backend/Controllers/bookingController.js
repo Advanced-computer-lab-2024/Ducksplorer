@@ -200,30 +200,53 @@ const viewMyPastBookings = async (req, res) => {
 const viewDesiredActivity = async (req, res) => {
   try {
     const { activityId } = req.params;
+
     const result = await Activity.findOne({ _id: activityId });
+
     if (!result) {
       return res.status(404).json({ message: "Activity not found" });
     }
-    res.status(200).json(result);
+
+    const now = new Date();
+    const activityDate = new Date(result.date);
+    const isUpcoming = activityDate > now;
+
+    res.status(200).json({
+      ...result.toObject(),
+      isUpcoming,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
+
 const viewDesiredItinerary = async (req, res) => {
   try {
-    //console.log(req.params);
     const { itineraryId } = req.params;
+
     const result = await Itinerary.findOne({ _id: itineraryId });
-    console.log(itineraryId);
+
     if (!result) {
       return res.status(404).json({ message: "Itinerary not found" });
     }
-    res.status(200).json(result);
+
+    // Check if any available date is in the future
+    const now = new Date();
+    const isUpcoming = result.availableDatesAndTimes.some(dateTime => {
+      const itineraryDate = new Date(dateTime);
+      return itineraryDate > now; // Check if the date is in the future
+    });
+
+    res.status(200).json({
+      ...result.toObject(),
+      isUpcoming,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 const getMyBookings = async (req, res) => {
   try {

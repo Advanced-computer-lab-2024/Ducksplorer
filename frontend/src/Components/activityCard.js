@@ -165,7 +165,12 @@ export default function ActivityCard({ activity = {} }) {
       );
 
       if (response.status === 200) {
-        navigate("/payment");
+        if (response.data.isUpcoming) {
+          navigate("/payment");
+        }
+        else {
+          message.error("You can't book an old activity");
+        }
       } else {
         message.error("Booking failed.");
       }
