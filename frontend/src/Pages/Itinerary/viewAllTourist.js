@@ -28,6 +28,8 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { Link, useParams } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
 import Help from "../../Components/HelpIcon.js";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 import TouristNavBar from "../../Components/TouristNavBar";
 import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
@@ -58,34 +60,45 @@ function SearchItineraries() {
 
   const [selectedFilters, setSelectedFilters] = useState([]);
 
+  const [isSaved, setIsSaved] = useState(false);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const username = user?.username;
+
   //default rendering of all itineraries
   useEffect(() => {
-    const showPreferences = localStorage.getItem("showPreferences");
-    const user = JSON.parse(localStorage.getItem("user"));
+    const fetchItineraries = async () => {
+      const showPreferences = localStorage.getItem("showPreferences");
+      const user = JSON.parse(localStorage.getItem("user"));
 
-    const username = user?.username;
-    const role = user?.role;
-    axios
-      .get("http://localhost:8000/itinerary/", {
-        params: {
-          showPreferences: showPreferences.toString(),
-          username,
-          role,
-        },
-      })
-      .then((response) => {
+      const username = user?.username;
+      const role = user?.role;
+      try {
+        const response = await axios.get("http://localhost:8000/itinerary/", {
+          params: {
+            showPreferences: showPreferences.toString(),
+            username,
+            role,
+          },
+        });
+        const data = response.data.map((itinerary) => ({
+          ...itinerary,
+          saved: itinerary.saved || { isSaved: false, user: null },
+        }));
         if (id === undefined) {
-          setItineraries(response.data);
+          setItineraries(data);
         } else {
-          const tempItineraries = response.data.filter(
+          const tempItineraries = data.filter(
             (itinerary) => itinerary._id === id
           );
           setItineraries(tempItineraries);
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("There was an error fetching the itineraries!", error);
-      });
+      }
+    };
+    fetchItineraries();
   }, [id]);
 
   //search handler
@@ -265,6 +278,75 @@ function SearchItineraries() {
     setActivityExchangeRates(rates);
     setActivityCurrency(selectedCurrency);
   };
+
+  const handleSaveItinerary = async (itineraryId, currentIsSaved) => {
+    try {
+      const newIsSaved = !currentIsSaved;
+
+      const response = await axios.put(
+        `http://localhost:8000/itinerary/save/${itineraryId}`,
+        {
+          username: username,
+          save: newIsSaved,
+        }
+      );
+      if (response.status === 200) {
+        message.success("Itinerary saved successfully");
+        setItineraries((prevItineraries) =>
+          prevItineraries.map((itinerary) =>
+            itinerary._id === itineraryId
+              ? {
+                  ...itinerary,
+                  saved: { ...itinerary.saved, isSaved: newIsSaved },
+                }
+              : itinerary
+          )
+        );
+      } else {
+        message.error("Failed to save");
+      }
+      setIsSaved(isSaved);
+    } catch (error) {
+      console.error("Error toggling save state:", error);
+    }
+  };
+
+  const [saveStates, setSaveStates] = useState({});
+
+  useEffect(() => {
+    const fetchSaveStates = async () => {
+      const userJson = localStorage.getItem("user");
+      const user = JSON.parse(userJson);
+      const userName = user.username;
+
+      // Loop through itineraries to fetch save states
+      const newSaveStates = {};
+      await Promise.all(
+        itineraries.map(async (itinerary) => {
+          try {
+            const response = await axios.get(
+              `http://localhost:8000/itinerary/getSave/${itinerary._id}/${userName}`
+            );
+
+            if (response.status === 200) {
+              newSaveStates[itinerary._id] = response.data.saved; // Save the state
+            }
+          } catch (error) {
+            console.error(
+              `Failed to fetch save state for ${itinerary._id}:`,
+              error
+            );
+          }
+        })
+      );
+
+      setSaveStates(newSaveStates); // Update state with all fetched save states
+    };
+
+    if (itineraries.length > 0) {
+      fetchSaveStates();
+    }
+  }, [itineraries]);
 
   return (
     <div>
@@ -449,9 +531,9 @@ function SearchItineraries() {
             {
               itineraries.map((itinerary) =>
                 itinerary.flag === false &&
-                  itinerary.isDeactivated === false &&
-                  itinerary.tourGuideDeleted === false &&
-                  itinerary.deletedItinerary === false ? (
+                itinerary.isDeactivated === false &&
+                itinerary.tourGuideDeleted === false &&
+                itinerary.deletedItinerary === false ? (
                   <ItineraryCard itinerary={itinerary} />
                 ) : null
               ) // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists
@@ -462,6 +544,26 @@ function SearchItineraries() {
             No itineraries found.
           </Typography>
         )}
+        {/* <TableCell>
+                            <span
+                              onClick={() =>
+                                handleSaveItinerary(
+                                  itinerary._id,
+                                  itinerary.saved?.isSaved
+                                )
+                              }
+                            >
+                              {saveStates[itinerary._id] ? (
+                                <IconButton>
+                                  <BookmarkIcon />
+                                </IconButton>
+                              ) : (
+                                <IconButton>
+                                  <BookmarkBorderIcon />
+                                </IconButton>
+                              )}
+                            </span>  SAVED BY JAYDAAQ
+                          </TableCell> */}
 
         <Help />
       </Box>

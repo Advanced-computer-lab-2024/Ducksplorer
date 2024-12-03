@@ -6,6 +6,10 @@ const {
 const {
   commentActivity,
 } = require("../Controllers/Activity/activityCommentController");
+const {
+  touristSaveActivity,
+  getSaveStateActivity,
+} = require("../Controllers/Activity/activitySaveController.js");
 
 const router = express.Router();
 
@@ -25,5 +29,7 @@ router.post("/:activityId", activity.rateActivity);
 router.route("/rate/:bookingId").patch(activity.rateActivity);
 router.route("/toggleFlagActivity/:id").put(toggleFlagActivity);
 router.route("/commentActivity/:bookingId").patch(commentActivity);
+router.route("/save/:id").put(touristSaveActivity);
+router.route("/getSave/:id/:username").get(getSaveStateActivity);
 
 module.exports = router;

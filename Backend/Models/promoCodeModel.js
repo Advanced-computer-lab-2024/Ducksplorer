@@ -8,7 +8,16 @@ const promoCodeSchema = new Schema(
       required: true,
     },
     value: {
+      //discount percentage i.e. 10 is 10%
       type: Number,
+      required: true,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    }, // Promo code availability
+    expiryDate: {
+      type: Date,
       required: true,
     },
   },

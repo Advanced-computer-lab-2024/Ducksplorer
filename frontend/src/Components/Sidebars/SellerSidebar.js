@@ -18,7 +18,8 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PersonIcon from "@mui/icons-material/Person";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
-import SummarizeIcon from '@mui/icons-material/Summarize';
+import MyNotifications from "../myNotifications";
+import SummarizeIcon from "@mui/icons-material/Summarize";
 
 const drawerWidth = 300;
 
@@ -74,6 +75,7 @@ const SellerSidebar = () => {
       onMouseLeave={() => setIsSidebarOpen(false)} // Close sidebar on mouse leave
     >
       <List>
+        <MyNotifications />
         <ListItem
           button
           onClick={handleDeleteClick}
