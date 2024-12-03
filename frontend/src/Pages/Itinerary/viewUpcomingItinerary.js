@@ -247,44 +247,6 @@ const ViewUpcomingItinerary = () => {
     handleFilterClose();
   };
 
-  const handleBooking = async (itineraryId) => {
-    try {
-      const userJson = localStorage.getItem("user");
-      const isGuest = localStorage.getItem("guest") === "true";
-      if (isGuest) {
-        message.error("Can't book as a guest, Please login or sign up.");
-        navigate("/guestDashboard");
-        return;
-      }
-      if (!userJson) {
-        message.error("User is not logged in.");
-        return null;
-      }
-      const user = JSON.parse(userJson);
-      if (!user || !user.username) {
-        message.error("User information is missing.");
-        return null;
-      }
-      // const userName = user.username;
-      const type = "itinerary";
-
-      localStorage.setItem("itineraryId", itineraryId);
-      localStorage.setItem("type", type);
-
-      const response = await axios.get(
-        `http://localhost:8000/touristRoutes/viewDesiredItinerary/${itineraryId}`
-      );
-
-      if (response.status === 200) {
-        navigate("/payment");
-      } else {
-        message.error("Booking failed.");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      message.error("An error occurred while booking.");
-    }
-  };
   const handleActivityCurrencyChange = (rates, selectedCurrency) => {
     setActivityExchangeRates(rates);
     setActivityCurrency(selectedCurrency);
@@ -499,9 +461,7 @@ const ViewUpcomingItinerary = () => {
               <Button onClick={handleFilter}>Apply Filters</Button>
             </MenuItem>
             <MenuItem>
-              <Button onClick={handleClearAllFilters}>
-                Clear All Filters
-              </Button>
+              <Button onClick={handleClearAllFilters}>Clear All Filters</Button>
             </MenuItem>
           </Menu>
         </Box>

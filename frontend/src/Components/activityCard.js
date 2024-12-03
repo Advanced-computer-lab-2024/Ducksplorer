@@ -68,7 +68,8 @@ export default function ActivityCard({ activity = {} }) {
       `https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`
     );
   }, []);
-  const handleSaveClick = () => {
+  const handleSaveClick = (event) => {
+    event.stopPropagation();
     setSaved(!saved);
   };
   const TheCard = () => {
@@ -90,8 +91,9 @@ export default function ActivityCard({ activity = {} }) {
             <Tooltip title="Save Activity">
               <IconButton
                 size="md"
-                variant="solid"
-                color="primary"
+                variant={saved ? "soft" : "solid"}
+                color={saved ? "neutral" : "primary"}
+                onClick={handleSaveClick}
                 sx={{
                   position: "absolute",
                   zIndex: 2,
@@ -99,32 +101,15 @@ export default function ActivityCard({ activity = {} }) {
                   right: "1rem",
                   bottom: 0,
                   transform: "translateY(50%)",
+                  transition: "transform 0.3s",
+                  "&:active": {
+                    transform: "translateY(50%) scale(0.9)",
+                  },
                 }}
               >
-                <Add />
+                {saved ? <Done color="primary" /> : <Add />}
               </IconButton>
             </Tooltip>
-
-            <IconButton
-              size="md"
-              variant={saved ? "soft" : "solid"}
-              color={saved ? "neutral" : "primary"}
-              onClick={handleSaveClick}
-              sx={{
-                position: "absolute",
-                zIndex: 2,
-                borderRadius: "50%",
-                right: "1rem",
-                bottom: 0,
-                transform: "translateY(50%)",
-                transition: "transform 0.3s",
-                "&:active": {
-                  transform: "translateY(50%) scale(0.9)",
-                },
-              }}
-            >
-              {saved ? <Done color="primary" /> : <Add />}
-            </IconButton>
           </CardOverflow>
           <div style={{ height: "10%" }}>
             <div
@@ -216,7 +201,11 @@ export default function ActivityCard({ activity = {} }) {
                 size="md"
                 variant="solid"
                 color="primary"
-                onClick={() => handleBooking(activity._id)}
+                zIndex={2}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleBooking(activity._id);
+                }}
               >
                 Book Now
               </Button>

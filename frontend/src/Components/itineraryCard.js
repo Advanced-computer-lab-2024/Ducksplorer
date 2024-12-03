@@ -134,6 +134,45 @@ export default function ItineraryCard({ itinerary = {} }) {
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
   const [anchorEl, setAnchorEl] = React.useState(null);
 
+  const handleBooking = async (itineraryId) => {
+    try {
+      const userJson = localStorage.getItem("user");
+      const isGuest = localStorage.getItem("guest") === "true";
+      if (isGuest) {
+        message.error("Can't book as a guest, Please login or sign up.");
+        navigate("/guestDashboard");
+        return;
+      }
+      if (!userJson) {
+        message.error("User is not logged in.");
+        return null;
+      }
+      const user = JSON.parse(userJson);
+      if (!user || !user.username) {
+        message.error("User information is missing.");
+        return null;
+      }
+      // const userName = user.username;
+      const type = "itinerary";
+
+      localStorage.setItem("itineraryId", itineraryId);
+      localStorage.setItem("type", type);
+
+      const response = await axios.get(
+        `http://localhost:8000/touristRoutes/viewDesiredItinerary/${itineraryId}`
+      );
+
+      if (response.status === 200) {
+        navigate("/payment");
+      } else {
+        message.error("Booking failed.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      message.error("An error occurred while booking.");
+    }
+  };
+
   const handleShareLink = (itineraryId) => {
     const link = `${window.location.origin}/viewAllTourist/${itineraryId}`; // Update with your actual route
     navigator.clipboard
@@ -311,7 +350,12 @@ export default function ItineraryCard({ itinerary = {} }) {
               >
                 {itinerary.price}$
               </Typography>
-              <Button size="md" variant="solid" color="primary">
+              <Button
+                size="md"
+                variant="solid"
+                color="primary"
+                onClick={() => handleBooking(itinerary._id)}
+              >
                 Book Now
               </Button>
             </div>
