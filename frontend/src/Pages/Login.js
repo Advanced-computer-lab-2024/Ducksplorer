@@ -28,6 +28,8 @@ function Login() {
   const [email, setEmail] = useState("");
   const [message1, setMessage1] = useState(null);
   const navigate = useNavigate();
+  localStorage.setItem("showPreferences", "false");
+
 
   useEffect(() => {
     document.body.style.margin = "0";

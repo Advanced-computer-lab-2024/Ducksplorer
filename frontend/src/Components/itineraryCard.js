@@ -123,7 +123,7 @@ export default function ItineraryCard({ itinerary = {} }) {
                     marginRight: 20,
                   }}
                 >
-                  Itinerary Name
+                  {itinerary.name || "Itinerary Name"}
                 </h4>
 
                 <Rating
@@ -138,6 +138,8 @@ export default function ItineraryCard({ itinerary = {} }) {
                     display: "flex",
                     flexDirection: "row",
                     marginTop: "5px",
+                    flexWrap: "wrap",
+                    
                   }}
                 >
                   {itinerary.tags.map((tag, index) => (
@@ -146,7 +148,7 @@ export default function ItineraryCard({ itinerary = {} }) {
                       size="sm"
                       variant="outlined"
                       color="primary"
-                      sx={{ marginRight: 1 }}
+                      sx={{ marginRight: 1 , marginBottom: 1}}
                     >
                       {tag}
                     </Chip>
