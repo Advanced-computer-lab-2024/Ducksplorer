@@ -4,7 +4,6 @@ import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import CardOverflow from "@mui/joy/CardOverflow";
 import Divider from "@mui/joy/Divider";
-import Typography from "@mui/joy/Typography";
 import IconButton from "@mui/joy/IconButton";
 import Chip from "@mui/joy/Chip";
 import Link from "@mui/joy/Link";
@@ -13,17 +12,127 @@ import StarIcon from "@mui/icons-material/Star";
 import Done from "@mui/icons-material/Done";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { Rating, Tooltip } from "@mui/material";
-import Button from "@mui/joy/Button";
 import axios from "axios";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import Select, { selectClasses } from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
+import Popover from "@mui/material/Popover";
+import Typography from "@mui/joy/Typography";
+import Button from "@mui/joy/Button";
+
+function ItineraryPopover({ anchorEl, handleClose, itineraryData }) {
+  const open = Boolean(anchorEl);
+
+  return (
+    <Popover
+      open={open}
+      anchorEl={anchorEl}
+      onClose={handleClose}
+      anchorReference="anchorPosition"
+      anchorPosition={{ top: window.innerHeight / 2, left: window.innerWidth / 2 }}
+      anchorOrigin={{
+        vertical: "center",
+        horizontal: "center",
+      }}
+      transformOrigin={{
+        vertical: "center",
+        horizontal: "center",
+      }}
+      PaperProps={{
+        sx: {
+          width: "50vw",
+          maxWidth: "80%",
+          backgroundColor: "#f5f5f5",
+          padding: "20px",
+          borderRadius: "12px",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+        },
+      }}
+    >
+      <div style={{ width: "100%" }}>
+        <Typography variant="h5" sx={{ marginBottom: "10px", fontWeight: "bold" }}>
+          Itinerary Details
+        </Typography>
+
+        <p><strong>Itinerary Name:</strong> {itineraryData.name || "Itinerary Name"}</p>
+
+        {itineraryData.activity && itineraryData.activity.length > 0 ? (
+          itineraryData.activity.map((activity, index) => (
+            <div key={index} style={{ marginBottom: "10px" }}>
+              <p><strong>Activity Name:</strong> {activity.name}</p>
+              <p><strong>Activity Price:</strong> {activity.price}</p>
+            </div>
+          ))
+        ) : (
+          <p>No activities found.</p>
+        )}
+
+        <p><strong>Locations:</strong> {itineraryData.locations.join(', ')}</p>
+        <p><strong>Timeline:</strong> {itineraryData.timeline}</p>
+        <p><strong>Language:</strong> {itineraryData.language}</p>
+        <p><strong>Price:</strong> {itineraryData.price}</p>
+
+        <p><strong>Available Dates and Times:</strong>
+          {itineraryData.availableDatesAndTimes.length > 0
+            ? itineraryData.availableDatesAndTimes.map((dateTime, index) => {
+              const dateObj = new Date(dateTime);
+              const date = dateObj.toISOString().split('T')[0];
+              const time = dateObj.toTimeString().split(' ')[0];
+              return (
+                <div key={index}>
+                  Date {index + 1}: {date}<br />
+                  Time {index + 1}: {time}
+                </div>
+              );
+            })
+            : 'No available dates and times'
+          }
+        </p>
+
+        <p><strong>Accessibility:</strong> {itineraryData.accessibility}</p>
+        <p><strong>Pick Up Location:</strong> {itineraryData.pickUpLocation}</p>
+        <p><strong>Drop Off Location:</strong> {itineraryData.dropOffLocation}</p>
+        <p><strong>Rating:</strong> {(itineraryData.activity.averageRating || itineraryData.activity.averageRating === 0)
+          ? `${itineraryData.activity.averageRating}/5`
+          : `0/5`
+        }</p>
+
+        <p>
+          <strong>Tags:</strong>{" "}
+          {itineraryData.tags && itineraryData.tags.length > 0
+            ? itineraryData.tags.join(", ")
+            : "No tags available"}
+        </p>
+
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleClose}
+          sx={{
+            marginTop: "20px",
+            padding: "10px",
+            borderRadius: "8px",
+            fontWeight: "bold",
+            width: "100%",
+            textTransform: "none",
+          }}
+        >
+          Close
+        </Button>
+      </div>
+    </Popover>
+  );
+}
 
 export default function ItineraryCard({ itinerary = {} }) {
   const navigate = useNavigate();
   const [saved, setSaved] = React.useState(false);
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleShareLink = (itineraryId) => {
     const link = `${window.location.origin}/viewAllTourist/${itineraryId}`; // Update with your actual route
@@ -50,6 +159,15 @@ export default function ItineraryCard({ itinerary = {} }) {
   const handleSaveClick = () => {
     setSaved(!saved);
   };
+
+  const handleOpenPopover = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClosePopover = () => {
+    setAnchorEl(null);
+  };
+
   const TheCard = () => {
     return (
       <div>
@@ -155,6 +273,9 @@ export default function ItineraryCard({ itinerary = {} }) {
                   ))}
                 </div>
               </div>
+              <Button variant="outlined" onClick={handleOpenPopover}>
+                View Details
+              </Button>
             </div>
           </div>
           <div>
@@ -196,6 +317,12 @@ export default function ItineraryCard({ itinerary = {} }) {
             </div>
           </div>
         </Card>
+        <ItineraryPopover
+          anchorEl={anchorEl}
+          handleClose={handleClosePopover}
+          itineraryData={itinerary}
+        />
+
       </div>
     );
   };
