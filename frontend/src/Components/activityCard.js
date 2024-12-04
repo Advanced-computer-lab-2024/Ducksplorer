@@ -21,12 +21,10 @@ import { useNavigate } from "react-router-dom";
 import ActivityCardDetails from "./activityCardDetailed";
 import { useState, useEffect } from "react";
 import NotificationAddOutlinedIcon from '@mui/icons-material/NotificationAddOutlined';
-import NotificationsOffOutlinedIcon from '@mui/icons-material/NotificationsOffOutlined';
 
 // ActivityCard component
 export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
   const navigate = useNavigate();
-  const [saved, setSaved] = React.useState(false);
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
   const [anchorEl, setAnchorEl] = React.useState(null);
 

@@ -22,10 +22,11 @@ import Typography from "@mui/joy/Typography";
 import Button from "@mui/joy/Button";
 import ItineraryCardDetails from "./itineraryCardDetailed";
 import {useState, useEffect} from "react";
+import NotificationAddOutlinedIcon from '@mui/icons-material/NotificationAddOutlined';
+
 
 export default function ItineraryCard({ itinerary = {} , onRemove, showNotify}) {
   const navigate = useNavigate();
-  const [saved, setSaved] = React.useState(false);
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -166,6 +167,42 @@ export default function ItineraryCard({ itinerary = {} , onRemove, showNotify}) 
     fetchSaveStates();
   }, [itinerary._id]);
 
+  const [notificationStates, setNotificationStates] = useState({});
+
+  const requestNotification = async (event, itineraryId, currentIsNotified) => {
+    event.stopPropagation();
+    try {
+      const newIsNotified = !currentIsNotified;
+      
+      const response = await axios.post('http://localhost:8000/notification/request', {
+        user: username,
+        eventId: itineraryId,
+      });
+
+      if (response.status === 201) {
+        message.success(
+          newIsNotified
+            ? "Notifications enabled for this itinerary!"
+            : "Notifications disabled for this activity!"
+        );
+        setNotificationStates((prev) => ({
+          ...prev,
+          [itineraryId]: newIsNotified,
+        }));
+        message.success('You will be notified when this event starts accepting bookings.');
+      } else if(response.status === 200){
+        message.info('You have already requested to be notified for this activity');
+      }
+      else {
+        message.error(response.data.message);
+      }
+    } catch (error) {
+      console.error('Error requesting notification:', error);
+      message.error('Failed to request notification.');
+    }
+  };
+
+
   const TheCard = () => {
     return (
       <div>
@@ -234,6 +271,34 @@ export default function ItineraryCard({ itinerary = {} , onRemove, showNotify}) 
             >
               {saveStates[itinerary._id] ? <Done color="#ff9933" /> : <BookmarksIcon />}
             </IconButton>
+            {showNotify && (
+                <Tooltip title="Request Notifications">
+                <IconButton
+                  size="md"
+                  variant="solid"
+                  color="primary"
+                  onClick={(event) =>
+                    requestNotification(event, itinerary._id, notificationStates[itinerary._id])
+                  }
+                  sx={{
+                    borderRadius: "50%",
+                    position: "absolute",
+                    zIndex: 2,
+                    borderRadius: "50%",
+                    right: "1rem",
+                    bottom: 0,
+                    transform: "translateY(50%) translateX(-110%)",
+                    transition: "transform 0.3s",
+                    "&:active": {
+                      transform: "translateY(50%) scale(0.9)",
+                    },
+                    backgroundColor:  "#ffcc00",
+                  }}
+                >
+                  <NotificationAddOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            )}
           </CardOverflow>
           <div style={{ height: "10%" }}>
             <div
