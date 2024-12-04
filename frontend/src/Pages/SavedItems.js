@@ -15,18 +15,21 @@ import {
   IconButton,
   Rating,
   Tooltip,
+  CircularProgress
 } from "@mui/material";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import CurrencyConvertor from "../Components/CurrencyConvertor.js";
 import MyChips from "../Components/MyChips.js";
 import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
+import TouristNavBar from "../Components/TouristNavBar.js";
+import TouristSidebar from "../Components/Sidebars/TouristSidebar.js";
 
 function MySavedItems() {
   const { id } = useParams();
 
-  const chipNames = ["Itineraries", "Activities"];
-  const [selectedCategory, setSelectedCategory] = useState("Itineraries");
+  const chipNames = ["All", "Itineraries", "Activities"];
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   const [itineraries, setItineraries] = useState([]);
 
@@ -34,6 +37,9 @@ function MySavedItems() {
 
   const [isSaved, setIsSaved] = useState(false);
   const [isSavedActivity, setIsSavedActivity] = useState(false);
+
+  const [loadingActivity, setLoadingActivity] = useState(false);
+  const [loadingItinerary, setLoadingItinerary] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -59,6 +65,7 @@ function MySavedItems() {
       const username = user?.username;
       const role = user?.role;
       try {
+        setLoadingItinerary(true);
         const response = await axios.get("http://localhost:8000/itinerary/", {
           params: {
             showPreferences: showPreferences.toString(),
@@ -81,6 +88,9 @@ function MySavedItems() {
       } catch (error) {
         console.error("There was an error fetching the itineraries!", error);
       }
+      finally {
+        setLoadingItinerary(false);
+      }
     };
     fetchItineraries();
   }, [id]);
@@ -91,6 +101,7 @@ function MySavedItems() {
       const favCategory = localStorage.getItem("category");
       console.log(showPreferences, favCategory);
       try {
+        setLoadingActivity(true);
         const response = await axios.get("http://localhost:8000/activity/", {
           params: {
             showPreferences: showPreferences.toString(),
@@ -113,6 +124,9 @@ function MySavedItems() {
       } catch (error) {
         console.error("There was an error fetching the activities!", error);
       }
+      finally {
+        setLoadingActivity(false);
+      }
     };
     fetchActivities();
   }, [id]);
@@ -134,9 +148,9 @@ function MySavedItems() {
           prevItineraries.map((itinerary) =>
             itinerary._id === itineraryId
               ? {
-                  ...itinerary,
-                  saved: { ...itinerary.saved, isSaved: newIsSaved },
-                }
+                ...itinerary,
+                saved: { ...itinerary.saved, isSaved: newIsSaved },
+              }
               : itinerary
           )
         );
@@ -198,9 +212,9 @@ function MySavedItems() {
           prevActivities.map((activity) =>
             activity._id === activityId
               ? {
-                  ...activity,
-                  saved: { ...activity.saved, isSaved: newIsSaved },
-                }
+                ...activity,
+                saved: { ...activity.saved, isSaved: newIsSaved },
+              }
               : activity
           )
         );
@@ -251,10 +265,10 @@ function MySavedItems() {
   const requestNotification = async (eventId) => {
     try {
       const response = await axios.post('http://localhost:8000/notification/request', {
-        user: username, 
+        user: username,
         eventId: eventId,
       });
-  
+
       if (response.status === 201) {
         message.success('You will be notified when this event starts accepting bookings.');
       } else {
@@ -266,8 +280,52 @@ function MySavedItems() {
     }
   };
 
+  if (loadingActivity) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh", // Full screen height
+        }}
+      >
+        <CircularProgress size={60} thickness={4} />
+        <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
+          Loading saved activities...
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (loadingItinerary) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh", // Full screen height
+        }}
+      >
+        <CircularProgress size={60} thickness={4} />
+        <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
+          Loading saved itineraries...
+        </Typography>
+      </Box>
+    );
+  }
+
+  if ((!Array.isArray(itineraries) && !Array.isArray(activities)) || (itineraries.length === 0 && activities.length === 0)) {
+    return <p>No saved data available.</p>;
+  }
+
   return (
     <>
+      <TouristNavBar />
+      <TouristSidebar />
       <Box
         sx={{
           padding: "20px",
@@ -285,55 +343,56 @@ function MySavedItems() {
 
         <MyChips chipNames={chipNames} onChipClick={handleChipClick} />
 
-        {selectedCategory === "Itineraries" && (
-          <>
-            <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-              <Typography variant="h4">Saved Itineraries</Typography>
-            </Box>
-            <div style={{ flex: 1 }}>
-              {itineraries.length > 0 ? (
-                <Box>
-                  <TableContainer
-                    component={Paper}
-                    style={{ borderRadius: 20 }}
-                  >
-                    <Table stickyHeader>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Activities</TableCell>
-                          <TableCell>Locations</TableCell>
-                          <TableCell>Timeline</TableCell>
-                          <TableCell>Language</TableCell>
-                          <TableCell>
-                            Price
-                            <CurrencyConvertor
-                              onCurrencyChange={handleCurrencyChange}
-                            />
-                          </TableCell>
-                          <TableCell>Available Dates and Times</TableCell>
-                          <TableCell>Accessibility</TableCell>
-                          <TableCell>Pick Up Location</TableCell>
-                          <TableCell>Drop Off Location</TableCell>
-                          <TableCell>Ratings</TableCell>
-                          <TableCell>Tags</TableCell>
-                          <TableCell>Bookmark</TableCell>
-                          <TableCell>Notify Me</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {
-                          itineraries.map((itinerary) =>
-                            itinerary.flag === false &&
-                            itinerary.isDeactivated === false &&
-                            itinerary.tourGuideDeleted === false &&
-                            itinerary.deletedItinerary === false &&
-                            itinerary.saved.user === username &&
-                            itinerary.saved.isSaved === true ? (
-                              <TableRow key={itinerary._id}>
-                                <TableCell>
-                                  {itinerary.activity &&
-                                  itinerary.activity.length > 0
-                                    ? itinerary.activity.map(
+        {(selectedCategory === "Itineraries" ||
+          selectedCategory === "All") && (
+            <>
+              <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+                <Typography variant="h4">Saved Itineraries</Typography>
+              </Box>
+              <div style={{ flex: 1 }}>
+                {itineraries.length > 0 ? (
+                  <Box>
+                    <TableContainer
+                      component={Paper}
+                      style={{ borderRadius: 20 }}
+                    >
+                      <Table stickyHeader>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Activities</TableCell>
+                            <TableCell>Locations</TableCell>
+                            <TableCell>Timeline</TableCell>
+                            <TableCell>Language</TableCell>
+                            <TableCell>
+                              Price
+                              <CurrencyConvertor
+                                onCurrencyChange={handleCurrencyChange}
+                              />
+                            </TableCell>
+                            <TableCell>Available Dates and Times</TableCell>
+                            <TableCell>Accessibility</TableCell>
+                            <TableCell>Pick Up Location</TableCell>
+                            <TableCell>Drop Off Location</TableCell>
+                            <TableCell>Ratings</TableCell>
+                            <TableCell>Tags</TableCell>
+                            <TableCell>Bookmark</TableCell>
+                            <TableCell>Notify Me</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {
+                            itineraries.map((itinerary) =>
+                              itinerary.flag === false &&
+                                itinerary.isDeactivated === false &&
+                                itinerary.tourGuideDeleted === false &&
+                                itinerary.deletedItinerary === false &&
+                                itinerary.saved.user === username &&
+                                itinerary.saved.isSaved === true ? (
+                                <TableRow key={itinerary._id}>
+                                  <TableCell>
+                                    {itinerary.activity &&
+                                      itinerary.activity.length > 0
+                                      ? itinerary.activity.map(
                                         (activity, index) => (
                                           <div key={index}>
                                             {activity.name || "N/A"} - Price:{" "}
@@ -352,12 +411,12 @@ function MySavedItems() {
                                           </div>
                                         )
                                       )
-                                    : "No activities available"}
-                                </TableCell>
-                                <TableCell>
-                                  {itinerary.locations &&
-                                  itinerary.locations.length > 0
-                                    ? itinerary.locations.map(
+                                      : "No activities available"}
+                                  </TableCell>
+                                  <TableCell>
+                                    {itinerary.locations &&
+                                      itinerary.locations.length > 0
+                                      ? itinerary.locations.map(
                                         (location, index) => (
                                           <div key={index}>
                                             <Typography variant="body1">
@@ -368,20 +427,20 @@ function MySavedItems() {
                                           </div>
                                         )
                                       )
-                                    : "No locations available"}
-                                </TableCell>
-                                <TableCell>{itinerary.timeline}</TableCell>
-                                <TableCell>{itinerary.language}</TableCell>
-                                <TableCell>
-                                  {(
-                                    itinerary.price *
-                                    (exchangeRates[currency] || 1)
-                                  ).toFixed(2)}{" "}
-                                  {currency}
-                                </TableCell>
-                                <TableCell>
-                                  {itinerary.availableDatesAndTimes.length > 0
-                                    ? itinerary.availableDatesAndTimes.map(
+                                      : "No locations available"}
+                                  </TableCell>
+                                  <TableCell>{itinerary.timeline}</TableCell>
+                                  <TableCell>{itinerary.language}</TableCell>
+                                  <TableCell>
+                                    {(
+                                      itinerary.price *
+                                      (exchangeRates[currency] || 1)
+                                    ).toFixed(2)}{" "}
+                                    {currency}
+                                  </TableCell>
+                                  <TableCell>
+                                    {itinerary.availableDatesAndTimes.length > 0
+                                      ? itinerary.availableDatesAndTimes.map(
                                         (dateTime, index) => {
                                           const dateObj = new Date(dateTime);
                                           const date = dateObj
@@ -399,43 +458,181 @@ function MySavedItems() {
                                           );
                                         }
                                       )
-                                    : "No available dates and times"}
-                                </TableCell>
-                                <TableCell>{itinerary.accessibility}</TableCell>
-                                <TableCell>
-                                  {itinerary.pickUpLocation}
-                                </TableCell>
-                                <TableCell>
-                                  {itinerary.dropOffLocation}
-                                </TableCell>
-                                <TableCell>
-                                  <Rating
-                                    value={itinerary.averageRating}
-                                    precision={0.1}
-                                    readOnly
-                                  />
-                                </TableCell>
-                                <TableCell>
-                                  {itinerary.tags && itinerary.tags.length > 0
-                                    ? itinerary.tags.map((tag, index) => (
+                                      : "No available dates and times"}
+                                  </TableCell>
+                                  <TableCell>{itinerary.accessibility}</TableCell>
+                                  <TableCell>
+                                    {itinerary.pickUpLocation}
+                                  </TableCell>
+                                  <TableCell>
+                                    {itinerary.dropOffLocation}
+                                  </TableCell>
+                                  <TableCell>
+                                    <Rating
+                                      value={itinerary.averageRating}
+                                      precision={0.1}
+                                      readOnly
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    {itinerary.tags && itinerary.tags.length > 0
+                                      ? itinerary.tags.map((tag, index) => (
                                         <div key={index}>
                                           {tag || "N/A"}
                                           <br />
                                           <br />
                                         </div>
                                       ))
-                                    : "No tags available"}
+                                      : "No tags available"}
+                                  </TableCell>
+                                  <TableCell>
+                                    <span
+                                      onClick={() =>
+                                        handleSaveItinerary(
+                                          itinerary._id,
+                                          itinerary.saved?.isSaved
+                                        )
+                                      }
+                                    >
+                                      {saveStates[itinerary._id] ? (
+                                        <IconButton>
+                                          <BookmarkIcon />
+                                        </IconButton>
+                                      ) : (
+                                        <IconButton>
+                                          <BookmarkBorderIcon />
+                                        </IconButton>
+                                      )}
+                                    </span>
+                                  </TableCell>
+                                  <TableCell>
+                                    <Tooltip title="Notify me when active">
+                                      <IconButton
+                                        color="error"
+                                        aria-label="notify me"
+                                        onClick={() =>
+                                          requestNotification(itinerary._id)
+                                        }
+                                      >
+                                        <NotificationAddIcon />
+                                      </IconButton>
+                                    </Tooltip>
+                                  </TableCell>
+                                </TableRow>
+                              ) : null
+                            ) // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists
+                          }
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Box>
+                ) : (
+                  <Typography variant="body1" style={{ marginTop: "20px" }}>
+                    No itineraries found.
+                  </Typography>
+                )}
+              </div>
+            </>
+          )}
+
+        {(selectedCategory === "Activities" ||
+          selectedCategory === "All") && (
+            <>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  mb: 3,
+                  marginTop: "20px",
+                }}
+              >
+                <Typography variant="h4">Saved Activities</Typography>
+              </Box>
+              {activities.length > 0 ? (
+                <Box>
+                  <TableContainer component={Paper} style={{ borderRadius: 20 }}>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Name</TableCell>
+                          <TableCell>
+                            Price
+                            <CurrencyConvertor
+                              onCurrencyChange={handleCurrencyChange}
+                            />
+                          </TableCell>
+                          <TableCell>Is Open</TableCell>
+                          <TableCell>Category</TableCell>
+                          <TableCell>Tags</TableCell>
+                          <TableCell>Discount</TableCell>
+                          <TableCell>Dates and Times</TableCell>
+                          <TableCell>Duration</TableCell>
+                          <TableCell>Location</TableCell>
+                          <TableCell>Rating</TableCell>
+                          <TableCell>Bookmark</TableCell>
+                          <TableCell>Notify Me</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {
+                          activities.map((activity) =>
+                            activity.flag === false &&
+                              activity.advertiserDeleted === false &&
+                              activity.deletedActivity === false &&
+                              activity.saved.user === username &&
+                              activity.saved.isSaved ? (
+                              <TableRow key={activity._id}>
+                                <TableCell>{activity.name}</TableCell>
+                                <TableCell>
+                                  {(
+                                    activity.price *
+                                    (exchangeRates[currency] || 1)
+                                  ).toFixed(2)}{" "}
+                                  {currency}
+                                </TableCell>
+                                <TableCell>
+                                  {activity.isOpen ? "Yes" : "No"}
+                                </TableCell>
+                                <TableCell>{activity.category}</TableCell>
+                                <TableCell>{activity.tags.join(", ")}</TableCell>
+                                <TableCell>{activity.specialDiscount}</TableCell>
+                                <TableCell>
+                                  {activity.date
+                                    ? (() => {
+                                      const dateObj = new Date(activity.date);
+                                      const date = dateObj
+                                        .toISOString()
+                                        .split("T")[0];
+                                      const time = dateObj
+                                        .toTimeString()
+                                        .split(" ")[0];
+                                      return (
+                                        <div>
+                                          {date} at {time}
+                                        </div>
+                                      );
+                                    })()
+                                    : "No available date and time"}
+                                </TableCell>
+                                <TableCell>{activity.duration}</TableCell>
+                                <TableCell>{activity.location}</TableCell>
+                                <TableCell>
+                                  <Rating
+                                    value={activity.averageRating}
+                                    precision={0.1}
+                                    readOnly
+                                  />
                                 </TableCell>
                                 <TableCell>
                                   <span
                                     onClick={() =>
-                                      handleSaveItinerary(
-                                        itinerary._id,
-                                        itinerary.saved?.isSaved
+                                      handleSaveActivity(
+                                        activity._id,
+                                        activity.saved?.isSaved
                                       )
                                     }
                                   >
-                                    {saveStates[itinerary._id] ? (
+                                    {saveStatesActivity[activity._id] ? (
                                       <IconButton>
                                         <BookmarkIcon />
                                       </IconButton>
@@ -451,9 +648,9 @@ function MySavedItems() {
                                     <IconButton
                                       color="error"
                                       aria-label="notify me"
-                                        onClick={() =>
-                                            requestNotification(itinerary._id)
-                                        }
+                                      onClick={() =>
+                                        requestNotification(activity._id)
+                                      }
                                     >
                                       <NotificationAddIcon />
                                     </IconButton>
@@ -461,7 +658,7 @@ function MySavedItems() {
                                 </TableCell>
                               </TableRow>
                             ) : null
-                          ) // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists
+                          ) // We don't output a row when it has `activity.flag` is true (ie activity is inappropriate) or when the activity's advertiser has left the system or the activity has been deleted but cannot be removed from database since it is booked my previous tourists
                         }
                       </TableBody>
                     </Table>
@@ -469,148 +666,11 @@ function MySavedItems() {
                 </Box>
               ) : (
                 <Typography variant="body1" style={{ marginTop: "20px" }}>
-                  No itineraries found.
+                  No activities saved.
                 </Typography>
               )}
-            </div>
-          </>
-        )}
-
-        {selectedCategory === "Activities" && (
-          <>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                mb: 3,
-                marginTop: "20px",
-              }}
-            >
-              <Typography variant="h4">Saved Activities</Typography>
-            </Box>
-            {activities.length > 0 ? (
-              <Box>
-                <TableContainer component={Paper} style={{ borderRadius: 20 }}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Name</TableCell>
-                        <TableCell>
-                          Price
-                          <CurrencyConvertor
-                            onCurrencyChange={handleCurrencyChange}
-                          />
-                        </TableCell>
-                        <TableCell>Is Open</TableCell>
-                        <TableCell>Category</TableCell>
-                        <TableCell>Tags</TableCell>
-                        <TableCell>Discount</TableCell>
-                        <TableCell>Dates and Times</TableCell>
-                        <TableCell>Duration</TableCell>
-                        <TableCell>Location</TableCell>
-                        <TableCell>Rating</TableCell>
-                        <TableCell>Bookmark</TableCell>
-                        <TableCell>Notify Me</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {
-                        activities.map((activity) =>
-                          activity.flag === false &&
-                          activity.advertiserDeleted === false &&
-                          activity.deletedActivity === false &&
-                          activity.saved.user === username &&
-                          activity.saved.isSaved ? (
-                            <TableRow key={activity._id}>
-                              <TableCell>{activity.name}</TableCell>
-                              <TableCell>
-                                {(
-                                  activity.price *
-                                  (exchangeRates[currency] || 1)
-                                ).toFixed(2)}{" "}
-                                {currency}
-                              </TableCell>
-                              <TableCell>
-                                {activity.isOpen ? "Yes" : "No"}
-                              </TableCell>
-                              <TableCell>{activity.category}</TableCell>
-                              <TableCell>{activity.tags.join(", ")}</TableCell>
-                              <TableCell>{activity.specialDiscount}</TableCell>
-                              <TableCell>
-                                {activity.date
-                                  ? (() => {
-                                      const dateObj = new Date(activity.date);
-                                      const date = dateObj
-                                        .toISOString()
-                                        .split("T")[0];
-                                      const time = dateObj
-                                        .toTimeString()
-                                        .split(" ")[0];
-                                      return (
-                                        <div>
-                                          {date} at {time}
-                                        </div>
-                                      );
-                                    })()
-                                  : "No available date and time"}
-                              </TableCell>
-                              <TableCell>{activity.duration}</TableCell>
-                              <TableCell>{activity.location}</TableCell>
-                              <TableCell>
-                                <Rating
-                                  value={activity.averageRating}
-                                  precision={0.1}
-                                  readOnly
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <span
-                                  onClick={() =>
-                                    handleSaveActivity(
-                                      activity._id,
-                                      activity.saved?.isSaved
-                                    )
-                                  }
-                                >
-                                  {saveStatesActivity[activity._id] ? (
-                                    <IconButton>
-                                      <BookmarkIcon />
-                                    </IconButton>
-                                  ) : (
-                                    <IconButton>
-                                      <BookmarkBorderIcon />
-                                    </IconButton>
-                                  )}
-                                </span>
-                              </TableCell>
-                              <TableCell>
-                                <Tooltip title="Notify me when active">
-                                  <IconButton
-                                    color="error"
-                                    aria-label="notify me"
-                                      onClick={() =>
-                                        requestNotification(activity._id)
-                                      }
-                                  >
-                                    <NotificationAddIcon />
-                                  </IconButton>
-                                </Tooltip>
-                              </TableCell>
-                            </TableRow>
-                          ) : null
-                        ) // We don't output a row when it has `activity.flag` is true (ie activity is inappropriate) or when the activity's advertiser has left the system or the activity has been deleted but cannot be removed from database since it is booked my previous tourists
-                      }
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Box>
-            ) : (
-              <Typography variant="body1" style={{ marginTop: "20px" }}>
-                No activities saved.
-              </Typography>
-            )}
-          </>
-        )}
+            </>
+          )}
       </Box>
     </>
   );
