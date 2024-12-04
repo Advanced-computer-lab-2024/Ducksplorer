@@ -322,9 +322,9 @@ const ViewUpcomingItinerary = () => {
           prevItineraries.map((itinerary) =>
             itinerary._id === itineraryId
               ? {
-                  ...itinerary,
-                  saved: { ...itinerary.saved, isSaved: newIsSaved },
-                }
+                ...itinerary,
+                saved: { ...itinerary.saved, isSaved: newIsSaved },
+              }
               : itinerary
           )
         );
@@ -493,7 +493,7 @@ const ViewUpcomingItinerary = () => {
                 onClose={() => setAnchorEl(null)}
               >
                 <MenuItem>
-                  <Typography variant="subtitle1">Select Range:</Typography>
+                  <Typography variant="subtitle1">Select Range:</Typography> {" "}
                   <Slider
                     value={priceRange}
                     onChange={handlePriceRangeChange}
@@ -524,7 +524,7 @@ const ViewUpcomingItinerary = () => {
               Language
               <br />
               <FormControl sx={{ minWidth: 120, marginTop: 1 }}>
-                <InputLabel id="language-select-label"> Language </InputLabel>
+                <InputLabel id="language-select-label" sx={{ marginRight: 2 }}> Language </InputLabel>
                 <Select
                   labelId="language-select-label"
                   id="language-select"
@@ -600,9 +600,9 @@ const ViewUpcomingItinerary = () => {
           >
             {itineraries.map((itinerary) =>
               itinerary.flag === false &&
-              itinerary.isDeactivated === false &&
-              itinerary.tourGuideDeleted === false &&
-              itinerary.deletedItinerary === false ? (
+                itinerary.isDeactivated === false &&
+                itinerary.tourGuideDeleted === false &&
+                itinerary.deletedItinerary === false ? (
                 <ItineraryCard itinerary={itinerary} />
               ) : null
             )}
