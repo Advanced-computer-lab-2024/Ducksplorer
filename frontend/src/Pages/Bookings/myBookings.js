@@ -16,7 +16,7 @@ import {
   Tab,
   Button,
   Chip,
-  CircularProgress
+  CircularProgress,
 } from "@mui/material";
 
 import MyChips from "../../Components/MyChips";
@@ -176,7 +176,7 @@ const BookingDetails = () => {
       console.error("Error cancelling booking:", error);
       message.error(
         error.response?.data?.message ||
-        "Cannot cancel the booking within 48 hours of the start date or after the start of the activity/itinerary."
+          "Cannot cancel the booking within 48 hours of the start date or after the start of the activity/itinerary."
       );
     }
   };
@@ -222,7 +222,7 @@ const BookingDetails = () => {
       console.error("Error cancelling booking:", error);
       message.error(
         error.response?.data?.message ||
-        "Cannot cancel the booking within 48 hours of the start date or after the start of the activity/itinerary."
+          "Cannot cancel the booking within 48 hours of the start date or after the start of the activity/itinerary."
       );
     }
   };
@@ -255,13 +255,13 @@ const BookingDetails = () => {
   )
     return <p>No booking details available.</p>;
 
-
   return (
     <Box
       sx={{
         height: "100vh",
-        backgroundColor: "#f9f9f9",
         paddingTop: "64px", // Adjust for navbar height
+        width: "90vw",
+        marginLeft: "5vw",
       }}
     >
       <TouristNavBar />
@@ -285,331 +285,331 @@ const BookingDetails = () => {
           {/* Activities Table */}
           {(selectedCategory === "Activities" ||
             selectedCategory === "All") && (
-              <div>
-                {" "}
-                <Typography
-                  variant="h5"
-                  sx={{ fontWeight: "bold", marginBottom: "20px" }}
-                  gutterBottom
-                >
-                  Activities
-                </Typography>
-                <TableContainer
-                  component={Paper}
-                  sx={{
-                    marginBottom: 4,
-                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
-                    borderRadius: "1.5cap",
-                  }}
-                >
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Name
+            <div>
+              {" "}
+              <Typography
+                variant="h5"
+                sx={{ fontWeight: "bold", marginBottom: "20px" }}
+                gutterBottom
+              >
+                Activities
+              </Typography>
+              <TableContainer
+                component={Paper}
+                sx={{
+                  marginBottom: 4,
+                  boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+                  borderRadius: "1.5cap",
+                }}
+              >
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Name
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Is Open
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Advertiser
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Date
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Location
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Price
+                        <CurrencyConvertor
+                          onCurrencyChange={handleCurrencyChangeAc}
+                        />
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Category
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Tags
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Special Discount
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Duration
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Average Rating
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Actions
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {activityBookings.map((activityBooking) => (
+                      <TableRow key={activityBooking._id}>
+                        <TableCell>
+                          {activityBooking.activity?.name || "No Name"}
                         </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Is Open
+                        <TableCell>
+                          {activityBooking.activity?.isOpen ? "Yes" : "No"}
                         </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Advertiser
+                        <TableCell>
+                          {activityBooking.activity?.advertiser || "N/A"}
                         </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Date
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Location
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Price
-                          <CurrencyConvertor
-                            onCurrencyChange={handleCurrencyChangeAc}
-                          />
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Category
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Tags
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Special Discount
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Duration
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Average Rating
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Actions
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {activityBookings.map((activityBooking) => (
-                        <TableRow key={activityBooking._id}>
-                          <TableCell>
-                            {activityBooking.activity?.name || "No Name"}
-                          </TableCell>
-                          <TableCell>
-                            {activityBooking.activity?.isOpen ? "Yes" : "No"}
-                          </TableCell>
-                          <TableCell>
-                            {activityBooking.activity?.advertiser || "N/A"}
-                          </TableCell>
-                          <TableCell>
-                            {activityBooking.activity?.date
-                              ? new Date(
+                        <TableCell>
+                          {activityBooking.activity?.date
+                            ? new Date(
                                 activityBooking.activity.date
                               ).toLocaleDateString()
-                              : "N/A"}
-                          </TableCell>
-                          <TableCell>
-                            {activityBooking.activity?.location || "N/A"}
-                          </TableCell>
-                          <TableCell>
-                            {(
-                              activityBooking.activity?.price *
-                              (exchangeRatesAc[currencyAc] || 1)
-                            ).toFixed(2)}{" "}
-                            {currencyAc}
-                          </TableCell>
-                          <TableCell>
-                            {activityBooking.activity?.category || "N/A"}
-                          </TableCell>
-                          <TableCell>
-                            {activityBooking.activity?.tags?.join(", ") || "N/A"}
-                          </TableCell>
-                          <TableCell>
-                            {activityBooking.activity?.specialDiscount || 0}%
-                          </TableCell>
-                          <TableCell>
-                            {activityBooking.activity?.duration || "N/A"} mins
-                          </TableCell>
-                          <TableCell>
-                            <Rating
-                              value={activityBooking.activity?.averageRating || 0}
-                              precision={0.1}
-                              readOnly
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <Tooltip title="Cancel Booking">
-                              <IconButton
-                                color="error"
-                                aria-label="delete category"
-                                onClick={() =>
-                                  handleDeleteBooking(
-                                    "activity",
-                                    activityBooking.activity?._id,
-                                    activityBooking.activity?.price
-                                  )
-                                }
-                              >
-                                <DeleteIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>{" "}
-              </div>
-            )}
+                            : "N/A"}
+                        </TableCell>
+                        <TableCell>
+                          {activityBooking.activity?.location || "N/A"}
+                        </TableCell>
+                        <TableCell>
+                          {(
+                            activityBooking.activity?.price *
+                            (exchangeRatesAc[currencyAc] || 1)
+                          ).toFixed(2)}{" "}
+                          {currencyAc}
+                        </TableCell>
+                        <TableCell>
+                          {activityBooking.activity?.category || "N/A"}
+                        </TableCell>
+                        <TableCell>
+                          {activityBooking.activity?.tags?.join(", ") || "N/A"}
+                        </TableCell>
+                        <TableCell>
+                          {activityBooking.activity?.specialDiscount || 0}%
+                        </TableCell>
+                        <TableCell>
+                          {activityBooking.activity?.duration || "N/A"} mins
+                        </TableCell>
+                        <TableCell>
+                          <Rating
+                            value={activityBooking.activity?.averageRating || 0}
+                            precision={0.1}
+                            readOnly
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Tooltip title="Cancel Booking">
+                            <IconButton
+                              color="error"
+                              aria-label="delete category"
+                              onClick={() =>
+                                handleDeleteBooking(
+                                  "activity",
+                                  activityBooking.activity?._id,
+                                  activityBooking.activity?.price
+                                )
+                              }
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>{" "}
+            </div>
+          )}
           {/* Itineraries Table */}
           {(selectedCategory === "Itineraries" ||
             selectedCategory === "All") && (
-              <div>
-                {" "}
-                <Typography variant="h5" sx={{ fontWeight: "bold" }} gutterBottom>
-                  Itineraries
-                </Typography>
-                <TableContainer
-                  component={Paper}
-                  sx={{
-                    marginBottom: 4,
-                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
-                    borderRadius: "1.5cap",
-                  }}
-                >
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Name
+            <div>
+              {" "}
+              <Typography variant="h5" sx={{ fontWeight: "bold" }} gutterBottom>
+                Itineraries
+              </Typography>
+              <TableContainer
+                component={Paper}
+                sx={{
+                  marginBottom: 4,
+                  boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+                  borderRadius: "1.5cap",
+                }}
+              >
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Name
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Activity Names
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Locations
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Timeline
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Language
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Price
+                        <CurrencyConvertor
+                          onCurrencyChange={handleCurrencyChangeIt}
+                        />
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Available Dates & Times
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Chosen Date
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Accessibility
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Pick-Up Location
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Drop-Off Location
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Tour Guide
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Average Rating
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Tags
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Actions
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {itineraryBookings.map((itineraryBooking) => (
+                      <TableRow key={itineraryBooking._id}>
+                        <TableCell>
+                          {itineraryBooking.itinerary?.name ||
+                            "Still doesn't have a name"}
                         </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Activity Names
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Locations
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Timeline
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Language
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Price
-                          <CurrencyConvertor
-                            onCurrencyChange={handleCurrencyChangeIt}
-                          />
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Available Dates & Times
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Chosen Date
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Accessibility
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Pick-Up Location
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Drop-Off Location
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Tour Guide
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Average Rating
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Tags
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                          Actions
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {itineraryBookings.map((itineraryBooking) => (
-                        <TableRow key={itineraryBooking._id}>
-                          <TableCell>
-                            {itineraryBooking.itinerary?.name ||
-                              "Still doesn't have a name"}
-                          </TableCell>
-                          <TableCell>
-                            {itineraryBooking.itinerary &&
-                              itineraryBooking.itinerary.activity
-                              ? itineraryBooking.itinerary.activity
+                        <TableCell>
+                          {itineraryBooking.itinerary &&
+                          itineraryBooking.itinerary.activity
+                            ? itineraryBooking.itinerary.activity
                                 .map((act) => act.name)
                                 .join(", ")
-                              : "N/A"}
-                          </TableCell>
-                          <TableCell>
-                            {itineraryBooking.itinerary &&
-                              itineraryBooking.itinerary.locations
-                              ? itineraryBooking.itinerary.locations.join(", ")
-                              : "N/A"}
-                          </TableCell>
-                          <TableCell>
-                            {itineraryBooking.itinerary &&
-                              itineraryBooking.itinerary.timeline
-                              ? itineraryBooking.itinerary.timeline
-                              : "N/A"}
-                          </TableCell>
-                          <TableCell>
-                            {" "}
-                            {itineraryBooking.itinerary &&
-                              itineraryBooking.itinerary.language
-                              ? itineraryBooking.itinerary.language
-                              : "N/A"}
-                          </TableCell>
-                          <TableCell>
-                            {itineraryBooking.itinerary &&
-                              itineraryBooking.chosenPrice
-                              ? (
+                            : "N/A"}
+                        </TableCell>
+                        <TableCell>
+                          {itineraryBooking.itinerary &&
+                          itineraryBooking.itinerary.locations
+                            ? itineraryBooking.itinerary.locations.join(", ")
+                            : "N/A"}
+                        </TableCell>
+                        <TableCell>
+                          {itineraryBooking.itinerary &&
+                          itineraryBooking.itinerary.timeline
+                            ? itineraryBooking.itinerary.timeline
+                            : "N/A"}
+                        </TableCell>
+                        <TableCell>
+                          {" "}
+                          {itineraryBooking.itinerary &&
+                          itineraryBooking.itinerary.language
+                            ? itineraryBooking.itinerary.language
+                            : "N/A"}
+                        </TableCell>
+                        <TableCell>
+                          {itineraryBooking.itinerary &&
+                          itineraryBooking.chosenPrice
+                            ? (
                                 itineraryBooking.chosenPrice *
                                 (exchangeRatesIt[currencyIt] || 1)
                               ).toFixed(2) + ` ${currencyIt}`
-                              : "N/A"}{" "}
-                          </TableCell>
-                          <TableCell>
-                            {" "}
-                            {itineraryBooking.itinerary &&
-                              itineraryBooking.itinerary.availableDatesAndTimes
-                              ? itineraryBooking.itinerary.availableDatesAndTimes
+                            : "N/A"}{" "}
+                        </TableCell>
+                        <TableCell>
+                          {" "}
+                          {itineraryBooking.itinerary &&
+                          itineraryBooking.itinerary.availableDatesAndTimes
+                            ? itineraryBooking.itinerary.availableDatesAndTimes
                                 .map((date) =>
                                   new Date(date).toLocaleDateString()
                                 )
                                 .join(", ")
-                              : "N/A"}
-                          </TableCell>
-                          <TableCell>
-                            {itineraryBooking.itinerary &&
-                              itineraryBooking.itinerary.chosenDate
-                              ? new Date(
+                            : "N/A"}
+                        </TableCell>
+                        <TableCell>
+                          {itineraryBooking.itinerary &&
+                          itineraryBooking.itinerary.chosenDate
+                            ? new Date(
                                 itineraryBooking.itinerary.chosenDate
                               ).toLocaleDateString()
-                              : "N/A"}
-                          </TableCell>
-                          <TableCell>
-                            {itineraryBooking.itinerary &&
-                              itineraryBooking.itinerary.accessibility
-                              ? itineraryBooking.itinerary.accessibility
-                              : "N/A"}
-                          </TableCell>
-                          <TableCell>
-                            {itineraryBooking.itinerary &&
-                              itineraryBooking.itinerary.pickUpLocation
-                              ? itineraryBooking.itinerary.pickUpLocation
-                              : "N/A"}
-                          </TableCell>
-                          <TableCell>
-                            {" "}
-                            {itineraryBooking.itinerary &&
-                              itineraryBooking.itinerary.dropOffLocation
-                              ? itineraryBooking.itinerary.dropOffLocation
-                              : "N/A"}
-                          </TableCell>
-                          {/* <TableCell>{ itineraryBooking.itinerary && itineraryBooking.itinerary.tourGuideModel?.userName ? itineraryBooking.itinerary.tourGuideModel.userName : "N/A"}</TableCell> */}
-                          <TableCell>
-                            {tourGuideNames[itineraryBooking._id] || "N/A"}
-                          </TableCell>
-                          <TableCell>
-                            <Rating
-                              value={itineraryBooking.averageRating}
-                              precision={0.1}
-                              readOnly
-                            />
-                          </TableCell>
-                          <TableCell>
-                            {" "}
-                            {itineraryBooking.itinerary &&
-                              itineraryBooking.itinerary.tags
-                              ? itineraryBooking.itinerary.tags.join(", ")
-                              : "N/A"}
-                          </TableCell>
-                          <TableCell>
-                            <Tooltip title="Cancel Booking">
-                              <IconButton
-                                color="error"
-                                aria-label="delete category"
-                                onClick={() =>
-                                  handleDeleteBooking(
-                                    "itinerary",
-                                    itineraryBooking.itinerary._id,
-                                    itineraryBooking.itinerary.price
-                                  )
-                                }
-                              >
-                                <DeleteIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>{" "}
-              </div>
-            )}
+                            : "N/A"}
+                        </TableCell>
+                        <TableCell>
+                          {itineraryBooking.itinerary &&
+                          itineraryBooking.itinerary.accessibility
+                            ? itineraryBooking.itinerary.accessibility
+                            : "N/A"}
+                        </TableCell>
+                        <TableCell>
+                          {itineraryBooking.itinerary &&
+                          itineraryBooking.itinerary.pickUpLocation
+                            ? itineraryBooking.itinerary.pickUpLocation
+                            : "N/A"}
+                        </TableCell>
+                        <TableCell>
+                          {" "}
+                          {itineraryBooking.itinerary &&
+                          itineraryBooking.itinerary.dropOffLocation
+                            ? itineraryBooking.itinerary.dropOffLocation
+                            : "N/A"}
+                        </TableCell>
+                        {/* <TableCell>{ itineraryBooking.itinerary && itineraryBooking.itinerary.tourGuideModel?.userName ? itineraryBooking.itinerary.tourGuideModel.userName : "N/A"}</TableCell> */}
+                        <TableCell>
+                          {tourGuideNames[itineraryBooking._id] || "N/A"}
+                        </TableCell>
+                        <TableCell>
+                          <Rating
+                            value={itineraryBooking.averageRating}
+                            precision={0.1}
+                            readOnly
+                          />
+                        </TableCell>
+                        <TableCell>
+                          {" "}
+                          {itineraryBooking.itinerary &&
+                          itineraryBooking.itinerary.tags
+                            ? itineraryBooking.itinerary.tags.join(", ")
+                            : "N/A"}
+                        </TableCell>
+                        <TableCell>
+                          <Tooltip title="Cancel Booking">
+                            <IconButton
+                              color="error"
+                              aria-label="delete category"
+                              onClick={() =>
+                                handleDeleteBooking(
+                                  "itinerary",
+                                  itineraryBooking.itinerary._id,
+                                  itineraryBooking.itinerary.price
+                                )
+                              }
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>{" "}
+            </div>
+          )}
           {/* Flights Table */}
           {(selectedCategory === "Flights" || selectedCategory === "All") && (
             <div>
@@ -856,122 +856,122 @@ const BookingDetails = () => {
           {/* Transportation Table */}
           {(selectedCategory === "Transportation" ||
             selectedCategory === "All") && (
-              <div>
-                {" "}
-                <Typography
-                  variant="h5"
-                  sx={{ marginTop: "40px", fontWeight: "bold" }}
-                  gutterBottom
-                >
-                  Transportation
-                </Typography>
-                <div
-                  style={{
-                    paddingBottom: "40px",
+            <div>
+              {" "}
+              <Typography
+                variant="h5"
+                sx={{ marginTop: "40px", fontWeight: "bold" }}
+                gutterBottom
+              >
+                Transportation
+              </Typography>
+              <div
+                style={{
+                  paddingBottom: "40px",
+                }}
+              >
+                <TableContainer
+                  component={Paper}
+                  sx={{
+                    marginBottom: "40pxkp",
+                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+                    borderRadius: "1.5cap",
                   }}
                 >
-                  <TableContainer
-                    component={Paper}
-                    sx={{
-                      marginBottom: "40pxkp",
-                      boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
-                      borderRadius: "1.5cap",
-                    }}
-                  >
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell
-                            sx={{ fontWeight: "bold", fontSize: "18px" }}
-                          >
-                            Transportation Company
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell
+                          sx={{ fontWeight: "bold", fontSize: "18px" }}
+                        >
+                          Transportation Company
+                        </TableCell>
+                        <TableCell
+                          sx={{ fontWeight: "bold", fontSize: "18px" }}
+                        >
+                          Departure Date
+                        </TableCell>
+                        <TableCell
+                          sx={{ fontWeight: "bold", fontSize: "18px" }}
+                        >
+                          Arrival Date
+                        </TableCell>
+                        <TableCell
+                          sx={{ fontWeight: "bold", fontSize: "18px" }}
+                        >
+                          Price
+                          <CurrencyConvertor
+                            onCurrencyChange={handleCurrencyChangett}
+                          />
+                        </TableCell>
+                        {/* <TableCell>Origin</TableCell> */}
+                        {/* <TableCell>Destination</TableCell> */}
+                        <TableCell
+                          sx={{ fontWeight: "bold", fontSize: "18px" }}
+                        >
+                          Transfer Type
+                        </TableCell>
+                        <TableCell
+                          sx={{ fontWeight: "bold", fontSize: "18px" }}
+                        >
+                          Actions
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {transportationBookings.map((transportation) => (
+                        <TableRow key={transportation._id}>
+                          <TableCell>
+                            {transportation.transportations.companyName}
                           </TableCell>
-                          <TableCell
-                            sx={{ fontWeight: "bold", fontSize: "18px" }}
-                          >
-                            Departure Date
+                          <TableCell>
+                            {new Date(
+                              transportation.transportations.departureDate
+                            ).toLocaleString()}
                           </TableCell>
-                          <TableCell
-                            sx={{ fontWeight: "bold", fontSize: "18px" }}
-                          >
-                            Arrival Date
+                          <TableCell>
+                            {new Date(
+                              transportation.transportations.arrivalDate
+                            ).toLocaleString()}
                           </TableCell>
-                          <TableCell
-                            sx={{ fontWeight: "bold", fontSize: "18px" }}
-                          >
-                            Price
-                            <CurrencyConvertor
-                              onCurrencyChange={handleCurrencyChangett}
-                            />
+                          <TableCell>
+                            {(
+                              transportation.transportations.price *
+                              (exchangeRatestt[currencytt] || 1)
+                            ).toFixed(2)}{" "}
+                            {currencytt}
                           </TableCell>
-                          {/* <TableCell>Origin</TableCell> */}
-                          {/* <TableCell>Destination</TableCell> */}
-                          <TableCell
-                            sx={{ fontWeight: "bold", fontSize: "18px" }}
-                          >
-                            Transfer Type
+                          {/* <TableCell> {transportation.City}{" , "}{transportation.Country}</TableCell> */}
+                          {/* <TableCell> {transportation.arrivalCity}{" , "}{transportation.arrivalCountry}</TableCell> */}
+                          <TableCell>
+                            {" "}
+                            {transportation.transportations.transferType}
                           </TableCell>
-                          <TableCell
-                            sx={{ fontWeight: "bold", fontSize: "18px" }}
-                          >
-                            Actions
+                          <TableCell>
+                            <Tooltip title="Cancel Booking">
+                              <IconButton
+                                color="error"
+                                aria-label="delete Transportation"
+                                onClick={() =>
+                                  handleDeleteThirdPartyBooking(
+                                    "transportation",
+                                    transportation.transportations.price,
+                                    transportation.id
+                                  )
+                                }
+                              >
+                                <DeleteIcon />
+                              </IconButton>
+                            </Tooltip>
                           </TableCell>
                         </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {transportationBookings.map((transportation) => (
-                          <TableRow key={transportation._id}>
-                            <TableCell>
-                              {transportation.transportations.companyName}
-                            </TableCell>
-                            <TableCell>
-                              {new Date(
-                                transportation.transportations.departureDate
-                              ).toLocaleString()}
-                            </TableCell>
-                            <TableCell>
-                              {new Date(
-                                transportation.transportations.arrivalDate
-                              ).toLocaleString()}
-                            </TableCell>
-                            <TableCell>
-                              {(
-                                transportation.transportations.price *
-                                (exchangeRatestt[currencytt] || 1)
-                              ).toFixed(2)}{" "}
-                              {currencytt}
-                            </TableCell>
-                            {/* <TableCell> {transportation.City}{" , "}{transportation.Country}</TableCell> */}
-                            {/* <TableCell> {transportation.arrivalCity}{" , "}{transportation.arrivalCountry}</TableCell> */}
-                            <TableCell>
-                              {" "}
-                              {transportation.transportations.transferType}
-                            </TableCell>
-                            <TableCell>
-                              <Tooltip title="Cancel Booking">
-                                <IconButton
-                                  color="error"
-                                  aria-label="delete Transportation"
-                                  onClick={() =>
-                                    handleDeleteThirdPartyBooking(
-                                      "transportation",
-                                      transportation.transportations.price,
-                                      transportation.id
-                                    )
-                                  }
-                                >
-                                  <DeleteIcon />
-                                </IconButton>
-                              </Tooltip>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </div>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
               </div>
-            )}
+            </div>
+          )}
         </div>
         <Help />
       </div>

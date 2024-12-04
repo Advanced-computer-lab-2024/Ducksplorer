@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Chip } from "@mui/material";
 
 const MyChips = ({ chipNames, onChipClick }) => {
-  const [selectedChip, setSelectedChip] = useState(null);
+  const [selectedChip, setSelectedChip] = useState("All");
 
   const handleChipClick = (chipName) => {
     setSelectedChip(chipName);

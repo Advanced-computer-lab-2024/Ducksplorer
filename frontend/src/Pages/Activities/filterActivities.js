@@ -12,9 +12,7 @@ import {
   TableHead,
   TableRow,
   Paper,
-  TextField,
   MenuItem,
-  Select,
   InputLabel,
   FormControl,
   Button,
@@ -23,11 +21,17 @@ import {
   IconButton,
   Container,
 } from "@mui/material";
+import Select from "@mui/joy/Select";
+import Option from "@mui/joy/Option";
+import Input from "@mui/joy/Input";
+import { selectClasses } from "@mui/joy/Select";
+import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import { message } from "antd";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
+import ActivityCard from "../../Components/activityCard";
 
 const FilterActivities = () => {
   const navigate = useNavigate();
@@ -217,91 +221,93 @@ const FilterActivities = () => {
   }, [activities]);
 
   return (
-    <>
+    <div style={{ width: "100%" }}>
       <Box
         sx={{
           height: "100vh",
           backgroundColor: "#ffffff",
-          paddingTop: "2vh", // Adjust for navbar height
         }}
       >
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-          <Box sx={{ textAlign: "center", mb: 4 }}>
-            <Typography variant="h4" fontWeight="700">
-              Filter Activities
-            </Typography>
-          </Box>
-
-          <Box
-            sx={{
-              mb: 3,
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: "20px", // Adds space between the filter fields
-            }}
-          >
-            <TextField
-              label="Price"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              type="number"
-              sx={{ minWidth: 150 }}
-            />
-            <TextField
-              label="Date"
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              InputLabelProps={{ shrink: true }}
-              sx={{ minWidth: 150 }}
-            />
-            <FormControl sx={{ minWidth: 150 }}>
-              <InputLabel id="category-label">Category</InputLabel>
-              <Select
-                labelId="category-label"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                label="Category"
-              >
-                <MenuItem value="">
-                  <em>Any</em>
-                </MenuItem>
-                {categories.map((cat) => (
-                  <MenuItem key={cat._id} value={cat.name}>
-                    {cat.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            <Box sx={{ minWidth: 150 }}>
-              <Typography variant="body1">Rating: {averageRating}</Typography>
-              <Slider
-                value={averageRating}
-                onChange={(e, newValue) => setAverageRating(newValue)}
-                step={1}
-                marks={[0, 1, 2, 3, 4, 5].map((value) => ({
-                  value,
-                  label: value,
-                }))}
-                min={0}
-                max={5}
-                valueLabelDisplay="auto"
-              />
-            </Box>
-
-            <Button
-              variant="contained"
+        <Box
+          sx={{
+            mb: 3,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "20px", // Adds space between the filter fields
+          }}
+        >
+          <Input
+            placeholder="Price"
+            value={price}
+            color="primary"
+            onChange={(e) => setPrice(e.target.value)}
+            type="number"
+          />
+          <Input
+            placeholder="Date"
+            type="date"
+            variant="outlined"
+            color="primary"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            InputLabelProps={{ shrink: true }}
+          />
+          <FormControl sx={{ minWidth: 150 }}>
+            <Select
+              indicator={<KeyboardArrowDown />}
               color="primary"
-              onClick={fetchFilteredActivities}
+              placeholder="Category"
+              onChange={(e, newValue) => {
+                setCategory(newValue);
+              }}
+              sx={{
+                width: 240,
+                [`& .${selectClasses.indicator}`]: {
+                  transition: "0.2s",
+                  [`&.${selectClasses.expanded}`]: {
+                    transform: "rotate(-180deg)",
+                  },
+                },
+              }}
             >
-              Filter
-            </Button>
+              <Option value="">
+                <em>Any</em>
+              </Option>
+              {categories.map((cat) => (
+                <Option key={cat._id} value={cat.name}>
+                  {cat.name}
+                </Option>
+              ))}
+            </Select>
+          </FormControl>
+
+          <Box sx={{ minWidth: 150 }}>
+            <Typography variant="body1">Rating: {averageRating}</Typography>
+            <Slider
+              value={averageRating}
+              onChange={(e, newValue) => setAverageRating(newValue)}
+              step={1}
+              marks={[0, 1, 2, 3, 4, 5].map((value) => ({
+                value,
+                label: value,
+              }))}
+              min={0}
+              max={5}
+              valueLabelDisplay="auto"
+            />
           </Box>
 
-          {/* Activity Table */}
-          <TableContainer style={{ borderRadius: 20 }} component={Paper}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={fetchFilteredActivities}
+          >
+            Filter
+          </Button>
+        </Box>
+        {/* Activity Table */}
+        {/* <TableContainer style={{ borderRadius: 20 }} component={Paper}>
             <Table>
               <TableHead>
                 <TableRow>
@@ -324,13 +330,25 @@ const FilterActivities = () => {
                   <TableCell>Bookmark</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {
-                  activities.map((activity) =>
-                    activity.flag === false &&
-                    activity.advertiserDeleted === false &&
-                    activity.deletedActivity === false ? (
-                      <TableRow key={activity._id}>
+              <TableBody> */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "24px", // Adjust the gap between items as needed
+            width: "100%",
+          }}
+        >
+          {activities.map(
+            (activity) =>
+              activity.flag === false &&
+              activity.advertiserDeleted === false &&
+              activity.deletedActivity === false ? (
+                <ActivityCard activity={activity} />
+              ) : null,
+
+            {
+              /* <TableRow key={activity._id}>
                         <TableCell>{activity.name}</TableCell>
                         <TableCell>
                           {(
@@ -409,16 +427,15 @@ const FilterActivities = () => {
                             )}
                           </span>
                         </TableCell>
-                      </TableRow>
-                    ) : null
-                  ) // We don't output a row when it has `activity.flag` is true (ie activity is inappropriate) or when the activity's advertiser has left the system or the activity has been deleted but cannot be removed from database since it is booked my previous tourists
-                }
-              </TableBody>
+                      </TableRow>*/
+            }
+          )}
+        </div>
+        {/* </TableBody>
             </Table>
-          </TableContainer>
-        </Container>
+          </TableContainer>  */}
       </Box>
-    </>
+    </div>
   );
 };
 

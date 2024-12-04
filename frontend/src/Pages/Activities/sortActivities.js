@@ -203,7 +203,7 @@ const SortActivities = () => {
   }, [activities]);
 
   return (
-    <div className="yassin fouda" style={{ width: "100%" }}>
+    <div className="yassin fouda" style={{ width: "100%", marginTop: 20 }}>
       <div
         style={{
           display: "flex",

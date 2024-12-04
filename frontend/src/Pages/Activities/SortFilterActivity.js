@@ -38,7 +38,6 @@ function SortFilterActivity() {
 
         <Box
           sx={{
-            mb: 3,
             display: "flex",
             justifyContent: "flex-start",
             alignItems: "center",
