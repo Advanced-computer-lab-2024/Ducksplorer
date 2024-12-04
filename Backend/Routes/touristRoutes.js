@@ -91,8 +91,9 @@ router.get("/myPurchases/:buyer", getMyPurchases);
 // router.get("/myOrder", getMyOrder);
 router.get("/groupedPurchases/:buyer", getGroupedPurchases);
 router.get("/orderDetails/:orderNumber", getPurchasesByOrderNumber);
-router.get("/getOrderProducts/:productId",getOrderProducts);router.put("/cancelOrder", cancelOrder);
-router.put("/cancelOrder", cancelOrder);
+router.get("/getOrderProducts/:productId",getOrderProducts);
+router.delete("/cancelOrder/:username/:orderNumber", cancelOrder);
+
 router.get("/myOrders/:buyer", getMyOrders);
 
 router.put("/updatePurchases/:buyer", updatePurchase);

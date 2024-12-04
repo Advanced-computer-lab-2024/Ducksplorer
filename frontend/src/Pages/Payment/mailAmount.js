@@ -149,7 +149,7 @@ function PaymentPage() {
         message.success("Payment successfully completed!");
         if(itineraryOrActivity === "product"){
           await axios.delete("http://localhost:8000/touristRoutes/emptyCart", userName);
-          navigate("/myPurchases");
+          navigate("/orders");
         }
         // Payment succeeded; now create the booking in the backend
         const bookingResponse = await fetch(
@@ -331,7 +331,7 @@ function PaymentPage() {
       });
       console.log(response.data.message); // Log success message
       // Navigate to "My Purchases" on success
-      navigate("/myPurchases");
+      navigate("/orders");
     } catch (error) {
       console.error("Error emptying cart:", error.response?.data || error.message);
       message.error("Failed to empty the cart. Please try again.");

@@ -89,7 +89,7 @@ const TouristAllProducts = () => {
   };
 
   const handleMyPurchases = () => {
-    navigate("/myPurchases");
+    navigate("/orders");
   };
 
   const handleBackButtonClick = () => {
@@ -206,7 +206,7 @@ const TouristAllProducts = () => {
             onClick={handleMyPurchases}
             style={sidebarButtonStyle}
           >
-            My Purchases
+            My Orders
           </Button>
         )}
           <Menu

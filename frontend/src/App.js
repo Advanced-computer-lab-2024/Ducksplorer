@@ -79,7 +79,7 @@ import MyOrders from "./Pages/Products/OrdersPage.js";
 
 import CreatePromoCode from "./Pages/Admin/CreatePromoCode.js";
 import MySavedItems from "./Pages/SavedItems.js";
-import Orders from "./Pages/orders.js";
+import Orders from "./Pages/Products/orders.js";
 
 function App() {
   return (

@@ -34,7 +34,7 @@ const ProductCard = ({
   showAverageRatingNo, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
   removeProductFromWishlist,
   hideWishlist,
-  showCancelOrder,
+  showPurchase,
 }) => {
   const [isFormVisible, setFormVisible] = useState(false); // Controls form visibility
   const [quantity, setQuantity] = useState(1); // Holds the selected quantity
@@ -186,6 +186,7 @@ const ProductCard = ({
   const [showReviewBox, setShowReviewBox] = useState(false);
   const [showWishlist, setShowWishlist] = useState(false);
   const navigate = useNavigate();
+
   const getReviewerRating = (reviewer) => {
     const ratingEntry = product.ratings.find(
       (rating) => rating.buyer === reviewer
@@ -265,20 +266,7 @@ const ProductCard = ({
       console.error(error);
     }
   };
-  const handleCancelOrder = async () => {
-    try {
-      // const response = await axios.put(
-      //   `http://localhost:8000/touristRoutes/cancelOrder/${productID}`
-      // );
-      // if (response.status === 200) {
-      //   message.success("Order cancelled successfully");
-      // } else {
-      //   message.error("Failed to cancel order");
-      // }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+
   const handleRemoveWishlist = async (product) => {
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
     const user = JSON.parse(userJson);
@@ -511,9 +499,7 @@ const ProductCard = ({
           )}
           </div>
           <div>
-          {role === "Tourist" && showCancelOrder &&(
-           <Button onClick={handleCancelOrder}>Cancel Order</Button>
-          )}
+          
 
           {product.availableQuantity === 0 && (
               <div
