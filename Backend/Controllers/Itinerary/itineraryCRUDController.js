@@ -10,7 +10,9 @@ const TourGuide = require("../../Models/tourGuideModel");
 const send = require("send");
 const nodemailer = require("nodemailer");
 const Tourist = require("../../Models/touristModel");
-const {createNotification,} = require("../Notifications/NotificationsController.js");
+const {
+  createNotification,
+} = require("../Notifications/NotificationsController.js");
 const sendEmail = async (to, subject, message) => {
   try {
     // Configure the email transporter
@@ -329,7 +331,7 @@ const toggleFlagItinerary = async (req, res) => {
         `Your Itenary titled "${itinerary.name}" has been flagged as inappropriate.`,
         tourGuide.userName,
         "Iterary Flagged"
-      ); 
+      );
 
       await sendEmail(
         tourGuide.email,

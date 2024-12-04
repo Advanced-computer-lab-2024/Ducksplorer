@@ -185,10 +185,44 @@ export default function ActivityCard({ activity = {} }) {
       `https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`
     );
   }, []);
+
   const handleSaveClick = (event) => {
     event.stopPropagation();
     setSaved(!saved);
   };
+
+  // const handleSaveActivity = async (activityId, currentIsSaved) => {
+  //   try {
+  //     const newIsSaved = !currentIsSaved;
+
+  //     const response = await axios.put(
+  //       `http://localhost:8000/activity/save/${activityId}`,
+  //       {
+  //         username: username,
+  //         save: newIsSaved,
+  //       }
+  //     );
+  //     if (response.status === 200) {
+  //       message.success("Activity saved successfully");
+  //       setActivities((prevActivities) =>
+  //         prevActivities.map((activity) =>
+  //           activity._id === activityId
+  //             ? {
+  //                 ...activity,
+  //                 saved: { ...activity.saved, isSaved: newIsSaved },
+  //               }
+  //             : activity
+  //         )
+  //       );
+  //     } else {
+  //       message.error("Failed to save");
+  //     }
+  //     setIsSaved(isSaved);
+  //   } catch (error) {
+  //     console.error("Error toggling save state:", error);
+  //   }
+  // };
+
   const TheCard = () => {
     return (
       <div style={{ width: "100%" }}>
