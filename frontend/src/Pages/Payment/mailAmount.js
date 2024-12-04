@@ -61,6 +61,7 @@ function PaymentPage() {
   };
 
   const handleVisaSubmit = async (e) => {
+    e.preventDefault();
     if (cartData && !selectedAddress) {
       message.error("Please choose a delivery address first.");
       return;
@@ -79,7 +80,6 @@ function PaymentPage() {
       message.error("User information is missing.");
       return null;
     }
-    e.preventDefault();
     const amountInCents = Math.round(finalPrice);
     const email = user.email;
     localStorage.setItem("price", finalPrice);
@@ -116,6 +116,7 @@ function PaymentPage() {
   };
 
   const handleWalletSubmit = async (e) => {
+    e.preventDefault();
     if (cartData && !selectedAddress) {
       message.error("Please choose a delivery address first.");
       return;
@@ -139,7 +140,6 @@ function PaymentPage() {
     const activityId = localStorage.getItem("activityId");
     const itineraryId = localStorage.getItem("itineraryId");
     const itineraryOrActivity = localStorage.getItem("type");
-    e.preventDefault();
 
     try {
       setLoading(true);
@@ -156,9 +156,12 @@ function PaymentPage() {
       if (response.status === 200) {
         message.success("Payment successfully completed!");
         if (itineraryOrActivity === "product") {
+          console.log("type is ", itineraryOrActivity);
+          console.log("username is  ", userName);
           await axios.delete(
-            "http://localhost:8000/touristRoutes/emptyCart",
-            userName
+            "http://localhost:8000/touristRoutes/emptyCart", {
+              data: { userName }
+            }
           );
           navigate("/myPurchases");
         }
