@@ -1,4 +1,5 @@
 import AddressDropdown from "../../Components/AddressDropdown.js";
+import AddressDropdown from "../../Components/AddressDropdown.js";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -250,12 +251,15 @@ function PaymentPage() {
         //setFlight(flight);
         setPrice(flightsData.price);
         setFinalPrice(flightsData.price);
+        setFinalPrice(flightsData.price);
         console.log("Flight sada data fetched:", flight); // Debugging
         console.log("FlightData fetched:", flightsData); // Debugging
         console.log("flight price", flightsData.price);
       } else if (itineraryOrActivity === "hotel" && hotel) {
         //setHotel(hotel);
         setPrice(hotelsData.price);
+        setFinalPrice(hotelsData.price);
+      } else if (itineraryOrActivity === "transportation" && transportation) {
         setFinalPrice(hotelsData.price);
       } else if (itineraryOrActivity === "transportation" && transportation) {
         // setTransportation(transportation);
@@ -381,6 +385,38 @@ function PaymentPage() {
                   <ItineraryCardDetailed itinerary={itineraryData} />
                 </Card>
 
+                <Form
+                // form={form}
+                // onFinish={handleVisaSubmit}
+                // layout="vertical"
+                // initialValues={{ dateTime: null }}
+                >
+                  <Form.Item
+                    name="dateTime"
+                    label="Date and Time"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please select a date and time!",
+                      },
+                    ]}
+                  >
+                    <Select
+                      placeholder="Select a Date and Time"
+                      onChange={handleDateChange}
+                      style={{ width: "100%" }}
+                    >
+                      {itineraryData?.availableDatesAndTimes
+                        .filter((dateTime) => {
+                          const currentDate = new Date(); // Get the current date and time
+                          const dateObj = new Date(dateTime); // Convert available date to Date object
+                          return dateObj >= currentDate; // Only keep dates in the future or equal to now
+                        })
+                        .map((dateTime, index) => {
+                          const dateObj = new Date(dateTime);
+                          const date = dateObj.toISOString().split("T")[0];
+                          const time = dateObj.toTimeString().split(" ")[0];
+                          const displayText = `${date} at ${time}`;
                 <Form
                 // form={form}
                 // onFinish={handleVisaSubmit}
