@@ -13,6 +13,8 @@ const {
   getMyPurchases,
   updatePurchase,
   getGroupedPurchases,
+  getPurchasesByOrderNumber,
+  getOrderProducts,
   cancelOrder,
   // getMyOrder,
 } = require("../Controllers/purchasesController");
@@ -46,7 +48,10 @@ const {
   updateProductQuantity,
   viewCart,
   addPurchase2,
-  getMyOrders
+  getMyOrders,
+  getAddresses,
+  addAddress,
+  emptyCart
 } = require("../Controllers/Products/cartController");
 
 const { validatePromoCode } = require("../Controllers/promoCodeController");
@@ -69,7 +74,7 @@ router.patch("/payWallet/:userName", payWallet);
 router.patch("/payVisa/:userName", payVisa);
 
 //view cart
-router.get("/myCart", viewCart);
+router.get("/myCart/:userName", viewCart);
 //add to cart
 router.put("/cart", addProductToCart);
 //remove from cart
@@ -79,12 +84,15 @@ router.patch("/cart", updateProductQuantity);
 //add purchases from cart
 router.put("/addPurchase", addPurchase2);
 
+router.delete("/emptyCart", emptyCart);
+
 //router.patch("/loyalty/:name/:userName",receiveLoyaltyPoints);
 router.get("/myPurchases/:buyer", getMyPurchases);
 // router.get("/myOrder", getMyOrder);
 router.get("/groupedPurchases/:buyer", getGroupedPurchases);
+router.get("/orderDetails/:orderNumber", getPurchasesByOrderNumber);
+router.get("/getOrderProducts/:productId",getOrderProducts);router.put("/cancelOrder", cancelOrder);
 router.put("/cancelOrder", cancelOrder);
-
 router.get("/myOrders/:buyer", getMyOrders);
 
 router.put("/updatePurchases/:buyer", updatePurchase);
@@ -97,5 +105,8 @@ router.put("/updateWishlist/:username", updateWishlist);
 router.put("/removeFromWishlist/:username/:productId", removeFromWishlist);
 
 router.post("/validCode", validatePromoCode);
+
+router.get("/addresses/:userName", getAddresses);
+router.post("/newAddress/:userName", addAddress);
 
 module.exports = router;
