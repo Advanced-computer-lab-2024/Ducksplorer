@@ -34,6 +34,7 @@ import {
   FormControlLabel,
   Tooltip,
   Rating,
+  CircularProgress
 } from "@mui/material";
 
 const AdminReport = () => {
@@ -374,7 +375,7 @@ const AdminReport = () => {
     activitySetDate(""); // Reset date if month is selected
     activitySetFiltersApplied(true);
   };
-  
+
   const changeActivityYear = (newYear) => {
     activitySetYear(newYear);
     activitySetDate(""); // Reset date if month is selected
@@ -445,6 +446,84 @@ const AdminReport = () => {
     setSelectedCategory(chipName);
     console.log(selectedCategory);
   };
+
+  if (selectedCategory === 'Activities Report') {
+
+    if (activityLoading) {
+      return (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100vh", // Full screen height
+          }}
+        >
+          <CircularProgress size={60} thickness={4} />
+          <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
+            Loading activities report...
+          </Typography>
+        </Box>
+      );
+    }
+
+    if ((!Array.isArray(activities)) || (activities.length === 0)) {
+      return <p>No activities available.</p>;
+    }
+
+  }
+  else if (selectedCategory === 'Itineraries Report') {
+
+    if (itineraryLoading) {
+      return (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100vh", // Full screen height
+          }}
+        >
+          <CircularProgress size={60} thickness={4} />
+          <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
+            Loading itineraries report...
+          </Typography>
+        </Box>
+      );
+    }
+
+    if ((!Array.isArray(itineraries)) || (itineraries.length === 0)) {
+      return <p>No itineraries available.</p>;
+    }
+
+  }
+
+  else if (selectedCategory === 'Products Report') {
+    if (productLoading) {
+      return (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100vh", // Full screen height
+          }}
+        >
+          <CircularProgress size={60} thickness={4} />
+          <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
+            Loading products report...
+          </Typography>
+        </Box>
+      );
+    }
+
+    if ((!Array.isArray(products)) || (products.length === 0)) {
+      return <p>No products available.</p>;
+    }
+  }
 
   return (
     <Box

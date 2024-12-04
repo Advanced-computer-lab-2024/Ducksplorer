@@ -16,6 +16,7 @@ import {
   Tab,
   Button,
   Chip,
+  CircularProgress,
 } from "@mui/material";
 
 import MyChips from "../../Components/MyChips";
@@ -48,7 +49,7 @@ const BookingDetails = () => {
   const [loading, setLoading] = useState(true);
   const isGuest = localStorage.getItem("guest") === "true";
   const [tourGuideNames, setTourGuideNames] = useState({});
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const chipNames = [
     "All",
     "Activities",
@@ -137,7 +138,6 @@ const BookingDetails = () => {
   useEffect(() => {
     fetchBookings();
   }, []);
-  if (loading) return <p>Loading...</p>;
 
   const handleDeleteBooking = async (type, itemId, price, booking) => {
     try {
@@ -227,25 +227,41 @@ const BookingDetails = () => {
     }
   };
 
-  if (
-    !activityBookings.length &&
-    !itineraryBookings.length &&
-    !flightsBookings.length &&
-    !hotelsBookings.length &&
-    !transportationBookings.length
-  )
-    return <p>You have no bookings.</p>;
-
-  if (!Array.isArray(activityBookings) || !Array.isArray(itineraryBookings)) {
-    return <p>No booking details available.</p>;
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh", // Full screen height
+        }}
+      >
+        <CircularProgress size={60} thickness={4} />
+        <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
+          Loading bookings...
+        </Typography>
+      </Box>
+    );
   }
+
+  if (
+    activityBookings.length === 0 &&
+    itineraryBookings.length === 0 &&
+    flightsBookings.length === 0 &&
+    hotelsBookings.length === 0 &&
+    transportationBookings.length === 0
+  )
+    return <p>No booking details available.</p>;
 
   return (
     <Box
       sx={{
         height: "100vh",
-        backgroundColor: "#f9f9f9",
         paddingTop: "64px", // Adjust for navbar height
+        width: "90vw",
+        marginLeft: "5vw",
       }}
     >
       <TouristNavBar />
@@ -379,7 +395,7 @@ const BookingDetails = () => {
                           />
                         </TableCell>
                         <TableCell>
-                          <Tooltip title="Delete Activity">
+                          <Tooltip title="Cancel Booking">
                             <IconButton
                               color="error"
                               aria-label="delete category"
@@ -421,6 +437,9 @@ const BookingDetails = () => {
                 <Table>
                   <TableHead>
                     <TableRow>
+                      <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                        Name
+                      </TableCell>
                       <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
                         Activity Names
                       </TableCell>
@@ -471,6 +490,10 @@ const BookingDetails = () => {
                   <TableBody>
                     {itineraryBookings.map((itineraryBooking) => (
                       <TableRow key={itineraryBooking._id}>
+                        <TableCell>
+                          {itineraryBooking.itinerary?.name ||
+                            "Still doesn't have a name"}
+                        </TableCell>
                         <TableCell>
                           {itineraryBooking.itinerary &&
                           itineraryBooking.itinerary.activity
@@ -564,7 +587,7 @@ const BookingDetails = () => {
                             : "N/A"}
                         </TableCell>
                         <TableCell>
-                          <Tooltip title="Delete Itinerary">
+                          <Tooltip title="Cancel Booking">
                             <IconButton
                               color="error"
                               aria-label="delete category"
@@ -712,7 +735,7 @@ const BookingDetails = () => {
                         </TableCell>
 
                         <TableCell>
-                          <Tooltip title="Delete Flight">
+                          <Tooltip title="Cancel Booking">
                             <IconButton
                               color="error"
                               aria-label="delete category"
@@ -807,7 +830,7 @@ const BookingDetails = () => {
                         </TableCell>
                         {/* <TableCell><Rating value={hotel.rating} precision={0.1} readOnly /></TableCell> */}
                         <TableCell>
-                          <Tooltip title="Delete Hotel">
+                          <Tooltip title="Cancel Booking">
                             <IconButton
                               color="error"
                               aria-label="delete category"
@@ -925,7 +948,7 @@ const BookingDetails = () => {
                             {transportation.transportations.transferType}
                           </TableCell>
                           <TableCell>
-                            <Tooltip title="Delete Transportation">
+                            <Tooltip title="Cancel Booking">
                               <IconButton
                                 color="error"
                                 aria-label="delete Transportation"

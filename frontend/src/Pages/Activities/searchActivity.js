@@ -16,6 +16,7 @@ import {
   Paper,
   TextField,
   Rating,
+  IconButton,
   Container,
   Grid,
 } from "@mui/material";
@@ -28,6 +29,8 @@ import { Link, useParams } from "react-router-dom";
 // import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 
 const SearchActivities = () => {
   const { id } = useParams();
@@ -38,23 +41,32 @@ const SearchActivities = () => {
   const isGuest = localStorage.getItem("guest") === "true";
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
+  const [isSaved, setIsSaved] = useState(false);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const username = user?.username;
 
   // Fetch all activities when component mounts
   useEffect(() => {
-    const showPreferences = localStorage.getItem("showPreferences");
-    const favCategory = localStorage.getItem("category");
-    console.log(showPreferences, favCategory);
-    axios
-      .get("http://localhost:8000/activity/", {
-        params: {
-          showPreferences: showPreferences.toString(),
-          favCategory,
-        },
-      })
-      .then((response) => {
+    const fetchActivities = async () => {
+      const showPreferences = localStorage.getItem("showPreferences");
+      const favCategory = localStorage.getItem("category");
+      console.log(showPreferences, favCategory);
+      try {
+        const response = await axios.get("http://localhost:8000/activity/", {
+          params: {
+            showPreferences: showPreferences.toString(),
+            favCategory,
+          },
+        });
+        const data = response.data.map((activity) => ({
+          ...activity,
+          saved: activity.saved || { isSaved: false, user: null },
+        }));
         if (id === undefined) {
-          setAllActivities(response.data);
-          setActivities(response.data); // Set initial activities to all fetched activities
+          setAllActivities(data);
+          setActivities(data); // Set initial activities to all fetched activities
         } else {
           const tempActivities = response.data.filter(
             (activity) => activity._id === id
@@ -62,10 +74,11 @@ const SearchActivities = () => {
           setAllActivities(tempActivities);
           setActivities(tempActivities);
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("There was an error fetching the activities!", error);
-      });
+      }
+    };
+    fetchActivities();
   }, [id]);
 
   // Function to fetch activities based on search criteria
@@ -88,7 +101,7 @@ const SearchActivities = () => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
   };
-  // Share itinerary functionality
+  // Share activity functionality
   const handleShareLink = (activityId) => {
     const link = `${window.location.origin}/activity/searchActivities/${activityId}`; // Update with your actual route
     navigator.clipboard
@@ -110,6 +123,77 @@ const SearchActivities = () => {
     )}&body=${encodeURIComponent(body)}`;
   };
 
+  const handleSaveActivity = async (activityId, currentIsSaved) => {
+    try {
+      const newIsSaved = !currentIsSaved;
+
+      const response = await axios.put(
+        `http://localhost:8000/activity/save/${activityId}`,
+        {
+          username: username,
+          save: newIsSaved,
+        }
+      );
+      if (response.status === 200) {
+        message.success("Activity saved successfully");
+        setActivities((prevActivities) =>
+          prevActivities.map((activity) =>
+            activity._id === activityId
+              ? {
+                ...activity,
+                saved: { ...activity.saved, isSaved: newIsSaved },
+              }
+              : activity
+          )
+        );
+      } else {
+        message.error("Failed to save");
+      }
+      setIsSaved(isSaved);
+    } catch (error) {
+      console.error("Error toggling save state:", error);
+    }
+  };
+
+  const [saveStates, setSaveStates] = useState({});
+
+  useEffect(() => {
+    const fetchSaveStates = async () => {
+      const userJson = localStorage.getItem("user");
+      const user = JSON.parse(userJson);
+      const userName = user.username;
+
+      const newSaveStates = {};
+      await Promise.all(
+        activities.map(async (activity) => {
+          try {
+            const response = await axios.get(
+              `http://localhost:8000/activity/getSave/${activity._id}/${userName}`
+            );
+
+            console.log("hal heya saved: ", response.data);
+            console.log("what is the status ", response.status);
+
+            if (response.status === 200) {
+              newSaveStates[activity._id] = response.data.saved; // Save the state
+            }
+          } catch (error) {
+            console.error(
+              `Failed to fetch save state for ${activity._id}:`,
+              error
+            );
+          }
+        })
+      );
+
+      setSaveStates(newSaveStates); // Update state with all fetched save states
+    };
+
+    if (activities.length > 0) {
+      fetchSaveStates();
+    }
+  }, [activities]);
+
   return (
     <Box
       sx={{
@@ -119,11 +203,10 @@ const SearchActivities = () => {
       }}
     >
       <TouristNavBar />
-      <TouristSidebar />
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography variant="h4" fontWeight="700">
-            All Available Activities
+            Activities
           </Typography>
         </Box>
 
@@ -140,8 +223,9 @@ const SearchActivities = () => {
           <Button
             variant="solid"
             color="primary"
+            size="lg"
             onClick={fetchSearchedActivities}
-            sx={{ ml: 2 }}
+            sx={{ ml: 2, backgroundColor: "orange" }}
           >
             Search
           </Button>
@@ -151,8 +235,8 @@ const SearchActivities = () => {
           {Array.isArray(activities) && activities.length > 0 ? (
             activities.map((activity) =>
               activity.flag === false &&
-              activity.advertiserDeleted === false &&
-              activity.deletedActivity === false ? (
+                activity.advertiserDeleted === false &&
+                activity.deletedActivity === false ? (
                 <Grid item xs={12} sm={6} md={4} key={activity._id}>
                   <ActivityCard activity={activity} />
                 </Grid>
@@ -167,6 +251,26 @@ const SearchActivities = () => {
           )}
         </Grid>
       </Container>
+      {/* <TableCell>
+                        <span
+                          onClick={() =>
+                            handleSaveActivity(
+                              activity._id,
+                              activity.saved?.isSaved
+                            )
+                          }
+                        >
+                          {saveStates[activity._id] ? (
+                            <IconButton>
+                              <BookmarkIcon />
+                            </IconButton>
+                          ) : (
+                            <IconButton>
+                              <BookmarkBorderIcon />
+                            </IconButton>
+                          )}
+                        </span>  SAVED BY JAYDAA
+                      </TableCell> */}
       <Help />
     </Box>
   );

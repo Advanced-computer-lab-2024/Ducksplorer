@@ -4,26 +4,210 @@ import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import CardOverflow from "@mui/joy/CardOverflow";
 import Divider from "@mui/joy/Divider";
-import Typography from "@mui/joy/Typography";
 import IconButton from "@mui/joy/IconButton";
 import Chip from "@mui/joy/Chip";
 import Link from "@mui/joy/Link";
-import Add from "@mui/icons-material/Add";
+import BookmarksIcon from "@mui/icons-material/Bookmark";
 import StarIcon from "@mui/icons-material/Star";
 import Done from "@mui/icons-material/Done";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { Rating, Tooltip } from "@mui/material";
-import Button from "@mui/joy/Button";
 import axios from "axios";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import Select, { selectClasses } from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
+import Popover from "@mui/material/Popover";
+import Typography from "@mui/joy/Typography";
+import Button from "@mui/joy/Button";
+
+function ItineraryPopover({ anchorEl, handleClose, itineraryData }) {
+  const open = Boolean(anchorEl);
+
+  return (
+    <Popover
+      open={open}
+      anchorEl={anchorEl}
+      onClose={handleClose}
+      anchorReference="anchorPosition"
+      anchorPosition={{
+        top: window.innerHeight / 2,
+        left: window.innerWidth / 2,
+      }}
+      anchorOrigin={{
+        vertical: "center",
+        horizontal: "center",
+      }}
+      transformOrigin={{
+        vertical: "center",
+        horizontal: "center",
+      }}
+      PaperProps={{
+        sx: {
+          width: "50vw",
+          maxWidth: "80%",
+          backgroundColor: "#f5f5f5",
+          padding: "20px",
+          borderRadius: "12px",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+        },
+      }}
+    >
+      <div style={{ width: "100%" }}>
+        <Typography
+          variant="h5"
+          sx={{ marginBottom: "10px", fontWeight: "bold" }}
+        >
+          Itinerary Details
+        </Typography>
+
+        <p>
+          <strong>Itinerary Name:</strong>{" "}
+          {itineraryData.name || "Itinerary Name"}
+        </p>
+
+        {itineraryData.activity && itineraryData.activity.length > 0 ? (
+          itineraryData.activity.map((activity, index) => (
+            <div key={index} style={{ marginBottom: "10px" }}>
+              <p>
+                <strong>Activity Name:</strong> {activity.name}
+              </p>
+              <p>
+                <strong>Activity Price:</strong> {activity.price}
+              </p>
+            </div>
+          ))
+        ) : (
+          <p>No activities found.</p>
+        )}
+
+        <p>
+          <strong>Locations:</strong> {itineraryData.locations.join(", ")}
+        </p>
+        <p>
+          <strong>Timeline:</strong> {itineraryData.timeline}
+        </p>
+        <p>
+          <strong>Language:</strong> {itineraryData.language}
+        </p>
+        <p>
+          <strong>Price:</strong> {itineraryData.price}
+        </p>
+
+        <p>
+          <strong>Available Dates and Times:</strong>
+          {itineraryData.availableDatesAndTimes.length > 0
+            ? itineraryData.availableDatesAndTimes.map((dateTime, index) => {
+              const dateObj = new Date(dateTime);
+              const date = dateObj.toISOString().split("T")[0];
+              const time = dateObj.toTimeString().split(" ")[0];
+              return (
+                <div key={index}>
+                  Date {index + 1}: {date}
+                  <br />
+                  Time {index + 1}: {time}
+                </div>
+              );
+            })
+            : "No available dates and times"}
+        </p>
+
+        <p>
+          <strong>Accessibility:</strong> {itineraryData.accessibility}
+        </p>
+        <p>
+          <strong>Pick Up Location:</strong> {itineraryData.pickUpLocation}
+        </p>
+        <p>
+          <strong>Drop Off Location:</strong> {itineraryData.dropOffLocation}
+        </p>
+        <p>
+          <strong>Rating:</strong>{" "}
+          {itineraryData.activity.averageRating ||
+            itineraryData.activity.averageRating === 0
+            ? `${itineraryData.activity.averageRating}/5`
+            : `0/5`}
+        </p>
+
+        <p>
+          <strong>Tags:</strong>{" "}
+          {itineraryData.tags && itineraryData.tags.length > 0
+            ? itineraryData.tags.join(", ")
+            : "No tags available"}
+        </p>
+
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleClose}
+          sx={{
+            marginTop: "20px",
+            padding: "10px",
+            borderRadius: "8px",
+            fontWeight: "bold",
+            width: "100%",
+            textTransform: "none",
+          }}
+        >
+          Close
+        </Button>
+      </div>
+    </Popover>
+  );
+}
 
 export default function ItineraryCard({ itinerary = {} }) {
   const navigate = useNavigate();
   const [saved, setSaved] = React.useState(false);
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleBooking = async (itineraryId) => {
+    try {
+      const userJson = localStorage.getItem("user");
+      const isGuest = localStorage.getItem("guest") === "true";
+      if (isGuest) {
+        message.error("Can't book as a guest, Please login or sign up.");
+        navigate("/guestDashboard");
+        return;
+      }
+      if (!userJson) {
+        message.error("User is not logged in.");
+        return null;
+      }
+      const user = JSON.parse(userJson);
+      if (!user || !user.username) {
+        message.error("User information is missing.");
+        return null;
+      }
+      // const userName = user.username;
+      const type = "itinerary";
+
+      localStorage.setItem("itineraryId", itineraryId);
+      localStorage.setItem("type", type);
+
+      const response = await axios.get(
+        `http://localhost:8000/touristRoutes/viewDesiredItinerary/${itineraryId}`
+      );
+
+      if (response.status === 200) {
+        if (response.data.isUpcoming) {
+          navigate("/payment");
+        }
+        else {
+          message.error("You can't book an old itinerary");
+        }
+      } else {
+        message.error("Booking failed.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      message.error("An error occurred while booking.");
+    }
+  };
 
   const handleShareLink = (itineraryId) => {
     const link = `${window.location.origin}/viewAllTourist/${itineraryId}`; // Update with your actual route
@@ -50,15 +234,26 @@ export default function ItineraryCard({ itinerary = {} }) {
   const handleSaveClick = () => {
     setSaved(!saved);
   };
+
+  const handleOpenPopover = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClosePopover = () => {
+    setAnchorEl(null);
+  };
+
   const TheCard = () => {
     return (
       <div>
         <Card
+          className="itinerary-card"
           variant="outlined"
           sx={{
             width: "20vw",
             height: "400px",
           }}
+          onClick={handleOpenPopover}
         >
           <CardOverflow>
             <AspectRatio ratio="2">
@@ -68,17 +263,22 @@ export default function ItineraryCard({ itinerary = {} }) {
               <IconButton
                 size="md"
                 variant="solid"
-                color="primary"
+                color="black"
                 sx={{
                   position: "absolute",
                   zIndex: 2,
-                  borderRadius: "50%",
+                  borderRadius: "100%",
+                  height: "10px",
+                  width: "10px",
                   right: "1rem",
+                  fontSize: "3px",
                   bottom: 0,
                   transform: "translateY(50%)",
+                  size: "1px",
+                  backgroundColor: "#ff9933",
                 }}
               >
-                <Add />
+                <BookmarksIcon />
               </IconButton>
             </Tooltip>
 
@@ -86,21 +286,30 @@ export default function ItineraryCard({ itinerary = {} }) {
               size="md"
               variant={saved ? "soft" : "solid"}
               color={saved ? "neutral" : "primary"}
-              onClick={handleSaveClick}
+              onClick={(event) => {
+                event.stopPropagation();
+                handleSaveClick();
+              }}
+              onMouseEnter={(e) => (e.target.style.cursor = 'pointer')}
+              onMouseLeave={(e) => (e.target.style.cursor = 'default')}
               sx={{
                 position: "absolute",
                 zIndex: 2,
                 borderRadius: "50%",
                 right: "1rem",
                 bottom: 0,
+                height: "10px",
+                width: "10px",
+                fontSize: "3px",
                 transform: "translateY(50%)",
                 transition: "transform 0.3s",
+                backgroundColor: "#ff9933",
                 "&:active": {
                   transform: "translateY(50%) scale(0.9)",
                 },
               }}
             >
-              {saved ? <Done color="primary" /> : <Add />}
+              {saved ? <Done color="#ff9933" /> : <BookmarksIcon />}
             </IconButton>
           </CardOverflow>
           <div style={{ height: "10%" }}>
@@ -123,12 +332,12 @@ export default function ItineraryCard({ itinerary = {} }) {
                     marginRight: 20,
                   }}
                 >
-                  Itinerary Name
+                  {itinerary.name || "Itinerary Name"}
                 </h4>
 
                 <Rating
                   value={itinerary.rating}
-                  icon={<StarIcon sx={{ color: "orange" }} />}
+                  icon={<StarIcon sx={{ color: "ff9933" }} />}
                   emptyIcon={<StarOutlineIcon />}
                   readOnly
                   precision={0.5}
@@ -138,6 +347,7 @@ export default function ItineraryCard({ itinerary = {} }) {
                     display: "flex",
                     flexDirection: "row",
                     marginTop: "5px",
+                    flexWrap: "wrap",
                   }}
                 >
                   {itinerary.tags.map((tag, index) => (
@@ -146,7 +356,7 @@ export default function ItineraryCard({ itinerary = {} }) {
                       size="sm"
                       variant="outlined"
                       color="primary"
-                      sx={{ marginRight: 1 }}
+                      sx={{ marginRight: 1, marginBottom: 1 }}
                     >
                       {tag}
                     </Chip>
@@ -188,12 +398,25 @@ export default function ItineraryCard({ itinerary = {} }) {
               >
                 {itinerary.price}$
               </Typography>
-              <Button size="md" variant="solid" color="primary">
+              <Button
+                size="md"
+                variant="solid"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleBooking(itinerary._id);
+                }}
+                sx={{ backgroundColor: "#ff9933" }}
+              >
                 Book Now
               </Button>
             </div>
           </div>
         </Card>
+        <ItineraryPopover
+          anchorEl={anchorEl}
+          handleClose={handleClosePopover}
+          itineraryData={itinerary}
+        />
       </div>
     );
   };

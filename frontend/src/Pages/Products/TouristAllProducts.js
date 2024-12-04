@@ -124,7 +124,7 @@ const TouristAllProducts = () => {
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography variant="h4" fontWeight="700">
-            Available Products
+            Products
           </Typography>
         </Box>
 
@@ -199,9 +199,27 @@ const TouristAllProducts = () => {
                 textTransform: "capitalize",
                 marginLeft: "10px",
               }}
-              onClick={() => navigate("/myPurchases")}
+              onClick={() => navigate("/myCart")}
             >
-              My Purchases
+              View Cart
+            </Button>
+          )}
+        </Box>
+
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+          {!isGuest && (
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{
+                paddingX: 4,
+                fontWeight: 600,
+                textTransform: "capitalize",
+                marginLeft: "10px",
+              }}
+              onClick={() => navigate("/Wishlist")}
+            >
+              View Wishlist
             </Button>
           )}
         </Box>
@@ -212,7 +230,8 @@ const TouristAllProducts = () => {
               .filter((product) => product.isArchived !== true)
               .map((product) => (
                 <Grid item xs={12} sm={6} md={4} key={product._id}>
-                  <ProductCard product={product} />
+                  <ProductCard product={product} showRating={true}
+                    showAddToCart={true}/>
                 </Grid>
               ))
           ) : (

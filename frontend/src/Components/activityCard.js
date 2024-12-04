@@ -3,12 +3,13 @@ import AspectRatio from "@mui/joy/AspectRatio";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import CardOverflow from "@mui/joy/CardOverflow";
+import Popover from "@mui/material/Popover";
 import Divider from "@mui/joy/Divider";
 import Typography from "@mui/joy/Typography";
 import IconButton from "@mui/joy/IconButton";
 import Chip from "@mui/joy/Chip";
 import Link from "@mui/joy/Link";
-import Add from "@mui/icons-material/Add";
+import Add from "@mui/icons-material/Bookmark";
 import StarIcon from "@mui/icons-material/Star";
 import Done from "@mui/icons-material/Done";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
@@ -23,6 +24,117 @@ export default function ActivityCard({ activity = {} }) {
   const navigate = useNavigate();
   const [saved, setSaved] = React.useState(false);
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  function ActivityPopover({ anchorEl, handleClose, activityData }) {
+    const open = Boolean(anchorEl);
+
+    return (
+      <Popover
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorReference="anchorPosition"
+        anchorPosition={{
+          top: window.innerHeight / 2,
+          left: window.innerWidth / 2,
+        }}
+        anchorOrigin={{
+          vertical: "center",
+          horizontal: "center",
+        }}
+        transformOrigin={{
+          vertical: "center",
+          horizontal: "center",
+        }}
+        PaperProps={{
+          sx: {
+            width: "50vw",
+            maxWidth: "80%",
+            backgroundColor: "#f5f5f5",
+            padding: "20px",
+            borderRadius: "12px",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+          },
+        }}
+      >
+        <div style={{ width: "100%" }}>
+          <Typography
+            variant="h3"
+            sx={{
+              marginBottom: "10px",
+              fontWeight: "bold",
+              textAlign: "center",
+              fontSize: "40px",
+            }}
+          >
+            Activity Details
+          </Typography>
+
+          <p>
+            <strong>Activity Name:</strong>{" "}
+            {activityData.name || "Activity Name"}
+          </p>
+
+          <p>
+            <strong>isOpen:</strong> {JSON.stringify(activityData.isOpen)}
+          </p>
+          <p>
+            <strong>Advertiser:</strong> {activityData.advertiser}
+          </p>
+          <p>
+            <strong>Date:</strong> {activityData.date}
+          </p>
+
+          <p>
+            <strong>Location:</strong> {activityData.location}
+          </p>
+
+          <p>
+            <strong>Price:</strong> {activityData.price}
+          </p>
+          <p>
+            <strong>Category:</strong> {activityData.category}
+          </p>
+          <p>
+            <strong>Tags:</strong>{" "}
+            {activityData.tags && activityData.tags.length > 0
+              ? activityData.tags.join(", ")
+              : "No tags available"}
+          </p>
+          <p>
+            <strong>Duration:</strong> {activityData.duration}
+          </p>
+
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleClose}
+            sx={{
+              marginTop: "20px",
+              padding: "10px",
+              borderRadius: "8px",
+              fontWeight: "bold",
+              width: "100%",
+              textTransform: "none",
+            }}
+          >
+            Close
+          </Button>
+        </div>
+      </Popover>
+    );
+  }
+  const handleOpenPopover = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClosePopover = () => {
+    setAnchorEl(null);
+  };
 
   const handleBooking = async (activityId) => {
     try {
@@ -53,7 +165,12 @@ export default function ActivityCard({ activity = {} }) {
       );
 
       if (response.status === 200) {
-        navigate("/payment");
+        if (response.data.isUpcoming) {
+          navigate("/payment");
+        }
+        else {
+          message.error("You can't book an old activity");
+        }
       } else {
         message.error("Booking failed.");
       }
@@ -68,16 +185,19 @@ export default function ActivityCard({ activity = {} }) {
       `https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`
     );
   }, []);
-  const handleSaveClick = () => {
+  const handleSaveClick = (event) => {
+    event.stopPropagation();
     setSaved(!saved);
   };
   const TheCard = () => {
     return (
-      <div>
+      <div style={{ width: "100%" }}>
         <Card
+          onClick={handleOpenPopover}
+          className="activity-card"
           variant="outlined"
           sx={{
-            width: "20vw",
+            width: "100%",
             height: "400px",
           }}
         >
@@ -88,8 +208,9 @@ export default function ActivityCard({ activity = {} }) {
             <Tooltip title="Save Activity">
               <IconButton
                 size="md"
-                variant="solid"
-                color="primary"
+                variant={saved ? "soft" : "solid"}
+                color={saved ? "neutral" : "primary"}
+                onClick={handleSaveClick}
                 sx={{
                   position: "absolute",
                   zIndex: 2,
@@ -97,32 +218,16 @@ export default function ActivityCard({ activity = {} }) {
                   right: "1rem",
                   bottom: 0,
                   transform: "translateY(50%)",
+                  transition: "transform 0.3s",
+                  backgroundColor : "#ff9933",
+                  "&:active": {
+                    transform: "translateY(50%) scale(0.9)",
+                  },
                 }}
               >
-                <Add />
+                {saved ? <Done color="#ff9933" /> : <Add />}
               </IconButton>
             </Tooltip>
-
-            <IconButton
-              size="md"
-              variant={saved ? "soft" : "solid"}
-              color={saved ? "neutral" : "primary"}
-              onClick={handleSaveClick}
-              sx={{
-                position: "absolute",
-                zIndex: 2,
-                borderRadius: "50%",
-                right: "1rem",
-                bottom: 0,
-                transform: "translateY(50%)",
-                transition: "transform 0.3s",
-                "&:active": {
-                  transform: "translateY(50%) scale(0.9)",
-                },
-              }}
-            >
-              {saved ? <Done color="primary" /> : <Add />}
-            </IconButton>
           </CardOverflow>
           <div style={{ height: "10%" }}>
             <div
@@ -214,13 +319,24 @@ export default function ActivityCard({ activity = {} }) {
                 size="md"
                 variant="solid"
                 color="primary"
-                onClick={() => handleBooking(activity._id)}
+                zIndex={2}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleBooking(activity._id)
+                }}
+                sx={{ backgroundColor: "ff9933" }}
+
               >
                 Book Now
               </Button>
             </div>
           </div>
         </Card>
+        <ActivityPopover
+          anchorEl={anchorEl}
+          handleClose={handleClosePopover}
+          activityData={activity}
+        />
       </div>
     );
   };

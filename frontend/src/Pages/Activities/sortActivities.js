@@ -17,6 +17,7 @@ import {
   FormControl,
   Button,
   Rating,
+  IconButton,
 } from "@mui/material";
 import Select, { selectClasses } from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
@@ -26,6 +27,9 @@ import ActivityCard from "../../Components/activityCard";
 import { useNavigate } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+
 const SortActivities = () => {
   const navigate = useNavigate();
   const [activities, setActivities] = useState([]);
@@ -34,6 +38,12 @@ const SortActivities = () => {
 
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
+  const [isSaved, setIsSaved] = useState(false);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const username = user?.username;
+
   // Function to fetch sorted activities
   const fetchSortedActivities = () => {
     const showPreferences = localStorage.getItem("showPreferences");
@@ -57,6 +67,10 @@ const SortActivities = () => {
               return 0; // If both have the same category, retain their relative order
             }
           });
+          Activities = response.data.map((activity) => ({
+            ...activity,
+            saved: activity.saved || { isSaved: false, user: null },
+          }));
           setActivities(Activities);
         } else {
           setActivities(response.data);
@@ -117,27 +131,87 @@ const SortActivities = () => {
     }
   };
 
+  const handleSaveActivity = async (activityId, currentIsSaved) => {
+    try {
+      const newIsSaved = !currentIsSaved;
+
+      const response = await axios.put(
+        `http://localhost:8000/activity/save/${activityId}`,
+        {
+          username: username,
+          save: newIsSaved,
+        }
+      );
+      if (response.status === 200) {
+        message.success("Activity saved successfully");
+        setActivities((prevActivities) =>
+          prevActivities.map((activity) =>
+            activity._id === activityId
+              ? {
+                  ...activity,
+                  saved: { ...activity.saved, isSaved: newIsSaved },
+                }
+              : activity
+          )
+        );
+      } else {
+        message.error("Failed to save");
+      }
+      setIsSaved(isSaved);
+    } catch (error) {
+      console.error("Error toggling save state:", error);
+    }
+  };
+
+  const [saveStates, setSaveStates] = useState({});
+
+  useEffect(() => {
+    const fetchSaveStates = async () => {
+      const userJson = localStorage.getItem("user");
+      const user = JSON.parse(userJson);
+      const userName = user.username;
+
+      const newSaveStates = {};
+      await Promise.all(
+        activities.map(async (activity) => {
+          try {
+            const response = await axios.get(
+              `http://localhost:8000/activity/getSave/${activity._id}/${userName}`
+            );
+
+            console.log("hal heya saved: ", response.data);
+            console.log("what is the status ", response.status);
+
+            if (response.status === 200) {
+              newSaveStates[activity._id] = response.data.saved; // Save the state
+            }
+          } catch (error) {
+            console.error(
+              `Failed to fetch save state for ${activity._id}:`,
+              error
+            );
+          }
+        })
+      );
+
+      setSaveStates(newSaveStates); // Update state with all fetched save states
+    };
+
+    if (activities.length > 0) {
+      fetchSaveStates();
+    }
+  }, [activities]);
+
   return (
-    <>
-      {/* <h4
-        variant="h4"
-        className="oswald-Titles"
+    <div className="yassin fouda" style={{ width: "100%", marginTop: 20 }}>
+      <div
         style={{
-          textAlign: "center",
-          marginBottom: "40px",
-        }}
-      >
-        Upcoming Activities
-      </h4> */}
-      {/* Sorting Controls */}
-      <Box
-        sx={{
           display: "flex",
+          marginBottom: 15,
           justifyContent: "space-between",
-          mb: 3,
         }}
       >
-        <FormControl sx={{ minWidth: 150 }}>
+        <FormControl>
           <Select
             indicator={<KeyboardArrowDown />}
             placeholder="Sort By"
@@ -165,7 +239,7 @@ const SortActivities = () => {
           </Select>
         </FormControl>
 
-        <FormControl sx={{ minWidth: 150 }}>
+        <FormControl sx={{ minWidth: 100 }}>
           <Select
             labelId="order-label"
             placeholder="Order"
@@ -196,13 +270,14 @@ const SortActivities = () => {
         >
           Sort
         </Button>
-      </Box>
-      {/* Activity Table */}
+      </div>
+
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
+          gridTemplateColumns: "repeat(3, 1fr)",
           gap: "24px", // Adjust the gap between items as needed
+          width: "100%",
         }}
       >
         {activities.map((activity) =>
@@ -214,8 +289,29 @@ const SortActivities = () => {
             : null
         )}
       </div>
+
+      {/* <TableCell>
+                    <span
+                      onClick={() =>
+                        handleSaveActivity(
+                          activity._id,
+                          activity.saved?.isSaved
+                        )
+                      }
+                    >
+                      {saveStates[activity._id] ? (
+                        <IconButton>
+                          <BookmarkIcon />
+                        </IconButton>
+                      ) : (
+                        <IconButton>
+                          <BookmarkBorderIcon />
+                        </IconButton>
+                      )}
+                    </span>  SAVED BY JAYDAA
+                  </TableCell> */}
       <Help />
-    </>
+    </div>
   );
 };
 

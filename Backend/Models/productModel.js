@@ -1,6 +1,4 @@
 const { urlencoded } = require("body-parser");
-const Seller = require("../Models/sellerModel");
-const User = require("../Models/userModel");
 const mongoose = require("mongoose");
 
 

@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import { message } from "antd";
+import { Box, CircularProgress, Typography } from "@mui/material";
 
 export default function UploadFile({ onUpload }) {
   const [loading, setLoading] = useState(false);
@@ -118,9 +119,20 @@ export default function UploadFile({ onUpload }) {
       </div>
       <div>
         {loading ? (
-          <div className="flex items-center justify-center">
-            <img />{" "}
-          </div>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100vh", // Full screen height
+            }}
+          >
+            <CircularProgress size={60} thickness={4} />
+            <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
+              Loading image...
+            </Typography>
+          </Box>
         ) : (
           <UploadInput />
         )}

@@ -119,11 +119,15 @@ const itinerarySchema = new Schema(
       default: false,
       required: false,
     },
+    saved: {
+      user: { type: String, required: false, default: null },
+      isSaved: { type: Boolean, required: false, default: false },
+    },
     totalGain: {
       type: Number,
       required: false,
-      default:0
-    }
+      default: 0,
+    },
   },
   { timestamps: true }
 ); // Moved `timestamps` to schema options here

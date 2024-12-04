@@ -227,64 +227,59 @@ const sendConfirmation = async (req, res) => {
         "name activity date location price category tags duartion averageRating -_id"
       );
       break;
-    // case "Product":
-    //   booking = await Product.findOne({ _id: itemId }).select(
-    //     "name price -_id"
-    //   );
-    //   break;
-    // case "Hotel":
-    //   booking = hotel;
-    //   break;
-    // case "Flight":
-    //   booking = flight;
-    //   break;
-    // case "Transporation":
-    //   booking = transporation;
-    //   break;
     default:
       return res.status(400).json({ message: "Invalid booking type" });
   }
 
-  // Check if the booking was found
   if (!booking) {
     return res.status(404).json({ message: "Booking not found" });
   }
 
-  // Create an HTML table from the booking details
   const bookingDetails = `
-        <table style="width: 100%; border-collapse: collapse;">
+    <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; color: #333;">
+        <thead style="background-color: #f4f4f4; text-align: left;">
             <tr>
-                <th style="border: 1px solid #ddd; padding: 8px;">Key</th>
-                <th style="border: 1px solid #ddd; padding: 8px;">Value</th>
+                <th style="border: 1px solid #ddd; padding: 12px;">Key</th>
+                <th style="border: 1px solid #ddd; padding: 12px;">Value</th>
             </tr>
+        </thead>
+        <tbody>
             ${Object.entries(booking.toObject())
               .map(
                 ([key, value]) => `
                 <tr>
-                    <td style="border: 1px solid #ddd; padding: 8px;">${key}</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">${value}</td>
+                    <td style="border: 1px solid #ddd; padding: 10px; font-weight: bold; background-color: #fafafa;">${key}</td>
+                    <td style="border: 1px solid #ddd; padding: 10px; background-color: #fff;">${value}</td>
                 </tr>
             `
               )
               .join("")}
-        </table>
-    `;
+        </tbody>
+    </table>
+  `;
 
-  // Set up the email options with HTML content
   const mailOptions = {
     from: process.env.SMTP_USER,
     to: email,
     subject: "Booking Confirmation",
     html: `
-            <h1>Your booking is confirmed!</h1>
-            <p>Details:</p>
-            ${bookingDetails}
-        `,
+      <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+          <h1 style="text-align: center; color: #4CAF50;">Your Booking is Confirmed!</h1>
+          <p style="font-size: 16px; text-align: center; color: #666;">
+              Thank you for booking with us. Below are your booking details:
+          </p>
+          <div style="margin: 20px auto; max-width: 600px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden;">
+              ${bookingDetails}
+          </div>
+          <p style="text-align: center; margin-top: 20px; font-size: 14px; color: #999;">
+              If you have any questions, feel free to contact us at support@example.com.
+          </p>
+      </div>
+    `,
   };
 
-  // Send the email
   const transporter = nodemailer.createTransport({
-    service: "gmail", // Adjust this if using a different provider
+    service: "gmail",
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,

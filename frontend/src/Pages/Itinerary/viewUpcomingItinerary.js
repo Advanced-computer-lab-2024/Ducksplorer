@@ -32,6 +32,8 @@ import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon.js";
 import TouristNavBar from "../../Components/TouristNavBar.js";
 import ItineraryCard from "../../Components/itineraryCard.js";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 
 const ViewUpcomingItinerary = () => {
   const navigate = useNavigate();
@@ -62,6 +64,8 @@ const ViewUpcomingItinerary = () => {
   const [filterAnchorEl, setFilterAnchorEl] = useState(null);
 
   const [selectedFilters, setSelectedFilters] = useState([]);
+
+  const [isSaved, setIsSaved] = useState(false);
 
   //get all pref tags from table
   useEffect(() => {
@@ -178,24 +182,32 @@ const ViewUpcomingItinerary = () => {
 
   //get upcoming itineraries
   useEffect(() => {
-    const showPreferences = localStorage.getItem("showPreferences") || "false";
-    const user = JSON.parse(localStorage.getItem("user"));
-    const username = user?.username;
-    const role = user?.role;
-    axios
-      .get("http://localhost:8000/itinerary/upcoming", {
-        params: {
-          showPreferences: showPreferences.toString(),
-          username,
-          role,
-        },
-      })
-      .then((response) => {
-        setItineraries(response.data);
-      })
-      .catch((error) => {
+    const fetchItineraries = async () => {
+      const showPreferences = localStorage.getItem("showPreferences");
+      const user = JSON.parse(localStorage.getItem("user"));
+      const username = user?.username;
+      const role = user?.role;
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/itinerary/upcoming",
+          {
+            params: {
+              showPreferences: showPreferences.toString(),
+              username,
+              role,
+            },
+          }
+        );
+        const data = response.data.map((itinerary) => ({
+          ...itinerary,
+          saved: itinerary.saved || { isSaved: false, user: null },
+        }));
+        setItineraries(data);
+      } catch (error) {
         console.error("There was an error fetching the itineraries!", error);
-      });
+      }
+    };
+    fetchItineraries();
   }, []);
 
   //get itineraries based on the sorting criteria
@@ -247,6 +259,11 @@ const ViewUpcomingItinerary = () => {
     handleFilterClose();
   };
 
+  const handleActivityCurrencyChange = (rates, selectedCurrency) => {
+    setActivityExchangeRates(rates);
+    setActivityCurrency(selectedCurrency);
+  };
+
   const handleBooking = async (itineraryId) => {
     try {
       const userJson = localStorage.getItem("user");
@@ -285,14 +302,81 @@ const ViewUpcomingItinerary = () => {
       message.error("An error occurred while booking.");
     }
   };
-  const handleActivityCurrencyChange = (rates, selectedCurrency) => {
-    setActivityExchangeRates(rates);
-    setActivityCurrency(selectedCurrency);
+
+  const handleSaveItinerary = async (itineraryId, currentIsSaved) => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const username = user?.username;
+      const newIsSaved = !currentIsSaved;
+
+      const response = await axios.put(
+        `http://localhost:8000/itinerary/save/${itineraryId}`,
+        {
+          username: username,
+          save: newIsSaved,
+        }
+      );
+      if (response.status === 200) {
+        message.success("Itinerary saved successfully");
+        setItineraries((prevItineraries) =>
+          prevItineraries.map((itinerary) =>
+            itinerary._id === itineraryId
+              ? {
+                ...itinerary,
+                saved: { ...itinerary.saved, isSaved: newIsSaved },
+              }
+              : itinerary
+          )
+        );
+      } else {
+        message.error("Failed to save");
+      }
+      setIsSaved(isSaved);
+    } catch (error) {
+      console.error("Error toggling save state:", error);
+    }
   };
+
+  const [saveStates, setSaveStates] = useState({});
+
+  useEffect(() => {
+    const fetchSaveStates = async () => {
+      const userJson = localStorage.getItem("user");
+      const user = JSON.parse(userJson);
+      const userName = user.username;
+
+      // Loop through itineraries to fetch save states
+      const newSaveStates = {};
+      await Promise.all(
+        itineraries.map(async (itinerary) => {
+          try {
+            const response = await axios.get(
+              `http://localhost:8000/itinerary/getSave/${itinerary._id}/${userName}`
+            );
+
+            if (response.status === 200) {
+              newSaveStates[itinerary._id] = response.data.saved; // Save the state
+            }
+          } catch (error) {
+            console.error(
+              `Failed to fetch save state for ${itinerary._id}:`,
+              error
+            );
+          }
+        })
+      );
+
+      setSaveStates(newSaveStates); // Update state with all fetched save states
+    };
+
+    if (itineraries.length > 0) {
+      fetchSaveStates();
+    }
+  }, [itineraries]);
+
   return (
     <div>
       <TouristNavBar />
-      <TouristSidebar />
       <Box
         sx={{
           padding: "20px",
@@ -408,7 +492,7 @@ const ViewUpcomingItinerary = () => {
                 onClose={() => setAnchorEl(null)}
               >
                 <MenuItem>
-                  <Typography variant="subtitle1">Select Range:</Typography>
+                  <Typography variant="subtitle1">Select Range:</Typography> {" "}
                   <Slider
                     value={priceRange}
                     onChange={handlePriceRangeChange}
@@ -439,7 +523,7 @@ const ViewUpcomingItinerary = () => {
               Language
               <br />
               <FormControl sx={{ minWidth: 120, marginTop: 1 }}>
-                <InputLabel id="language-select-label"> Language </InputLabel>
+                <InputLabel id="language-select-label" sx={{ marginRight: 2 }}> Language </InputLabel>
                 <Select
                   labelId="language-select-label"
                   id="language-select"
@@ -499,9 +583,7 @@ const ViewUpcomingItinerary = () => {
               <Button onClick={handleFilter}>Apply Filters</Button>
             </MenuItem>
             <MenuItem>
-              <Button onClick={handleClearAllFilters}>
-                Clear All Filters
-              </Button>
+              <Button onClick={handleClearAllFilters}>Clear All Filters</Button>
             </MenuItem>
           </Menu>
         </Box>
@@ -517,9 +599,9 @@ const ViewUpcomingItinerary = () => {
           >
             {itineraries.map((itinerary) =>
               itinerary.flag === false &&
-              itinerary.isDeactivated === false &&
-              itinerary.tourGuideDeleted === false &&
-              itinerary.deletedItinerary === false ? (
+                itinerary.isDeactivated === false &&
+                itinerary.tourGuideDeleted === false &&
+                itinerary.deletedItinerary === false ? (
                 <ItineraryCard itinerary={itinerary} />
               ) : null
             )}
@@ -531,6 +613,22 @@ const ViewUpcomingItinerary = () => {
         )}
 
         <Help />
+
+        {/* <TableCell>
+                                          <span
+                                            onClick={() => handleSaveItinerary(itinerary._id, itinerary.saved?.isSaved)}
+                                          >
+                                            {saveStates[itinerary._id] ? (
+                                              <IconButton>
+                                                <BookmarkIcon />
+                                              </IconButton>
+                                            ) : (
+                                              <IconButton>
+                                                <BookmarkBorderIcon />
+                                              </IconButton>
+                                            )}
+                                          </span>
+                                        </TableCell> */}
       </Box>
     </div>
   );

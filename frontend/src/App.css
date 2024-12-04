@@ -2,24 +2,28 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-
   font-family: "Josefin Sans", sans-serif;
   font-family: "Manrope", sans-serif;
+
   font-family: "Overpass", sans-serif;
   font-family: "Poppins", sans-serif;
+
 }
 
 body {
+
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
+  background-color: #fff6e6 !important;
   height: 120vh;
-  background-color: "white";
+  background-color: #FEF4EA;
 }
 
 .app {
   max-width: 1024px;
+
 }
 
 /* Universal Classes */
@@ -61,8 +65,10 @@ body {
 
 .form-container {
   width: 100%;
-  max-width: 600px; /* Set a maximum width for the form */
-  overflow: auto; /* Hide overflow content */
+  max-width: 600px;
+  /* Set a maximum width for the form */
+  overflow: auto;
+  /* Hide overflow content */
   padding: 20px;
   box-sizing: border-box;
 }
@@ -101,6 +107,7 @@ body {
   .app {
     display: flex;
     align-items: center;
+
   }
 
   .text-container {
@@ -135,14 +142,15 @@ body {
 Menu {
   padding-bottom: 15px;
 }
-*/
 
+*/
 
 /* Reset CSS */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
 
   font-family: "Josefin Sans", sans-serif;
   font-family: "Manrope", sans-serif;
@@ -262,11 +270,30 @@ button[type="submit"]:hover {
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.5) !important;
 }
 
+.activity-card:hover {
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+.itinerary-card:hover {
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
 ::-webkit-file-upload-button {
   display: none;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+HR+Lijeva:wght@100..400&display=swap');
+
 @import url("https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+
+.duckTitle {
+  font-family: "Playwrite HR Lijeva", cursive;
+  font-size: 40px;
+  font-weight: 700;
+  font-style: normal;
+  text-align: left;
+}
 
 .oswald-Titles {
   font-family: "Barlow", sans-serif;
