@@ -30,7 +30,8 @@ import {
     Rating,
     Radio,
     RadioGroup,
-    FormControlLabel
+    FormControlLabel,
+    CircularProgress
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
@@ -62,6 +63,7 @@ const ItineraryReport = () => {
     useEffect(() => {
         console.log(userName);
         const fetchItineraries = async () => {
+            setLoading(true);
             try {
                 const response = await axios.get(
                     `http://localhost:8000/tourGuideAccount/report/${userName}`
@@ -71,6 +73,9 @@ const ItineraryReport = () => {
             } catch (error) {
                 console.error("There was an error fetching the itineraries!", error);
                 message.error("error in fetching");
+            }
+            finally {
+                setLoading(false);
             }
         };
         fetchItineraries();
@@ -195,6 +200,28 @@ const ItineraryReport = () => {
         setExchangeRates(rates);
         setCurrency(selectedCurrency);
     };
+
+    if ((!Array.isArray(itineraries)) || (itineraries.length === 0)) {
+        return <p>No itineraries available.</p>;
+    }
+    if (loading) {
+        return (
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100vh", // Full screen height
+                }}
+            >
+                <CircularProgress size={60} thickness={4} />
+                <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
+                    Loading tour guide report...
+                </Typography>
+            </Box>
+        );
+    }
 
     return (
         <>

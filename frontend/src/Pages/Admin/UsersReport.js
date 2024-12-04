@@ -29,7 +29,8 @@ import {
     Rating,
     Radio,
     RadioGroup,
-    FormControlLabel
+    FormControlLabel,
+    CircularProgress
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { useInternalMessage } from "antd/es/message/useMessage.js";
@@ -53,6 +54,7 @@ const ActivityReport = () => {
     // Handle fetching activities by userName ID
     useEffect(() => {
         const fetchUsers = async () => {
+            setLoading(true)
             try {
                 const response = await axios.get(
                     `http://localhost:8000/admin/getAllUsersWithEmails`
@@ -62,6 +64,9 @@ const ActivityReport = () => {
             } catch (error) {
                 console.error("There was an error fetching user details!", error);
                 message.error("error in fetching");
+            }
+            finally {
+                setLoading(false);
             }
         };
         fetchUsers();
@@ -130,6 +135,28 @@ const ActivityReport = () => {
     const changeMonth = (newMonth) => {
         setMonth(newMonth);
         setFiltersApplied(true);
+    }
+
+    if ((!Array.isArray(users)) || (users.length === 0)) {
+        return <p>No users available.</p>;
+    }
+    if (loading) {
+        return (
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100vh", // Full screen height
+                }}
+            >
+                <CircularProgress size={60} thickness={4} />
+                <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
+                    Loading users report...
+                </Typography>
+            </Box>
+        );
     }
 
     return (

@@ -29,7 +29,8 @@ import {
     Rating,
     Radio,
     RadioGroup,
-    FormControlLabel
+    FormControlLabel,
+    CircularProgress
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
@@ -57,6 +58,7 @@ const ActivityReport = () => {
     useEffect(() => {
         console.log(userName);
         const fetchActivities = async () => {
+            setLoading(true);
             try {
                 const response = await axios.get(
                     `http://localhost:8000/advertiserAccount/report/${userName}`
@@ -67,6 +69,9 @@ const ActivityReport = () => {
             } catch (error) {
                 console.error("There was an error fetching the activities!", error);
                 message.error("error in fetching");
+            }
+            finally {
+                setLoading(false);
             }
         };
         fetchActivities();
@@ -190,7 +195,28 @@ const ActivityReport = () => {
         setFiltersApplied(true);
     }
 
-
+    if (loading) {
+        return (
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100vh", // Full screen height
+                }}
+            >
+                <CircularProgress size={60} thickness={4} />
+                <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
+                    Loading advertiser report...
+                </Typography>
+            </Box>
+        );
+    }
+    
+    if ((!Array.isArray(activities)) || (activities.length === 0)) {
+        return <p>No activities available.</p>;
+    }
 
     return (
         <>

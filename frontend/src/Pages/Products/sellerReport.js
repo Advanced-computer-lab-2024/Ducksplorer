@@ -29,7 +29,8 @@ import {
   Rating,
   Radio,
   RadioGroup,
-  FormControlLabel
+  FormControlLabel,
+  CircularProgress
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
@@ -56,6 +57,7 @@ const MyPurchases = () => {
     console.log(userName);
     const fetchProducts = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(
           `http://localhost:8000/sellerRoutes/report/${userName}`
         );
@@ -64,6 +66,9 @@ const MyPurchases = () => {
       } catch (error) {
         console.error("There was an error fetching the products!", error);
         message.error("error in fetching");
+      }
+      finally {
+        setLoading(false);
       }
     };
     fetchProducts();
@@ -186,6 +191,28 @@ const MyPurchases = () => {
     return ratingEntry ? ratingEntry.rating : "No rating available";
   };
 
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh", // Full screen height
+        }}
+      >
+        <CircularProgress size={60} thickness={4} />
+        <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
+          Loading seller report...
+        </Typography>
+      </Box>
+    );
+  }
+
+  if ((!Array.isArray(products)) || (products.length === 0)) {
+    return <p>No products available.</p>;
+  }
 
   return (
     <>

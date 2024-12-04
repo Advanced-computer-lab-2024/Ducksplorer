@@ -69,6 +69,7 @@ function ForgetPassword() {
     navigate("/"); // Navigate to the homepage
   };
 
+  
   return (
     <div style={styles.container}>
       <div style={styles.overlay}></div>

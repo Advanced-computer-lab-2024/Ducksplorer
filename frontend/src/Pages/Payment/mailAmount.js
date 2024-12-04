@@ -6,9 +6,10 @@ import React from "react";
 import { Card, Typography, Space, message, Select, Form, Button } from "antd";
 import Help from "../../Components/HelpIcon.js";
 import TouristNavBar from "../../Components/TouristNavBar.js";
+import { CircularProgress, Box } from "@mui/material";
+
 const { Title } = Typography;
 const { Option } = Select;
-
 function PaymentPage() {
   const flight = localStorage.getItem("flight");
   const hotel = localStorage.getItem("hotel");
@@ -43,6 +44,8 @@ function PaymentPage() {
 
   const [selectedAddress, setSelectedAddress] = useState("");
   const [addresses, setAddresses] = useState([]);
+
+  const [loading, setLoading] = useState(false);
 
   const handleAddressSelect = (addressIndex) => {
     setSelectedAddress(addressIndex); // Update the selected address index
@@ -82,6 +85,7 @@ function PaymentPage() {
     localStorage.setItem("price", finalPrice);
 
     try {
+      setLoading(true);
       const response = await fetch("http://localhost:8000/payment/pay", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -105,6 +109,9 @@ function PaymentPage() {
     } catch (error) {
       console.error("Payment initiation failed:", error);
       message.error("Error initiating payment. Please try again.");
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -135,6 +142,7 @@ function PaymentPage() {
     e.preventDefault();
 
     try {
+      setLoading(true);
       const response = await fetch(
         `http://localhost:8000/touristRoutes/payWallet/${userName}`,
         {
@@ -190,6 +198,9 @@ function PaymentPage() {
       console.error("Payment initiation failed:", error);
       message.error("Error creating payment. Not enough money in the wallet.");
     }
+    finally {
+      setLoading(false);
+    }
   };
 
   const handleDisplayBooked = async () => {
@@ -221,6 +232,7 @@ function PaymentPage() {
       let response;
 
       if (itineraryOrActivity === "itinerary" && itineraryId) {
+        setLoading(true);
         response = await axios.get(
           `http://localhost:8000/touristRoutes/viewDesiredItinerary/${itineraryId}`
         );
@@ -233,6 +245,7 @@ function PaymentPage() {
           message.error("Failed to retrieve itinerary details.");
         }
       } else if (itineraryOrActivity === "activity" && activityId) {
+        setLoading(true);
         console.log("Fetching activity data for ID:", activityId); // Debugging
         response = await axios.get(
           `http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}`
@@ -247,6 +260,7 @@ function PaymentPage() {
           message.error("Failed to retrieve activity details.");
         }
       } else if (itineraryOrActivity === "flight") {
+        setLoading(true);
         //setFlight(flight);
         setPrice(flightsData.price);
         setFinalPrice(flightsData.price);
@@ -254,14 +268,17 @@ function PaymentPage() {
         console.log("FlightData fetched:", flightsData); // Debugging
         console.log("flight price", flightsData.price);
       } else if (itineraryOrActivity === "hotel" && hotel) {
+        setLoading(true);
         //setHotel(hotel);
         setPrice(hotelsData.price);
         setFinalPrice(hotelsData.price);
       } else if (itineraryOrActivity === "transportation" && transportation) {
+        setLoading(true);
         // setTransportation(transportation);
         setPrice(transportationsData.price);
         setFinalPrice(transportationsData.price);
       } else if (itineraryOrActivity === "product" && cartId) {
+        setLoading(true);
         console.log("Fetching activity data for ID:", cartId); // Debugging
         const response = await axios.get(
           `http://localhost:8000/touristRoutes/myCart/${userName}`
@@ -283,6 +300,9 @@ function PaymentPage() {
     } catch (error) {
       console.error("Error:", error);
       message.error("An error occurred while retrieving the booking.");
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -347,6 +367,33 @@ function PaymentPage() {
     }
   };
 
+  //itineraryData, activityData, transportationsData, flightsData, hotelsData, cartData
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh", // Full screen height
+        }}
+      >
+        <CircularProgress size={60} thickness={4} />
+        <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
+          {itineraryData ? "Loading itinerary details" : activityData ? "Loading activity details" : cartData ? "Loading cart details"
+            : transportationsData ? "Loading transportation details" : flightsData ? "Loading flight details" : "Loading hotel details"}
+        </Typography>
+      </Box>
+    );
+  }
+  if ((!Array.isArray(itineraryData)) || (itineraryData.length === 0) || (!Array.isArray(activityData)) || (activityData.length === 0)
+    || (!Array.isArray(transportationsData)) || (transportationsData.length === 0) || (!Array.isArray(flightsData)) || (flightsData.length === 0)
+    || (!Array.isArray(hotelsData)) || (hotelsData.length === 0) || (!Array.isArray(cartData)) || (cartData.length === 0)) {
+    return <p>No users available.</p>;
+  }
+
   return (
     <div
       style={{
@@ -370,11 +417,11 @@ function PaymentPage() {
       >
         <div>
           {itineraryData ||
-          activityData ||
-          (flightsData && type === "flight") ||
-          (hotelsData && type === "hotel") ||
-          (transportationsData && type === "transportation") ||
-          (cartData && type === "product") ? (
+            activityData ||
+            (flightsData && type === "flight") ||
+            (hotelsData && type === "hotel") ||
+            (transportationsData && type === "transportation") ||
+            (cartData && type === "product") ? (
             type === "itinerary" ? (
               <div>
                 <Card
@@ -396,7 +443,7 @@ function PaymentPage() {
                     </p>
                     {/* Looping through the activities */}
                     {itineraryData.activity &&
-                    itineraryData.activity.length > 0 ? (
+                      itineraryData.activity.length > 0 ? (
                       itineraryData.activity.map((activity, index) => (
                         <div key={index}>
                           <p>
@@ -427,19 +474,19 @@ function PaymentPage() {
                       <strong>Available Dates and Times:</strong>{" "}
                       {itineraryData.availableDatesAndTimes.length > 0
                         ? itineraryData.availableDatesAndTimes.map(
-                            (dateTime, index) => {
-                              const dateObj = new Date(dateTime);
-                              const date = dateObj.toISOString().split("T")[0];
-                              const time = dateObj.toTimeString().split(" ")[0];
-                              return (
-                                <div key={index}>
-                                  Date {index + 1}: {date}
-                                  <br />
-                                  Time {index + 1}: {time}
-                                </div>
-                              );
-                            }
-                          )
+                          (dateTime, index) => {
+                            const dateObj = new Date(dateTime);
+                            const date = dateObj.toISOString().split("T")[0];
+                            const time = dateObj.toTimeString().split(" ")[0];
+                            return (
+                              <div key={index}>
+                                Date {index + 1}: {date}
+                                <br />
+                                Time {index + 1}: {time}
+                              </div>
+                            );
+                          }
+                        )
                         : "No available dates and times"}
                     </p>
                     <p>
@@ -457,7 +504,7 @@ function PaymentPage() {
                     <p>
                       <strong>Rating:</strong>{" "}
                       {itineraryData.activity.averageRating ||
-                      itineraryData.activity.averageRating === 0
+                        itineraryData.activity.averageRating === 0
                         ? `${itineraryData.activity.averageRating}/5`
                         : `0/5`}
                     </p>
@@ -609,15 +656,15 @@ function PaymentPage() {
                       <strong>Date and Time:</strong>{" "}
                       {activityData.date
                         ? (() => {
-                            const dateObj = new Date(activityData.date);
-                            const date = dateObj.toISOString().split("T")[0];
-                            const time = dateObj.toTimeString().split(" ")[0];
-                            return (
-                              <div>
-                                {date} at {time}
-                              </div>
-                            );
-                          })()
+                          const dateObj = new Date(activityData.date);
+                          const date = dateObj.toISOString().split("T")[0];
+                          const time = dateObj.toTimeString().split(" ")[0];
+                          return (
+                            <div>
+                              {date} at {time}
+                            </div>
+                          );
+                        })()
                         : "No available date and time"}
                     </p>
                     <p>
@@ -629,9 +676,9 @@ function PaymentPage() {
                     <p>
                       <strong>Ratings:</strong>
                       {activityData &&
-                      activityData.activity &&
-                      (activityData.activity.averageRating ||
-                        activityData.activity.averageRating === 0)
+                        activityData.activity &&
+                        (activityData.activity.averageRating ||
+                          activityData.activity.averageRating === 0)
                         ? `${activityData.activity.averageRating}/5`
                         : `0/5`}
                     </p>
@@ -994,8 +1041,8 @@ function PaymentPage() {
                       <strong>Order Details:</strong>{" "}
                     </p>
                     {cartData &&
-                    cartData.products &&
-                    cartData.products.length > 0 ? (
+                      cartData.products &&
+                      cartData.products.length > 0 ? (
                       cartData.products.map((product, index) => (
                         <div key={index} style={{ marginBottom: "10px" }}>
                           <p>
