@@ -7,18 +7,11 @@ import {
   Stack,
   Typography,
   Box,
-  TableContainer,
   Menu,
   MenuItem,
   Checkbox,
   Slider,
   Select,
-  Paper,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
   IconButton,
   FormControl,
   InputLabel,
@@ -296,9 +289,9 @@ function SearchItineraries() {
           prevItineraries.map((itinerary) =>
             itinerary._id === itineraryId
               ? {
-                  ...itinerary,
-                  saved: { ...itinerary.saved, isSaved: newIsSaved },
-                }
+                ...itinerary,
+                saved: { ...itinerary.saved, isSaved: newIsSaved },
+              }
               : itinerary
           )
         );
@@ -450,6 +443,7 @@ function SearchItineraries() {
               <Checkbox
                 checked={isFilterSelected("language")}
                 onChange={() => handleFilterToggle("language")}
+                paddingRight="40%"
               />
               Language
               <br />
@@ -531,9 +525,9 @@ function SearchItineraries() {
             {
               itineraries.map((itinerary) =>
                 itinerary.flag === false &&
-                itinerary.isDeactivated === false &&
-                itinerary.tourGuideDeleted === false &&
-                itinerary.deletedItinerary === false ? (
+                  itinerary.isDeactivated === false &&
+                  itinerary.tourGuideDeleted === false &&
+                  itinerary.deletedItinerary === false ? (
                   <ItineraryCard itinerary={itinerary} />
                 ) : null
               ) // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists

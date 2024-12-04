@@ -140,9 +140,9 @@ const SearchActivities = () => {
           prevActivities.map((activity) =>
             activity._id === activityId
               ? {
-                  ...activity,
-                  saved: { ...activity.saved, isSaved: newIsSaved },
-                }
+                ...activity,
+                saved: { ...activity.saved, isSaved: newIsSaved },
+              }
               : activity
           )
         );
@@ -203,7 +203,6 @@ const SearchActivities = () => {
       }}
     >
       <TouristNavBar />
-      <TouristSidebar />
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography variant="h4" fontWeight="700">
@@ -226,7 +225,7 @@ const SearchActivities = () => {
             color="primary"
             size="lg"
             onClick={fetchSearchedActivities}
-            sx={{ ml: 2 }}
+            sx={{ ml: 2, backgroundColor: "orange" }}
           >
             Search
           </Button>
@@ -236,8 +235,8 @@ const SearchActivities = () => {
           {Array.isArray(activities) && activities.length > 0 ? (
             activities.map((activity) =>
               activity.flag === false &&
-              activity.advertiserDeleted === false &&
-              activity.deletedActivity === false ? (
+                activity.advertiserDeleted === false &&
+                activity.deletedActivity === false ? (
                 <Grid item xs={12} sm={6} md={4} key={activity._id}>
                   <ActivityCard activity={activity} />
                 </Grid>

@@ -75,7 +75,7 @@ const TouristSidebar = () => {
           width: isSidebarOpen ? 300 : 76,
           boxSizing: "border-box",
           overflowX: "hidden", // Prevent horizontal scrolling
-          background: "#bce4e4", // Gradient background
+          //background: "#ff9933", // Gradient background
           color: "#ffffff", // White text for contrast
         },
       }}
@@ -96,7 +96,7 @@ const TouristSidebar = () => {
           }}
         >
           <ListItemIcon>
-            <DeleteIcon sx={{ color: "error.main" }} />
+            <DeleteIcon sx={{color :"#ff9933" }} />
           </ListItemIcon>
           {isSidebarOpen && <ListItemText primary="Delete My Account" />}
         </ListItem>
@@ -111,10 +111,11 @@ const TouristSidebar = () => {
             },
             borderRadius: 1, // Slightly round edges for better aesthetics
             margin: "4px 0", // Add some spacing between list items
+            color :"black"
           }}
         >
           <ListItemIcon>
-            <PersonIcon sx={{ color: "primary.main" }} />{" "}
+            <PersonIcon sx={{color :"#ff9933" }} />{" "}
             {/* Styled with theme color */}
           </ListItemIcon>
           {isSidebarOpen && <ListItemText primary="Profile" />}
@@ -131,10 +132,11 @@ const TouristSidebar = () => {
             borderRadius: 1, // Rounded corners for better aesthetics
             margin: "4px 0", // Add spacing between items
             padding: "8px 16px", // Better padding for touch interaction
+             color :"black"
           }}
         >
           <ListItemIcon>
-            <EventNoteIcon sx={{ color: "primary.main" }} />{" "}
+            <EventNoteIcon sx={{  color :"#ff9933"}} />{" "}
             {/* Theme-based color */}
           </ListItemIcon>
           {isSidebarOpen && <ListItemText primary="View All Itineraries" />}
@@ -151,10 +153,11 @@ const TouristSidebar = () => {
             borderRadius: 1, // Rounded corners
             margin: "4px 0", // Add spacing between items
             padding: "8px 16px", // Improve touch-friendly interaction
+             color :"black"
           }}
         >
           <ListItemIcon>
-            <MuseumIcon sx={{ color: "warning.main" }} />{" "}
+            <MuseumIcon sx={{ color :"#ff9933" }} />{" "}
             {/* Use warning color for variety */}
           </ListItemIcon>
           {isSidebarOpen && <ListItemText primary="View Historical Places" />}
@@ -170,10 +173,11 @@ const TouristSidebar = () => {
             borderRadius: 1, // Rounded corners
             margin: "4px 0", // Add spacing between items
             padding: "8px 16px", // Better padding for touch interaction
+             color :"black"
           }}
         >
           <ListItemIcon>
-            <MuseumIcon sx={{ color: "info.main" }} />{" "}
+            <MuseumIcon sx={{ color :"#ff9933" }} />{" "}
             {/* Info color for icon */}
           </ListItemIcon>
           {isSidebarOpen && <ListItemText primary="View Museums" />}
@@ -190,10 +194,11 @@ const TouristSidebar = () => {
             borderRadius: 1, // Rounded corners
             margin: "4px 0", // Add spacing between items
             padding: "8px 16px", // Better padding for touch interaction
+             color :"black"
           }}
         >
           <ListItemIcon>
-            <EventAvailableIcon sx={{ color: "success.main" }} />{" "}
+            <EventAvailableIcon sx={{ color :"#ff9933" }} />{" "}
             {/* Green color for upcoming events */}
           </ListItemIcon>
           {isSidebarOpen && <ListItemText primary="View Upcoming Museums" />}
@@ -210,10 +215,11 @@ const TouristSidebar = () => {
             borderRadius: 1, // Smooth rounded corners
             margin: "4px 0", // Add spacing between items
             padding: "8px 16px", // Improve padding for touch interaction
+             color :"black"
           }}
         >
           <ListItemIcon>
-            <EventAvailableIcon sx={{ color: "info.main" }} />{" "}
+            <EventAvailableIcon sx={{ color :"#ff9933" }} />{" "}
             {/* Blue color for upcoming historical events */}
           </ListItemIcon>
           {isSidebarOpen && (
@@ -232,10 +238,11 @@ const TouristSidebar = () => {
             borderRadius: 1, // Smooth rounded corners
             margin: "4px 0", // Spacing between items
             padding: "8px 16px", // Improved padding for touch-friendly interaction
+             color :"black"
           }}
         >
           <ListItemIcon>
-            <DirectionsRunIcon sx={{ color: "success.main" }} />{" "}
+            <DirectionsRunIcon sx={{ color :"#ff9933" }} />{" "}
             {/* Green for activities */}
           </ListItemIcon>
           {isSidebarOpen && <ListItemText primary="View All Activities" />}
@@ -251,11 +258,12 @@ const TouristSidebar = () => {
             },
             borderRadius: 1, // Rounded corners for a cleaner look
             margin: "4px 0", // Add spacing between items
-            padding: "8px 16px", // Better padding for user interaction
+            padding: "8px 16px",
+            color :"black"// Better padding for user interaction
           }}
         >
           <ListItemIcon>
-            <BookIcon sx={{ color: "secondary.main" }} />{" "}
+            <BookIcon sx={{ color :"#ff9933" }} />{" "}
             {/* Use secondary color for bookings */}
           </ListItemIcon>
           {isSidebarOpen && <ListItemText primary="My Past Bookings" />}
@@ -267,15 +275,17 @@ const TouristSidebar = () => {
           to="/myComplaints"
           sx={{
             "&:hover": {
-              backgroundColor: "#f9f9f9", // Subtle hover effect
+              backgroundColor: "#f9f9f9",
+               // Subtle hover effect
             },
             borderRadius: 1, // Rounded corners for better appearance
             margin: "4px 0", // Add spacing between items
-            padding: "8px 16px", // Improved padding for user interaction
+            padding: "8px 16px",
+            color :"black"// Improved padding for user interaction
           }}
         >
           <ListItemIcon>
-            <ReportIcon sx={{ color: "error.main" }} />{" "}
+            <ReportIcon sx={{ color :"#ff9933" }} />{" "}
             {/* Red color to indicate complaints */}
           </ListItemIcon>
           {isSidebarOpen && <ListItemText primary="My Complaints" />}

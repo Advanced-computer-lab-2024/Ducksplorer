@@ -377,7 +377,6 @@ const ViewUpcomingItinerary = () => {
   return (
     <div>
       <TouristNavBar />
-      <TouristSidebar />
       <Box
         sx={{
           padding: "20px",

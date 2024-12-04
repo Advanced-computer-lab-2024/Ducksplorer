@@ -115,9 +115,9 @@ const UpcomingActivities = () => {
           prevActivities.map((activity) =>
             activity._id === activityId
               ? {
-                  ...activity,
-                  saved: { ...activity.saved, isSaved: newIsSaved },
-                }
+                ...activity,
+                saved: { ...activity.saved, isSaved: newIsSaved },
+              }
               : activity
           )
         );
@@ -218,23 +218,23 @@ const UpcomingActivities = () => {
                   <TableCell>
                     {activity.date.length > 0
                       ? activity.date.map((dateTime, index) => {
-                          const dateObj = new Date(dateTime);
-                          const date = dateObj.toISOString().split("T")[0];
-                          const time = dateObj.toTimeString().split(" ")[0];
-                          return (
-                            <div key={index}>
-                              Date {index + 1}: {date}
-                              <br />
-                              Time {index + 1}: {time}
-                            </div>
-                          );
-                        })
+                        const dateObj = new Date(dateTime);
+                        const date = dateObj.toISOString().split("T")[0];
+                        const time = dateObj.toTimeString().split(" ")[0];
+                        return (
+                          <div key={index}>
+                            Date {index + 1}: {date}
+                            <br />
+                            Time {index + 1}: {time}
+                          </div>
+                        );
+                      })
                       : "No available dates and times"}
                   </TableCell>
                   <TableCell>{activity.duration}</TableCell>
                   <TableCell>{activity.location}</TableCell>
                   <TableCell>
-                    <Button onClick={() => handleBooking(activity._id)}>
+                    <Button onClick={() => handleBooking(activity._id)} >
                       Book Now
                     </Button>
                   </TableCell>

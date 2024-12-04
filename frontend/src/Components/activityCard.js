@@ -9,7 +9,7 @@ import Typography from "@mui/joy/Typography";
 import IconButton from "@mui/joy/IconButton";
 import Chip from "@mui/joy/Chip";
 import Link from "@mui/joy/Link";
-import Add from "@mui/icons-material/Add";
+import Add from "@mui/icons-material/Bookmark";
 import StarIcon from "@mui/icons-material/Star";
 import Done from "@mui/icons-material/Done";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
@@ -219,12 +219,13 @@ export default function ActivityCard({ activity = {} }) {
                   bottom: 0,
                   transform: "translateY(50%)",
                   transition: "transform 0.3s",
+                  backgroundColor : "#ff9933",
                   "&:active": {
                     transform: "translateY(50%) scale(0.9)",
                   },
                 }}
               >
-                {saved ? <Done color="primary" /> : <Add />}
+                {saved ? <Done color="#ff9933" /> : <Add />}
               </IconButton>
             </Tooltip>
           </CardOverflow>
@@ -321,8 +322,10 @@ export default function ActivityCard({ activity = {} }) {
                 zIndex={2}
                 onClick={(event) => {
                   event.stopPropagation();
-                  handleBooking(activity._id);
+                  handleBooking(activity._id)
                 }}
+                sx={{ backgroundColor: "ff9933" }}
+
               >
                 Book Now
               </Button>

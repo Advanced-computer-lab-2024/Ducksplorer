@@ -7,7 +7,7 @@ import Divider from "@mui/joy/Divider";
 import IconButton from "@mui/joy/IconButton";
 import Chip from "@mui/joy/Chip";
 import Link from "@mui/joy/Link";
-import Add from "@mui/icons-material/Add";
+import BookmarksIcon from "@mui/icons-material/Bookmark";
 import StarIcon from "@mui/icons-material/Star";
 import Done from "@mui/icons-material/Done";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
@@ -263,17 +263,22 @@ export default function ItineraryCard({ itinerary = {} }) {
               <IconButton
                 size="md"
                 variant="solid"
-                color="primary"
+                color="black"
                 sx={{
                   position: "absolute",
                   zIndex: 2,
-                  borderRadius: "50%",
+                  borderRadius: "100%",
+                  height: "10px",
+                  width: "10px",
                   right: "1rem",
+                  fontSize: "3px",
                   bottom: 0,
                   transform: "translateY(50%)",
+                  size: "1px",
+                  backgroundColor: "#ff9933",
                 }}
               >
-                <Add />
+                <BookmarksIcon />
               </IconButton>
             </Tooltip>
 
@@ -285,20 +290,26 @@ export default function ItineraryCard({ itinerary = {} }) {
                 event.stopPropagation();
                 handleSaveClick();
               }}
+              onMouseEnter={(e) => (e.target.style.cursor = 'pointer')}
+              onMouseLeave={(e) => (e.target.style.cursor = 'default')}
               sx={{
                 position: "absolute",
                 zIndex: 2,
                 borderRadius: "50%",
                 right: "1rem",
                 bottom: 0,
+                height: "10px",
+                width: "10px",
+                fontSize: "3px",
                 transform: "translateY(50%)",
                 transition: "transform 0.3s",
+                backgroundColor: "#ff9933",
                 "&:active": {
                   transform: "translateY(50%) scale(0.9)",
                 },
               }}
             >
-              {saved ? <Done color="primary" /> : <Add />}
+              {saved ? <Done color="#ff9933" /> : <BookmarksIcon />}
             </IconButton>
           </CardOverflow>
           <div style={{ height: "10%" }}>
@@ -326,7 +337,7 @@ export default function ItineraryCard({ itinerary = {} }) {
 
                 <Rating
                   value={itinerary.rating}
-                  icon={<StarIcon sx={{ color: "orange" }} />}
+                  icon={<StarIcon sx={{ color: "ff9933" }} />}
                   emptyIcon={<StarOutlineIcon />}
                   readOnly
                   precision={0.5}
@@ -390,11 +401,11 @@ export default function ItineraryCard({ itinerary = {} }) {
               <Button
                 size="md"
                 variant="solid"
-                color="primary"
                 onClick={(event) => {
                   event.stopPropagation();
                   handleBooking(itinerary._id);
                 }}
+                sx={{ backgroundColor: "#ff9933" }}
               >
                 Book Now
               </Button>
