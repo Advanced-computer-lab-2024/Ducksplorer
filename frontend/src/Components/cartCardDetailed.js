@@ -8,7 +8,7 @@ import { Rating } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 
-export default function ActivityCardDetails({ cartData }) {
+export default function CartCardDetails({ cartData }) {
     return (
         <Card variant="outlined" sx={{ width: "100%", height: "auto" }}>
             <AspectRatio ratio="2">
@@ -35,7 +35,7 @@ export default function ActivityCardDetails({ cartData }) {
                 ) : (
                     <p>No products in the cart.</p>
                 )}
-                
+
                 <Typography
                     level="title-lg"
                     sx={{
@@ -55,22 +55,9 @@ export default function ActivityCardDetails({ cartData }) {
                         </Chip>
                     }
                 >
-                    {activity.price}$
+                    {localStorage.getItem("totalPrice")}$
                 </Typography>
 
-                <div style={{ display: "flex", flexWrap: "wrap", marginTop: "5px" }}>
-                    {(activity.tags || []).map((tag, index) => (
-                        <Chip
-                            key={index}
-                            size="sm"
-                            variant="outlined"
-                            color="primary"
-                            sx={{ marginRight: 1, marginBottom: 1 }}
-                        >
-                            {tag}
-                        </Chip>
-                    ))}
-                </div>
             </CardContent>
         </Card>
     );

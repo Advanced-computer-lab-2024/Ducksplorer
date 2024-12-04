@@ -1,5 +1,4 @@
 import AddressDropdown from "../../Components/AddressDropdown.js";
-import AddressDropdown from "../../Components/AddressDropdown.js";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -10,6 +9,8 @@ import ItineraryCardDetailed from "../../Components/itineraryCardDetailed.js";
 import ActivityCardDetailed from "../../Components/activityCardDetailed.js";
 import FlightCardDetailed from "../../Components/flightCardDetailed.js";
 import HotelCardDetailed from "../../Components/hotelCardDetailed.js";
+import CartCardDetailed from "../../Components/cartCardDetailed.js";
+import TransportationCardDetailed from "../../Components/transportationCardDetailed.js";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -251,15 +252,12 @@ function PaymentPage() {
         //setFlight(flight);
         setPrice(flightsData.price);
         setFinalPrice(flightsData.price);
-        setFinalPrice(flightsData.price);
         console.log("Flight sada data fetched:", flight); // Debugging
         console.log("FlightData fetched:", flightsData); // Debugging
         console.log("flight price", flightsData.price);
       } else if (itineraryOrActivity === "hotel" && hotel) {
         //setHotel(hotel);
         setPrice(hotelsData.price);
-        setFinalPrice(hotelsData.price);
-      } else if (itineraryOrActivity === "transportation" && transportation) {
         setFinalPrice(hotelsData.price);
       } else if (itineraryOrActivity === "transportation" && transportation) {
         // setTransportation(transportation);
@@ -385,38 +383,6 @@ function PaymentPage() {
                   <ItineraryCardDetailed itinerary={itineraryData} />
                 </Card>
 
-                <Form
-                // form={form}
-                // onFinish={handleVisaSubmit}
-                // layout="vertical"
-                // initialValues={{ dateTime: null }}
-                >
-                  <Form.Item
-                    name="dateTime"
-                    label="Date and Time"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please select a date and time!",
-                      },
-                    ]}
-                  >
-                    <Select
-                      placeholder="Select a Date and Time"
-                      onChange={handleDateChange}
-                      style={{ width: "100%" }}
-                    >
-                      {itineraryData?.availableDatesAndTimes
-                        .filter((dateTime) => {
-                          const currentDate = new Date(); // Get the current date and time
-                          const dateObj = new Date(dateTime); // Convert available date to Date object
-                          return dateObj >= currentDate; // Only keep dates in the future or equal to now
-                        })
-                        .map((dateTime, index) => {
-                          const dateObj = new Date(dateTime);
-                          const date = dateObj.toISOString().split("T")[0];
-                          const time = dateObj.toTimeString().split(" ")[0];
-                          const displayText = `${date} at ${time}`;
                 <Form
                 // form={form}
                 // onFinish={handleVisaSubmit}
@@ -689,42 +655,8 @@ function PaymentPage() {
               </div>
             ) : type === "transportation" ? (
               <div>
-                <Card
-                  style={{
-                    maxWidth: "600px",
-                    margin: "20px auto",
-                    borderRadius: "8px",
-                  }}
-                >
-                  <Space
-                    direction="vertical"
-                    size="middle"
-                    style={{ display: "flex" }}
-                  >
-                    <Title level={3}>Booked Details</Title>
-                    <p>
-                      <strong>Price:</strong> {transportationsData.price}
-                      {"  "}
-                      {transportationsData.currency}
-                    </p>
-                    <p>
-                      <strong>Departure Date:</strong>{" "}
-                      {transportationsData.departureDate}
-                    </p>
-                    <p>
-                      <strong>Arrival Date:</strong>{" "}
-                      {transportationsData.arrivalDate}
-                    </p>
-                    <p>
-                      <strong>Company Name:</strong>{" "}
-                      {transportationsData.companyName}
-                    </p>
-                    {/* <p><strong>Departure City:</strong> {transportationsData.departureCity}</p> */}
-                    <p>
-                      <strong>Transfer Type:</strong>{" "}
-                      {transportationsData.transferType}
-                    </p>
-                  </Space>
+                <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
+                  <TransportationCardDetailed transportation={transportationsData} />
                 </Card>
                 <Form>
                   <h1>Enter Payment Details</h1>
@@ -781,35 +713,8 @@ function PaymentPage() {
               </div>
             ) : type === "product" && cartData ? (
               <div>
-                <Card
-                  style={{
-                    maxWidth: "600px",
-                    margin: "20px auto",
-                    borderRadius: "8px",
-                  }}
-                >
-                  <Space
-                    direction="vertical"
-                    size="middle"
-                    style={{ display: "flex" }}
-                  >
-                    <Title level={3}>Booked Details</Title>
-                    <p>
-                      <strong>Order Details:</strong>{" "}
-                    </p>
-                    {cartData && cartData.products && cartData.products.length > 0 ? (
-                      cartData.products.map((product, index) => (
-                        <div key={index} style={{ marginBottom: "10px" }}>
-                          <p><strong>Product {index + 1}:</strong></p>
-                          <p><strong>Name:</strong> {product.product.name}</p>
-                          <p><strong>Price:</strong> {product.product.price}</p>
-                          <p><strong>Quantity:</strong> {product.quantity}</p>
-                        </div>
-                      ))
-                    ) : (
-                      <p>No products in the cart.</p>
-                    )}
-                  </Space>
+                <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
+                  <CartCardDetailed cartData={cartData} />
                 </Card>
                 <Form>
                   <h1>Payment Details</h1>

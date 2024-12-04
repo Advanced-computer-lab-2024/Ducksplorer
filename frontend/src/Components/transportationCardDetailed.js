@@ -23,19 +23,19 @@ export default function HotelCardDetailed({ transportation }) {
                 </Typography>
                 <p>
                     <strong>Departure Date:</strong>{" "}
-                    {transportationsData.departureDate}
+                    {transportation.departureDate}
                 </p>
                 <p>
                     <strong>Arrival Date:</strong>{" "}
-                    {transportationsData.arrivalDate}
+                    {transportation.arrivalDate}
                 </p>
                 <p>
                     <strong>Company Name:</strong>{" "}
-                    {transportationsData.companyName}
+                    {transportation.companyName}
                 </p>
                 <p>
                     <strong>Transfer Type:</strong>{" "}
-                    {transportationsData.transferType}
+                    {transportation.transferType}
                 </p>
 
                 <Typography
