@@ -20,150 +20,20 @@ import Option from "@mui/joy/Option";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/joy/Typography";
 import Button from "@mui/joy/Button";
+import ItineraryCardDetails from "./itineraryCardDetailed";
+import {useState, useEffect} from "react";
+import NotificationAddOutlinedIcon from '@mui/icons-material/NotificationAddOutlined';
 
-function ItineraryPopover({ anchorEl, handleClose, itineraryData }) {
-  const open = Boolean(anchorEl);
 
-  return (
-    <Popover
-      open={open}
-      anchorEl={anchorEl}
-      onClose={handleClose}
-      anchorReference="anchorPosition"
-      anchorPosition={{
-        top: window.innerHeight / 2,
-        left: window.innerWidth / 2,
-      }}
-      anchorOrigin={{
-        vertical: "center",
-        horizontal: "center",
-      }}
-      transformOrigin={{
-        vertical: "center",
-        horizontal: "center",
-      }}
-      PaperProps={{
-        sx: {
-          width: "50vw",
-          maxWidth: "80%",
-          backgroundColor: "#f5f5f5",
-          padding: "20px",
-          borderRadius: "12px",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
-        },
-      }}
-    >
-      <div style={{ width: "100%" }}>
-        <Typography
-          variant="h5"
-          sx={{ marginBottom: "10px", fontWeight: "bold" }}
-        >
-          Itinerary Details
-        </Typography>
-
-        <p>
-          <strong>Itinerary Name:</strong>{" "}
-          {itineraryData.name || "Itinerary Name"}
-        </p>
-
-        {itineraryData.activity && itineraryData.activity.length > 0 ? (
-          itineraryData.activity.map((activity, index) => (
-            <div key={index} style={{ marginBottom: "10px" }}>
-              <p>
-                <strong>Activity Name:</strong> {activity.name}
-              </p>
-              <p>
-                <strong>Activity Price:</strong> {activity.price}
-              </p>
-            </div>
-          ))
-        ) : (
-          <p>No activities found.</p>
-        )}
-
-        <p>
-          <strong>Locations:</strong> {itineraryData.locations.join(", ")}
-        </p>
-        <p>
-          <strong>Timeline:</strong> {itineraryData.timeline}
-        </p>
-        <p>
-          <strong>Language:</strong> {itineraryData.language}
-        </p>
-        <p>
-          <strong>Price:</strong> {itineraryData.price}
-        </p>
-
-        <p>
-          <strong>Available Dates and Times:</strong>
-          {itineraryData.availableDatesAndTimes.length > 0
-            ? itineraryData.availableDatesAndTimes.map((dateTime, index) => {
-              const dateObj = new Date(dateTime);
-              const date = dateObj.toISOString().split("T")[0];
-              const time = dateObj.toTimeString().split(" ")[0];
-              return (
-                <div key={index}>
-                  Date {index + 1}: {date}
-                  <br />
-                  Time {index + 1}: {time}
-                </div>
-              );
-            })
-            : "No available dates and times"}
-        </p>
-
-        <p>
-          <strong>Accessibility:</strong> {itineraryData.accessibility}
-        </p>
-        <p>
-          <strong>Pick Up Location:</strong> {itineraryData.pickUpLocation}
-        </p>
-        <p>
-          <strong>Drop Off Location:</strong> {itineraryData.dropOffLocation}
-        </p>
-        <p>
-          <strong>Rating:</strong>{" "}
-          {itineraryData.activity.averageRating ||
-            itineraryData.activity.averageRating === 0
-            ? `${itineraryData.activity.averageRating}/5`
-            : `0/5`}
-        </p>
-
-        <p>
-          <strong>Tags:</strong>{" "}
-          {itineraryData.tags && itineraryData.tags.length > 0
-            ? itineraryData.tags.join(", ")
-            : "No tags available"}
-        </p>
-
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleClose}
-          sx={{
-            marginTop: "20px",
-            padding: "10px",
-            borderRadius: "8px",
-            fontWeight: "bold",
-            width: "100%",
-            textTransform: "none",
-          }}
-        >
-          Close
-        </Button>
-      </div>
-    </Popover>
-  );
-}
-
-export default function ItineraryCard({ itinerary = {} }) {
+export default function ItineraryCard({ itinerary = {} , onRemove, showNotify}) {
   const navigate = useNavigate();
-  const [saved, setSaved] = React.useState(false);
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleBooking = async (itineraryId) => {
     try {
@@ -231,17 +101,107 @@ export default function ItineraryCard({ itinerary = {} }) {
       `https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`
     );
   }, []);
-  const handleSaveClick = () => {
-    setSaved(!saved);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const username = user?.username;
+
+  const handleSaveItinerary = async (itineraryId, currentIsSaved) => {
+    try {
+      const newIsSaved = !currentIsSaved;
+
+      const response = await axios.put(
+        `http://localhost:8000/itinerary/save/${itineraryId}`,
+        {
+          username: username,
+          save: newIsSaved,
+        }
+      );
+      if (response.status === 200) {
+        setSaveStates((prevState) => ({
+          ...prevState,
+          [itineraryId]: newIsSaved, // Update the save state for this itinerary
+        }));
+        message.success(
+          newIsSaved
+            ? "Itinerary saved successfully!"
+            : "Itinerary removed from saved list!"
+        );
+        if (!newIsSaved && onRemove) {
+          onRemove(itineraryId);
+        }
+      } else {
+        message.error("Failed to save");
+      }
+    } catch (error) {
+      console.error("Error toggling save state:", error);
+    }
   };
 
-  const handleOpenPopover = (event) => {
-    setAnchorEl(event.currentTarget);
+  const [saveStates, setSaveStates] = useState({});
+
+  useEffect(() => {
+    const fetchSaveStates = async () => {
+      const userJson = localStorage.getItem("user");
+      const user = JSON.parse(userJson);
+      const userName = user.username;
+
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/itinerary/getSave/${itinerary._id}/${userName}`
+        );
+
+        console.log("hal heya saved: ", response.data);
+        console.log("what is the status ", response.status);
+
+        if (response.status === 200) {
+          setSaveStates((prevState) => ({
+            ...prevState,
+            [itinerary._id]: response.data.saved, // Update only the relevant activity state
+          }));
+        }
+      } catch (error) {
+        console.error(`Failed to fetch save state for ${itinerary._id}:`, error);
+      }
+    };
+    fetchSaveStates();
+  }, [itinerary._id]);
+
+  const [notificationStates, setNotificationStates] = useState({});
+
+  const requestNotification = async (event, itineraryId, currentIsNotified) => {
+    event.stopPropagation();
+    try {
+      const newIsNotified = !currentIsNotified;
+      
+      const response = await axios.post('http://localhost:8000/notification/request', {
+        user: username,
+        eventId: itineraryId,
+      });
+
+      if (response.status === 201) {
+        message.success(
+          newIsNotified
+            ? "Notifications enabled for this itinerary!"
+            : "Notifications disabled for this activity!"
+        );
+        setNotificationStates((prev) => ({
+          ...prev,
+          [itineraryId]: newIsNotified,
+        }));
+        message.success('You will be notified when this event starts accepting bookings.');
+      } else if(response.status === 200){
+        message.info('You have already requested to be notified for this activity');
+      }
+      else {
+        message.error(response.data.message);
+      }
+    } catch (error) {
+      console.error('Error requesting notification:', error);
+      message.error('Failed to request notification.');
+    }
   };
 
-  const handleClosePopover = () => {
-    setAnchorEl(null);
-  };
 
   const TheCard = () => {
     return (
@@ -253,7 +213,7 @@ export default function ItineraryCard({ itinerary = {} }) {
             width: "20vw",
             height: "400px",
           }}
-          onClick={handleOpenPopover}
+          onClick={handleOpen}
         >
           <CardOverflow>
             <AspectRatio ratio="2">
@@ -284,11 +244,11 @@ export default function ItineraryCard({ itinerary = {} }) {
 
             <IconButton
               size="md"
-              variant={saved ? "soft" : "solid"}
-              color={saved ? "neutral" : "primary"}
+              variant={saveStates[itinerary._id] ? "soft" : "solid"}
+              color={saveStates[itinerary._id] ? "neutral" : "primary"}
               onClick={(event) => {
                 event.stopPropagation();
-                handleSaveClick();
+                handleSaveItinerary(itinerary._id, saveStates[itinerary._id])
               }}
               onMouseEnter={(e) => (e.target.style.cursor = 'pointer')}
               onMouseLeave={(e) => (e.target.style.cursor = 'default')}
@@ -309,8 +269,36 @@ export default function ItineraryCard({ itinerary = {} }) {
                 },
               }}
             >
-              {saved ? <Done color="#ff9933" /> : <BookmarksIcon />}
+              {saveStates[itinerary._id] ? <Done color="#ff9933" /> : <BookmarksIcon />}
             </IconButton>
+            {showNotify && (
+                <Tooltip title="Request Notifications">
+                <IconButton
+                  size="md"
+                  variant="solid"
+                  color="primary"
+                  onClick={(event) =>
+                    requestNotification(event, itinerary._id, notificationStates[itinerary._id])
+                  }
+                  sx={{
+                    borderRadius: "50%",
+                    position: "absolute",
+                    zIndex: 2,
+                    borderRadius: "50%",
+                    right: "1rem",
+                    bottom: 0,
+                    transform: "translateY(50%) translateX(-110%)",
+                    transition: "transform 0.3s",
+                    "&:active": {
+                      transform: "translateY(50%) scale(0.9)",
+                    },
+                    backgroundColor:  "#ffcc00",
+                  }}
+                >
+                  <NotificationAddOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            )}
           </CardOverflow>
           <div style={{ height: "10%" }}>
             <div
@@ -412,11 +400,64 @@ export default function ItineraryCard({ itinerary = {} }) {
             </div>
           </div>
         </Card>
-        <ItineraryPopover
-          anchorEl={anchorEl}
-          handleClose={handleClosePopover}
-          itineraryData={itinerary}
-        />
+        <Popover
+          open={open}
+          anchorEl={null}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "center",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "center",
+            horizontal: "center",
+          }}
+          sx={{
+            "& .MuiPopover-paper": {
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              background: "none",
+              boxShadow: "none",
+              padding: 0,
+            },
+          }}
+        >
+          <div
+            style={{
+              position: "relative",
+              display: "flex",
+              flexDirection: "column",
+              width: "60vw",
+              maxWidth: "90%",
+              maxHeight: "80vh",
+              overflow: "auto",
+              padding: "30px",
+              borderRadius: "16px",
+              backgroundColor: "#f5f5f5",
+            }}
+          >
+            <button
+              onClick={handleClose}
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                background: "transparent",
+                border: "none",
+                fontSize: "1.5rem",
+                cursor: "pointer",
+                color: "#333",
+              }}
+            >
+              &times;
+            </button>
+
+            <ItineraryCardDetails itinerary={itinerary} />
+          </div>
+        </Popover>
+
       </div>
     );
   };

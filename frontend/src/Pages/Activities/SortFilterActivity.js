@@ -20,7 +20,7 @@ function SortFilterActivity() {
     <Box
       sx={{
         height: "100vh",
-        backgroundColor: "#ffffff",
+        backgroundColor: "#fff6e6",
         width: "80vw",
         paddingTop: "2vh", // Adjust for navbar height
         display: "flex",
@@ -49,10 +49,10 @@ function SortFilterActivity() {
             sx={{
               border: "2px solid black",
               borderRadius: "50px",
-              color: "black",
               padding: "10px 20px",
               fontWeight: "bold",
               textTransform: "none",
+              className: "blackhover",
               "&:hover": {
                 backgroundColor: "#f0f0f0",
               },

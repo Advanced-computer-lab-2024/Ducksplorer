@@ -13,128 +13,25 @@ import Add from "@mui/icons-material/Bookmark";
 import StarIcon from "@mui/icons-material/Star";
 import Done from "@mui/icons-material/Done";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
-import { Rating, Tooltip } from "@mui/material";
+import { Rating, Tooltip, Box } from "@mui/material";
 import Button from "@mui/joy/Button";
 import axios from "axios";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
+import ActivityCardDetails from "./activityCardDetailed";
+import { useState, useEffect } from "react";
+import NotificationAddOutlinedIcon from '@mui/icons-material/NotificationAddOutlined';
 
 // ActivityCard component
-export default function ActivityCard({ activity = {} }) {
+export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
   const navigate = useNavigate();
-  const [saved, setSaved] = React.useState(false);
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  function ActivityPopover({ anchorEl, handleClose, activityData }) {
-    const open = Boolean(anchorEl);
+  const [open, setOpen] = React.useState(false);
 
-    return (
-      <Popover
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorReference="anchorPosition"
-        anchorPosition={{
-          top: window.innerHeight / 2,
-          left: window.innerWidth / 2,
-        }}
-        anchorOrigin={{
-          vertical: "center",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "center",
-          horizontal: "center",
-        }}
-        PaperProps={{
-          sx: {
-            width: "50vw",
-            maxWidth: "80%",
-            backgroundColor: "#f5f5f5",
-            padding: "20px",
-            borderRadius: "12px",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-          },
-        }}
-      >
-        <div style={{ width: "100%" }}>
-          <Typography
-            variant="h3"
-            sx={{
-              marginBottom: "10px",
-              fontWeight: "bold",
-              textAlign: "center",
-              fontSize: "40px",
-            }}
-          >
-            Activity Details
-          </Typography>
-
-          <p>
-            <strong>Activity Name:</strong>{" "}
-            {activityData.name || "Activity Name"}
-          </p>
-
-          <p>
-            <strong>isOpen:</strong> {JSON.stringify(activityData.isOpen)}
-          </p>
-          <p>
-            <strong>Advertiser:</strong> {activityData.advertiser}
-          </p>
-          <p>
-            <strong>Date:</strong> {activityData.date}
-          </p>
-
-          <p>
-            <strong>Location:</strong> {activityData.location}
-          </p>
-
-          <p>
-            <strong>Price:</strong> {activityData.price}
-          </p>
-          <p>
-            <strong>Category:</strong> {activityData.category}
-          </p>
-          <p>
-            <strong>Tags:</strong>{" "}
-            {activityData.tags && activityData.tags.length > 0
-              ? activityData.tags.join(", ")
-              : "No tags available"}
-          </p>
-          <p>
-            <strong>Duration:</strong> {activityData.duration}
-          </p>
-
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleClose}
-            sx={{
-              marginTop: "20px",
-              padding: "10px",
-              borderRadius: "8px",
-              fontWeight: "bold",
-              width: "100%",
-              textTransform: "none",
-            }}
-          >
-            Close
-          </Button>
-        </div>
-      </Popover>
-    );
-  }
-  const handleOpenPopover = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClosePopover = () => {
-    setAnchorEl(null);
-  };
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleBooking = async (activityId) => {
     try {
@@ -167,8 +64,7 @@ export default function ActivityCard({ activity = {} }) {
       if (response.status === 200) {
         if (response.data.isUpcoming) {
           navigate("/payment");
-        }
-        else {
+        } else {
           message.error("You can't book an old activity");
         }
       } else {
@@ -185,20 +81,120 @@ export default function ActivityCard({ activity = {} }) {
       `https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`
     );
   }, []);
-  const handleSaveClick = (event) => {
+
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const username = user?.username;
+
+  const handleSaveActivity = async (event, activityId, currentIsSaved) => {
     event.stopPropagation();
-    setSaved(!saved);
+    try {
+      const newIsSaved = !currentIsSaved;
+
+      const response = await axios.put(
+        `http://localhost:8000/activity/save/${activityId}`,
+        {
+          username: username,
+          save: newIsSaved,
+        }
+      );
+      if (response.status === 200) {
+        setSaveStates((prevState) => ({
+          ...prevState,
+          [activityId]: newIsSaved, // Update the save state for this activity
+        }));
+        message.success(
+          newIsSaved
+            ? "Activity saved successfully!"
+            : "Activity removed from saved list!"
+        );
+        if (!newIsSaved && onRemove) {
+          onRemove(activityId);
+        }
+      } else {
+        message.error("Failed to save");
+      }
+    } catch (error) {
+      console.error("Error toggling save state:", error);
+    }
   };
+
+  const [saveStates, setSaveStates] = useState({});
+
+  useEffect(() => {
+    const fetchSaveStates = async () => {
+      const userJson = localStorage.getItem("user");
+      const user = JSON.parse(userJson);
+      const userName = user.username;
+
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/activity/getSave/${activity._id}/${userName}`
+        );
+
+        console.log("hal heya saved: ", response.data);
+        console.log("what is the status ", response.status);
+
+        if (response.status === 200) {
+          setSaveStates((prevState) => ({
+            ...prevState,
+            [activity._id]: response.data.saved, // Update only the relevant activity state
+          }));
+        }
+      } catch (error) {
+        console.error(`Failed to fetch save state for ${activity._id}:`, error);
+      }
+    };
+    fetchSaveStates();
+  }, [activity._id]);
+
+  const [notificationStates, setNotificationStates] = useState({});
+
+  const requestNotification = async (event, activityId, currentIsNotified) => {
+    event.stopPropagation();
+    try {
+      const newIsNotified = !currentIsNotified;
+      
+      const response = await axios.post('http://localhost:8000/notification/request', {
+        user: username,
+        eventId: activityId,
+      });
+
+      if (response.status === 201) {
+        message.success(
+          newIsNotified
+            ? "Notifications enabled for this activity!"
+            : "Notifications disabled for this activity!"
+        );
+        setNotificationStates((prev) => ({
+          ...prev,
+          [activityId]: newIsNotified,
+        }));
+        message.success('You will be notified when this event starts accepting bookings.');
+      } else if(response.status === 200){
+        message.info('You have already requested to be notified for this activity');
+      }
+      else {
+        message.error(response.data.message);
+      }
+    } catch (error) {
+      console.error('Error requesting notification:', error);
+      message.error('Failed to request notification.');
+    }
+  };
+
   const TheCard = () => {
     return (
       <div style={{ width: "100%" }}>
         <Card
-          onClick={handleOpenPopover}
+          onClick={handleOpen}
           className="activity-card"
           variant="outlined"
           sx={{
             width: "100%",
             height: "400px",
+            cursor: "pointer",
           }}
         >
           <CardOverflow>
@@ -208,9 +204,9 @@ export default function ActivityCard({ activity = {} }) {
             <Tooltip title="Save Activity">
               <IconButton
                 size="md"
-                variant={saved ? "soft" : "solid"}
-                color={saved ? "neutral" : "primary"}
-                onClick={handleSaveClick}
+                variant={saveStates[activity._id] ? "soft" : "solid"}
+                color={saveStates[activity._id] ? "neutral" : "primary"}
+                onClick={(event) => handleSaveActivity(event, activity._id, saveStates[activity._id])}
                 sx={{
                   position: "absolute",
                   zIndex: 2,
@@ -219,15 +215,43 @@ export default function ActivityCard({ activity = {} }) {
                   bottom: 0,
                   transform: "translateY(50%)",
                   transition: "transform 0.3s",
-                  backgroundColor : "#ff9933",
+                  backgroundColor: "#ff9933",
                   "&:active": {
                     transform: "translateY(50%) scale(0.9)",
                   },
                 }}
               >
-                {saved ? <Done color="#ff9933" /> : <Add />}
+                {saveStates[activity._id] ? <Done color="#ff9933" /> : <Add />}
               </IconButton>
             </Tooltip>
+            {showNotify && (
+                <Tooltip title="Request Notifications">
+                <IconButton
+                  size="md"
+                  variant="solid"
+                  color="primary"
+                  onClick={(event) =>
+                    requestNotification(event, activity._id, notificationStates[activity._id])
+                  }
+                  sx={{
+                    borderRadius: "50%",
+                    position: "absolute",
+                    zIndex: 2,
+                    borderRadius: "50%",
+                    right: "1rem",
+                    bottom: 0,
+                    transform: "translateY(50%) translateX(-110%)",
+                    transition: "transform 0.3s",
+                    "&:active": {
+                      transform: "translateY(50%) scale(0.9)",
+                    },
+                    backgroundColor:  "#ffcc00",
+                  }}
+                >
+                  <NotificationAddOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            )}
           </CardOverflow>
           <div style={{ height: "10%" }}>
             <div
@@ -319,24 +343,76 @@ export default function ActivityCard({ activity = {} }) {
                 size="md"
                 variant="solid"
                 color="primary"
+                className="blackhover"
                 zIndex={2}
                 onClick={(event) => {
                   event.stopPropagation();
-                  handleBooking(activity._id)
+                  handleBooking(activity._id);
                 }}
-                sx={{ backgroundColor: "ff9933" }}
-
+                sx={{ backgroundColor: "#ff9933" }}
               >
                 Book Now
               </Button>
             </div>
           </div>
         </Card>
-        <ActivityPopover
-          anchorEl={anchorEl}
-          handleClose={handleClosePopover}
-          activityData={activity}
-        />
+        <Popover
+          open={open}
+          anchorEl={null}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "center",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "center",
+            horizontal: "center",
+          }}
+          sx={{
+            "& .MuiPopover-paper": {
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              background: "none",
+              boxShadow: "none",
+              padding: 0,
+            },
+          }}
+        >
+          <div
+            style={{
+              position: "relative",
+              display: "flex",
+              flexDirection: "column",
+              width: "60vw",
+              maxWidth: "90%",
+              maxHeight: "80vh",
+              overflow: "auto",
+              padding: "30px",
+              borderRadius: "16px",
+              backgroundColor: "#f5f5f5",
+            }}
+          >
+            <button
+              onClick={handleClose}
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                background: "transparent",
+                border: "none",
+                fontSize: "1.5rem",
+                cursor: "pointer",
+                color: "#333",
+              }}
+            >
+              &times;
+            </button>
+
+            <ActivityCardDetails activity={activity} />
+          </div>
+        </Popover>
       </div>
     );
   };

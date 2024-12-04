@@ -148,9 +148,9 @@ const SortActivities = () => {
           prevActivities.map((activity) =>
             activity._id === activityId
               ? {
-                  ...activity,
-                  saved: { ...activity.saved, isSaved: newIsSaved },
-                }
+                ...activity,
+                saved: { ...activity.saved, isSaved: newIsSaved },
+              }
               : activity
           )
         );
@@ -211,7 +211,7 @@ const SortActivities = () => {
           justifyContent: "space-between",
         }}
       >
-        <FormControl>
+        <FormControl >
           <Select
             indicator={<KeyboardArrowDown />}
             placeholder="Sort By"
@@ -265,7 +265,6 @@ const SortActivities = () => {
 
         <Button
           variant="contained"
-          color="primary"
           onClick={fetchSortedActivities}
         >
           Sort
@@ -282,8 +281,8 @@ const SortActivities = () => {
       >
         {activities.map((activity) =>
           activity.flag === false &&
-          activity.advertiserDeleted === false &&
-          activity.deletedActivity === false
+            activity.advertiserDeleted === false &&
+            activity.deletedActivity === false
             ? (console.log("this is the average rating ", activity.ratings[1]),
               (<ActivityCard activity={activity} />))
             : null
@@ -311,7 +310,7 @@ const SortActivities = () => {
                     </span>  SAVED BY JAYDAA
                   </TableCell> */}
       <Help />
-    </div>
+    </div >
   );
 };
 

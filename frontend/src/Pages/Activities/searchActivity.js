@@ -198,14 +198,14 @@ const SearchActivities = () => {
     <Box
       sx={{
         height: "100vh",
-        backgroundColor: "#ffffff",
+        backgroundColor: "fff6e6",
         paddingTop: "2vh", // Adjust for navbar height
       }}
     >
       <TouristNavBar />
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
-          <Typography variant="h4" fontWeight="700">
+          <Typography class="duckTitle">
             Activities
           </Typography>
         </Box>
@@ -251,26 +251,7 @@ const SearchActivities = () => {
           )}
         </Grid>
       </Container>
-      {/* <TableCell>
-                        <span
-                          onClick={() =>
-                            handleSaveActivity(
-                              activity._id,
-                              activity.saved?.isSaved
-                            )
-                          }
-                        >
-                          {saveStates[activity._id] ? (
-                            <IconButton>
-                              <BookmarkIcon />
-                            </IconButton>
-                          ) : (
-                            <IconButton>
-                              <BookmarkBorderIcon />
-                            </IconButton>
-                          )}
-                        </span>  SAVED BY JAYDAA
-                      </TableCell> */}
+     
       <Help />
     </Box>
   );

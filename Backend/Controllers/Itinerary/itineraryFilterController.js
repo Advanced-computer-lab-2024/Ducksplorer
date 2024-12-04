@@ -6,7 +6,10 @@ const filterItineraries = async (req, res) => {
     const { minPrice, maxPrice, availableDatesAndTimes, language, tags } = req.query; //missing prefs waiting for wael to create table
     const filters = {};
 
-    const tagsArray = Array.isArray(tags) ? tags : tags.split(',');
+    let tagsArray;
+    if (tags){
+        tagsArray = Array.isArray(tags) ? tags : tags.split(',');
+    }
 
     if (minPrice || maxPrice) {
         filters.price = {};
@@ -43,8 +46,10 @@ const filterUpcomingItineraries = async (req, res) => {
     const { minPrice, maxPrice, availableDatesAndTimes, language, tags } = req.query; //missing prefs waiting for wael to create table
     const filters = {};
 
-    const tagsArray = Array.isArray(tags) ? tags : tags.split(',');
-
+    let tagsArray;
+    if (tags){
+        tagsArray = Array.isArray(tags) ? tags : tags.split(',');
+    }
     const currentDate = new Date(); // Gets the current date and time
 
     filters.availableDatesAndTimes = {
