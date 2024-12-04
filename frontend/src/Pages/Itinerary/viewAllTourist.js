@@ -539,26 +539,25 @@ function SearchItineraries() {
           </Typography>
         )}
         {/* <TableCell>
-                            <span
-                              onClick={() =>
-                                handleSaveItinerary(
-                                  itinerary._id,
-                                  itinerary.saved?.isSaved
-                                )
-                              }
-                            >
-                              {saveStates[itinerary._id] ? (
-                                <IconButton>
-                                  <BookmarkIcon />
-                                </IconButton>
-                              ) : (
-                                <IconButton>
-                                  <BookmarkBorderIcon />
-                                </IconButton>
-                              )}
-                            </span>  SAVED BY JAYDAAQ
-                          </TableCell> */}
-
+          <span
+            onClick={() =>
+              handleSaveItinerary(
+                itinerary._id,
+                itinerary.saved?.isSaved
+              )
+            }
+          >
+            {saveStates[itinerary._id] ? (
+              <IconButton>
+                <BookmarkIcon />
+              </IconButton>
+            ) : (
+              <IconButton>
+                <BookmarkBorderIcon />
+              </IconButton>
+            )}
+          </span>  SAVED BY JAYDAA
+        </TableCell> */}
         <Help />
       </Box>
     </div>
