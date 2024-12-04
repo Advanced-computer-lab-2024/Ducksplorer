@@ -127,6 +127,8 @@ function TouristNavBar() {
               className="duckTitle"
               style={{
                 marginLeft: "20px",
+                fontSize: "40px",
+                fontWeight: "700",
                 color: "orange",
               }}>Ducksplorer</h2>
           </Tooltip>

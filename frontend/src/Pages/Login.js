@@ -166,24 +166,24 @@ function Login() {
   return (
     <div style={styles.container}>
       <div style={styles.leftSection}>
-        <Typography variant="h3" style={styles.welcomeText}>
+        <Typography variant="h3" style={styles.welcomeText} className="duckTitle" >
           Welcome to Ducksplorer
         </Typography>
-        <Typography variant="h5" style={styles.descriptionText}>
+        <Typography variant="h5" style={styles.descriptionText} className="duckTitle" >
           Get your ducks in a row.
         </Typography>
-        <Typography variant="h5" style={styles.descriptionText}>
+        {/* <Typography variant="h5" style={styles.descriptionText} className="duckTitle" >
           Login to continue your adventure.
-        </Typography>
+        </Typography> */}
       </div>
       <div style={styles.rightSection}>
         <Box style={styles.content}>
-          <Typography variant="h4" style={styles.title}>
-            Welcome Back to Ducksplorer
+          <Typography variant="h4" style={styles.title} className="duckTitle">
+            Ducksplorer
           </Typography>
-          <Typography variant="h6" style={styles.subtitle}>
+          {/* <Typography variant="h6" style={styles.subtitle} >
             Login to continue your adventure
-          </Typography>
+          </Typography> */}
           <Stack spacing={2} mt={3}>
             <TextField
               label="Username"
@@ -330,7 +330,9 @@ const styles = {
   title: {
     color: "#ff8c00",
     fontWeight: "bold",
-    marginBottom: "10px",
+    marginBottom: "40px",
+    fontSize: "30px",
+    textAlign: "center"
   },
   subtitle: {
     color: "#555",
