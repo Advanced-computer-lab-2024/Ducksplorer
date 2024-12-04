@@ -170,18 +170,18 @@ const UpcomingActivities = () => {
     <Box
       sx={{
         height: "100vh",
-        backgroundColor: "#f9f9f9", // Light background for better contrast
+        backgroundColor: "#fff6e6", // Light background for better contrast
         paddingTop: "64px", // Adjust for navbar height
       }}
     >
       <TouristNavBar />
       <TouristSidebar />
 
-      <Box sx={{ p: 6, maxWidth: 1200, overflowY: "auto", height: "100vh" }}>
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+      <Box sx={{ p: 6, maxWidth: 1200, overflowY: "auto", height: "100vh", backgroundColor: "#fff6e6" }}>
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 3, backgroundColor: "#fff6e6" }}>
           <Typography variant="h4">Upcoming Activities</Typography>
         </Box>
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{ backgroundColor: "#fff6e6" }}>
           <Table>
             <TableHead>
               <TableRow>

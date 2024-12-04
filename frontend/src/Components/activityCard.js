@@ -219,7 +219,7 @@ export default function ActivityCard({ activity = {} }) {
                   bottom: 0,
                   transform: "translateY(50%)",
                   transition: "transform 0.3s",
-                  backgroundColor : "#ff9933",
+                  backgroundColor: "#ff9933",
                   "&:active": {
                     transform: "translateY(50%) scale(0.9)",
                   },
@@ -319,12 +319,13 @@ export default function ActivityCard({ activity = {} }) {
                 size="md"
                 variant="solid"
                 color="primary"
+                className="blackhover"
                 zIndex={2}
                 onClick={(event) => {
                   event.stopPropagation();
                   handleBooking(activity._id)
                 }}
-                sx={{ backgroundColor: "ff9933" }}
+                sx={{ backgroundColor: "#ff9933" }}
 
               >
                 Book Now
