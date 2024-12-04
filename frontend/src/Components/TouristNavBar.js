@@ -122,12 +122,13 @@ function TouristNavBar() {
     >
       <Container sx={{ width: "100%" }}>
         <Toolbar disableGutters sx={{ width: "100vw", justifySelf: "center" }}>
-          <Tooltip title="Badge">
+          <Tooltip title="Home">
             <h2
               className="duckTitle"
               style={{
                 marginLeft: "20px",
                 color: "orange",
+                fontSize: '2rem'
               }}>Ducksplorer</h2>
           </Tooltip>
           {/* <PersistentDrawerLeft /> */}
@@ -205,7 +206,7 @@ function TouristNavBar() {
                   <IconButton>
                     <FestivalIcon />
                   </IconButton>
-                  <Typography textAlign="center">Activities</Typography>
+                  <Typography textAlign="center"  >Activities</Typography>
                 </MenuItem>
                 <MenuItem onClick={() => handleNavigation("itineraries")}>
                   <IconButton>
@@ -284,8 +285,8 @@ function TouristNavBar() {
                 <Typography
                   textAlign="center"
                   sx={{
-                    fontSize: "1.25rem", // Larger font size
-                    fontWeight: "bold",  // Bold text
+                    fontSize: "1rem", // Larger font size
+                    // fontWeight: "bold",  // Bold text
                     fontFamily: "'Roboto', sans-serif", // Modern, readable font
                     color: "black"
                   }}
@@ -299,8 +300,8 @@ function TouristNavBar() {
                 <Typography
                   textAlign="center"
                   sx={{
-                    fontSize: "1.25rem",
-                    fontWeight: "bold",
+                    fontSize: "1rem",
+                    // fontWeight: "bold",
                     fontFamily: "'Roboto', sans-serif",
                     color: "black"
                   }}
@@ -314,8 +315,8 @@ function TouristNavBar() {
                 <Typography
                   textAlign="center"
                   sx={{
-                    fontSize: "1.25rem",
-                    fontWeight: "bold",
+                    fontSize: "1rem",
+                    // fontWeight: "bold",
                     fontFamily: "'Roboto', sans-serif",
                     color: "black"
                   }}
@@ -329,8 +330,8 @@ function TouristNavBar() {
                 <Typography
                   textAlign="center"
                   sx={{
-                    fontSize: "1.25rem",
-                    fontWeight: "bold",
+                    fontSize: "1rem",
+                    // fontWeight: "bold",
                     fontFamily: "'Roboto', sans-serif",
                     color: "black"
                   }}
@@ -344,8 +345,8 @@ function TouristNavBar() {
                 <Typography
                   textAlign="center"
                   sx={{
-                    fontSize: "1.25rem",
-                    fontWeight: "bold",
+                    fontSize: "1rem",
+                    // fontWeight: "bold",
                     fontFamily: "'Roboto', sans-serif",
                     color: "black"
                   }}
@@ -359,8 +360,8 @@ function TouristNavBar() {
                 <Typography
                   textAlign="center"
                   sx={{
-                    fontSize: "1.25rem",
-                    fontWeight: "bold",
+                    fontSize: "1rem",
+                    // fontWeight: "bold",
                     fontFamily: "'Roboto', sans-serif",
                     color: "black"
                   }}
