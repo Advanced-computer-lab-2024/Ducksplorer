@@ -101,5 +101,6 @@ module.exports = {
   getMyPurchases,
   updatePurchase,
   getGroupedPurchases,
+  cancelOrder,
   // getMyOrder,
 };

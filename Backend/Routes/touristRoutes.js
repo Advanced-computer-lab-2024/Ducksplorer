@@ -13,6 +13,7 @@ const {
   getMyPurchases,
   updatePurchase,
   getGroupedPurchases,
+  cancelOrder,
   // getMyOrder,
 } = require("../Controllers/purchasesController");
 
@@ -82,7 +83,7 @@ router.put("/addPurchase", addPurchase2);
 router.get("/myPurchases/:buyer", getMyPurchases);
 // router.get("/myOrder", getMyOrder);
 router.get("/groupedPurchases/:buyer", getGroupedPurchases);
-
+router.put("/cancelOrder", cancelOrder);
 
 router.get("/myOrders/:buyer", getMyOrders);
 
