@@ -20,150 +20,18 @@ import Option from "@mui/joy/Option";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/joy/Typography";
 import Button from "@mui/joy/Button";
-
-function ItineraryPopover({ anchorEl, handleClose, itineraryData }) {
-  const open = Boolean(anchorEl);
-
-  return (
-    <Popover
-      open={open}
-      anchorEl={anchorEl}
-      onClose={handleClose}
-      anchorReference="anchorPosition"
-      anchorPosition={{
-        top: window.innerHeight / 2,
-        left: window.innerWidth / 2,
-      }}
-      anchorOrigin={{
-        vertical: "center",
-        horizontal: "center",
-      }}
-      transformOrigin={{
-        vertical: "center",
-        horizontal: "center",
-      }}
-      PaperProps={{
-        sx: {
-          width: "50vw",
-          maxWidth: "80%",
-          backgroundColor: "#f5f5f5",
-          padding: "20px",
-          borderRadius: "12px",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
-        },
-      }}
-    >
-      <div style={{ width: "100%" }}>
-        <Typography
-          variant="h5"
-          sx={{ marginBottom: "10px", fontWeight: "bold" }}
-        >
-          Itinerary Details
-        </Typography>
-
-        <p>
-          <strong>Itinerary Name:</strong>{" "}
-          {itineraryData.name || "Itinerary Name"}
-        </p>
-
-        {itineraryData.activity && itineraryData.activity.length > 0 ? (
-          itineraryData.activity.map((activity, index) => (
-            <div key={index} style={{ marginBottom: "10px" }}>
-              <p>
-                <strong>Activity Name:</strong> {activity.name}
-              </p>
-              <p>
-                <strong>Activity Price:</strong> {activity.price}
-              </p>
-            </div>
-          ))
-        ) : (
-          <p>No activities found.</p>
-        )}
-
-        <p>
-          <strong>Locations:</strong> {itineraryData.locations.join(", ")}
-        </p>
-        <p>
-          <strong>Timeline:</strong> {itineraryData.timeline}
-        </p>
-        <p>
-          <strong>Language:</strong> {itineraryData.language}
-        </p>
-        <p>
-          <strong>Price:</strong> {itineraryData.price}
-        </p>
-
-        <p>
-          <strong>Available Dates and Times:</strong>
-          {itineraryData.availableDatesAndTimes.length > 0
-            ? itineraryData.availableDatesAndTimes.map((dateTime, index) => {
-              const dateObj = new Date(dateTime);
-              const date = dateObj.toISOString().split("T")[0];
-              const time = dateObj.toTimeString().split(" ")[0];
-              return (
-                <div key={index}>
-                  Date {index + 1}: {date}
-                  <br />
-                  Time {index + 1}: {time}
-                </div>
-              );
-            })
-            : "No available dates and times"}
-        </p>
-
-        <p>
-          <strong>Accessibility:</strong> {itineraryData.accessibility}
-        </p>
-        <p>
-          <strong>Pick Up Location:</strong> {itineraryData.pickUpLocation}
-        </p>
-        <p>
-          <strong>Drop Off Location:</strong> {itineraryData.dropOffLocation}
-        </p>
-        <p>
-          <strong>Rating:</strong>{" "}
-          {itineraryData.activity.averageRating ||
-            itineraryData.activity.averageRating === 0
-            ? `${itineraryData.activity.averageRating}/5`
-            : `0/5`}
-        </p>
-
-        <p>
-          <strong>Tags:</strong>{" "}
-          {itineraryData.tags && itineraryData.tags.length > 0
-            ? itineraryData.tags.join(", ")
-            : "No tags available"}
-        </p>
-
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleClose}
-          sx={{
-            marginTop: "20px",
-            padding: "10px",
-            borderRadius: "8px",
-            fontWeight: "bold",
-            width: "100%",
-            textTransform: "none",
-          }}
-        >
-          Close
-        </Button>
-      </div>
-    </Popover>
-  );
-}
+import ItineraryCardDetails from "./itineraryCardDetailed";
 
 export default function ItineraryCard({ itinerary = {} }) {
   const navigate = useNavigate();
   const [saved, setSaved] = React.useState(false);
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleBooking = async (itineraryId) => {
     try {
@@ -235,14 +103,6 @@ export default function ItineraryCard({ itinerary = {} }) {
     setSaved(!saved);
   };
 
-  const handleOpenPopover = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClosePopover = () => {
-    setAnchorEl(null);
-  };
-
   const TheCard = () => {
     return (
       <div>
@@ -253,7 +113,7 @@ export default function ItineraryCard({ itinerary = {} }) {
             width: "20vw",
             height: "400px",
           }}
-          onClick={handleOpenPopover}
+          onClick={handleOpen}
         >
           <CardOverflow>
             <AspectRatio ratio="2">
@@ -412,11 +272,64 @@ export default function ItineraryCard({ itinerary = {} }) {
             </div>
           </div>
         </Card>
-        <ItineraryPopover
-          anchorEl={anchorEl}
-          handleClose={handleClosePopover}
-          itineraryData={itinerary}
-        />
+        <Popover
+          open={open}
+          anchorEl={null}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "center",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "center",
+            horizontal: "center",
+          }}
+          sx={{
+            "& .MuiPopover-paper": {
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              background: "none",
+              boxShadow: "none",
+              padding: 0,
+            },
+          }}
+        >
+          <div
+            style={{
+              position: "relative",
+              display: "flex",
+              flexDirection: "column",
+              width: "60vw",
+              maxWidth: "90%",
+              maxHeight: "80vh",
+              overflow: "auto",
+              padding: "30px",
+              borderRadius: "16px",
+              backgroundColor: "#f5f5f5",
+            }}
+          >
+            <button
+              onClick={handleClose}
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                background: "transparent",
+                border: "none",
+                fontSize: "1.5rem",
+                cursor: "pointer",
+                color: "#333",
+              }}
+            >
+              &times;
+            </button>
+
+            <ItineraryCardDetails itinerary={itinerary} />
+          </div>
+        </Popover>
+
       </div>
     );
   };

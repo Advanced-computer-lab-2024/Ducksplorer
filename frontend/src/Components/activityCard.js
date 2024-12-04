@@ -18,6 +18,7 @@ import Button from "@mui/joy/Button";
 import axios from "axios";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
+import ActivityCardDetails from "./activityCardDetailed";
 
 // ActivityCard component
 export default function ActivityCard({ activity = {} }) {
@@ -26,115 +27,10 @@ export default function ActivityCard({ activity = {} }) {
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  function ActivityPopover({ anchorEl, handleClose, activityData }) {
-    const open = Boolean(anchorEl);
+  const [open, setOpen] = React.useState(false);
 
-    return (
-      <Popover
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorReference="anchorPosition"
-        anchorPosition={{
-          top: window.innerHeight / 2,
-          left: window.innerWidth / 2,
-        }}
-        anchorOrigin={{
-          vertical: "center",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "center",
-          horizontal: "center",
-        }}
-        PaperProps={{
-          sx: {
-            width: "50vw",
-            maxWidth: "80%",
-            backgroundColor: "#f5f5f5",
-            padding: "20px",
-            borderRadius: "12px",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-          },
-        }}
-      >
-        <div style={{ width: "100%" }}>
-          <Typography
-            variant="h3"
-            sx={{
-              marginBottom: "10px",
-              fontWeight: "bold",
-              textAlign: "center",
-              fontSize: "40px",
-            }}
-          >
-            Activity Details
-          </Typography>
-
-          <p>
-            <strong>Activity Name:</strong>{" "}
-            {activityData.name || "Activity Name"}
-          </p>
-
-          <p>
-            <strong>isOpen:</strong> {JSON.stringify(activityData.isOpen)}
-          </p>
-          <p>
-            <strong>Advertiser:</strong> {activityData.advertiser}
-          </p>
-          <p>
-            <strong>Date:</strong> {activityData.date}
-          </p>
-
-          <p>
-            <strong>Location:</strong> {activityData.location}
-          </p>
-
-          <p>
-            <strong>Price:</strong> {activityData.price}
-          </p>
-          <p>
-            <strong>Category:</strong> {activityData.category}
-          </p>
-          <p>
-            <strong>Tags:</strong>{" "}
-            {activityData.tags && activityData.tags.length > 0
-              ? activityData.tags.join(", ")
-              : "No tags available"}
-          </p>
-          <p>
-            <strong>Duration:</strong> {activityData.duration}
-          </p>
-
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleClose}
-            sx={{
-              marginTop: "20px",
-              padding: "10px",
-              borderRadius: "8px",
-              fontWeight: "bold",
-              width: "100%",
-              textTransform: "none",
-            }}
-          >
-            Close
-          </Button>
-        </div>
-      </Popover>
-    );
-  }
-  const handleOpenPopover = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClosePopover = () => {
-    setAnchorEl(null);
-  };
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleBooking = async (activityId) => {
     try {
@@ -193,12 +89,13 @@ export default function ActivityCard({ activity = {} }) {
     return (
       <div style={{ width: "100%" }}>
         <Card
-          onClick={handleOpenPopover}
+          onClick={handleOpen}
           className="activity-card"
           variant="outlined"
           sx={{
             width: "100%",
             height: "400px",
+            cursor: "pointer",
           }}
         >
           <CardOverflow>
@@ -333,12 +230,65 @@ export default function ActivityCard({ activity = {} }) {
             </div>
           </div>
         </Card>
-        <ActivityPopover
-          anchorEl={anchorEl}
-          handleClose={handleClosePopover}
-          activityData={activity}
-        />
-      </div>
+        <Popover
+          open={open}
+          anchorEl={null}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "center",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "center",
+            horizontal: "center",
+          }}
+          sx={{
+            "& .MuiPopover-paper": {
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              background: "none",
+              boxShadow: "none",
+              padding: 0,
+            },
+          }}
+        >
+          <div
+            style={{
+              position: "relative",
+              display: "flex",
+              flexDirection: "column",
+              width: "60vw",
+              maxWidth: "90%",
+              maxHeight: "80vh",
+              overflow: "auto",
+              padding: "30px",
+              borderRadius: "16px",
+              backgroundColor: "#f5f5f5",
+            }}
+          >
+            <button
+              onClick={handleClose}
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                background: "transparent",
+                border: "none",
+                fontSize: "1.5rem",
+                cursor: "pointer",
+                color: "#333",
+              }}
+            >
+              &times;
+            </button>
+
+            <ActivityCardDetails activity={activity} />
+          </div>
+        </Popover>
+
+      </div >
     );
   };
   return <TheCard />;

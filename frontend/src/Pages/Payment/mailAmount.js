@@ -393,7 +393,7 @@ function PaymentPage() {
                           const time = dateObj.toTimeString().split(' ')[0];
                           return (
                             <div>
-                              {date} at {time}
+                              {date.toLocalDateString()} at {time}
                             </div>
                           );
                         })()
