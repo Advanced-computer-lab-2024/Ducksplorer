@@ -251,26 +251,7 @@ const SearchActivities = () => {
           )}
         </Grid>
       </Container>
-      {/* <TableCell>
-                        <span
-                          onClick={() =>
-                            handleSaveActivity(
-                              activity._id,
-                              activity.saved?.isSaved
-                            )
-                          }
-                        >
-                          {saveStates[activity._id] ? (
-                            <IconButton>
-                              <BookmarkIcon />
-                            </IconButton>
-                          ) : (
-                            <IconButton>
-                              <BookmarkBorderIcon />
-                            </IconButton>
-                          )}
-                        </span>  SAVED BY JAYDAA
-                      </TableCell> */}
+     
       <Help />
     </Box>
   );

@@ -1,13 +1,13 @@
 const NotificationRequest = require('../../Models/notificationRequestModel');
 
 const requestNotification = async (req, res) => {
-  const { user, eventId } = req.body; // Assuming userId is extracted from the request
+  const { user, eventId } = req.body; 
 
   try {
     // Check if the request already exists
     const existingRequest = await NotificationRequest.findOne({ user, eventId });
     if (existingRequest) {
-      return res.status(400).json({ message: 'You have already requested a notification for this itinerary.' });
+      return res.status(200).json({ message: 'You have already requested a notification for this itinerary.' });
     }
 
     // Create a new notification request

@@ -21,8 +21,9 @@ import Popover from "@mui/material/Popover";
 import Typography from "@mui/joy/Typography";
 import Button from "@mui/joy/Button";
 import ItineraryCardDetails from "./itineraryCardDetailed";
+import {useState, useEffect} from "react";
 
-export default function ItineraryCard({ itinerary = {} }) {
+export default function ItineraryCard({ itinerary = {} , onRemove, showNotify}) {
   const navigate = useNavigate();
   const [saved, setSaved] = React.useState(false);
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
@@ -99,9 +100,71 @@ export default function ItineraryCard({ itinerary = {} }) {
       `https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`
     );
   }, []);
-  const handleSaveClick = () => {
-    setSaved(!saved);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const username = user?.username;
+
+  const handleSaveItinerary = async (itineraryId, currentIsSaved) => {
+    try {
+      const newIsSaved = !currentIsSaved;
+
+      const response = await axios.put(
+        `http://localhost:8000/itinerary/save/${itineraryId}`,
+        {
+          username: username,
+          save: newIsSaved,
+        }
+      );
+      if (response.status === 200) {
+        setSaveStates((prevState) => ({
+          ...prevState,
+          [itineraryId]: newIsSaved, // Update the save state for this itinerary
+        }));
+        message.success(
+          newIsSaved
+            ? "Itinerary saved successfully!"
+            : "Itinerary removed from saved list!"
+        );
+        if (!newIsSaved && onRemove) {
+          onRemove(itineraryId);
+        }
+      } else {
+        message.error("Failed to save");
+      }
+    } catch (error) {
+      console.error("Error toggling save state:", error);
+    }
   };
+
+  const [saveStates, setSaveStates] = useState({});
+
+  useEffect(() => {
+    const fetchSaveStates = async () => {
+      const userJson = localStorage.getItem("user");
+      const user = JSON.parse(userJson);
+      const userName = user.username;
+
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/itinerary/getSave/${itinerary._id}/${userName}`
+        );
+
+        console.log("hal heya saved: ", response.data);
+        console.log("what is the status ", response.status);
+
+        if (response.status === 200) {
+          setSaveStates((prevState) => ({
+            ...prevState,
+            [itinerary._id]: response.data.saved, // Update only the relevant activity state
+          }));
+        }
+      } catch (error) {
+        console.error(`Failed to fetch save state for ${itinerary._id}:`, error);
+      }
+    };
+    fetchSaveStates();
+  }, [itinerary._id]);
 
   const TheCard = () => {
     return (
@@ -144,11 +207,11 @@ export default function ItineraryCard({ itinerary = {} }) {
 
             <IconButton
               size="md"
-              variant={saved ? "soft" : "solid"}
-              color={saved ? "neutral" : "primary"}
+              variant={saveStates[itinerary._id] ? "soft" : "solid"}
+              color={saveStates[itinerary._id] ? "neutral" : "primary"}
               onClick={(event) => {
                 event.stopPropagation();
-                handleSaveClick();
+                handleSaveItinerary(itinerary._id, saveStates[itinerary._id])
               }}
               onMouseEnter={(e) => (e.target.style.cursor = 'pointer')}
               onMouseLeave={(e) => (e.target.style.cursor = 'default')}
@@ -169,7 +232,7 @@ export default function ItineraryCard({ itinerary = {} }) {
                 },
               }}
             >
-              {saved ? <Done color="#ff9933" /> : <BookmarksIcon />}
+              {saveStates[itinerary._id] ? <Done color="#ff9933" /> : <BookmarksIcon />}
             </IconButton>
           </CardOverflow>
           <div style={{ height: "10%" }}>
