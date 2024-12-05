@@ -97,6 +97,8 @@ import EditItinerary from "./Pages/Itinerary/editItinerary.js";
 
 import LandingPage from "./Pages/LandingPage.js";
 import ActivityCard from "../src/Components/activityCard";
+import FlightsPage from './Components/ThirdParty/FlightsPage';
+import HotelsPage from './Components/ThirdParty/HotelsPage';
 
 function App() {
   const { authUser } = useAuthContext();
@@ -695,6 +697,14 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/hotelsPage"
+            element={
+              <ProtectedRoute>
+                <HotelsPage />
+              </ProtectedRoute>
+            }
+          />
 
           <Route path="/addPromoCode" element={<CreatePromoCode />} />
           <Route path="/myOrders" element={<MyOrders />} />
@@ -704,6 +714,7 @@ function App() {
           
           <Route path="/mySaved" element={<MySavedItems/>} />
           <Route path="/orders" element={<Orders/>} />
+          <Route path="/flightsPage" element={<FlightsPage />} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

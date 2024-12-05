@@ -4,7 +4,7 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import axios from 'axios';
 import { message } from 'antd';
-import HotelCards from './HotelCard';
+import { useNavigate } from 'react-router-dom';
 
 const cities = [
   { label: 'New York', code: 'NYC', country: 'USA' },
@@ -79,8 +79,8 @@ const HotelBookingForm = () => {
   const [city, setCity] = useState(null);
   const [checkOutDate, setCheckOutDate] = useState(null);
   const [adults, setAdults] = useState('');
+  const navigate = useNavigate();
 
-  //c7ca2a8100mshd130920df3324d6p1981b5jsnd001bc3dd180
   const handleSearch = async () => {
     if (validateFields()) {
       const formattedCheckInDate = checkInDate.toISOString().split('T')[0]; // Format date as yyyy-mm-dd
@@ -119,7 +119,9 @@ const HotelBookingForm = () => {
             console.log(hotelsData);
 
             if (hotelsData && hotelsData.length > 0) {
-              setHotels(hotelsData);
+              const hotelsDataToStore = { hotels: hotelsData, checkInDate, checkOutDate, city, country: city.country, adults };
+              localStorage.setItem('hotelsData', JSON.stringify(hotelsDataToStore));
+              navigate('/hotelsPage');
             } else {
               message.error('No Hotels found.');
             }
@@ -156,62 +158,108 @@ const HotelBookingForm = () => {
   };
 
   return (
-    <Container sx={{ maxHeight: '50vh', mt:-25, overflowY: 'visible' }}>
-    <Container maxWidth="sm">
-      <Box sx={{ mt: 4 }}>
-        <Typography variant="h4" style={{textAlign: 'center'}} gutterBottom>
+    <div style={styles.container}>
+      <div style={styles.leftSection}>
+        <Typography variant="h3" style={styles.welcomeText}>
           Hotel Booking
         </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <DatePicker
-                label="Check-in Date"
-                value={checkInDate}
-                onChange={(newValue) => setCheckInDate(newValue)}
-                renderInput={(params) => <TextField {...params} fullWidth />}
-              />
-            </LocalizationProvider>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <DatePicker
-                label="Check-out Date"
-                value={checkOutDate}
-                onChange={(newValue) => setCheckOutDate(newValue)}
-                renderInput={(params) => <TextField {...params} fullWidth />}
-              />
-            </LocalizationProvider>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Autocomplete
-              options={cities}
-              getOptionLabel={(option) => `${option.country}, ${option.label}, ${option.code}`}
-              value={city}
-              onChange={(event, newValue) => setCity(newValue)}
-              renderInput={(params) => <TextField {...params} label="City" fullWidth />}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Number of Adults"
-              type="number"
-              value={adults}
-              onChange={(e) => setAdults(e.target.value)}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Button variant="contained" color="primary" onClick={handleSearch} fullWidth>
-              Search
-            </Button>
-          </Grid>
-        </Grid>
-      </Box>
-    </Container>
-    {hotels.length > 0 && <HotelCards sx={{overflowY: 'auto'}} hotels={hotels} checkInDate={checkInDate} checkOutDate={checkOutDate} country={city.country} city={city.label}  adults={adults} />}
-    </Container>
+        <Typography variant="h5" style={styles.descriptionText}>
+          Book your hotels with ease.
+        </Typography>
+      </div>
+      <div style={styles.rightSection}>
+        <Container maxWidth="sm">
+          <Box sx={{ mt: 4 }}>
+            <Typography variant="h4" style={{ textAlign: 'center' }} gutterBottom>
+              Hotel Booking
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    label="Check-in Date"
+                    value={checkInDate}
+                    onChange={(newValue) => setCheckInDate(newValue)}
+                    renderInput={(params) => <TextField {...params} fullWidth />}
+                  />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    label="Check-out Date"
+                    value={checkOutDate}
+                    onChange={(newValue) => setCheckOutDate(newValue)}
+                    renderInput={(params) => <TextField {...params} fullWidth />}
+                  />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Autocomplete
+                  options={cities}
+                  getOptionLabel={(option) => `${option.country}, ${option.label}, ${option.code}`}
+                  value={city}
+                  onChange={(event, newValue) => setCity(newValue)}
+                  renderInput={(params) => <TextField {...params} label="City" fullWidth />}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Number of Adults"
+                  type="number"
+                  value={adults}
+                  onChange={(e) => setAdults(e.target.value)}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button variant="contained" sx={{backgroundColor:"#ff9933"}} onClick={handleSearch} fullWidth>
+                  Search
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
+        </Container>
+      </div>
+    </div>
   );
+};
+
+const styles = {
+  container: {
+    display: 'flex',
+    height: '100vh',
+    width: '100vw',
+    background: 'url("/duckHotel.jpg") no-repeat left center fixed',
+    backgroundSize: 'cover',
+    overflowY: 'visible',
+  },
+  leftSection: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    color: '#fff',
+    padding: '20px',
+  },
+  rightSection: {
+    flex: 0.7,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.95)',
+  },
+  welcomeText: {
+    fontSize: '3rem',
+    fontWeight: 'bold',
+    marginBottom: '20px',
+  },
+  descriptionText: {
+    fontSize: '1.5rem',
+    textAlign: 'center',
+  },
 };
 
 export default HotelBookingForm;

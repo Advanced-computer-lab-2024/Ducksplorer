@@ -4,7 +4,7 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import axios from 'axios';
 import { message } from 'antd';
-import FlightsCards from './FlightsCards';
+import { useNavigate } from 'react-router-dom';
 
 const cities = [
   { label: 'New York', code: 'NYC', country: 'USA' },
@@ -73,11 +73,11 @@ const cities = [
 ];
 
 const FlightBookingForm = () => {
-  const [flights, setFlights] = useState([]);
   const [departureDate, setDepartureDate] = useState(null);
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
   const [seats, setSeats] = useState('');
+  const navigate = useNavigate();
 
   const handleSearch = async () => {
     if (validateFields()) {
@@ -94,17 +94,16 @@ const FlightBookingForm = () => {
         const flightsData = response.data.data;
         console.log(flightsData);
 
-      if (flightsData && flightsData.length > 0) {
-        setFlights(flightsData);
-        console.log(flightsData[0].itineraries[0]);
-        console.log(flightsData[0].itineraries[0].segments[0].arrival.at);
-      } else {
-        message.error('No flights found.');
-      }
+        if (flightsData && flightsData.length > 0) {
+          const flightsDataToStore = { flights: flightsData, origin, destination, departureDate };
+          localStorage.setItem('flightsData', JSON.stringify(flightsDataToStore));
+          navigate('/flightsPage');
+        } else {
+          message.error('No flights found.');
+        }
 
       } catch (error) {
         console.error('Error fetching flights:', error);
-        //message.error('Response data:', error.response.error);
         message.error('Failed to fetch flights. Please try again.');
       }
     } else {
@@ -130,61 +129,114 @@ const FlightBookingForm = () => {
   };
 
   return (
-    <Container sx={{ maxHeight: '50vh', mt:-25, overflowY: 'visible' }}>
-    <Container maxWidth="sm">
-      <Box sx={{ mt: 4 }}>
-        <Typography variant="h4" style={{textAlign: 'center'}} gutterBottom>
-          Flight Booking
+    <div style={styles.container}>
+      <div style={styles.leftSection}>
+        <Typography variant="h3" style={styles.welcomeText}>
+        Flight Booking
         </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <DatePicker
-                label="Departure Date"
-                value={departureDate}
-                onChange={(newValue) => setDepartureDate(newValue)}
-                renderInput={(params) => <TextField {...params} fullWidth />}
-              />
-            </LocalizationProvider>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Autocomplete
-              options={cities}
-              getOptionLabel={(option) => `${option.country}, ${option.label}, ${option.code}`}
-              value={origin}
-              onChange={(event, newValue) => setOrigin(newValue)}
-              renderInput={(params) => <TextField {...params} label="Origin" fullWidth />}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Autocomplete
-              options={cities}
-              getOptionLabel={(option) => `${option.country}, ${option.label}, ${option.code}`}
-              value={destination}
-              onChange={(event, newValue) => setDestination(newValue)}
-              renderInput={(params) => <TextField {...params} label="Destination" fullWidth />}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Number of Seats"
-              type="number"
-              value={seats}
-              onChange={(e) => setSeats(e.target.value)}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Button variant="contained" color="primary" onClick={handleSearch} fullWidth>
-              Search
-            </Button>
-          </Grid>
-        </Grid>
-      </Box>
-    </Container>
-    {flights.length > 0 && <FlightsCards sx={{overflowY: 'auto'}}flights={flights} originCity={origin.label} destinationCity={destination.label} originCountry={origin.country} destinationCountry={destination.country} departureDate={departureDate} />}
-    </Container>
+        <Typography variant="h5" style={styles.descriptionText}>
+          Book your flights with ease.
+        </Typography>
+      </div>
+      <div style={styles.rightSection}>
+        <Container maxWidth="sm">
+          <Box sx={{ mt: 4 }}>
+            <Typography variant="h4" style={{ textAlign: 'center' }} gutterBottom>
+              Flight Booking
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    label="Departure Date"
+                    value={departureDate}
+                    onChange={(newValue) => setDepartureDate(newValue)}
+                    renderInput={(params) => <TextField {...params} fullWidth />}
+                  />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Autocomplete
+                  options={cities}
+                  getOptionLabel={(option) => `${option.country}, ${option.label}, ${option.code}`}
+                  value={origin}
+                  onChange={(event, newValue) => setOrigin(newValue)}
+                  renderInput={(params) => <TextField {...params} label="Origin" fullWidth />}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Autocomplete
+                  options={cities}
+                  getOptionLabel={(option) => `${option.country}, ${option.label}, ${option.code}`}
+                  value={destination}
+                  onChange={(event, newValue) => setDestination(newValue)}
+                  renderInput={(params) => <TextField {...params} label="Destination" fullWidth />}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Number of Seats"
+                  type="number"
+                  value={seats}
+                  onChange={(e) => setSeats(e.target.value)}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button variant="contained" sx={{backgroundColor:"#ff9933"}} onClick={handleSearch} fullWidth>
+                  Search
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
+        </Container>
+      </div>
+    </div>
   );
+};
+
+const styles = {
+  container: {
+    display: 'flex',
+    height: '100vh',
+    width: '100vw',
+    background: 'url("/duckPlane.jpg") no-repeat left center fixed',
+    backgroundSize: 'cover',
+    overflowY : 'visible',
+  },
+  leftSection: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    color: '#fff',
+    padding: '20px',
+  },
+  rightSection: {
+    flex: 0.7,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.95)',
+  },
+  centeredSection: {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.95)',
+  },
+  welcomeText: {
+    fontSize: '3rem',
+    fontWeight: 'bold',
+    marginBottom: '20px',
+  },
+  descriptionText: {
+    fontSize: '1.5rem',
+    textAlign: 'center',
+  },
 };
 
 export default FlightBookingForm;
