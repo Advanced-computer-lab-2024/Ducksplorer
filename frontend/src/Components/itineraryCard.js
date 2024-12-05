@@ -411,13 +411,6 @@ export default function ItineraryCard({
                   {itinerary.name || "Itinerary Name"}
                 </h4>
                 <div style={{ marginLeft: "3px" }}>
-                  {itinerary.activity && itinerary.activity.length > 0 ? (
-                    <p style={{ padding: 0, margin: 0 }}>
-                      {itinerary.activity
-                        .map((activity) => activity.name)
-                        .join(", ")}
-                    </p>
-                  ) : null}
                   <Rating
                     value={itinerary.rating}
                     icon={<StarIcon sx={{ color: "ff9933" }} />}
