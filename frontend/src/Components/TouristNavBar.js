@@ -300,6 +300,9 @@ function TouristNavBar() {
                 color: "black",
                 textAlign: "center",
                 textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
               }}
             >
               <Typography
@@ -326,6 +329,9 @@ function TouristNavBar() {
                 color: "black",
                 textAlign: "center",
                 textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
               }}
             >
               <Typography
@@ -352,6 +358,9 @@ function TouristNavBar() {
                 color: "black",
                 textAlign: "center",
                 textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
               }}
             >
               <Typography
@@ -378,6 +387,9 @@ function TouristNavBar() {
                 color: "black",
                 textAlign: "center",
                 textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
               }}
             >
               <Typography
@@ -404,6 +416,9 @@ function TouristNavBar() {
                 color: "black",
                 textAlign: "center",
                 textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
               }}
             >
               <Typography
@@ -430,7 +445,7 @@ function TouristNavBar() {
                 textAlign: "center",
                 textTransform: "none",
                 "&:hover": {
-                  color: "#ff9933",
+                  backgroundColor: "#FEF4EA",
                 },
               }}
             >
@@ -504,9 +519,7 @@ function TouristNavBar() {
                     borderRadius: "100%", // Circular shape
                     border: "2px solid #FFD700", // Add a gold border for a premium feel
                   }}
-                  onError={(e) => {
-                    e.target.src = "defaultAvatar.png";
-                  }} // Fallback in case of image load error
+                  // Fallback in case of image load error
                   title="User Avatar" // Tooltip for accessibility
                 />
               </IconButton>
@@ -548,7 +561,9 @@ function TouristNavBar() {
                 </IconButton>
               </MenuItem>
               <MenuItem onClick={handleTogglePreferences}>
-                <IconButton sx={{ textAlign: "center", p: 0.5, color: "black" }}>
+                <IconButton
+                  sx={{ textAlign: "center", p: 0.5, color: "black" }}
+                >
                   {showPreferences ? (
                     <VisibilityIcon sx={{ fontSize: 20, color: "green" }} />
                   ) : (
@@ -644,7 +659,6 @@ function TouristNavBar() {
                   </Typography>
                 </IconButton>
               </MenuItem>
-
             </Menu>
           </Box>
         </Toolbar>

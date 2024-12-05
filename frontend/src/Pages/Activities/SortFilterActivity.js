@@ -90,7 +90,6 @@ function SortFilterActivity() {
             Filter
           </Button>
         </Box>
-
         {sort && <SortActivities />}
         {filter && <FilterActivities />}
       </div>

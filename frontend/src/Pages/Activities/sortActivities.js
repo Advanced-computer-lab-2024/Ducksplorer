@@ -148,9 +148,9 @@ const SortActivities = () => {
           prevActivities.map((activity) =>
             activity._id === activityId
               ? {
-                ...activity,
-                saved: { ...activity.saved, isSaved: newIsSaved },
-              }
+                  ...activity,
+                  saved: { ...activity.saved, isSaved: newIsSaved },
+                }
               : activity
           )
         );
@@ -211,15 +211,20 @@ const SortActivities = () => {
           justifyContent: "space-between",
         }}
       >
-        <FormControl >
+        <FormControl>
           <Select
             indicator={<KeyboardArrowDown />}
             placeholder="Sort By"
-            color="primary"
             onChange={(e, newValue) => {
               setSortBy(newValue);
             }}
             sx={{
+              color: "orange",
+              borderColor: "orange",
+              backgroundColor: "#ffffff",
+              "&:hover": {
+                backgroundColor: "#FEF4EA",
+              },
               width: 240,
               [`& .${selectClasses.indicator}`]: {
                 transition: "0.2s",
@@ -229,13 +234,90 @@ const SortActivities = () => {
               },
             }}
           >
-            <Option value="date">Date</Option>
-            <Option value="price">Price</Option>
-            <Option value="name">Name</Option>
-            <Option value="duration">Duration</Option>
-            <Option value="category">Category</Option>
-            <Option value="specialDiscount">Discount</Option>
-            <Option value="averageRating">Rating</Option>
+            <Option
+              sx={{
+                color: "orange",
+                backgroundColor: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+              value="date"
+            >
+              Date
+            </Option>
+            <Option
+              sx={{
+                color: "orange",
+                backgroundColor: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+              value="price"
+            >
+              Price
+            </Option>
+            <Option
+              sx={{
+                color: "orange",
+                backgroundColor: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+              value="name"
+            >
+              Name
+            </Option>
+            <Option
+              sx={{
+                color: "orange",
+                backgroundColor: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+              value="duration"
+            >
+              Duration
+            </Option>
+            <Option
+              sx={{
+                color: "orange",
+                backgroundColor: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+              value="category"
+            >
+              Category
+            </Option>
+            <Option
+              sx={{
+                color: "orange",
+                backgroundColor: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+              value="specialDiscount"
+            >
+              Discount
+            </Option>
+            <Option
+              sx={{
+                color: "orange",
+                backgroundColor: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+              value="averageRating"
+            >
+              Rating
+            </Option>
           </Select>
         </FormControl>
 
@@ -246,9 +328,23 @@ const SortActivities = () => {
             onChange={(e, value) => {
               setOrder(value);
             }}
-            color="primary"
             indicator={<KeyboardArrowDown />}
             sx={{
+              "&.MuiSelect-MenuItem": {
+                backgroundColor: "orange",
+              },
+              "&.Joy-JoySelectListBox": {
+                sx: {
+                  backgroundColor: "orange",
+                },
+              },
+
+              color: "orange",
+              borderColor: "orange",
+              backgroundColor: "#ffffff",
+              "&:hover": {
+                backgroundColor: "#FEF4EA",
+              },
               width: 240,
               [`& .${selectClasses.indicator}`]: {
                 transition: "0.2s",
@@ -258,13 +354,30 @@ const SortActivities = () => {
               },
             }}
           >
-            <Option value="asc">Ascending</Option>
-            <Option value="desc">Descending</Option>
+            <Option
+              value="asc"
+              sx={{
+                color: "orange",
+                backgroundColor: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              Ascending
+            </Option>
+            <Option
+              value="desc"
+              sx={{ color: "orange", backgroundColor: "#ffffff" }}
+            >
+              Descending
+            </Option>
           </Select>
         </FormControl>
 
         <Button
-          variant="contained"
+          className="blackhover"
+          sx={{ backgroundColor: "#ff9933", color: "white " }}
           onClick={fetchSortedActivities}
         >
           Sort
@@ -281,8 +394,8 @@ const SortActivities = () => {
       >
         {activities.map((activity) =>
           activity.flag === false &&
-            activity.advertiserDeleted === false &&
-            activity.deletedActivity === false
+          activity.advertiserDeleted === false &&
+          activity.deletedActivity === false
             ? (console.log("this is the average rating ", activity.ratings[1]),
               (<ActivityCard activity={activity} />))
             : null
@@ -310,7 +423,7 @@ const SortActivities = () => {
                     </span>  SAVED BY JAYDAA
                   </TableCell> */}
       <Help />
-    </div >
+    </div>
   );
 };
 
