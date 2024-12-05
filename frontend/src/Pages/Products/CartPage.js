@@ -166,7 +166,8 @@ const CartPage = () => {
             onClick={() => setIsCheckoutModalVisible(true)}
             style={{
               backgroundColor: "#ff9933", // Ensure visible background color
-              color: "#fff", // Ensure text is visible
+              color: "#fff",
+              "&:hover": { backgroundColor: "#e68a00" },
               border: "none", // Remove any conflicting borders
               padding: "10px 20px",
               fontSize: "1.2rem",
