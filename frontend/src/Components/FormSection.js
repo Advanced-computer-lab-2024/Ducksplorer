@@ -562,7 +562,7 @@ const FormSection = () => {
               </>
             )}
             <DropDown />
-            {type && (type === "Seller" || type === "Advertiser" || type === "Guide" || type === "Tourist") && (
+            {type && (type === "Seller" || type === "Advertiser" || type === "Guide") && (
               <FormControlLabel
                 sx={{ justifyContent: "center" }}
                 control={

@@ -15,6 +15,7 @@ const {
   getGroupedPurchases,
   getPurchasesByOrderNumber,
   getOrderProducts,
+  cancelOrder,
   // getMyOrder,
 } = require("../Controllers/purchasesController");
 
@@ -97,6 +98,7 @@ router.get("/myPurchases/:buyer", getMyPurchases);
 router.get("/groupedPurchases/:buyer", getGroupedPurchases);
 router.get("/orderDetails/:orderNumber", getPurchasesByOrderNumber);
 router.get("/getOrderProducts/:productId", getOrderProducts);
+router.delete("/cancelOrder/:username/:orderNumber", cancelOrder);
 
 router.get("/myOrders/:buyer", getMyOrders);
 

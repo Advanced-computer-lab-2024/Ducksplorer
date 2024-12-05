@@ -282,6 +282,8 @@ const PastBookingDetails = () => {
 
   if (loading) {
     return (
+      <>
+      <TouristNavBar/>
       <Box
         sx={{
           display: "flex",
@@ -296,11 +298,14 @@ const PastBookingDetails = () => {
           Loading past bookings...
         </Typography>
       </Box>
+      </>
     );
   }
 
   if ((!Array.isArray(activityBookings) && !Array.isArray(itineraryBookings)) || (activityBookings.length === 0 && itineraryBookings.length === 0)) {
-    return <p>No booking details available.</p>;
+    return (<>
+    <TouristNavBar/>
+    <p style={{fontSize:'2rem' , fontWeight:'bold', fontFamily: "'Roboto', sans-serif",}}>No booking details available.</p></>);
   }
 
   return (

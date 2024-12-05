@@ -22,11 +22,16 @@ import Typography from "@mui/joy/Typography";
 import Button from "@mui/joy/Button";
 import ItineraryCardDetails from "./itineraryCardDetailed";
 import { useState, useEffect } from "react";
-import NotificationAddOutlinedIcon from '@mui/icons-material/NotificationAddOutlined';
-import ShareIcon from '@mui/icons-material/Share';
+import NotificationAddOutlinedIcon from "@mui/icons-material/NotificationAddOutlined";
+import ShareIcon from "@mui/icons-material/Share";
 import { Menu, MenuItem } from "@mui/material";
+import Swal from "sweetalert2";
 
-export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) {
+export default function ItineraryCard({
+  itinerary = {},
+  onRemove,
+  showNotify,
+}) {
   const navigate = useNavigate();
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -36,14 +41,41 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleClick = (event) => {
-    // event.stopPropagation();
-    setAnchorEl(event.currentTarget);
-  };
+  const handleClick = (event, itineraryId) => {
+    event.stopPropagation();
+    // setAnchorEl(event.currentTarget);
+    Swal.fire({
+      title: "Share Itinerary",
+      html: `
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+          <button id="share-link" style="padding: 10px 20px; font-size: 16px; background-color: #ff9933; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            Share via Link
+          </button>
+          <button id="share-mail" style="padding: 10px 20px; font-size: 16px; background-color: #ff9933; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            Share via Mail
+          </button>
+        </div>
+      `,
+      showConfirmButton: false, // Hide default OK button
+      width: "400px", // Set the width of the popup
+      padding: "20px", // Add padding to the popup
+      customClass: {
+        popup: "my-swal-popup", // Optional: Add custom styling via CSS
+      },
+    });
 
-  // Close the dropdown menu
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
+    // Add click event listeners for custom buttons
+    document.getElementById("share-link").addEventListener("click", () => {
+      console.log("Sharing via link...");
+      handleShareLink(itineraryId);
+      Swal.fire("Link copied to clipboard!", "", "success");
+    });
+
+    document.getElementById("share-mail").addEventListener("click", () => {
+      console.log("Sharing via mail...");
+      handleShareEmail(itineraryId);
+      // Swal.fire("Shared via Mail!", "", "success");
+    });
   };
 
   const handleBooking = async (itineraryId) => {
@@ -77,8 +109,7 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
       if (response.status === 200) {
         if (response.data.isUpcoming) {
           navigate("/payment");
-        }
-        else {
+        } else {
           message.error("You can't book an old itinerary");
         }
       } else {
@@ -172,7 +203,10 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
           }));
         }
       } catch (error) {
-        console.error(`Failed to fetch save state for ${itinerary._id}:`, error);
+        console.error(
+          `Failed to fetch save state for ${itinerary._id}:`,
+          error
+        );
       }
     };
     fetchSaveStates();
@@ -185,10 +219,13 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
     try {
       const newIsNotified = !currentIsNotified;
 
-      const response = await axios.post('http://localhost:8000/notification/request', {
-        user: username,
-        eventId: itineraryId,
-      });
+      const response = await axios.post(
+        "http://localhost:8000/notification/request",
+        {
+          user: username,
+          eventId: itineraryId,
+        }
+      );
 
       if (response.status === 201) {
         message.success(
@@ -200,19 +237,21 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
           ...prev,
           [itineraryId]: newIsNotified,
         }));
-        message.success('You will be notified when this event starts accepting bookings.');
+        message.success(
+          "You will be notified when this event starts accepting bookings."
+        );
       } else if (response.status === 200) {
-        message.info('You have already requested to be notified for this activity');
-      }
-      else {
+        message.info(
+          "You have already requested to be notified for this activity"
+        );
+      } else {
         message.error(response.data.message);
       }
     } catch (error) {
-      console.error('Error requesting notification:', error);
-      message.error('Failed to request notification.');
+      console.error("Error requesting notification:", error);
+      message.error("Failed to request notification.");
     }
   };
-
 
   const TheCard = () => {
     return (
@@ -221,7 +260,7 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
           className="itinerary-card"
           variant="outlined"
           sx={{
-            width: "20vw",
+            width: "100%",
             height: "400px",
           }}
           onClick={handleOpen}
@@ -235,7 +274,7 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
                 size="md"
                 variant="solid"
                 color="primary"
-                onClick={handleClick}
+                onClick={(event) => handleClick(event, itinerary._id)}
                 sx={{
                   borderRadius: "50%",
                   position: "absolute",
@@ -254,41 +293,6 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
                 <ShareIcon />
               </IconButton>
             </Tooltip>
-
-            {/* Dropdown menu */}
-            <Menu
-              anchorEl={anchorEl} // Position the dropdown relative to the button
-              open={Boolean(anchorEl)} // Open if anchorEl is not null
-              onClose={handleClose} // Close on menu item click or outside click
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "center",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "center",
-              }}
-            >
-              {/* Menu Items */}
-              <MenuItem
-                onClick={() => {
-                  handleShareLink(itinerary._id); // Call share via link function
-                  handleCloseMenu(); // Close dropdown
-                }}
-              >
-                Share via Link
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  handleShareEmail(itinerary._id); // Call share via mail function
-                  handleCloseMenu(); // Close dropdown
-                }}
-              >
-                Share via Mail
-              </MenuItem>
-            </Menu>
-
-
 
             <Tooltip title="Save itinerary">
               <IconButton
@@ -319,10 +323,10 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
               color={saveStates[itinerary._id] ? "neutral" : "primary"}
               onClick={(event) => {
                 event.stopPropagation();
-                handleSaveItinerary(itinerary._id, saveStates[itinerary._id])
+                handleSaveItinerary(itinerary._id, saveStates[itinerary._id]);
               }}
-              onMouseEnter={(e) => (e.target.style.cursor = 'pointer')}
-              onMouseLeave={(e) => (e.target.style.cursor = 'default')}
+              onMouseEnter={(e) => (e.target.style.cursor = "pointer")}
+              onMouseLeave={(e) => (e.target.style.cursor = "default")}
               sx={{
                 position: "absolute",
                 zIndex: 2,
@@ -340,7 +344,11 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
                 },
               }}
             >
-              {saveStates[itinerary._id] ? <Done color="#ff9933" /> : <BookmarksIcon />}
+              {saveStates[itinerary._id] ? (
+                <Done color="#ff9933" />
+              ) : (
+                <BookmarksIcon />
+              )}
             </IconButton>
             {showNotify && (
               <Tooltip title="Request Notifications">
@@ -349,7 +357,11 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
                   variant="solid"
                   color="primary"
                   onClick={(event) =>
-                    requestNotification(event, itinerary._id, notificationStates[itinerary._id])
+                    requestNotification(
+                      event,
+                      itinerary._id,
+                      notificationStates[itinerary._id]
+                    )
                   }
                   sx={{
                     borderRadius: "50%",
@@ -393,6 +405,14 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
                 >
                   {itinerary.name || "Itinerary Name"}
                 </h4>
+
+                {itinerary.activity && itinerary.activity.length > 0 ? (
+                  <p>
+                    {itinerary.activity.map((activity) => activity.name).join(", ")}
+                  </p>
+                ) : (
+                  <p></p>
+                )}
 
                 <Rating
                   value={itinerary.rating}
@@ -530,7 +550,6 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
             <ItineraryCardDetails itinerary={itinerary} />
           </div>
         </Popover>
-
       </div>
     );
   };

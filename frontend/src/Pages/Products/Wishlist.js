@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { message } from "antd";
 import { Typography } from "@mui/material";
-import { Button } from "@mui/material";
+import { Button, Box } from "@mui/material";
 import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
 import Help from "../../Components/HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar";
@@ -43,6 +43,11 @@ function Wishlist() {
     <>
       <TouristNavBar />
       <Button onClick={handleBackButtonClick}>Back</Button>
+      <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Typography variant="h4" fontWeight="700">
+            My Wishlist
+          </Typography>
+        </Box>
       <div
         style={{
           padding: "20px",

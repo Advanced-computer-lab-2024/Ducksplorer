@@ -28,6 +28,8 @@ import Cookies from "js-cookie";
 import PersistentDrawerLeft from "./Drawer";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
+import Button from "@mui/material/Button";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -123,15 +125,20 @@ function TouristNavBar() {
       <Container sx={{ width: "100%" }}>
         <Toolbar disableGutters sx={{ width: "100vw", justifySelf: "center" }}>
           <Tooltip title="Home">
-            <h2
-              className="duckTitle"
-              style={{
-                marginLeft: "20px",
-                fontSize: "40px",
-                fontWeight: "700",
-                color: "orange",
-                fontSize: '2rem'
-              }}>Ducksplorer</h2>
+            <a href="/touristDashboard" style={{ textDecoration: "none" }}>
+              <h2
+                className="duckTitle"
+                style={{
+                  marginLeft: "20px",
+                  fontSize: "40px",
+                  fontWeight: "700",
+                  color: "orange",
+                  fontSize: "2rem",
+                }}
+              >
+                Ducksplorer
+              </h2>
+            </a>
           </Tooltip>
           {/* <PersistentDrawerLeft /> */}
           {/* <Tooltip title="Ducksplorer Home Page">
@@ -190,7 +197,6 @@ function TouristNavBar() {
               onClose={handleCloseNavMenu}
               sx={{ display: { xs: "block", md: "none" } }}
             >
-
               <Box
                 sx={{
                   display: "flex",
@@ -208,7 +214,7 @@ function TouristNavBar() {
                   <IconButton>
                     <FestivalIcon />
                   </IconButton>
-                  <Typography textAlign="center"  >Activities</Typography>
+                  <Typography textAlign="center">Activities</Typography>
                 </MenuItem>
                 <MenuItem onClick={() => handleNavigation("itineraries")}>
                   <IconButton>
@@ -260,6 +266,9 @@ function TouristNavBar() {
               letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
+              "&:hover": {
+                color: "#ff9933",
+              },
             }}
           >
             Bookings
@@ -282,96 +291,179 @@ function TouristNavBar() {
                 </Typography>
               </IconButton>
             </Tooltip> */}
-            <Tooltip title="Book Activities">
-              <IconButton onClick={() => handleNavigation("activity/sortFilter")}>
-                <Typography
-                  textAlign="center"
-                  sx={{
-                    fontSize: "1rem", // Larger font size
-                    // fontWeight: "bold",  // Bold text
-                    fontFamily: "'Roboto', sans-serif", // Modern, readable font
-                    color: "black"
-                  }}
-                >
-                  Activities
-                </Typography>
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Book Itineraries">
-              <IconButton onClick={() => handleNavigation("viewUpcomingItinerary")}>
-                <Typography
-                  textAlign="center"
-                  sx={{
-                    fontSize: "1rem",
-                    // fontWeight: "bold",
-                    fontFamily: "'Roboto', sans-serif",
-                    color: "black"
-                  }}
-                >
-                  Itineraries
-                </Typography>
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Book Flights">
-              <IconButton onClick={() => handleNavigation("flights")}>
-                <Typography
-                  textAlign="center"
-                  sx={{
-                    fontSize: "1rem",
-                    // fontWeight: "bold",
-                    fontFamily: "'Roboto', sans-serif",
-                    color: "black"
-                  }}
-                >
-                  Flights
-                </Typography>
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Book Hotels">
-              <IconButton onClick={() => handleNavigation("hotels")}>
-                <Typography
-                  textAlign="center"
-                  sx={{
-                    fontSize: "1rem",
-                    // fontWeight: "bold",
-                    fontFamily: "'Roboto', sans-serif",
-                    color: "black"
-                  }}
-                >
-                  Hotels
-                </Typography>
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Book Transportation">
-              <IconButton onClick={() => handleNavigation("transportation")}>
-                <Typography
-                  textAlign="center"
-                  sx={{
-                    fontSize: "1rem",
-                    // fontWeight: "bold",
-                    fontFamily: "'Roboto', sans-serif",
-                    color: "black"
-                  }}
-                >
-                  Transportation
-                </Typography>
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="View Products">
-              <IconButton onClick={() => handleNavigation("TouristAllProducts")}>
-                <Typography
-                  textAlign="center"
-                  sx={{
-                    fontSize: "1rem",
-                    // fontWeight: "bold",
-                    fontFamily: "'Roboto', sans-serif",
-                    color: "black"
-                  }}
-                >
-                  Products
-                </Typography>
-              </IconButton>
-            </Tooltip>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("activity/sortFilter")}
+              sx={{
+                fontSize: "1rem",
+                fontFamily: "'Josefin Sans', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Lobster', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                Activities
+              </Typography>
+            </Button>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("viewUpcomingItinerary")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                Itineraries
+              </Typography>
+            </Button>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("flights")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                Flights
+              </Typography>
+            </Button>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("hotels")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                Hotels
+              </Typography>
+            </Button>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("transportation")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                Transportation
+              </Typography>
+            </Button>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("TouristAllProducts")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                Marketplace
+              </Typography>
+            </Button>
 
             {/* <Tooltip title="View My Bookings">
               <IconButton onClick={() => handleNavigation("mybookings")}>
@@ -381,18 +473,37 @@ function TouristNavBar() {
                 </Typography>
               </IconButton>
             </Tooltip> */}
-            {/* <Tooltip title="View My Wishlist">
-              <IconButton onClick={() => handleNavigation("wishlist")}>
-                <FavoriteBorderIcon />
-                <Typography textAlign="center" marginRight={1}>
-                  Wishlist
-                </Typography>
-              </IconButton>
-            </Tooltip> */}
           </Box>
           <Box sx={{ flexGrow: 0, marginRight: "3vw " }}>
-            <Tooltip title="Notifications">
+            <Tooltip>
               <MyNotifications />
+            </Tooltip>
+            <Tooltip>
+              <IconButton onClick={() => handleNavigation("wishlist")}>
+                <FavoriteBorderIcon
+                  sx={{
+                    color: "black",
+                    "&:hover": {
+                      color: "#ff9933",
+                    },
+                  }}
+                />
+                {/* <Typography textAlign="center" marginRight={1}>
+                   Wishlist
+                 </Typography> */}
+              </IconButton>
+            </Tooltip>
+            <Tooltip>
+              <IconButton onClick={() => handleNavigation("myCart")}>
+                <ShoppingCartIcon
+                  sx={{
+                    color: "black",
+                    "&:hover": {
+                      color: "#ff9933",
+                    },
+                  }}
+                />
+              </IconButton>
             </Tooltip>
             <Tooltip title="Open Account settings">
               <IconButton
@@ -408,9 +519,7 @@ function TouristNavBar() {
                     borderRadius: "100%", // Circular shape
                     border: "2px solid #FFD700", // Add a gold border for a premium feel
                   }}
-                  onError={(e) => {
-                    e.target.src = "defaultAvatar.png";
-                  }} // Fallback in case of image load error
+                  // Fallback in case of image load error
                   title="User Avatar" // Tooltip for accessibility
                 />
               </IconButton>
@@ -452,38 +561,101 @@ function TouristNavBar() {
                 </IconButton>
               </MenuItem>
               <MenuItem onClick={handleTogglePreferences}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
+                <IconButton
+                  sx={{ textAlign: "center", p: 0.5, color: "black" }}
+                >
                   {showPreferences ? (
                     <VisibilityIcon sx={{ fontSize: 20, color: "green" }} />
                   ) : (
                     <VisibilityOffIcon sx={{ fontSize: 20, color: "red" }} />
                   )}
-                  <Typography sx={{ ml: 1 }} variant="body2">
+                  <Typography
+                    textAlign="center"
+                    marginLeft={2}
+                    sx={{ color: "black", fontSize: "14px" }}
+                  >
                     Show Preferences
                   </Typography>
                 </IconButton>
               </MenuItem>
+
+              <MenuItem onClick={handleCloseUserMenu}>
+                <IconButton
+                  component="a"
+                  href="/editAccount"
+                  sx={{ textAlign: "center", p: 0.5, color: "black" }}
+                >
+                  <AccountCircleIcon sx={{ fontSize: 20, color: "black" }} />
+                  <Typography
+                    textAlign="center"
+                    marginLeft={2}
+                    sx={{ color: "black", fontSize: "14px" }}
+                  >
+                    Profile
+                  </Typography>
+                </IconButton>
+              </MenuItem>
+
               <MenuItem onClick={handleCloseUserMenu}>
                 <IconButton
                   component="a"
                   href="/mySaved"
                   sx={{ textAlign: "center", p: 0.5 }}
                 >
-                  <BookmarksIcon sx={{ fontSize: 20, color: "grey" }} />
-                  <Typography sx={{ ml: 1 }} variant="body2">
+                  <BookmarksIcon sx={{ fontSize: 20, color: "black" }} />
+                  <Typography
+                    textAlign="center"
+                    marginLeft={2}
+                    sx={{ color: "black", fontSize: "14px" }}
+                  >
                     Saved
                   </Typography>
                 </IconButton>
               </MenuItem>
+
               <MenuItem onClick={handleCloseUserMenu}>
                 <IconButton
                   component="a"
                   href="/mybookings"
                   sx={{ textAlign: "center", p: 0.5 }}
                 >
-                  <BookmarkAddedIcon />
-                  <Typography textAlign="center" marginLeft={2}>
+                  <BookmarkAddedIcon sx={{ color: "black" }} />
+                  <Typography
+                    textAlign="center"
+                    marginLeft={2}
+                    sx={{ color: "black", fontSize: "14px" }}
+                  >
                     My Bookings
+                  </Typography>
+                </IconButton>
+              </MenuItem>
+
+              <MenuItem onClick={handleCloseUserMenu}>
+                <IconButton
+                  component="a"
+                  href="/orders"
+                  sx={{ textAlign: "center", p: 0.5 }}
+                >
+                  <StorefrontIcon sx={{ color: "black" }} />
+                  <Typography
+                    textAlign="center"
+                    marginLeft={2}
+                    sx={{ color: "black", fontSize: "14px" }}
+                  >
+                    My Orders
+                  </Typography>
+                </IconButton>
+              </MenuItem>
+
+              <MenuItem onClick={handleLogout}>
+                <IconButton component="a" sx={{ textAlign: "center", p: 0.5 }}>
+                  <LockIcon sx={{ fontSize: 20, color: "black" }} />
+                  <Typography
+                    textAlign="center"
+                    marginLeft={2}
+                    sx={{ color: "black", fontSize: "14px" }}
+                  >
+                    Logout
                   </Typography>
                 </IconButton>
               </MenuItem>
@@ -491,7 +663,7 @@ function TouristNavBar() {
           </Box>
         </Toolbar>
       </Container>
-    </AppBar >
+    </AppBar>
   );
 }
 

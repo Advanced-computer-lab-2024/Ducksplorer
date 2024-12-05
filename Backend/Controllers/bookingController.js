@@ -220,7 +220,6 @@ const viewDesiredActivity = async (req, res) => {
   }
 };
 
-
 const viewDesiredItinerary = async (req, res) => {
   try {
     const { itineraryId } = req.params;
@@ -233,7 +232,7 @@ const viewDesiredItinerary = async (req, res) => {
 
     // Check if any available date is in the future
     const now = new Date();
-    const isUpcoming = result.availableDatesAndTimes.some(dateTime => {
+    const isUpcoming = result.availableDatesAndTimes.some((dateTime) => {
       const itineraryDate = new Date(dateTime);
       return itineraryDate > now; // Check if the date is in the future
     });
@@ -246,7 +245,6 @@ const viewDesiredItinerary = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 const getMyBookings = async (req, res) => {
   try {
@@ -567,10 +565,13 @@ const redeemPoints = async (req, res) => {
 const payVisa = async (req, res) => {
   try {
     console.log("entered function pay visa");
-    console.log(req.body);
+    console.log("body", req.body);
     const { userName } = req.params;
     const { finalPrice } = req.body;
     const tourist = await Tourist.findOne({ userName });
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found" });
+    }
     if (tourist.level === 1) {
       tourist.points += finalPrice * 0.5;
     } else if (tourist.level === 2) {
@@ -592,8 +593,11 @@ const payVisa = async (req, res) => {
       wallet: tourist.wallet,
       points: tourist.points,
     });
-  } catch {
-    res.status(500).json({ message: "An error occurred", error });
+  } catch (error) {
+    console.error("Error in payVisa:", error);
+    res
+      .status(500)
+      .json({ message: "An error occurred", error: error.message });
   }
 };
 
