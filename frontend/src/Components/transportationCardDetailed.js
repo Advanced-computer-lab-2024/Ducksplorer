@@ -7,8 +7,8 @@ import Chip from "@mui/joy/Chip";
 
 export default function TransportationCardDetailed({ transportation }) {
     return (
-        <Card variant="outlined" sx={{ width: "100%", height: "auto" }}>
-            <AspectRatio ratio="2">
+        <Card variant="outlined" sx={{ width: "100%", height: "84.5vh" }}>
+            <AspectRatio ratio="1.75">
                 <img
                     src={transportation.image || "https://picsum.photos/200/300"}
                     alt={transportation.name || "Hotel Image"}
@@ -16,10 +16,14 @@ export default function TransportationCardDetailed({ transportation }) {
                 />
             </AspectRatio>
 
-            <CardContent>
-                <Typography level="h4" sx={{ fontWeight: "bold" }}>
+            <CardContent sx={{ display: "flex", alignItems: "center" }}>
+                <h4 style={{
+                    fontWeight: "bold",
+                    margin: "3%",
+                    fontSize: 40
+                }}>
                     {transportation.companyName}
-                </Typography>
+                </h4>
                 <p>
                     <strong>Departure Date:</strong>{" "}
                     {transportation.departureDate}

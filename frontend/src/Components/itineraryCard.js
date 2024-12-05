@@ -261,7 +261,7 @@ export default function ItineraryCard({
           variant="outlined"
           sx={{
             width: "100%",
-            height: "400px",
+            height: "40vh",
           }}
           onClick={handleOpen}
         >
@@ -274,6 +274,7 @@ export default function ItineraryCard({
                 size="md"
                 variant="solid"
                 color="primary"
+                className="blackhover"
                 onClick={(event) => handleClick(event, itinerary._id)}
                 sx={{
                   borderRadius: "50%",
@@ -298,7 +299,7 @@ export default function ItineraryCard({
               <IconButton
                 size="md"
                 variant="solid"
-                color="black"
+                className="blackhover"
                 sx={{
                   position: "absolute",
                   zIndex: 2,
@@ -309,8 +310,12 @@ export default function ItineraryCard({
                   fontSize: "3px",
                   bottom: 0,
                   transform: "translateY(50%)",
+                  color: "white",
                   size: "1px",
                   backgroundColor: "#ff9933",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
                 <BookmarksIcon />
@@ -320,7 +325,7 @@ export default function ItineraryCard({
             <IconButton
               size="md"
               variant={saveStates[itinerary._id] ? "soft" : "solid"}
-              color={saveStates[itinerary._id] ? "neutral" : "primary"}
+              className="blackhover"
               onClick={(event) => {
                 event.stopPropagation();
                 handleSaveItinerary(itinerary._id, saveStates[itinerary._id]);
@@ -336,6 +341,7 @@ export default function ItineraryCard({
                 height: "10px",
                 width: "10px",
                 fontSize: "3px",
+                color: "white",
                 transform: "translateY(50%)",
                 transition: "transform 0.3s",
                 backgroundColor: "#ff9933",
@@ -392,6 +398,7 @@ export default function ItineraryCard({
             >
               <div
                 style={{
+                  marginTop: "0",
                   display: "flex",
                   flexDirection: "column",
                 }}
@@ -399,28 +406,26 @@ export default function ItineraryCard({
                 <h4
                   style={{
                     fontWeight: "bold",
-                    margin: 0,
-                    marginRight: 20,
                   }}
                 >
                   {itinerary.name || "Itinerary Name"}
                 </h4>
-
-                {itinerary.activity && itinerary.activity.length > 0 ? (
-                  <p>
-                    {itinerary.activity.map((activity) => activity.name).join(", ")}
-                  </p>
-                ) : (
-                  <p></p>
-                )}
-
-                <Rating
-                  value={itinerary.rating}
-                  icon={<StarIcon sx={{ color: "ff9933" }} />}
-                  emptyIcon={<StarOutlineIcon />}
-                  readOnly
-                  precision={0.5}
-                />
+                <div style={{ marginLeft: "3px" }}>
+                  {itinerary.activity && itinerary.activity.length > 0 ? (
+                    <p style={{ padding: 0, margin: 0 }}>
+                      {itinerary.activity
+                        .map((activity) => activity.name)
+                        .join(", ")}
+                    </p>
+                  ) : null}
+                  <Rating
+                    value={itinerary.rating}
+                    icon={<StarIcon sx={{ color: "ff9933" }} />}
+                    emptyIcon={<StarOutlineIcon />}
+                    readOnly
+                    precision={0.5}
+                  />
+                </div>
                 <div
                   style={{
                     display: "flex",
@@ -434,8 +439,12 @@ export default function ItineraryCard({
                       component="span"
                       size="sm"
                       variant="outlined"
-                      color="primary"
-                      sx={{ marginRight: 1, marginBottom: 1 }}
+                      sx={{
+                        marginRight: 1,
+                        marginBottom: 1,
+                        color: "#ff9933",
+                        borderColor: "#ff9933",
+                      }}
                     >
                       {tag}
                     </Chip>
@@ -449,11 +458,10 @@ export default function ItineraryCard({
               style={{
                 display: "flex",
                 flexDirection: "row",
-                alignItems: "center",
                 justifyContent: "space-between",
                 position: "absolute",
                 bottom: 10,
-                width: "90%",
+                width: "94%",
               }}
             >
               <Typography
