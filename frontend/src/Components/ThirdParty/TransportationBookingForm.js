@@ -438,11 +438,11 @@ const TransportationBookingForm = () => {
         </Typography>
       </div>
       <div style={styles.rightSection}>
-        <Container maxWidth="sm">
+        <Container maxWidth="sm" style={{ marginTop: "-30vh" }}>
           <Box sx={{ mt: 4 }}>
             <Typography
               variant="h4"
-              style={{ textAlign: "center" }}
+              style={{ textAlign: "center" ,  marginBottom: "60px"}}
               gutterBottom
             >
               Transportation Booking

@@ -200,17 +200,17 @@ const HotelBookingForm = () => {
         </Typography>
       </div>
       <div style={styles.rightSection}>
-        <Container maxWidth="sm">
-          <Box sx={{ mt: 4 }}>
+        <Container maxWidth="sm" style={{ marginTop: "-30vh" }}>
+          <Box>
             <Typography
               variant="h4"
-              style={{ textAlign: "center" }}
+              style={{ textAlign: "center" ,  marginBottom: "60px" }}
               gutterBottom
             >
               Hotel Booking
             </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+            <Grid container spacing={2} direction="column">
+              <Grid item xs={12}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
                     sx={{ width: "100%" }}
@@ -223,7 +223,7 @@ const HotelBookingForm = () => {
                   />
                 </LocalizationProvider>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
                     label="Check-out Date"
@@ -236,7 +236,7 @@ const HotelBookingForm = () => {
                   />
                 </LocalizationProvider>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <Autocomplete
                   options={cities}
                   getOptionLabel={(option) =>
@@ -249,7 +249,7 @@ const HotelBookingForm = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   label="Number of Adults"
                   type="number"
@@ -261,7 +261,7 @@ const HotelBookingForm = () => {
               <Grid item xs={12}>
                 <Button
                   variant="contained"
-                  sx={{ backgroundColor: "#ff9933" }}
+                  sx={{ backgroundColor: "#ff9933" ,  marginTop: "20px" }}
                   onClick={handleSearch}
                   fullWidth
                 >

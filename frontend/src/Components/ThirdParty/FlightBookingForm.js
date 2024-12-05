@@ -152,17 +152,16 @@ const FlightBookingForm = () => {
         <Typography variant="h3" style={styles.welcomeText}>
           Flight Booking
         </Typography>
-        <Typography variant="h5" style={styles.descriptionText}>
+        <Typography variant="h1" style={styles.descriptionText}>
           Book your flights with ease.
         </Typography>
       </div>
       <div style={styles.rightSection}>
-        <Container maxWidth="sm">
-          <Box sx={{ mt: 4 }}>
+        <Container maxWidth="sm" style={{ marginTop: "-30vh" }}>
+          <Box>
             <Typography
               variant="h4"
-              style={{ textAlign: "center" }}
-              gutterBottom
+              style={{ textAlign: "center" , marginBottom: "60px"}}
             >
               Flight Booking
             </Typography>
@@ -174,7 +173,6 @@ const FlightBookingForm = () => {
                     sx={{ width: '100%' }}
                     value={departureDate}
                     onChange={(newValue) => setDepartureDate(newValue)}
-                    sx={{ width: "100%" }}
                     renderInput={(params) => (
                       <TextField {...params} fullWidth />
                     )}
@@ -219,7 +217,7 @@ const FlightBookingForm = () => {
               <Grid item xs={12}>
                 <Button
                   variant="contained"
-                  sx={{ backgroundColor: "#ff9933" }}
+                  sx={{ backgroundColor: "#ff9933" , marginTop: "30px"}}
                   onClick={handleSearch}
                   fullWidth
                 >
