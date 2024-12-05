@@ -34,6 +34,7 @@ export default function ItineraryCardDetails({ itinerary }) {
                         <div key={index}>
                             <p><strong>Activity Name:</strong> {activity.name}</p>
                             <p><strong>Activity Price:</strong> {activity.price}</p>
+                            <p><strong>Activity Category:</strong> {activity.category}</p>
                         </div>
                     ))
                 ) : (

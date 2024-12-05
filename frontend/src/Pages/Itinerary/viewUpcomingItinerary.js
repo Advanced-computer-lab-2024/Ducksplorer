@@ -303,8 +303,6 @@ const ViewUpcomingItinerary = () => {
     }
   };
 
- 
-
   return (
     <div>
       <TouristNavBar />
@@ -316,6 +314,7 @@ const ViewUpcomingItinerary = () => {
           flexDirection: "column",
           overflowY: "visible",
           height: "100vh",
+          width: "80vw",
         }}
       >
         <Link
@@ -423,7 +422,7 @@ const ViewUpcomingItinerary = () => {
                 onClose={() => setAnchorEl(null)}
               >
                 <MenuItem>
-                  <Typography variant="subtitle1">Select Range:</Typography> {" "}
+                  <Typography variant="subtitle1">Select Range:</Typography>{" "}
                   <Slider
                     value={priceRange}
                     onChange={handlePriceRangeChange}
@@ -454,7 +453,10 @@ const ViewUpcomingItinerary = () => {
               Language
               <br />
               <FormControl sx={{ minWidth: 120, marginTop: 1 }}>
-                <InputLabel id="language-select-label" sx={{ marginRight: 2 }}> Language </InputLabel>
+                <InputLabel id="language-select-label" sx={{ marginRight: 2 }}>
+                  {" "}
+                  Language{" "}
+                </InputLabel>
                 <Select
                   labelId="language-select-label"
                   id="language-select"
@@ -530,9 +532,9 @@ const ViewUpcomingItinerary = () => {
           >
             {itineraries.map((itinerary) =>
               itinerary.flag === false &&
-                itinerary.isDeactivated === false &&
-                itinerary.tourGuideDeleted === false &&
-                itinerary.deletedItinerary === false ? (
+              itinerary.isDeactivated === false &&
+              itinerary.tourGuideDeleted === false &&
+              itinerary.deletedItinerary === false ? (
                 <ItineraryCard itinerary={itinerary} />
               ) : null
             )}
@@ -544,8 +546,6 @@ const ViewUpcomingItinerary = () => {
         )}
 
         <Help />
-
-
       </Box>
     </div>
   );
