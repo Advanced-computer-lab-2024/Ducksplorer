@@ -565,7 +565,7 @@ const redeemPoints = async (req, res) => {
 const payVisa = async (req, res) => {
   try {
     console.log("entered function pay visa");
-    console.log(req.body);
+    console.log("body", req.body);
     const { userName } = req.params;
     const { finalPrice } = req.body;
     const tourist = await Tourist.findOne({ userName });

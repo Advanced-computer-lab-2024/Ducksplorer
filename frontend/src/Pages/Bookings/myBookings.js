@@ -229,6 +229,8 @@ const BookingDetails = () => {
 
   if (loading) {
     return (
+      <>
+      <TouristNavBar/>
       <Box
         sx={{
           display: "flex",
@@ -243,6 +245,7 @@ const BookingDetails = () => {
           Loading bookings...
         </Typography>
       </Box>
+      </>
     );
   }
 
@@ -253,7 +256,10 @@ const BookingDetails = () => {
     hotelsBookings.length === 0 &&
     transportationBookings.length === 0
   )
-    return <p>No booking details available.</p>;
+    return (<>
+    <TouristNavBar/>
+    <p style={{fontSize:'2rem' , fontWeight:'bold', fontFamily: "'Roboto', sans-serif",}} >No booking details available.</p>
+    </>);
 
   return (
     <Box
