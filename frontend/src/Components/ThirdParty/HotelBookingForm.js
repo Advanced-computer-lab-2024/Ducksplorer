@@ -209,15 +209,13 @@ const HotelBookingForm = () => {
             >
               Hotel Booking
             </Typography>
-            <Grid container spacing={2} direction="column">
-              <Grid item xs={12}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
                     sx={{ width: "100%" }}
                     label="Check-in Date"
                     value={checkInDate}
-                    sx={{ width: '100%' }}
-
                     onChange={(newValue) => setCheckInDate(newValue)}
                     renderInput={(params) => (
                       <TextField {...params} fullWidth />
@@ -225,12 +223,12 @@ const HotelBookingForm = () => {
                   />
                 </LocalizationProvider>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={6}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
                     label="Check-out Date"
                     value={checkOutDate}
-                    sx={{ width: '100%' }}
+                    sx={{ width: "100%" }}
                     onChange={(newValue) => setCheckOutDate(newValue)}
                     renderInput={(params) => (
                       <TextField {...params} fullWidth />
@@ -238,7 +236,7 @@ const HotelBookingForm = () => {
                   />
                 </LocalizationProvider>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={6}>
                 <Autocomplete
                   options={cities}
                   getOptionLabel={(option) =>
@@ -251,7 +249,7 @@ const HotelBookingForm = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={6}>
                 <TextField
                   label="Number of Adults"
                   type="number"
