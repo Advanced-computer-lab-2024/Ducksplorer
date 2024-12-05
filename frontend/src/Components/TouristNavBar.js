@@ -28,6 +28,7 @@ import Cookies from "js-cookie";
 import PersistentDrawerLeft from "./Drawer";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
+import Button from "@mui/material/Button";
 
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -122,7 +123,7 @@ function TouristNavBar() {
     >
       <Container sx={{ width: "100%" }}>
         <Toolbar disableGutters sx={{ width: "100vw", justifySelf: "center" }}>
-          <Tooltip title="Home">
+        <Tooltip title="Home">
             <h2
               className="duckTitle"
               style={{
@@ -131,7 +132,9 @@ function TouristNavBar() {
                 fontWeight: "700",
                 color: "orange",
                 fontSize: '2rem'
-              }}>Ducksplorer</h2>
+              }}>
+              Ducksplorer
+            </h2>
           </Tooltip>
           {/* <PersistentDrawerLeft /> */}
           {/* <Tooltip title="Ducksplorer Home Page">
@@ -208,7 +211,7 @@ function TouristNavBar() {
                   <IconButton>
                     <FestivalIcon />
                   </IconButton>
-                  <Typography textAlign="center"  >Activities</Typography>
+                  <Typography textAlign="center">Activities</Typography>
                 </MenuItem>
                 <MenuItem onClick={() => handleNavigation("itineraries")}>
                   <IconButton>
@@ -260,6 +263,9 @@ function TouristNavBar() {
               letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
+              '&:hover': {
+                  color: "#ff9933"
+                },
             }}
           >
             Bookings
@@ -282,96 +288,164 @@ function TouristNavBar() {
                 </Typography>
               </IconButton>
             </Tooltip> */}
-            <Tooltip title="Book Activities">
-              <IconButton onClick={() => handleNavigation("activity/sortFilter")}>
-                <Typography
-                  textAlign="center"
-                  sx={{
-                    fontSize: "1rem", // Larger font size
-                    // fontWeight: "bold",  // Bold text
-                    fontFamily: "'Roboto', sans-serif", // Modern, readable font
-                    color: "black"
-                  }}
-                >
-                  Activities
-                </Typography>
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Book Itineraries">
-              <IconButton onClick={() => handleNavigation("viewUpcomingItinerary")}>
-                <Typography
-                  textAlign="center"
-                  sx={{
-                    fontSize: "1rem",
-                    // fontWeight: "bold",
-                    fontFamily: "'Roboto', sans-serif",
-                    color: "black"
-                  }}
-                >
-                  Itineraries
-                </Typography>
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Book Flights">
-              <IconButton onClick={() => handleNavigation("flights")}>
-                <Typography
-                  textAlign="center"
-                  sx={{
-                    fontSize: "1rem",
-                    // fontWeight: "bold",
-                    fontFamily: "'Roboto', sans-serif",
-                    color: "black"
-                  }}
-                >
-                  Flights
-                </Typography>
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Book Hotels">
-              <IconButton onClick={() => handleNavigation("hotels")}>
-                <Typography
-                  textAlign="center"
-                  sx={{
-                    fontSize: "1rem",
-                    // fontWeight: "bold",
-                    fontFamily: "'Roboto', sans-serif",
-                    color: "black"
-                  }}
-                >
-                  Hotels
-                </Typography>
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Book Transportation">
-              <IconButton onClick={() => handleNavigation("transportation")}>
-                <Typography
-                  textAlign="center"
-                  sx={{
-                    fontSize: "1rem",
-                    // fontWeight: "bold",
-                    fontFamily: "'Roboto', sans-serif",
-                    color: "black"
-                  }}
-                >
-                  Transportation
-                </Typography>
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="View Products">
-              <IconButton onClick={() => handleNavigation("TouristAllProducts")}>
-                <Typography
-                  textAlign="center"
-                  sx={{
-                    fontSize: "1rem",
-                    // fontWeight: "bold",
-                    fontFamily: "'Roboto', sans-serif",
-                    color: "black"
-                  }}
-                >
-                  Products
-                </Typography>
-              </IconButton>
-            </Tooltip>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("activity/sortFilter")}
+              sx={{
+                fontSize: "1rem",
+                fontFamily: "'Josefin Sans', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform : "none",
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Lobster', sans-serif",
+                  color: "black",
+                  '&:hover': {
+                  color: "#ff9933"
+                },
+                }}
+              >
+                Activities
+              </Typography>
+            </Button>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("viewUpcomingItinerary")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform : "none",
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  '&:hover': {
+                  color: "#ff9933"
+                },
+                }}
+              >
+                Itineraries
+              </Typography>
+            </Button>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("flights")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform : "none",
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  '&:hover': {
+                  color: "#ff9933"
+                },
+                }}
+              >
+                Flights
+              </Typography>
+            </Button>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("hotels")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform : "none",
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  '&:hover': {
+                  color: "#ff9933"
+                },
+                }}
+              >
+                Hotels
+              </Typography>
+            </Button>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("transportation")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform : "none",
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  '&:hover': {
+                  color: "#ff9933"
+                },
+                }}
+              >
+                Transportation
+              </Typography>
+            </Button>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("TouristAllProducts")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                textAlign: "center",
+                textTransform : "none",
+                '&:hover': {
+                  color: "#ff9933"
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  '&:hover': {
+                  color: "#ff9933"
+                },
+                }}
+              >
+                Products
+              </Typography>
+            </Button>
 
             {/* <Tooltip title="View My Bookings">
               <IconButton onClick={() => handleNavigation("mybookings")}>
