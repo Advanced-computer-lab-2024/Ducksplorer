@@ -88,8 +88,23 @@ const TouristAllProducts = () => {
     }
   };
 
-  const handleMyPurchases = () => {
-    navigate("/orders");
+  const handleSortProducts = async (order) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/adminRoutes/sortProducts",
+        {
+          params: { sortingDecider: order },
+        }
+      );
+      if (response.status === 200) {
+        message.success("Products sorted successfully");
+        setProducts(response.data);
+      } else {
+        message.error("Failed to sort products");
+      }
+    } catch (error) {
+      message.error("An error occurred: " + error.message);
+    }
   };
 
   const handleBackButtonClick = () => {
@@ -154,52 +169,98 @@ const TouristAllProducts = () => {
           >
             Filter
           </Button>
-          <Button
-            fullWidth
-            variant="contained"
-            onClick={handleFilterClick}
-            style={sidebarButtonStyle}
-          >
-            Filter Products
-          </Button>
-          <Button
-            fullWidth
-            variant="contained"
-            onClick={handleSearchProduct}
-            style={sidebarButtonStyle}
-          >
-            Search Products
-          </Button>
-          <Button
-          fullWidth
-          variant="contained"
-          color="primary"
-          onClick={handleSortProducts}
-          style={sidebarButtonStyle}
-        >
-          Sort Products
-        </Button>
-        {!isGuest && (
-          <Button
-            fullWidth
-            variant="contained"
-            onClick={handleMyPurchases}
-            style={sidebarButtonStyle}
-          >
-            My Orders
-          </Button>
-        )}
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleFilterClose}
-          >
-            <MenuItem onClick={handleFilterClose}>Price</MenuItem>
-          </Menu>
-        </div>
-      </Drawer>
-      <Help />
-    </div>
+        </Box>
+
+        <Box sx={{ mb: 3, display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <FormControl variant="outlined" style={{ minWidth: 120 }}>
+            <InputLabel>Sort By</InputLabel>
+            <Select
+              value={sortOrder}
+              onChange={(e) => {
+                setSortOrder(e.target.value);
+                handleSortProducts(e.target.value);
+              }}
+              label="Sort By"
+            >
+              <MenuItem value="1">Price Ascending</MenuItem>
+              <MenuItem value="0">Price Descending</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+          {!isGuest && (
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{
+                paddingX: 4,
+                fontWeight: 600,
+                textTransform: "capitalize",
+                marginLeft: "10px",
+              }}
+              onClick={() => navigate("/myCart")}
+            >
+              View Cart
+            </Button>
+          )}
+        </Box>
+
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+          {!isGuest && (
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{
+                paddingX: 4,
+                fontWeight: 600,
+                textTransform: "capitalize",
+                marginLeft: "10px",
+              }}
+              onClick={() => navigate("/Wishlist")}
+            >
+              View Wishlist
+            </Button>
+          )}
+        </Box>
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+          {!isGuest && (
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{
+                paddingX: 4,
+                fontWeight: 600,
+                textTransform: "capitalize",
+                marginLeft: "10px",
+              }}
+              onClick={() => navigate("/orders")}
+            >
+              View All orders
+            </Button>
+          )}
+        </Box>
+        <Grid container spacing={3}>
+          {products.filter((product) => product.isArchived !== true).length > 0 ? (
+            products
+              .filter((product) => product.isArchived !== true)
+              .map((product) => (
+                <Grid item xs={12} sm={6} md={4} key={product._id}>
+                  <ProductCard product={product} showRating={true}
+                    showAddToCart={true}/>
+                </Grid>
+              ))
+          ) : (
+            <Grid item xs={12}>
+              <Typography variant="body1" color="textSecondary" align="center">
+                No products found.
+              </Typography>
+            </Grid>
+          )}
+        </Grid>
+        <Help />
+      </Container>
+    </Box>
   );
 };
 
