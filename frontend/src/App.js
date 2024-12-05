@@ -97,6 +97,7 @@ import EditItinerary from "./Pages/Itinerary/editItinerary.js";
 
 import LandingPage from "./Pages/LandingPage.js";
 import ActivityCard from "../src/Components/activityCard";
+import FlightsPage from './Components/ThirdParty/FlightsPage';
 
 function App() {
   const { authUser } = useAuthContext();
@@ -704,6 +705,7 @@ function App() {
           
           <Route path="/mySaved" element={<MySavedItems/>} />
           <Route path="/orders" element={<Orders/>} />
+          <Route path="/flightsPage" element={<FlightsPage />} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>
