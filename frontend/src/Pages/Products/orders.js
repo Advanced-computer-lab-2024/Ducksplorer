@@ -88,23 +88,11 @@ const OrdersPage = () => {
         flexDirection: "column",
       }}
     >
-  <Typography
-    variant="h4"
-    sx={{
-      mb: 3,
-      textAlign: "center",
-      fontWeight: "bold",
-      color: "transparent",
-      backgroundClip: "text",
-      textFillColor: "transparent",
-      backgroundImage: "linear-gradient(to right, #3f51b5, #1e88e5)",
-      textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)",
-      padding: 2,
-      borderRadius: "8px",
-    }}
-  >
-    My Orders
-  </Typography>
+  <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Typography variant="h4" fontWeight="700">
+            My Orders
+          </Typography>
+        </Box>
 
   {error && (
     <Typography color="error" variant="body1" sx={{ textAlign: "center" }}>
