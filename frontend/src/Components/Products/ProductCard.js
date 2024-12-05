@@ -200,6 +200,7 @@ const ProductCard = ({
   const [showReviewBox, setShowReviewBox] = useState(false);
   const [showWishlist, setShowWishlist] = useState(false);
   const navigate = useNavigate();
+
   const getReviewerRating = (reviewer) => {
     const ratingEntry = product.ratings.find(
       (rating) => rating.buyer === reviewer

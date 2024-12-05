@@ -78,7 +78,7 @@ import ChangePassword from "./Pages/Admin/ChangePassword.js";
 import MyOrders from "./Pages/Products/OrdersPage.js";
 
 import MySavedItems from "./Pages/SavedItems.js";
-import Orders from "./Pages/orders.js";
+import Orders from "./Pages/Products/orders.js";
 import { useAuthContext } from "./context/AuthContext.js";
 import ProtectedRoute from "./Components/ProtectedRoute"; // Import the ProtectedRoute component
 
