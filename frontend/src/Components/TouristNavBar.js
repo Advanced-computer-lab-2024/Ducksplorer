@@ -512,63 +512,104 @@ function TouristNavBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-
-              <MenuItem onClick={handleCloseUserMenu}>
-                <IconButton
-                  component="a"
-                  href="/editAccount"
-                  sx={{ textAlign: "center", p: 0.5 }}
-                >
-                  <AccountCircleIcon sx={{ fontSize: 20, color: "blue" }} />
-                  <Typography sx={{ ml: 1 }} variant="body2">
-                    Profile
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-              <MenuItem onClick={handleLogout}>
-                <IconButton component="a" sx={{ textAlign: "center", p: 0.5 }}>
-                  <LockIcon sx={{ fontSize: 20, color: "gold" }} />
-                  <Typography sx={{ ml: 1 }} variant="body2">
-                    Logout
-                  </Typography>
-                </IconButton>
-              </MenuItem>
               <MenuItem onClick={handleTogglePreferences}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
+                <IconButton sx={{ textAlign: "center", p: 0.5, color: "black" }}>
                   {showPreferences ? (
                     <VisibilityIcon sx={{ fontSize: 20, color: "green" }} />
                   ) : (
                     <VisibilityOffIcon sx={{ fontSize: 20, color: "red" }} />
                   )}
-                  <Typography sx={{ ml: 1 }} variant="body2">
+                  <Typography
+                    textAlign="center"
+                    marginLeft={2}
+                    sx={{ color: "black", fontSize: "14px" }}
+                  >
                     Show Preferences
                   </Typography>
                 </IconButton>
               </MenuItem>
+
+              <MenuItem onClick={handleCloseUserMenu}>
+                <IconButton
+                  component="a"
+                  href="/editAccount"
+                  sx={{ textAlign: "center", p: 0.5, color: "black" }}
+                >
+                  <AccountCircleIcon sx={{ fontSize: 20, color: "black" }} />
+                  <Typography
+                    textAlign="center"
+                    marginLeft={2}
+                    sx={{ color: "black", fontSize: "14px" }}
+                  >
+                    Profile
+                  </Typography>
+                </IconButton>
+              </MenuItem>
+
               <MenuItem onClick={handleCloseUserMenu}>
                 <IconButton
                   component="a"
                   href="/mySaved"
                   sx={{ textAlign: "center", p: 0.5 }}
                 >
-                  <BookmarksIcon sx={{ fontSize: 20, color: "grey" }} />
-                  <Typography sx={{ ml: 1 }} variant="body2">
+                  <BookmarksIcon sx={{ fontSize: 20, color: "black" }} />
+                  <Typography
+                    textAlign="center"
+                    marginLeft={2}
+                    sx={{ color: "black", fontSize: "14px" }}
+                  >
                     Saved
                   </Typography>
                 </IconButton>
               </MenuItem>
+
               <MenuItem onClick={handleCloseUserMenu}>
                 <IconButton
                   component="a"
                   href="/mybookings"
                   sx={{ textAlign: "center", p: 0.5 }}
                 >
-                  <BookmarkAddedIcon />
-                  <Typography textAlign="center" marginLeft={2}>
+                  <BookmarkAddedIcon sx={{ color: "black" }} />
+                  <Typography
+                    textAlign="center"
+                    marginLeft={2}
+                    sx={{ color: "black", fontSize: "14px" }}
+                  >
                     My Bookings
                   </Typography>
                 </IconButton>
               </MenuItem>
+
+              <MenuItem onClick={handleCloseUserMenu}>
+                <IconButton
+                  component="a"
+                  href="/orders"
+                  sx={{ textAlign: "center", p: 0.5 }}
+                >
+                  <StorefrontIcon sx={{ color: "black" }} />
+                  <Typography
+                    textAlign="center"
+                    marginLeft={2}
+                    sx={{ color: "black", fontSize: "14px" }}
+                  >
+                    My Orders
+                  </Typography>
+                </IconButton>
+              </MenuItem>
+
+              <MenuItem onClick={handleLogout}>
+                <IconButton component="a" sx={{ textAlign: "center", p: 0.5 }}>
+                  <LockIcon sx={{ fontSize: 20, color: "black" }} />
+                  <Typography
+                    textAlign="center"
+                    marginLeft={2}
+                    sx={{ color: "black", fontSize: "14px" }}
+                  >
+                    Logout
+                  </Typography>
+                </IconButton>
+              </MenuItem>
+
             </Menu>
           </Box>
         </Toolbar>
