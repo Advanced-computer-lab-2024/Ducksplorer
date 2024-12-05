@@ -220,7 +220,6 @@ const viewDesiredActivity = async (req, res) => {
   }
 };
 
-
 const viewDesiredItinerary = async (req, res) => {
   try {
     const { itineraryId } = req.params;
@@ -233,7 +232,7 @@ const viewDesiredItinerary = async (req, res) => {
 
     // Check if any available date is in the future
     const now = new Date();
-    const isUpcoming = result.availableDatesAndTimes.some(dateTime => {
+    const isUpcoming = result.availableDatesAndTimes.some((dateTime) => {
       const itineraryDate = new Date(dateTime);
       return itineraryDate > now; // Check if the date is in the future
     });
@@ -246,7 +245,6 @@ const viewDesiredItinerary = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 const getMyBookings = async (req, res) => {
   try {
@@ -567,7 +565,7 @@ const redeemPoints = async (req, res) => {
 const payVisa = async (req, res) => {
   try {
     console.log("entered function pay visa");
-    console.log(req.body);
+    console.log("body", req.body);
     const { userName } = req.params;
     const { finalPrice } = req.body;
     const tourist = await Tourist.findOne({ userName });
