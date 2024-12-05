@@ -22,13 +22,16 @@ import Typography from "@mui/joy/Typography";
 import Button from "@mui/joy/Button";
 import ItineraryCardDetails from "./itineraryCardDetailed";
 import { useState, useEffect } from "react";
-import NotificationAddOutlinedIcon from '@mui/icons-material/NotificationAddOutlined';
-import ShareIcon from '@mui/icons-material/Share';
-import {Menu, MenuItem} from "@mui/material";
-import Swal from 'sweetalert2'
+import NotificationAddOutlinedIcon from "@mui/icons-material/NotificationAddOutlined";
+import ShareIcon from "@mui/icons-material/Share";
+import { Menu, MenuItem } from "@mui/material";
+import Swal from "sweetalert2";
 
-
-export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) {
+export default function ItineraryCard({
+  itinerary = {},
+  onRemove,
+  showNotify,
+}) {
   const navigate = useNavigate();
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -106,8 +109,7 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
       if (response.status === 200) {
         if (response.data.isUpcoming) {
           navigate("/payment");
-        }
-        else {
+        } else {
           message.error("You can't book an old itinerary");
         }
       } else {
@@ -201,7 +203,10 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
           }));
         }
       } catch (error) {
-        console.error(`Failed to fetch save state for ${itinerary._id}:`, error);
+        console.error(
+          `Failed to fetch save state for ${itinerary._id}:`,
+          error
+        );
       }
     };
     fetchSaveStates();
@@ -214,10 +219,13 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
     try {
       const newIsNotified = !currentIsNotified;
 
-      const response = await axios.post('http://localhost:8000/notification/request', {
-        user: username,
-        eventId: itineraryId,
-      });
+      const response = await axios.post(
+        "http://localhost:8000/notification/request",
+        {
+          user: username,
+          eventId: itineraryId,
+        }
+      );
 
       if (response.status === 201) {
         message.success(
@@ -229,19 +237,21 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
           ...prev,
           [itineraryId]: newIsNotified,
         }));
-        message.success('You will be notified when this event starts accepting bookings.');
+        message.success(
+          "You will be notified when this event starts accepting bookings."
+        );
       } else if (response.status === 200) {
-        message.info('You have already requested to be notified for this activity');
-      }
-      else {
+        message.info(
+          "You have already requested to be notified for this activity"
+        );
+      } else {
         message.error(response.data.message);
       }
     } catch (error) {
-      console.error('Error requesting notification:', error);
-      message.error('Failed to request notification.');
+      console.error("Error requesting notification:", error);
+      message.error("Failed to request notification.");
     }
   };
-
 
   const TheCard = () => {
     return (
@@ -250,8 +260,8 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
           className="itinerary-card"
           variant="outlined"
           sx={{
-            width: "20vw",
-            height: "400px",
+            width: "100%",
+            height: "40vh",
           }}
           onClick={handleOpen}
         >
@@ -260,37 +270,36 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
               <img src={image} loading="lazy" alt="" />
             </AspectRatio>
             <Tooltip title="Share">
-                <IconButton
-                  size="md"
-                  variant="solid"
-                  color="primary"
-                  onClick={(event) => handleClick(event, itinerary._id)}
-                  sx={{
-                    borderRadius: "50%",
-                    position: "absolute",
-                    zIndex: 2,
-                    borderRadius: "50%",
-                    right: "1rem",
-                    bottom: 0,
-                    transform: "translateY(50%) translateX(-130%)",
-                    transition: "transform 0.3s",
-                    "&:active": {
-                      transform: "translateY(50%) scale(0.9)",
-                    },
-                    backgroundColor:  "#ff9933",
-                  }}
-                >
-                  <ShareIcon />
-                </IconButton>
-              </Tooltip>
-
-       
+              <IconButton
+                size="md"
+                variant="solid"
+                color="primary"
+                className="blackhover"
+                onClick={(event) => handleClick(event, itinerary._id)}
+                sx={{
+                  borderRadius: "50%",
+                  position: "absolute",
+                  zIndex: 2,
+                  borderRadius: "50%",
+                  right: "1rem",
+                  bottom: 0,
+                  transform: "translateY(50%) translateX(-130%)",
+                  transition: "transform 0.3s",
+                  "&:active": {
+                    transform: "translateY(50%) scale(0.9)",
+                  },
+                  backgroundColor: "#ff9933",
+                }}
+              >
+                <ShareIcon />
+              </IconButton>
+            </Tooltip>
 
             <Tooltip title="Save itinerary">
               <IconButton
                 size="md"
                 variant="solid"
-                color="black"
+                className="blackhover"
                 sx={{
                   position: "absolute",
                   zIndex: 2,
@@ -301,8 +310,12 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
                   fontSize: "3px",
                   bottom: 0,
                   transform: "translateY(50%)",
+                  color: "white",
                   size: "1px",
                   backgroundColor: "#ff9933",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
                 <BookmarksIcon />
@@ -312,13 +325,13 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
             <IconButton
               size="md"
               variant={saveStates[itinerary._id] ? "soft" : "solid"}
-              color={saveStates[itinerary._id] ? "neutral" : "primary"}
+              className="blackhover"
               onClick={(event) => {
                 event.stopPropagation();
-                handleSaveItinerary(itinerary._id, saveStates[itinerary._id])
+                handleSaveItinerary(itinerary._id, saveStates[itinerary._id]);
               }}
-              onMouseEnter={(e) => (e.target.style.cursor = 'pointer')}
-              onMouseLeave={(e) => (e.target.style.cursor = 'default')}
+              onMouseEnter={(e) => (e.target.style.cursor = "pointer")}
+              onMouseLeave={(e) => (e.target.style.cursor = "default")}
               sx={{
                 position: "absolute",
                 zIndex: 2,
@@ -328,6 +341,7 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
                 height: "10px",
                 width: "10px",
                 fontSize: "3px",
+                color: "white",
                 transform: "translateY(50%)",
                 transition: "transform 0.3s",
                 backgroundColor: "#ff9933",
@@ -336,7 +350,11 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
                 },
               }}
             >
-              {saveStates[itinerary._id] ? <Done color="#ff9933" /> : <BookmarksIcon />}
+              {saveStates[itinerary._id] ? (
+                <Done color="#ff9933" />
+              ) : (
+                <BookmarksIcon />
+              )}
             </IconButton>
             {showNotify && (
               <Tooltip title="Request Notifications">
@@ -345,7 +363,11 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
                   variant="solid"
                   color="primary"
                   onClick={(event) =>
-                    requestNotification(event, itinerary._id, notificationStates[itinerary._id])
+                    requestNotification(
+                      event,
+                      itinerary._id,
+                      notificationStates[itinerary._id]
+                    )
                   }
                   sx={{
                     borderRadius: "50%",
@@ -376,6 +398,7 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
             >
               <div
                 style={{
+                  marginTop: "0",
                   display: "flex",
                   flexDirection: "column",
                 }}
@@ -383,20 +406,26 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
                 <h4
                   style={{
                     fontWeight: "bold",
-                    margin: 0,
-                    marginRight: 20,
                   }}
                 >
                   {itinerary.name || "Itinerary Name"}
                 </h4>
-
-                <Rating
-                  value={itinerary.rating}
-                  icon={<StarIcon sx={{ color: "ff9933" }} />}
-                  emptyIcon={<StarOutlineIcon />}
-                  readOnly
-                  precision={0.5}
-                />
+                <div style={{ marginLeft: "3px" }}>
+                  {itinerary.activity && itinerary.activity.length > 0 ? (
+                    <p style={{ padding: 0, margin: 0 }}>
+                      {itinerary.activity
+                        .map((activity) => activity.name)
+                        .join(", ")}
+                    </p>
+                  ) : null}
+                  <Rating
+                    value={itinerary.rating}
+                    icon={<StarIcon sx={{ color: "ff9933" }} />}
+                    emptyIcon={<StarOutlineIcon />}
+                    readOnly
+                    precision={0.5}
+                  />
+                </div>
                 <div
                   style={{
                     display: "flex",
@@ -410,8 +439,12 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
                       component="span"
                       size="sm"
                       variant="outlined"
-                      color="primary"
-                      sx={{ marginRight: 1, marginBottom: 1 }}
+                      sx={{
+                        marginRight: 1,
+                        marginBottom: 1,
+                        color: "#ff9933",
+                        borderColor: "#ff9933",
+                      }}
                     >
                       {tag}
                     </Chip>
@@ -425,11 +458,10 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
               style={{
                 display: "flex",
                 flexDirection: "row",
-                alignItems: "center",
                 justifyContent: "space-between",
                 position: "absolute",
                 bottom: 10,
-                width: "90%",
+                width: "94%",
               }}
             >
               <Typography
@@ -526,7 +558,6 @@ export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) 
             <ItineraryCardDetails itinerary={itinerary} />
           </div>
         </Popover>
-
       </div>
     );
   };

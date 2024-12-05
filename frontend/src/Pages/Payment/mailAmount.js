@@ -12,33 +12,11 @@ import HotelCardDetailed from "../../Components/hotelCardDetailed.js";
 import CartCardDetailed from "../../Components/cartCardDetailed.js";
 import TransportationCardDetailed from "../../Components/transportationCardDetailed.js";
 import TouristNavBar from "../../Components/TouristNavBar.js";
+import { Paper } from '@mui/material';
+
 const { Title } = Typography;
 const { Option } = Select;
-const styles = {
-  container: {
-    display: "flex",
-    flexDirection: "row",
-    height: "100vh",
-  },
-  left: {
-    flex: 1,
-    display: "flex",
-    width: "100%",
-    flexDirection: "column",
-    gap: "20px",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-    minHeight: "70vh"
-  },
-  right: {
-    flex: 1,
-    backgroundColor: "#fff",
-    padding: "20px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "20px",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-  },
-};
+
 
 
 function PaymentPage() {
@@ -398,446 +376,749 @@ function PaymentPage() {
             (transportationsData && type === "transportation") ||
             (cartData && type === "product") ? (
             type === "itinerary" ? (
-              <div style={styles.left}>
-                {/* <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}> */}
-                <Card>
-                  <ItineraryCardDetailed itinerary={itineraryData} />
-                </Card>
+              <div style={{ display: "flex", alignItems: "flex-start", gap: "20px" }}>
+                {/* Left Section */}
+                <div style={{ flex: 1 }}>
+                  <Card style={{ width: "50vw", margin: '20px auto', borderRadius: '8px', variant: "middle", jsyt: "center" }}>
+                    <ItineraryCardDetailed itinerary={itineraryData} />
+                  </Card>
+                </div>
+                <Paper
+                  elevation={3}
+                  style={{
+                    width: "800px",
+                    minHeight: "600px",
+                    margin: "20px auto",
+                    padding: "20px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    height: "100vh",
+                  }}
+                >
+                  <Form style={{ width: "100%", height: "100%" }}>
+                    <h1> Payment Details</h1>
 
-                <Form style={styles.right}>
-
-                  <h1> Payment Details</h1>
-
-                  <Form.Item
-                    name="dateTime"
-                    label="Date and Time"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please select a date and time!",
-                      },
-                    ]}
-                  >
-                    <Select
-                      placeholder="Select a Date and Time"
-                      onChange={handleDateChange}
-                      style={{ width: "100%" }}
+                    <Form.Item
+                      name="dateTime"
+                      label="Date and Time"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please select a date and time!",
+                        },
+                      ]}
                     >
-                      {itineraryData?.availableDatesAndTimes
-                        .filter((dateTime) => {
-                          const currentDate = new Date(); // Get the current date and time
-                          const dateObj = new Date(dateTime); // Convert available date to Date object
-                          return dateObj >= currentDate; // Only keep dates in the future or equal to now
-                        })
-                        .map((dateTime, index) => {
-                          const dateObj = new Date(dateTime);
-                          const date = dateObj.toISOString().split("T")[0];
-                          const time = dateObj.toTimeString().split(" ")[0];
-                          const displayText = `${date} at ${time}`;
+                      <Select
+                        placeholder="Select a Date and Time"
+                        onChange={handleDateChange}
+                        style={{ width: "100%" }}
+                      >
+                        {itineraryData?.availableDatesAndTimes
+                          .filter((dateTime) => {
+                            const currentDate = new Date(); // Get the current date and time
+                            const dateObj = new Date(dateTime); // Convert available date to Date object
+                            return dateObj >= currentDate; // Only keep dates in the future or equal to now
+                          })
+                          .map((dateTime, index) => {
+                            const dateObj = new Date(dateTime);
+                            const date = dateObj.toISOString().split("T")[0];
+                            const time = dateObj.toTimeString().split(" ")[0];
+                            const displayText = `${date} at ${time}`;
 
-                          return (
-                            <Option key={index} value={dateTime} required>
-                              {displayText}
-                            </Option>
-                          );
-                        })}
-                    </Select>
-                  </Form.Item>
-                  <p>
-                    <strong>Selected Date and Time:</strong>{" "}
-                    {chosenDate
-                      ? new Date(chosenDate).toLocaleString()
-                      : "None selected"}
-                  </p>
+                            return (
+                              <Option key={index} value={dateTime} required>
+                                {displayText}
+                              </Option>
+                            );
+                          })}
+                      </Select>
+                    </Form.Item>
+                    <p>
+                      <strong>Selected Date and Time:</strong>{" "}
+                      {chosenDate
+                        ? new Date(chosenDate).toLocaleString()
+                        : "None selected"}
+                    </p>
 
-                  <p>Email</p>
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value * 100)}
-                    required
-                    readOnly
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "4px",
-                      border: "1px solid #ddd",
-                    }}
-                  />
+                    <div>
+                      <p style={{ textAlign: "left", marginTop: "10px", marginBottom: "2px", fontWeight: "bold" }}>Email</p>
+                      <input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value * 100)}
+                        required
+                        readOnly
+                        style={{
+                          padding: "8px", width: "100%", borderRadius: "4px",
+                          border: "1px solid #ddd",
+                        }}
 
-                  <p>Amount</p>
-                  <input
-                    type="number"
-                    placeholder="Amount"
-                    value={price}
-                    onChange={(e) => setAmount(e.target.value * 100)}
-                    required
-                    readOnly
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "4px",
-                      border: "1px solid #ddd",
-                    }}
-                  />
+                      />
+                    </div>
+                    <div>
+                      <p style={{ textAlign: "left", marginTop: "10px", marginBottom: "2px", fontWeight: "bold" }}>Amount</p>
+                      <input
+                        type="number"
+                        placeholder="Amount"
+                        value={price}
+                        onChange={(e) => setAmount(e.target.value * 100)}
+                        required
+                        readOnly
+                        style={{
+                          width: "100%",
+                          padding: "8px",
+                          borderRadius: "4px",
+                          border: "1px solid #ddd",
+                        }}
+                      />
+                    </div>
 
-                  <p>Promo Code</p>
-                  <input
-                    type="text"
-                    placeholder="Promo Code"
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "4px",
-                      border: "1px solid #ddd",
-                    }}
-                  />
-                  <Button onClick={applyPromoCode}>Apply Promo Code</Button>
-                  {discount > 0 && <p>Discount Applied: {discount}%</p>}
-                  <h2>Final Price: {finalPrice}EGP</h2>
-                </Form>
+                    <div style={{ marginBottom: "20px" }}>
+                      <p style={{ textAlign: "left", marginTop: "10px", marginBottom: "2px", fontWeight: "bold" }}>Promo Code</p>
+                      <input
+                        type="text"
+                        placeholder="Promo Code"
+                        value={promoCode}
+                        onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
+                        style={{
+                          width: "100%",
+                          padding: "8px",
+                          borderRadius: "4px",
+                          border: "1px solid #ddd",
+                        }}
+                      />
+                    </div>
+                    <button
+                      size="md"
+                      variant="solid"
+                      className="blackhover"
+                      zIndex={2}
+                      type="submit"
+                      style={{
+                        padding: "10px",
+                        fontSize: "1rem",
+                        flex: 1,
+                        marginRight: "12px",
+                        marginBottom: "20px",
+                        backgroundColor: "#ff9933"
+                      }}
+                      onClick={applyPromoCode}
+                    >
+                      Apply Promo Code
+                    </button>
+                    {discount > 0 && <p style={{ textAlign: "left" }}>Discount Applied: {discount}%</p>}
+                    <h2 style={{ textAlign: "left" }}>Final Price: {finalPrice}EGP</h2>
+                    <form style={{ display: "flex", flexDirection: "row" }}>
+                      <button
+                        size="md"
+                        variant="solid"
+                        className="blackhover"
+                        zIndex={2}
+                        type="submit"
+                        style={{
+                          padding: "10px",
+                          fontSize: "1rem",
+                          flex: 1,
+                          marginRight: "12px",
+                          backgroundColor: "#ff9933"
+                        }}
+                        onClick={handleVisaSubmit}
+
+                      >
+                        Visa
+                      </button>
+                      <button
+                        size="md"
+                        variant="solid"
+                        className="blackhover"
+                        zIndex={2}
+                        type="submit"
+                        style={{
+                          padding: "10px",
+                          fontSize: "1rem",
+                          flex: 1,
+                          backgroundColor: "#ff9933"
+                        }}
+                        onClick={handleWalletSubmit}
+                      >
+                        Wallet
+                      </button>
+                    </form>
+                  </Form>
+                </Paper>
               </div>
             ) : type === "activity" && activityData ? (
-              <div>
-                <Card style={styles.left}>
-                  <ActivityCardDetailed activity={activityData} />
-                </Card>
-                <Form style={styles.right}>
-                  <h1>Payment Details</h1>
+              <div style={{ display: "flex", alignItems: "flex-start", gap: "20px" }}>
+                {/* Left Section */}
+                <div style={{ flex: 1 }}>
+                  <Card style={{ width: '800px', margin: '20px auto', borderRadius: '8px' }}>
+                    <ActivityCardDetailed activity={activityData} />
+                  </Card>
+                </div>
+                <Paper
+                  elevation={3}
+                  style={{
+                    width: "800px",
+                    minHeight: "600px",
+                    margin: "20px auto",
+                    padding: "20px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                  }}
+                >
+                  <Form>
+                    <h1>Payment Details</h1>
 
-                  <p>Email</p>
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value * 100)}
-                    required
-                    readOnly
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "4px",
-                      border: "1px solid #ddd",
-                    }}
-                  />
-                  <p>Amount</p>
-                  <input
-                    type="number"
-                    placeholder="Amount"
-                    value={price}
-                    onChange={(e) => setAmount(e.target.value * 100)}
-                    required
-                    readOnly
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "4px",
-                      border: "1px solid #ddd",
-                    }}
-                  />
+                    <p>Email</p>
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value * 100)}
+                      required
+                      readOnly
+                      style={{
+                        width: "100%",
+                        padding: "8px",
+                        borderRadius: "4px",
+                        border: "1px solid #ddd",
+                      }}
+                    />
+                    <p>Amount</p>
+                    <input
+                      type="number"
+                      placeholder="Amount"
+                      value={price}
+                      onChange={(e) => setAmount(e.target.value * 100)}
+                      required
+                      readOnly
+                      style={{
+                        width: "100%",
+                        padding: "8px",
+                        borderRadius: "4px",
+                        border: "1px solid #ddd",
+                      }}
+                    />
 
-                  <p>Promo Code</p>
-                  <input
-                    type="text"
-                    placeholder="Promo Code"
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "4px",
-                      border: "1px solid #ddd",
-                    }}
-                  />
-                  <Button onClick={applyPromoCode}>Apply Promo Code</Button>
-                  {discount > 0 && <p>Discount Applied: {discount}%</p>}
-                  <h2>Final Price: {finalPrice}EGP</h2>
-                </Form>
+                    <p>Promo Code</p>
+                    <input
+                      type="text"
+                      placeholder="Promo Code"
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
+                      style={{
+                        width: "100%",
+                        padding: "8px",
+                        borderRadius: "4px",
+                        border: "1px solid #ddd",
+                      }}
+                    />
+                    <Button onClick={applyPromoCode}>Apply Promo Code</Button>
+                    {discount > 0 && <p>Discount Applied: {discount}%</p>}
+                    <h2>Final Price: {finalPrice}EGP</h2>
+
+                    <form style={{ display: "flex", flexDirection: "row" }}>
+                      <button
+                        type="submit"
+                        onClick={handleVisaSubmit}
+                        style={{
+                          padding: "10px",
+                          fontSize: "1rem",
+                          flex: 1, // Ensures both buttons take equal space
+                          marginRight: "12px", // Adds space between the buttons
+                        }}
+                      >
+                        Visa
+                      </button>
+                      <button
+                        type="submit"
+                        onClick={handleWalletSubmit}
+                        style={{
+                          padding: "10px",
+                          fontSize: "1rem",
+                          flex: 1, // Makes this button take equal space as the first one
+                        }}
+                      >
+                        Wallet
+                      </button>
+                    </form>
+                  </Form>
+                </Paper>
               </div>
             ) : type === "flight" ? (
-              <div>
-                <Card style={styles.left}>
-                  <FlightCardDetailed flightsData={flightsData} />
-                </Card>
-                <Form style={styles.right}>
-                  <h1>Enter Payment Details</h1>
+              <div style={{ display: "flex", alignItems: "flex-start", gap: "20px" }}>
+                {/* Left Section */}
+                <div style={{ flex: 1 }}>
+                  <Card style={{ width: '800px', margin: '20px auto', borderRadius: '8px' }}>
+                    <FlightCardDetailed flightsData={flightsData} />
+                  </Card>
+                </div>
+                <Paper
+                  elevation={3}
+                  style={{
+                    width: "800px",
+                    minHeight: "600px",
+                    margin: "20px auto",
+                    padding: "20px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                  }}
+                >
+                  <Form>
+                    <h1>Enter Payment Details</h1>
 
-                  <p>Email</p>
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value * 100)}
-                    required
-                    readOnly
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "4px",
-                      border: "1px solid #ddd",
-                    }}
-                  />
-                  <p>Amount</p>
-                  <input
-                    type="number"
-                    placeholder="Amount"
-                    value={flightsData.price}
-                    onChange={(e) => setAmount(e.target.value * 100)}
-                    required
-                    readOnly
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "4px",
-                      border: "1px solid #ddd",
-                    }}
-                  />
-                  <p>Promo Code</p>
-                  <input
-                    type="text"
-                    placeholder="Promo Code"
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "4px",
-                      border: "1px solid #ddd",
-                    }}
-                  />
-                  <Button onClick={applyPromoCode}>Apply Promo Code</Button>
-                  {discount > 0 && <p>Discount Applied: {discount}%</p>}
-                  <h2>Final Price: {finalPrice}EGP</h2>
-                </Form>
+                    <p>Email</p>
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value * 100)}
+                      required
+                      readOnly
+                      style={{
+                        width: "100%",
+                        padding: "8px",
+                        borderRadius: "4px",
+                        border: "1px solid #ddd",
+                      }}
+                    />
+                    <p>Amount</p>
+                    <input
+                      type="number"
+                      placeholder="Amount"
+                      value={flightsData.price}
+                      onChange={(e) => setAmount(e.target.value * 100)}
+                      required
+                      readOnly
+                      style={{
+                        width: "100%",
+                        padding: "8px",
+                        borderRadius: "4px",
+                        border: "1px solid #ddd",
+                      }}
+                    />
+                    <p>Promo Code</p>
+                    <input
+                      type="text"
+                      placeholder="Promo Code"
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
+                      style={{
+                        width: "100%",
+                        padding: "8px",
+                        borderRadius: "4px",
+                        border: "1px solid #ddd",
+                      }}
+                    />
+                    <Button onClick={applyPromoCode}>Apply Promo Code</Button>
+                    {discount > 0 && <p>Discount Applied: {discount}%</p>}
+                    <h2>Final Price: {finalPrice}EGP</h2>
+                    <form style={{ display: "flex", flexDirection: "row" }}>
+                      <button
+                        type="submit"
+                        onClick={handleVisaSubmit}
+                        style={{
+                          padding: "10px",
+                          fontSize: "1rem",
+                          flex: 1, // Ensures both buttons take equal space
+                          marginRight: "12px", // Adds space between the buttons
+                        }}
+                      >
+                        Visa
+                      </button>
+                      <button
+                        type="submit"
+                        onClick={handleWalletSubmit}
+                        style={{
+                          padding: "10px",
+                          fontSize: "1rem",
+                          flex: 1, // Makes this button take equal space as the first one
+                        }}
+                      >
+                        Wallet
+                      </button>
+                    </form>
+                  </Form>
+                </Paper>
               </div>
             ) : type === "hotel" ? (
-              <div>
-                <Card style={styles.left}>
-                  <HotelCardDetailed hotelsData={hotelsData} />
-                </Card>
-                <Form style={styles.right}>
-                  <h1>Enter Payment Details</h1>
+              <div style={{ display: "flex", alignItems: "flex-start", gap: "20px" }}>
+                {/* Left Section */}
+                <div style={{ flex: 1 }}>
+                  <Card style={{ width: '800px', margin: '20px auto', borderRadius: '8px' }}>
+                    <HotelCardDetailed hotelsData={hotelsData} />
+                  </Card>
+                </div>
+                <Paper
+                  elevation={3}
+                  style={{
+                    width: "800px",
+                    minHeight: "600px",
+                    margin: "20px auto",
+                    padding: "20px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                  }}
+                >
+                  <Form>
+                    <h1>Enter Payment Details</h1>
 
-                  <p>Email</p>
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value * 100)}
-                    required
-                    readOnly
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "4px",
-                      border: "1px solid #ddd",
-                    }}
-                  />
-                  <p>Amount</p>
-                  <input
-                    type="number"
-                    placeholder="Amount"
-                    value={hotelsData.price}
-                    onChange={(e) => setAmount(e.target.value * 100)}
-                    required
-                    readOnly
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "4px",
-                      border: "1px solid #ddd",
-                    }}
-                  />
+                    <p>Email</p>
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value * 100)}
+                      required
+                      readOnly
+                      style={{
+                        width: "100%",
+                        padding: "8px",
+                        borderRadius: "4px",
+                        border: "1px solid #ddd",
+                      }}
+                    />
+                    <p>Amount</p>
+                    <input
+                      type="number"
+                      placeholder="Amount"
+                      value={hotelsData.price}
+                      onChange={(e) => setAmount(e.target.value * 100)}
+                      required
+                      readOnly
+                      style={{
+                        width: "100%",
+                        padding: "8px",
+                        borderRadius: "4px",
+                        border: "1px solid #ddd",
+                      }}
+                    />
 
-                  <p>Promo Code</p>
-                  <input
-                    type="text"
-                    placeholder="Promo Code"
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "4px",
-                      border: "1px solid #ddd",
-                    }}
-                  />
-                  <Button onClick={applyPromoCode}>Apply Promo Code</Button>
-                  {discount > 0 && <p>Discount Applied: {discount}%</p>}
-                  <h2>Final Price: {finalPrice}EGP</h2>
-                </Form>
+                    <p>Promo Code</p>
+                    <input
+                      type="text"
+                      placeholder="Promo Code"
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
+                      style={{
+                        width: "100%",
+                        padding: "8px",
+                        borderRadius: "4px",
+                        border: "1px solid #ddd",
+                      }}
+                    />
+                    <Button onClick={applyPromoCode}>Apply Promo Code</Button>
+                    {discount > 0 && <p>Discount Applied: {discount}%</p>}
+                    <h2>Final Price: {finalPrice}EGP</h2>
+                  </Form>
+                </Paper>
               </div>
             ) : type === "transportation" ? (
-              <div>
-                <Card style={styles.left}>
-                  <TransportationCardDetailed transportation={transportationsData} />
-                </Card>
-                <Form style={styles.right}>
-                  <h1>Enter Payment Details</h1>
+              <div style={{ display: "flex", alignItems: "flex-start", gap: "20px" }}>
+                {/* Left Section */}
+                <div style={{ flex: 1 }}>
+                  <Card style={{ width: '800px', margin: '20px auto', borderRadius: '8px' }}>
+                    <TransportationCardDetailed transportation={transportationsData} />
+                  </Card>
+                </div>
+                <Paper
+                  elevation={3}
+                  style={{
+                    width: "800px",
+                    minHeight: "600px",
+                    margin: "20px auto",
+                    padding: "20px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                  }}
+                >
+                  <Form>
+                    <h1>Enter Payment Details</h1>
 
-                  <p>Email</p>
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value * 100)}
-                    required
-                    readOnly
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "4px",
-                      border: "1px solid #ddd",
-                    }}
-                  />
+                    <p>Email</p>
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value * 100)}
+                      required
+                      readOnly
+                      style={{
+                        width: "100%",
+                        padding: "8px",
+                        borderRadius: "4px",
+                        border: "1px solid #ddd",
+                      }}
+                    />
 
-                  <p>Amount</p>
-                  <input
-                    type="number"
-                    placeholder="Amount"
-                    value={transportationsData.price}
-                    onChange={(e) => setAmount(e.target.value * 100)}
-                    required
-                    readOnly
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "4px",
-                      border: "1px solid #ddd",
-                    }}
-                  />
+                    <p>Amount</p>
+                    <input
+                      type="number"
+                      placeholder="Amount"
+                      value={transportationsData.price}
+                      onChange={(e) => setAmount(e.target.value * 100)}
+                      required
+                      readOnly
+                      style={{
+                        width: "100%",
+                        padding: "8px",
+                        borderRadius: "4px",
+                        border: "1px solid #ddd",
+                      }}
+                    />
 
-                  <p>Promo Code</p>
-                  <input
-                    type="text"
-                    placeholder="Promo Code"
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "4px",
-                      border: "1px solid #ddd",
-                    }}
-                  />
-                  <Button onClick={applyPromoCode}>Apply Promo Code</Button>
-                  {discount > 0 && <p>Discount Applied: {discount}%</p>}
-                  <h2>Final Price: {finalPrice}EGP</h2>
-                </Form>
+                    <p>Promo Code</p>
+                    <div style={{ marginBottom: "20px" }}>
+                      <p style={{ textAlign: "left", marginTop: "10px", marginBottom: "2px", fontWeight: "bold" }}>Promo Code</p>
+                      <input
+                        type="text"
+                        placeholder="Promo Code"
+                        value={promoCode}
+                        onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
+                        style={{
+                          width: "100%",
+                          padding: "8px",
+                          borderRadius: "4px",
+                          border: "1px solid #ddd",
+                        }}
+                      />
+                    </div>
+                    <button
+                      size="md"
+                      variant="solid"
+                      className="blackhover"
+                      zIndex={2}
+                      type="submit"
+                      style={{
+                        padding: "10px",
+                        fontSize: "1rem",
+                        flex: 1,
+                        marginRight: "12px",
+                        marginBottom: "20px",
+                        backgroundColor: "#ff9933"
+                      }}
+                      onClick={applyPromoCode}
+                    >
+                      Apply Promo Code
+                    </button>
+                    {discount > 0 && <p style={{ textAlign: "left" }}>Discount Applied: {discount}%</p>}
+                    <h2 style={{ textAlign: "left" }}>Final Price: {finalPrice}EGP</h2>
+                    <form style={{ display: "flex", flexDirection: "row" }}>
+                      <button
+                        size="md"
+                        variant="solid"
+                        className="blackhover"
+                        zIndex={2}
+                        type="submit"
+                        style={{
+                          padding: "10px",
+                          fontSize: "1rem",
+                          flex: 1,
+                          marginRight: "12px",
+                          backgroundColor: "#ff9933"
+                        }}
+                        onClick={handleVisaSubmit}
+
+                      >
+                        Visa
+                      </button>
+                      <button
+                        size="md"
+                        variant="solid"
+                        className="blackhover"
+                        zIndex={2}
+                        type="submit"
+                        style={{
+                          padding: "10px",
+                          fontSize: "1rem",
+                          flex: 1,
+                          marginRight: "12px",
+                          backgroundColor: "#ff9933"
+                        }}
+                        onClick={handleWalletSubmit}
+                      >
+                        Wallet
+                      </button>
+                    </form>
+                  </Form>
+                </Paper>
               </div>
             ) : type === "product" && cartData ? (
-              <div>
-                <Card style={styles.left}>
-                  <CartCardDetailed cartData={cartData} />
-                </Card>
-                <Form style={styles.right}>
-                  <h1>Payment Details</h1>
+              <div style={{ display: "flex", alignItems: "flex-start", gap: "20px" }}>
+                {/* Left Section */}
+                <div style={{ flex: 1 }}>
+                  <Card style={{ width: '800px', margin: '20px auto', borderRadius: '8px' }}>
+                    <CartCardDetailed cartData={cartData} />
+                  </Card>
+                </div>
+                <Paper
+                  elevation={3}
+                  style={{
+                    width: "800px",
+                    minHeight: "600px",
+                    margin: "20px auto",
+                    padding: "20px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                  }}
+                >
+                  (type === )
+                  <Form >
+                    <h1>Payment Details</h1>
 
-                  <AddressDropdown onAddressSelect={handleAddressSelect} onAddAddress={addNewAddress} />
-                  {/* {selectedAddress && <p>Selected Address: 
-                    {`${selectedAddress.street}, ${selectedAddress.city}, ${selectedAddress.state || ""}, ${selectedAddress.country} (${selectedAddress.postalCode})`}
-                  </p>} */}
+                    <AddressDropdown onAddressSelect={handleAddressSelect} onAddAddress={addNewAddress} />
+                    <div>
+                      <p style={{ textAlign: "left", marginTop: "10px", marginBottom: "2px", fontWeight: "bold" }}>Email</p>
+                      <input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value * 100)}
+                        required
+                        readOnly
+                        style={{
+                          padding: "8px", width: "100%", borderRadius: "4px",
+                          border: "1px solid #ddd",
+                        }}
 
-                  <p>Email</p>
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value * 100)}
-                    required
-                    readOnly
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "4px",
-                      border: "1px solid #ddd",
-                    }}
-                  />
-                  <p>Amount</p>
-                  <input
-                    type="number"
-                    placeholder="Amount"
-                    value={price}
-                    onChange={(e) => setAmount(e.target.value * 100)}
-                    required
-                    readOnly
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "4px",
-                      border: "1px solid #ddd",
-                    }}
-                  />
+                      />
+                    </div>
+                    <div>
+                      <p style={{ textAlign: "left", marginTop: "10px", marginBottom: "2px", fontWeight: "bold" }}>Amount</p>
+                      <input
+                        type="number"
+                        placeholder="Amount"
+                        value={price}
+                        onChange={(e) => setAmount(e.target.value * 100)}
+                        required
+                        readOnly
+                        style={{
+                          width: "100%",
+                          padding: "8px",
+                          borderRadius: "4px",
+                          border: "1px solid #ddd",
+                        }}
+                      />
+                    </div>
+                    <div style={{ marginBottom: "20px" }}>
+                      <p style={{ textAlign: "left", marginTop: "10px", marginBottom: "2px", fontWeight: "bold" }}>Promo Code</p>
+                      <input
+                        type="text"
+                        placeholder="Promo Code"
+                        value={promoCode}
+                        onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
+                        style={{
+                          width: "100%",
+                          padding: "8px",
+                          borderRadius: "4px",
+                          border: "1px solid #ddd",
+                        }}
+                      />
+                    </div>
+                    <button
+                      size="md"
+                      variant="solid"
+                      className="blackhover"
+                      zIndex={2}
+                      type="submit"
+                      style={{
+                        padding: "10px",
+                        fontSize: "1rem",
+                        flex: 1,
+                        marginRight: "12px",
+                        marginBottom: "20px",
+                        backgroundColor: "#ff9933"
+                      }}
+                      onClick={applyPromoCode}
+                    >
+                      Apply Promo Code
+                    </button>
+                    {discount > 0 && <p style={{ textAlign: "left" }}>Discount Applied: {discount}%</p>}
+                    <h2 style={{ textAlign: "left" }}>Final Price: {finalPrice}EGP</h2>
+                    <form style={{ display: "flex", flexDirection: "row" }}>
+                      <button
+                        size="md"
+                        variant="solid"
+                        className="blackhover"
+                        zIndex={2}
+                        type="submit"
+                        style={{
+                          padding: "10px",
+                          fontSize: "1rem",
+                          flex: 1,
+                          marginRight: "12px",
+                          backgroundColor: "#ff9933"
+                        }}
+                        onClick={handleVisaSubmit}
 
-                  <p>Promo Code</p>
-                  <input
-                    type="text"
-                    placeholder="Promo Code"
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "4px",
-                      border: "1px solid #ddd",
-                    }}
-                  />
-                  <Button onClick={applyPromoCode}>Apply Promo Code</Button>
-                  {discount > 0 && <p>Discount Applied: {discount}%</p>}
-                  <h2>Final Price: {finalPrice}EGP</h2>
-                </Form>
+                      >
+                        Visa
+                      </button>
+                      <button
+                        size="md"
+                        variant="solid"
+                        className="blackhover"
+                        zIndex={2}
+                        type="submit"
+                        style={{
+                          padding: "10px",
+                          fontSize: "1rem",
+                          flex: 1,
+                          marginRight: "12px",
+                          backgroundColor: "#ff9933"
+                        }}
+                        onClick={handleWalletSubmit}
+                      >
+                        Wallet
+                      </button>
+                      <button
+                        size="md"
+                        variant="solid"
+                        className="blackhover"
+                        zIndex={2}
+                        type="submit"
+                        style={{
+                          padding: "10px",
+                          fontSize: "1rem",
+                          flex: 1,
+                          marginRight: "12px",
+                          backgroundColor: "#ff9933"
+                        }} onClick={handleCashOnDelivery}
+                      >
+                        Cash on Delivery
+                      </button>
+                    </form>
+                  </Form>
+                </Paper>
               </div>
             ) : null
           ) : (
             <p>Loading booking details...</p>
           )}
         </div>
-        <form style={{ ...styles.right, display: "flex", flexDirection: "row" }}>
-          <button
-            type="submit"
-            onClick={handleVisaSubmit}
-            style={{
-              padding: "10px",
-              fontSize: "1rem",
-              flex: 1, // Ensures both buttons take equal space
-              marginRight: "12px", // Adds space between the buttons
-            }}
-          >
-            Visa
-          </button>
-          <button
-            type="submit"
-            onClick={handleWalletSubmit}
-            style={{
-              padding: "10px",
-              fontSize: "1rem",
-              flex: 1, // Makes this button take equal space as the first one
-            }}
-          >
-            Wallet
-          </button>
-          {type === "product" && cartData && (
-            <button
-              type="submit"
-              onClick={handleCashOnDelivery}
-              style={{
-                padding: "10px",
-                fontSize: "1rem",
-                flex: 1, // Makes this button take equal space as the first one
-                marginLeft: "1em", // Adds space between this button and the others
-              }}
-            >
-              Cash on Delivery
-            </button>
-          )}
-        </form>
 
         <Help />
       </div>
-    </div>
+    </div >
   );
 }
 

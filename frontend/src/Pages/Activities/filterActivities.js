@@ -218,7 +218,7 @@ const FilterActivities = () => {
     if (activities.length > 0) {
       fetchSaveStates();
     }
-  }, [activities]);
+  }, []);
 
   return (
     <div style={{ width: "100%" }}>

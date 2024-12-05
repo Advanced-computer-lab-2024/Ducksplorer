@@ -86,7 +86,6 @@ const OrdersPage = () => {
         >
           Back
         </Button>
-
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography variant="h4" fontWeight="700">
             My Orders

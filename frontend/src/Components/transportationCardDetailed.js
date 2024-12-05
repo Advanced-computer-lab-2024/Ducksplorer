@@ -16,10 +16,14 @@ export default function TransportationCardDetailed({ transportation }) {
                 />
             </AspectRatio>
 
-            <CardContent>
-                <Typography level="h4" sx={{ fontWeight: "bold" }}>
+            <CardContent sx={{ display: "flex", alignItems: "center" }}>
+                <h4 style={{
+                    fontWeight: "bold",
+                    fontWeight: "bold",
+                    margin: 20,
+                }}>
                     {transportation.companyName}
-                </Typography>
+                </h4>
                 <p>
                     <strong>Departure Date:</strong>{" "}
                     {transportation.departureDate}
