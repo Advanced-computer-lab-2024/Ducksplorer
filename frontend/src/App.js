@@ -98,6 +98,7 @@ import EditItinerary from "./Pages/Itinerary/editItinerary.js";
 import LandingPage from "./Pages/LandingPage.js";
 import ActivityCard from "../src/Components/activityCard";
 import FlightsPage from './Components/ThirdParty/FlightsPage';
+import HotelsPage from './Components/ThirdParty/HotelsPage';
 
 function App() {
   const { authUser } = useAuthContext();
@@ -693,6 +694,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <MyPurchases />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/hotelsPage"
+            element={
+              <ProtectedRoute>
+                <HotelsPage />
               </ProtectedRoute>
             }
           />
