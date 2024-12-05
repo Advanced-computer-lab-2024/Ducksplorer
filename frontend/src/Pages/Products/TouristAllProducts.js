@@ -223,7 +223,23 @@ const TouristAllProducts = () => {
             </Button>
           )}
         </Box>
-
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+          {!isGuest && (
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{
+                paddingX: 4,
+                fontWeight: 600,
+                textTransform: "capitalize",
+                marginLeft: "10px",
+              }}
+              onClick={() => navigate("/orders")}
+            >
+              View All orders
+            </Button>
+          )}
+        </Box>
         <Grid container spacing={3}>
           {products.filter((product) => product.isArchived !== true).length > 0 ? (
             products

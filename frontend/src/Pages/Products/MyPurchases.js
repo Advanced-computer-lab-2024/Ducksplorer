@@ -49,8 +49,14 @@ function MyPurchases() {
       const productDetail = response.data;
       console.log("Fetched product detail:", productDetail);
 
+      setProducts((prevProducts) => {
+        const isDuplicate = prevProducts.some(
+          (product) => product._id === productDetail._id
+        );
+        return isDuplicate ? prevProducts : [...prevProducts, productDetail];
+      });
       // Add the fetched product detail to the products state
-      setProducts((prevProducts) => [...prevProducts, productDetail]);
+      // setProducts((prevProducts) => [...prevProducts, productDetail]);
     } catch (error) {
       console.error("Error fetching product detail:", error);
     }
@@ -77,6 +83,9 @@ function MyPurchases() {
           </Typography>
         </Box>
 
+        <h2>
+          Order Number: {orderNumber}
+        </h2>
         <Button
           onClick={handleBackButtonClick}
           variant="contained"

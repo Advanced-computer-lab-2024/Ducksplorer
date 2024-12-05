@@ -517,7 +517,7 @@ function SearchItineraries() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
+              gridTemplateColumns: "repeat(3, 1fr)",
               gap: "24px", // Adjust the gap between items as needed
               paddingBottom: 24,
             }}
@@ -538,26 +538,6 @@ function SearchItineraries() {
             No itineraries found.
           </Typography>
         )}
-        {/* <TableCell>
-          <span
-            onClick={() =>
-              handleSaveItinerary(
-                itinerary._id,
-                itinerary.saved?.isSaved
-              )
-            }
-          >
-            {saveStates[itinerary._id] ? (
-              <IconButton>
-                <BookmarkIcon />
-              </IconButton>
-            ) : (
-              <IconButton>
-                <BookmarkBorderIcon />
-              </IconButton>
-            )}
-          </span>  SAVED BY JAYDAA
-        </TableCell> */}
         <Help />
       </Box>
     </div>

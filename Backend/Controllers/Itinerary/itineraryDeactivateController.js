@@ -31,7 +31,7 @@ const toggleItineraryActiveStatus = async (req, res) => {
       for (const request of notificationRequest) {
         // Create and send the notification
         await createNotification(
-            `The itinerary    is now accepting bookings!`, //"${itinerary.name}" put name here in space
+            `The itinerary ${itinerary.name} is now accepting bookings!`, //"${itinerary.name}" put name here in space
             request.user,
             "Itinerary active!"
           );

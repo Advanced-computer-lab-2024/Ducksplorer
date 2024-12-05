@@ -143,6 +143,7 @@ const FlightsCards = ({ flights , originCity, destinationCity, originCountry, de
                 departureCountry: originCountry,
                 arrivalCountry : destinationCountry,
                 arrivalCity : destinationCity,
+                //image: 
               }
         
               localStorage.setItem('flight', JSON.stringify(flight));
