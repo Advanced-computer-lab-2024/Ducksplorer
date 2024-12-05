@@ -288,9 +288,9 @@ button[type="submit"]:hover {
 
 
 .duckTitle {
-  font-family: "Playwrite HR Lijeva", cursive;
-  font-size: 40px;
-  font-weight: 700;
+  font-family: "Playwrite HR Lijeva", cursive !important;
+  /* font-size: 40px; */
+  /* font-weight: 700; */
   font-style: normal;
 
 }

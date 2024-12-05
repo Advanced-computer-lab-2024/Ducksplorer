@@ -165,80 +165,92 @@ function Login() {
 
   return (
     <div style={styles.container}>
-      <div style={styles.overlay}></div>
-      <Box style={styles.content}>
-        <Typography variant="h4" style={styles.title}>
-          Welcome Back to Ducksplorer
+      <div style={styles.leftSection}>
+        <Typography variant="h3" style={styles.welcomeText} className="duckTitle" >
+          Welcome to Ducksplorer
         </Typography>
-        <Typography variant="h6" style={styles.subtitle}>
-          Login to continue your adventure
+        <Typography variant="h5" style={styles.descriptionText} className="duckTitle" >
+          Get your ducks in a row.
         </Typography>
-        <Stack spacing={2} mt={3}>
-          <TextField
-            label="Username"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-            fullWidth
-          />
-          <TextField
-            label="Password"
-            type={showPassword ? "text" : "password"}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            fullWidth
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={() => setShowPassword(!showPassword)}>
-                    <Iconify
-                      icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
-                    />
-                  </IconButton>
-                </InputAdornment>
-              ),
+        {/* <Typography variant="h5" style={styles.descriptionText} className="duckTitle" >
+          Login to continue your adventure.
+        </Typography> */}
+      </div>
+      <div style={styles.rightSection}>
+        <Box style={styles.content}>
+          <Typography variant="h4" style={styles.title} className="duckTitle">
+            Ducksplorer
+          </Typography>
+          {/* <Typography variant="h6" style={styles.subtitle} >
+            Login to continue your adventure
+          </Typography> */}
+          <Stack spacing={2} mt={3}>
+            <TextField
+              label="Username"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              fullWidth
+            />
+            <TextField
+              label="Password"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              fullWidth
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={() => setShowPassword(!showPassword)}>
+                      <Iconify
+                        icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
+                      />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Stack>
+          <Button
+            disabled={!userName}
+            onClick={() => {
+              handleForgotPassword();
+              handleSendOtp();
             }}
-          />
-        </Stack>
-        <Button
-          disabled={!userName}
-          onClick={() => {
-            handleForgotPassword();
-            handleSendOtp();
-          }}
-          style={{
-            ...styles.link,
-            cursor: userName ? "pointer" : "not-allowed",
-            color: userName ? "#007bff" : "#aaa",
-          }}
-        >
-          Forgot password?
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          fullWidth
-          style={styles.button}
-          onClick={handleLogin}
-          disabled={loading}
-        >
-          {loading ? "Logging in..." : "Login"}
-        </Button>
-        <Typography variant="body2" style={styles.linkText}>
-          Don't have an account?{" "}
-          <Link to="/signUp" style={styles.link}>
-            Sign Up
-          </Link>
-        </Typography>
-        <Button
-          variant="outlined"
-          color="secondary"
-          fullWidth
-          style={styles.backButton}
-          onClick={handleBackToHome}
-        >
-          Back to Homepage
-        </Button>
-      </Box>
+            style={{
+              ...styles.link,
+              cursor: userName ? "pointer" : "not-allowed",
+              color: userName ? "#007bff" : "#aaa",
+            }}
+          >
+            Forgot password?
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            style={styles.button}
+            onClick={handleLogin}
+            disabled={loading}
+          >
+            {loading ? "Logging in..." : "Login"}
+          </Button>
+          <Typography variant="body2" style={styles.linkText}>
+            Don't have an account?{" "}
+            <Link to="/signUp" style={styles.link}>
+              Sign Up
+            </Link>
+          </Typography>
+          <Button
+            variant="outlined"
+            color="secondary"
+            fullWidth
+            style={styles.backButton}
+            onClick={handleBackToHome}
+          >
+            Back to Homepage
+          </Button>
+        </Box>
+      </div>
 
       {/* Forgot Password Dialog */}
       <Dialog
@@ -274,40 +286,53 @@ function Login() {
 
 const styles = {
   container: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100vw",
+    display: "flex",
     height: "100vh",
+    width: "100vw",
     background: "url('/travelbg.jpg') no-repeat center center fixed",
     backgroundSize: "cover",
   },
-  overlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
+  leftSection: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
-    zIndex: 1,
+    color: "#fff",
+    padding: "20px",
+  },
+  rightSection: {
+    flex: 0.7,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.85)", // Light and very transparent orange
+  },
+  welcomeText: {
+    fontSize: "3rem",
+    fontWeight: "bold",
+    marginBottom: "20px",
+  },
+  descriptionText: {
+    fontSize: "1.5rem",
+    textAlign: "center",
   },
   content: {
-    position: "relative",
-    zIndex: 2,
-    background: "rgba(255, 255, 255, 0.9)",
-    padding: "30px",
-    borderRadius: "10px",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
     width: "100%",
     maxWidth: "400px",
-    margin: "auto",
-    marginTop: "20vh",
+    padding: "30px",
+    borderRadius: "10px",
+    boxShadow: "rgba(0, 0, 0, 0.6) 0px 2px 11px 1px",
     textAlign: "center",
+    backgroundColor: "white"
   },
   title: {
     color: "#ff8c00",
     fontWeight: "bold",
-    marginBottom: "10px",
+    marginBottom: "40px",
+    fontSize: "30px",
+    textAlign: "center"
   },
   subtitle: {
     color: "#555",

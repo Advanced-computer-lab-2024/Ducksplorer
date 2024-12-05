@@ -362,14 +362,22 @@ const FormSection = () => {
     navigate("/"); // Navigate to the homepage
   };
 
-    return (
-      <div style={styles.container}>
-        <div style={styles.overlay}></div>
+  return (
+    <div style={styles.container}>
+      <div style={styles.leftSection}>
+        <Typography variant="h3" style={styles.welcomeText} className="duckTitle">
+          Welcome to Ducksplorer
+        </Typography>
+        <Typography variant="h5" style={styles.descriptionText} className="duckTitle">
+          Get your ducks in a row.
+        </Typography>
+      </div>
+      <div style={styles.rightSection}>
         <Box style={styles.content}>
-          <Typography variant="h4" style={styles.title}>
-            Ducksplorer Sign Up Form
+          <Typography variant="h4" style={styles.title} className="duckTitle">
+            Ducksplorer
           </Typography>
-          <Stack spacing={2} mt={3} style={styles.form}>
+          <Stack spacing={2} mt={3}>
             <TextField
               name="username"
               label="Username"
@@ -675,75 +683,86 @@ const FormSection = () => {
           </Stack>
         </Box>
       </div>
-    );
-  };
-  
-  const styles = {
-    container: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100vw",
-      height: "100vh",
-      background: "url('/travelbg.jpg') no-repeat center center fixed",
-      backgroundSize: "cover",
-      overflow: "hidden", // Prevent scrolling on the main page
-      display: "flex",
-      justifyContent: "center", // Center the form horizontally
-      alignItems: "center", // Center the form vertically
-    },
-    overlay: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      backgroundColor: "rgba(0, 0, 0, 0.5)",
-      zIndex: 1,
-    },
-    content: {
-      position: "relative",
-      zIndex: 2,
-      background: "rgba(255, 255, 255, 0.9)",
-      padding: "30px",
-      borderRadius: "10px",
-      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
-      width: "100%",
-      maxWidth: "500px", // Widen the container
-      margin: "auto",
-      marginTop: "10vh", // Adjusted to fit everything on the page
-      textAlign: "center",
-      overflowY: "auto", // Allow scrolling within the form
-      maxHeight: "80vh", // Limit the height of the form container
-    },
-    title: {
-      color: "#ff8c00",
-      fontWeight: "bold",
-      marginBottom: "10px",
-    },
-    subtitle: {
-      color: "#555",
-      marginBottom: "20px",
-    },
-    button: {
-      backgroundColor: "#ff8c00",
-      color: "#fff",
-      marginTop: "20px",
-    },
-    linkText: {
-      marginTop: "10px",
-      color: "#555",
-    },
-    link: {
-      color: "#007bff",
-      textDecoration: "none",
-      fontWeight: "bold",
-    },
-    backButton: {
-      marginTop: "15px",
-      backgroundColor: "#fff",
-      color: "#007bff",
-    },
-  };
-  
+    </div>
+  );
+};
+
+const styles = {
+  container: {
+    display: "flex",
+    height: "100vh",
+    width: "100vw",
+    background: "url('/travelbg.jpg') no-repeat center center fixed",
+    backgroundSize: "cover",
+  },
+  leftSection: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    color: "#fff",
+    padding: "20px",
+  },
+  rightSection: {
+    flex: 0.7,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.85)",
+    overflow: "auto"
+  },
+  welcomeText: {
+    fontSize: "3rem",
+    fontWeight: "bold",
+    marginBottom: "20px",
+  },
+  descriptionText: {
+    fontSize: "1.5rem",
+    textAlign: "center",
+  },
+  content: {
+    width: "100%",
+    maxWidth: "400px",
+    padding: "30px",
+    borderRadius: "10px",
+    boxShadow: "rgba(0, 0, 0, 0.6) 0px 2px 11px 1px",
+    textAlign: "center",
+    backgroundColor: "white",
+    maxHeight: "80vh", // Add this line
+    overflowY: "auto", // Add this line
+  },
+  title: {
+    color: "#ff8c00",
+    fontWeight: "bold",
+    marginBottom: "40px",
+    fontSize: "30px",
+    textAlign: "center"
+  },
+  subtitle: {
+    color: "#555",
+    marginBottom: "20px",
+  },
+  button: {
+    backgroundColor: "#ff8c00",
+    color: "#fff",
+    marginTop: "20px",
+  },
+  linkText: {
+    marginTop: "10px",
+    color: "#555",
+  },
+  link: {
+    color: "#007bff",
+    textDecoration: "none",
+    fontWeight: "bold",
+  },
+  backButton: {
+    marginTop: "15px",
+    backgroundColor: "#fff",
+    color: "#007bff",
+  },
+};
+
 export default FormSection;
