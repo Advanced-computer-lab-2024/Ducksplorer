@@ -123,7 +123,7 @@ function TouristNavBar() {
     >
       <Container sx={{ width: "100%" }}>
         <Toolbar disableGutters sx={{ width: "100vw", justifySelf: "center" }}>
-          <Tooltip title="Home">
+        <Tooltip title="Home">
             <h2
               className="duckTitle"
               style={{
@@ -132,7 +132,10 @@ function TouristNavBar() {
                 fontWeight: "700",
                 color: "orange",
                 fontSize: '2rem'
-              }}>Ducksplorer</h2>
+              }}>
+              Ducksplorer
+            </h2>
+          </Tooltip>
           {/* <PersistentDrawerLeft /> */}
           {/* <Tooltip title="Ducksplorer Home Page">
           <TravelExploreIcon
@@ -208,7 +211,7 @@ function TouristNavBar() {
                   <IconButton>
                     <FestivalIcon />
                   </IconButton>
-                  <Typography textAlign="center"  >Activities</Typography>
+                  <Typography textAlign="center">Activities</Typography>
                 </MenuItem>
                 <MenuItem onClick={() => handleNavigation("itineraries")}>
                   <IconButton>
