@@ -19,10 +19,14 @@ export default function ActivityCardDetails({ activity }) {
                 />
             </AspectRatio>
 
-            <CardContent>
-                <Typography level="h4" sx={{ fontWeight: "bold" }}>
+            <CardContent sx={{ display: "flex", alignItems: "center" }}>
+                <h4 style={{
+                    fontWeight: "bold",
+                    margin: 20,
+                    fontSize: 40
+                }}>
                     {activity.name || "Unnamed Activity"}
-                </Typography>
+                </h4>
                 <p><strong>Is Open:</strong> {activity.isOpen ? "Yes" : "No"}</p>
                 <p><strong>Category:</strong> {activity.category || "N/A"}</p>
                 <p><strong>Duration:</strong> {activity.duration || "N/A"} hours</p>

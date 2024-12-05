@@ -8,10 +8,14 @@ import Chip from "@mui/joy/Chip";
 export default function CartCardDetails({ cartData }) {
     return (
         <Card variant="outlined" sx={{ width: "100%", height: "auto" }}>
-            <CardContent>
-                <Typography level="h4" sx={{ fontWeight: "bold" }}>
-                    {"Cart"}
-                </Typography>
+            <CardContent sx={{ display: "flex", alignItems: "center" }}>
+                <h4 style={{
+                    fontWeight: "bold",
+                    fontWeight: "bold",
+                    margin: 20,
+                }}>
+                    Cart
+                </h4>
                 {cartData && cartData.products && cartData.products.length > 0 ? (
                     cartData.products.map((product, index) => (
                         <div
