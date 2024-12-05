@@ -20,9 +20,10 @@ import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import ActivityCardDetails from "./activityCardDetailed";
 import { useState, useEffect } from "react";
-import NotificationAddOutlinedIcon from '@mui/icons-material/NotificationAddOutlined';
-import ShareIcon from '@mui/icons-material/Share';
-import Swal from 'sweetalert2';
+import NotificationAddOutlinedIcon from "@mui/icons-material/NotificationAddOutlined";
+import ShareIcon from "@mui/icons-material/Share";
+import Swal from "sweetalert2";
+import { red } from "@mui/material/colors";
 
 // ActivityCard component
 export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
@@ -83,7 +84,6 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
       `https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`
     );
   }, []);
-
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -157,11 +157,14 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
     event.stopPropagation();
     try {
       const newIsNotified = !currentIsNotified;
-      
-      const response = await axios.post('http://localhost:8000/notification/request', {
-        user: username,
-        eventId: activityId,
-      });
+
+      const response = await axios.post(
+        "http://localhost:8000/notification/request",
+        {
+          user: username,
+          eventId: activityId,
+        }
+      );
 
       if (response.status === 201) {
         message.success(
@@ -173,16 +176,19 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
           ...prev,
           [activityId]: newIsNotified,
         }));
-        message.success('You will be notified when this event starts accepting bookings.');
-      } else if(response.status === 200){
-        message.info('You have already requested to be notified for this activity');
-      }
-      else {
+        message.success(
+          "You will be notified when this event starts accepting bookings."
+        );
+      } else if (response.status === 200) {
+        message.info(
+          "You have already requested to be notified for this activity"
+        );
+      } else {
         message.error(response.data.message);
       }
     } catch (error) {
-      console.error('Error requesting notification:', error);
-      message.error('Failed to request notification.');
+      console.error("Error requesting notification:", error);
+      message.error("Failed to request notification.");
     }
   };
 
@@ -207,7 +213,6 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
     )}&body=${encodeURIComponent(body)}`;
   };
 
-
   const handleClick = (event, activityId) => {
     event.stopPropagation();
     // setAnchorEl(event.currentTarget);
@@ -218,7 +223,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
           <button id="share-link" style="padding: 10px 20px; font-size: 16px; background-color: #ff9933; color: white; border: none; border-radius: 8px; cursor: pointer;">
             Share via Link
           </button>
-          <button id="share-mail" style="padding: 10px 20px; font-size: 16px; background-color: #ff9933; color: white; border: none; border-radius: 8px; cursor: pointer;">
+          <button className="blackhover" id="share-mail" style="padding: 10px 20px; font-size: 16px; background-color: #ff9933; color: white; border: none; border-radius: 8px; cursor: pointer;">
             Share via Mail
           </button>
         </div>
@@ -245,7 +250,6 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
     });
   };
 
-
   const TheCard = () => {
     return (
       <div style={{ width: "100%" }}>
@@ -264,38 +268,44 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
               <img src={image} loading="lazy" alt="" />
             </AspectRatio>
             <Tooltip title="Share">
-                <IconButton
-                  size="md"
-                  variant="solid"
-                  color="primary"
-                  onClick={(event) => handleClick(event, activity._id)}
-                  sx={{
-                    borderRadius: "50%",
-                    position: "absolute",
-                    zIndex: 2,
-                    borderRadius: "50%",
-                    right: "1rem",
-                    bottom: 0,
-                    transform: "translateY(50%) translateX(-130%)",
-                    transition: "transform 0.3s",
-                    "&:active": {
-                      transform: "translateY(50%) scale(0.9)",
-                    },
-                    backgroundColor:  "#ff9933",
-                  }}
-                >
-                  <ShareIcon />
-                </IconButton>
-              </Tooltip>
+              <IconButton
+                size="md"
+                variant="solid"
+                color="primary"
+                onClick={(event) => handleClick(event, activity._id)}
+                className="blackhover"
+                sx={{
+                  borderRadius: "50%",
+                  position: "absolute",
+                  zIndex: 2,
+                  borderRadius: "50%",
+                  right: "1rem",
+                  bottom: 0,
+                  transform: "translateY(50%) translateX(-130%)",
+                  transition: "transform 0.3s",
+
+                  backgroundColor: "#ff9933",
+                }}
+              >
+                <ShareIcon />
+              </IconButton>
+            </Tooltip>
             <Tooltip title="Save Activity">
               <IconButton
                 size="md"
                 variant={saveStates[activity._id] ? "soft" : "solid"}
-                color={saveStates[activity._id] ? "neutral" : "primary"}
-                onClick={(event) => handleSaveActivity(event, activity._id, saveStates[activity._id])}
+                onClick={(event) =>
+                  handleSaveActivity(
+                    event,
+                    activity._id,
+                    saveStates[activity._id]
+                  )
+                }
+                className="blackhover"
                 sx={{
                   position: "absolute",
                   zIndex: 2,
+                  color: "white",
                   borderRadius: "50%",
                   right: "1rem",
                   bottom: 0,
@@ -311,27 +321,33 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
               </IconButton>
             </Tooltip>
             {showNotify && (
-                <Tooltip title="Request Notifications">
+              <Tooltip title="Request Notifications">
                 <IconButton
                   size="md"
                   variant="solid"
                   color="primary"
                   onClick={(event) =>
-                    requestNotification(event, activity._id, notificationStates[activity._id])
+                    requestNotification(
+                      event,
+                      activity._id,
+                      notificationStates[activity._id]
+                    )
                   }
                   sx={{
                     borderRadius: "50%",
                     position: "absolute",
                     zIndex: 2,
                     borderRadius: "50%",
-                    right: "1rem",
+                    display: "flex",
+                    justifyContent: "center  ",
+                    alignItems: "center",
                     bottom: 0,
                     transform: "translateY(50%) translateX(-260%)",
                     transition: "transform 0.3s",
                     "&:active": {
                       transform: "translateY(50%) scale(0.9)",
                     },
-                    backgroundColor:  "#ffcc00",
+                    backgroundColor: "#ffcc00",
                   }}
                 >
                   <NotificationAddOutlinedIcon />
@@ -349,7 +365,6 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
               <div
                 style={{
                   display: "flex",
-
                   flexDirection: "column",
                 }}
               >
@@ -382,8 +397,11 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                       component="span"
                       size="sm"
                       variant="outlined"
-                      color="primary"
-                      sx={{ marginRight: 1 }}
+                      sx={{
+                        marginRight: 1,
+                        color: "#ff9933",
+                        borderColor: "#ff9933",
+                      }}
                     >
                       {tag}
                     </Chip>
@@ -455,6 +473,9 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
           }}
           sx={{
             "& .MuiPopover-paper": {
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
               position: "fixed",
               top: "50%",
               left: "50%",
@@ -467,6 +488,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
         >
           <div
             style={{
+              padding: "30px",
               position: "relative",
               display: "flex",
               flexDirection: "column",
@@ -474,8 +496,9 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
               maxWidth: "90%",
               maxHeight: "80vh",
               overflow: "auto",
-              padding: "30px",
               borderRadius: "16px",
+              borderColor: "grey",
+              boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
               backgroundColor: "#f5f5f5",
             }}
           >
