@@ -288,6 +288,10 @@ button[type="submit"]:hover {
   font-style: normal;
 }
 
+.blackhover {
+  background-color: #ff9933 !important;
+}
+
 .blackhover:hover {
   background-color: #ffeccc !important;
   color: #ff9933;
