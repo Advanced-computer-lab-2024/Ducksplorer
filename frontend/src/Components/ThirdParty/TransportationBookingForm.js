@@ -466,6 +466,7 @@ const TransportationBookingForm = () => {
                   <DatePicker
                     label="Start Date"
                     value={startDate}
+                    sx={{ width: "100%" }}
                     onChange={(newValue) => handleDateChange(newValue)}
                     renderInput={(params) => (
                       <TextField {...params} fullWidth />
@@ -506,7 +507,7 @@ const TransportationBookingForm = () => {
             <Grid item xs={12}>
               <Button
                 variant="contained"
-                color="primary"
+                className="blackhover"
                 onClick={handleSearch}
                 fullWidth
               >

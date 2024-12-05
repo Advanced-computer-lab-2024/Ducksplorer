@@ -1,7 +1,7 @@
 const express = require("express");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const cron = require("node-cron");
-
+const Cron = require("../Models/cronModel"); // Cron model
 const nodemailer = require("nodemailer");
 const Activity = require("../Models/activityModel");
 const Itinerary = require("../Models/itineraryModel");
@@ -23,7 +23,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendEmail = async (to, subject, message) => {
+const sendEmail = async (to, subject, htmlContent) => {
   try {
     // Configure the email transporter
     const transporter = nodemailer.createTransport({
@@ -39,7 +39,7 @@ const sendEmail = async (to, subject, message) => {
       from: "ducksplorer@gmail.com", // Sender address
       to, // Receiver's email address
       subject, // Email subject
-      text: message, // Email message
+      html: htmlContent,
     };
 
     // Send email
@@ -50,14 +50,21 @@ const sendEmail = async (to, subject, message) => {
   }
 };
 
-const notifyUpcomingActivities = async (req, res) => {
+// State to enable/disable the cron job
+let isCronEnabled = false;
+
+// Function to toggle cron state
+const toggleCron = (state) => {
+  isCronEnabled = state;
+  console.log(
+    `Cron job state updated: ${isCronEnabled ? "Enabled" : "Disabled"}`
+  );
+};
+
+// Notify function
+const notifyUpcomingActivities = async () => {
   try {
-    // Extract the user parameter
-    const { user } = req.params; // Assuming req.params.user contains the user string
-    if (!user) {
-      return res.status(400).json({ error: "User parameter is missing." });
-    }
-    console.log("user:", user);
+    console.log("Running notifyUpcomingActivities cron job...");
 
     // Get the current date and time
     const now = new Date();
@@ -68,55 +75,201 @@ const notifyUpcomingActivities = async (req, res) => {
     twoDaysFromNow.setDate(now.getDate() + 2);
     console.log("Date two days from now:", twoDaysFromNow);
 
-    // Query for bookings with activity dates within the next two days and not yet notified
+    // Query all bookings with activity dates within the next two days and not yet notified
     const bookings = await ActivityBooking.find({
-      user: user, // Pass user directly as a string
       chosenDate: {
         $gte: now,
         $lte: twoDaysFromNow,
       },
-      notificationSent: false,
+      //notificationSent: false,
     });
-    console.log(bookings);
 
-    // Send notifications
+    console.log(`Found ${bookings.length} bookings for notification.`);
+
+    // Process notifications
     for (const booking of bookings) {
-      const { activities } = booking;
-      //console.log(activities);
+      const { user, activity } = booking;
+      const activityData = await Activity.findOne({ _id: activity });
+      console.log("activity:", activity);
+      console.log(booking.name);
       // Fetch the user's email
       const userData = await Tourist.findOne({ userName: user });
       if (!userData) {
         console.error(`No user found with userName: ${user}`);
         continue;
       }
-      //console.log(userData);
 
-      const userEmail = userData.email; // Ensure userData.email exists
-      for (const activity of activities) {
-        // Send an email for each activity
-        await sendEmail(
-          userEmail,
-          "Upcoming Event Reminder",
-          `Reminder: You have an upcoming event "${activity.name}" on ${activity.date}.`
-        );
-      }
+      const userEmail = userData.email;
+
+      // Send an email for the activity
+      await sendEmail(
+        userEmail,
+        "Reminder: Your Upcoming Event",
+        `
+        <html>
+          <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+            <h2 style="color: #0056b3;">Upcoming Event Reminder</h2>
+            <p>Dear ${userData.firstName || user},</p>
+            <p>
+              We are excited to remind you about your upcoming event:
+            </p>
+            <table style="border-collapse: collapse; width: 100%; max-width: 600px; margin-top: 20px;">
+              <tr>
+                <td style="font-weight: bold; padding: 8px; border: 1px solid #ddd;">Event Name</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">${
+                  activityData.name
+                }</td>
+              </tr>
+              <tr>
+                <td style="font-weight: bold; padding: 8px; border: 1px solid #ddd;">Date</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">${booking.chosenDate.toDateString()}</td>
+              </tr>
+              <tr>
+                <td style="font-weight: bold; padding: 8px; border: 1px solid #ddd;">Price</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">$${booking.chosenPrice.toFixed(
+                  2
+                )}</td>
+              </tr>
+            </table>
+            <p style="margin-top: 20px;">
+              We look forward to seeing you at the event. If you have any questions, feel free to reach out to us.
+            </p>
+            <p style="margin-top: 20px;">
+              Best regards,<br/>
+              <strong>Your Events Team</strong>
+            </p>
+          </body>
+        </html>
+        `
+      );
+
+      console.log(
+        `Notification sent to ${userEmail} for activity: ${activity.name}`
+      );
 
       // Mark notification as sent
       booking.notificationSent = true;
       await booking.save();
+      console.log(`Notification status updated for booking ID: ${booking._id}`);
     }
 
-    res.status(200).json({ message: "Notifications sent successfully." });
+    console.log("All notifications sent successfully.");
   } catch (error) {
     console.error("Error in notifying upcoming events:", error);
-    res
-      .status(500)
-      .json({ error: "An error occurred while sending notifications." });
   }
 };
 
-// Schedule the job to run daily
-cron.schedule("39 18 * * *", notifyUpcomingActivities); // Runs every day at 8:00 AM
+const notifyUpcomingItineraries = async () => {
+  try {
+    console.log("Running notifyUpcomingItineraries cron job...");
+
+    // Get the current date and time
+    const now = new Date();
+    console.log("Current Date:", now);
+
+    // Get the date two days from now
+    const twoDaysFromNow = new Date();
+    twoDaysFromNow.setDate(now.getDate() + 2);
+    console.log("Date two days from now:", twoDaysFromNow);
+
+    // Query all bookings with activity dates within the next two days and not yet notified
+    const bookings = await ItineraryBooking.find({
+      chosenDate: {
+        $gte: now,
+        $lte: twoDaysFromNow,
+      },
+      //notificationSent: false,
+    });
+
+    console.log(`Found ${bookings.length} bookings for notification.`);
+
+    // Process notifications
+    for (const booking of bookings) {
+      const { user, itinerary } = booking;
+      const activityData = await Itinerary.findOne({ _id: itinerary });
+      console.log("itinerary:", itinerary);
+      console.log(booking.name);
+      // Fetch the user's email
+      const userData = await Tourist.findOne({ userName: user });
+      if (!userData) {
+        console.error(`No user found with userName: ${user}`);
+        continue;
+      }
+
+      const userEmail = userData.email;
+
+      // Send an email for the activity
+      await sendEmail(
+        userEmail,
+        "Reminder: Your Upcoming Event",
+        `
+        <html>
+          <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+            <h2 style="color: #0056b3;">Upcoming Event Reminder</h2>
+            <p>Dear ${userData.firstName || user},</p>
+            <p>
+              We are excited to remind you about your upcoming event:
+            </p>
+            <table style="border-collapse: collapse; width: 100%; max-width: 600px; margin-top: 20px;">
+              <tr>
+                <td style="font-weight: bold; padding: 8px; border: 1px solid #ddd;">Event Name</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">${
+                  activityData.name
+                }</td>
+              </tr>
+              <tr>
+                <td style="font-weight: bold; padding: 8px; border: 1px solid #ddd;">Date</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">${booking.chosenDate.toDateString()}</td>
+              </tr>
+              <tr>
+                <td style="font-weight: bold; padding: 8px; border: 1px solid #ddd;">Price</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">$${booking.chosenPrice.toFixed(
+                  2
+                )}</td>
+              </tr>
+            </table>
+            <p style="margin-top: 20px;">
+              We look forward to seeing you at the event. If you have any questions, feel free to reach out to us.
+            </p>
+            <p style="margin-top: 20px;">
+              Best regards,<br/>
+              <strong>Your Events Team</strong>
+            </p>
+          </body>
+        </html>
+        `
+      );
+
+      console.log(
+        `Notification sent to ${userEmail} for activity: ${itinerary.name}`
+      );
+
+      // Mark notification as sent
+      booking.notificationSent = true;
+      await booking.save();
+      console.log(`Notification status updated for booking ID: ${booking._id}`);
+    }
+
+    console.log("All notifications sent successfully.");
+  } catch (error) {
+    console.error("Error in notifying upcoming events:", error);
+  }
+};
+
+cron.schedule("44 23 * * *", async () => {
+  try {
+    const cronState = await Cron.findOne({ name: "notifyUpcoming" });
+    if (cronState?.enabled) {
+      console.log("Executing scheduled cron job: notifyUpcomingActivities");
+      await notifyUpcomingActivities();
+      await notifyUpcomingItineraries();
+    } else {
+      console.log("Cron job 'notifyUpcomingActivities' is disabled. Skipping.");
+    }
+  } catch (error) {
+    console.error("Error executing scheduled cron job:", error);
+  }
+});
 
 const createPayment = async (req, res) => {
   //const itemId = req.params;
