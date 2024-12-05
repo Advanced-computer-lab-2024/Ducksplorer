@@ -19,14 +19,20 @@ const createBooking = async (req, res) => {
       return;
     }
 
-    const convertedDate = new Date(date);
+    let convertedDate;
+    if (date) {
+      convertedDate = new Date(date);
+    }
 
     const activity = activityId ? await Activity.findById(activityId) : null;
     const itinerary = itineraryId
       ? await Itinerary.findById(itineraryId)
       : null;
 
-    console.log(activityId, itineraryId, type);
+    if (activityId) activity.totalGain += activity.price;
+    if (itineraryId) itinerary.totalGain += itinerary.price;
+
+    console.log("wesel hena? ", activityId, itineraryId, type);
 
     if (activityId && type === "activity") {
       activity.bookedCount += 1;
@@ -194,30 +200,53 @@ const viewMyPastBookings = async (req, res) => {
 const viewDesiredActivity = async (req, res) => {
   try {
     const { activityId } = req.params;
+
     const result = await Activity.findOne({ _id: activityId });
+
     if (!result) {
       return res.status(404).json({ message: "Activity not found" });
     }
-    res.status(200).json(result);
+
+    const now = new Date();
+    const activityDate = new Date(result.date);
+    const isUpcoming = activityDate > now;
+
+    res.status(200).json({
+      ...result.toObject(),
+      isUpcoming,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
+
 const viewDesiredItinerary = async (req, res) => {
   try {
-    //console.log(req.params);
     const { itineraryId } = req.params;
+
     const result = await Itinerary.findOne({ _id: itineraryId });
-    console.log(itineraryId);
+
     if (!result) {
       return res.status(404).json({ message: "Itinerary not found" });
     }
-    res.status(200).json(result);
+
+    // Check if any available date is in the future
+    const now = new Date();
+    const isUpcoming = result.availableDatesAndTimes.some(dateTime => {
+      const itineraryDate = new Date(dateTime);
+      return itineraryDate > now; // Check if the date is in the future
+    });
+
+    res.status(200).json({
+      ...result.toObject(),
+      isUpcoming,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 const getMyBookings = async (req, res) => {
   try {
@@ -297,6 +326,8 @@ const cancelMyBooking = async (req, res) => {
   // const { booking } = req.body.booking || "";
   const currentDate = new Date();
   console.log("requestBody", req.body);
+  console.log("username;", user);
+  console.log("booking", booking);
   let itemObjectId;
 
   try {
@@ -332,13 +363,16 @@ const cancelMyBooking = async (req, res) => {
           .status(400)
           .json({ message: "Cannot cancel within 48 hours of the activity" });
       }
+      const activity = await Activity.findOne({ _id: itemObjectId });
 
       tourist.wallet += parseFloat(price);
       await tourist.save();
-
+      console.log("price:", activityBooking.chosenPrice);
+      const newCount = activity.bookedCount - 1;
+      const newGain = activity.totalGain - activityBooking.chosenPrice;
       await Activity.updateOne(
         { _id: itemObjectId },
-        { $inc: { bookedCount: -1 } }
+        { bookedCount: newCount, totalGain: newGain }
       );
 
       await ActivityBooking.deleteOne({ user, activity: itemObjectId });
@@ -347,6 +381,11 @@ const cancelMyBooking = async (req, res) => {
         user,
         itinerary: itemObjectId,
       });
+      console.log(itineraryBooking);
+
+      const itinerary = await Itinerary.findOne({ _id: itemObjectId });
+
+      console.log(itinerary);
 
       if (!itineraryBooking) {
         return res
@@ -366,11 +405,20 @@ const cancelMyBooking = async (req, res) => {
 
       tourist.wallet += parseFloat(price);
       await tourist.save();
+      console.log("price before:", itineraryBooking.chosenPrice);
+      console.log("Gain before:", itinerary.totalGain);
+      console.log("booked before:", itinerary.bookedCount);
+      const newCount = itinerary.bookedCount - 1;
+      const newGain = itinerary.totalGain - itineraryBooking.chosenPrice;
 
       await Itinerary.updateOne(
         { _id: itemObjectId },
-        { $inc: { bookedCount: -1 } }
+        { bookedCount: newCount, totalGain: newGain }
       );
+
+      console.log("price after:", itineraryBooking.chosenPrice);
+      console.log("Gain after:", itinerary.totalGain);
+      console.log("booked after:", itinerary.bookedCount);
 
       await ItineraryBooking.deleteOne({ user, itinerary: itemObjectId });
     } else if (

@@ -1,17 +1,18 @@
 import { React, useState, useEffect } from "react";
 import CurrencyConvertor from "../CurrencyConvertor";
 import {
+  Box,
   Card,
   CardContent,
   Typography,
   CardMedia,
   Button,
   TextField,
+  Rating,
 } from "@mui/material";
 import useUserRole from "../getRole";
 import { message } from "antd";
 import axios from "axios";
-import { Rating } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { calculateProductRating } from "../../Utilities/averageRating";
@@ -26,8 +27,8 @@ const ProductCard = ({
   showRating, //shows the user review , also for myPurchases as a tourist
   showReview,
   inCartQuantity,
-  isConfirmButtonVisible=false,
-  showAddToCart=false,
+  isConfirmButtonVisible = false,
+  showAddToCart = false,
   onProductRemove,
   onQuantityChange,
   showRemoveWishlist,
@@ -58,7 +59,9 @@ const ProductCard = ({
       const username = user.username;
 
       try {
-        const response = await axios.get(`http://localhost:8000/touristRoutes/myPurchases/${username}`);
+        const response = await axios.get(
+          `http://localhost:8000/touristRoutes/myPurchases/${username}`
+        );
         console.log(response.data);
         if (response.status === 200) {
           setPurchaseStatus(response.data[0].status);
@@ -76,51 +79,60 @@ const ProductCard = ({
   const handleCartConfirmQuantity = async (e) => {
     e.preventDefault();
     console.log(neededQuantity);
-    if(neededQuantity>0){
-      try{
+    if (neededQuantity > 0) {
+      try {
         const userJson = localStorage.getItem("user");
         const user = JSON.parse(userJson);
         const userName = user.username;
         const newQuantity = neededQuantity;
-        const response = await axios.patch("http://localhost:8000/touristRoutes/cart", {
-          userName,
-          productId: product._id,
-          newQuantity,
-        });
+        const response = await axios.patch(
+          "http://localhost:8000/touristRoutes/cart",
+          {
+            userName,
+            productId: product._id,
+            newQuantity,
+          }
+        );
         if (response.status === 200) {
           message.success("Product quantity updated successfully!");
         } else {
           message.error("Failed to update quantity in cart.");
         }
-      }catch(error){
+      } catch (error) {
         console.error(error);
-        message.error("An error occurred while adding the product to the cart.");
+        message.error(
+          "An error occurred while adding the product to the cart."
+        );
       }
-    }else{
-      try{
+    } else {
+      try {
         const userJson = localStorage.getItem("user");
         const user = JSON.parse(userJson);
         const userName = user.username;
-        const response = await axios.delete("http://localhost:8000/touristRoutes/cart", {
-          params: {
-            userName,
-            productId: product._id,
-          },
-        });
+        const response = await axios.delete(
+          "http://localhost:8000/touristRoutes/cart",
+          {
+            params: {
+              userName,
+              productId: product._id,
+            },
+          }
+        );
         if (response.status === 200) {
           message.success("Product removed successfully!");
           onProductRemove(product._id);
         } else {
           message.error("Failed to update quantity in cart.");
         }
-      }catch(error){
+      } catch (error) {
         console.error(error);
-        message.error("An error occurred while adding the product to the cart.");
+        message.error(
+          "An error occurred while adding the product to the cart."
+        );
       }
     }
     onQuantityChange(product._id, neededQuantity); // Notify the parent
-  }
-
+  };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -130,11 +142,14 @@ const ProductCard = ({
       const userName = user.username;
       const newQuantity = quantity;
       // Send the selected quantity and product details to the backend
-      const response = await axios.put("http://localhost:8000/touristRoutes/cart", {
-        userName,
-        productId: product._id,
-        newQuantity,
-      });
+      const response = await axios.put(
+        "http://localhost:8000/touristRoutes/cart",
+        {
+          userName,
+          productId: product._id,
+          newQuantity,
+        }
+      );
 
       if (response.status === 200) {
         message.success("Product added to cart successfully!");
@@ -148,33 +163,32 @@ const ProductCard = ({
     }
   };
 
-
   const handleIncrement = () => {
     setQuantity((prev) => prev + 1); // Increment the quantity by 1
-    if (quantity >= product.availableQuantity){
+    if (quantity >= product.availableQuantity) {
       message.error("Cannot purchase with a quantity more than the available");
     }
   };
 
   const handleDecrement = () => {
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1)); // Decrement the quantity but not below 1
-    if (quantity > (product.availableQuantity + 1)){
+    if (quantity > product.availableQuantity + 1) {
       message.error("Cannot purchase with a quantity more than the available");
     }
   };
 
   const handleDecrementForCart = () => {
     setNeededQuantity((prev) => (prev > 0 ? prev - 1 : 0)); // Decrement the quantity but not below 0
-  }
+  };
 
   const handleIncrementForCart = () => {
     setNeededQuantity((prev) => prev + 1); // Increment the quantity by 1
-  }
+  };
 
   const handleAddToCartClick = () => {
     setFormVisible(true); // Show the form when the button is clicked
   };
-  
+
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
@@ -276,14 +290,13 @@ const ProductCard = ({
     console.log("username:", userName);
     try {
       const response = await axios.put(
-        `http://localhost:8000/touristRoutes/removeFromWishlist/${userName}/${productId}`,
+        `http://localhost:8000/touristRoutes/removeFromWishlist/${userName}/${productId}`
       );
-  
+
       if (response.status === 200) {
         message.success("Product removed from wishlist successfully");
         removeProductFromWishlist(product._id);
-        return response.data; 
-
+        return response.data;
       } else {
         message.error("Failed to remove product from wishlist");
       }
@@ -292,8 +305,7 @@ const ProductCard = ({
       message.error("An error occurred while removing the product");
     }
   };
-  
-  
+
   const addToWishlist = async (product) => {
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
     const user = JSON.parse(userJson);
@@ -308,15 +320,15 @@ const ProductCard = ({
       if (response.status === 200) {
         message.success("Product added to wishlist successfully!");
         setShowWishlist(false);
-
       } else {
         message.error("Failed to add the product to the wishlist.");
       }
     } catch (error) {
-      message.error("An error occurred while adding the product to the wishlist.");
+      message.error(
+        "An error occurred while adding the product to the wishlist."
+      );
     }
-
-  }
+  };
   const handlePurchase = async (product) => {
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
     const user = JSON.parse(userJson);
@@ -376,29 +388,27 @@ const ProductCard = ({
 
   return (
     <Card
-      className="product-card"
       style={{
-        margin: "20px",
         position: "relative",
-        filter: archived || product.availableQuantity === 0 ? "grayscale(100%)" : "none", // Greyscale effect when archived
+        borderRadius: "8px",
+        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+        margin: "16px",
+        width: "100%",
+        maxWidth: "300px",
+        height: "70vh",
+        filter:
+          archived || product.availableQuantity === 0
+            ? "grayscale(100%)"
+            : "none",
         opacity: archived || product.availableQuantity === 0 ? 0.6 : 1,
-        borderRadius: "3cap",
-        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
-        height: "100%",
       }}
     >
       <CardMedia
         component="img"
-        width="100%"
-        height="60%" // Adjust the height as needed
+        height="140"
         image={product.picture}
         alt={product.name}
-        style={{
-          maxHeight: "500px",
-          objectFit: "cover",
-          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
-          borderRadius: "3cap",
-        }} // Ensure the image covers the container
+        style={{ objectFit: "cover" }}
       />
       <div style={{ overflow: "auto", height: "40%" }}>
         <CardContent>
@@ -492,16 +502,11 @@ const ProductCard = ({
             </div>
           )}
           <div>
-          {role === "Tourist" && showPurchase &&(
-            <Typography variant="body1">
-            Status: {purchaseStatus}
-          </Typography>
-          )}
-          </div>
-          <div>
-          
+            {role === "Tourist" && showPurchase && (
+              <Typography variant="body1">Status: {purchaseStatus}</Typography>
+            )}
 
-          {product.availableQuantity === 0 && (
+            {product.availableQuantity === 0 && (
               <div
                 style={{
                   position: "absolute",
@@ -521,8 +526,7 @@ const ProductCard = ({
               >
                 Sold Out
               </div>
-          )}
-
+            )}
           </div>
           {!isGuest && showAddToCart && (
             <Button
@@ -533,120 +537,121 @@ const ProductCard = ({
             >
               Add To Cart
             </Button>
-            
-          )} 
-          {isConfirmButtonVisible &&(
+          )}
+          {isConfirmButtonVisible && (
             <form
-            onSubmit={handleCartConfirmQuantity}
-            style={{
-              marginTop: "10px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "10px",
-            }}
-          >
-            {/* Quantity Selector */}
-            <div
+              onSubmit={handleCartConfirmQuantity}
               style={{
+                marginTop: "10px",
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
-                justifyContent: "center",
                 gap: "10px",
               }}
             >
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={handleDecrementForCart}
-                style={{ minWidth: "40px", minHeight: "40px" }}
+              {/* Quantity Selector */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "10px",
+                }}
               >
-                -
-              </Button>
-              <Typography variant="h6">{neededQuantity}</Typography>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleDecrementForCart}
+                  style={{ minWidth: "40px", minHeight: "40px" }}
+                >
+                  -
+                </Button>
+                <Typography variant="h6">{neededQuantity}</Typography>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleIncrementForCart}
+                  style={{ minWidth: "40px", minHeight: "40px" }}
+                >
+                  +
+                </Button>
+              </div>
               <Button
-                variant="outlined"
+                type="submit"
+                variant="contained"
                 color="primary"
-                onClick={handleIncrementForCart}
-                style={{ minWidth: "40px", minHeight: "40px" }}
+                style={{ width: "80%" }}
               >
-                +
+                Confirm
               </Button>
-            </div>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              style={{ width: "80%" }}
-            >
-              Confirm
-            </Button>
-          </form>
+            </form>
           )}
           {isFormVisible && (
             <form
-            onSubmit={handleFormSubmit}
-            style={{
-              marginTop: "10px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "10px",
-            }}
-          >
-            {/* Quantity Selector */}
-            <div
+              onSubmit={handleFormSubmit}
               style={{
+                marginTop: "10px",
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
-                justifyContent: "center",
                 gap: "10px",
               }}
             >
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={handleDecrement}
-                style={{ minWidth: "40px", minHeight: "40px" }}
+              {/* Quantity Selector */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "10px",
+                }}
               >
-                -
-              </Button>
-              <Typography variant="h6">{quantity}</Typography>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleDecrement}
+                  style={{ minWidth: "40px", minHeight: "40px" }}
+                >
+                  -
+                </Button>
+                <Typography variant="h6">{quantity}</Typography>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleIncrement}
+                  style={{ minWidth: "40px", minHeight: "40px" }}
+                >
+                  +
+                </Button>
+              </div>
               <Button
-                variant="outlined"
+                type="submit"
+                variant="contained"
                 color="primary"
-                onClick={handleIncrement}
-                style={{ minWidth: "40px", minHeight: "40px" }}
+                style={{ width: "80%" }}
               >
-                +
+                Confirm
               </Button>
-            </div>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              style={{ width: "80%" }}
-            >
-              Confirm
-            </Button>
-          </form>
+            </form>
           )}
           <div>
-          {role === "Tourist" && !hideWishlist && (
-            <Button
-              variant="contained"
-              color="primary"
-              style={{ position: "relative", left: "75%" ,bottom: "100%"}} // Place the button at the bottom-right corner
-              onClick={() =>
-                showRemoveWishlist ? handleRemoveWishlist(product) : addToWishlist(product)
-              }            
+            {role === "Tourist" && !hideWishlist && (
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ position: "relative", left: "75%", bottom: "100%" }} // Place the button at the bottom-right corner
+                onClick={() =>
+                  showRemoveWishlist
+                    ? handleRemoveWishlist(product)
+                    : addToWishlist(product)
+                }
               >
-              {showRemoveWishlist ? "remove from wishlist" :"Add to Wishlist" }
-            </Button>
-          )}
-
+                {showRemoveWishlist
+                  ? "remove from wishlist"
+                  : "Add to Wishlist"}
+              </Button>
+            )}
           </div>
-          
         </CardContent>
       </div>
     </Card>

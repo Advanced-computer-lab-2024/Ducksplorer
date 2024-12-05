@@ -1,28 +1,29 @@
-//This page from inside RUDMuseum
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { message } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon.js";
-
+import TouristNavBar from "../../Components/TouristNavBar.js";
 import {
   Box,
-  Table,
   Typography,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
+  Grid,
+  Container,
+  Button,
 } from "@mui/material";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
+import MuseumHistoricalPlaceCard from "../../Components/MuseumHistoricalPlaceCard";
+import MuseumSearch from "../../Components/MuseumHistoricalPlaceComponent/MuseumSearch";
+import MuseumFilterComponent from "../../Components/MuseumHistoricalPlaceComponent/MuseumFilterComponent";
+import Input from "@mui/joy/Input";
 
 const UpcomingMuseums = () => {
   const [upcomingMuseums, setUpcomingMuseums] = useState([]);
-
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
+  const [searchQuery, setSearchQuery] = useState(""); // Ensure this line is present
+  const navigate = useNavigate();
 
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
@@ -44,73 +45,56 @@ const UpcomingMuseums = () => {
       });
   }, []);
 
+  const handleSearchResults = (searchResults) => {
+    setUpcomingMuseums(searchResults);
+  };
+
+  const handleFilterResults = (filterResults) => {
+    setUpcomingMuseums(filterResults);
+  };
+
+  const goToUpcomingPage = () => {
+    navigate("/UpcomingMuseums");
+  };
+
   return (
-    <Box sx={{ p: 6, maxWidth: 1200, overflowY: "visible", height: "100vh" }}>
-      <Link to="/MuseumTouristPov"> Back </Link>
-      <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-        <Typography variant="h4">Upcoming Museum Visits</Typography>
-      </Box>
+    <Box
+      sx={{
+        height: "100vh",
+        width: "100vw",
+        backgroundColor: "#ffffff",
+        paddingTop: "2vh", // Adjust for navbar height
+      }}
+    >
+      <TouristNavBar />
+      <TouristSidebar />
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Typography variant="h4" fontWeight="700">
+            Upcoming Museum Visits
+          </Typography>
+        </Box>
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Description</TableCell>
-              <TableCell>Location</TableCell>
-              <TableCell>Pictures</TableCell>
-              <TableCell>
-                Ticket Price
-                <CurrencyConvertor
-                  exchangeRates={exchangeRates}
-                  currency={currency}
-                  onCurrencyChange={handleCurrencyChange}
-                />
-              </TableCell>
-              <TableCell>Opening Time</TableCell>
-              <TableCell>Closing Time</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell>Tags</TableCell>
-              <TableCell>Created By</TableCell>
-            </TableRow>
-          </TableHead>
+        <Grid container spacing={3}>
+          {Array.isArray(upcomingMuseums) && upcomingMuseums.length > 0 ? (
+            upcomingMuseums.map((museum) => (
+              <Grid item xs={12} sm={6} md={4} key={museum._id}>
+                <MuseumHistoricalPlaceCard place={museum} />
+              </Grid>
+            ))
+          ) : (
+            <Grid item xs={12}>
+              <Typography variant="body1" color="textSecondary" align="center">
+                No museums available
+              </Typography>
+            </Grid>
+          )}
+        </Grid>
 
-          <TableBody>
-            {upcomingMuseums.map((upcomingMuseum) => (
-              <TableRow key={upcomingMuseum._id}>
-                <TableCell>{upcomingMuseum.description}</TableCell>
-                <TableCell>{upcomingMuseum.location}</TableCell>
-                <TableCell>
-                  <img
-                    src={upcomingMuseum.pictures}
-                    alt="Museum"
-                    style={{
-                      width: "100px",
-                      height: "auto",
-                      objectFit: "cover",
-                    }}
-                  />
-                </TableCell>
-                <TableCell>
-                  {(
-                    upcomingMuseum.ticketPrices * (exchangeRates[currency] || 1)
-                  ).toFixed(2)}{" "}
-                  {currency}
-                </TableCell>
-                <TableCell>{upcomingMuseum.openingTime}</TableCell>
-                <TableCell>{upcomingMuseum.closingTime}</TableCell>
-                <TableCell>{upcomingMuseum.museumDate}</TableCell>
-                <TableCell>{upcomingMuseum.museumName}</TableCell>
-                <TableCell>{upcomingMuseum.museumCategory}</TableCell>
-                <TableCell>{upcomingMuseum.tags.join(", ")}</TableCell>
-                <TableCell>{upcomingMuseum.createdBy}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Help />
+        <Box sx={{ mt: 4, textAlign: "center" }}>
+          <Help />
+        </Box>
+      </Container>
     </Box>
   );
 };

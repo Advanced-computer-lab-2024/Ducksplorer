@@ -4,10 +4,13 @@ import ReactDOM from "react-dom/client";
 import "./App.css";
 import App from "./App";
 import { TypeContextProvider } from "./context/TypeContext";
+import { AuthContextProvider } from "./context/AuthContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <TypeContextProvider>
-    <App />
+    <AuthContextProvider>
+      <App />
+    </AuthContextProvider>
   </TypeContextProvider>
 );

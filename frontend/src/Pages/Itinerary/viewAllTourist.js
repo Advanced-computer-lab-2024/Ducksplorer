@@ -1,24 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { message } from "antd";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
+import ItineraryCard from "../../Components/itineraryCard.js";
 import {
-  Button,
   Stack,
-  TextField,
   Typography,
   Box,
-  TableContainer,
   Menu,
   MenuItem,
   Checkbox,
   Slider,
   Select,
-  Paper,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
   IconButton,
   FormControl,
   InputLabel,
@@ -30,6 +23,9 @@ import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
 import Help from "../../Components/HelpIcon.js";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
+import TouristNavBar from "../../Components/TouristNavBar";
+import Input from "@mui/joy/Input";
+import Button from "@mui/joy/Button";
 
 function SearchItineraries() {
   const { id } = useParams();
@@ -49,6 +45,9 @@ function SearchItineraries() {
 
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
+
+  const [activityExchangeRates, setActivityExchangeRates] = useState({});
+  const [activityCurrency, setActivityCurrency] = useState("EGP");
 
   const [filterAnchorEl, setFilterAnchorEl] = useState(null);
 
@@ -268,6 +267,11 @@ function SearchItineraries() {
     window.location.href = `mailto:?subject=Check out this itinerary&body=Here is the link to the itinerary: ${link}`;
   };
 
+  const handleActivityCurrencyChange = (rates, selectedCurrency) => {
+    setActivityExchangeRates(rates);
+    setActivityCurrency(selectedCurrency);
+  };
+
   const handleSaveItinerary = async (itineraryId, currentIsSaved) => {
     try {
       const newIsSaved = !currentIsSaved;
@@ -285,9 +289,9 @@ function SearchItineraries() {
           prevItineraries.map((itinerary) =>
             itinerary._id === itineraryId
               ? {
-                  ...itinerary,
-                  saved: { ...itinerary.saved, isSaved: newIsSaved },
-                }
+                ...itinerary,
+                saved: { ...itinerary.saved, isSaved: newIsSaved },
+              }
               : itinerary
           )
         );
@@ -338,341 +342,205 @@ function SearchItineraries() {
   }, [itineraries]);
 
   return (
-    <Box
-      sx={{
-        padding: "20px",
-        maxWidth: "1200px",
-        margin: "auto",
-        display: "flex",
-        flexDirection: "column",
-        overflowY: "visible",
-        height: "100vh",
-      }}
-    >
-      <Link
-        to={isGuest ? "/guestDashboard" : "/touristDashboard"}
-        className="text-sm hover:underline hover:text-blue-600 mt-2 inline-block"
+    <div>
+      <TouristNavBar />
+      <TouristSidebar />
+      <Box
+        sx={{
+          padding: "20px",
+          margin: "auto",
+          display: "flex",
+          flexDirection: "column",
+          overflowY: "visible",
+          height: "100vh",
+        }}
       >
-        Back
-      </Link>
-      <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-        <Typography variant="h4">Available itineraries</Typography>
-      </Box>
-      <Stack spacing={2} style={{ marginBottom: "20px" }}>
-        <TextField
-          label="Enter Name or Category or Tag"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          fullWidth
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSearchItineraries}
+        <Link
+          to={isGuest ? "/guestDashboard" : "/touristDashboard"}
+          className="text-sm hover:underline hover:text-blue-600 mt-2 inline-block"
         >
-          Search
-        </Button>
+          Back
+        </Link>
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+          <Typography variant="h4"> Itineraries</Typography>
+        </Box>
+        <Stack spacing={2} style={{ marginBottom: "20px" }}>
+          <Input
+            placeholder="Enter Name or Category or Tag"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            fullWidth
+            variant="outlined"
+            color="primary"
+          />
+          <Button
+            variant="solid"
+            color="primary"
+            onClick={handleSearchItineraries}
+          >
+            Search
+          </Button>
 
-        {/* Filtering */}
-        <IconButton onClick={handleFilterChoiceClick}>
-          {" "}
-          {/* try to make it on the right later */}
-          <FilterAltIcon />
-        </IconButton>
-        <Menu
-          anchorEl={filterAnchorEl}
-          open={Boolean(filterAnchorEl)}
-          onClose={handleFilterClose}
-        >
-          <MenuItem>
-            <Checkbox
-              checked={isFilterSelected("price")}
-              onChange={(e) => {
-                handleFilterToggle("price");
-                if (!e.target.checked) {
-                  // Reset price filters if unchecked
-                  setMinPrice("");
-                  setMaxPrice("");
-                  setPriceRange([0, 5000]); // Reset the slider to initial values
-                }
-              }}
-            />
-            Price
-            <br />
-            <Button onClick={(e) => setAnchorEl(e.currentTarget)}>
-              Select Price Range
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={() => setAnchorEl(null)}
-            >
-              <MenuItem>
-                <Typography variant="subtitle1">Select Range:</Typography>
-                <Slider
-                  value={priceRange}
-                  onChange={handlePriceRangeChange}
-                  valueLabelDisplay="auto"
-                  min={0}
-                  max={5000}
-                  sx={{ width: 300, marginLeft: 2, marginTop: "10px" }} // Adjust slider width and margin
-                />
-              </MenuItem>
-              <MenuItem>
-                <Typography variant="body1">
-                  Selected Min: {priceRange[0]}
-                </Typography>
-              </MenuItem>
-              <MenuItem>
-                <Typography variant="body1">
-                  Selected Max: {priceRange[1]}
-                </Typography>
-              </MenuItem>
-            </Menu>
-          </MenuItem>
-
-          <MenuItem>
-            <Checkbox
-              checked={isFilterSelected("language")}
-              onChange={() => handleFilterToggle("language")}
-            />
-            Language
-            <br />
-            <FormControl sx={{ minWidth: 120, marginTop: 1 }}>
-              <InputLabel id="language-select-label">Language</InputLabel>
-              <Select
-                labelId="language-select-label"
-                id="language-select"
-                value={language}
-                onChange={handleLanguageChange}
-              >
-                <MenuItem value="English">English</MenuItem>
-                <MenuItem value="Arabic">Arabic</MenuItem>
-                <MenuItem value="German">German</MenuItem>
-                <MenuItem value="French">French</MenuItem>
-                <MenuItem value="Spanish">Spanish</MenuItem>
-              </Select>
-            </FormControl>
-          </MenuItem>
-
-          <MenuItem>
-            <Checkbox
-              checked={isFilterSelected("availableDatesAndTimes")}
-              onChange={() => handleFilterToggle("availableDatesAndTimes")}
-            />
-            Dates & Times
-            <br />
-            <input
-              type="datetime-local"
-              value={availableDatesAndTimes}
-              onChange={(e) => setAvailableDatesAndTimes(e.target.value)} // Update the state with the selected date
-              style={{ marginTop: "10px" }}
-            />
-          </MenuItem>
-
-          <MenuItem>
-            <Checkbox
-              checked={isFilterSelected("tags")}
-              onChange={() => handleFilterToggle("tags")}
-            />
-            <FormControl sx={{ minWidth: 120, marginTop: 1 }}>
-              <InputLabel id="tags-select-label">Tags</InputLabel>
-              <Select
-                labelId="tags-select-label"
-                id="tags-select"
-                multiple
-                value={tags}
-                onChange={handleTagsChange}
-                renderValue={(selected) => selected.join(", ")}
-              >
-                {allTags.map((tag) => (
-                  <MenuItem key={tag._id} value={tag.name}>
-                    <Checkbox checked={tags.indexOf(tag.name) > -1} />
-                    {tag.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </MenuItem>
-
-          <MenuItem>
-            <Button onClick={handleFilter}>Apply Filters</Button>
-          </MenuItem>
-          <MenuItem>
-            <Button onClick={handleClearAllFilters}>Clear All Filters</Button>
-          </MenuItem>
-        </Menu>
-      </Stack>
-
-      <div style={{ flex: 1 }}>
-        {itineraries.length > 0 ? (
-          <Box>
-            <TableContainer component={Paper}>
-              <Table stickyHeader>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Activities</TableCell>
-                    <TableCell>Locations</TableCell>
-                    <TableCell>Timeline</TableCell>
-                    <TableCell>Language</TableCell>
-                    <TableCell>
-                      Price
-                      <CurrencyConvertor
-                        onCurrencyChange={handleCurrencyChange}
-                      />
-                    </TableCell>
-                    <TableCell>Available Dates and Times</TableCell>
-                    <TableCell>Accessibility</TableCell>
-                    <TableCell>Pick Up Location</TableCell>
-                    <TableCell>Drop Off Location</TableCell>
-                    <TableCell>Ratings</TableCell>
-                    <TableCell>Tags</TableCell>
-                    <TableCell>Share</TableCell>
-                    <TableCell>Bookmark</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {
-                    itineraries.map((itinerary) =>
-                      itinerary.flag === false &&
-                      itinerary.isDeactivated === false &&
-                      itinerary.tourGuideDeleted === false &&
-                      itinerary.deletedItinerary === false ? (
-                        <TableRow key={itinerary._id}>
-                          <TableCell>
-                            {itinerary.activity && itinerary.activity.length > 0
-                              ? itinerary.activity.map((activity, index) => (
-                                  <div key={index}>
-                                    {activity.name || "N/A"} - Price: {""}
-                                    {activity.price !== undefined
-                                      ? activity.price
-                                      : "N/A"}
-                                    ,<br />
-                                    Location: {activity.location || "N/A"},
-                                    <br />
-                                    Category: {activity.category || "N/A"}
-                                    <br />
-                                    <br />
-                                  </div>
-                                ))
-                              : "No activities available"}
-                          </TableCell>
-                          <TableCell>
-                            {itinerary.locations &&
-                            itinerary.locations.length > 0
-                              ? itinerary.locations.map((location, index) => (
-                                  <div key={index}>
-                                    <Typography variant="body1">
-                                      Location {index + 1}: {location.trim()}
-                                    </Typography>
-                                    <br />
-                                  </div>
-                                ))
-                              : "No locations available"}
-                          </TableCell>
-                          <TableCell>{itinerary.timeline}</TableCell>
-                          <TableCell>{itinerary.language}</TableCell>
-                          <TableCell>
-                            {(
-                              itinerary.price * (exchangeRates[currency] || 1)
-                            ).toFixed(2)}{" "}
-                            {currency}
-                          </TableCell>
-                          <TableCell>
-                            {itinerary.availableDatesAndTimes.length > 0
-                              ? itinerary.availableDatesAndTimes.map(
-                                  (dateTime, index) => {
-                                    const dateObj = new Date(dateTime);
-                                    const date = dateObj
-                                      .toISOString()
-                                      .split("T")[0];
-                                    const time = dateObj
-                                      .toTimeString()
-                                      .split(" ")[0];
-                                    return (
-                                      <div key={index}>
-                                        Date {index + 1}: {date}
-                                        <br />
-                                        Time {index + 1}: {time}
-                                      </div>
-                                    );
-                                  }
-                                )
-                              : "No available dates and times"}
-                          </TableCell>
-                          <TableCell>{itinerary.accessibility}</TableCell>
-                          <TableCell>{itinerary.pickUpLocation}</TableCell>
-                          <TableCell>{itinerary.dropOffLocation}</TableCell>
-                          <TableCell>
-                            <Rating
-                              value={itinerary.averageRating}
-                              precision={0.1}
-                              readOnly
-                            />
-                          </TableCell>
-                          <TableCell>
-                            {itinerary.tags && itinerary.tags.length > 0
-                              ? itinerary.tags.map((tag, index) => (
-                                  <div key={index}>
-                                    {tag || "N/A"}
-                                    <br />
-                                    <br />
-                                  </div>
-                                ))
-                              : "No tags available"}
-                          </TableCell>
-                          {id === undefined ? (
-                            <TableCell>
-                              <Button
-                                variant="outlined"
-                                onClick={() => handleShareLink(itinerary._id)}
-                              >
-                                Share Via Link
-                              </Button>
-                              <Button
-                                variant="outlined"
-                                onClick={() => handleShareEmail(itinerary._id)}
-                              >
-                                Share Via Email
-                              </Button>
-                            </TableCell>
-                          ) : null}
-                          <TableCell>
-                            <span
-                              onClick={() =>
-                                handleSaveItinerary(
-                                  itinerary._id,
-                                  itinerary.saved?.isSaved
-                                )
-                              }
-                            >
-                              {saveStates[itinerary._id] ? (
-                                <IconButton>
-                                  <BookmarkIcon />
-                                </IconButton>
-                              ) : (
-                                <IconButton>
-                                  <BookmarkBorderIcon />
-                                </IconButton>
-                              )}
-                            </span>
-                          </TableCell>
-                        </TableRow>
-                      ) : null
-                    ) // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists
+          {/* Filtering */}
+          <IconButton onClick={handleFilterChoiceClick}>
+            {" "}
+            {/* try to make it on the right later */}
+            <FilterAltIcon />
+          </IconButton>
+          <Menu
+            anchorEl={filterAnchorEl}
+            open={Boolean(filterAnchorEl)}
+            onClose={handleFilterClose}
+          >
+            <MenuItem>
+              <Checkbox
+                checked={isFilterSelected("price")}
+                onChange={(e) => {
+                  handleFilterToggle("price");
+                  if (!e.target.checked) {
+                    // Reset price filters if unchecked
+                    setMinPrice("");
+                    setMaxPrice("");
+                    setPriceRange([0, 5000]); // Reset the slider to initial values
                   }
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Box>
+                }}
+              />
+              Price
+              <br />
+              <Button onClick={(e) => setAnchorEl(e.currentTarget)}>
+                Select Price Range
+              </Button>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={() => setAnchorEl(null)}
+              >
+                <MenuItem>
+                  <Typography variant="subtitle1">Select Range:</Typography>
+                  <Slider
+                    value={priceRange}
+                    onChange={handlePriceRangeChange}
+                    valueLabelDisplay="auto"
+                    min={0}
+                    max={5000}
+                    sx={{ width: 300, marginLeft: 2, marginTop: "10px" }} // Adjust slider width and margin
+                  />
+                </MenuItem>
+                <MenuItem>
+                  <Typography variant="body1">
+                    Selected Min: {priceRange[0]}
+                  </Typography>
+                </MenuItem>
+                <MenuItem>
+                  <Typography variant="body1">
+                    Selected Max: {priceRange[1]}
+                  </Typography>
+                </MenuItem>
+              </Menu>
+            </MenuItem>
+
+            <MenuItem>
+              <Checkbox
+                checked={isFilterSelected("language")}
+                onChange={() => handleFilterToggle("language")}
+                paddingRight="40%"
+              />
+              Language
+              <br />
+              <FormControl sx={{ minWidth: 120, marginTop: 1 }}>
+                <InputLabel id="language-select-label">Language</InputLabel>
+                <Select
+                  labelId="language-select-label"
+                  id="language-select"
+                  value={language}
+                  onChange={handleLanguageChange}
+                >
+                  <MenuItem value="English">English</MenuItem>
+                  <MenuItem value="Arabic">Arabic</MenuItem>
+                  <MenuItem value="German">German</MenuItem>
+                  <MenuItem value="French">French</MenuItem>
+                  <MenuItem value="Spanish">Spanish</MenuItem>
+                </Select>
+              </FormControl>
+            </MenuItem>
+
+            <MenuItem>
+              <Checkbox
+                checked={isFilterSelected("availableDatesAndTimes")}
+                onChange={() => handleFilterToggle("availableDatesAndTimes")}
+              />
+              Dates & Times
+              <br />
+              <input
+                type="datetime-local"
+                value={availableDatesAndTimes}
+                onChange={(e) => setAvailableDatesAndTimes(e.target.value)} // Update the state with the selected date
+                style={{ marginTop: "10px" }}
+              />
+            </MenuItem>
+
+            <MenuItem>
+              <Checkbox
+                checked={isFilterSelected("tags")}
+                onChange={() => handleFilterToggle("tags")}
+              />
+              <FormControl sx={{ minWidth: 120, marginTop: 1 }}>
+                <InputLabel id="tags-select-label">Tags</InputLabel>
+                <Select
+                  labelId="tags-select-label"
+                  id="tags-select"
+                  multiple
+                  value={tags}
+                  onChange={handleTagsChange}
+                  renderValue={(selected) => selected.join(", ")}
+                >
+                  {allTags.map((tag) => (
+                    <MenuItem key={tag._id} value={tag.name}>
+                      <Checkbox checked={tags.indexOf(tag.name) > -1} />
+                      {tag.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </MenuItem>
+
+            <MenuItem>
+              <Button onClick={handleFilter}>Apply Filters</Button>
+            </MenuItem>
+            <MenuItem>
+              <Button onClick={handleClearAllFilters}>Clear All Filters</Button>
+            </MenuItem>
+          </Menu>
+        </Stack>
+
+        {itineraries.length > 0 ? (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: "24px", // Adjust the gap between items as needed
+              paddingBottom: 24,
+            }}
+          >
+            {
+              itineraries.map((itinerary) =>
+                itinerary.flag === false &&
+                  itinerary.isDeactivated === false &&
+                  itinerary.tourGuideDeleted === false &&
+                  itinerary.deletedItinerary === false ? (
+                  <ItineraryCard itinerary={itinerary} />
+                ) : null
+              ) // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists
+            }
+          </div>
         ) : (
           <Typography variant="body1" style={{ marginTop: "20px" }}>
             No itineraries found.
           </Typography>
         )}
-      </div>
-      <Help />
-    </Box>
+        <Help />
+      </Box>
+    </div>
   );
 }
 

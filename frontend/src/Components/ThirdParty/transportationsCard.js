@@ -22,8 +22,6 @@ const TransportationsCard = ({transportations}) =>{
   }
 
 
-
-
   return (
     <Box sx={{ flexGrow: 1, mt: 4, overflowY: 'auto' }}>
         {/* <CurrencyConverterGeneral onCurrencyChange={handleCurrencyChange} initialCurrency={initialCurrency} /> */}

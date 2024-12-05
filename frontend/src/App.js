@@ -56,7 +56,7 @@ import MyPurchases from "./Pages/Products/MyPurchases.js";
 import ComplaintsDashboard from "./Components/Complaints/ComplaintDashboard.js";
 import ComplaintDetails from "./Components/Complaints/ComplaintDetails.js";
 import MyComplaints from "./Components/Complaints/MyComplaints.js";
-
+import "bootstrap/dist/css/bootstrap.min.css";
 import FlightsBooking from "./Pages/ThirdParty/FlightsBooking.js";
 import HotelsBooking from "./Pages/ThirdParty/HotelsBooking.js";
 //import TouristNavBar from "./Components/TouristNavBar.js";
@@ -77,132 +77,631 @@ import CartPage from "./Pages/Products/CartPage.js";
 import ChangePassword from "./Pages/Admin/ChangePassword.js";
 import MyOrders from "./Pages/Products/OrdersPage.js";
 
-import CreatePromoCode from "./Pages/Admin/CreatePromoCode.js";
 import MySavedItems from "./Pages/SavedItems.js";
 import Orders from "./Pages/Products/orders.js";
+import { useAuthContext } from "./context/AuthContext.js";
+import ProtectedRoute from "./Components/ProtectedRoute"; // Import the ProtectedRoute component
+
+import CreatePromoCode from "./Pages/Admin/CreatePromoCode.js";
+import MyNotifications from "./Components/myNotifications.js";
+import ForgetPassword from "./Pages/EditAccount/ForgetPassword.js";
+
+import TourGuideItineraryReport from "./Pages/Itinerary/tourGuideReport.js"
+import AdvertiserActivityReport from "./Pages/Activities/advertiserReport.js"
+import AdminReport from "./Pages/Admin/adminReport.js"
+import UserReport from "./Pages/Admin/UsersReport.js"
+
+
+import SellerProductReport from "./Pages/Products/sellerReport.js"
+import EditItinerary from "./Pages/Itinerary/editItinerary.js";
+
+import LandingPage from "./Pages/LandingPage.js";
+import ActivityCard from "../src/Components/activityCard";
 
 function App() {
+  const { authUser } = useAuthContext();
   return (
     <React.StrictMode>
       <BrowserRouter>
         <Routes>
           {/* <Route index element={<Hotels />} /> */}
-          <Route path="/changePassword" element={<ChangePassword/>} />
-          <Route path="/" element={<Login />} />
+          <Route path="/notifications" element={<MyNotifications />} />
+          <Route
+            path="/changePassword"
+            element={
+              <ProtectedRoute>
+                <ChangePassword />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/forgetPassword" element={<ForgetPassword />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signUp" element={<Signup />} />
-          <Route path="/createItinerary" element={<CreateItinerary />} />
-          <Route path="/rudItinerary" element={<RUDItinerary />} />
+          <Route
+            path="/createItinerary"
+            element={
+              <ProtectedRoute>
+                <CreateItinerary />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/rudItinerary"
+            element={
+              <ProtectedRoute>
+                <RUDItinerary />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/editItinerary" element={<EditItinerary />} />
           <Route
             path="/viewUpcomingItinerary"
-            element={<ViewUpcomingItinerary />}
+            element={
+              <ProtectedRoute allowGuest={true}>
+                <ViewUpcomingItinerary />
+              </ProtectedRoute>
+            }
           />
-          <Route path="/viewAllTourist" element={<ViewAllTourist />} />
-          <Route path="/viewAllTourist/:id" element={<ViewAllTourist />} />
-          <Route path="/tourGuideDashboard" element={<TourGuideDashboard />} />
-          <Route path="/touristDashboard" element={<TouristDashboard />} />
+          <Route
+            path="/tourGuideReport"
+            element={<TourGuideItineraryReport />}
+          />
+          <Route path="/adminReport" element={<AdminReport />} />
+          <Route path="/userReport" element={<UserReport />} />
+          <Route
+            path="/tourGuideReport"
+            element={<TourGuideItineraryReport />}
+          />
+          <Route path="/adminReport" element={<AdminReport />} />
+          <Route path="/userReport" element={<UserReport />} />
+          <Route
+            path="/viewAllTourist"
+            element={
+              <ProtectedRoute allowGuest={true}>
+                <ViewAllTourist />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/viewAllTourist/:id"
+            element={
+              <ProtectedRoute>
+                <ViewAllTourist />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tourGuideDashboard"
+            element={
+              <ProtectedRoute>
+                <TourGuideDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/touristDashboard"
+            element={
+              <ProtectedRoute>
+                <TouristDashboard />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/tourGuideEditAccount"
-            element={<TourGuideEditProfile />}
+            element={
+              <ProtectedRoute>
+                <TourGuideEditProfile />
+              </ProtectedRoute>
+            }
           />
-          <Route path="/guestDashboard" element={<GuestDashboard />} />
-          <Route path="/governorDashboard" element={<GovernorDashboard />} />
-          <Route path="/createMuseum" element={<CreateMuseum />} />
+          <Route
+            path="/guestDashboard"
+            element={
+              <ProtectedRoute allowGuest={true}>
+                <GuestDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/governorDashboard"
+            element={
+              <ProtectedRoute>
+                <GovernorDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/createMuseum"
+            element={
+              <ProtectedRoute>
+                <CreateMuseum />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/createHistoricalPlace"
-            element={<CreateHistoricalPlace />}
+            element={
+              <ProtectedRoute>
+                <CreateHistoricalPlace />
+              </ProtectedRoute>
+            }
           />
-          <Route path="/RUDMuseum" element={<RUDMuseum />} />
-          <Route path="/RUDHistoricalPlace" element={<RUDHistoricalPlace />} />
-          {/* <Route path="/RUDVisit" element={<RUDVisit />} /> */}
-          <Route path="/MuseumTouristPov" element={<MuseumTouristPov />} />
+          <Route
+            path="/RUDMuseum"
+            element={
+              <ProtectedRoute>
+                <RUDMuseum />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/RUDHistoricalPlace"
+            element={
+              <ProtectedRoute>
+                <RUDHistoricalPlace />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/MuseumTouristPov"
+            element={
+              <ProtectedRoute allowGuest={true}>
+                <MuseumTouristPov />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/HistoricalPlaceTouristPov"
-            element={<HistoricalPlaceTouristPov />}
+            element={
+              <ProtectedRoute allowGuest={true}>
+                <HistoricalPlaceTouristPov />
+              </ProtectedRoute>
+            }
           />
-          <Route path="/MuseumTouristPov/:id" element={<MuseumTouristPov />} />
+          <Route
+            path="/MuseumTouristPov/:id"
+            element={
+              <ProtectedRoute>
+                <MuseumTouristPov />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/HistoricalPlaceTouristPov/:id"
-            element={<HistoricalPlaceTouristPov />}
+            element={
+              <ProtectedRoute>
+                <HistoricalPlaceTouristPov />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="/UpcomingHistoricalPlaces"
-            element={<UpcomingHistoricalPlaces />}
+            element={
+              <ProtectedRoute allowGuest={true}>
+                <UpcomingHistoricalPlaces />
+              </ProtectedRoute>
+            }
           />
-          <Route path="/UpcomingMuseums" element={<UpcomingMuseums />} />
-          <Route path="/createTagMuseum" element={<CreateTagMuseum />} />
+          <Route
+            path="/UpcomingMuseums"
+            element={
+              <ProtectedRoute allowGuest={true}>
+                <UpcomingMuseums />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/createTagMuseum"
+            element={
+              <ProtectedRoute>
+                <CreateTagMuseum />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/createTagHistoricalPlace"
-            element={<CreateTagHistoricalPlace />}
+            element={
+              <ProtectedRoute>
+                <CreateTagHistoricalPlace />
+              </ProtectedRoute>
+            }
           />
-
-          <Route path="/AdminDashboard" element={<AdminDashboard />} />
-          <Route path="/pendingusers" element={<ApproveUsers />} />
-          <Route path="/deleteusers" element={<DeleteUser />} />
-          <Route path="/addAdmin" element={<AddAdmin />} />
-          <Route path="/addGovernor" element={<AddGoverner />} />
-          <Route path="/categoriesActions" element={<CategoriesActions />} />
-          <Route path="/viewAllItineraries" element={<ViewAllItineraries />} />
-          <Route path="/viewAllActivities" element={<ViewAllActivities />} />
-          <Route path="/preferenceTags" element={<PreferenceTags />} />
-          <Route path="/admin/complaints" element={<ComplaintsDashboard />} />
-          <Route path="/admin/complaints" element={<ComplaintsDashboard />} />
-          <Route path="/admin/complaints/:id" element={<ComplaintDetails />} />
-          <Route path="/myComplaints" element={<MyComplaints />} />
-          <Route path="/touristProducts" element={<TouristProducts />} />
-          <Route path="/Wishlist" element={<Wishlist />} />
+          <Route
+            path="/AdminDashboard"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/pendingusers"
+            element={
+              <ProtectedRoute>
+                <ApproveUsers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/deleteusers"
+            element={
+              <ProtectedRoute>
+                <DeleteUser />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/addAdmin"
+            element={
+              <ProtectedRoute>
+                <AddAdmin />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/addGovernor"
+            element={
+              <ProtectedRoute>
+                <AddGoverner />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/categoriesActions"
+            element={
+              <ProtectedRoute>
+                <CategoriesActions />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/viewAllItineraries"
+            element={
+              <ProtectedRoute>
+                <ViewAllItineraries />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/viewAllActivities"
+            element={
+              <ProtectedRoute>
+                <ViewAllActivities />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/preferenceTags"
+            element={
+              <ProtectedRoute>
+                <PreferenceTags />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/complaints"
+            element={
+              <ProtectedRoute>
+                <ComplaintsDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/complaints"
+            element={
+              <ProtectedRoute>
+                <ComplaintsDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/complaints/:id"
+            element={
+              <ProtectedRoute>
+                <ComplaintDetails />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/myComplaints"
+            element={
+              <ProtectedRoute>
+                <MyComplaints />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/touristProducts"
+            element={
+              <ProtectedRoute>
+                <TouristProducts />
+              </ProtectedRoute>
+            }
+          />          <Route path="/Wishlist" element={<Wishlist />} />
           <Route
             path="/advertiserDashboard"
-            element={<AdvertiserDashboard />}
+            element={
+              <ProtectedRoute>
+                <AdvertiserDashboard />
+              </ProtectedRoute>
+            }
           />
-          <Route path="/activity/addActivity" element={<AddActivity />} />
-          <Route path="/activity/rudActivity" element={<RUDActivity />} />
-          <Route path="/activity/upcoming" element={<UpcomingActivities />} />
+          <Route
+            path="/activity/addActivity"
+            element={
+              <ProtectedRoute>
+                <AddActivity />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/activity/rudActivity"
+            element={
+              <ProtectedRoute>
+                <RUDActivity />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/activity/upcoming"
+            element={
+              <ProtectedRoute>
+                <UpcomingActivities />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/activity/searchActivities"
-            element={<SearchActivities />}
+            element={
+              <ProtectedRoute allowGuest={true}>
+                <SearchActivities />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="/activity/searchActivities/:id"
-            element={<SearchActivities />}
+            element={
+              <ProtectedRoute>
+                <SearchActivities />
+              </ProtectedRoute>
+            }
           />
-          <Route path="/activity/SortFilter" element={<SortFilterActivity />} />
-          <Route path="/activity/myActivities" element={<MyActivities />} />
-          <Route path="/location" element={<ClinicLocation />} />
-          <Route path="/myPastBookings" element={<PastBookingDetails />} />
-          <Route path="/myBookings" element={<BookingDetails />} />
-
-          <Route path="/payment" element={<PaymentPage />} />
-          <Route path="/checkout" element={<Payment />} />
-          <Route path="/completion" element={<Completion />} />
-
-          <Route path="/ProductDashboard" element={<ProductDashboard />} />
-          <Route path="/AllProducts" element={<AllProducts />} />
-          <Route path="/AddProducts" element={<AddProducts />} />
-          <Route path="/FilterProducts" element={<FilterProducts />} />
-          <Route path="/SearchProducts" element={<SearchProducts />} />
-          <Route path="/SortProducts" element={<SortProducts />} />
-          <Route path="/ViewMyProducts" element={<ViewMyProducts />} />
-          <Route path="/editProduct/:productId" element={<EditProduct />} />
-          <Route path="/Adminproducts" element={<AdminProducts />} />
-          <Route path="/AdminAllProducts" element={<AdminAllProducts />} />
-          <Route path="/TouristAllProducts" element={<TouristAllProducts />} />
-          <Route path="/editAccount" element={<TouristEditAccount />} />
+          <Route
+            path="/activity/SortFilter"
+            element={
+              <ProtectedRoute allowGuest={true}>
+                <SortFilterActivity />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/activity/myActivities"
+            element={
+              <ProtectedRoute>
+                <MyActivities />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/location"
+            element={
+              <ProtectedRoute>
+                <ClinicLocation />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/myPastBookings"
+            element={
+              <ProtectedRoute>
+                <PastBookingDetails />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/myBookings"
+            element={
+              <ProtectedRoute>
+                <BookingDetails />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/payment"
+            element={
+              <ProtectedRoute>
+                <PaymentPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <Payment />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/completion"
+            element={
+              <ProtectedRoute>
+                <Completion />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ProductDashboard"
+            element={
+              <ProtectedRoute>
+                <ProductDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/AllProducts"
+            element={
+              <ProtectedRoute>
+                <AllProducts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/AddProducts"
+            element={
+              <ProtectedRoute>
+                <AddProducts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/FilterProducts"
+            element={
+              <ProtectedRoute>
+                <FilterProducts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/SearchProducts"
+            element={
+              <ProtectedRoute>
+                <SearchProducts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/SortProducts"
+            element={
+              <ProtectedRoute>
+                <SortProducts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ViewMyProducts"
+            element={
+              <ProtectedRoute>
+                <ViewMyProducts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/editProduct/:productId"
+            element={
+              <ProtectedRoute>
+                <EditProduct />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/Adminproducts"
+            element={
+              <ProtectedRoute>
+                <AdminProducts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/AdminAllProducts"
+            element={
+              <ProtectedRoute>
+                <AdminAllProducts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/TouristAllProducts"
+            element={
+              <ProtectedRoute allowGuest={true}>
+                <TouristAllProducts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/editAccount"
+            element={
+              <ProtectedRoute>
+                <TouristEditAccount />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/advertiserEditAccount"
-            element={<AdvertiserEditProfile />}
+            element={
+              <ProtectedRoute>
+                <AdvertiserEditProfile />
+              </ProtectedRoute>
+            }
           />
-          <Route path="/sellerEditAccount" element={<SellerEditProfile />} />
-          <Route path="/sellerDashboard" element={<SellerDashboard />} />
-          <Route path="/flights" element={<FlightsBooking />} />
-          <Route path="/transportation" element={<TransportationBooking />} />
-          <Route path="/hotels" element={<HotelsBooking />} />
-          <Route path="/myPurchases/:orderNumber" element={<MyPurchases />} />
+
+          <Route
+            path="/advertiserReport"
+            element={
+              <ProtectedRoute>
+                <AdvertiserActivityReport />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="/sellerReport" element={<SellerProductReport />} />
+          <Route
+            path="/sellerEditAccount"
+            element={
+              <ProtectedRoute>
+                <SellerEditProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/ActivityCardTest" element={<ActivityCard />} />
+          <Route
+            path="/sellerDashboard"
+            element={
+              <ProtectedRoute>
+                <SellerDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/flights"
+            element={
+              <ProtectedRoute>
+                <FlightsBooking />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/transportation"
+            element={
+              <ProtectedRoute>
+                <TransportationBooking />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/hotels"
+            element={
+              <ProtectedRoute>
+                <HotelsBooking />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/myPurchases/:orderNumber"
+            element={
+              <ProtectedRoute>
+                <MyPurchases />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="/addPromoCode" element={<CreatePromoCode />} />
           <Route path="/myOrders" element={<MyOrders />} />
           <Route path="/myCart" element={<CartPage />} />
 
 
-          <Route path="/addPromoCode" element={<CreatePromoCode/>} />
+          
           <Route path="/mySaved" element={<MySavedItems/>} />
           <Route path="/orders" element={<Orders/>} />
         </Routes>

@@ -7,7 +7,7 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import { message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
-const HotelCards = ({ hotels , checkInDate, checkOutDate , adults , city , country }) => {
+const HotelCards = ({ hotels, checkInDate, checkOutDate, adults, city, country }) => {
   const initialCurrency = 'USD';
   const [currency, setCurrency] = useState('USD');
   const [exchangeRates, setExchangeRates] = useState({});
@@ -40,20 +40,21 @@ const HotelCards = ({ hotels , checkInDate, checkOutDate , adults , city , count
         return null;
       }
       const nameBefore = hotelBooking.title.match(/^(\d+)\.\s*(.*)$/);
-          // const titleNumber = titleMatch ? titleMatch[1] : '';
+      // const titleNumber = titleMatch ? titleMatch[1] : '';
       const name = nameBefore ? nameBefore[2] : hotelBooking.title;
-      
-      
+
+
       const type = 'hotel';
       const hotel = {
-        price : hotelBooking.priceForDisplay ? convertPriceToEgp(parseFloat(hotelBooking.priceForDisplay.replace('$', ''))) :(hotelBooking.priceSummary && extractPrice(hotelBooking.priceSummary) ),
-        currency :'EGP',
-        checkInDate : checkInDate,
-        checkOutDate : checkOutDate,
-        hotelName :name,
-        city : city,
+        price: hotelBooking.priceForDisplay ? convertPriceToEgp(parseFloat(hotelBooking.priceForDisplay.replace('$', ''))) : (hotelBooking.priceSummary && extractPrice(hotelBooking.priceSummary)),
+        currency: 'EGP',
+        checkInDate: checkInDate,
+        checkOutDate: checkOutDate,
+        hotelName: name,
+        city: city,
         country: country,
-        rating : hotelBooking.bubbleRating.rating,
+        rating: hotelBooking.bubbleRating.rating,
+        image: hotelBooking.cardPhotos[0]?.sizes?.urlTemplate.split('?')[0] || "hotel1.jpg",
       }
 
       localStorage.setItem('hotel', JSON.stringify(hotel));
@@ -70,7 +71,7 @@ const HotelCards = ({ hotels , checkInDate, checkOutDate , adults , city , count
       console.error("Error:", error);
       message.error("An error occurred while booking.");
     }
-};
+  };
 
   const handleImageSwipe = (index, direction) => {
     const newHotels = hotels;
@@ -102,7 +103,7 @@ const HotelCards = ({ hotels , checkInDate, checkOutDate , adults , city , count
     return price ? price.trim() : 'N/A';
   };
 
-  
+
 
   return (
     <Box sx={{ flexGrow: 1, mt: 4, overflowY: 'auto' }}>
@@ -112,7 +113,7 @@ const HotelCards = ({ hotels , checkInDate, checkOutDate , adults , city , count
           if (!hotel.currentImageIndex) {
             hotel.currentImageIndex = 0;
           }
-           
+
           const titleMatch = hotel.title.match(/^(\d+)\.\s*(.*)$/);
           // const titleNumber = titleMatch ? titleMatch[1] : '';
           const titleText = titleMatch ? titleMatch[2] : hotel.title;
@@ -123,66 +124,66 @@ const HotelCards = ({ hotels , checkInDate, checkOutDate , adults , city , count
             return hTitleText === titleText;
           });
           if (isDuplicate) {
-          return null;
+            return null;
           }
 
-            return (
+          return (
             <Grid item xs={12} sm={6} key={index}>
               <Card sx={{ borderRadius: 5, width: '100%', height: '100%', position: 'relative' }}>
-              <CardHeader
-              avatar={
-              <Avatar aria-label="hotel">
-              {avatarLetter}
-              </Avatar>
-              }
-              title={`${titleText}`}
-              />
-              <Box sx={{ position: 'relative', overflow: 'hidden', '&:hover img': { opacity: 0.7, transition: 'opacity 0.3s ease-in-out' }}}>
-              <CardMedia
-              component="img"
-              height="194"
-              image={hotel.cardPhotos[hotel.currentImageIndex]?.sizes?.urlTemplate.split('?')[0] || "hotel1.jpg"}
-              alt={`${hotel.title} image`}
-              onError={(e) => { e.target.onerror = null; e.target.src = "hotel1.jpg"; }}
-              onLoad={() => console.log(`Image loaded: ${hotel.cardPhotos[hotel.currentImageIndex]?.sizes?.urlTemplate.split('?')[0] || "hotel1.jpg"}`)}
-              />
-              <IconButton
-              onClick={() => handleImageSwipe(index, 'left')}
-              sx={{ position: 'absolute', top: '50%', left: 0, transform: 'translateY(-50%)' }}
-              >
-              &lt;
-              </IconButton>
-              <IconButton
-              onClick={() => handleImageSwipe(index, 'right')}
-              sx={{ position: 'absolute', top: '50%', right: 0, transform: 'translateY(-50%)' }}
-              >
-              &gt;
-              </IconButton>
-              </Box>
-              <CardContent>
-              <Typography variant="body2" color="text.secondary">
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-              
-              </Typography>
-              </CardContent>
-              <div style={{ display: "flex", justifyContent: "center" }}>
-              <IconButton aria-label="rating" sx={{ fontSize: 15 }}>
-              <StarIcon sx={{ color: 'gold' }} /> {hotel.bubbleRating.rating} ({hotel.bubbleRating.count}){' ratings'}
-              </IconButton>
-              <IconButton aria-label="person" sx={{ fontSize: 15 }}>
-              <PersonIcon /> 2
-              </IconButton>
-              <IconButton aria-label="booking" sx={{ fontSize: 15 }}>
-              <PaymentIcon sx={{ color: 'green' }} /> {hotel.priceForDisplay ? convertPrice(parseFloat(hotel.priceForDisplay.replace('$', '')), 'USD') :(hotel.priceSummary && extractPrice(hotel.priceSummary) )|| 'N/A'} {currency}
-              </IconButton>
-              </div>
-              <Button variant="contained" color="primary" fullWidth onClick={() => handleBooking(hotel)}>
-              Book Hotel
-              </Button>
+                <CardHeader
+                  avatar={
+                    <Avatar aria-label="hotel">
+                      {avatarLetter}
+                    </Avatar>
+                  }
+                  title={`${titleText}`}
+                />
+                <Box sx={{ position: 'relative', overflow: 'hidden', '&:hover img': { opacity: 0.7, transition: 'opacity 0.3s ease-in-out' } }}>
+                  <CardMedia
+                    component="img"
+                    height="194"
+                    image={hotel.cardPhotos[hotel.currentImageIndex]?.sizes?.urlTemplate.split('?')[0] || "hotel1.jpg"}
+                    alt={`${hotel.title} image`}
+                    onError={(e) => { e.target.onerror = null; e.target.src = "hotel1.jpg"; }}
+                    onLoad={() => console.log(`Image loaded: ${hotel.cardPhotos[hotel.currentImageIndex]?.sizes?.urlTemplate.split('?')[0] || "hotel1.jpg"}`)}
+                  />
+                  <IconButton
+                    onClick={() => handleImageSwipe(index, 'left')}
+                    sx={{ position: 'absolute', top: '50%', left: 0, transform: 'translateY(-50%)' }}
+                  >
+                    &lt;
+                  </IconButton>
+                  <IconButton
+                    onClick={() => handleImageSwipe(index, 'right')}
+                    sx={{ position: 'absolute', top: '50%', right: 0, transform: 'translateY(-50%)' }}
+                  >
+                    &gt;
+                  </IconButton>
+                </Box>
+                <CardContent>
+                  <Typography variant="body2" color="text.secondary">
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+
+                  </Typography>
+                </CardContent>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <IconButton aria-label="rating" sx={{ fontSize: 15 }}>
+                    <StarIcon sx={{ color: 'gold' }} /> {hotel.bubbleRating.rating} ({hotel.bubbleRating.count}){' ratings'}
+                  </IconButton>
+                  <IconButton aria-label="person" sx={{ fontSize: 15 }}>
+                    <PersonIcon /> 2
+                  </IconButton>
+                  <IconButton aria-label="booking" sx={{ fontSize: 15 }}>
+                    <PaymentIcon sx={{ color: 'green' }} /> {hotel.priceForDisplay ? convertPrice(parseFloat(hotel.priceForDisplay.replace('$', '')), 'USD') : (hotel.priceSummary && extractPrice(hotel.priceSummary)) || 'N/A'} {currency}
+                  </IconButton>
+                </div>
+                <Button variant="contained" color="primary" fullWidth onClick={() => handleBooking(hotel)}>
+                  Book Hotel
+                </Button>
               </Card>
             </Grid>
-            );
+          );
         })}
       </Grid>
     </Box>

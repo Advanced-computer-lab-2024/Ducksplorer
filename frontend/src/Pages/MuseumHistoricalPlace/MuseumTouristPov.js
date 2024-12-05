@@ -1,4 +1,3 @@
-// This file contains everything the tourist should see : all museums of all tourism governors, search filter, and see upcoming museum visits
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { message } from "antd";
@@ -8,31 +7,27 @@ import MuseumFilterComponent from "../../Components/MuseumHistoricalPlaceCompone
 import { Link, useParams } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon.js";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
+import TouristNavBar from "../../Components/TouristNavBar.js";
 import {
   Box,
   Button,
-  Table,
   Typography,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
+  Grid,
+  Container,
 } from "@mui/material";
+import MuseumHistoricalPlaceCard from "../../Components/MuseumHistoricalPlaceCard";
+import Input from "@mui/joy/Input";
 
 const MuseumTouristPov = () => {
   const { id } = useParams();
-
   const [Museums, setMuseums] = useState([]);
   const isGuest = localStorage.getItem("guest") === "true";
-
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
-
+  const [searchQuery, setSearchQuery] = useState(""); // Add this line
   const navigate = useNavigate();
 
-  // Fetch all museums on component mount
   useEffect(() => {
     axios
       .get(`http://localhost:8000/museum/getAllMuseums`)
@@ -57,162 +52,73 @@ const MuseumTouristPov = () => {
     setCurrency(selectedCurrency);
   };
 
-  // Callback to handle search results
   const handleSearchResults = (searchResults) => {
-    setMuseums(searchResults); // Update table data with search results
+    setMuseums(searchResults);
   };
 
-  // Callback to handle filter results
   const handleFilterResults = (filterResults) => {
-    setMuseums(filterResults); // Update table data with filter results
+    setMuseums(filterResults);
   };
 
-  // Navigate to the upcoming museums page
   const goToUpcomingPage = () => {
     navigate("/UpcomingMuseums");
   };
 
-  // Share museum functionality
-  const handleShareLink = (MuseumId) => {
-    const link = `${window.location.origin}/MuseumTouristPov/${MuseumId}`; // Update with your actual route
-    navigator.clipboard
-      .writeText(link)
-      .then(() => {
-        message.success("Link copied to clipboard!");
-      })
-      .catch(() => {
-        message.error("Failed to copy link.");
-      });
-  };
-
-  const handleShareEmail = (MuseumId) => {
-    const link = `${window.location.origin}/MuseumTouristPov/${MuseumId}`; // Update with your actual route
-    const subject = "Check out this museum";
-    const body = `Here is the link to the museum: ${link}`;
-    window.location.href = `mailto:?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
-  };
-
   return (
-    <>
-      <Button
-        component={Link}
-        to={isGuest ? "/guestDashboard" : "/touristDashboard"}
-        variant="contained"
-        color="primary"
-        style={{ marginBottom: "20px" }}
-      >
-        Back to Dashboard
-      </Button>
-      <Box sx={{ p: 6, maxWidth: 1200, overflowY: "visible", height: "100vh" }}>
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Typography variant="h4">Available Museum Visits</Typography>
+    <Box
+      sx={{
+        height: "100vh",
+        backgroundColor: "#ffffff",
+        paddingTop: "2vh", // Adjust for navbar height
+      }}
+    >
+      <TouristNavBar />
+      <TouristSidebar />
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Typography variant="h4" fontWeight="700">
+            Museums
+          </Typography>
         </Box>
 
-        {/* Render the search component and pass the callback */}
-        <div>
+        <Box sx={{ mb: 3, display: "flex", alignItems: "center" }}>
           <MuseumSearch onSearch={handleSearchResults} />
-        </div>
-
-        {/* Render the filter component and pass the callback */}
-        <div>
           <MuseumFilterComponent onFilter={handleFilterResults} />
-        </div>
+        </Box>
 
-        {/* Button to navigate to upcoming museums */}
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <Button
             variant="contained"
-            color="primary"
+            color="secondary"
+            sx={{
+              paddingX: 4,
+              fontWeight: 600,
+              textTransform: "capitalize",
+            }}
             onClick={goToUpcomingPage}
           >
             Get Upcoming Museum Visits
           </Button>
         </Box>
 
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Description</TableCell>
-                <TableCell>Location</TableCell>
-                <TableCell>Pictures</TableCell>
-                <TableCell>
-                  Ticket Price
-                  <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
-                </TableCell>
-                <TableCell>Opening Time</TableCell>
-                <TableCell>Closing Time</TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Tags</TableCell>
-                <TableCell>Created By</TableCell>
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {Array.isArray(Museums) && Museums.length > 0 ? (
-                Museums.map((museum) => (
-                  <TableRow key={museum._id}>
-                    <TableCell>{museum.description}</TableCell>
-                    <TableCell>{museum.location}</TableCell>
-                    <TableCell>
-                      <img
-                        src={museum.pictures}
-                        alt="Museum"
-                        style={{
-                          width: "100px",
-                          height: "auto",
-                          objectFit: "cover",
-                        }} // Adjust as needed
-                      />
-                    </TableCell>
-                    <TableCell>
-                      {(
-                        museum.ticketPrices * (exchangeRates[currency] || 1)
-                      ).toFixed(2)}{" "}
-                      {currency}
-                    </TableCell>
-                    <TableCell>{museum.openingTime}</TableCell>
-                    <TableCell>{museum.closingTime}</TableCell>
-                    <TableCell>{museum.museumDate}</TableCell>
-                    <TableCell>{museum.museumName}</TableCell>
-                    <TableCell>{museum.museumCategory}</TableCell>
-                    <TableCell>{museum.tags.join(", ")}</TableCell>
-                    <TableCell>{museum.createdBy}</TableCell>
-                    {id === undefined ? (
-                      <TableCell>
-                        <Button
-                          variant="outlined"
-                          onClick={() => handleShareLink(museum._id)}
-                        >
-                          Share Via Link
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          onClick={() => handleShareEmail(museum._id)}
-                        >
-                          Share Via Email
-                        </Button>
-                      </TableCell>
-                    ) : null}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={11} align="center">
-                    No museums available
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
+        <Grid container spacing={3}>
+          {Array.isArray(Museums) && Museums.length > 0 ? (
+            Museums.map((museum) => (
+              <Grid item xs={12} sm={6} md={4} key={museum._id}>
+                <MuseumHistoricalPlaceCard place={museum} />
+              </Grid>
+            ))
+          ) : (
+            <Grid item xs={12}>
+              <Typography variant="body1" color="textSecondary" align="center">
+                No museums available
+              </Typography>
+            </Grid>
+          )}
+        </Grid>
+      </Container>
       <Help />
-    </>
+    </Box>
   );
 };
 

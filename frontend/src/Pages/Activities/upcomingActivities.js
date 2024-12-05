@@ -12,15 +12,17 @@ import {
   TableHead,
   TableRow,
   Paper,
-  IconButton
+  IconButton,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon";
 import { Link } from "react-router-dom";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 
+import TouristNavBar from "../../Components/TouristNavBar";
 const UpcomingActivities = () => {
   const [activities, setActivities] = useState([]);
   const navigate = useNavigate();
@@ -41,15 +43,16 @@ const UpcomingActivities = () => {
   // Handle fetching upcoming activities
   useEffect(() => {
     const fetchActivities = async () => {
-      try{
-        const response = await axios.get("http://localhost:8000/activity/upcoming");
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/activity/upcoming"
+        );
         const data = response.data.map((activity) => ({
           ...activity,
           saved: activity.saved || { isSaved: false, user: null },
         }));
         setActivities(data);
-    }
-      catch(error) {
+      } catch (error) {
         console.error("There was an error fetching the activities!", error);
       }
     };
@@ -95,7 +98,6 @@ const UpcomingActivities = () => {
     }
   };
 
-
   const handleSaveActivity = async (activityId, currentIsSaved) => {
     try {
       const newIsSaved = !currentIsSaved;
@@ -113,9 +115,9 @@ const UpcomingActivities = () => {
           prevActivities.map((activity) =>
             activity._id === activityId
               ? {
-                  ...activity,
-                  saved: { ...activity.saved, isSaved: newIsSaved },
-                }
+                ...activity,
+                saved: { ...activity.saved, isSaved: newIsSaved },
+              }
               : activity
           )
         );
@@ -165,19 +167,21 @@ const UpcomingActivities = () => {
   }, [activities]);
 
   return (
-    <>
-      <Box sx={{ p: 6, maxWidth: 1200, overflowY: "auto", height: "100vh" }}>
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+    <Box
+      sx={{
+        height: "100vh",
+        backgroundColor: "#fff6e6", // Light background for better contrast
+        paddingTop: "64px", // Adjust for navbar height
+      }}
+    >
+      <TouristNavBar />
+      <TouristSidebar />
+
+      <Box sx={{ p: 6, maxWidth: 1200, overflowY: "auto", height: "100vh", backgroundColor: "#fff6e6" }}>
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 3, backgroundColor: "#fff6e6" }}>
           <Typography variant="h4">Upcoming Activities</Typography>
         </Box>
-        <TableContainer component={Paper}>
-          <Link
-            to={isGuest ? "/guestDashboard" : "/touristDashboard"}
-            className="text-sm hover:underline hover:text-blue-600 mt-2 inline-block"
-          >
-            Back
-          </Link>
-
+        <TableContainer component={Paper} sx={{ backgroundColor: "#fff6e6" }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -214,23 +218,23 @@ const UpcomingActivities = () => {
                   <TableCell>
                     {activity.date.length > 0
                       ? activity.date.map((dateTime, index) => {
-                          const dateObj = new Date(dateTime);
-                          const date = dateObj.toISOString().split("T")[0];
-                          const time = dateObj.toTimeString().split(" ")[0];
-                          return (
-                            <div key={index}>
-                              Date {index + 1}: {date}
-                              <br />
-                              Time {index + 1}: {time}
-                            </div>
-                          );
-                        })
+                        const dateObj = new Date(dateTime);
+                        const date = dateObj.toISOString().split("T")[0];
+                        const time = dateObj.toTimeString().split(" ")[0];
+                        return (
+                          <div key={index}>
+                            Date {index + 1}: {date}
+                            <br />
+                            Time {index + 1}: {time}
+                          </div>
+                        );
+                      })
                       : "No available dates and times"}
                   </TableCell>
                   <TableCell>{activity.duration}</TableCell>
                   <TableCell>{activity.location}</TableCell>
                   <TableCell>
-                    <Button onClick={() => handleBooking(activity._id)}>
+                    <Button onClick={() => handleBooking(activity._id)} >
                       Book Now
                     </Button>
                   </TableCell>
@@ -261,7 +265,7 @@ const UpcomingActivities = () => {
         </TableContainer>
       </Box>
       <Help />
-    </>
+    </Box>
   );
 };
 

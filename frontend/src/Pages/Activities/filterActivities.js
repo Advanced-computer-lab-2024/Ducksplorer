@@ -12,21 +12,26 @@ import {
   TableHead,
   TableRow,
   Paper,
-  TextField,
   MenuItem,
-  Select,
   InputLabel,
   FormControl,
   Button,
   Rating,
   Slider,
-  IconButton
+  IconButton,
+  Container,
 } from "@mui/material";
-import {message} from 'antd';
+import Select from "@mui/joy/Select";
+import Option from "@mui/joy/Option";
+import Input from "@mui/joy/Input";
+import { selectClasses } from "@mui/joy/Select";
+import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
+import { message } from "antd";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
+import ActivityCard from "../../Components/activityCard";
 
 const FilterActivities = () => {
   const navigate = useNavigate();
@@ -68,16 +73,17 @@ const FilterActivities = () => {
     //     console.error("There was an error fetching the activities!", error);
     //   });
     const fetchActivities = async () => {
-      try{
-        const response = await axios.get("http://localhost:8000/activity/upcoming");
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/activity/upcoming"
+        );
         const data = response.data.map((activity) => ({
           ...activity,
           saved: activity.saved || { isSaved: false, user: null },
         }));
         setAllActivities(data);
         setActivities(data);
-    }
-      catch(error) {
+      } catch (error) {
         console.error("There was an error fetching the activities!", error);
       }
     };
@@ -95,7 +101,6 @@ const FilterActivities = () => {
       price,
       date,
       category,
-      ...(averageRating > 0 && { averageRating }), // Only include averageRating if it's greater than 0
     }).toString();
 
     axios
@@ -216,51 +221,67 @@ const FilterActivities = () => {
   }, [activities]);
 
   return (
-    <>
+    <div style={{ width: "100%" }}>
       <Box
-        sx={{ p: 6, maxWidth: "120vh", overflowY: "visible", height: "100vh" }}
+        sx={{
+          height: "100vh",
+          backgroundColor: "#ffffff",
+        }}
       >
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Typography variant="h4">Filter Activities</Typography>
-        </Box>
-
-        {/* Filter Form */}
-        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
-          <TextField
-            label="Price"
+        <Box
+          sx={{
+            mb: 3,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "20px", // Adds space between the filter fields
+          }}
+        >
+          <Input
+            placeholder="Price"
             value={price}
+            color="primary"
             onChange={(e) => setPrice(e.target.value)}
             type="number"
-            sx={{ minWidth: 150 }}
           />
-          <TextField
-            label="Date"
+          <Input
+            placeholder="Date"
             type="date"
+            variant="outlined"
+            color="primary"
             value={date}
             onChange={(e) => setDate(e.target.value)}
             InputLabelProps={{ shrink: true }}
-            sx={{ minWidth: 150 }}
           />
           <FormControl sx={{ minWidth: 150 }}>
-            <InputLabel id="category-label">Category</InputLabel>
             <Select
-              labelId="category-label"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              label="Category"
+              indicator={<KeyboardArrowDown />}
+              color="primary"
+              placeholder="Category"
+              onChange={(e, newValue) => {
+                setCategory(newValue);
+              }}
+              sx={{
+                width: 240,
+                [`& .${selectClasses.indicator}`]: {
+                  transition: "0.2s",
+                  [`&.${selectClasses.expanded}`]: {
+                    transform: "rotate(-180deg)",
+                  },
+                },
+              }}
             >
-              <MenuItem value="">
+              <Option value="">
                 <em>Any</em>
-              </MenuItem>
+              </Option>
               {categories.map((cat) => (
-                <MenuItem key={cat._id} value={cat.name}>
+                <Option key={cat._id} value={cat.name}>
                   {cat.name}
-                </MenuItem>
+                </Option>
               ))}
             </Select>
           </FormControl>
 
-          {/* Rating Slider */}
           <Box sx={{ minWidth: 150 }}>
             <Typography variant="body1">Rating: {averageRating}</Typography>
             <Slider
@@ -285,101 +306,136 @@ const FilterActivities = () => {
             Filter
           </Button>
         </Box>
-
         {/* Activity Table */}
-        <TableContainer style={{ borderRadius: 20 }} component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>
-                  Price
-                  <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
-                </TableCell>
-                <TableCell>Is Open</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Tags</TableCell>
-                <TableCell>Discount</TableCell>
-                <TableCell>Dates and Times</TableCell>
-                <TableCell>Duration</TableCell>
-                <TableCell>Location</TableCell>
-                <TableCell>Rating</TableCell>
-                <TableCell>Booking</TableCell>
-                <TableCell>Bookmark</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {activities.map((activity) => activity.flag === false && activity.advertiserDeleted === false && activity.deletedActivity === false ? (
-                <TableRow key={activity._id}>
-                  <TableCell>{activity.name}</TableCell>
+        {/* <TableContainer style={{ borderRadius: 20 }} component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
                   <TableCell>
-                    {(activity.price * (exchangeRates[currency] || 1)).toFixed(2)} {" "}
+                    Price
+                    <CurrencyConvertor
+                      onCurrencyChange={handleCurrencyChange}
+                    />
                   </TableCell>
-                  <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
-                  <TableCell>{activity.category}</TableCell>
-                  <TableCell>{activity.tags.join(", ")}</TableCell>
-                  <TableCell>{activity.specialDiscount}</TableCell>
-                  <TableCell>{activity.date ? (() => {
-                    const dateObj = new Date(activity.date);
-                    const date = dateObj.toISOString().split('T')[0];
-                    const time = dateObj.toTimeString().split(' ')[0];
-                    return (
-                      <div>
-                        {date} at {time}
-                      </div>
-                    );
-                  })()
-                    : 'No available date and time' ? (() => {
-                      const dateObj = new Date(activity.date);
-                      const date = dateObj.toISOString().split('T')[0];
-                      const time = dateObj.toTimeString().split(' ')[0];
-                      return (
-                        <div>
-                          {date} at {time}
-                        </div>
-                      );
-                    })()
-                      : 'No available date and time'}</TableCell>
-                  <TableCell>{activity.duration}</TableCell>
-                  <TableCell>{activity.location}</TableCell>
-                  <TableCell>
-                    <Rating value={activity.averageRating} precision={0.1} readOnly />
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={() => handleBooking(activity._id)}>
-                      Book Now
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <span
-                      onClick={() =>
-                        handleSaveActivity(
-                          activity._id,
-                          activity.saved?.isSaved
-                        )
-                      }
-                    >
-                      {saveStates[activity._id] ? (
-                        <IconButton>
-                          <BookmarkIcon />
-                        </IconButton>
-                      ) : (
-                        <IconButton>
-                          <BookmarkBorderIcon />
-                        </IconButton>
-                      )}
-                    </span>
-                  </TableCell>
+                  <TableCell>Is Open</TableCell>
+                  <TableCell>Category</TableCell>
+                  <TableCell>Tags</TableCell>
+                  <TableCell>Discount</TableCell>
+                  <TableCell>Dates and Times</TableCell>
+                  <TableCell>Duration</TableCell>
+                  <TableCell>Location</TableCell>
+                  <TableCell>Rating</TableCell>
+                  <TableCell>Booking</TableCell>
+                  <TableCell>Bookmark</TableCell>
                 </TableRow>
-              ) : null
-              ) // We don't output a row when it has `activity.flag` is true (ie activity is inappropriate) or when the activity's advertiser has left the system or the activity has been deleted but cannot be removed from database since it is booked my previous tourists
-              }
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody> */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "24px", // Adjust the gap between items as needed
+            width: "100%",
+          }}
+        >
+          {activities.map(
+            (activity) =>
+              activity.flag === false &&
+              activity.advertiserDeleted === false &&
+              activity.deletedActivity === false ? (
+                <ActivityCard activity={activity} />
+              ) : null,
+
+            {
+              /* <TableRow key={activity._id}>
+                        <TableCell>{activity.name}</TableCell>
+                        <TableCell>
+                          {(
+                            activity.price * (exchangeRates[currency] || 1)
+                          ).toFixed(2)}{" "}
+                          {currency}
+                        </TableCell>
+                        <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
+                        <TableCell>{activity.category}</TableCell>
+                        <TableCell>{activity.tags.join(", ")}</TableCell>
+                        <TableCell>{activity.specialDiscount}</TableCell>
+                        <TableCell>
+                          {activity.date
+                            ? (() => {
+                                const dateObj = new Date(activity.date);
+                                const date = dateObj
+                                  .toISOString()
+                                  .split("T")[0];
+                                const time = dateObj
+                                  .toTimeString()
+                                  .split(" ")[0];
+                                return (
+                                  <div>
+                                    {date} at {time}
+                                  </div>
+                                );
+                              })()
+                            : "No available date and time"
+                            ? (() => {
+                                const dateObj = new Date(activity.date);
+                                const date = dateObj
+                                  .toISOString()
+                                  .split("T")[0];
+                                const time = dateObj
+                                  .toTimeString()
+                                  .split(" ")[0];
+                                return (
+                                  <div>
+                                    {date} at {time}
+                                  </div>
+                                );
+                              })()
+                            : "No available date and time"}
+                        </TableCell>
+                        <TableCell>{activity.duration}</TableCell>
+                        <TableCell>{activity.location}</TableCell>
+                        <TableCell>
+                          <Rating
+                            value={activity.averageRating}
+                            precision={0.1}
+                            readOnly
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Button onClick={() => handleBooking(activity._id)}>
+                            Book Now
+                          </Button>
+                        </TableCell>
+                        <TableCell>
+                          <span
+                            onClick={() =>
+                              handleSaveActivity(
+                                activity._id,
+                                activity.saved?.isSaved
+                              )
+                            }
+                          >
+                            {saveStates[activity._id] ? (
+                              <IconButton>
+                                <BookmarkIcon />
+                              </IconButton>
+                            ) : (
+                              <IconButton>
+                                <BookmarkBorderIcon />
+                              </IconButton>
+                            )}
+                          </span>
+                        </TableCell>
+                      </TableRow>*/
+            }
+          )}
+        </div>
+        {/* </TableBody>
+            </Table>
+          </TableContainer>  */}
       </Box>
-      <Help />
-    </>
+    </div>
   );
 };
 

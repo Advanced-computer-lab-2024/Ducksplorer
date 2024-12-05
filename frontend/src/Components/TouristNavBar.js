@@ -21,20 +21,24 @@ import TempleBuddhistIcon from "@mui/icons-material/TempleBuddhist";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import LockIcon from "@mui/icons-material/Lock";
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import BookmarksIcon from '@mui/icons-material/Bookmarks';
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import MyNotifications from "./myNotifications";
+import Cookies from "js-cookie";
+import PersistentDrawerLeft from "./Drawer";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import BookmarksIcon from "@mui/icons-material/Bookmarks";
 
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
-import MyNotifications from "./myNotifications";
+import { useNavigate } from "react-router-dom";
 
 function TouristNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [image, setImage] = React.useState("");
-  const [storedPicture, setStoredPicture] = React.useState(localStorage.getItem('profilePicture'));
+  const [storedPicture, setStoredPicture] = React.useState(
+    localStorage.getItem("profilePicture")
+  );
   const navigate = useNavigate();
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -45,13 +49,31 @@ function TouristNavBar() {
   //call the getImage in a useEffect
   const userName = JSON.parse(localStorage.getItem("user")).username;
 
+  //get the notifications length periodically
+
+  const handleLogout = () => {
+    handleCloseUserMenu();
+    axios
+      .post("http://localhost:8000/signUp/logout")
+      .then((response) => {
+        console.log(response.data);
+        localStorage.removeItem("user");
+        Cookies.remove("jwt");
+        window.location.href = "/login";
+      })
+      .catch((error) => {
+        console.error("There was an error logging out!", error);
+      });
+  };
+
   useEffect(() => {
     //const storedPicture = localStorage.getItem('profilePicture');
-  
-        axios.get(`http://localhost:8000/touristRoutes/getLevel/${userName}`)
-        .then((response) => {
-          console.log(response.data);
-          const level = response.data;
+
+    axios
+      .get(`http://localhost:8000/touristRoutes/getLevel/${userName}`)
+      .then((response) => {
+        console.log(response.data);
+        const level = response.data;
         if (level === 1) {
           setImage("level1.png");
         } else if (level === 2) {
@@ -59,12 +81,12 @@ function TouristNavBar() {
         } else if (level === 3) {
           setImage("level3.png");
         }
-      }) 
-      .catch ((error) => {
+      })
+      .catch((error) => {
         console.log("Error: ", error.message);
         console.error("There was an error fetching the image!", error);
       });
-    }, [userName]);
+  }, [userName]);
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
@@ -78,7 +100,7 @@ function TouristNavBar() {
   };
 
   const [showPreferences, setShowPreferences] = React.useState(() => {
-    const savedPreference = localStorage.getItem('showPreferences');
+    const savedPreference = localStorage.getItem("showPreferences");
     return savedPreference !== null ? JSON.parse(savedPreference) : false;
   });
   const handleTogglePreferences = () => {
@@ -87,32 +109,46 @@ function TouristNavBar() {
   };
 
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: "#FFD700", width: "100%" }}>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <Tooltip title="Badge">
-            <img
-              src={image}
-              alt="Avatar"
+    <AppBar
+      position="fixed"
+      sx={{
+        backgroundColor: "white",
+        width: "100vw",
+        height: "9vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Container sx={{ width: "100%" }}>
+        <Toolbar disableGutters sx={{ width: "100vw", justifySelf: "center" }}>
+          <Tooltip title="Home">
+            <h2
+              className="duckTitle"
               style={{
-                width: 70,
-                height: 70,
-                borderRadius: "50%",
-                marginRight: 10,
-              }}
-            />
+                marginLeft: "20px",
+                fontSize: "40px",
+                fontWeight: "700",
+                color: "orange",
+                fontSize: '2rem'
+              }}>Ducksplorer</h2>
           </Tooltip>
-          <Tooltip title="Ducksplorer Home Page">
-            <TravelExploreIcon
-              sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-            />
+          {/* <PersistentDrawerLeft /> */}
+          {/* <Tooltip title="Ducksplorer Home Page">
+          <TravelExploreIcon
+            sx={{
+              display: { xs: "none", md: "flex" },
+              ml: "auto",  // This pushes it to the right in a flex container
+              mr: 1,
+            }}
+          />
             <Typography
               variant="h6"
               noWrap
               component="a"
-              onClick={() => navigate('/touristDashboard')}
+              onClick={() => navigate("/touristDashboard")}
               sx={{
-                mr: 2,
+                ml: 11,  // Increase the margin-left value to move the text further to the right
                 display: { xs: "none", md: "flex" },
                 fontFamily: "monospace",
                 fontWeight: 700,
@@ -124,7 +160,8 @@ function TouristNavBar() {
             >
               Ducksplorer
             </Typography>
-          </Tooltip>
+
+          </Tooltip> */}
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -153,6 +190,7 @@ function TouristNavBar() {
               onClose={handleCloseNavMenu}
               sx={{ display: { xs: "block", md: "none" } }}
             >
+
               <Box
                 sx={{
                   display: "flex",
@@ -160,17 +198,17 @@ function TouristNavBar() {
                   alignItems: "center",
                 }}
               >
-                <MenuItem onClick={() => handleNavigation("myCart")}>
+                {/* <MenuItem onClick={() => handleNavigation("myCart")}>
                   <IconButton>
                     <ShoppingCartIcon />
                   </IconButton>
                   <Typography textAlign="center">Cart</Typography>
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem onClick={() => handleNavigation("activities")}>
                   <IconButton>
-                    < FestivalIcon/>
+                    <FestivalIcon />
                   </IconButton>
-                  <Typography textAlign="center">Activities</Typography>
+                  <Typography textAlign="center"  >Activities</Typography>
                 </MenuItem>
                 <MenuItem onClick={() => handleNavigation("itineraries")}>
                   <IconButton>
@@ -234,7 +272,6 @@ function TouristNavBar() {
               alignItems: "center",
             }}
           >
-            <MyNotifications/>
             {/* <Tooltip title="My Cart">
               <IconButton
                 onClick={() => handleNavigation("myCart")}
@@ -246,87 +283,135 @@ function TouristNavBar() {
               </IconButton>
             </Tooltip> */}
             <Tooltip title="Book Activities">
-              <IconButton
-                onClick={() => handleNavigation("activity/sortFilter")}
-              >
-                <FestivalIcon />
-                <Typography textAlign="center" marginRight={3}>
+              <IconButton onClick={() => handleNavigation("activity/sortFilter")}>
+                <Typography
+                  textAlign="center"
+                  sx={{
+                    fontSize: "1rem", // Larger font size
+                    // fontWeight: "bold",  // Bold text
+                    fontFamily: "'Roboto', sans-serif", // Modern, readable font
+                    color: "black"
+                  }}
+                >
                   Activities
                 </Typography>
               </IconButton>
             </Tooltip>
             <Tooltip title="Book Itineraries">
-              <IconButton
-                onClick={() => handleNavigation("viewUpcomingItinerary")}
-              >
-                <TempleBuddhistIcon />
-                <Typography textAlign="center" marginRight={1}>
+              <IconButton onClick={() => handleNavigation("viewUpcomingItinerary")}>
+                <Typography
+                  textAlign="center"
+                  sx={{
+                    fontSize: "1rem",
+                    // fontWeight: "bold",
+                    fontFamily: "'Roboto', sans-serif",
+                    color: "black"
+                  }}
+                >
                   Itineraries
                 </Typography>
               </IconButton>
             </Tooltip>
             <Tooltip title="Book Flights">
               <IconButton onClick={() => handleNavigation("flights")}>
-                <FlightIcon />
-                <Typography textAlign="center" marginRight={1}>
+                <Typography
+                  textAlign="center"
+                  sx={{
+                    fontSize: "1rem",
+                    // fontWeight: "bold",
+                    fontFamily: "'Roboto', sans-serif",
+                    color: "black"
+                  }}
+                >
                   Flights
                 </Typography>
               </IconButton>
             </Tooltip>
             <Tooltip title="Book Hotels">
               <IconButton onClick={() => handleNavigation("hotels")}>
-                <HotelIcon />
-                <Typography textAlign="center" marginRight={1}>
+                <Typography
+                  textAlign="center"
+                  sx={{
+                    fontSize: "1rem",
+                    // fontWeight: "bold",
+                    fontFamily: "'Roboto', sans-serif",
+                    color: "black"
+                  }}
+                >
                   Hotels
                 </Typography>
               </IconButton>
             </Tooltip>
             <Tooltip title="Book Transportation">
               <IconButton onClick={() => handleNavigation("transportation")}>
-                <DirectionsCarIcon />
-                <Typography textAlign="center" marginRight={1}>
+                <Typography
+                  textAlign="center"
+                  sx={{
+                    fontSize: "1rem",
+                    // fontWeight: "bold",
+                    fontFamily: "'Roboto', sans-serif",
+                    color: "black"
+                  }}
+                >
                   Transportation
                 </Typography>
               </IconButton>
             </Tooltip>
             <Tooltip title="View Products">
-              <IconButton
-                onClick={() => handleNavigation("TouristAllProducts")}
-              >
-                <StorefrontIcon />
-                <Typography textAlign="center" marginRight={1}>
+              <IconButton onClick={() => handleNavigation("TouristAllProducts")}>
+                <Typography
+                  textAlign="center"
+                  sx={{
+                    fontSize: "1rem",
+                    // fontWeight: "bold",
+                    fontFamily: "'Roboto', sans-serif",
+                    color: "black"
+                  }}
+                >
                   Products
                 </Typography>
               </IconButton>
             </Tooltip>
-            <Tooltip title="View My Bookings">
+
+            {/* <Tooltip title="View My Bookings">
               <IconButton onClick={() => handleNavigation("mybookings")}>
                 <BookmarkAddedIcon />
-                <Typography textAlign="center" marginRight={1}>
+                <Typography textAlign="center" marginLeft={2}>
                   My Bookings
                 </Typography>
               </IconButton>
-            </Tooltip>
-            <Tooltip title="View My Wishlist">
+            </Tooltip> */}
+            {/* <Tooltip title="View My Wishlist">
               <IconButton onClick={() => handleNavigation("wishlist")}>
                 <FavoriteBorderIcon />
                 <Typography textAlign="center" marginRight={1}>
                   Wishlist
                 </Typography>
               </IconButton>
-            </Tooltip>
-            
+            </Tooltip> */}
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
+          <Box sx={{ flexGrow: 0, marginRight: "3vw " }}>
+            <Tooltip title="Notifications">
+              <MyNotifications />
+            </Tooltip>
             <Tooltip title="Open Account settings">
               <IconButton
                 onClick={handleOpenUserMenu}
                 sx={{ p: 0, ml: 4, width: 40, height: 40 }}
               >
                 <img
-                  src={"duckAvatar.png"} // Check if profilePicture exists, else use default
+                  src={image} // Fallback to a default image if image is undefined
                   alt="Avatar"
-                  style={{ width: 40, height: 40, borderRadius: "50%" }}
+                  style={{
+                    maxWidth: "60px", // Use consistent units
+                    maxHeight: "60px",
+                    borderRadius: "100%", // Circular shape
+                    border: "2px solid #FFD700", // Add a gold border for a premium feel
+                  }}
+                  onError={(e) => {
+                    e.target.src = "defaultAvatar.png";
+                  }} // Fallback in case of image load error
+                  title="User Avatar" // Tooltip for accessibility
                 />
               </IconButton>
             </Tooltip>
@@ -358,12 +443,8 @@ function TouristNavBar() {
                   </Typography>
                 </IconButton>
               </MenuItem>
-              <MenuItem onClick={handleCloseUserMenu}>
-                <IconButton
-                  component="a"
-                  href="/login"
-                  sx={{ textAlign: "center", p: 0.5 }}
-                >
+              <MenuItem onClick={handleLogout}>
+                <IconButton component="a" sx={{ textAlign: "center", p: 0.5 }}>
                   <LockIcon sx={{ fontSize: 20, color: "gold" }} />
                   <Typography sx={{ ml: 1 }} variant="body2">
                     Logout
@@ -394,11 +475,23 @@ function TouristNavBar() {
                   </Typography>
                 </IconButton>
               </MenuItem>
+              <MenuItem onClick={handleCloseUserMenu}>
+                <IconButton
+                  component="a"
+                  href="/mybookings"
+                  sx={{ textAlign: "center", p: 0.5 }}
+                >
+                  <BookmarkAddedIcon />
+                  <Typography textAlign="center" marginLeft={2}>
+                    My Bookings
+                  </Typography>
+                </IconButton>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
       </Container>
-    </AppBar>
+    </AppBar >
   );
 }
 

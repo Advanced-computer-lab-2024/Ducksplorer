@@ -1,11 +1,15 @@
-//This is the page that gets called when the upcoming activities button is clicked
+// This is the page that gets called when the upcoming activities button is clicked
 import React from "react";
 import SortActivities from "./sortActivities";
 import { Button } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import FilterActivities from "./filterActivities";
+// import { Link } from "react-router-dom";
 import Help from "../../Components/HelpIcon";
+import TouristNavBar from "../../Components/TouristNavBar.js";
+import { Box, Container, Grid, Typography } from "@mui/material";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 
 function SortFilterActivity() {
   const [sort, setSort] = useState(true);
@@ -13,54 +17,85 @@ function SortFilterActivity() {
   const isGuest = localStorage.getItem("guest") === "true";
 
   return (
-    <div>
-      <Button
-        component={Link}
-        to={isGuest ? "/guestDashboard" : "/touristDashboard"}
-        variant="contained"
-        color="primary"
-        style={{ marginBottom: "20px" }}
-      >
-        Back to Dashboard
-      </Button>
-      <div style={{ marginLeft: 0, maxWidth: "170vh", padding: "0 20px" }}>
-        <Button
-          style={{
-            border: "1.3px solid black",
-            borderRadius: 100,
-            color: "black",
-          }}
-          onClick={() => {
-            setSort(!sort);
-            if (filter) {
-              setFilter(false);
-            }
-          }}
-        >
-          {" "}
-          Sort{" "}
-        </Button>
-        <Button
-          style={{
-            margin: 10,
-            border: "1.3px solid black",
-            borderRadius: 100,
-            color: "black",
-          }}
-          onClick={() => {
-            setFilter(!filter);
-            if (sort) {
-              setSort(false);
-            }
+    <Box
+      sx={{
+        height: "100vh",
+        backgroundColor: "#fff6e6",
+        width: "80vw",
+        paddingTop: "2vh", // Adjust for navbar height
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <TouristNavBar />
+      <TouristSidebar />
+      <div style={{ width: "80%" }}>
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Typography variant="h4" fontWeight="700">
+            Upcoming Activities
+          </Typography>
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            gap: "20px", // Adds space between the buttons
           }}
         >
-          filter
-        </Button>
+          <Button
+            variant="outlined"
+            sx={{
+              border: "2px solid black",
+              borderRadius: "50px",
+              padding: "10px 20px",
+              fontWeight: "bold",
+              textTransform: "none",
+              className: "blackhover",
+              "&:hover": {
+                backgroundColor: "#f0f0f0",
+              },
+            }}
+            onClick={() => {
+              setSort(!sort);
+              if (filter) {
+                setFilter(false);
+              }
+            }}
+          >
+            Sort
+          </Button>
+
+          <Button
+            variant="outlined"
+            sx={{
+              border: "2px solid black",
+              borderRadius: "50px",
+              color: "black",
+              padding: "10px 20px",
+              fontWeight: "bold",
+              textTransform: "none",
+              "&:hover": {
+                backgroundColor: "#f0f0f0",
+              },
+            }}
+            onClick={() => {
+              setFilter(!filter);
+              if (sort) {
+                setSort(false);
+              }
+            }}
+          >
+            Filter
+          </Button>
+        </Box>
+
         {sort && <SortActivities />}
         {filter && <FilterActivities />}
       </div>
       <Help />
-    </div>
+    </Box>
   );
 }
 

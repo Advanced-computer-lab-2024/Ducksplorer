@@ -5,8 +5,41 @@ import axios from "axios";
 import React from "react";
 import { Card, Typography, Space, message, Select, Form, Button } from "antd";
 import Help from "../../Components/HelpIcon.js";
+import ItineraryCardDetailed from "../../Components/itineraryCardDetailed.js";
+import ActivityCardDetailed from "../../Components/activityCardDetailed.js";
+import FlightCardDetailed from "../../Components/flightCardDetailed.js";
+import HotelCardDetailed from "../../Components/hotelCardDetailed.js";
+import CartCardDetailed from "../../Components/cartCardDetailed.js";
+import TransportationCardDetailed from "../../Components/transportationCardDetailed.js";
+import TouristNavBar from "../../Components/TouristNavBar.js";
 const { Title } = Typography;
 const { Option } = Select;
+const styles = {
+  container: {
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+    height: "100vh",
+  },
+  left: {
+    flex: 1,
+    display: "flex",
+    width: "100%",
+    flexDirection: "column",
+    gap: "20px",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+    minHeight: "70vh"
+  },
+  right: {
+    flex: 1,
+    backgroundColor: "#fff",
+    padding: "20px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "20px",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+  },
+};
 
 
 function PaymentPage() {
@@ -147,7 +180,7 @@ function PaymentPage() {
       console.log(data);
       if (response.status === 200) {
         message.success("Payment successfully completed!");
-        if(itineraryOrActivity === "product"){
+        if (itineraryOrActivity === "product") {
           await axios.delete("http://localhost:8000/touristRoutes/emptyCart", userName);
           navigate("/orders");
         }
@@ -256,7 +289,7 @@ function PaymentPage() {
         // setTransportation(transportation);
         setPrice(transportationsData.price);
         setFinalPrice(transportationsData.price);
-      } else if (itineraryOrActivity === "product" && cartId){
+      } else if (itineraryOrActivity === "product" && cartId) {
         console.log("Fetching activity data for ID:", cartId); // Debugging
         const response = await axios.get(
           `http://localhost:8000/touristRoutes/myCart/${userName}`
@@ -342,15 +375,10 @@ function PaymentPage() {
     <div
       style={{
         overflowY: "visible",
-        height: "120vh",
+        height: "100vh",
       }}
     >
-      <Button
-        onClick={() => navigate(-1)}
-        style={{ marginLeft: "0%" }} // Add margin to position the button to the left
-      >
-        Go Back
-      </Button>
+      <TouristNavBar />
       <div
         style={{
           display: "flex",
@@ -365,108 +393,20 @@ function PaymentPage() {
       >
         <div>
           {itineraryData ||
-          activityData ||
-          (flightsData && type === "flight") ||
-          (hotelsData && type === "hotel") ||
-          (transportationsData && type === "transportation") ||
-          (cartData && type === "product") ? (
+            activityData ||
+            (flightsData && type === "flight") ||
+            (hotelsData && type === "hotel") ||
+            (transportationsData && type === "transportation") ||
+            (cartData && type === "product") ? (
             type === "itinerary" ? (
-              <div>
-                <Card
-                  style={{
-                    maxWidth: "600px",
-                    margin: "20px auto",
-                    borderRadius: "8px",
-                  }}
-                >
-                  <Space
-                    direction="vertical"
-                    size="middle"
-                    style={{ display: "flex" }}
-                  >
-                    <Title level={3}>Booked Details</Title>
-                    <p>
-                      <strong>Itinerary Details:</strong> {itineraryData.name}
-                    </p>
-                    {/* Looping through the activities */}
-                    {itineraryData.activity &&
-                    itineraryData.activity.length > 0 ? (
-                      itineraryData.activity.map((activity, index) => (
-                        <div key={index}>
-                          <p>
-                            <strong>Activity Name:</strong> {activity.name}
-                          </p>
-                          <p>
-                            <strong>Activity Price:</strong> {activity.price}
-                          </p>
-                        </div>
-                      ))
-                    ) : (
-                      <p>No activities found.</p>
-                    )}
-                    <p>
-                      <strong>Locations:</strong>{" "}
-                      {itineraryData.locations.join(", ")}
-                    </p>
-                    <p>
-                      <strong>Timeline:</strong> {itineraryData.timeline}
-                    </p>
-                    <p>
-                      <strong>Language:</strong> {itineraryData.language}
-                    </p>
-                    <p>
-                      <strong>Price:</strong> {itineraryData.price}
-                    </p>
-                    <p>
-                      <strong>Available Dates and Times:</strong>{" "}
-                      {itineraryData.availableDatesAndTimes.length > 0
-                        ? itineraryData.availableDatesAndTimes.map(
-                            (dateTime, index) => {
-                              const dateObj = new Date(dateTime);
-                              const date = dateObj.toISOString().split("T")[0];
-                              const time = dateObj.toTimeString().split(" ")[0];
-                              return (
-                                <div key={index}>
-                                  Date {index + 1}: {date}
-                                  <br />
-                                  Time {index + 1}: {time}
-                                </div>
-                              );
-                            }
-                          )
-                        : "No available dates and times"}
-                    </p>
-                    <p>
-                      <strong>Accessibility:</strong>{" "}
-                      {itineraryData.accessibility}
-                    </p>
-                    <p>
-                      <strong>Pick Up Location:</strong>{" "}
-                      {itineraryData.pickUpLocation}
-                    </p>
-                    <p>
-                      <strong>Drop Off Location:</strong>{" "}
-                      {itineraryData.dropOffLocation}
-                    </p>
-                    <p>
-                      <strong>Rating:</strong>{" "}
-                      {itineraryData.activity.averageRating ||
-                      itineraryData.activity.averageRating === 0
-                        ? `${itineraryData.activity.averageRating}/5`
-                        : `0/5`}
-                    </p>
-                    <p>
-                      <strong>Tags:</strong> {itineraryData.tags}
-                    </p>
-                  </Space>
+              <div style={styles.left}>
+                {/* <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}> */}
+                <Card>
+                  <ItineraryCardDetailed itinerary={itineraryData} />
                 </Card>
 
-                <Form
-                // form={form}
-                // onFinish={handleVisaSubmit}
-                // layout="vertical"
-                // initialValues={{ dateTime: null }}
-                >
+                <Form style={styles.right}>
+
                   <Form.Item
                     name="dateTime"
                     label="Date and Time"
@@ -563,75 +503,10 @@ function PaymentPage() {
               </div>
             ) : type === "activity" && activityData ? (
               <div>
-                <Card
-                  style={{
-                    maxWidth: "600px",
-                    margin: "20px auto",
-                    borderRadius: "8px",
-                  }}
-                >
-                  <Space
-                    direction="vertical"
-                    size="middle"
-                    style={{ display: "flex" }}
-                  >
-                    <Title level={3}>Booked Details</Title>
-                    <p>
-                      <strong>Activity Details:</strong>{" "}
-                    </p>
-                    <p>
-                      <strong>Activity Name:</strong> {activityData.name}
-                    </p>
-                    <p>
-                      <strong>Price:</strong> {activityData.price}
-                    </p>
-                    <p>
-                      <strong>Is Open:</strong>{" "}
-                      {activityData.isOpen ? "Yes" : "No"}
-                    </p>
-                    <p>
-                      <strong>Category:</strong> {activityData.category}
-                    </p>
-                    <p>
-                      <strong>Tags:</strong> {activityData.tags}
-                    </p>
-                    <p>
-                      <strong>Special Discount:</strong>{" "}
-                      {activityData.specialDiscount}
-                    </p>
-                    <p>
-                      <strong>Date and Time:</strong>{" "}
-                      {activityData.date
-                        ? (() => {
-                            const dateObj = new Date(activityData.date);
-                            const date = dateObj.toISOString().split("T")[0];
-                            const time = dateObj.toTimeString().split(" ")[0];
-                            return (
-                              <div>
-                                {date} at {time}
-                              </div>
-                            );
-                          })()
-                        : "No available date and time"}
-                    </p>
-                    <p>
-                      <strong>Duration:</strong> {activityData.duration}
-                    </p>
-                    <p>
-                      <strong>Location:</strong> {activityData.location}
-                    </p>
-                    <p>
-                      <strong>Ratings:</strong>
-                      {activityData &&
-                      activityData.activity &&
-                      (activityData.activity.averageRating ||
-                        activityData.activity.averageRating === 0)
-                        ? `${activityData.activity.averageRating}/5`
-                        : `0/5`}
-                    </p>
-                  </Space>
+                <Card style={styles.left}>
+                  <ActivityCardDetailed activity={activityData} />
                 </Card>
-                <Form>
+                <Form style={styles.right}>
                   <h1>Payment Details</h1>
 
                   <p>Email</p>
@@ -685,57 +560,10 @@ function PaymentPage() {
               </div>
             ) : type === "flight" ? (
               <div>
-                <Card
-                  style={{
-                    maxWidth: "600px",
-                    margin: "20px auto",
-                    borderRadius: "8px",
-                  }}
-                >
-                  <Space
-                    direction="vertical"
-                    size="middle"
-                    style={{ display: "flex" }}
-                  >
-                    <Title level={3}>Booked Details</Title>
-                    <p>
-                      <strong>Flight Details:</strong>{" "}
-                    </p>
-                    <p>
-                      <strong>Price:</strong> {flightsData.price}
-                      {"  "}
-                      {flightsData.currency}
-                    </p>
-                    <p>
-                      <strong>Departure Date:</strong>{" "}
-                      {flightsData.departureDate}
-                    </p>
-                    <p>
-                      <strong>Arrival Date:</strong> {flightsData.arrivalDate}
-                    </p>
-                    <p>
-                      <strong>Company Name:</strong> {flightsData.companyName}
-                    </p>
-                    <p>
-                      <strong>Departure City:</strong>{" "}
-                      {flightsData.departureCity}
-                    </p>
-                    <p>
-                      <strong>Departure Country:</strong>{" "}
-                      {flightsData.departureCountry}
-                    </p>
-                    <p>
-                      <strong>Arrival City:</strong> {flightsData.arrivalCity}
-                    </p>
-                    <p>
-                      <strong>Arrival Country:</strong>{" "}
-                      {flightsData.arrivalCountry}
-                    </p>
-                    {/* <p><strong>Departure Airport:</strong> {flightsData.departureAirport}</p>
-                  <p><strong>Arrival Airport:</strong> {flightsData.arrivalAirport}</p> */}
-                  </Space>
+                <Card style={styles.left}>
+                  <FlightCardDetailed flightsData={flightsData} />
                 </Card>
-                <Form>
+                <Form style={styles.right}>
                   <h1>Enter Payment Details</h1>
 
                   <p>Email</p>
@@ -788,44 +616,10 @@ function PaymentPage() {
               </div>
             ) : type === "hotel" ? (
               <div>
-                <Card
-                  style={{
-                    maxWidth: "600px",
-                    margin: "20px auto",
-                    borderRadius: "8px",
-                  }}
-                >
-                  <Space
-                    direction="vertical"
-                    size="middle"
-                    style={{ display: "flex" }}
-                  >
-                    <Title level={3}>Booked Details</Title>
-                    <p>
-                      <strong>Hotel Details:</strong>{" "}
-                    </p>
-                    <p>
-                      <strong>Price:</strong> {hotelsData.price}
-                      {"  "}
-                      {hotelsData.currency}
-                    </p>
-                    <p>
-                      <strong>Check In Date:</strong> {hotelsData.checkInDate}
-                    </p>
-                    <p>
-                      <strong>Check Out Date:</strong> {hotelsData.checkOutDate}
-                    </p>
-                    <p>
-                      <strong>Hotel Name:</strong> {hotelsData.hotelName}
-                    </p>
-                    <p>
-                      <strong>Location:</strong> {hotelsData.city}
-                      {"  ,"}
-                      {hotelsData.country}
-                    </p>
-                  </Space>
+                <Card style={styles.left}>
+                  <HotelCardDetailed hotelsData={hotelsData} />
                 </Card>
-                <Form>
+                <Form style={styles.right}>
                   <h1>Enter Payment Details</h1>
 
                   <p>Email</p>
@@ -879,44 +673,10 @@ function PaymentPage() {
               </div>
             ) : type === "transportation" ? (
               <div>
-                <Card
-                  style={{
-                    maxWidth: "600px",
-                    margin: "20px auto",
-                    borderRadius: "8px",
-                  }}
-                >
-                  <Space
-                    direction="vertical"
-                    size="middle"
-                    style={{ display: "flex" }}
-                  >
-                    <Title level={3}>Booked Details</Title>
-                    <p>
-                      <strong>Price:</strong> {transportationsData.price}
-                      {"  "}
-                      {transportationsData.currency}
-                    </p>
-                    <p>
-                      <strong>Departure Date:</strong>{" "}
-                      {transportationsData.departureDate}
-                    </p>
-                    <p>
-                      <strong>Arrival Date:</strong>{" "}
-                      {transportationsData.arrivalDate}
-                    </p>
-                    <p>
-                      <strong>Company Name:</strong>{" "}
-                      {transportationsData.companyName}
-                    </p>
-                    {/* <p><strong>Departure City:</strong> {transportationsData.departureCity}</p> */}
-                    <p>
-                      <strong>Transfer Type:</strong>{" "}
-                      {transportationsData.transferType}
-                    </p>
-                  </Space>
+                <Card style={styles.left}>
+                  <TransportationCardDetailed transportation={transportationsData} />
                 </Card>
-                <Form>
+                <Form style={styles.right}>
                   <h1>Enter Payment Details</h1>
 
                   <p>Email</p>
@@ -971,40 +731,13 @@ function PaymentPage() {
               </div>
             ) : type === "product" && cartData ? (
               <div>
-                <Card
-                  style={{
-                    maxWidth: "600px",
-                    margin: "20px auto",
-                    borderRadius: "8px",
-                  }}
-                >
-                  <Space
-                    direction="vertical"
-                    size="middle"
-                    style={{ display: "flex" }}
-                  >
-                    <Title level={3}>Booked Details</Title>
-                    <p>
-                      <strong>Order Details:</strong>{" "}
-                    </p>
-                    {cartData && cartData.products && cartData.products.length > 0 ? (
-                      cartData.products.map((product, index) => (
-                        <div key={index} style={{ marginBottom: "10px" }}>
-                          <p><strong>Product {index + 1}:</strong></p>
-                          <p><strong>Name:</strong> {product.product.name}</p>
-                          <p><strong>Price:</strong> {product.product.price}</p>
-                          <p><strong>Quantity:</strong> {product.quantity}</p>
-                        </div>
-                      ))
-                    ) : (
-                      <p>No products in the cart.</p>
-                    )}
-                  </Space>
+                <Card style={styles.left}>
+                  <CartCardDetailed cartData={cartData} />
                 </Card>
-                <Form>
+                <Form style={styles.right}>
                   <h1>Payment Details</h1>
 
-                  <AddressDropdown onAddressSelect={handleAddressSelect} onAddAddress={addNewAddress}/>
+                  <AddressDropdown onAddressSelect={handleAddressSelect} onAddAddress={addNewAddress} />
                   {/* {selectedAddress && <p>Selected Address: 
                     {`${selectedAddress.street}, ${selectedAddress.city}, ${selectedAddress.state || ""}, ${selectedAddress.country} (${selectedAddress.postalCode})`}
                   </p>} */}
@@ -1063,7 +796,7 @@ function PaymentPage() {
             <p>Loading booking details...</p>
           )}
         </div>
-        <form style={{ display: "flex", width: "100%" }}>
+        <form style={{ ...styles.right, display: "flex", flexDirection: "row" }}>
           <button
             type="submit"
             onClick={handleVisaSubmit}
@@ -1087,21 +820,22 @@ function PaymentPage() {
           >
             Wallet
           </button>
-          {type === "product" && cartData && 
-          <button
-            type="submit"
-            onClick={handleCashOnDelivery}
-            style={{
-              padding: "10px",
-              fontSize: "1rem",
-              flex: 1, // Makes this button take equal space as the first one
-              marginLeft: "1em"
-            }}
-          >
-            Cash on Delivery
-          </button>
-          }
+          {type === "product" && cartData && (
+            <button
+              type="submit"
+              onClick={handleCashOnDelivery}
+              style={{
+                padding: "10px",
+                fontSize: "1rem",
+                flex: 1, // Makes this button take equal space as the first one
+                marginLeft: "1em", // Adds space between this button and the others
+              }}
+            >
+              Cash on Delivery
+            </button>
+          )}
         </form>
+
         <Help />
       </div>
     </div>

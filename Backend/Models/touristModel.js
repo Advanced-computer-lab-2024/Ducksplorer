@@ -7,15 +7,15 @@ const touristSchema = new Schema(
       type: String,
       required: true,
     },
-    userName:{
-        type : String,
-        required : true,
-        unique : true,
-        immutable : true
+    userName: {
+      type: String,
+      required: true,
+      unique: true,
+      immutable: true,
     },
-    password:{
-        type : String ,
-        required :true
+    password: {
+      type: String,
+      required: true,
     },
     mobileNumber: {
       type: Number,
@@ -26,12 +26,16 @@ const touristSchema = new Schema(
       required: true,
       default: "Egyptian", //error (Lazem tet7at gowa quotations)
     },
-    DOB: 
-       {type: Date, 
-        default: Date.now , 
-        get: (date)=> date.toLocaleDateString('en-GB'), 
-        required: true}
-    ,
+    DOB: {
+      type: Date,
+      default: Date.now,
+      get: (date) => date.toLocaleDateString("en-GB"),
+      required: true,
+    },
+    hasReceivedBirthdayPromo: {
+      type: Boolean,
+      default: false,
+    },
     employmentStatus: {
       required: true,
       type: String,
@@ -49,31 +53,31 @@ const touristSchema = new Schema(
       },
     ],
     wallet: {
-        type: Number,
-        required: true,
-        default: 0,
-        immutable: false // This makes the field read-only
-    },
-    level:{
       type: Number,
-      default: 1
+      required: true,
+      default: 0,
+      immutable: false, // This makes the field read-only
     },
-    points:{
+    level: {
       type: Number,
-      default:0
+      default: 1,
     },
-    favouriteCategory : {
-      required : false,
-      type : String,
-      default : "Category"
+    points: {
+      type: Number,
+      default: 0,
     },
-    tagPreferences : {
-        type : Array,
-        required : false
+    favouriteCategory: {
+      required: false,
+      type: String,
+      default: "Category",
     },
-    historicalPlacestags : {
-        type : Array,
-        required : false
+    tagPreferences: {
+      type: Array,
+      required: false,
+    },
+    historicalPlacestags: {
+      type: Array,
+      required: false,
     },
     addresses: [
       {
@@ -84,9 +88,9 @@ const touristSchema = new Schema(
         country: String,
       },
     ],
-  
-},{timestamps: true})
-
+  },
+  { timestamps: true }
+);
 
 const Tourist = mongoose.model("Tourist", touristSchema);
 

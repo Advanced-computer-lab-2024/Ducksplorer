@@ -18,8 +18,8 @@ const promoCodeSchema = new Schema(
     }, // Promo code availability
     expiryDate: {
       type: Date,
-      required: true
-    }, 
+      required: true,
+    },
   },
   { timestamps: true }
 );

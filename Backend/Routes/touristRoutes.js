@@ -25,7 +25,12 @@ const {
   removeFromWishlist,
 } = require("../Controllers/wishlistController");
 
-const{placeOrder, removeProductFromOrder, getOrdersByUsername} = require("../Controllers/orderController")
+const {
+  placeOrder,
+  removeProductFromOrder,
+  getOrdersByUsername,
+} = require("../Controllers/orderController");
+
 const {
   createBooking,
   viewMyUpcomingBookings,
@@ -51,10 +56,11 @@ const {
   getMyOrders,
   getAddresses,
   addAddress,
-  emptyCart
+  emptyCart,
 } = require("../Controllers/Products/cartController");
 
 const { validatePromoCode } = require("../Controllers/promoCodeController");
+const { bod } = require("../Controllers/touristAccount");
 const router = express.Router();
 
 router.get("/getproducts", getProducts);
@@ -91,7 +97,7 @@ router.get("/myPurchases/:buyer", getMyPurchases);
 // router.get("/myOrder", getMyOrder);
 router.get("/groupedPurchases/:buyer", getGroupedPurchases);
 router.get("/orderDetails/:orderNumber", getPurchasesByOrderNumber);
-router.get("/getOrderProducts/:productId",getOrderProducts);
+router.get("/getOrderProducts/:productId", getOrderProducts);
 router.delete("/cancelOrder/:username/:orderNumber", cancelOrder);
 
 router.get("/myOrders/:buyer", getMyOrders);

@@ -1,28 +1,35 @@
-//This page from inside RUDHistoricalPlace
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { message } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon.js";
-
+import TouristNavBar from "../../Components/TouristNavBar.js";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 import {
   Box,
-  Table,
   Typography,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
+  Grid,
+  Container,
+  Button,
 } from "@mui/material";
+import MuseumHistoricalPlaceCard from "../../Components/MuseumHistoricalPlaceCard";
+import HistoricalPlaceSearch from "../../Components/MuseumHistoricalPlaceComponent/HistoricalPlaceSearch";
+import HistoricalPlaceFilterComponent from "../../Components/MuseumHistoricalPlaceComponent/HistoricalPlaceFilterComponent";
+import Input from "@mui/joy/Input";
 
 const UpcomingHistoricalPlaces = () => {
   const [upcomingHistoricalPlaces, setUpcomingHistoricalPlaces] = useState([]);
-
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
+  const [searchQuery, setSearchQuery] = useState(""); // Add this line
+  const navigate = useNavigate();
+
+  const handleCurrencyChange = (rates, selectedCurrency) => {
+    setExchangeRates(rates);
+    setCurrency(selectedCurrency);
+  };
+
   useEffect(() => {
     axios
       .get(
@@ -40,81 +47,56 @@ const UpcomingHistoricalPlaces = () => {
       });
   }, []);
 
-  const handleCurrencyChange = (rates, selectedCurrency) => {
-    setExchangeRates(rates);
-    setCurrency(selectedCurrency);
+  const handleSearchResults = (searchResults) => {
+    setUpcomingHistoricalPlaces(searchResults);
+  };
+
+  const handleFilterResults = (filterResults) => {
+    setUpcomingHistoricalPlaces(filterResults);
+  };
+
+  const goToUpcomingPage = () => {
+    navigate("/UpcomingHistoricalPlaces");
   };
 
   return (
-    <Box sx={{ p: 6, maxWidth: 1200, overflowY: "visible", height: "100vh" }}>
-      <Link to="/HistoricalPlaceTouristPov"> Back </Link>
-      <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-        <Typography variant="h4">Upcoming Historical Place Visits</Typography>
-      </Box>
+    <Box
+      sx={{
+        height: "100vh",
+        backgroundColor: "#ffffff",
+        paddingTop: "2vh", // Adjust for navbar height
+      }}
+    >
+      <TouristNavBar />
+      <TouristSidebar />
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Typography variant="h4">
+            Upcoming Historical Place Visits
+          </Typography>
+        </Box>
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Description</TableCell>
-              <TableCell>Location</TableCell>
-              <TableCell>Pictures</TableCell>
-              <TableCell>
-                Ticket Price
-                <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
-              </TableCell>
-              <TableCell>Opening Time</TableCell>
-              <TableCell>Closing Time</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell>Tags</TableCell>
-              <TableCell>Created By</TableCell>
-            </TableRow>
-          </TableHead>
 
-          <TableBody>
-            {upcomingHistoricalPlaces.map((upcomingHistoricalPlace) => (
-              <TableRow key={upcomingHistoricalPlace._id}>
-                <TableCell>{upcomingHistoricalPlace.description}</TableCell>
-                <TableCell>{upcomingHistoricalPlace.location}</TableCell>
-                <TableCell>
-                  <img
-                    src={upcomingHistoricalPlace.pictures}
-                    alt="Historical Place"
-                    style={{
-                      width: "100px",
-                      height: "auto",
-                      objectFit: "cover",
-                    }}
-                  />
-                </TableCell>
-                <TableCell>
-                  {(
-                    upcomingHistoricalPlace.ticketPrices *
-                    (exchangeRates[currency] || 1)
-                  ).toFixed(2)}{" "}
-                  {currency}
-                </TableCell>
-                <TableCell>{upcomingHistoricalPlace.openingTime}</TableCell>
-                <TableCell>{upcomingHistoricalPlace.closingTime}</TableCell>
-                <TableCell>
-                  {upcomingHistoricalPlace.HistoricalPlaceDate}
-                </TableCell>
-                <TableCell>
-                  {upcomingHistoricalPlace.HistoricalPlaceName}
-                </TableCell>
-                <TableCell>
-                  {upcomingHistoricalPlace.HistoricalPlaceCategory}
-                </TableCell>
-                <TableCell>{upcomingHistoricalPlace.tags.join(", ")}</TableCell>
-                <TableCell>{upcomingHistoricalPlace.createdBy}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Help />
+        <Grid container spacing={3}>
+          {Array.isArray(upcomingHistoricalPlaces) && upcomingHistoricalPlaces.length > 0 ? (
+            upcomingHistoricalPlaces.map((place) => (
+              <Grid item xs={12} sm={6} md={4} key={place._id}>
+                <MuseumHistoricalPlaceCard place={place} />
+              </Grid>
+            ))
+          ) : (
+            <Grid item xs={12}>
+              <Typography variant="body1" color="textSecondary" align="center">
+                No Historical Places available
+              </Typography>
+            </Grid>
+          )}
+        </Grid>
+
+        <Box sx={{ mt: 4, textAlign: "center" }}>
+          <Help />
+        </Box>
+      </Container>
     </Box>
   );
 };

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { message } from "antd";
-import { Typography } from "@mui/material";
-import { Button } from "@mui/material";
-import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
+import { Typography, Button, Box, Grid, Container } from "@mui/material";
+import ProductCard from "../../Components/Products/ProductCard";
 import Help from "../../Components/HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 import { useNavigate } from "react-router-dom";
 
 function TouristProducts() {
@@ -21,63 +21,73 @@ function TouristProducts() {
       })
       .catch((error) => {
         console.error("There was an error fetching the products!", error);
+        message.error("Failed to fetch products.");
       });
   }, []);
 
   const handleBackButtonClick = () => {
-    window.history.back();
+    navigate(-1);
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        height: "100vh",
+        backgroundColor: "#ffffff",
+        paddingTop: "64px",
+      }}
+    >
       <TouristNavBar />
-      <Button onClick={handleBackButtonClick}>Back</Button>
-      <div
-        style={{
-          padding: "20px",
-          margin: "auto",
-          height: "100vh",
-        }}
-      >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            overflowY: "visible",
-            padding: "10px",
-            marginTop: "20px",
-            gridGap: "40px",
+      <TouristSidebar />
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Typography variant="h4" fontWeight="700">
+            Available Products
+          </Typography>
+        </Box>
+
+        <Button
+          onClick={handleBackButtonClick}
+          variant="contained"
+          sx={{
+            backgroundColor: "#1a237e",
+            color: "#fff",
+            fontWeight: "bold",
+            borderRadius: "8px",
+            marginBottom: "20px",
+            "&:hover": {
+              backgroundColor: "#0d47a1",
+            },
           }}
         >
-          {/* Render the filtered products using the ProductCard component */}
+          Back
+        </Button>
+
+        <Grid container spacing={3}>
           {products.filter((product) => product.isArchived !== true).length >
           0 ? (
             products
               .filter((product) => product.isArchived !== true)
               .map((product) => (
-                <div
-                  key={product._id}
-                  style={{
-                    position: "relative",
-                    marginBottom: "20px",
-                    height: "60vh",
-                    width: "30vw",
-                    maxHeight: "100%",
-                  }}
-                >
-                  <ProductCard product={product} showRating={true} showAddToCart={true} />
-
-                </div>
+                <Grid item xs={12} sm={6} md={4} key={product._id}>
+                  <ProductCard
+                    product={product}
+                    showRating={true}
+                    showAddToCart={true}
+                  />
+                </Grid>
               ))
           ) : (
-            <Typography variant="body1" style={{ marginTop: "20px" }}>
-              No products found under the specified name.
-            </Typography>
+            <Grid item xs={12}>
+              <Typography variant="body1" color="textSecondary" align="center">
+                No products found.
+              </Typography>
+            </Grid>
           )}
-        </div>
+        </Grid>
         <Help />
-      </div>
-    </>
+      </Container>
+    </Box>
   );
 }
 

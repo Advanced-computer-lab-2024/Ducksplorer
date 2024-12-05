@@ -2,15 +2,18 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { message } from "antd";
-import { Typography, Button } from "@mui/material";
-import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
+import { Typography, Button, Box, Grid, Container } from "@mui/material";
+import ProductCard from "../../Components/Products/ProductCard";
 import Help from "../../Components/HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar";
+import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
+import { useNavigate } from "react-router-dom";
 
 function MyPurchases() {
   const [purchases, setPurchases] = useState([]);
   const [products, setProducts] = useState([]); // Use state for products
   const { orderNumber } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPurchases = async () => {
@@ -60,41 +63,50 @@ function MyPurchases() {
   };
 
   const handleBackButtonClick = () => {
-    window.history.back();
+    navigate(-1);
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        height: "100vh",
+        backgroundColor: "#ffffff",
+        paddingTop: "64px",
+      }}
+    >
       <TouristNavBar />
-      <Button onClick={handleBackButtonClick}>Back</Button>
-      <div
-        style={{
-          padding: "20px",
-          margin: "auto",
-          height: "100vh",
-        }}
-      >
+      <TouristSidebar />
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Typography variant="h4" fontWeight="700">
+            My Purchases
+          </Typography>
+        </Box>
+
         <h2>
           Order Number: {orderNumber}
         </h2>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            overflowY: "visible",
-            padding: "10px",
-            marginTop: "20px",
+        <Button
+          onClick={handleBackButtonClick}
+          variant="contained"
+          sx={{
+            backgroundColor: "#1a237e",
+            color: "#fff",
+            fontWeight: "bold",
+            borderRadius: "8px",
+            marginBottom: "20px",
+            "&:hover": {
+              backgroundColor: "#0d47a1",
+            },
           }}
         >
-          {products.length > 0 ? (
+          Back
+        </Button>
+
+        <Grid container spacing={3}>
+          {products && products.length > 0 ? (
             products.map((item, index) => (
-              <div
-                key={item._id || index} // Use _id or index as fallback
-                style={{
-                  maxWidth: "600px",
-                  margin: "auto",
-                }}
-              >
+              <Grid item xs={12} sm={6} md={4} key={item._id || index}>
                 <ProductCard
                   product={item} // Pass the full product object
                   productID={item._id}
@@ -103,17 +115,21 @@ function MyPurchases() {
                   showRating={true}
                   showAverageRating={true}
                   hideWishlist={true}
-                  showPurchase={true} 
+                  showPurchase={true}
                 />
-              </div>
+              </Grid>
             ))
           ) : (
-            <h2>Your cart is empty!</h2>
+            <Grid item xs={12}>
+              <Typography variant="body1" color="textSecondary" align="center">
+                No products found under the specified name.
+              </Typography>
+            </Grid>
           )}
-        </div>
+        </Grid>
         <Help />
-      </div>
-    </>
+      </Container>
+    </Box>
   );
 }
 

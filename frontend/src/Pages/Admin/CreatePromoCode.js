@@ -18,7 +18,7 @@ function CreatePromoCode() {
         {
           code,
           value,
-          date
+          date,
         }
       );
       if (response.status === 200) {

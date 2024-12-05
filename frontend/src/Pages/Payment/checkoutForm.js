@@ -31,12 +31,30 @@ export default function CheckoutForm() {
     e.preventDefault();
 
     if (!stripe || !elements) {
+      message.error("Fields are not loaded.");
       return;
     }
-
     setIsProcessing(true);
 
     try {
+      // Validate the card fields before proceeding
+      const { error: cardError } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          // This prevents actual payment from happening yet
+          return_url: `${window.location.origin}/completion`,
+        },
+        redirect: "if_required",
+      });
+
+      if (cardError) {
+        setMessage1(cardError.message); // Display card error
+        message.error(cardError.message); // Show notification
+        setIsProcessing(false);
+        return; // Stop here if card validation fails
+      }
+
+      // Card fields are valid; proceed with payment intent creation and OTP
       const response = await fetch(
         "http://localhost:8000/payment/create-payment-intent",
         {
@@ -49,19 +67,68 @@ export default function CheckoutForm() {
       );
 
       const data = await response.json();
-      console.log(data.clientSecret); //undefined
-      if (data.sent) {
+      console.log(data);
+      console.log(data.clientSecret);
+      const storedClientSecret = localStorage.getItem("clientSecret");
+      if (storedClientSecret) {
         setShowOtpPopup(true);
         setMessage1("OTP sent to your email. Please enter it to confirm.");
+        message.success("OTP sent to your email.");
       } else {
         setMessage1("Failed to create payment intent.");
       }
     } catch (error) {
       setMessage1("An error occurred during payment creation.");
       console.error("Error:", error);
+    } finally {
+      setIsProcessing(false);
     }
+  };
 
-    setIsProcessing(false);
+  const sendConfirmationEmail = async () => {
+    try {
+      // Retrieve necessary data from localStorage
+      const email = localStorage.getItem("paymentEmail");
+      const itemId =
+        localStorage.getItem("activityId") ||
+        localStorage.getItem("itineraryId");
+      const type = localStorage.getItem("type");
+      // const hotel = localStorage.getItem("hotelBooking"); // Example: add this if relevant
+      // const flight = localStorage.getItem("flightBooking"); // Example: add this if relevant
+      // const transportation = localStorage.getItem("transportationBooking"); // Example: add this if relevant
+      console.log("email,item,type:", email, itemId, type);
+      // Make a POST request to the backend
+      const response = await fetch(
+        "http://localhost:8000/payment/send-confirmation",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            itemId,
+            type,
+            // hotel,
+            // flight,
+            // transportation,
+          }),
+        }
+      );
+      console.log(response);
+
+      const result = await response.json();
+      if (response.ok) {
+        message.success("Confirmation email sent successfully!");
+        console.log("Email Response:", result);
+      } else {
+        message.error("Failed to send confirmation email.");
+        console.error("Error sending email:", result);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      message.error("An error occurred while sending the email.");
+    }
   };
 
   const handleOtpSubmit = async () => {
@@ -69,7 +136,6 @@ export default function CheckoutForm() {
       setMessage1("Please enter the OTP.");
       return;
     }
-
     try {
       const response = await fetch(
         "http://localhost:8000/payment/confirm-otp",
@@ -117,8 +183,9 @@ export default function CheckoutForm() {
       //       return_url: `${window.location.origin}/completion`,
       //     },
       //  });
+      // }
 
-      if (true) {
+      if (result.message === "OTP verified") {
         const userJson = localStorage.getItem("user");
         if (!userJson) {
           message.error("User is not logged in.");
@@ -199,8 +266,9 @@ export default function CheckoutForm() {
         const pointsResult = await pointsResponse.json();
         message.success("Payment completed and loyalty points updated");
         console.log("Points Result", pointsResult);
+        navigate("/myBookings");
+        sendConfirmationEmail();
       }
-      navigate("/myBookings");
     } catch (error) {
       setMessage1("Failed to confirm OTP.");
       console.error("Error:", error);

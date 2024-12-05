@@ -28,6 +28,7 @@ import Sidebar from "../../Components/Sidebars/Sidebar";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
+import AdminNavbar from "../../Components/TopNav/Adminnavbar";
 
 const ApproveUsers = () => {
   const [pendingUsers, setPendingUsers] = useState([]);
@@ -41,6 +42,7 @@ const ApproveUsers = () => {
   });
 
   useEffect(() => {
+    setLoading(true)
     axios
       .get("http://localhost:8000/admin/getpending")
       .then((response) => {
@@ -52,7 +54,8 @@ const ApproveUsers = () => {
       })
       .catch((error) => {
         console.error("There was an error fetching the pending users!", error);
-      });
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const handleApprove = (username) => {
@@ -68,7 +71,7 @@ const ApproveUsers = () => {
       .catch((error) => {
         message.error(
           error.response?.data?.error ||
-            "There was an error approving the user!"
+          "There was an error approving the user!"
         );
         console.error("Error approving user:", error);
       })
@@ -129,42 +132,123 @@ const ApproveUsers = () => {
     setConfirmDialog({ open: false, action: null, userName: "" });
   };
 
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh", // Full screen height
+        }}
+      >
+        <CircularProgress size={60} thickness={4} />
+        <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
+          Loading pending users...
+        </Typography>
+      </Box>
+    );
+  }
+
+  if ((!Array.isArray(pendingUsers)) || (pendingUsers.length === 0)) {
+    return <p>No pending users available.</p>;
+  }
+
   return (
-    <>
+    <Box
+      sx={{
+        width: "100%", // Full width of the viewport
+        minHeight: "100vh", // Full height of the viewport
+        background: "linear-gradient(to bottom, #fffff, #eaeaea)", // Gradient background
+        paddingTop: "64px", // Adjust for navbar height
+        overflow: "hidden", // Disable scroll bar
+        display: "flex",
+        justifyContent: "center", // Center the content horizontally
+        padding: "16px",
+        height: "5vh"
+      }}
+    >
       <Sidebar />
-      <Box sx={{ p: 6 }}>
+
+      <Box
+        sx={{
+          maxWidth: "1400px", // Increase max width for a wider layout
+          width: "100%", // Full width on smaller screens
+          backgroundColor: "#ffffff", // White background for the content
+          borderRadius: "12px", // Rounded corners
+          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
+          padding: "32px", // Inner padding
+          overflow: "hidden"
+        }}
+      >
+        <AdminNavbar />
+        {/* Page Title */}
         <Box
           sx={{
             display: "flex",
             justifyContent: "center",
-            mb: 3,
-            overflowY: "visible",
-            height: "100vh",
+            marginBottom: "24px",
           }}
         >
-          <Typography variant="h4">Pending Users</Typography>
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: "bold",
+              color: "#3f51b5", // Primary color
+              textAlign: "center",
+            }}
+          >
+            Pending Users
+          </Typography>
         </Box>
+
+        {/* Table Container */}
         <TableContainer
           component={Paper}
           sx={{
-            maxWidth: "100%",
-            margin: "0 auto",
+            borderRadius: "12px",
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Table shadow
           }}
         >
           <Table>
-            <TableHead>
+            <TableHead
+              sx={{
+                backgroundColor: "#3f51bf", // Header background
+              }}
+            >
               <TableRow>
-                <TableCell>User Name</TableCell>
-                <TableCell>Role</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Approve</TableCell>
-                <TableCell>Reject</TableCell>
-                <TableCell>Files</TableCell>
+                <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                  User Name
+                </TableCell>
+                <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                  Role
+                </TableCell>
+                <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                  Status
+                </TableCell>
+                <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                  Approve
+                </TableCell>
+                <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                  Reject
+                </TableCell>
+                <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                  Files
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {pendingUsers.map((user) => (
-                <TableRow key={user._id}>
+              {pendingUsers.map((user, index) => (
+                <TableRow
+                  key={user._id}
+                  sx={{
+                    backgroundColor: index % 2 === 0 ? "#ffffff" : "white", // Alternate row colors
+                    "&:hover": {
+                      backgroundColor: "#f1f1f1", // Highlight on hover
+                    },
+                  }}
+                >
                   <TableCell>{user.userName}</TableCell>
                   <TableCell>{user.role}</TableCell>
                   <TableCell>{user.status}</TableCell>
@@ -215,16 +299,42 @@ const ApproveUsers = () => {
 
         {/* File List Display */}
         {selectedUser && (
-          <Box sx={{ mt: 4 }}>
-            <Typography variant="h6">Files for {selectedUser}</Typography>
+          <Box
+            sx={{
+              marginTop: "24px",
+              padding: "16px",
+              backgroundColor: "#f9f9f9",
+              borderRadius: "8px",
+              boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            <Typography variant="h6" sx={{ marginBottom: "16px" }}>
+              Files for {selectedUser}
+            </Typography>
             <List>
               {userFiles.map((file, index) => (
-                <ListItem key={index}>
-                  <Typography>{file.filename}</Typography>
+                <ListItem
+                  key={index}
+                  sx={{
+                    padding: "8px",
+                    borderBottom: "1px solid #e0e0e0",
+                    "&:last-child": {
+                      borderBottom: "none",
+                    },
+                  }}
+                >
+                  <Typography sx={{ flex: 1 }}>{file.filename}</Typography>
                   <Link
                     href={file.url}
                     target="_blank"
                     rel="noopener noreferrer"
+                    sx={{
+                      color: "#3f51b5",
+                      textDecoration: "none",
+                      "&:hover": {
+                        textDecoration: "underline",
+                      },
+                    }}
                   >
                     View File
                   </Link>
@@ -235,16 +345,38 @@ const ApproveUsers = () => {
         )}
 
         {/* Loading Spinner */}
-        {loading && <CircularProgress sx={{ mt: 2 }} />}
+        {loading && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "16px",
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
 
         {/* Confirmation Dialog */}
         <Dialog
           open={confirmDialog.open}
           onClose={() => setConfirmDialog({ ...confirmDialog, open: false })}
+          sx={{
+            "& .MuiDialog-paper": {
+              borderRadius: "12px",
+              padding: "16px",
+            },
+          }}
         >
-          <DialogTitle>{`Confirm ${
-            confirmDialog.action === "approve" ? "Approval" : "Rejection"
-          }`}</DialogTitle>
+          <DialogTitle
+            sx={{
+              fontWeight: "bold",
+              fontSize: "20px",
+              color: "#f44336",
+            }}
+          >
+            Confirm {confirmDialog.action === "approve" ? "Approval" : "Rejection"}
+          </DialogTitle>
           <DialogContent>
             <DialogContentText>
               Are you sure you want to {confirmDialog.action} this user?
@@ -252,20 +384,33 @@ const ApproveUsers = () => {
           </DialogContent>
           <DialogActions>
             <Button
-              onClick={() =>
-                setConfirmDialog({ ...confirmDialog, open: false })
-              }
-              color="secondary"
+              onClick={() => setConfirmDialog({ ...confirmDialog, open: false })}
+              sx={{
+                backgroundColor: "#e0e0e0",
+                color: "#333",
+                "&:hover": { backgroundColor: "#d6d6d6" },
+              }}
             >
               Cancel
             </Button>
-            <Button onClick={handleConfirmAction} color="primary">
+            <Button
+              onClick={handleConfirmAction}
+              sx={{
+                backgroundColor: confirmDialog.action === "approve" ? "#4caf50" : "#f44336",
+                color: "white",
+                "&:hover": {
+                  backgroundColor:
+                    confirmDialog.action === "approve" ? "#388e3c" : "#d32f2f",
+                },
+              }}
+            >
               Confirm
             </Button>
           </DialogActions>
         </Dialog>
       </Box>
-    </>
+    </Box>
+
   );
 };
 
