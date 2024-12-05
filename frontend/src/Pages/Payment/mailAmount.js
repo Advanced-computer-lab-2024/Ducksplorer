@@ -11,7 +11,7 @@ import FlightCardDetailed from "../../Components/flightCardDetailed.js";
 import HotelCardDetailed from "../../Components/hotelCardDetailed.js";
 import CartCardDetailed from "../../Components/cartCardDetailed.js";
 import TransportationCardDetailed from "../../Components/transportationCardDetailed.js";
-
+import TouristNavBar from "../../Components/TouristNavBar.js";
 const { Title } = Typography;
 const { Option } = Select;
 
@@ -352,6 +352,7 @@ function PaymentPage() {
         height: "120vh",
       }}
     >
+      <TouristNavBar />
       <Button
         onClick={() => navigate(-1)}
         style={{ marginLeft: "0%" }} // Add margin to position the button to the left

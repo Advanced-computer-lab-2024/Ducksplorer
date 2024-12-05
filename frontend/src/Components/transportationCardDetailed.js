@@ -5,8 +5,7 @@ import CardContent from "@mui/joy/CardContent";
 import Typography from "@mui/joy/Typography";
 import Chip from "@mui/joy/Chip";
 
-
-export default function HotelCardDetailed({ transportation }) {
+export default function TransportationCardDetailed({ transportation }) {
     return (
         <Card variant="outlined" sx={{ width: "100%", height: "auto" }}>
             <AspectRatio ratio="2">
@@ -19,7 +18,7 @@ export default function HotelCardDetailed({ transportation }) {
 
             <CardContent>
                 <Typography level="h4" sx={{ fontWeight: "bold" }}>
-                    {transportation.hotelName || "Unnamed Hotel"}
+                    {transportation.companyName}
                 </Typography>
                 <p>
                     <strong>Departure Date:</strong>{" "}

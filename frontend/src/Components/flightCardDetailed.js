@@ -13,7 +13,7 @@ export default function FlightCardDetails({ flightsData }) {
         <Card variant="outlined" sx={{ width: "100%", height: "auto" }}>
             <AspectRatio ratio="2">
                 <img
-                    src={flightsData.image || "https://picsum.photos/200/300"}
+                    src="/flight.png"
                     alt={flightsData.name || "Flight Image"}
                     loading="lazy"
                 />
@@ -21,7 +21,7 @@ export default function FlightCardDetails({ flightsData }) {
 
             <CardContent>
                 <Typography level="h4" sx={{ fontWeight: "bold" }}>
-                    {flightsData.name || "Unnamed Flight"}
+                    {flightsData.companyName || "Unnamed Flight"}
                 </Typography>
                 <p>
                     <strong>Departure Date:</strong>{" "}
@@ -30,9 +30,9 @@ export default function FlightCardDetails({ flightsData }) {
                 <p>
                     <strong>Arrival Date:</strong> {flightsData.arrivalDate}
                 </p>
-                <p>
+                {/* <p>
                     <strong>Company Name:</strong> {flightsData.companyName}
-                </p>
+                </p> */}
                 <p>
                     <strong>Departure City:</strong>{" "}
                     {flightsData.departureCity}
