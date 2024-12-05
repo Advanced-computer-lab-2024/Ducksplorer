@@ -14,6 +14,32 @@ import TransportationCardDetailed from "../../Components/transportationCardDetai
 import TouristNavBar from "../../Components/TouristNavBar.js";
 const { Title } = Typography;
 const { Option } = Select;
+const styles = {
+  container: {
+    display: "flex", // Divide into left and right sections
+    flexDirection: "row", // Horizontal layout (side by side)
+    width: "100%",
+    height: "100vh", // Full height of the viewport
+  },
+  left: {
+    flex: 1, // Left section takes up equal space
+    display: "flex",
+    width: "100%",
+    flexDirection: "column", // Stack items vertically
+    gap: "20px", // Space between items
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+    minHeight: "70vh"
+  },
+  right: {
+    flex: 1, // Right section takes up equal space
+    backgroundColor: "#fff",
+    padding: "20px",
+    display: "flex",
+    flexDirection: "column", // Stack items vertically
+    gap: "20px", // Space between items
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+  },
+};
 
 
 function PaymentPage() {
@@ -349,16 +375,10 @@ function PaymentPage() {
     <div
       style={{
         overflowY: "visible",
-        height: "120vh",
+        height: "100vh",
       }}
     >
       <TouristNavBar />
-      <Button
-        onClick={() => navigate(-1)}
-        style={{ marginLeft: "0%" }} // Add margin to position the button to the left
-      >
-        Go Back
-      </Button>
       <div
         style={{
           display: "flex",
@@ -379,17 +399,14 @@ function PaymentPage() {
             (transportationsData && type === "transportation") ||
             (cartData && type === "product") ? (
             type === "itinerary" ? (
-              <div>
-                <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
+              <div style={styles.left}>
+                {/* <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}> */}
+                <Card>
                   <ItineraryCardDetailed itinerary={itineraryData} />
                 </Card>
 
-                <Form
-                // form={form}
-                // onFinish={handleVisaSubmit}
-                // layout="vertical"
-                // initialValues={{ dateTime: null }}
-                >
+                <Form style={styles.right}>
+
                   <Form.Item
                     name="dateTime"
                     label="Date and Time"
@@ -486,10 +503,10 @@ function PaymentPage() {
               </div>
             ) : type === "activity" && activityData ? (
               <div>
-                <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
+                <Card style={styles.left}>
                   <ActivityCardDetailed activity={activityData} />
                 </Card>
-                <Form>
+                <Form style={styles.right}>
                   <h1>Payment Details</h1>
 
                   <p>Email</p>
@@ -543,10 +560,10 @@ function PaymentPage() {
               </div>
             ) : type === "flight" ? (
               <div>
-                <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
+                <Card style={styles.left}>
                   <FlightCardDetailed flightsData={flightsData} />
                 </Card>
-                <Form>
+                <Form style={styles.right}>
                   <h1>Enter Payment Details</h1>
 
                   <p>Email</p>
@@ -599,10 +616,10 @@ function PaymentPage() {
               </div>
             ) : type === "hotel" ? (
               <div>
-                <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
+                <Card style={styles.left}>
                   <HotelCardDetailed hotelsData={hotelsData} />
                 </Card>
-                <Form>
+                <Form style={styles.right}>
                   <h1>Enter Payment Details</h1>
 
                   <p>Email</p>
@@ -656,10 +673,10 @@ function PaymentPage() {
               </div>
             ) : type === "transportation" ? (
               <div>
-                <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
+                <Card style={styles.left}>
                   <TransportationCardDetailed transportation={transportationsData} />
                 </Card>
-                <Form>
+                <Form style={styles.right}>
                   <h1>Enter Payment Details</h1>
 
                   <p>Email</p>
@@ -714,10 +731,10 @@ function PaymentPage() {
               </div>
             ) : type === "product" && cartData ? (
               <div>
-                <Card style={{ maxWidth: '600px', margin: '20px auto', borderRadius: '8px' }}>
+                <Card style={styles.left}>
                   <CartCardDetailed cartData={cartData} />
                 </Card>
-                <Form>
+                <Form style={styles.right}>
                   <h1>Payment Details</h1>
 
                   <AddressDropdown onAddressSelect={handleAddressSelect} onAddAddress={addNewAddress} />
@@ -779,7 +796,7 @@ function PaymentPage() {
             <p>Loading booking details...</p>
           )}
         </div>
-        <form style={{ display: "flex", width: "100%" }}>
+        <form style={{ ...styles.right, display: "flex", flexDirection: "row" }}>
           <button
             type="submit"
             onClick={handleVisaSubmit}
@@ -803,7 +820,7 @@ function PaymentPage() {
           >
             Wallet
           </button>
-          {type === "product" && cartData &&
+          {type === "product" && cartData && (
             <button
               type="submit"
               onClick={handleCashOnDelivery}
@@ -811,13 +828,14 @@ function PaymentPage() {
                 padding: "10px",
                 fontSize: "1rem",
                 flex: 1, // Makes this button take equal space as the first one
-                marginLeft: "1em"
+                marginLeft: "1em", // Adds space between this button and the others
               }}
             >
               Cash on Delivery
             </button>
-          }
+          )}
         </form>
+
         <Help />
       </div>
     </div>
