@@ -7,6 +7,7 @@ import {
   Box,
   Typography,
   Autocomplete,
+  CircularProgress,
 } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -85,10 +86,12 @@ const FlightBookingForm = () => {
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
   const [seats, setSeats] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSearch = async () => {
     if (validateFields()) {
+      setLoading(true);
       const formattedDepartureDate = departureDate.toISOString().split("T")[0]; // Format date as yyyy-mm-dd
       const requestBody = {
         originCode: origin.code,
@@ -123,6 +126,8 @@ const FlightBookingForm = () => {
       } catch (error) {
         console.error("Error fetching flights:", error);
         message.error("Failed to fetch flights. Please try again.");
+      } finally {
+        setLoading(false);
       }
     } else {
       message.error("Error in the Form");
@@ -220,8 +225,9 @@ const FlightBookingForm = () => {
                   sx={{ backgroundColor: "#ff9933" , marginTop: "30px"}}
                   onClick={handleSearch}
                   fullWidth
+                  disabled={loading}
                 >
-                  Search
+                  {loading ? <CircularProgress  sx={{color:"#ff9933"}}size={24} /> : "Search"}
                 </Button>
               </Grid>
             </Grid>

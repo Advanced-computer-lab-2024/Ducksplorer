@@ -7,6 +7,7 @@ import {
   Box,
   Typography,
   Autocomplete,
+  CircularProgress,
 } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -88,10 +89,12 @@ const HotelBookingForm = () => {
   const [city, setCity] = useState(null);
   const [checkOutDate, setCheckOutDate] = useState(null);
   const [adults, setAdults] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSearch = async () => {
     if (validateFields()) {
+      setLoading(true);
       const formattedCheckInDate = checkInDate.toISOString().split("T")[0]; // Format date as yyyy-mm-dd
       const formattedCheckOutDate = checkOutDate.toISOString().split("T")[0]; // Format date as yyyy-mm-dd
 
@@ -143,7 +146,7 @@ const HotelBookingForm = () => {
                 hotels: hotelsData,
                 checkInDate,
                 checkOutDate,
-                city,
+                city : city.label,
                 country: city.country,
                 adults,
               };
@@ -166,6 +169,8 @@ const HotelBookingForm = () => {
       } catch (error) {
         console.error("Error fetching Hotels:", error);
         message.error("Failed to fetch Hotels. Please try again.");
+      } finally {
+        setLoading(false);
       }
     } else {
       message.error("Error in the Form");
@@ -204,7 +209,7 @@ const HotelBookingForm = () => {
           <Box>
             <Typography
               variant="h4"
-              style={{ textAlign: "center" ,  marginBottom: "60px" }}
+              style={{ textAlign: "center", marginBottom: "60px" }}
               gutterBottom
             >
               Hotel Booking
@@ -261,11 +266,16 @@ const HotelBookingForm = () => {
               <Grid item xs={12}>
                 <Button
                   variant="contained"
-                  sx={{ backgroundColor: "#ff9933" ,  marginTop: "20px" }}
+                  sx={{ backgroundColor: "#ff9933", marginTop: "20px" }}
                   onClick={handleSearch}
                   fullWidth
+                  disabled={loading}
                 >
-                  Search
+                  {loading ? (
+                    <CircularProgress sx={{ color: "#ffcc99" }} size={24} />
+                  ) : (
+                    "Search"
+                  )}
                 </Button>
               </Grid>
             </Grid>
