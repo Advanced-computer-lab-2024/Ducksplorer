@@ -18,7 +18,6 @@ const styles = {
   container: {
     display: "flex",
     flexDirection: "row",
-    width: "100%",
     height: "100vh",
   },
   left: {
@@ -407,6 +406,8 @@ function PaymentPage() {
 
                 <Form style={styles.right}>
 
+                  <h1> Payment Details</h1>
+
                   <Form.Item
                     name="dateTime"
                     label="Date and Time"
@@ -448,8 +449,6 @@ function PaymentPage() {
                       ? new Date(chosenDate).toLocaleString()
                       : "None selected"}
                   </p>
-
-                  <h1> Payment Details</h1>
 
                   <p>Email</p>
                   <input

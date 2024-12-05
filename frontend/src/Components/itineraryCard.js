@@ -21,12 +21,12 @@ import Popover from "@mui/material/Popover";
 import Typography from "@mui/joy/Typography";
 import Button from "@mui/joy/Button";
 import ItineraryCardDetails from "./itineraryCardDetailed";
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import NotificationAddOutlinedIcon from '@mui/icons-material/NotificationAddOutlined';
 import ShareIcon from '@mui/icons-material/Share';
-import {Menu, MenuItem} from "@mui/material";
+import { Menu, MenuItem } from "@mui/material";
 
-export default function ItineraryCard({ itinerary = {} , onRemove, showNotify}) {
+export default function ItineraryCard({ itinerary = {}, onRemove, showNotify }) {
   const navigate = useNavigate();
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -184,7 +184,7 @@ export default function ItineraryCard({ itinerary = {} , onRemove, showNotify}) 
     event.stopPropagation();
     try {
       const newIsNotified = !currentIsNotified;
-      
+
       const response = await axios.post('http://localhost:8000/notification/request', {
         user: username,
         eventId: itineraryId,
@@ -201,7 +201,7 @@ export default function ItineraryCard({ itinerary = {} , onRemove, showNotify}) 
           [itineraryId]: newIsNotified,
         }));
         message.success('You will be notified when this event starts accepting bookings.');
-      } else if(response.status === 200){
+      } else if (response.status === 200) {
         message.info('You have already requested to be notified for this activity');
       }
       else {
@@ -231,62 +231,62 @@ export default function ItineraryCard({ itinerary = {} , onRemove, showNotify}) 
               <img src={image} loading="lazy" alt="" />
             </AspectRatio>
             <Tooltip title="Share">
-                <IconButton
-                  size="md"
-                  variant="solid"
-                  color="primary"
-                  onClick={handleClick}
-                  sx={{
-                    borderRadius: "50%",
-                    position: "absolute",
-                    zIndex: 2,
-                    borderRadius: "50%",
-                    right: "1rem",
-                    bottom: 0,
-                    transform: "translateY(50%) translateX(-130%)",
-                    transition: "transform 0.3s",
-                    "&:active": {
-                      transform: "translateY(50%) scale(0.9)",
-                    },
-                    backgroundColor:  "#ff9933",
-                  }}
-                >
-                  <ShareIcon />
-                </IconButton>
-              </Tooltip>
+              <IconButton
+                size="md"
+                variant="solid"
+                color="primary"
+                onClick={handleClick}
+                sx={{
+                  borderRadius: "50%",
+                  position: "absolute",
+                  zIndex: 2,
+                  borderRadius: "50%",
+                  right: "1rem",
+                  bottom: 0,
+                  transform: "translateY(50%) translateX(-130%)",
+                  transition: "transform 0.3s",
+                  "&:active": {
+                    transform: "translateY(50%) scale(0.9)",
+                  },
+                  backgroundColor: "#ff9933",
+                }}
+              >
+                <ShareIcon />
+              </IconButton>
+            </Tooltip>
 
-        {/* Dropdown menu */}
-        <Menu
-        anchorEl={anchorEl} // Position the dropdown relative to the button
-        open={Boolean(anchorEl)} // Open if anchorEl is not null
-        onClose={handleClose} // Close on menu item click or outside click
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-      >
-        {/* Menu Items */}
-        <MenuItem
-          onClick={() => {
-            handleShareLink(itinerary._id); // Call share via link function
-            handleCloseMenu(); // Close dropdown
-          }}
-        >
-          Share via Link
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            handleShareEmail(itinerary._id); // Call share via mail function
-            handleCloseMenu(); // Close dropdown
-          }}
-        >
-          Share via Mail
-        </MenuItem>
-      </Menu>
+            {/* Dropdown menu */}
+            <Menu
+              anchorEl={anchorEl} // Position the dropdown relative to the button
+              open={Boolean(anchorEl)} // Open if anchorEl is not null
+              onClose={handleClose} // Close on menu item click or outside click
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "center",
+              }}
+            >
+              {/* Menu Items */}
+              <MenuItem
+                onClick={() => {
+                  handleShareLink(itinerary._id); // Call share via link function
+                  handleCloseMenu(); // Close dropdown
+                }}
+              >
+                Share via Link
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  handleShareEmail(itinerary._id); // Call share via mail function
+                  handleCloseMenu(); // Close dropdown
+                }}
+              >
+                Share via Mail
+              </MenuItem>
+            </Menu>
 
 
 
@@ -343,7 +343,7 @@ export default function ItineraryCard({ itinerary = {} , onRemove, showNotify}) 
               {saveStates[itinerary._id] ? <Done color="#ff9933" /> : <BookmarksIcon />}
             </IconButton>
             {showNotify && (
-                <Tooltip title="Request Notifications">
+              <Tooltip title="Request Notifications">
                 <IconButton
                   size="md"
                   variant="solid"
@@ -363,7 +363,7 @@ export default function ItineraryCard({ itinerary = {} , onRemove, showNotify}) 
                     "&:active": {
                       transform: "translateY(50%) scale(0.9)",
                     },
-                    backgroundColor:  "#ffcc00",
+                    backgroundColor: "#ffcc00",
                   }}
                 >
                   <NotificationAddOutlinedIcon />
@@ -460,6 +460,8 @@ export default function ItineraryCard({ itinerary = {} , onRemove, showNotify}) 
               <Button
                 size="md"
                 variant="solid"
+                className="blackhover"
+                zIndex={2}
                 onClick={(event) => {
                   event.stopPropagation();
                   handleBooking(itinerary._id);

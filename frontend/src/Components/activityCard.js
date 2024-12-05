@@ -369,7 +369,6 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
               <Button
                 size="md"
                 variant="solid"
-                color="primary"
                 className="blackhover"
                 zIndex={2}
                 onClick={(event) => {
