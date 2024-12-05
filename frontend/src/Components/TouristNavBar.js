@@ -381,18 +381,25 @@ function TouristNavBar() {
                 </Typography>
               </IconButton>
             </Tooltip> */}
-            {/* <Tooltip title="View My Wishlist">
-              <IconButton onClick={() => handleNavigation("wishlist")}>
-                <FavoriteBorderIcon />
-                <Typography textAlign="center" marginRight={1}>
-                  Wishlist
-                </Typography>
-              </IconButton>
-            </Tooltip> */}
           </Box>
           <Box sx={{ flexGrow: 0, marginRight: "3vw " }}>
             <Tooltip title="Notifications">
               <MyNotifications />
+            </Tooltip>
+            <Tooltip title="View My Wishlist">
+               <IconButton onClick={() => handleNavigation("wishlist")}>
+                 <FavoriteBorderIcon />
+                 {/* <Typography textAlign="center" marginRight={1}>
+                   Wishlist
+                 </Typography> */}
+               </IconButton>
+            </Tooltip>
+            <Tooltip title="My Cart">
+              <IconButton
+                onClick={() => handleNavigation("myCart")}
+              >
+                <ShoppingCartIcon />
+              </IconButton>
             </Tooltip>
             <Tooltip title="Open Account settings">
               <IconButton
@@ -431,6 +438,7 @@ function TouristNavBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+
               <MenuItem onClick={handleCloseUserMenu}>
                 <IconButton
                   component="a"
