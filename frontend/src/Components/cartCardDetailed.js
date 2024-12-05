@@ -11,45 +11,66 @@ export default function CartCardDetails({ cartData }) {
             <CardContent sx={{ display: "flex", alignItems: "center" }}>
                 <h4 style={{
                     fontWeight: "bold",
-                    fontWeight: "bold",
+                    fontSize: 40,
                     margin: 20,
                 }}>
                     Cart
                 </h4>
                 {cartData && cartData.products && cartData.products.length > 0 ? (
-                    cartData.products.map((product, index) => (
-                        <div
-                            key={index}
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                marginBottom: "10px"
-                            }}
-                        >
-                            {/* Product Image */}
-                            <img
-                                src={product.product.picture || "https://picsum.photos/50/50"}
-                                alt={product.product.name || "Product Image"}
+                    <div
+                        style={{
+                            display: "flex",
+                            flexWrap: "wrap",
+                            gap: "3%", // Adds spacing between product groups
+                        }}
+                    >
+                        {cartData.products.map((product, index) => (
+                            <div
+                                key={index}
                                 style={{
-                                    width: "50px",
-                                    height: "50px",
-                                    marginRight: "10px",
-                                    borderRadius: "5px",
-                                    objectFit: "cover"
+                                    display: "flex",
+                                    flexDirection: "column", // Arrange items vertically within each product
+                                    alignItems: "center",
+                                    width: "calc(50% - 2%)", // Two items per row
+                                    marginBottom: "3%",
+                                    border: "1px solid #ddd",
+                                    borderRadius: "8px",
+                                    padding: "10px",
                                 }}
-                            />
-                            {/* Product Details */}
-                            <div>
-                                <p><strong>Product {index + 1}:</strong></p>
-                                <p><strong>Name:</strong> {product.product.name}</p>
-                                <p><strong>Price:</strong> {product.product.price}</p>
-                                <p><strong>Quantity:</strong> {product.quantity}</p>
+                            >
+                                {/* Product Name */}
+                                <p style={{ fontWeight: "bold", marginBottom: "10px", textAlign: "center" }}>
+                                    Product {index + 1}: {product.product.name}
+                                </p>
+                                {/* Product Image */}
+                                <img
+                                    src={product.product.picture || "https://picsum.photos/100/100"}
+                                    alt={product.product.name || "Product Image"}
+                                    style={{
+                                        width: "50%",
+                                        height: "50%",
+                                        marginBottom: "10px",
+                                        borderRadius: "8px",
+                                        objectFit: "cover",
+                                    }}
+                                />
+                                {/* Product Details */}
+                                <div style={{ textAlign: "center" }}>
+                                    <p>
+                                        <strong>Price:</strong> {product.product.price}
+                                    </p>
+                                    <p>
+                                        <strong>Quantity:</strong> {product.quantity}
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                    ))
+                        ))}
+                    </div>
                 ) : (
                     <p>No products in the cart.</p>
                 )}
+
+
 
                 <Typography
                     level="title-lg"
