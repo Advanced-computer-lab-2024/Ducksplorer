@@ -73,8 +73,12 @@ export default function ActivityCardDetails({ activity }) {
               key={index}
               size="sm"
               variant="outlined"
-              color="primary"
-              sx={{ marginRight: 1, marginBottom: 1 }}
+              sx={{
+                marginRight: 1,
+                marginBottom: 1,
+                color: "#ff9933",
+                borderColor: "#ff9933",
+              }}
             >
               {tag}
             </Chip>

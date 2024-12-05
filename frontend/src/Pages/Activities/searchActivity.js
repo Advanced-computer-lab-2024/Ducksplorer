@@ -140,9 +140,9 @@ const SearchActivities = () => {
           prevActivities.map((activity) =>
             activity._id === activityId
               ? {
-                ...activity,
-                saved: { ...activity.saved, isSaved: newIsSaved },
-              }
+                  ...activity,
+                  saved: { ...activity.saved, isSaved: newIsSaved },
+                }
               : activity
           )
         );
@@ -199,22 +199,21 @@ const SearchActivities = () => {
       sx={{
         height: "100vh",
         backgroundColor: "fff6e6",
+        width: "100vw",
         paddingTop: "2vh", // Adjust for navbar height
       }}
     >
       <TouristNavBar />
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Container sx={{ mt: 4, mb: 4 }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
-          <Typography class="duckTitle">
-            Activities
-          </Typography>
+          <Typography class="duckTitle">Activities</Typography>
         </Box>
 
         <Box sx={{ mb: 3, display: "flex", alignItems: "center" }}>
           <Input
-            color="primary"
-            variant="outlined"
+            variant="filled"
             placeholder="Search for an activity..."
+            className="searchInput"
             fullWidth
             onChange={(e) => setSearchQuery(e.target.value)}
             value={searchQuery}
@@ -226,32 +225,36 @@ const SearchActivities = () => {
             size="lg"
             onClick={fetchSearchedActivities}
             sx={{ ml: 2, backgroundColor: "orange" }}
+            className="blackhover"
           >
             Search
           </Button>
         </Box>
 
-        <Grid container spacing={3}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "24px", // Adjust the gap between items as needed
+            width: "100%",
+          }}
+        >
           {Array.isArray(activities) && activities.length > 0 ? (
             activities.map((activity) =>
               activity.flag === false &&
-                activity.advertiserDeleted === false &&
-                activity.deletedActivity === false ? (
-                <Grid item xs={12} sm={6} md={4} key={activity._id}>
-                  <ActivityCard activity={activity} />
-                </Grid>
+              activity.advertiserDeleted === false &&
+              activity.deletedActivity === false ? (
+                <ActivityCard activity={activity} />
               ) : null
             )
           ) : (
-            <Grid item xs={12}>
-              <Typography variant="body1" color="textSecondary" align="center">
-                No activities available
-              </Typography>
-            </Grid>
+            <Typography variant="body1" color="textSecondary" align="center">
+              No activities available
+            </Typography>
           )}
-        </Grid>
+        </div>
       </Container>
-     
+
       <Help />
     </Box>
   );

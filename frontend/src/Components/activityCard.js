@@ -23,7 +23,6 @@ import { useState, useEffect } from "react";
 import NotificationAddOutlinedIcon from "@mui/icons-material/NotificationAddOutlined";
 import ShareIcon from "@mui/icons-material/Share";
 import Swal from "sweetalert2";
-import { red } from "@mui/material/colors";
 
 // ActivityCard component
 export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
@@ -223,9 +222,9 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
           <button id="share-link" style="padding: 10px 20px; font-size: 16px; background-color: #ff9933; color: white; border: none; border-radius: 8px; cursor: pointer;">
             Share via Link
           </button>
-          <button className="blackhover" id="share-mail" style="padding: 10px 20px; font-size: 16px; background-color: #ff9933; color: white; border: none; border-radius: 8px; cursor: pointer;">
+          <Button className="blackhover" id="share-mail" style="padding: 10px 20px; font-size: 16px; background-color: #ff9933; color: white; border: none; border-radius: 8px; cursor: pointer;">
             Share via Mail
-          </button>
+          </Button>
         </div>
       `,
       showConfirmButton: false, // Hide default OK button
@@ -419,7 +418,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                 justifyContent: "space-between",
                 position: "absolute",
                 bottom: 10,
-                width: "90%",
+                width: "95%",
               }}
             >
               <Typography
@@ -452,75 +451,77 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                   event.stopPropagation();
                   handleBooking(activity._id);
                 }}
-                sx={{ backgroundColor: "#ff9933" }}
+                sx={{ backgroundColor: "#ff9933", marginRight: 1 }}
               >
                 Book Now
               </Button>
             </div>
           </div>
         </Card>
-        <Popover
-          open={open}
-          anchorEl={null}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: "center",
-            horizontal: "center",
-          }}
-          transformOrigin={{
-            vertical: "center",
-            horizontal: "center",
-          }}
-          sx={{
-            "& .MuiPopover-paper": {
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              position: "fixed",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              background: "none",
-              boxShadow: "none",
-              padding: 0,
-            },
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          <div
-            style={{
-              padding: "30px",
-              position: "relative",
-              display: "flex",
-              flexDirection: "column",
-              width: "60vw",
-              maxWidth: "90%",
-              maxHeight: "80vh",
-              overflow: "auto",
-              borderRadius: "16px",
-              borderColor: "grey",
-              boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-              backgroundColor: "#f5f5f5",
+          <Popover
+            open={open}
+            anchorEl={null}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "center",
+              horizontal: "center",
+            }}
+            transformOrigin={{
+              vertical: "center",
+              horizontal: "center",
+            }}
+            sx={{
+              "& .MuiPopover-paper": {
+                height: "100vh",
+                background: "none",
+                boxShadow: "none",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: 0,
+              },
             }}
           >
-            <button
-              onClick={handleClose}
+            <div
               style={{
-                position: "absolute",
-                top: "10px",
-                right: "10px",
-                background: "transparent",
-                border: "none",
-                fontSize: "1.5rem",
-                cursor: "pointer",
-                color: "#333",
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                width: "60vw",
+                maxWidth: "90%",
+                maxHeight: "80vh",
+                overflow: "auto",
+                borderRadius: "16px",
+                backgroundColor: "#f5f5f5",
               }}
             >
-              &times;
-            </button>
+              <button
+                onClick={handleClose}
+                style={{
+                  position: "absolute",
+                  top: "10px",
+                  right: "10px",
+                  background: "transparent",
+                  border: "none",
+                  fontSize: "1.5rem",
+                  cursor: "pointer",
+                  color: "#333",
+                }}
+              >
+                &times;
+              </button>
 
-            <ActivityCardDetails activity={activity} />
-          </div>
-        </Popover>
+              <ActivityCardDetails activity={activity} />
+            </div>
+          </Popover>
+        </div>
       </div>
     );
   };
