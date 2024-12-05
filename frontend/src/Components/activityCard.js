@@ -22,6 +22,7 @@ import ActivityCardDetails from "./activityCardDetailed";
 import { useState, useEffect } from "react";
 import NotificationAddOutlinedIcon from '@mui/icons-material/NotificationAddOutlined';
 import ShareIcon from '@mui/icons-material/Share';
+import Swal from 'sweetalert2';
 
 // ActivityCard component
 export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
@@ -185,6 +186,66 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
     }
   };
 
+  const handleShareLink = (activityId) => {
+    const link = `${window.location.origin}/activity/searchActivities/${activityId}`; // Update with your actual route
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        message.success("Link copied to clipboard!");
+      })
+      .catch(() => {
+        message.error("Failed to copy link.");
+      });
+  };
+
+  const handleShareEmail = (activityId) => {
+    const link = `${window.location.origin}/activity/searchActivities/${activityId}`; // Update with your actual route
+    const subject = "Check out this activity";
+    const body = `Here is the link to the activity: ${link}`;
+    window.location.href = `mailto:?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+  };
+
+
+  const handleClick = (event, activityId) => {
+    event.stopPropagation();
+    // setAnchorEl(event.currentTarget);
+    Swal.fire({
+      title: "Share Activity",
+      html: `
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+          <button id="share-link" style="padding: 10px 20px; font-size: 16px; background-color: #ff9933; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            Share via Link
+          </button>
+          <button id="share-mail" style="padding: 10px 20px; font-size: 16px; background-color: #ff9933; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            Share via Mail
+          </button>
+        </div>
+      `,
+      showConfirmButton: false, // Hide default OK button
+      width: "400px", // Set the width of the popup
+      padding: "20px", // Add padding to the popup
+      customClass: {
+        popup: "my-swal-popup", // Optional: Add custom styling via CSS
+      },
+    });
+
+    // Add click event listeners for custom buttons
+    document.getElementById("share-link").addEventListener("click", () => {
+      console.log("Sharing via link...");
+      handleShareLink(activityId);
+      Swal.fire("Link copied to clipboard!", "", "success");
+    });
+
+    document.getElementById("share-mail").addEventListener("click", () => {
+      console.log("Sharing via mail...");
+      handleShareEmail(activityId);
+      // Swal.fire("Shared via Mail!", "", "success");
+    });
+  };
+
+
   const TheCard = () => {
     return (
       <div style={{ width: "100%" }}>
@@ -207,9 +268,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                   size="md"
                   variant="solid"
                   color="primary"
-                  // onClick={(event) =>
-                  //   requestNotification(event, itinerary._id, notificationStates[itinerary._id])
-                  // }
+                  onClick={(event) => handleClick(event, activity._id)}
                   sx={{
                     borderRadius: "50%",
                     position: "absolute",
