@@ -222,7 +222,7 @@ function MySavedItems() {
         }}
       >
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Typography variant="h4">Saved</Typography>
+          <Typography variant="h4" sx={{fontFamily: "'Roboto', sans-serif", color: "black"}}>Saved</Typography>
         </Box>
 
         <MyChips chipNames={chipNames} onChipClick={handleChipClick} />
@@ -230,17 +230,18 @@ function MySavedItems() {
         {(selectedCategory === "Itineraries" ||
           selectedCategory === "All") && (
             <>
-              <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+              {/* <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
                 <Typography variant="h4">Itineraries</Typography>
-              </Box>
+              </Box> */}
               <div style={{ flex: 1 }}>
               {itineraries.length > 0 ? (
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
+              gridTemplateColumns: "repeat(3, 1fr)",
               gap: "24px", // Adjust the gap between items as needed
               paddingBottom: 24,
+              paddingTop: 24
             }}
           >
             {
@@ -276,7 +277,7 @@ function MySavedItems() {
                   marginTop: "20px",
                 }}
               >
-                <Typography variant="h4"> Activities</Typography>
+                {/* <Typography variant="h4"> Activities</Typography> */}
               </Box>
               <Grid container spacing={3}>
                 {Array.isArray(activities) && activities.length > 0 ? (
@@ -286,7 +287,7 @@ function MySavedItems() {
                       activity.deletedActivity === false &&
                       activity.saved.user === username &&
                       activity.saved.isSaved === true ? (
-                      <Grid item xs={12} sm={6} md={4} key={activity._id}>
+                      <Grid item xs={12} sm={8} md={6} key={activity._id}>
                         <ActivityCard activity={activity} onRemove={handleRemoveActivity} showNotify={true}/>
                       </Grid>
                     ) : null
