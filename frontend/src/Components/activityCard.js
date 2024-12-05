@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import ActivityCardDetails from "./activityCardDetailed";
 import { useState, useEffect } from "react";
 import NotificationAddOutlinedIcon from '@mui/icons-material/NotificationAddOutlined';
+import ShareIcon from '@mui/icons-material/Share';
 
 // ActivityCard component
 export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
@@ -201,6 +202,32 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
             <AspectRatio ratio="2">
               <img src={image} loading="lazy" alt="" />
             </AspectRatio>
+            <Tooltip title="Share">
+                <IconButton
+                  size="md"
+                  variant="solid"
+                  color="primary"
+                  // onClick={(event) =>
+                  //   requestNotification(event, itinerary._id, notificationStates[itinerary._id])
+                  // }
+                  sx={{
+                    borderRadius: "50%",
+                    position: "absolute",
+                    zIndex: 2,
+                    borderRadius: "50%",
+                    right: "1rem",
+                    bottom: 0,
+                    transform: "translateY(50%) translateX(-130%)",
+                    transition: "transform 0.3s",
+                    "&:active": {
+                      transform: "translateY(50%) scale(0.9)",
+                    },
+                    backgroundColor:  "#ff9933",
+                  }}
+                >
+                  <ShareIcon />
+                </IconButton>
+              </Tooltip>
             <Tooltip title="Save Activity">
               <IconButton
                 size="md"
@@ -240,7 +267,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                     borderRadius: "50%",
                     right: "1rem",
                     bottom: 0,
-                    transform: "translateY(50%) translateX(-110%)",
+                    transform: "translateY(50%) translateX(-260%)",
                     transition: "transform 0.3s",
                     "&:active": {
                       transform: "translateY(50%) scale(0.9)",

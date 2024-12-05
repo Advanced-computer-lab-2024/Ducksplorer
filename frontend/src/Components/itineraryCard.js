@@ -23,7 +23,8 @@ import Button from "@mui/joy/Button";
 import ItineraryCardDetails from "./itineraryCardDetailed";
 import {useState, useEffect} from "react";
 import NotificationAddOutlinedIcon from '@mui/icons-material/NotificationAddOutlined';
-
+import ShareIcon from '@mui/icons-material/Share';
+import {Menu, MenuItem} from "@mui/material";
 
 export default function ItineraryCard({ itinerary = {} , onRemove, showNotify}) {
   const navigate = useNavigate();
@@ -34,6 +35,16 @@ export default function ItineraryCard({ itinerary = {} , onRemove, showNotify}) 
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const handleClick = (event) => {
+    // event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+  };
+
+  // Close the dropdown menu
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
 
   const handleBooking = async (itineraryId) => {
     try {
@@ -219,6 +230,66 @@ export default function ItineraryCard({ itinerary = {} , onRemove, showNotify}) 
             <AspectRatio ratio="2">
               <img src={image} loading="lazy" alt="" />
             </AspectRatio>
+            <Tooltip title="Share">
+                <IconButton
+                  size="md"
+                  variant="solid"
+                  color="primary"
+                  onClick={handleClick}
+                  sx={{
+                    borderRadius: "50%",
+                    position: "absolute",
+                    zIndex: 2,
+                    borderRadius: "50%",
+                    right: "1rem",
+                    bottom: 0,
+                    transform: "translateY(50%) translateX(-130%)",
+                    transition: "transform 0.3s",
+                    "&:active": {
+                      transform: "translateY(50%) scale(0.9)",
+                    },
+                    backgroundColor:  "#ff9933",
+                  }}
+                >
+                  <ShareIcon />
+                </IconButton>
+              </Tooltip>
+
+        {/* Dropdown menu */}
+        <Menu
+        anchorEl={anchorEl} // Position the dropdown relative to the button
+        open={Boolean(anchorEl)} // Open if anchorEl is not null
+        onClose={handleClose} // Close on menu item click or outside click
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+      >
+        {/* Menu Items */}
+        <MenuItem
+          onClick={() => {
+            handleShareLink(itinerary._id); // Call share via link function
+            handleCloseMenu(); // Close dropdown
+          }}
+        >
+          Share via Link
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleShareEmail(itinerary._id); // Call share via mail function
+            handleCloseMenu(); // Close dropdown
+          }}
+        >
+          Share via Mail
+        </MenuItem>
+      </Menu>
+
+
+
             <Tooltip title="Save itinerary">
               <IconButton
                 size="md"
@@ -287,7 +358,7 @@ export default function ItineraryCard({ itinerary = {} , onRemove, showNotify}) 
                     borderRadius: "50%",
                     right: "1rem",
                     bottom: 0,
-                    transform: "translateY(50%) translateX(-110%)",
+                    transform: "translateY(50%) translateX(-260%)",
                     transition: "transform 0.3s",
                     "&:active": {
                       transform: "translateY(50%) scale(0.9)",
