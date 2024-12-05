@@ -16,27 +16,27 @@ const { Title } = Typography;
 const { Option } = Select;
 const styles = {
   container: {
-    display: "flex", // Divide into left and right sections
-    flexDirection: "row", // Horizontal layout (side by side)
+    display: "flex",
+    flexDirection: "row",
     width: "100%",
-    height: "100vh", // Full height of the viewport
+    height: "100vh",
   },
   left: {
-    flex: 1, // Left section takes up equal space
+    flex: 1,
     display: "flex",
     width: "100%",
-    flexDirection: "column", // Stack items vertically
-    gap: "20px", // Space between items
+    flexDirection: "column",
+    gap: "20px",
     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
     minHeight: "70vh"
   },
   right: {
-    flex: 1, // Right section takes up equal space
+    flex: 1,
     backgroundColor: "#fff",
     padding: "20px",
     display: "flex",
-    flexDirection: "column", // Stack items vertically
-    gap: "20px", // Space between items
+    flexDirection: "column",
+    gap: "20px",
     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
   },
 };
