@@ -569,6 +569,9 @@ const payVisa = async (req, res) => {
     const { userName } = req.params;
     const { finalPrice } = req.body;
     const tourist = await Tourist.findOne({ userName });
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found" });
+    }
     if (tourist.level === 1) {
       tourist.points += finalPrice * 0.5;
     } else if (tourist.level === 2) {
@@ -590,8 +593,11 @@ const payVisa = async (req, res) => {
       wallet: tourist.wallet,
       points: tourist.points,
     });
-  } catch {
-    res.status(500).json({ message: "An error occurred", error });
+  } catch (error) {
+    console.error("Error in payVisa:", error);
+    res
+      .status(500)
+      .json({ message: "An error occurred", error: error.message });
   }
 };
 
