@@ -144,18 +144,19 @@ const FlightBookingForm = () => {
             <Typography variant="h4" style={{ textAlign: 'center' }} gutterBottom>
               Flight Booking
             </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+            <Grid container spacing={2} direction="column">
+              <Grid item xs={12}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
                     label="Departure Date"
+                    sx={{ width: '100%' }}
                     value={departureDate}
                     onChange={(newValue) => setDepartureDate(newValue)}
                     renderInput={(params) => <TextField {...params} fullWidth />}
                   />
                 </LocalizationProvider>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <Autocomplete
                   options={cities}
                   getOptionLabel={(option) => `${option.country}, ${option.label}, ${option.code}`}
@@ -164,7 +165,7 @@ const FlightBookingForm = () => {
                   renderInput={(params) => <TextField {...params} label="Origin" fullWidth />}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <Autocomplete
                   options={cities}
                   getOptionLabel={(option) => `${option.country}, ${option.label}, ${option.code}`}
@@ -173,7 +174,7 @@ const FlightBookingForm = () => {
                   renderInput={(params) => <TextField {...params} label="Destination" fullWidth />}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   label="Number of Seats"
                   type="number"

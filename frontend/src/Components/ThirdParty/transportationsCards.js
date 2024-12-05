@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, Typography, Box, Grid } from '@mui/material';
-// import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot, TimelineOppositeContent } from '@mui/lab';
 import CurrencyConverterGeneral from './CurrencyConverterGeneral';
 import { Button } from '@mui/material';
 import { message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-
 
 const TransportationsCards = ({ transportations }) => {
 
@@ -39,7 +37,6 @@ const TransportationsCards = ({ transportations }) => {
                 return null;
             }
 
-
             const type = 'transportation';
             const transportation = {
                 price: convertPriceToEgp(transportationBookings.quotation.monetaryAmount),
@@ -55,12 +52,10 @@ const TransportationsCards = ({ transportations }) => {
             localStorage.setItem('transportation', JSON.stringify(transportation));
             localStorage.setItem('type', type);
 
-
-
             if (transportationBookings) {
                 navigate('/payment');
             } else {
-                message.error("Please Choose a transporation.");
+                message.error("Please Choose a transportation.");
             }
         } catch (error) {
             console.error("Error:", error);
@@ -86,16 +81,32 @@ const TransportationsCards = ({ transportations }) => {
         setCurrency(selectedCurrency);
     }, []);
 
-
     return (
-        <Box sx={{ flexGrow: 1, mt: 4, overflowY: 'auto' }}>
-            <CurrencyConverterGeneral onCurrencyChange={handleCurrencyChange} initialCurrency={currency} />
-            <Grid container spacing={2} justifyContent="center">
+        <Box sx={{ flexGrow: 1, mt: 4, overflowY: 'visible' , height:"90vh" }}>
+        <Typography variant="h6" component="div" sx={{ color: 'orange', textAlign: 'center', padding: 2 }}>
+          Currency Converter
+        </Typography>
+        <div style={{marginBottom:"20px"}}>
+            <CurrencyConverterGeneral onCurrencyChange={handleCurrencyChange} initialCurrency={currency} style={{marginBottom:"20px"}} />
+        </div>                
+      <Grid container spacing={2} justifyContent="center">
                 {transportations.map((transportation, index) => (
                     <Grid item xs={12} sm={4} key={index} sx={{ mt: 2, overflowY: 'auto' }}>
-                        <Card sx={{ borderRadius: 5, width: '100%', height: '100%', boxShadow: '0 8px 16px 0 rgba(0,0,0,0.2)', backgroundColor: '#f5f5f5' }}>
+                        <Card
+                            onClick={() => handleBooking(transportation)}
+                            variant="outlined"
+                            className="activity-card"
+                            sx={{
+                                width: "30vw",
+                                height: "85vh",
+                                cursor: "pointer",
+                                borderRadius: 5,
+                                boxShadow: '0 8px 16px 0 rgba(0,0,0,0.2)',
+                                backgroundColor: '#f5f5f5'
+                            }}
+                        >
                             <CardContent sx={{ padding: 2 }}>
-                                <Typography variant="h6" component="div" sx={{ textAlign: 'center', padding: 2 }}>
+                                <Typography variant="h6" component="div" sx={{color:"#ff9933" , textAlign: 'center', padding: 2 }}>
                                     Transportation {index + 1}
                                 </Typography>
 
@@ -155,7 +166,7 @@ const TransportationsCards = ({ transportations }) => {
                                     </>
                                 )}
 
-                                <Button variant="contained" color="primary" onClick={() => handleBooking(transportation)} sx={{ mt: 2 }} fullWidth>
+                                <Button variant="contained" sx={{mt:2 , backgroundColor:"#ff9933"}} onClick={() => handleBooking(transportation)}  fullWidth>
                                     Book Transportation
                                 </Button>
                             </CardContent>
@@ -165,8 +176,6 @@ const TransportationsCards = ({ transportations }) => {
             </Grid>
         </Box>
     );
-
 };
-
 
 export default TransportationsCards;
