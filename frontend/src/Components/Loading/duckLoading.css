@@ -1,6 +1,6 @@
 /* Prevent scrolling */
 body {
-  overflow: hidden; /* Disable scrolling */
+  /* Disable scrolling */
   margin: 0; /* Remove default body margin */
   height: 100vh; /* Ensure body height covers the full viewport */
 }
