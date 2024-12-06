@@ -13,7 +13,7 @@ import {
   Container,
   Grid,
   Slider,
-  FormControl
+  FormControl,
 } from "@mui/material";
 import ActivityCard from "../../Components/activityCard";
 import Input from "@mui/joy/Input";
@@ -32,7 +32,6 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import SortIcon from "@mui/icons-material/Sort";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-
 
 const SearchActivities = () => {
   const { id } = useParams();
@@ -61,7 +60,6 @@ const SearchActivities = () => {
   const toggleSort = () => {
     setDisplaySort((prev) => !prev);
   };
-
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -111,7 +109,6 @@ const SearchActivities = () => {
         console.error("There was an error fetching the categories!", error);
       });
   }, []);
-
 
   // Function to fetch activities based on search criteria
   const fetchSearchedActivities = () => {
@@ -203,7 +200,6 @@ const SearchActivities = () => {
     }
   };
 
-
   return (
     <Box
       sx={{
@@ -214,11 +210,10 @@ const SearchActivities = () => {
       }}
     >
       <TouristNavBar />
-      <Container sx={{ width: '100%' }}>
+      <Container sx={{ width: "100%" }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
-          <Typography class="duckTitle">Activities</Typography> 
+          <Typography class="bigTitle">Activities</Typography>
         </Box>
-
 
         <div
           style={{
@@ -227,10 +222,10 @@ const SearchActivities = () => {
             gridTemplateColumns: "2.5fr 0.5fr auto auto",
             gap: "16px", // Adjust the gap between items as needed
             paddingBottom: 24,
-            width: '100%'
+            width: "100%",
           }}
         >
-         {/* SEARCH */}
+          {/* SEARCH */}
           <Input
             variant="filled"
             placeholder="Search for an activity..."
@@ -248,122 +243,35 @@ const SearchActivities = () => {
             Search
           </Button>
 
-        <IconButton onClick={toggleFilter}>
-          <FilterAltIcon sx={{ color: "black" }} />
-        </IconButton>
-        <IconButton onClick={toggleSort}>
-          <SortIcon sx={{ color: "black" }} />
-        </IconButton>
+          <IconButton onClick={toggleFilter}>
+            <FilterAltIcon sx={{ color: "black" }} />
+          </IconButton>
+          <IconButton onClick={toggleSort}>
+            <SortIcon sx={{ color: "black" }} />
+          </IconButton>
         </div>
 
         {/* FILTER */}
         {displayFilter && (
-        <Box
-          sx={{
-            mb: 3,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: "20px", // Adds space between the filter fields
-          }}
-        >
-          <Input
-            placeholder="Price"
-            value={price}
-            color="primary"
-            onChange={(e) => setPrice(e.target.value)}
-            type="number"
+          <Box
             sx={{
-              color: "orange",
-              borderColor: "orange",
-              backgroundColor: "#ffffff",
-              "&:hover": {
-                backgroundColor: "#FEF4EA",
-              },
-              width: 240,
-              [`& .${selectClasses.indicator}`]: {
-                transition: "0.2s",
-                [`&.${selectClasses.expanded}`]: {
-                  transform: "rotate(-180deg)",
-                },
-              },
+              mb: 3,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: "20px", // Adds space between the filter fields
             }}
-          />
-          <Input
-            placeholder="Date"
-            type="date"
-            variant="outlined"
-            color="primary"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            InputLabelProps={{ shrink: true }}
-            sx={{
-              color: "orange",
-              borderColor: "orange",
-              backgroundColor: "#ffffff",
-              "&:hover": {
-                backgroundColor: "#FEF4EA",
-              },
-              width: 240,
-              [`& .${selectClasses.indicator}`]: {
-                transition: "0.2s",
-                [`&.${selectClasses.expanded}`]: {
-                  transform: "rotate(-180deg)",
-                },
-              },
-            }}
-          />
-          <FormControl sx={{ minWidth: 150 }}>
-            <Select
-              indicator={<KeyboardArrowDown />}
+          >
+            <Input
+              placeholder="Price"
+              value={price}
               color="primary"
-              placeholder="Category"
-              onChange={(e, newValue) => {
-                setCategory(newValue);
-              }}
+              onChange={(e) => setPrice(e.target.value)}
+              type="number"
               sx={{
                 color: "orange",
                 borderColor: "orange",
                 backgroundColor: "#ffffff",
-                "&:hover": {
-                  backgroundColor: "#FEF4EA",
-                },
-                width: 240,
-                [`& .${selectClasses.indicator}`]: {
-                  transition: "0.2s",
-                  [`&.${selectClasses.expanded}`]: {
-                    transform: "rotate(-180deg)",
-                  },
-                },
-              }}
-            >
-              <Option value="">
-                <em>Any</em>
-              </Option>
-              {categories.map((cat) => (
-                <Option key={cat._id} value={cat.name}>
-                  {cat.name}
-                </Option>
-              ))}
-            </Select>
-          </FormControl>
-
-          <Box sx={{ minWidth: 150 }}>
-            <Typography variant="body1">Rating: {averageRating}</Typography>
-            <Slider
-              value={averageRating}
-              onChange={(e, newValue) => setAverageRating(newValue)}
-              step={1}
-              marks={[0, 1, 2, 3, 4, 5].map((value) => ({
-                value,
-                label: value,
-              }))}
-              min={0}
-              max={5}
-              valueLabelDisplay="auto"
-              sx={{
-                color: "orange",
-                borderColor: "orange",
                 "&:hover": {
                   backgroundColor: "#FEF4EA",
                 },
@@ -376,218 +284,301 @@ const SearchActivities = () => {
                 },
               }}
             />
-          </Box>
+            <Input
+              placeholder="Date"
+              type="date"
+              variant="outlined"
+              color="primary"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              sx={{
+                color: "orange",
+                borderColor: "orange",
+                backgroundColor: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+                width: 240,
+                [`& .${selectClasses.indicator}`]: {
+                  transition: "0.2s",
+                  [`&.${selectClasses.expanded}`]: {
+                    transform: "rotate(-180deg)",
+                  },
+                },
+              }}
+            />
+            <FormControl sx={{ minWidth: 150 }}>
+              <Select
+                indicator={<KeyboardArrowDown />}
+                color="primary"
+                placeholder="Category"
+                onChange={(e, newValue) => {
+                  setCategory(newValue);
+                }}
+                sx={{
+                  color: "orange",
+                  borderColor: "orange",
+                  backgroundColor: "#ffffff",
+                  "&:hover": {
+                    backgroundColor: "#FEF4EA",
+                  },
+                  width: 240,
+                  [`& .${selectClasses.indicator}`]: {
+                    transition: "0.2s",
+                    [`&.${selectClasses.expanded}`]: {
+                      transform: "rotate(-180deg)",
+                    },
+                  },
+                }}
+              >
+                <Option value="">
+                  <em>Any</em>
+                </Option>
+                {categories.map((cat) => (
+                  <Option key={cat._id} value={cat.name}>
+                    {cat.name}
+                  </Option>
+                ))}
+              </Select>
+            </FormControl>
 
-          <Button
-            className="blackhover"
-            onClick={fetchFilteredActivities}
-          >
-            Filter
-          </Button>
-        </Box>
+            <Box sx={{ minWidth: 150 }}>
+              <Typography variant="body1">Rating: {averageRating}</Typography>
+              <Slider
+                value={averageRating}
+                onChange={(e, newValue) => setAverageRating(newValue)}
+                step={1}
+                marks={[0, 1, 2, 3, 4, 5].map((value) => ({
+                  value,
+                  label: value,
+                }))}
+                min={0}
+                max={5}
+                valueLabelDisplay="auto"
+                sx={{
+                  color: "orange",
+                  borderColor: "orange",
+                  "&:hover": {
+                    backgroundColor: "#FEF4EA",
+                  },
+                  width: 240,
+                  [`& .${selectClasses.indicator}`]: {
+                    transition: "0.2s",
+                    [`&.${selectClasses.expanded}`]: {
+                      transform: "rotate(-180deg)",
+                    },
+                  },
+                }}
+              />
+            </Box>
+
+            <Button className="blackhover" onClick={fetchFilteredActivities}>
+              Filter
+            </Button>
+          </Box>
         )}
 
         <Button
           className="blackhover"
           onClick={fetchUpcomingActivities}
-          sx={{marginBottom:'3%'}}
+          sx={{ marginBottom: "3%" }}
         >
           Upcoming Activities Only
         </Button>
 
         {/* SORTING */}
 
-
         {displaySort && (
-        <div
-        style={{
-          display: "flex",
-          marginBottom: 15,
-          justifyContent: "space-between",
-        }}
-      >
-        <FormControl>
-          <Select
-            indicator={<KeyboardArrowDown />}
-            placeholder="Sort By"
-            onChange={(e, newValue) => {
-              setSortBy(newValue);
-            }}
-            sx={{
-              color: "orange",
-              borderColor: "orange",
-              backgroundColor: "#ffffff",
-              "&:hover": {
-                backgroundColor: "#FEF4EA",
-              },
-              width: 240,
-              [`& .${selectClasses.indicator}`]: {
-                transition: "0.2s",
-                [`&.${selectClasses.expanded}`]: {
-                  transform: "rotate(-180deg)",
-                },
-              },
+          <div
+            style={{
+              display: "flex",
+              marginBottom: 15,
+              justifyContent: "space-between",
             }}
           >
-            <Option
-              sx={{
-                color: "orange",
-                backgroundColor: "#ffffff",
-                "&:hover": {
-                  backgroundColor: "#FEF4EA",
-                },
-              }}
-              value="date"
-            >
-              Date
-            </Option>
-            <Option
-              sx={{
-                color: "orange",
-                backgroundColor: "#ffffff",
-                "&:hover": {
-                  backgroundColor: "#FEF4EA",
-                },
-              }}
-              value="price"
-            >
-              Price
-            </Option>
-            <Option
-              sx={{
-                color: "orange",
-                backgroundColor: "#ffffff",
-                "&:hover": {
-                  backgroundColor: "#FEF4EA",
-                },
-              }}
-              value="name"
-            >
-              Name
-            </Option>
-            <Option
-              sx={{
-                color: "orange",
-                backgroundColor: "#ffffff",
-                "&:hover": {
-                  backgroundColor: "#FEF4EA",
-                },
-              }}
-              value="duration"
-            >
-              Duration
-            </Option>
-            <Option
-              sx={{
-                color: "orange",
-                backgroundColor: "#ffffff",
-                "&:hover": {
-                  backgroundColor: "#FEF4EA",
-                },
-              }}
-              value="category"
-            >
-              Category
-            </Option>
-            <Option
-              sx={{
-                color: "orange",
-                backgroundColor: "#ffffff",
-                "&:hover": {
-                  backgroundColor: "#FEF4EA",
-                },
-              }}
-              value="specialDiscount"
-            >
-              Discount
-            </Option>
-            <Option
-              sx={{
-                color: "orange",
-                backgroundColor: "#ffffff",
-                "&:hover": {
-                  backgroundColor: "#FEF4EA",
-                },
-              }}
-              value="averageRating"
-            >
-              Rating
-            </Option>
-          </Select>
-        </FormControl>
+            <FormControl>
+              <Select
+                indicator={<KeyboardArrowDown />}
+                placeholder="Sort By"
+                onChange={(e, newValue) => {
+                  setSortBy(newValue);
+                }}
+                sx={{
+                  color: "orange",
+                  borderColor: "orange",
+                  backgroundColor: "#ffffff",
+                  "&:hover": {
+                    backgroundColor: "#FEF4EA",
+                  },
+                  width: 240,
+                  [`& .${selectClasses.indicator}`]: {
+                    transition: "0.2s",
+                    [`&.${selectClasses.expanded}`]: {
+                      transform: "rotate(-180deg)",
+                    },
+                  },
+                }}
+              >
+                <Option
+                  sx={{
+                    color: "orange",
+                    backgroundColor: "#ffffff",
+                    "&:hover": {
+                      backgroundColor: "#FEF4EA",
+                    },
+                  }}
+                  value="date"
+                >
+                  Date
+                </Option>
+                <Option
+                  sx={{
+                    color: "orange",
+                    backgroundColor: "#ffffff",
+                    "&:hover": {
+                      backgroundColor: "#FEF4EA",
+                    },
+                  }}
+                  value="price"
+                >
+                  Price
+                </Option>
+                <Option
+                  sx={{
+                    color: "orange",
+                    backgroundColor: "#ffffff",
+                    "&:hover": {
+                      backgroundColor: "#FEF4EA",
+                    },
+                  }}
+                  value="name"
+                >
+                  Name
+                </Option>
+                <Option
+                  sx={{
+                    color: "orange",
+                    backgroundColor: "#ffffff",
+                    "&:hover": {
+                      backgroundColor: "#FEF4EA",
+                    },
+                  }}
+                  value="duration"
+                >
+                  Duration
+                </Option>
+                <Option
+                  sx={{
+                    color: "orange",
+                    backgroundColor: "#ffffff",
+                    "&:hover": {
+                      backgroundColor: "#FEF4EA",
+                    },
+                  }}
+                  value="category"
+                >
+                  Category
+                </Option>
+                <Option
+                  sx={{
+                    color: "orange",
+                    backgroundColor: "#ffffff",
+                    "&:hover": {
+                      backgroundColor: "#FEF4EA",
+                    },
+                  }}
+                  value="specialDiscount"
+                >
+                  Discount
+                </Option>
+                <Option
+                  sx={{
+                    color: "orange",
+                    backgroundColor: "#ffffff",
+                    "&:hover": {
+                      backgroundColor: "#FEF4EA",
+                    },
+                  }}
+                  value="averageRating"
+                >
+                  Rating
+                </Option>
+              </Select>
+            </FormControl>
 
-        <FormControl sx={{ minWidth: 100 }}>
-          <Select
-            labelId="order-label"
-            placeholder="Order"
-            onChange={(e, value) => {
-              setOrder(value);
-            }}
-            indicator={<KeyboardArrowDown />}
-            sx={{
-              "&.MuiSelect-MenuItem": {
-                backgroundColor: "orange",
-              },
-              "&.Joy-JoySelectListBox": {
-                sx: {
-                  backgroundColor: "orange",
-                },
-              },
+            <FormControl sx={{ minWidth: 100 }}>
+              <Select
+                labelId="order-label"
+                placeholder="Order"
+                onChange={(e, value) => {
+                  setOrder(value);
+                }}
+                indicator={<KeyboardArrowDown />}
+                sx={{
+                  "&.MuiSelect-MenuItem": {
+                    backgroundColor: "orange",
+                  },
+                  "&.Joy-JoySelectListBox": {
+                    sx: {
+                      backgroundColor: "orange",
+                    },
+                  },
 
-              color: "orange",
-              borderColor: "orange",
-              backgroundColor: "#ffffff",
-              "&:hover": {
-                backgroundColor: "#FEF4EA",
-              },
-              width: 240,
-              [`& .${selectClasses.indicator}`]: {
-                transition: "0.2s",
-                [`&.${selectClasses.expanded}`]: {
-                  transform: "rotate(-180deg)",
-                },
-              },
-            }}
-          >
-            <Option
-              value="asc"
-              sx={{
-                color: "orange",
-                backgroundColor: "#ffffff",
-                "&:hover": {
-                  backgroundColor: "#FEF4EA",
-                },
-              }}
+                  color: "orange",
+                  borderColor: "orange",
+                  backgroundColor: "#ffffff",
+                  "&:hover": {
+                    backgroundColor: "#FEF4EA",
+                  },
+                  width: 240,
+                  [`& .${selectClasses.indicator}`]: {
+                    transition: "0.2s",
+                    [`&.${selectClasses.expanded}`]: {
+                      transform: "rotate(-180deg)",
+                    },
+                  },
+                }}
+              >
+                <Option
+                  value="asc"
+                  sx={{
+                    color: "orange",
+                    backgroundColor: "#ffffff",
+                    "&:hover": {
+                      backgroundColor: "#FEF4EA",
+                    },
+                  }}
+                >
+                  Ascending
+                </Option>
+                <Option
+                  value="desc"
+                  sx={{ color: "orange", backgroundColor: "#ffffff" }}
+                >
+                  Descending
+                </Option>
+              </Select>
+            </FormControl>
+
+            <Button
+              className="blackhover"
+              sx={{ backgroundColor: "#ff9933", color: "white " }}
+              onClick={fetchSortedActivities}
             >
-              Ascending
-            </Option>
-            <Option
-              value="desc"
-              sx={{ color: "orange", backgroundColor: "#ffffff" }}
-            >
-              Descending
-            </Option>
-          </Select>
-        </FormControl>
+              Sort
+            </Button>
+          </div>
+        )}
 
-        <Button
-          className="blackhover"
-          sx={{ backgroundColor: "#ff9933", color: "white " }}
-          onClick={fetchSortedActivities}
-        >
-          Sort
-        </Button>
-      </div>
-      )}
-
-
-{/* cards start here */}
+        {/* cards start here */}
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
             gap: "24px", // Adjust the gap between items as needed
             width: "100%",
+            paddingBottom: 24,
           }}
         >
           {Array.isArray(activities) && activities.length > 0 ? (

@@ -27,12 +27,9 @@ import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon";
 import { Link } from "react-router-dom";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
-<<<<<<< HEAD
 import DuckLoading from "../../Components/Loading/duckLoading";
-=======
 import Error404 from "../../Components/Error404";
 
->>>>>>> 0e82457025ed37054520309c7a0e4f5b74932970
 const BookingDetails = () => {
   const userName = JSON.parse(localStorage.getItem("user")).username;
   //const [booking, setBooking] = useState(null);

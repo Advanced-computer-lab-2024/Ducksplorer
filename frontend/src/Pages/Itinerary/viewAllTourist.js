@@ -10,6 +10,7 @@ import {
   Menu,
   MenuItem,
   Checkbox,
+  Container,
   Slider,
   Select,
   IconButton,
@@ -36,7 +37,8 @@ function SearchItineraries() {
   const [itineraries, setItineraries] = useState([]);
   const isGuest = localStorage.getItem("guest") === "true";
 
-  const errorMessage = "The itinerary you are looking for might be removed or is temporarily unavailable";
+  const errorMessage =
+    "The itinerary you are looking for might be removed or is temporarily unavailable";
   const backMessage = "Back to search again";
   //filtering consts
   const [minPrice, setMinPrice] = useState("");
@@ -335,31 +337,30 @@ function SearchItineraries() {
   }, [itineraries]);
 
   return (
-    <div>
+    <Box
+      sx={{
+        height: "100vh",
+        backgroundColor: "fff6e6",
+        width: "100vw",
+        paddingTop: "2vh", // Adjust for navbar height
+      }}
+    >
       <TouristNavBar />
-      {/* <TouristSidebar /> */}
-      <Box
-        sx={{
-          padding: "20px",
-          margin: "auto",
-          display: "flex",
-          flexDirection: "column",
-          overflowY: "visible",
-          height: "100vh",
-        }}
-      >
-
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Typography variant="h4"> Itineraries</Typography>
+      <Container sx={{ width: "100%" }}>
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Typography class="bigTitle">Itineraries</Typography>
         </Box>
+
+        {/* <TouristSidebar /> */}
 
         <div
           style={{
             //div to surround search bar, button and the filter, and 2 sort icons
             display: "grid",
-            gridTemplateColumns: "3fr 0.5fr auto",
+            gridTemplateColumns: "2.5fr 0.5fr auto auto",
             gap: "16px",
             paddingBottom: 24,
+            width: "100%",
           }}
         >
           <Input
@@ -393,7 +394,11 @@ function SearchItineraries() {
             >
               <MenuItem>
                 <div
-                  style={{ display: "flex", alignItems: "center", gap: "16px" }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px",
+                  }}
                 >
                   <Checkbox
                     checked={showUpcomingOnly}
@@ -405,7 +410,11 @@ function SearchItineraries() {
 
               <MenuItem>
                 <div
-                  style={{ display: "flex", alignItems: "center", gap: "16px" }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px",
+                  }}
                 >
                   <Checkbox
                     checked={isFilterSelected("price")}
@@ -460,7 +469,11 @@ function SearchItineraries() {
 
               <MenuItem>
                 <div
-                  style={{ display: "flex", alignItems: "center", gap: "16px" }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px",
+                  }}
                 >
                   <Checkbox
                     checked={isFilterSelected("language")}
@@ -491,7 +504,11 @@ function SearchItineraries() {
 
               <MenuItem>
                 <div
-                  style={{ display: "flex", alignItems: "center", gap: "16px" }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px",
+                  }}
                 >
                   <Checkbox
                     checked={isFilterSelected("availableDatesAndTimes")}
@@ -512,7 +529,11 @@ function SearchItineraries() {
 
               <MenuItem>
                 <div
-                  style={{ display: "flex", alignItems: "center", gap: "16px" }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px",
+                  }}
                 >
                   <Checkbox
                     checked={isFilterSelected("tags")}
@@ -651,7 +672,7 @@ function SearchItineraries() {
         {itineraries.length > 0 ? (
           <div
             style={{
-              width: "90vw",
+              width: "100%",
               display: "grid",
               gridTemplateColumns: "repeat(3, 1fr)",
               gap: "24px", // Adjust the gap between items as needed
@@ -660,23 +681,25 @@ function SearchItineraries() {
           >
             {itineraries.map((itinerary) =>
               !itinerary.flag &&
-                !itinerary.isDeactivated &&
-                !itinerary.tourGuideDeleted &&
-                !itinerary.deletedItinerary ? (
+              !itinerary.isDeactivated &&
+              !itinerary.tourGuideDeleted &&
+              !itinerary.deletedItinerary ? (
                 <ItineraryCard key={itinerary._id} itinerary={itinerary} />
               ) : null
             )}
           </div>
-        ) : showError && (
-          <Error404
-            errorMessage={errorMessage}
-            backMessage={backMessage}
-            route="/viewAllTourist"
-          />
+        ) : (
+          showError && (
+            <Error404
+              errorMessage={errorMessage}
+              backMessage={backMessage}
+              route="/viewAllTourist"
+            />
+          )
         )}
         <Help />
-      </Box>
-    </div>
+      </Container>
+    </Box>
   );
 }
 
