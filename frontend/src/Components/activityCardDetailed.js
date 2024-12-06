@@ -33,6 +33,9 @@ export default function ActivityCardDetails({ activity }) {
           <strong>Is Open:</strong> {activity.isOpen ? "Yes" : "No"}
         </p>
         <p>
+          <strong>Date:</strong> {new Date(activity.date).toLocaleDateString() || "N/A"}
+        </p>
+        <p>
           <strong>Category:</strong> {activity.category || "N/A"}
         </p>
         <p>

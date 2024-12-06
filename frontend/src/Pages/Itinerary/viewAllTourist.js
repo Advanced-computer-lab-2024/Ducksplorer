@@ -72,6 +72,9 @@ function SearchItineraries() {
   const [sortByAnchorEl, setSortByAnchorEl] = useState(null);
   const [sortOrderAnchorEl, setSortOrderAnchorEl] = useState(null);
 
+  const [showUpcomingOnly, setShowUpcomingOnly] = useState(false);
+  const [showError, setShowError] = useState(false);
+
   //default rendering of all itineraries
   useEffect(() => {
     const fetchItineraries = async () => {
@@ -324,8 +327,7 @@ function SearchItineraries() {
     setActivityCurrency(selectedCurrency);
   };
 
-  const [showUpcomingOnly, setShowUpcomingOnly] = useState(false);
-  const [showError, setShowError] = useState(false);
+  
 
   useEffect(() => {
     if (itineraries.length === 0) {
@@ -351,7 +353,6 @@ function SearchItineraries() {
           <Typography class="bigTitle">Itineraries</Typography>
         </Box>
 
-        {/* <TouristSidebar /> */}
 
         <div
           style={{
@@ -364,7 +365,7 @@ function SearchItineraries() {
           }}
         >
           <Input
-            placeholder="Enter Name or Category or Tag"
+            placeholder="Search for an itinerary..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             fullWidth
@@ -404,7 +405,7 @@ function SearchItineraries() {
                     checked={showUpcomingOnly}
                     onChange={(e) => setShowUpcomingOnly(e.target.checked)}
                   />
-                  <span>Upcoming Itineraries Only</span>
+                  <span>Upcoming Itineraries</span>
                 </div>
               </MenuItem>
 
