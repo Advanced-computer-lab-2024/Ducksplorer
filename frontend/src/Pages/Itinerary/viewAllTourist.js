@@ -323,6 +323,16 @@ function SearchItineraries() {
   };
 
   const [showUpcomingOnly, setShowUpcomingOnly] = useState(false);
+  const [showError, setShowError] = useState(false);
+
+  useEffect(() => {
+    if (itineraries.length === 0) {
+      const timer = setTimeout(() => setShowError(true), 500); // Wait 0.5 second
+      return () => clearTimeout(timer); // Cleanup the timer when the component unmounts or updates
+    } else {
+      setShowError(false); // Reset error state if itineraries exist
+    }
+  }, [itineraries]);
 
   return (
     <div>
@@ -348,7 +358,7 @@ function SearchItineraries() {
             //div to surround search bar, button and the filter, and 2 sort icons
             display: "grid",
             gridTemplateColumns: "3fr 0.5fr auto",
-            gap: "16px", 
+            gap: "16px",
             paddingBottom: 24,
           }}
         >
@@ -648,20 +658,21 @@ function SearchItineraries() {
               paddingBottom: 24,
             }}
           >
-            {console.log("these are the itineraries", itineraries)}
-            {
-              itineraries.map((itinerary) =>
-                itinerary.flag === false &&
-                  itinerary.isDeactivated === false &&
-                  itinerary.tourGuideDeleted === false &&
-                  itinerary.deletedItinerary === false ? (
-                  <ItineraryCard itinerary={itinerary} />
-                ) : null
-              ) // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists
-            }
+            {itineraries.map((itinerary) =>
+              !itinerary.flag &&
+                !itinerary.isDeactivated &&
+                !itinerary.tourGuideDeleted &&
+                !itinerary.deletedItinerary ? (
+                <ItineraryCard key={itinerary._id} itinerary={itinerary} />
+              ) : null
+            )}
           </div>
-        ) : (
-          <Error404 errorMessage={errorMessage} backMessage={backMessage} route="/viewAllTourist" />
+        ) : showError && (
+          <Error404
+            errorMessage={errorMessage}
+            backMessage={backMessage}
+            route="/viewAllTourist"
+          />
         )}
         <Help />
       </Box>
