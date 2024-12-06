@@ -317,24 +317,6 @@ function SearchItineraries() {
     handleFilterClose();
   };
 
-  // Share itinerary functionality
-  const handleShareLink = (itineraryId) => {
-    const link = `${window.location.origin}/viewAllTourist/${itineraryId}`; // Update with your actual route
-    navigator.clipboard
-      .writeText(link)
-      .then(() => {
-        message.success("Link copied to clipboard!");
-      })
-      .catch(() => {
-        message.error("Failed to copy link.");
-      });
-  };
-
-  const handleShareEmail = (itineraryId) => {
-    const link = `${window.location.origin}/viewAllTourist/${itineraryId}`; // Update with your actual route
-    window.location.href = `mailto:?subject=Check out this itinerary&body=Here is the link to the itinerary: ${link}`;
-  };
-
   const handleActivityCurrencyChange = (rates, selectedCurrency) => {
     setActivityExchangeRates(rates);
     setActivityCurrency(selectedCurrency);
@@ -366,7 +348,7 @@ function SearchItineraries() {
             //div to surround search bar, button and the filter, and 2 sort icons
             display: "grid",
             gridTemplateColumns: "3fr 0.5fr auto",
-            gap: "16px", // Adjust the gap between items as needed
+            gap: "16px", 
             paddingBottom: 24,
           }}
         >
@@ -431,6 +413,7 @@ function SearchItineraries() {
                   <br />
                   <Button
                     onClick={(e) => setAnchorEl(e.currentTarget)}
+                    className="blackhover"
                     sx={{ backgroundColor: "#ff9933" }}
                   >
                     Select Price Range
@@ -557,6 +540,7 @@ function SearchItineraries() {
                 >
                   <Button
                     onClick={handleFilter}
+                    className="blackhover"
                     sx={{
                       backgroundColor: "#ff9933",
                       alignSelf: "center",
@@ -577,6 +561,7 @@ function SearchItineraries() {
                 >
                   <Button
                     onClick={handleClearAllFilters}
+                    className="blackhover"
                     sx={{
                       backgroundColor: "#ff9933",
                       alignSelf: "center",
