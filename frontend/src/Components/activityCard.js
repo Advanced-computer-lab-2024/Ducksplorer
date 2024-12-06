@@ -34,7 +34,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  console.log(image);
   const handleBooking = async (activityId) => {
     try {
       const userJson = localStorage.getItem("user");
@@ -209,7 +209,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
 
 
   const handleClick = (event, activityId) => {
-    event.stopPropagation();
+    // event.stopPropagation();
     // setAnchorEl(event.currentTarget);
     Swal.fire({
       title: "Share Activity",
@@ -268,7 +268,10 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                   size="md"
                   variant="solid"
                   color="primary"
-                  onClick={(event) => handleClick(event, activity._id)}
+                  onClick={(event) => {
+                    event.stopPropagation(); // Prevents the card's onClick from triggering
+                    handleClick(event,activity._id); // Executes the share functionality
+                  }}
                   sx={{
                     borderRadius: "50%",
                     position: "absolute",
@@ -278,9 +281,6 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                     bottom: 0,
                     transform: "translateY(50%) translateX(-130%)",
                     transition: "transform 0.3s",
-                    "&:active": {
-                      transform: "translateY(50%) scale(0.9)",
-                    },
                     backgroundColor:  "#ff9933",
                   }}
                 >
