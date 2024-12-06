@@ -40,6 +40,7 @@ const MuseumTouristPov = () => {
           );
           setMuseums(tempMuseums);
         }
+        console.log("this is how the data should be:",response.data);
       })
       .catch((error) => {
         console.error("There was an error fetching the museums!", error);
@@ -53,6 +54,7 @@ const MuseumTouristPov = () => {
   };
 
   const handleSearchResults = (searchResults) => {
+    console.log("this is the data by the search:",searchResults);
     setMuseums(searchResults);
   };
 

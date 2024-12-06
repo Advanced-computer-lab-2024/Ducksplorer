@@ -18,14 +18,14 @@ import Button from "@mui/joy/Button";
 import axios from "axios";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
-import ActivityCardDetails from "./activityCardDetailed";
+import ActivityCardDetails from "../activityCardDetailed";
 import { useState, useEffect } from "react";
-import NotificationAddOutlinedIcon from "@mui/icons-material/NotificationAddOutlined";
-import ShareIcon from "@mui/icons-material/Share";
+import Favorite from "@mui/icons-material/Favorite";
+
 import Swal from "sweetalert2";
 
 // ActivityCard component
-export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
+export default function ProductCard({ activity = {}, onRemove, showNotify }) {
   const navigate = useNavigate();
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -34,7 +34,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  console.log(image);
+
   const handleBooking = async (activityId) => {
     try {
       const userJson = localStorage.getItem("user");
@@ -210,7 +210,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
   };
 
   const handleClick = (event, activityId) => {
-    // event.stopPropagation();
+    event.stopPropagation();
     // setAnchorEl(event.currentTarget);
     Swal.fire({
       title: "Share Activity",
@@ -261,31 +261,9 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
         >
           <CardOverflow>
             <AspectRatio ratio="2">
-              <img src={image} loading="lazy" alt="" />
+              <img src={activity.picture || image} loading="lazy" alt="" />
             </AspectRatio>
-            <Tooltip title="Share">
-              <IconButton
-                size="md"
-                variant="solid"
-                color="primary"
-                onClick={(event) => handleClick(event, activity._id)}
-                className="blackhover"
-                sx={{
-                  borderRadius: "50%",
-                  position: "absolute",
-                  zIndex: 2,
-                  borderRadius: "50%",
-                  right: "1rem",
-                  bottom: 0,
-                  transform: "translateY(50%) translateX(-130%)",
-                  transition: "transform 0.3s",
 
-                  backgroundColor: "#ff9933",
-                }}
-              >
-                <ShareIcon />
-              </IconButton>
-            </Tooltip>
             <Tooltip title="Save Activity">
               <IconButton
                 size="md"
@@ -313,7 +291,11 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                   },
                 }}
               >
-                {saveStates[activity._id] ? <Done color="#ff9933" /> : <Add />}
+                {saveStates[activity._id] ? (
+                  <Done color="#ff9933" />
+                ) : (
+                  <Favorite />
+                )}
               </IconButton>
             </Tooltip>
             {showNotify && (
@@ -345,9 +327,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                     },
                     backgroundColor: "#ffcc00",
                   }}
-                >
-                  <NotificationAddOutlinedIcon />
-                </IconButton>
+                ></IconButton>
               </Tooltip>
             )}
           </CardOverflow>
@@ -375,7 +355,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                 </h4>
 
                 <Rating
-                  value={activity.averageRating}
+                  value={activity.rating}
                   icon={<StarIcon sx={{ color: "orange" }} />}
                   emptyIcon={<StarOutlineIcon />}
                   readOnly
@@ -387,22 +367,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                     flexDirection: "row",
                     marginTop: "5px",
                   }}
-                >
-                  {activity.tags.map((tag, index) => (
-                    <Chip
-                      component="span"
-                      size="sm"
-                      variant="outlined"
-                      sx={{
-                        marginRight: 1,
-                        color: "#ff9933",
-                        borderColor: "#ff9933",
-                      }}
-                    >
-                      {tag}
-                    </Chip>
-                  ))}
-                </div>
+                ></div>
               </div>
             </div>
           </div>
@@ -423,19 +388,9 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                 sx={{
                   mt: 1,
                   fontSize: 25,
+                  maxWidth: "30%",
                   fontWeight: "xl",
-                  justifySelf: "flex-start",
                 }}
-                endDecorator={
-                  <Chip
-                    component="span"
-                    size="sm"
-                    variant="soft"
-                    color="success"
-                  >
-                    Lowest price
-                  </Chip>
-                }
               >
                 {activity.price}$
               </Typography>
@@ -450,7 +405,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                 }}
                 sx={{ backgroundColor: "#ff9933", marginRight: 1 }}
               >
-                Book Now
+                Add to Cart
               </Button>
             </div>
           </div>
