@@ -61,13 +61,12 @@ const MyComplaints = () => {
         variant="h4"
         align="center"
         className="bigTitle"
-        sx={{ marginBottom: "20px" }}
+        sx={{ marginBottom: "30px" }}
         gutterBottom
       >
         My Complaints
       </Typography>
       <Container
-        maxWidth="md"
         sx={{
           mt: 1,
           mb: 4,
@@ -76,77 +75,84 @@ const MyComplaints = () => {
         }}
       >
         {complaints.length > 0 ? (
-          <Grid container spacing={3}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3,1fr)",
+              gridGap: "20px",
+            }}
+          >
             {complaints.map((complaint) => (
-              <Grid item xs={12} key={complaint._id}>
-                <Card
-                  variant="outlined"
-                  sx={{
-                    borderColor: "orange",
-                    borderRadius: 2,
-                    boxShadow: 2,
-                    backgroundColor: "#f9f9f9",
-                  }}
-                >
-                  <CardContent>
-                    <Typography
-                      variant="h6"
-                      sx={{
+              <Card
+                variant="outlined"
+                sx={{
+                  minHeight: "300px",
+                  minWidth: "300px",
+                  borderColor: complaint.status ? "#4bb543" : "orange",
+                  borderRadius: 2,
+                  boxShadow: 2,
+                  borderWidth: 2,
+                  backgroundColor: "#f9f9f9",
+                }}
+              >
+                <CardContent>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontWeight: "bold",
+                      color: complaint.status ? "#4bb543" : "orange",
+                      textAlign: "center",
+                    }}
+                  >
+                    {complaint.title}
+                  </Typography>
+                  <Divider sx={{ my: 1 }} />
+                  <Typography variant="body2" color="textSecondary">
+                    <strong>Date:</strong>{" "}
+                    {new Date(complaint.date).toLocaleDateString()}
+                  </Typography>
+                  <Divider sx={{ my: 1 }} />
+                  <Typography variant="body2" color="textSecondary">
+                    <strong>Body:</strong> {complaint.body}
+                  </Typography>
+                  <Divider sx={{ my: 1 }} />
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    sx={{ mt: 1 }}
+                  >
+                    <strong>Status:</strong>{" "}
+                    <span
+                      style={{
                         fontWeight: "bold",
-                        color: "#333",
-                        textAlign: "center",
+                        color: complaint.status ? "green" : "orange",
                       }}
                     >
-                      {complaint.title}
-                    </Typography>
-                    <Divider sx={{ my: 1 }} />
-                    <Typography variant="body2" color="textSecondary">
-                      <strong>Date:</strong>{" "}
-                      {new Date(complaint.date).toLocaleDateString()}
-                    </Typography>
-                    <Divider sx={{ my: 1 }} />
-                    <Typography variant="body2" color="textSecondary">
-                      <strong>Body:</strong> {complaint.body}
-                    </Typography>
-                    <Divider sx={{ my: 1 }} />
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      sx={{ mt: 1 }}
-                    >
-                      <strong>Status:</strong>{" "}
-                      <span
-                        style={{
-                          fontWeight: "bold",
-                          color: complaint.status ? "green" : "orange",
-                        }}
+                      {complaint.status ? "Resolved" : "Pending"}
+                    </span>
+                  </Typography>
+                  <Divider sx={{ my: 1 }} />
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    sx={{ mt: 1 }}
+                  >
+                    <strong>Replies:</strong>
+                  </Typography>
+                  {complaint.replies &&
+                    complaint.replies.map((reply, index) => (
+                      <Typography
+                        key={index}
+                        variant="body2"
+                        color="textSecondary"
                       >
-                        {complaint.status ? "Resolved" : "Pending"}
-                      </span>
-                    </Typography>
-                    <Divider sx={{ my: 1 }} />
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      sx={{ mt: 1 }}
-                    >
-                      <strong>Replies:</strong>
-                    </Typography>
-                    {complaint.replies &&
-                      complaint.replies.map((reply, index) => (
-                        <Typography
-                          key={index}
-                          variant="body2"
-                          color="textSecondary"
-                        >
-                          <strong>Date:</strong> {reply.date} - {reply.text}
-                        </Typography>
-                      ))}
-                  </CardContent>
-                </Card>
-              </Grid>
+                        <strong>Date:</strong> {reply.date} - {reply.text}
+                      </Typography>
+                    ))}
+                </CardContent>
+              </Card>
             ))}
-          </Grid>
+          </div>
         ) : (
           <Box
             display="flex"
