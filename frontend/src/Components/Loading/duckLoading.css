@@ -1,10 +1,3 @@
-/* Prevent scrolling */
-body {
-  /* Disable scrolling */
-  margin: 0; /* Remove default body margin */
-  height: 100vh; /* Ensure body height covers the full viewport */
-}
-
 /* Full-screen container */
 .duck-loading-container {
   display: flex;
