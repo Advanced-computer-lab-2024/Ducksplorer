@@ -12,7 +12,6 @@ const TransportationBooking = () => {
   return (
     <>
       <TouristNavBar />
-      <TouristSidebar/>        
       <TransportationBookingForm/>
     </>
   );

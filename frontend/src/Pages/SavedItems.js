@@ -24,7 +24,6 @@ import CurrencyConvertor from "../Components/CurrencyConvertor.js";
 import MyChips from "../Components/MyChips.js";
 import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
 import TouristNavBar from "../Components/TouristNavBar.js";
-import TouristSidebar from "../Components/Sidebars/TouristSidebar.js";
 import ItineraryCard from "../Components/itineraryCard.js";
 import ActivityCard from "../Components/activityCard.js";
 

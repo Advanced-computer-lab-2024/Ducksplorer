@@ -199,7 +199,6 @@ const AddItinerary = () => {
   return (
     <Box
       sx={{
-
         height: "100vh",
       }}
     >
@@ -215,8 +214,7 @@ const AddItinerary = () => {
           overflowY: "auto",
         }}
       >
-
-        <Box sx={{ overflowY: "visible", height: "100vh", }}>
+        <Box sx={{ overflowY: "visible", height: "100vh" }}>
           <h1
             style={{
               textAlign: "center",
@@ -250,14 +248,22 @@ const AddItinerary = () => {
                   marginBottom: "24px",
                 }}
               >
-                <label style={{ display: "block", fontWeight: "bold", marginBottom: "8px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontWeight: "bold",
+                    marginBottom: "8px",
+                  }}
+                >
                   Activity Name
                 </label>
                 <input
                   type="text"
                   placeholder="Activity Name"
                   value={activity.name}
-                  onChange={(e) => handleActivityChange(index, "name", e.target.value)}
+                  onChange={(e) =>
+                    handleActivityChange(index, "name", e.target.value)
+                  }
                   required
                   style={{
                     width: "100%",
@@ -269,28 +275,44 @@ const AddItinerary = () => {
                   }}
                 />
 
-                <label style={{ display: "block", fontWeight: "bold", marginBottom: "8px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontWeight: "bold",
+                    marginBottom: "8px",
+                  }}
+                >
                   Activity Is Open?
                 </label>
                 <input
                   type="checkbox"
                   checked={activity.isOpen}
-                  onChange={(e) => handleActivityChange(index, "isOpen", e.target.checked)}
+                  onChange={(e) =>
+                    handleActivityChange(index, "isOpen", e.target.checked)
+                  }
                   style={{
                     marginBottom: "16px",
                     transform: "scale(1.2)",
                     cursor: "pointer",
-                    color: "#ff9933"
+                    color: "#ff9933",
                   }}
                 />
 
-                <label style={{ display: "block", fontWeight: "bold", marginBottom: "8px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontWeight: "bold",
+                    marginBottom: "8px",
+                  }}
+                >
                   Activity Date
                 </label>
                 <input
                   type="datetime-local"
                   value={activity.date}
-                  onChange={(e) => handleActivityChange(index, "date", e.target.value)}
+                  onChange={(e) =>
+                    handleActivityChange(index, "date", e.target.value)
+                  }
                   required
                   style={{
                     width: "100%",
@@ -302,14 +324,22 @@ const AddItinerary = () => {
                   }}
                 />
 
-                <label style={{ display: "block", fontWeight: "bold", marginBottom: "8px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontWeight: "bold",
+                    marginBottom: "8px",
+                  }}
+                >
                   Activity Location
                 </label>
                 <input
                   type="text"
                   placeholder="Activity Location"
                   value={activity.location}
-                  onChange={(e) => handleActivityChange(index, "location", e.target.value)}
+                  onChange={(e) =>
+                    handleActivityChange(index, "location", e.target.value)
+                  }
                   required
                   style={{
                     width: "100%",
@@ -321,14 +351,22 @@ const AddItinerary = () => {
                   }}
                 />
 
-                <label style={{ display: "block", fontWeight: "bold", marginBottom: "8px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontWeight: "bold",
+                    marginBottom: "8px",
+                  }}
+                >
                   Activity Price
                 </label>
                 <input
                   type="number"
                   placeholder="Activity Price"
                   value={activity.price}
-                  onChange={(e) => handleActivityChange(index, "price", e.target.value)}
+                  onChange={(e) =>
+                    handleActivityChange(index, "price", e.target.value)
+                  }
                   required
                   style={{
                     width: "100%",
@@ -340,14 +378,22 @@ const AddItinerary = () => {
                   }}
                 />
 
-                <label style={{ display: "block", fontWeight: "bold", marginBottom: "8px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontWeight: "bold",
+                    marginBottom: "8px",
+                  }}
+                >
                   Activity Category
                 </label>
                 <input
                   type="text"
                   placeholder="Activity Category"
                   value={activity.category}
-                  onChange={(e) => handleActivityChange(index, "category", e.target.value)}
+                  onChange={(e) =>
+                    handleActivityChange(index, "category", e.target.value)
+                  }
                   required
                   style={{
                     width: "100%",
@@ -359,14 +405,22 @@ const AddItinerary = () => {
                   }}
                 />
 
-                <label style={{ display: "block", fontWeight: "bold", marginBottom: "8px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontWeight: "bold",
+                    marginBottom: "8px",
+                  }}
+                >
                   Activity Tags
                 </label>
                 <input
                   type="text"
                   placeholder="Activity Tags"
                   value={activity.tags}
-                  onChange={(e) => handleActivityChange(index, "tags", e.target.value)}
+                  onChange={(e) =>
+                    handleActivityChange(index, "tags", e.target.value)
+                  }
                   required
                   style={{
                     width: "100%",
@@ -378,14 +432,22 @@ const AddItinerary = () => {
                   }}
                 />
 
-                <label style={{ display: "block", fontWeight: "bold", marginBottom: "8px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontWeight: "bold",
+                    marginBottom: "8px",
+                  }}
+                >
                   Activity Duration
                 </label>
                 <input
                   type="text"
                   placeholder="Activity Duration"
                   value={activity.duration}
-                  onChange={(e) => handleActivityChange(index, "duration", e.target.value)}
+                  onChange={(e) =>
+                    handleActivityChange(index, "duration", e.target.value)
+                  }
                   required
                   style={{
                     width: "100%",
@@ -397,14 +459,17 @@ const AddItinerary = () => {
                   }}
                 />
               </div>
-
             ))}
 
-            <IconButton onClick={handleAddActivity}>
+            <IconButton
+              onClick={handleAddActivity}
+              sx={{ width: "50px", height: "50px", alignSelf: "center" }}
+            >
               <AddCircleIcon
                 style={{
                   color: "ff9933",
-                }} />
+                }}
+              />
             </IconButton>
             <h3>Locations:</h3>
             {locations.map((location, index) => (
@@ -459,13 +524,23 @@ const AddItinerary = () => {
                   />
                 ))}
 
-                <Box style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                  <IconButton onClick={handleAddLocation}>
-                    <AddCircleIcon style={{
-                      color: "ff9933",
-                    }} />
+                <Box
+                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                >
+                  <IconButton
+                    onClick={handleAddLocation}
+                    sx={{ width: "50px", height: "50px", alignSelf: "center" }}
+                  >
+                    <AddCircleIcon
+                      style={{
+                        color: "ff9933",
+                      }}
+                    />
                   </IconButton>
-                  <Typography variant="h6" style={{ fontWeight: "bold", color: "#333" }}>
+                  <Typography
+                    variant="h6"
+                    style={{ fontWeight: "bold", color: "#333" }}
+                  >
                     Add Location
                   </Typography>
                 </Box>
@@ -555,7 +630,9 @@ const AddItinerary = () => {
                     type="datetime-local"
                     placeholder="Available Date and Time"
                     value={dateTime}
-                    onChange={(e) => handleAvailableDateChange(index, e.target.value)}
+                    onChange={(e) =>
+                      handleAvailableDateChange(index, e.target.value)
+                    }
                     required
                     style={{
                       width: "100%",
@@ -573,12 +650,16 @@ const AddItinerary = () => {
                   />
                 ))}
               </div>
-
             ))}
-            <IconButton onClick={handleAddAvailableDate}>
-              <AddCircleIcon style={{
-                color: "ff9933",
-              }} />
+            <IconButton
+              onClick={handleAddAvailableDate}
+              sx={{ width: "50px", height: "50px", alignSelf: "center" }}
+            >
+              <AddCircleIcon
+                style={{
+                  color: "ff9933",
+                }}
+              />
             </IconButton>
             <div
               style={{
@@ -701,7 +782,7 @@ const AddItinerary = () => {
                 borderRadius: "8px",
                 backgroundColor: "#3f51b5",
                 boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                transition: "all 0.3s ease"
+                transition: "all 0.3s ease",
               }}
             >
               Add Itinerary
@@ -710,7 +791,6 @@ const AddItinerary = () => {
         </Box>
       </Paper>
     </Box>
-
   );
 };
 

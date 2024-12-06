@@ -13,7 +13,7 @@ export default function ActivityCardDetails({ activity }) {
     <Card variant="outlined" sx={{ width: "100%", height: "auto" }}>
       <AspectRatio ratio="2">
         <img
-          src={activity.image || "https://picsum.photos/200/300"}
+          src={activity.picture || "https://picsum.photos/200/300"}
           alt={activity.name || "Activity Image"}
           loading="lazy"
         />
@@ -31,6 +31,10 @@ export default function ActivityCardDetails({ activity }) {
         </h4>
         <p>
           <strong>Is Open:</strong> {activity.isOpen ? "Yes" : "No"}
+        </p>
+        <p>
+          <strong>Date:</strong>{" "}
+          {new Date(activity.date).toLocaleDateString() || "N/A"}
         </p>
         <p>
           <strong>Category:</strong> {activity.category || "N/A"}

@@ -15,6 +15,7 @@ import axios from "axios";
 import { message } from "antd";
 import FlightsCards from "./FlightsCards";
 import { useNavigate } from "react-router-dom";
+import DuckLoading from "../Loading/duckLoading";
 const cities = [
   { label: "New York", code: "NYC", country: "USA" },
   { label: "Los Angeles", code: "LAX", country: "USA" },
@@ -133,6 +134,13 @@ const FlightBookingForm = () => {
       message.error("Error in the Form");
     }
   };
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
 
   const validateFields = () => {
     if (!departureDate || !origin || !destination || !seats) {
@@ -166,7 +174,7 @@ const FlightBookingForm = () => {
           <Box>
             <Typography
               variant="h4"
-              style={{ textAlign: "center" , marginBottom: "60px"}}
+              style={{ textAlign: "center", marginBottom: "60px" }}
             >
               Flight Booking
             </Typography>
@@ -175,7 +183,7 @@ const FlightBookingForm = () => {
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
                     label="Departure Date"
-                    sx={{ width: '100%' }}
+                    sx={{ width: "100%" }}
                     value={departureDate}
                     onChange={(newValue) => setDepartureDate(newValue)}
                     renderInput={(params) => (
@@ -222,12 +230,16 @@ const FlightBookingForm = () => {
               <Grid item xs={12}>
                 <Button
                   variant="contained"
-                  sx={{ backgroundColor: "#ff9933" , marginTop: "30px"}}
+                  sx={{ backgroundColor: "#ff9933", marginTop: "30px" }}
                   onClick={handleSearch}
                   fullWidth
                   disabled={loading}
                 >
-                  {loading ? <CircularProgress  sx={{color:"#ff9933"}}size={24} /> : "Search"}
+                  {loading ? (
+                    <CircularProgress sx={{ color: "#ff9933" }} size={24} />
+                  ) : (
+                    "Search"
+                  )}
                 </Button>
               </Grid>
             </Grid>

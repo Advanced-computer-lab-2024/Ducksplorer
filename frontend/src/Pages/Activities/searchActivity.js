@@ -1,45 +1,55 @@
-// This is the file that gets all the activities for the tourist
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { message } from "antd";
 import TouristNavBar from "../../Components/TouristNavBar";
-import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
+import ActivityCard from "../../Components/activityCard.js";
+import Error404 from "../../Components/Error404";
 import {
-  Box,
-  Table,
+  Stack,
   Typography,
-  Rating,
-  IconButton,
+  Box,
+  Menu,
+  MenuItem,
+  Checkbox,
   Container,
-  Grid,
   Slider,
+  Select,
+  IconButton,
   FormControl,
+  InputLabel,
+  Rating,
+  Grid2,
 } from "@mui/material";
-import ActivityCard from "../../Components/activityCard";
+import { Link, useParams } from "react-router-dom";
+import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
+import Help from "../../Components/HelpIcon.js";
 import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
-import Select from "@mui/joy/Select";
-import Option from "@mui/joy/Option";
-import { selectClasses } from "@mui/joy/Select";
-
-import { Link, useParams } from "react-router-dom";
-
-// import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
-import CurrencyConvertor from "../../Components/CurrencyConvertor";
-import Help from "../../Components/HelpIcon";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
-import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import SortIcon from "@mui/icons-material/Sort";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import SwapVertIcon from "@mui/icons-material/SwapVert";
+import DuckLoading from "../../Components/Loading/duckLoading";
 
-const SearchActivities = () => {
+function SearchActivity() {
   const { id } = useParams();
 
-  const [activities, setActivities] = useState([]); // Displayed activities
-  const [allActivities, setAllActivities] = useState([]); // Store all fetched activities
   const [searchQuery, setSearchQuery] = useState(""); // Single search input
+  const [searchTerm, setSearchTerm] = useState(""); // Single search term
+  const [activities, setActivities] = useState([]); // Displayed activities
+  const [allActivities, setAllActivities] = useState([]); // Store all fetched activities  
   const isGuest = localStorage.getItem("guest") === "true";
+
+  const [selectedFilters, setSelectedFilters] = useState([]);
+  const [filterAnchorEl, setFilterAnchorEl] = useState(null);
+  const errorMessage =
+    "The activity you are looking for might be removed or is temporarily unavailable";
+  const backMessage = "Back to search again";
+  //filtering consts
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [priceRange, setPriceRange] = useState([0, 5000]);
+  const [rating, setRating] = useState(null);
+
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
   const [averageRating, setAverageRating] = useState(0); // Set default value to 0
@@ -49,9 +59,30 @@ const SearchActivities = () => {
   const [categories, setCategories] = useState([]); // Store fetched categories
   const [sortBy, setSortBy] = useState("date"); // Default sorting by date
   const [order, setOrder] = useState("asc"); // Default ascending order
+  const [activityExchangeRates, setActivityExchangeRates] = useState(null);
+  const [activityCurrency, setActivityCurrency] = useState(null);
+
+  //for price slider
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const [loading, setLoading] = useState(true);
 
   const [displayFilter, setDisplayFilter] = useState(false);
   const [displaySort, setDisplaySort] = useState(false);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const username = user?.username;
+
+  //sorting consts
+  const [sortOrder, setSortOrder] = useState("asc"); // Default to 'asc'
+
+  const [sortByAnchorEl, setSortByAnchorEl] = useState(null);
+  const [sortOrderAnchorEl, setSortOrderAnchorEl] = useState(null);
+
+
+  const [showUpcomingOnly, setShowUpcomingOnly] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const toggleFilter = () => {
     setDisplayFilter((prev) => !prev);
@@ -61,16 +92,13 @@ const SearchActivities = () => {
     setDisplaySort((prev) => !prev);
   };
 
-  const user = JSON.parse(localStorage.getItem("user"));
-
-  const username = user?.username;
-
   // Fetch all activities when component mounts
   useEffect(() => {
     const fetchActivities = async () => {
       const showPreferences = localStorage.getItem("showPreferences");
       const favCategory = localStorage.getItem("category");
       console.log(showPreferences, favCategory);
+      setLoading(true);
       try {
         const response = await axios.get("http://localhost:8000/activity/", {
           params: {
@@ -94,6 +122,8 @@ const SearchActivities = () => {
         }
       } catch (error) {
         console.error("There was an error fetching the activities!", error);
+      } finally {
+        setTimeout(() => setLoading(false), 1000); // Delay of 1 second
       }
     };
     fetchActivities();
@@ -110,45 +140,33 @@ const SearchActivities = () => {
       });
   }, []);
 
-  // Function to fetch activities based on search criteria
-  const fetchSearchedActivities = () => {
-    const query = new URLSearchParams({
-      search: searchQuery, // Single search query sent to the backend
-    }).toString();
+  useEffect(() => {
+    if (activities.length === 0) {
+      const timer = setTimeout(() => setShowError(true), 500); // Wait 0.5 second
+      return () => clearTimeout(timer); // Cleanup the timer when the component unmounts or updates
+    } else {
+      setShowError(false); // Reset error state if activities exist
+    }
+  }, [activities]);
 
-    axios
-      .get(`http://localhost:8000/activity?${query}`)
-      .then((response) => {
-        setActivities(response.data);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the activities!", error);
-      });
+
+  // Handlers for Sort By dropdown
+  const handleSortByClick = (event) => {
+    setSortByAnchorEl(event.currentTarget);
+  };
+  const handleSortByClose = () => {
+    setSortByAnchorEl(null);
   };
 
-  const fetchFilteredActivities = () => {
-    const query = new URLSearchParams({
-      price,
-      date,
-      category,
-    }).toString();
-
-    axios
-      .get(`http://localhost:8000/activity/filter?${query}`)
-      .then((response) => {
-        setActivities(response.data);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the activities!", error);
-      });
+  // Handlers for Sort Order dropdown
+  const handleSortOrderClick = (event) => {
+    setSortOrderAnchorEl(event.currentTarget);
+  };
+  const handleSortOrderClose = () => {
+    setSortOrderAnchorEl(null);
   };
 
-  const handleCurrencyChange = (rates, selectedCurrency) => {
-    setExchangeRates(rates);
-    setCurrency(selectedCurrency);
-  };
-
-  const fetchSortedActivities = () => {
+  const handleSort = () => {
     const showPreferences = localStorage.getItem("showPreferences");
     const favCategory = localStorage.getItem("category");
     axios
@@ -183,8 +201,119 @@ const SearchActivities = () => {
         console.error("There was an error fetching the activities!", error);
       });
   };
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
 
-  const fetchUpcomingActivities = async () => {
+  // Function to fetch activities based on search criteria
+  const handleSearchActivities = () => {
+    const query = new URLSearchParams({
+      search: searchQuery, // Single search query sent to the backend
+    }).toString();
+
+    axios
+      .get(`http://localhost:8000/activity?${query}`)
+      .then((response) => {
+        setActivities(response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the activities!", error);
+      });
+  };
+
+  const isFilterSelected = (filter) => selectedFilters.includes(filter);
+
+  const handleFilterChoiceClick = (event) => {
+    setFilterAnchorEl(event.currentTarget);
+  };
+  const handleFilterClose = () => {
+    setFilterAnchorEl(null);
+  };
+  //price, date, category, averageRating
+  const handleFilterToggle = (filter) => {
+    const newFilters = [...selectedFilters];
+    if (newFilters.includes(filter)) {
+      // Remove filter if it's already selected
+      const index = newFilters.indexOf(filter);
+      newFilters.splice(index, 1);
+
+      switch (filter) {
+        case "minPrice":
+          setMinPrice("");
+          break;
+        case "maxPrice":
+          setMaxPrice("");
+          break;
+        case "category":
+          setCategory("");
+          break;
+        case "date":
+          setDate(null);
+          break;
+        case "averageRating":
+          setRating(null);
+          break;
+        default:
+          break;
+      }
+    } else {
+      // Add filter if not selected
+      newFilters.push(filter);
+    }
+    setSelectedFilters(newFilters);
+  };
+
+  const handleCurrencyChange = (rates, selectedCurrency) => {
+    setExchangeRates(rates);
+    setCurrency(selectedCurrency);
+  };
+  //clear all filters
+  const handleClearAllFilters = () => {
+    setMinPrice("");
+    setMaxPrice("");
+    setDate(null);
+    setRating([]);
+    setCategories([]);
+    setSelectedFilters([]);
+
+    axios
+      .get("http://localhost:8000/activity/")
+      .then((response) => {
+        setActivities(response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the activities!", error);
+      });
+
+    handleFilterClose();
+  };
+
+  const handlePriceRangeChange = (event, newValue) => {
+    setPriceRange(newValue);
+    setMinPrice(newValue[0]);
+    setMaxPrice(newValue[1]);
+  };
+
+  const handleCategoryChange = (event) => {
+    setCategory(event.target.value);
+  };
+
+  const handleRatingChange = (event) => {
+    setRating(event.target.value);
+  };
+
+  // const handleTagsChange = (event) => {
+  //   const value = event.target.value;
+  //   setTags(value);
+  // };
+
+
+
+  const displayUpcomingActivities = async () => {
     try {
       const response = await axios.get(
         "http://localhost:8000/activity/upcoming"
@@ -199,6 +328,54 @@ const SearchActivities = () => {
       console.error("There was an error fetching the activities!", error);
     }
   };
+
+  //price, date, category, averageRating
+  const handleFilter = () => {
+    if (showUpcomingOnly) {
+      displayUpcomingActivities();
+      return;
+    }
+    const query = new URLSearchParams({
+      price,
+      date,
+      category,
+    }).toString();
+
+    axios
+      .get(`http://localhost:8000/activity/filter?${query}`)
+      .then((response) => {
+        setActivities(response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the activities!", error);
+      });
+  };
+
+  const handleActivityCurrencyChange = (rates, selectedCurrency) => {
+    setActivityExchangeRates(rates);
+    setActivityCurrency(selectedCurrency);
+  };
+
+  const fetchCategories = () => {
+    if (categories.length === 0) { // Avoid redundant API calls
+      axios
+        .get("http://localhost:8000/category")
+        .then((response) => {
+          setCategories(response.data);
+        })
+        .catch((error) => {
+          console.error("There was an error fetching the categories!", error);
+        });
+    }
+  };
+
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
 
   return (
     <Box
@@ -215,391 +392,408 @@ const SearchActivities = () => {
           <Typography class="bigTitle">Activities</Typography>
         </Box>
 
+
         <div
           style={{
-            //div to surround search bar, button and the filter, and sort icons
+            //div to surround search bar, button and the filter, and 2 sort icons
             display: "grid",
             gridTemplateColumns: "2.5fr 0.5fr auto auto",
-            gap: "16px", // Adjust the gap between items as needed
+            gap: "16px",
             paddingBottom: 24,
             width: "100%",
           }}
         >
-          {/* SEARCH */}
           <Input
-            variant="filled"
             placeholder="Search for an activity..."
-            className="searchInput"
-            onChange={(e) => setSearchQuery(e.target.value)}
-            value={searchQuery}
-            sx={{ width: "100%" }}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            fullWidth
+            variant="filled"
+            color="primary"
           />
           <Button
             variant="solid"
-            onClick={fetchSearchedActivities}
-            sx={{ backgroundColor: "orange" }}
+            onClick={handleSearchActivities}
             className="blackhover"
+            sx={{ backgroundColor: "#ff9933" }}
           >
             Search
           </Button>
 
-          <IconButton onClick={toggleFilter}>
-            <FilterAltIcon sx={{ color: "black" }} />
-          </IconButton>
-          <IconButton onClick={toggleSort}>
-            <SortIcon sx={{ color: "black" }} />
-          </IconButton>
-        </div>
+          <div>
+            {/* Filtering */}
+            <IconButton onClick={handleFilterChoiceClick}>
+              {" "}
+              {/* try to make it on the right later */}
+              <FilterAltIcon sx={{ color: "black" }} />
+            </IconButton>
+            <Menu
+              anchorEl={filterAnchorEl}
+              open={Boolean(filterAnchorEl)}
+              onClose={handleFilterClose}
+            >
+              <MenuItem>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px",
+                  }}
+                >
+                  <Checkbox
+                    checked={showUpcomingOnly}
+                    onChange={(e) => setShowUpcomingOnly(e.target.checked)}
+                  />
+                  <span>Upcoming Activities</span>
+                </div>
+              </MenuItem>
 
-        {/* FILTER */}
-        {displayFilter && (
-          <Box
-            sx={{
-              mb: 3,
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: "20px", // Adds space between the filter fields
-            }}
-          >
-            <Input
-              placeholder="Price"
-              value={price}
-              color="primary"
-              onChange={(e) => setPrice(e.target.value)}
-              type="number"
-              sx={{
-                color: "orange",
-                borderColor: "orange",
-                backgroundColor: "#ffffff",
-                "&:hover": {
-                  backgroundColor: "#FEF4EA",
-                },
-                width: 240,
-                [`& .${selectClasses.indicator}`]: {
-                  transition: "0.2s",
-                  [`&.${selectClasses.expanded}`]: {
-                    transform: "rotate(-180deg)",
-                  },
-                },
-              }}
-            />
-            <Input
-              placeholder="Date"
-              type="date"
-              variant="outlined"
-              color="primary"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              InputLabelProps={{ shrink: true }}
-              sx={{
-                color: "orange",
-                borderColor: "orange",
-                backgroundColor: "#ffffff",
-                "&:hover": {
-                  backgroundColor: "#FEF4EA",
-                },
-                width: 240,
-                [`& .${selectClasses.indicator}`]: {
-                  transition: "0.2s",
-                  [`&.${selectClasses.expanded}`]: {
-                    transform: "rotate(-180deg)",
-                  },
-                },
-              }}
-            />
-            <FormControl sx={{ minWidth: 150 }}>
-              <Select
-                indicator={<KeyboardArrowDown />}
-                color="primary"
-                placeholder="Category"
-                onChange={(e, newValue) => {
-                  setCategory(newValue);
-                }}
-                sx={{
-                  color: "orange",
-                  borderColor: "orange",
-                  backgroundColor: "#ffffff",
-                  "&:hover": {
-                    backgroundColor: "#FEF4EA",
-                  },
-                  width: 240,
-                  [`& .${selectClasses.indicator}`]: {
-                    transition: "0.2s",
-                    [`&.${selectClasses.expanded}`]: {
-                      transform: "rotate(-180deg)",
-                    },
-                  },
+              <MenuItem>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px",
+                  }}
+                >
+                  <Checkbox
+                    checked={isFilterSelected("price")}
+                    onChange={(e) => {
+                      handleFilterToggle("price");
+                      if (!e.target.checked) {
+                        // Reset price filters if unchecked
+                        setMinPrice("");
+                        setMaxPrice("");
+                        setPriceRange([0, 5000]); // Reset the slider to initial values
+                      }
+                    }}
+                  />
+                  <span>Price </span>
+                  <br />
+                  <Button
+                    onClick={(e) => setAnchorEl(e.currentTarget)}
+                    className="blackhover"
+                    sx={{ backgroundColor: "#ff9933" }}
+                  >
+                    Select Price Range
+                  </Button>
+                </div>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={() => setAnchorEl(null)}
+                >
+                  <MenuItem>
+                    <Typography variant="subtitle1">Select Range:</Typography>
+                    <Slider
+                      value={priceRange}
+                      onChange={handlePriceRangeChange}
+                      valueLabelDisplay="auto"
+                      min={0}
+                      max={5000}
+                      sx={{ width: 300, marginLeft: 2, marginTop: "10px" }} // Adjust slider width and margin
+                    />
+                  </MenuItem>
+                  <MenuItem>
+                    <Typography variant="body1">
+                      Selected Min: {priceRange[0]}
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem>
+                    <Typography variant="body1">
+                      Selected Max: {priceRange[1]}
+                    </Typography>
+                  </MenuItem>
+                </Menu>
+              </MenuItem>
+
+              <MenuItem>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px",
+                  }}
+                >
+                  <Checkbox
+                    checked={isFilterSelected("category")}
+                    onChange={() => handleFilterToggle("category")}
+                    paddingRight="40%"
+                  />
+                  Category
+                  <br />
+                  <FormControl sx={{ minWidth: 120, marginTop: 1 }}>
+                    <InputLabel id="category-select-label">Category</InputLabel>
+                    <Select
+                      labelId="category-select-label"
+                      id="category-select"
+                      value={category}
+                      onChange={handleCategoryChange}
+                      onOpen={fetchCategories} // Fetch categories when the dropdown is opened
+                    >
+                      {/* Map through the categories to generate MenuItems */}
+                      {categories.length > 0 ? (
+                        categories.map((category) => (
+                          <MenuItem key={category._id} value={category.name}>
+                            {category.name}
+                          </MenuItem>
+                        ))
+                      ) : (
+                        <MenuItem disabled>No categories available</MenuItem>
+                      )}
+                    </Select>
+                  </FormControl>
+                </div>
+              </MenuItem>
+
+              <MenuItem>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px",
+                  }}
+                >
+                  <Checkbox
+                    checked={isFilterSelected("rating")}
+                    onChange={() => handleFilterToggle("rating")}
+                    paddingRight="40%"
+                  />
+                  Rating
+                  <FormControl sx={{ minWidth: 120, marginTop: 1 }}>
+                    <InputLabel id="rating-select-label">Rating</InputLabel>
+                    <Select
+                      labelId="rating-select-label"
+                      id="rating-select"
+                      value={rating}
+                      onChange={handleRatingChange}
+                    >
+                      {[0, 1, 2, 3, 4, 5].map((ratingValue) => (
+                        <MenuItem key={ratingValue} value={ratingValue}>
+                          {ratingValue}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+              </MenuItem>
+
+              <MenuItem>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px",
+                  }}
+                >
+                  <Checkbox
+                    checked={isFilterSelected("date")}
+                    onChange={() =>
+                      handleFilterToggle("date")
+                    }
+                  />
+                  Date
+                  <br />
+                  <input
+                    type="datetime-local"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)} // Update the state with the selected date
+                    style={{ marginTop: "10px" }}
+                  />
+                </div>
+              </MenuItem>
+
+              <MenuItem sx={{ alignItems: "center", justifyContent: "center" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "16px",
+                  }}
+                >
+                  <Button
+                    onClick={handleFilter}
+                    className="blackhover"
+                    sx={{
+                      backgroundColor: "#ff9933",
+                      alignSelf: "center",
+                      justifySelf: "center",
+                    }}
+                  >
+                    Apply Filters
+                  </Button>
+                </div>
+              </MenuItem>
+              <MenuItem sx={{ alignItems: "center", justifyContent: "center" }}>
+                <div
+                  style={{
+                    gap: "16px",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Button
+                    onClick={handleClearAllFilters}
+                    className="blackhover"
+                    sx={{
+                      backgroundColor: "#ff9933",
+                      alignSelf: "center",
+                      justifySelf: "center",
+                    }}
+                  >
+                    Clear All Filters
+                  </Button>
+                </div>
+              </MenuItem>
+            </Menu>
+
+            <IconButton onClick={handleSortByClick}>
+              <SortIcon sx={{ color: "black" }} />
+            </IconButton>
+            <Menu
+              anchorEl={sortByAnchorEl}
+              open={Boolean(sortByAnchorEl)}
+              onClose={handleSortByClose}
+            >
+              <MenuItem
+                value="date"
+                onClick={() => {
+                  setSortBy("date");
+                  handleSort("date", sortOrder);
+                  handleSortByClose();
                 }}
               >
-                <Option value="">
-                  <em>Any</em>
-                </Option>
-                {categories.map((cat) => (
-                  <Option key={cat._id} value={cat.name}>
-                    {cat.name}
-                  </Option>
-                ))}
-              </Select>
-            </FormControl>
-
-            <Box sx={{ minWidth: 150 }}>
-              <Typography variant="body1">Rating: {averageRating}</Typography>
-              <Slider
-                value={averageRating}
-                onChange={(e, newValue) => setAverageRating(newValue)}
-                step={1}
-                marks={[0, 1, 2, 3, 4, 5].map((value) => ({
-                  value,
-                  label: value,
-                }))}
-                min={0}
-                max={5}
-                valueLabelDisplay="auto"
-                sx={{
-                  color: "orange",
-                  borderColor: "orange",
-                  "&:hover": {
-                    backgroundColor: "#FEF4EA",
-                  },
-                  width: 240,
-                  [`& .${selectClasses.indicator}`]: {
-                    transition: "0.2s",
-                    [`&.${selectClasses.expanded}`]: {
-                      transform: "rotate(-180deg)",
-                    },
-                  },
+                Date
+              </MenuItem>
+              <MenuItem
+                value="price"
+                onClick={() => {
+                  setSortBy("price");
+                  handleSort("price", sortOrder);
+                  handleSortByClose();
                 }}
-              />
-            </Box>
+              >
+                Price
+              </MenuItem>
+              <MenuItem
+                value="name"
+                onClick={() => {
+                  setSortBy("name");
+                  handleSort("name", sortOrder);
+                  handleSortByClose();
+                }}
+              >
+                Name
+              </MenuItem>
+              <MenuItem
+                value="duration"
+                onClick={() => {
+                  setSortBy("duration");
+                  handleSort("duration", sortOrder);
+                  handleSortByClose();
+                }}
+              >
+                Duration
+              </MenuItem>
+              <MenuItem
+                value="category"
+                onClick={() => {
+                  setSortBy("category");
+                  handleSort("category", sortOrder);
+                  handleSortByClose();
+                }}
+              >
+                Category
+              </MenuItem>
+              <MenuItem
+                value="specialDiscount"
+                onClick={() => {
+                  setSortBy("specialDiscount");
+                  handleSort("specialDiscount", sortOrder);
+                  handleSortByClose();
+                }}
+              >
+                Discount
+              </MenuItem>
+              <MenuItem
+                value="averageRating"
+                onClick={() => {
+                  setSortBy("averageRating");
+                  handleSort("averageRating", sortOrder);
+                  handleSortByClose();
+                }}
+              >
+                Rating
+              </MenuItem>
+            </Menu>
 
-            <Button className="blackhover" onClick={fetchFilteredActivities}>
-              Filter
-            </Button>
-          </Box>
-        )}
+            {/* Sort Order Menu */}
+            <IconButton onClick={handleSortOrderClick}>
+              <SwapVertIcon sx={{ color: "black" }} />
+            </IconButton>
+            <Menu
+              anchorEl={sortOrderAnchorEl}
+              open={Boolean(sortOrderAnchorEl)}
+              onClose={handleSortOrderClose}
+            >
+              <MenuItem
+                value="asc"
+                onClick={() => {
+                  setSortOrder("asc");
+                  handleSort(sortBy, "asc");
+                  handleSortOrderClose();
+                }}
+              >
+                Ascending
+              </MenuItem>
+              <MenuItem
+                value="desc"
+                onClick={() => {
+                  setSortOrder("desc");
+                  handleSort(sortBy, "desc");
+                  handleSortOrderClose();
+                }}
+              >
+                Descending
+              </MenuItem>
+            </Menu>
+          </div>
+          {/* for the three icons */}
+        </div>
 
-        <Button
-          className="blackhover"
-          onClick={fetchUpcomingActivities}
-          sx={{ marginBottom: "3%" }}
-        >
-          Upcoming Activities Only
-        </Button>
-
-        {/* SORTING */}
-
-        {displaySort && (
+        {activities.length > 0 ? (
           <div
             style={{
-              display: "flex",
-              marginBottom: 15,
-              justifyContent: "space-between",
+              width: "100%",
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: "24px", // Adjust the gap between items as needed
+              paddingBottom: 24,
             }}
           >
-            <FormControl>
-              <Select
-                indicator={<KeyboardArrowDown />}
-                placeholder="Sort By"
-                onChange={(e, newValue) => {
-                  setSortBy(newValue);
-                }}
-                sx={{
-                  color: "orange",
-                  borderColor: "orange",
-                  backgroundColor: "#ffffff",
-                  "&:hover": {
-                    backgroundColor: "#FEF4EA",
-                  },
-                  width: 240,
-                  [`& .${selectClasses.indicator}`]: {
-                    transition: "0.2s",
-                    [`&.${selectClasses.expanded}`]: {
-                      transform: "rotate(-180deg)",
-                    },
-                  },
-                }}
-              >
-                <Option
-                  sx={{
-                    color: "orange",
-                    backgroundColor: "#ffffff",
-                    "&:hover": {
-                      backgroundColor: "#FEF4EA",
-                    },
-                  }}
-                  value="date"
-                >
-                  Date
-                </Option>
-                <Option
-                  sx={{
-                    color: "orange",
-                    backgroundColor: "#ffffff",
-                    "&:hover": {
-                      backgroundColor: "#FEF4EA",
-                    },
-                  }}
-                  value="price"
-                >
-                  Price
-                </Option>
-                <Option
-                  sx={{
-                    color: "orange",
-                    backgroundColor: "#ffffff",
-                    "&:hover": {
-                      backgroundColor: "#FEF4EA",
-                    },
-                  }}
-                  value="name"
-                >
-                  Name
-                </Option>
-                <Option
-                  sx={{
-                    color: "orange",
-                    backgroundColor: "#ffffff",
-                    "&:hover": {
-                      backgroundColor: "#FEF4EA",
-                    },
-                  }}
-                  value="duration"
-                >
-                  Duration
-                </Option>
-                <Option
-                  sx={{
-                    color: "orange",
-                    backgroundColor: "#ffffff",
-                    "&:hover": {
-                      backgroundColor: "#FEF4EA",
-                    },
-                  }}
-                  value="category"
-                >
-                  Category
-                </Option>
-                <Option
-                  sx={{
-                    color: "orange",
-                    backgroundColor: "#ffffff",
-                    "&:hover": {
-                      backgroundColor: "#FEF4EA",
-                    },
-                  }}
-                  value="specialDiscount"
-                >
-                  Discount
-                </Option>
-                <Option
-                  sx={{
-                    color: "orange",
-                    backgroundColor: "#ffffff",
-                    "&:hover": {
-                      backgroundColor: "#FEF4EA",
-                    },
-                  }}
-                  value="averageRating"
-                >
-                  Rating
-                </Option>
-              </Select>
-            </FormControl>
-
-            <FormControl sx={{ minWidth: 100 }}>
-              <Select
-                labelId="order-label"
-                placeholder="Order"
-                onChange={(e, value) => {
-                  setOrder(value);
-                }}
-                indicator={<KeyboardArrowDown />}
-                sx={{
-                  "&.MuiSelect-MenuItem": {
-                    backgroundColor: "orange",
-                  },
-                  "&.Joy-JoySelectListBox": {
-                    sx: {
-                      backgroundColor: "orange",
-                    },
-                  },
-
-                  color: "orange",
-                  borderColor: "orange",
-                  backgroundColor: "#ffffff",
-                  "&:hover": {
-                    backgroundColor: "#FEF4EA",
-                  },
-                  width: 240,
-                  [`& .${selectClasses.indicator}`]: {
-                    transition: "0.2s",
-                    [`&.${selectClasses.expanded}`]: {
-                      transform: "rotate(-180deg)",
-                    },
-                  },
-                }}
-              >
-                <Option
-                  value="asc"
-                  sx={{
-                    color: "orange",
-                    backgroundColor: "#ffffff",
-                    "&:hover": {
-                      backgroundColor: "#FEF4EA",
-                    },
-                  }}
-                >
-                  Ascending
-                </Option>
-                <Option
-                  value="desc"
-                  sx={{ color: "orange", backgroundColor: "#ffffff" }}
-                >
-                  Descending
-                </Option>
-              </Select>
-            </FormControl>
-
-            <Button
-              className="blackhover"
-              sx={{ backgroundColor: "#ff9933", color: "white " }}
-              onClick={fetchSortedActivities}
-            >
-              Sort
-            </Button>
-          </div>
-        )}
-
-        {/* cards start here */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "24px", // Adjust the gap between items as needed
-            width: "100%",
-            paddingBottom: 24,
-          }}
-        >
-          {Array.isArray(activities) && activities.length > 0 ? (
-            activities.map((activity) =>
-              activity.flag === false &&
-              activity.advertiserDeleted === false &&
-              activity.deletedActivity === false ? (
-                <ActivityCard activity={activity} />
+            {activities.map((activity) =>
+              !activity.flag &&
+                !activity.isDeactivated &&
+                !activity.tourGuideDeleted &&
+                !activity.deletedActivity ? (
+                <ActivityCard key={activity._id} activity={activity} />
               ) : null
-            )
-          ) : (
-            <Typography variant="body1" color="textSecondary" align="center">
-              No activities available
-            </Typography>
-          )}
-        </div>
+            )}
+          </div>
+        ) : (
+          showError && (
+            <Error404
+              errorMessage={errorMessage}
+              backMessage={backMessage}
+              route="/activity/searchActivities" // Change route for activities
+            />
+          )
+        )}
+        <Help />
       </Container>
-
-      <Help />
     </Box>
   );
-};
+}
 
-export default SearchActivities;
+export default SearchActivity;
