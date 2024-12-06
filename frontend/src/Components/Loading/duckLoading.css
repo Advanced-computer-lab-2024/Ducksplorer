@@ -6,15 +6,17 @@
   align-items: center;
   height: 100vh; /* Full height */
   width: 100vw; /* Full width */
-  background: #ffffff; /* Sky-blue to white gradient */
+  background: #ffffff;
   overflow: hidden; /* Ensure no child elements can overflow */
 }
 
 /* Video styling */
 .duck-video {
-  width: 100%; /* Increase the size of the video */
-  height: 150%;
+  width: 50%; /* Increase the size of the video */
+  height: auto;
   border-radius: 20px; /* Slightly round the corners */
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
+  animation: float 2s infinite ease-in-out;
 }
 /* Text styling */
 .loading-text {
