@@ -18,7 +18,7 @@ export default function HotelCardDetailed({ hotelsData }) {
             </AspectRatio>
 
             <CardContent sx={{ display: "flex", alignItems: "center" }}>
-                <Typography level="h4" sx={{ fontWeight: "bold", fontSize: 35, margin: "2%" }}>
+                <Typography level="h4" sx={{ fontWeight: "bold", fontSize: 30, margin: "2%" }}>
                     {hotelsData.hotelName || "Unnamed Hotel"}
                 </Typography>
                 <p><strong>Location:</strong> {hotelsData.city}{"  ,"}{hotelsData.country}</p>

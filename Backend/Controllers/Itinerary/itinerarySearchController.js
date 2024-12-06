@@ -14,14 +14,14 @@ const searchItineraries = async (req, res) => {
             searches['$or'] = [
                 { 'activity.name': { $regex: searchTerm, $options: 'i' } },   // Search in activity name
                 { 'activity.category': { $regex: searchTerm, $options: 'i' } }, // Search in activity category
-                { tags: { $regex: searchTerm, $options: 'i'  } }
+                { tags: { $regex: searchTerm, $options: 'i' } }
             ];
         }
 
         const itineraries = await itineraryModel.find(searches);
 
-        if (!itineraries.length) {
-            return res.status(200).json({ error: "No itineraries found matching the search criteria" });
+        if (itineraries.length === 0) {
+            return res.status(200).json([]);
         }
 
         res.status(200).json(itineraries);

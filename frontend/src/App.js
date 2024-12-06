@@ -101,6 +101,8 @@ import FlightsPage from './Components/ThirdParty/FlightsPage';
 import HotelsPage from './Components/ThirdParty/HotelsPage';
 import TransportationsPage from './Components/ThirdParty/TransportationsPage'; // Import TransportationsPage
 
+import Error404 from "./Components/Error404.js";
+
 function App() {
   const { authUser } = useAuthContext();
   return (
@@ -712,9 +714,9 @@ function App() {
           <Route path="/myCart" element={<CartPage />} />
 
 
-          
-          <Route path="/mySaved" element={<MySavedItems/>} />
-          <Route path="/orders" element={<Orders/>} />
+
+          <Route path="/mySaved" element={<MySavedItems />} />
+          <Route path="/orders" element={<Orders />} />
           <Route path="/flightsPage" element={<FlightsPage />} />
           <Route
             path="/transportationsPage"
@@ -724,6 +726,9 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route path="/errorPage" element={<Error404 />} />
+
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

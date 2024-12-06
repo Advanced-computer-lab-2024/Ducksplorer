@@ -9,6 +9,7 @@ import TouristNavBar from '../../Components/TouristNavBar';
 import TouristSidebar from '../../Components/Sidebars/TouristSidebar';
 import AdminNavbar from '../../Components/TopNav/Adminnavbar';
 import Sidebar from '../../Components/Sidebars/Sidebar';
+
 import {
   Box,
   Table,
@@ -73,11 +74,10 @@ const ViewAllItineraries = () => {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
-        backgroundColor: "#ffffff",
-        overflowY: "auto",
-        display: "flex", // Flex layout for Navbar and Sidebar
-        height: "10vh"
+        height: "100vh",
+        paddingTop: "64px",
+        width: "90vw",
+        marginLeft: "5vw",
       }}
     >
       {/* Navbar */}
@@ -91,196 +91,181 @@ const ViewAllItineraries = () => {
         sx={{
           flex: 1, // Take the remaining width
           padding: "32px", // Inner padding
-          maxWidth: "1200px", // Content width limit
           margin: "0 auto", // Center content horizontally
-          backgroundColor: "#ffffff", // White background for main content
           borderRadius: "12px", // Rounded corners
-          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
         }}
       >
         {/* Page Title */}
-        <Typography
-          variant="h4"
-          sx={{
-            fontWeight: "bold",
-            color: "#3f51b5", // Primary color
-            textAlign: "center",
-            marginBottom: "24px", // Space below the title
-          }}
+        <div
+          style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
         >
-          Itineraries
-        </Typography>
-
-        {/* Table Container */}
-        <TableContainer
-          component={Paper}
-          sx={{
-            borderRadius: "12px", // Rounded corners
-            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
-            overflow: "hidden", // Prevent content overflow
-          }}
-        >
-          <Table>
-            <TableHead
+          <div style={{ overflowY: "visible", height: "100vh" }}>
+            <Typography
+              variant="h2"
+              sx={{ textAlign: "center", fontWeight: "bold" }}
+              gutterBottom
+            >
+              Itineraries
+            </Typography>
+            <br></br>
+            {/* Table Container */}
+            <TableContainer
+              component={Paper}
               sx={{
-                backgroundColor: "#3f51b5", // Header background color
+                marginBottom: 4,
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+                borderRadius: "1.5cap",
               }}
             >
-              <TableRow>
-                {[
-                  "Activities",
-                  "Locations",
-                  "Timeline",
-                  "Language",
-                  "Price",
-                  "Available Dates and Times",
-                  "Accessibility",
-                  "Pick Up Location",
-                  "Drop Off Location",
-                  "Ratings",
-                  "Tags",
-                  "Flag",
-                  "Action",
-                ].map((header) => (
-                  <TableCell
-                    key={header}
-                    sx={{
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: "14px",
-                    }}
-                  >
-                    {header}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {itineraries.length > 0 ? (
-                itineraries.map((itinerary) => (
-                  <TableRow
-                    key={itinerary._id}
-                    sx={{
-                      backgroundColor: itinerary.flag ? "#ffdddd" : "transparent", // Highlight flagged rows
-                      "&:hover": {
-                        backgroundColor: "#f1f1f1", // Highlight on hover
-                      },
-                    }}
-                  >
-                    {/* Activities */}
-                    <TableCell>
-                      {itinerary.activity?.length > 0 ? (
-                        itinerary.activity.map((activity, index) => (
-                          <Box key={index} sx={{ marginBottom: "8px" }}>
-                            <Typography variant="body2">
-                              <strong>Name:</strong> {activity.name || "N/A"}
-                            </Typography>
-                            <Typography variant="body2">
-                              <strong>Price:</strong> {activity.price || "N/A"}
-                            </Typography>
-                            <Typography variant="body2">
-                              <strong>Location:</strong> {activity.location || "N/A"}
-                            </Typography>
-                            <Typography variant="body2">
-                              <strong>Category:</strong> {activity.category || "N/A"}
-                            </Typography>
-                          </Box>
-                        ))
-                      ) : (
-                        <Typography variant="body2">No activities available</Typography>
-                      )}
-                    </TableCell>
-
-                    {/* Other Columns */}
-                    <TableCell>
-                      {itinerary.locations?.length > 0 ? (
-                        itinerary.locations.map((location, index) => (
-                          <Typography key={index} variant="body2">
-                            {location.trim()}
-                          </Typography>
-                        ))
-                      ) : (
-                        "No locations available"
-                      )}
-                    </TableCell>
-                    <TableCell>{itinerary.timeline || "N/A"}</TableCell>
-                    <TableCell>{itinerary.language || "N/A"}</TableCell>
-                    <TableCell>{itinerary.price || "N/A"}</TableCell>
-                    <TableCell>
-                      {itinerary.availableDatesAndTimes?.length > 0
-                        ? itinerary.availableDatesAndTimes.map((dateTime, index) => {
-                          const dateObj = new Date(dateTime);
-                          const date = dateObj.toISOString().split("T")[0];
-                          const time = dateObj.toTimeString().split(" ")[0];
-                          return (
-                            <Typography key={index} variant="body2">
-                              {date} {time}
-                            </Typography>
-                          );
-                        })
-                        : "No available dates and times"}
-                    </TableCell>
-                    <TableCell>{itinerary.accessibility || "N/A"}</TableCell>
-                    <TableCell>{itinerary.pickUpLocation || "N/A"}</TableCell>
-                    <TableCell>{itinerary.dropOffLocation || "N/A"}</TableCell>
-                    <TableCell>{itinerary.rating || "N/A"}</TableCell>
-                    <TableCell>
-                      {itinerary.tags?.length > 0
-                        ? itinerary.tags.map((tag, index) => (
-                          <Typography key={index} variant="body2">
-                            {tag}
-                          </Typography>
-                        ))
-                        : "No tags available"}
-                    </TableCell>
-                    <TableCell>
-                      {itinerary.flag ? (
-                        <Typography
-                          sx={{ display: "flex", alignItems: "center", color: "red" }}
-                        >
-                          <WarningIcon sx={{ marginRight: "4px" }} />
-                          Inappropriate
-                        </Typography>
-                      ) : (
-                        <Typography
-                          sx={{ display: "flex", alignItems: "center", color: "green" }}
-                        >
-                          <CheckCircleIcon sx={{ marginRight: "4px" }} />
-                          Appropriate
-                        </Typography>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <Tooltip title="Change Itinerary Flag">
-                        <IconButton
-                          color="error"
-                          aria-label="Flag Itinerary"
-                          onClick={() => {
-                            setEditingItinerary(itinerary); // Set the itinerary to be flagged
-                            flagItinerary(itinerary); // Update the itinerary immediately
-                          }}
-                        >
-                          <FlagIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </TableCell>
+              <Table>
+                <TableHead
+                >
+                  <TableRow>
+                    {[
+                      "Activities",
+                      "Locations",
+                      "Timeline",
+                      "Language",
+                      "Price",
+                      "Available Dates and Times",
+                      "Accessibility",
+                      "Pick Up Location",
+                      "Drop Off Location",
+                      "Ratings",
+                      "Tags",
+                      "Flag",
+                      "Action",
+                    ].map((header) => (
+                      <TableCell
+                        key={header}
+                        sx={{ fontSize: "18px", fontWeight: "bold" }}
+                      >
+                        {header}
+                      </TableCell>
+                    ))}
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={13}>
-                    <Typography variant="body2" align="center">
-                      No itineraries found.
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
-    </Box>
+                </TableHead>
+                <TableBody>
+                  {itineraries.length > 0 ? (
+                    itineraries.map((itinerary) => (
+                      <TableRow
+                        key={itinerary._id}
+                      >
+                        {/* Activities */}
+                        <TableCell>
+                          {itinerary.activity?.length > 0 ? (
+                            itinerary.activity.map((activity, index) => (
+                              <Box key={index} sx={{ marginBottom: "8px" }}>
+                                <Typography variant="body2">
+                                  <strong>Name:</strong> {activity.name || "N/A"}
+                                </Typography>
+                                <Typography variant="body2">
+                                  <strong>Price:</strong> {activity.price || "N/A"}
+                                </Typography>
+                                <Typography variant="body2">
+                                  <strong>Location:</strong> {activity.location || "N/A"}
+                                </Typography>
+                                <Typography variant="body2">
+                                  <strong>Category:</strong> {activity.category || "N/A"}
+                                </Typography>
+                              </Box>
+                            ))
+                          ) : (
+                            <Typography variant="body2">No activities available</Typography>
+                          )}
+                        </TableCell>
 
+                        {/* Other Columns */}
+                        <TableCell>
+                          {itinerary.locations?.length > 0 ? (
+                            itinerary.locations.map((location, index) => (
+                              <Typography key={index} variant="body2">
+                                {location.trim()}
+                              </Typography>
+                            ))
+                          ) : (
+                            "No locations available"
+                          )}
+                        </TableCell>
+                        <TableCell>{itinerary.timeline || "N/A"}</TableCell>
+                        <TableCell>{itinerary.language || "N/A"}</TableCell>
+                        <TableCell>{itinerary.price || "N/A"}</TableCell>
+                        <TableCell>
+                          {itinerary.availableDatesAndTimes?.length > 0
+                            ? itinerary.availableDatesAndTimes.map((dateTime, index) => {
+                              const dateObj = new Date(dateTime);
+                              const date = dateObj.toISOString().split("T")[0];
+                              const time = dateObj.toTimeString().split(" ")[0];
+                              return (
+                                <Typography key={index} variant="body2">
+                                  {date} {time}
+                                </Typography>
+                              );
+                            })
+                            : "No available dates and times"}
+                        </TableCell>
+                        <TableCell>{itinerary.accessibility || "N/A"}</TableCell>
+                        <TableCell>{itinerary.pickUpLocation || "N/A"}</TableCell>
+                        <TableCell>{itinerary.dropOffLocation || "N/A"}</TableCell>
+                        <TableCell>{itinerary.rating || "N/A"}</TableCell>
+                        <TableCell>
+                          {itinerary.tags?.length > 0
+                            ? itinerary.tags.map((tag, index) => (
+                              <Typography key={index} variant="body2">
+                                {tag}
+                              </Typography>
+                            ))
+                            : "No tags available"}
+                        </TableCell>
+                        <TableCell>
+                          {itinerary.flag ? (
+                            <Typography
+                              sx={{ display: "flex", alignItems: "center", color: "red" }}
+                            >
+                              <WarningIcon sx={{ marginRight: "4px" }} />
+                              Inappropriate
+                            </Typography>
+                          ) : (
+                            <Typography
+                              sx={{ display: "flex", alignItems: "center", color: "green" }}
+                            >
+                              <CheckCircleIcon sx={{ marginRight: "4px" }} />
+                              Appropriate
+                            </Typography>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <Tooltip title="Change Itinerary Flag">
+                            <IconButton
+                              color="error"
+                              aria-label="Flag Itinerary"
+                              onClick={() => {
+                                setEditingItinerary(itinerary); // Set the itinerary to be flagged
+                                flagItinerary(itinerary); // Update the itinerary immediately
+                              }}
+                            >
+                              <FlagIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={13}>
+                        <Typography variant="body2" align="center">
+                          No itineraries found.
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+        </div>
+      </Box>
+    </Box >
 
   );
 }

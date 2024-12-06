@@ -9,6 +9,8 @@ import StandAloneToggleButton from "../../Components/ToggleButton.js";
 import WarningIcon from '@mui/icons-material/Warning';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import TouristNavBar from "../../Components/TouristNavBar.js";
+import Help from "../../Components/HelpIcon";
+import Error404 from "../../Components/Error404.js";
 import {
   Rating,
   Checkbox,
@@ -148,41 +150,66 @@ const MyActivities = () => {
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        height: "100vh",
+        paddingTop: "64px",
+        width: "90vw",
+        marginLeft: "5vw",
+      }}
+    >
       <AdvertiserSidebar />
-      <div>
-        <Box
-          sx={{
-            p: 6,
-            maxWidth: "120vh",
-            overflowY: "visible",
-            height: "100vh",
-            marginLeft: "350px",
-          }}
-        >
-          <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-            <Typography variant="h4">Available activities</Typography>
-          </Box>
-          <TableContainer style={{ borderRadius: 20 }} component={Paper}>
+      <div
+        style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
+      >
+        <div style={{ overflowY: "visible", height: "100vh" }}>
+          <Typography
+            variant="h2"
+            sx={{ textAlign: "center", fontWeight: "bold" }}
+            gutterBottom
+          >
+            Activities
+          </Typography>
+          <br></br>
+          <TableContainer
+            component={Paper}
+            sx={{
+              marginBottom: 4,
+              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+              borderRadius: "1.5cap",
+            }}
+          >
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Price</TableCell>
-                  <TableCell>Is open</TableCell>
-                  <TableCell>Category</TableCell>
-                  <TableCell>Tags</TableCell>
-                  <TableCell>Discount</TableCell>
-                  <TableCell>Dates and Times</TableCell>
-                  <TableCell>Duration</TableCell>
-                  <TableCell>Location</TableCell>
-                  <TableCell>Rating</TableCell>
-                  <TableCell>Flag</TableCell>
-                  <TableCell>Actions</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Name</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Price</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Is open</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Category</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Tags</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Discount</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Dates and Times</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Duration</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Location</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Rating</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Flag</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {activities.map((activity) => activity.deletedActivity=== false?(
+                {activities.map((activity) => activity.deletedActivity === false ? (
                   <TableRow key={activity._id}>
                     <TableCell>{activity.name}</TableCell>
                     <TableCell>{activity.price}</TableCell>
@@ -242,12 +269,11 @@ const MyActivities = () => {
                       </Tooltip>
                     </TableCell>
                   </TableRow>
-                ):null)// We don't output a row when the activity has been deleted but cannot be removed from database since it is booked by previous tourists
-                } 
+                ) : <Error404 route={"/advertiserDashboard"} errorMessage={"The activities you are looking for might be removed or is temporarily unavailable"} backMessage={"Back to Dashboard"} />)
+                }
               </TableBody>
             </Table>
           </TableContainer>
-
           {editingActivity && (
             <form
               onSubmit={handleUpdate}
@@ -308,14 +334,6 @@ const MyActivities = () => {
                 fullWidth
                 sx={{ mb: 2 }}
               />
-              {/* <TextField
-                label="Tags (comma-separated)"
-                name="tags"
-                value={formData.tags}
-                onChange={handleInputChange}
-                fullWidth
-                sx={{ mb: 2 }}
-              /> */}
               <div
                 style={{
                   display: "flex",
@@ -349,7 +367,7 @@ const MyActivities = () => {
                 fullWidth
                 sx={{ mb: 2 }}
               />
-              <Button type="submit" variant="contained" color="primary">
+              <Button type="submit" variant="contained" className="blackhover">
                 Update Activity
               </Button>
             </form>
@@ -371,9 +389,9 @@ const MyActivities = () => {
               </Button>
             </DialogActions>
           </Dialog>
-        </Box>
+        </div>
       </div>
-    </>
+    </Box >
   );
 };
 

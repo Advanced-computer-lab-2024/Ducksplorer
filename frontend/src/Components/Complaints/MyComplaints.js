@@ -15,6 +15,7 @@ import { useParams } from "react-router-dom";
 import Help from "../HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar.js";
 import TouristSidebar from "../Sidebars/TouristSidebar.js";
+import DuckLoading from "../../Components/Loading/duckLoading";
 
 const MyComplaints = () => {
   const [complaints, setComplaints] = useState([]);
@@ -41,21 +42,9 @@ const MyComplaints = () => {
 
   if (loading) {
     return (
-      <Box
-        sx={{
-          height: "100vh",
-        }}
-      >
-        <TouristNavBar />
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          height="80vh"
-        >
-          <CircularProgress size={60} thickness={4} />
-        </Box>
-      </Box>
+      <div>
+        <DuckLoading />
+      </div>
     );
   }
 
@@ -63,94 +52,107 @@ const MyComplaints = () => {
     <Box
       sx={{
         height: "100vh",
-        backgroundColor: "#ffffff",
-        paddingTop: "64px", // Adjusted for fixed navbar spacing
+        paddingTop: "64px",
       }}
     >
       <TouristNavBar />
-      <TouristSidebar/>
 
-      <Container
-        maxWidth="md"
-        sx={{ mt: 1, mb: 4, overflowY: "auto", height: "calc(100vh - 100px)" }}
+      <Typography
+        variant="h4"
+        align="center"
+        className="bigTitle"
+        sx={{ marginBottom: "30px" }}
+        gutterBottom
       >
-        <Typography
-          variant="h4"
-          align="center"
-          gutterBottom
-          sx={{ fontWeight: "bold", color: "#000000" }}
-        >
-          My Complaints
-        </Typography>
-        <Divider sx={{ mb: 3 }} />
-
+        My Complaints
+      </Typography>
+      <Container
+        sx={{
+          mt: 1,
+          mb: 4,
+          overflowY: "visible",
+          height: "100%",
+        }}
+      >
         {complaints.length > 0 ? (
-          <Grid container spacing={3}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3,1fr)",
+              gridGap: "20px",
+            }}
+          >
             {complaints.map((complaint) => (
-              <Grid item xs={12} key={complaint._id}>
-                <Card
-                  variant="outlined"
-                  sx={{
-                    borderRadius: 2,
-                    boxShadow: 2,
-                    backgroundColor: "#f9f9f9",
-                  }}
-                >
-                  <CardContent>
-                    <Typography
-                      variant="h6"
-                      sx={{ fontWeight: "bold", color: "#333" }}
+              <Card
+                variant="outlined"
+                sx={{
+                  minHeight: "300px",
+                  minWidth: "300px",
+                  borderColor: complaint.status ? "#4bb543" : "orange",
+                  borderRadius: 2,
+                  boxShadow: 2,
+                  borderWidth: 2,
+                  backgroundColor: "#f9f9f9",
+                }}
+              >
+                <CardContent>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontWeight: "bold",
+                      color: complaint.status ? "#4bb543" : "orange",
+                      textAlign: "center",
+                    }}
+                  >
+                    {complaint.title}
+                  </Typography>
+                  <Divider sx={{ my: 1 }} />
+                  <Typography variant="body2" color="textSecondary">
+                    <strong>Date:</strong>{" "}
+                    {new Date(complaint.date).toLocaleDateString()}
+                  </Typography>
+                  <Divider sx={{ my: 1 }} />
+                  <Typography variant="body2" color="textSecondary">
+                    <strong>Body:</strong> {complaint.body}
+                  </Typography>
+                  <Divider sx={{ my: 1 }} />
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    sx={{ mt: 1 }}
+                  >
+                    <strong>Status:</strong>{" "}
+                    <span
+                      style={{
+                        fontWeight: "bold",
+                        color: complaint.status ? "green" : "orange",
+                      }}
                     >
-                      {complaint.title}
-                    </Typography>
-                    <Divider sx={{ my: 1 }} />
-                    <Typography variant="body2" color="textSecondary">
-                      <strong>Date:</strong>{" "}
-                      {new Date(complaint.date).toLocaleDateString()}
-                    </Typography>
-                    <Divider sx={{ my: 1 }} />
-                    <Typography variant="body2" color="textSecondary">
-                      <strong>Body:</strong> {complaint.body}
-                    </Typography>
-                    <Divider sx={{ my: 1 }} />
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      sx={{ mt: 1 }}
-                    >
-                      <strong>Status:</strong>{" "}
-                      <span
-                        style={{
-                          fontWeight: "bold",
-                          color: complaint.status ? "green" : "orange",
-                        }}
+                      {complaint.status ? "Resolved" : "Pending"}
+                    </span>
+                  </Typography>
+                  <Divider sx={{ my: 1 }} />
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    sx={{ mt: 1 }}
+                  >
+                    <strong>Replies:</strong>
+                  </Typography>
+                  {complaint.replies &&
+                    complaint.replies.map((reply, index) => (
+                      <Typography
+                        key={index}
+                        variant="body2"
+                        color="textSecondary"
                       >
-                        {complaint.status ? "Resolved" : "Pending"}
-                      </span>
-                    </Typography>
-                    <Divider sx={{ my: 1 }} />
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      sx={{ mt: 1 }}
-                    >
-                      <strong>Replies:</strong>
-                    </Typography>
-                    {complaint.replies &&
-                      complaint.replies.map((reply, index) => (
-                        <Typography
-                          key={index}
-                          variant="body2"
-                          color="textSecondary"
-                        >
-                          <strong>Date:</strong> {reply.date} - {reply.text}
-                        </Typography>
-                      ))}
-                  </CardContent>
-                </Card>
-              </Grid>
+                        <strong>Date:</strong> {reply.date} - {reply.text}
+                      </Typography>
+                    ))}
+                </CardContent>
+              </Card>
             ))}
-          </Grid>
+          </div>
         ) : (
           <Box
             display="flex"
@@ -163,7 +165,6 @@ const MyComplaints = () => {
             </Typography>
           </Box>
         )}
-        <Help />
       </Container>
     </Box>
   );

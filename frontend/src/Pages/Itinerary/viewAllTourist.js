@@ -10,6 +10,7 @@ import {
   Menu,
   MenuItem,
   Checkbox,
+  Container,
   Slider,
   Select,
   IconButton,
@@ -27,6 +28,7 @@ import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
 import SortIcon from "@mui/icons-material/Sort";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
+import Error404 from "../../Components/Error404.js";
 
 function SearchItineraries() {
   const { id } = useParams();
@@ -35,6 +37,9 @@ function SearchItineraries() {
   const [itineraries, setItineraries] = useState([]);
   const isGuest = localStorage.getItem("guest") === "true";
 
+  const errorMessage =
+    "The itinerary you are looking for might be removed or is temporarily unavailable";
+  const backMessage = "Back to search again";
   //filtering consts
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
@@ -314,62 +319,48 @@ function SearchItineraries() {
     handleFilterClose();
   };
 
-  // Share itinerary functionality
-  const handleShareLink = (itineraryId) => {
-    const link = `${window.location.origin}/viewAllTourist/${itineraryId}`; // Update with your actual route
-    navigator.clipboard
-      .writeText(link)
-      .then(() => {
-        message.success("Link copied to clipboard!");
-      })
-      .catch(() => {
-        message.error("Failed to copy link.");
-      });
-  };
-
-  const handleShareEmail = (itineraryId) => {
-    const link = `${window.location.origin}/viewAllTourist/${itineraryId}`; // Update with your actual route
-    window.location.href = `mailto:?subject=Check out this itinerary&body=Here is the link to the itinerary: ${link}`;
-  };
-
   const handleActivityCurrencyChange = (rates, selectedCurrency) => {
     setActivityExchangeRates(rates);
     setActivityCurrency(selectedCurrency);
   };
 
   const [showUpcomingOnly, setShowUpcomingOnly] = useState(false);
+  const [showError, setShowError] = useState(false);
+
+  useEffect(() => {
+    if (itineraries.length === 0) {
+      const timer = setTimeout(() => setShowError(true), 500); // Wait 0.5 second
+      return () => clearTimeout(timer); // Cleanup the timer when the component unmounts or updates
+    } else {
+      setShowError(false); // Reset error state if itineraries exist
+    }
+  }, [itineraries]);
 
   return (
-    <div>
+    <Box
+      sx={{
+        height: "100vh",
+        backgroundColor: "fff6e6",
+        width: "100vw",
+        paddingTop: "2vh", // Adjust for navbar height
+      }}
+    >
       <TouristNavBar />
-      {/* <TouristSidebar /> */}
-      <Box
-        sx={{
-          padding: "20px",
-          margin: "auto",
-          display: "flex",
-          flexDirection: "column",
-          overflowY: "visible",
-          height: "100vh",
-        }}
-      >
-        <Link
-          to={isGuest ? "/guestDashboard" : "/touristDashboard"}
-          className="text-sm hover:underline hover:text-blue-600 mt-2 inline-block"
-        >
-          Back
-        </Link>
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Typography variant="h4"> Itineraries</Typography>
+      <Container sx={{ width: "100%" }}>
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Typography class="bigTitle">Itineraries</Typography>
         </Box>
+
+        {/* <TouristSidebar /> */}
 
         <div
           style={{
             //div to surround search bar, button and the filter, and 2 sort icons
             display: "grid",
-            gridTemplateColumns: "3fr 0.5fr auto",
-            gap: "16px", // Adjust the gap between items as needed
+            gridTemplateColumns: "2.5fr 0.5fr auto auto",
+            gap: "16px",
             paddingBottom: 24,
+            width: "100%",
           }}
         >
           <Input
@@ -403,7 +394,11 @@ function SearchItineraries() {
             >
               <MenuItem>
                 <div
-                  style={{ display: "flex", alignItems: "center", gap: "16px" }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px",
+                  }}
                 >
                   <Checkbox
                     checked={showUpcomingOnly}
@@ -415,7 +410,11 @@ function SearchItineraries() {
 
               <MenuItem>
                 <div
-                  style={{ display: "flex", alignItems: "center", gap: "16px" }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px",
+                  }}
                 >
                   <Checkbox
                     checked={isFilterSelected("price")}
@@ -433,6 +432,7 @@ function SearchItineraries() {
                   <br />
                   <Button
                     onClick={(e) => setAnchorEl(e.currentTarget)}
+                    className="blackhover"
                     sx={{ backgroundColor: "#ff9933" }}
                   >
                     Select Price Range
@@ -469,7 +469,11 @@ function SearchItineraries() {
 
               <MenuItem>
                 <div
-                  style={{ display: "flex", alignItems: "center", gap: "16px" }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px",
+                  }}
                 >
                   <Checkbox
                     checked={isFilterSelected("language")}
@@ -500,7 +504,11 @@ function SearchItineraries() {
 
               <MenuItem>
                 <div
-                  style={{ display: "flex", alignItems: "center", gap: "16px" }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px",
+                  }}
                 >
                   <Checkbox
                     checked={isFilterSelected("availableDatesAndTimes")}
@@ -521,7 +529,11 @@ function SearchItineraries() {
 
               <MenuItem>
                 <div
-                  style={{ display: "flex", alignItems: "center", gap: "16px" }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px",
+                  }}
                 >
                   <Checkbox
                     checked={isFilterSelected("tags")}
@@ -559,6 +571,7 @@ function SearchItineraries() {
                 >
                   <Button
                     onClick={handleFilter}
+                    className="blackhover"
                     sx={{
                       backgroundColor: "#ff9933",
                       alignSelf: "center",
@@ -579,6 +592,7 @@ function SearchItineraries() {
                 >
                   <Button
                     onClick={handleClearAllFilters}
+                    className="blackhover"
                     sx={{
                       backgroundColor: "#ff9933",
                       alignSelf: "center",
@@ -658,33 +672,34 @@ function SearchItineraries() {
         {itineraries.length > 0 ? (
           <div
             style={{
-              width: "90vw",
+              width: "100%",
               display: "grid",
               gridTemplateColumns: "repeat(3, 1fr)",
               gap: "24px", // Adjust the gap between items as needed
               paddingBottom: 24,
             }}
           >
-            {console.log("these are the itineraries", itineraries)}
-            {
-              itineraries.map((itinerary) =>
-                itinerary.flag === false &&
-                itinerary.isDeactivated === false &&
-                itinerary.tourGuideDeleted === false &&
-                itinerary.deletedItinerary === false ? (
-                  <ItineraryCard itinerary={itinerary} />
-                ) : null
-              ) // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists
-            }
+            {itineraries.map((itinerary) =>
+              !itinerary.flag &&
+              !itinerary.isDeactivated &&
+              !itinerary.tourGuideDeleted &&
+              !itinerary.deletedItinerary ? (
+                <ItineraryCard key={itinerary._id} itinerary={itinerary} />
+              ) : null
+            )}
           </div>
         ) : (
-          <Typography variant="body1" style={{ marginTop: "20px" }}>
-            No itineraries found.
-          </Typography>
+          showError && (
+            <Error404
+              errorMessage={errorMessage}
+              backMessage={backMessage}
+              route="/viewAllTourist"
+            />
+          )
         )}
         <Help />
-      </Box>
-    </div>
+      </Container>
+    </Box>
   );
 }
 

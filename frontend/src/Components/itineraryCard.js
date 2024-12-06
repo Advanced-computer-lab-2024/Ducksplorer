@@ -193,9 +193,6 @@ export default function ItineraryCard({
           `http://localhost:8000/itinerary/getSave/${itinerary._id}/${userName}`
         );
 
-        console.log("hal heya saved: ", response.data);
-        console.log("what is the status ", response.status);
-
         if (response.status === 200) {
           setSaveStates((prevState) => ({
             ...prevState,
@@ -255,13 +252,13 @@ export default function ItineraryCard({
 
   const TheCard = () => {
     return (
-      <div>
+      <div style={{ width: "100%", minWidth: "300px", minHeight: "375px" }}>
         <Card
           className="itinerary-card"
           variant="outlined"
           sx={{
             width: "100%",
-            height: "40vh",
+            height: "100%",
           }}
           onClick={handleOpen}
         >
@@ -434,7 +431,7 @@ export default function ItineraryCard({
                       variant="outlined"
                       sx={{
                         marginRight: 1,
-                        marginBottom: 1,
+                        marginBottom: 4,
                         color: "#ff9933",
                         borderColor: "#ff9933",
                       }}
@@ -454,7 +451,7 @@ export default function ItineraryCard({
                 justifyContent: "space-between",
                 position: "absolute",
                 bottom: 10,
-                width: "94%",
+                width: "100%",
               }}
             >
               <Typography
@@ -479,15 +476,15 @@ export default function ItineraryCard({
                 {itinerary.price}$
               </Typography>
               <Button
-                size="md"
                 variant="solid"
                 className="blackhover"
                 zIndex={2}
+                size="md"
                 onClick={(event) => {
                   event.stopPropagation();
                   handleBooking(itinerary._id);
                 }}
-                sx={{ backgroundColor: "#ff9933" }}
+                sx={{ backgroundColor: "#ff9933", marginRight: "7%" }}
               >
                 Book Now
               </Button>

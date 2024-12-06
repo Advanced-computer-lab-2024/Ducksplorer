@@ -372,12 +372,12 @@ const sendConfirmation = async (req, res) => {
   switch (type) {
     case "activity":
       booking = await Activity.findOne({ _id: itemId }).select(
-        "name date location price category tags duartion averageRating -_id"
+        "name date location price category tags duration averageRating -_id"
       );
       break;
     case "itinerary":
       booking = await Itinerary.findOne({ _id: itemId }).select(
-        "name activity date location price category tags duartion averageRating -_id"
+        "name activity date locations chosenDate price category tags duration averageRating -_id"
       );
       break;
     default:
@@ -386,6 +386,17 @@ const sendConfirmation = async (req, res) => {
 
   if (!booking) {
     return res.status(404).json({ message: "Booking not found" });
+  }
+
+  // Convert booking object to plain object and handle the activities array
+  const formattedBooking = booking.toObject();
+
+  if (formattedBooking.activity && Array.isArray(formattedBooking.activity)) {
+    // Extract only the names of activities
+    formattedBooking.activities = formattedBooking.activity
+      .map((item) => item.name)
+      .join(", ");
+    delete formattedBooking.activity; // Remove the original activity key
   }
 
   const bookingDetails = `
@@ -397,7 +408,7 @@ const sendConfirmation = async (req, res) => {
             </tr>
         </thead>
         <tbody>
-            ${Object.entries(booking.toObject())
+            ${Object.entries(formattedBooking)
               .map(
                 ([key, value]) => `
                 <tr>

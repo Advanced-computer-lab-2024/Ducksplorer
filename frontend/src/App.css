@@ -15,7 +15,7 @@ body {
   align-items: center;
   padding: 20px;
   background-color: #fff6e6 !important;
-  height: 120vh;
+  height: 100vh;
   background-color: #fef4ea;
 }
 
@@ -285,6 +285,13 @@ button[type="submit"]:hover {
   font-family: "Playwrite HR Lijeva", cursive !important;
   /* font-size: 40px; */
   /* font-weight: 700; */
+  font-style: normal;
+}
+
+.bigTitle {
+  font-family: "Playwrite HR Lijeva", cursive !important;
+  font-size: 3rem;
+  font-weight: 700;
   font-style: normal;
 }
 

@@ -146,259 +146,240 @@ const DeleteCategory = () => {
   };
 
   return (
-<Box
-  sx={{
-    minHeight: "100vh",
-    backgroundColor: "#ffffff", // Subtle background color
-    paddingTop: "64px", // Adjust for navbar height
-    overflowY: "auto", // Enable vertical scrolling
-    display: "flex", // Flex layout for alignment
-  }}
->
-  {/* Navbar */}
-  <AdminNavbar />
-  <Sidebar />
-
-  {/* Main Content */}
-  <Box
-    sx={{
-      flex: 1, // Take up remaining space
-      padding: "32px",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      maxWidth: "1200px", // Limit the width
-      margin: "0 auto", // Center the content
-      backgroundColor: "#ffffff", // White background for main content
-      borderRadius: "12px", // Rounded corners
-      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
-    }}
-  >
-    {/* Page Title */}
-    <Typography
-      variant="h4"
+    <Box
       sx={{
-        fontWeight: "bold",
-        color: "#3f51b5", // Primary color
-        textAlign: "center",
-        marginBottom: "24px",
+        height: "auto",
+        paddingTop: "64px",
+        width: "120vw",
+        display: "flex",
+        justifyContent: "center"
       }}
     >
-      Available Categories
-    </Typography>
+      {/* Navbar */}
+      <AdminNavbar />
+      <Sidebar />
 
-    {/* Add Category Field */}
-    {showTextField && (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          marginBottom: "24px",
-        }}
+      {/* Main Content */}
+      <div
+        style={{ marginBottom: "40px", height: "100vh", paddingBottom: "10%" }}
       >
-        <TextField
-          label="New Category"
-          variant="outlined"
-          value={newCategory}
-          onChange={handleCategoryChange}
-          sx={{
-            marginRight: "16px",
-            "& .MuiOutlinedInput-root": {
-              borderRadius: "8px",
-            },
-          }}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => handleAdd(newCategory)}
-          sx={{
-            borderRadius: "8px",
-            padding: "10px 24px",
-            textTransform: "none",
-            fontWeight: "bold",
-          }}
-        >
-          Add
-        </Button>
-      </Box>
-    )}
+        <div style={{ overflowY: "visible", height: "auto" }}>
+          <Typography
+            variant="h2"
+            sx={{ textAlign: "center", fontWeight: "bold" }}
+            gutterBottom
+          >
+            Available Categories
+          </Typography>
+          <br></br>
 
-    {/* Table for Categories */}
-    <TableContainer
-      component={Paper}
-      sx={{
-        borderRadius: "12px", // Rounded corners for table
-        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
-        overflow: "hidden", // Prevent content overflow
-      }}
-    >
-      <Table>
-        <TableHead
-          sx={{
-            backgroundColor: "#3f51b5", // Header background color
-          }}
-        >
-          <TableRow>
-            <TableCell
-              sx={{ color: "white", fontWeight: "bold", fontSize: "16px" }}
-            >
-              Category
-            </TableCell>
-            <TableCell
-              sx={{ color: "white", fontWeight: "bold", fontSize: "16px" }}
-            >
-              Activities
-            </TableCell>
-            <TableCell
-              sx={{ color: "white", fontWeight: "bold", fontSize: "16px" }}
-            >
-              Actions
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {categories.map((category, index) => (
-            <TableRow
-              key={category._id}
+          {/* Add Category Field */}
+          {showTextField && (
+            <Box
               sx={{
-                backgroundColor: index % 2 === 0 ? "#f9f9f9" : "#ffffff", // Alternate row colors
-                "&:hover": {
-                  backgroundColor: "#f1f1f1", // Highlight on hover
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: "24px",
+              }}
+            >
+              <TextField
+                label="New Category"
+                variant="outlined"
+                value={newCategory}
+                onChange={handleCategoryChange}
+                sx={{
+                  marginRight: "16px",
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "8px",
+                  },
+                }}
+              />
+              <Button
+                variant="contained"
+                onClick={() => handleAdd(newCategory)}
+                sx={{
+                  borderRadius: "8px",
+                  padding: "10px 24px",
+                  textTransform: "none",
+                  fontWeight: "bold",
+                }}
+              >
+                Add
+              </Button>
+            </Box>
+          )}
+
+          {/* Table for Categories */}
+          <TableContainer
+            component={Paper}
+            sx={{
+              width: "80vw",
+              borderRadius: "12px", // Rounded corners
+              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
+              overflow: "hidden", // Ensure no scroll bars
+            }}
+          >
+            <Table>
+              <TableHead
+              >
+                <TableRow>
+                  <TableCell
+                    sx={{ fontWeight: "bold", fontSize: "16px" }}
+                  >
+                    Category
+                  </TableCell>
+                  <TableCell
+                    sx={{ fontWeight: "bold", fontSize: "16px" }}
+                  >
+                    Activities
+                  </TableCell>
+                  <TableCell
+                    sx={{ fontWeight: "bold", fontSize: "16px" }}
+                  >
+                    Actions
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {categories.map((category, index) => (
+                  <TableRow
+                    key={category._id}
+                  >
+                    <TableCell>
+                      {editingCategory && editingCategory.name === category.name ? (
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                          <TextField
+                            value={editedCategoryName}
+                            onChange={handleEditCategoryChange}
+                            autoFocus
+                            sx={{
+                              marginRight: "16px",
+                              "& .MuiOutlinedInput-root": {
+                                borderRadius: "8px",
+                              },
+                            }}
+                          />
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() =>
+                              handleEdit(category.name, editedCategoryName)
+                            }
+                            sx={{
+                              borderRadius: "8px",
+                              padding: "6px 16px",
+                              textTransform: "none",
+                            }}
+                          >
+                            Confirm
+                          </Button>
+                        </Box>
+                      ) : (
+                        category.name
+                      )}
+                    </TableCell>
+                    <TableCell>{category.activities.join(", ")}</TableCell>
+                    <TableCell>
+                      <Tooltip title="Delete Category">
+                        <IconButton
+                          color="error"
+                          aria-label="delete category"
+                          onClick={() => handleClickOpen(category.name)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Edit Category">
+                        <IconButton
+                          color="primary"
+                          aria-label="edit category"
+                          onClick={() => handleEditClick(category)}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+
+            {/* Add New Category Button */}
+            <Box
+              sx={{
+                display: "flex", // Use flexbox
+                justifyContent: "center", // Center horizontally
+                alignItems: "center", // Center vertically
+                height: "8vh", // Optional: full viewport height for vertical centering
+              }}
+            >
+              <Tooltip title="Add New Category">
+                <IconButton
+                  aria-label="add category"
+                  onClick={handleAddCategoryClick}
+                  className="blackhover"
+                  sx={{
+                    color: "white"
+                  }}
+                >
+                  <AddIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
+            {/* Confirmation Dialog */}
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              sx={{
+                "& .MuiDialog-paper": {
+                  borderRadius: "12px",
+                  padding: "16px",
                 },
               }}
             >
-              <TableCell>
-                {editingCategory && editingCategory.name === category.name ? (
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <TextField
-                      value={editedCategoryName}
-                      onChange={handleEditCategoryChange}
-                      autoFocus
-                      sx={{
-                        marginRight: "16px",
-                        "& .MuiOutlinedInput-root": {
-                          borderRadius: "8px",
-                        },
-                      }}
-                    />
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() =>
-                        handleEdit(category.name, editedCategoryName)
-                      }
-                      sx={{
-                        borderRadius: "8px",
-                        padding: "6px 16px",
-                        textTransform: "none",
-                      }}
-                    >
-                      Confirm
-                    </Button>
-                  </Box>
-                ) : (
-                  category.name
-                )}
-              </TableCell>
-              <TableCell>{category.activities.join(", ")}</TableCell>
-              <TableCell>
-                <Tooltip title="Delete Category">
-                  <IconButton
-                    color="error"
-                    aria-label="delete category"
-                    onClick={() => handleClickOpen(category.name)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Edit Category">
-                  <IconButton
-                    color="primary"
-                    aria-label="edit category"
-                    onClick={() => handleEditClick(category)}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </Tooltip>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-
-    {/* Add New Category Button */}
-    <Tooltip title="Add New Category">
-      <IconButton
-        color="success"
-        aria-label="add category"
-        onClick={handleAddCategoryClick}
-        sx={{
-          marginTop: "24px",
-          backgroundColor: "#4caf50",
-          color: "white",
-          "&:hover": {
-            backgroundColor: "#388e3c",
-          },
-        }}
-      >
-        <AddIcon />
-      </IconButton>
-    </Tooltip>
-
-    {/* Confirmation Dialog */}
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      sx={{
-        "& .MuiDialog-paper": {
-          borderRadius: "12px",
-          padding: "16px",
-        },
-      }}
-    >
-      <DialogTitle
-        sx={{
-          fontWeight: "bold",
-          fontSize: "20px",
-          color: "#f44336",
-        }}
-      >
-        Confirm Deletion
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          Are you sure you want to delete this Category?
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button
-          onClick={handleClose}
-          sx={{
-            backgroundColor: "#e0e0e0",
-            color: "#333",
-            textTransform: "none",
-            "&:hover": { backgroundColor: "#d6d6d6" },
-          }}
-        >
-          Cancel
-        </Button>
-        <Button
-          onClick={handleConfirmDelete}
-          sx={{
-            backgroundColor: "#f44336",
-            color: "white",
-            textTransform: "none",
-            "&:hover": { backgroundColor: "#d32f2f" },
-          }}
-        >
-          Delete
-        </Button>
-      </DialogActions>
-    </Dialog>
-  </Box>
-</Box>
+              <DialogTitle
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: "20px",
+                  color: "#f44336",
+                }}
+              >
+                Confirm Deletion
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Are you sure you want to delete this Category?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={handleClose}
+                  sx={{
+                    backgroundColor: "#e0e0e0",
+                    color: "#333",
+                    textTransform: "none",
+                    "&:hover": { backgroundColor: "#d6d6d6" },
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleConfirmDelete}
+                  sx={{
+                    backgroundColor: "#f44336",
+                    color: "white",
+                    textTransform: "none",
+                    "&:hover": { backgroundColor: "#d32f2f" },
+                  }}
+                >
+                  Delete
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </TableContainer>
+        </div>
+      </div>
+    </Box>
 
   );
 };
