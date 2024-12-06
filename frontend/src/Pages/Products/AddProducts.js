@@ -2,7 +2,8 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
 import { message } from "antd";
-import { TextField, Button, Stack } from "@mui/material";
+import { Paper, Stack } from "@mui/material";
+import { Button, Input } from "@mui/joy";
 import UploadFile from "../../Components/ProductUploadImage";
 
 let picture = "";
@@ -59,41 +60,73 @@ function AddProducts() {
   };
 
   return (
-    <div style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
-      <h2>Add Product</h2>
-      <Button onClick={handleBackClick}>Back</Button>
-      <Stack spacing={2}>
-        <TextField
-          label="Product Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          variant="outlined"
-          fullWidth
-        />
-        <TextField
-          label="Price"
-          type="number"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          variant="outlined"
-          fullWidth
-        />
-        <TextField
-          label="Available Quantity"
-          type="number"
-          value={availableQuantity}
-          onChange={(e) => setAvailableQuantity(e.target.value)}
-          variant="outlined"
-          fullWidth
-        />
-        {/* <TextField
+    <div
+      style={{
+        width: "40vw",
+        minWidth: "600px",
+
+        height: "auto",
+      }}
+    >
+      <Paper sx={{ height: "100%", padding: "50px", borderRadius: "30px" }}>
+        <div style={{ marginBottom: "40px" }}>
+          <Button
+            onClick={handleBackClick}
+            sx={{ marginBottom: "10px", width: "100px" }}
+            className="blackhover"
+          >
+            Back
+          </Button>
+          <h2
+            className="bigTitle"
+            style={{
+              textAlign: "center",
+
+              alignSelf: "center",
+            }}
+          >
+            Add Product
+          </h2>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            columnGap: "30px",
+            rowGap: "20px",
+          }}
+        >
+          <Input
+            placeholder="Product Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            variant="outlined"
+            size="lg"
+          />
+          <Input
+            placeholder="Price"
+            type="number"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            variant="outlined"
+            size="lg"
+          />
+          <Input
+            placeholder="Available Quantity"
+            type="number"
+            value={availableQuantity}
+            onChange={(e) => setAvailableQuantity(e.target.value)}
+            variant="outlined"
+            size="lg"
+          />
+          {/* <Inputd
           label="Picture URL"
           value={picture}
           onChange={(e) => setPicture(e.target.value)}
           variant="outlined"
           fullWidth
         /> */}
-        {/* <form>
+          {/* <form>
           <input
             type="file"
             id="image"
@@ -107,27 +140,28 @@ function AddProducts() {
           />
         </form> */}
 
-        <UploadFile onUpload={handleUpload} />
+          <Input
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            variant="outlined"
+            multiline
+            size="lg"
+            rows={4}
+          />
+          <UploadFile onUpload={handleUpload} />
 
-        <TextField
-          label="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          variant="outlined"
-          multiline
-          rows={4}
-          fullWidth
-        />
-
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleAddProduct} // Call function to handle adding the product here
-          style={{ marginTop: "10px" }}
-        >
-          Add Product
-        </Button>
-      </Stack>
+          <Button
+            className="blackhover"
+            color="primary"
+            onClick={handleAddProduct} // Call function to handle adding the product here
+            style={{ marginTop: "10px" }}
+            size="lg"
+          >
+            Add Product
+          </Button>
+        </div>
+      </Paper>
     </div>
   );
 }

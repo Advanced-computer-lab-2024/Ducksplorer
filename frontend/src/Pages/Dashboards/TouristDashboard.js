@@ -104,7 +104,6 @@ const TouristDashboard = () => {
       <CssBaseline />
       <TouristNavBar />
       <Box sx={{ display: "flex" }}>
-        <TouristSidebar />
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <Outlet />
         </Box>

@@ -8,7 +8,6 @@ const FlightsBooking = () => {
   return (
     <>
  <TouristNavBar />
- <TouristSidebar/>      
       <HotelBookingForm />
       <Help />
     </>

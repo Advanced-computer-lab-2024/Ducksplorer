@@ -87,6 +87,7 @@ const ViewUpcomingItinerary = () => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
   };
+  
   // Handlers for Sort By dropdown
   const handleSortByClick = (event) => {
     setSortByAnchorEl(event.currentTarget);
@@ -323,6 +324,7 @@ const ViewUpcomingItinerary = () => {
         >
           Back
         </Link>
+
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <Typography variant="h4">Upcoming Itineraries</Typography>
         </Box>

@@ -92,116 +92,6 @@ const SortActivities = () => {
     fetchSortedActivities(); // Optional: Remove this line if you only want to load activities after clicking Sort
   }, []);
 
-  const handleBooking = async (activityId) => {
-    try {
-      const userJson = localStorage.getItem("user");
-      const isGuest = localStorage.getItem("guest") === "true";
-      if (isGuest) {
-        message.error("User is not logged in, Please login or sign up.");
-        navigate("/guestDashboard");
-        return;
-      }
-      if (!userJson) {
-        message.error("User is not logged in.");
-        return null;
-      }
-      const user = JSON.parse(userJson);
-      if (!user || !user.username) {
-        message.error("User information is missing.");
-        return null;
-      }
-
-      const type = "activity";
-
-      localStorage.setItem("activityId", activityId);
-      localStorage.setItem("type", type);
-
-      const response = await axios.get(
-        `http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}`
-      );
-
-      if (response.status === 200) {
-        navigate("/payment");
-      } else {
-        message.error("Booking failed.");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      message.error("An error occurred while booking.");
-    }
-  };
-
-  const handleSaveActivity = async (activityId, currentIsSaved) => {
-    try {
-      const newIsSaved = !currentIsSaved;
-
-      const response = await axios.put(
-        `http://localhost:8000/activity/save/${activityId}`,
-        {
-          username: username,
-          save: newIsSaved,
-        }
-      );
-      if (response.status === 200) {
-        message.success("Activity saved successfully");
-        setActivities((prevActivities) =>
-          prevActivities.map((activity) =>
-            activity._id === activityId
-              ? {
-                  ...activity,
-                  saved: { ...activity.saved, isSaved: newIsSaved },
-                }
-              : activity
-          )
-        );
-      } else {
-        message.error("Failed to save");
-      }
-      setIsSaved(isSaved);
-    } catch (error) {
-      console.error("Error toggling save state:", error);
-    }
-  };
-
-  const [saveStates, setSaveStates] = useState({});
-
-  useEffect(() => {
-    const fetchSaveStates = async () => {
-      const userJson = localStorage.getItem("user");
-      const user = JSON.parse(userJson);
-      const userName = user.username;
-
-      const newSaveStates = {};
-      await Promise.all(
-        activities.map(async (activity) => {
-          try {
-            const response = await axios.get(
-              `http://localhost:8000/activity/getSave/${activity._id}/${userName}`
-            );
-
-            console.log("hal heya saved: ", response.data);
-            console.log("what is the status ", response.status);
-
-            if (response.status === 200) {
-              newSaveStates[activity._id] = response.data.saved; // Save the state
-            }
-          } catch (error) {
-            console.error(
-              `Failed to fetch save state for ${activity._id}:`,
-              error
-            );
-          }
-        })
-      );
-
-      setSaveStates(newSaveStates); // Update state with all fetched save states
-    };
-
-    if (activities.length > 0) {
-      fetchSaveStates();
-    }
-  }, [activities]);
-
   return (
     <div className="yassin fouda" style={{ width: "100%", marginTop: 20 }}>
       <div
@@ -383,6 +273,7 @@ const SortActivities = () => {
           Sort
         </Button>
       </div>
+
 
       <div
         style={{

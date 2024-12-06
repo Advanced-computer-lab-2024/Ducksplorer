@@ -15,11 +15,7 @@ const sortItineraries = async (req, res) => {
     }
 
     const itineraries = await itineraryModel
-      .find({
-        availableDatesAndTimes: {
-          $elemMatch: { $gt: currentDate }, // Filters upcoming itineraries
-        },
-      })
+      .find()
       .sort(sortOption);
 
     if (!itineraries.length) {

@@ -20,6 +20,8 @@ import ProductCard from "../../Components/Products/ProductCard";
 import Help from "../../Components/HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
+import { setMaxListeners } from "form-data";
+import DuckLoading from "../../Components/Loading/duckLoading";
 
 const searchContainerStyle = {
   display: "flex",
@@ -29,15 +31,17 @@ const searchContainerStyle = {
 
 const TouristAllProducts = () => {
   const navigate = useNavigate();
-  const isGuest = localStorage.getItem('guest') === 'true';
+  const isGuest = localStorage.getItem("guest") === "true";
 
   const [name, setName] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get("http://localhost:8000/adminRoutes/getproducts")
       .then((response) => {
@@ -47,6 +51,9 @@ const TouristAllProducts = () => {
       .catch((error) => {
         console.error("There was an error fetching the products!", error);
         message.error("Failed to fetch products.");
+      })
+      .finally(() => {
+        setTimeout(() => setLoading(false), 1000); // Delay of 1 second
       });
   }, []);
 
@@ -68,6 +75,13 @@ const TouristAllProducts = () => {
       message.error("An error occurred: " + error.message);
     }
   };
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
 
   const handleFilterProducts = async () => {
     try {
@@ -120,7 +134,6 @@ const TouristAllProducts = () => {
       }}
     >
       <TouristNavBar />
-      <TouristSidebar />
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography variant="h4" fontWeight="700">
@@ -246,13 +259,17 @@ const TouristAllProducts = () => {
         </Box> */}
 
         <Grid container spacing={3}>
-          {products.filter((product) => product.isArchived !== true).length > 0 ? (
+          {products.filter((product) => product.isArchived !== true).length >
+          0 ? (
             products
               .filter((product) => product.isArchived !== true)
               .map((product) => (
                 <Grid item xs={12} sm={6} md={4} key={product._id}>
-                  <ProductCard product={product} showRating={true}
-                    showAddToCart={true}/>
+                  <ProductCard
+                    product={product}
+                    showRating={true}
+                    showAddToCart={true}
+                  />
                 </Grid>
               ))
           ) : (
