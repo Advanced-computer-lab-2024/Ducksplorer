@@ -27,6 +27,8 @@ import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon";
 import { Link } from "react-router-dom";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
+import Error404 from "../../Components/Error404";
+
 const BookingDetails = () => {
   const userName = JSON.parse(localStorage.getItem("user")).username;
   //const [booking, setBooking] = useState(null);
@@ -60,6 +62,9 @@ const BookingDetails = () => {
     "Flights",
     "Transportation",
   ];
+
+  const errorMessage = "The bookings you are looking for might be removed or is temporarily unavailable"
+  const backMessage = "BACK TO TOURIST DASHBOARD"
 
   useEffect(() => {
     if (selectedCategory === "Past") {
@@ -266,7 +271,7 @@ const BookingDetails = () => {
   )
     return (<>
       <TouristNavBar />
-      <p style={{ fontSize: '2rem', fontWeight: 'bold', fontFamily: "'Roboto', sans-serif", }} >No booking details available.</p>
+      <Error404 errorMessage={errorMessage} backMessage={backMessage} route="/touristDashboard" />
     </>);
 
   return (

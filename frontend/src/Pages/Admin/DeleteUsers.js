@@ -84,7 +84,7 @@ const DeleteUser = () => {
   return (
     <Box
       sx={{
-        height: "100vh",
+        height: "auto",
         paddingTop: "64px",
         width: "120vw",
         display: "flex",
@@ -97,9 +97,9 @@ const DeleteUser = () => {
 
       {/* Main Content */}
       <div
-        style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
+        style={{ marginBottom: "40px", height: "100vh", paddingBottom: "10%" }}
       >
-        <div style={{ overflowY: "visible", height: "100vh" }}>
+        <div style={{ overflowY: "visible", height: "auto" }}>
           <Typography
             variant="h2"
             sx={{ textAlign: "center", fontWeight: "bold" }}
@@ -113,37 +113,26 @@ const DeleteUser = () => {
           <TableContainer
             component={Paper}
             sx={{
-              width: "100%",
-              maxWidth: "900px", // Limit width for larger screens
+              width: "80vw",
               borderRadius: "12px", // Rounded corners
               boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
               overflow: "hidden", // Ensure no scroll bars
             }}
           >
-            <TableContainer
-              component={Paper}
-              sx={{
-                marginBottom: 4,
-                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
-                borderRadius: "1.5cap",
-              }}
-            >
               <Table>
                 <TableHead>
                   <TableRow sx={{
-                    backgroundColor: "black",
-
                   }}>
-                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold", color: "white" }}>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
                       User Name
                     </TableCell>
-                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold", color: "white" }}>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
                       Role
                     </TableCell>
-                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold", color: "white" }}>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
                       Status
                     </TableCell>
-                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold", color: "white" }}>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
                       Actions
                     </TableCell>
                   </TableRow>
@@ -172,7 +161,6 @@ const DeleteUser = () => {
                   ))}
                 </TableBody>
               </Table>
-            </TableContainer>
 
             {/* Delete Confirmation Dialog */}
             <Dialog

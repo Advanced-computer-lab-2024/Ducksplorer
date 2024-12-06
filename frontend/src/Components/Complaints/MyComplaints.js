@@ -163,7 +163,6 @@ const MyComplaints = () => {
             </Typography>
           </Box>
         )}
-        <Help />
       </Container>
     </Box>
   );

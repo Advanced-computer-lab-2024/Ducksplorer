@@ -300,7 +300,6 @@ const DeleteCategory = () => {
           </DialogActions>
         </Dialog>
       </Box>
-      <Help />
       </Box>
 
     

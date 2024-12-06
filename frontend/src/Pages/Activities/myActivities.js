@@ -390,7 +390,6 @@ const MyActivities = () => {
             </DialogActions>
           </Dialog>
         </div>
-        <Help />
       </div>
     </Box >
   );

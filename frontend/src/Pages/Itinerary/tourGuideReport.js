@@ -202,9 +202,7 @@ const ItineraryReport = () => {
         setCurrency(selectedCurrency);
     };
 
-    if ((!Array.isArray(itineraries)) || (itineraries.length === 0)) {
-        return <p>No itineraries available.</p>;
-    }
+
     if (loading) {
         return (
             <Box
@@ -222,6 +220,10 @@ const ItineraryReport = () => {
                 </Typography>
             </Box>
         );
+    }
+
+    if ((!Array.isArray(itineraries)) || (itineraries.length === 0)) {
+        return <p>No itineraries available.</p>;
     }
 
     return (
@@ -505,7 +507,6 @@ const ItineraryReport = () => {
                         </Table>
                     </TableContainer>
                 </div>
-                <Help />
             </div>
         </Box >
     );

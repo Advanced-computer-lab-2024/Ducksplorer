@@ -192,25 +192,23 @@ const ApproveUsers = () => {
             <Table>
               <TableHead>
                 <TableRow sx={{
-                  backgroundColor: "black",
-
                 }}>
-                  <TableCell sx={{ fontSize: "18px", fontWeight: "bold", color: "white" }}>
+                  <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
                     User Name
                   </TableCell>
-                  <TableCell sx={{ fontSize: "18px", fontWeight: "bold", color: "white" }}>
+                  <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
                     Role
                   </TableCell>
-                  <TableCell sx={{ fontSize: "18px", fontWeight: "bold", color: "white" }}>
+                  <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
                     Status
                   </TableCell>
-                  <TableCell sx={{ fontSize: "18px", fontWeight: "bold", color: "white" }}>
+                  <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
                     Approve
                   </TableCell>
-                  <TableCell sx={{ fontSize: "18px", fontWeight: "bold", color: "white" }}>
+                  <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
                     Reject
                   </TableCell>
-                  <TableCell sx={{ fontSize: "18px", fontWeight: "bold", color: "white" }}>
+                  <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
                     Files
                   </TableCell>
                 </TableRow>

@@ -416,6 +416,7 @@ const RUDItinerary = () => {
     <Box
       sx={{
         height: "100vh",
+        overflowY: "auto",
         paddingTop: "64px",
         width: "90vw",
         marginLeft: "5vw",
@@ -433,6 +434,7 @@ const RUDItinerary = () => {
           >
             Itineraries
           </Typography>
+          <br></br>
           <TableContainer
             component={Paper}
             sx={{
@@ -635,27 +637,28 @@ const RUDItinerary = () => {
                     ) : null
                   ) //We don't output a row when the itinerary has been deleted but cannot be removed from the database since it is booked by previous tourists
                 }
+
+
+                <Dialog open={open} onClose={handleClose}>
+                  <DialogTitle>Confirm Deletion</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                      Are you sure you want to delete this Itinerary?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                      Cancel
+                    </Button>
+                    <Button onClick={handleConfirmDelete} color="error">
+                      Delete
+                    </Button>
+                  </DialogActions>
+                </Dialog>
               </TableBody>
             </Table>
           </TableContainer>
         </div>
-
-        <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Confirm Deletion</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Are you sure you want to delete this Itinerary?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleConfirmDelete} color="error">
-              Delete
-            </Button>
-          </DialogActions>
-        </Dialog>
       </div>
     </Box >
   );
