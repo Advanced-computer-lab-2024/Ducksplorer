@@ -27,6 +27,7 @@ import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
 import SortIcon from "@mui/icons-material/Sort";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
+import Error404 from "../../Components/Error404.js";
 
 function SearchItineraries() {
   const { id } = useParams();
@@ -34,6 +35,8 @@ function SearchItineraries() {
   const [searchTerm, setSearchTerm] = useState(""); // Single search term
   const [itineraries, setItineraries] = useState([]);
   const isGuest = localStorage.getItem("guest") === "true";
+
+  const errorMessage = "The itinerary you are looking for might be removed or is temporarily unavailable";
 
   //filtering consts
   const [minPrice, setMinPrice] = useState("");
@@ -669,18 +672,16 @@ function SearchItineraries() {
             {
               itineraries.map((itinerary) =>
                 itinerary.flag === false &&
-                itinerary.isDeactivated === false &&
-                itinerary.tourGuideDeleted === false &&
-                itinerary.deletedItinerary === false ? (
+                  itinerary.isDeactivated === false &&
+                  itinerary.tourGuideDeleted === false &&
+                  itinerary.deletedItinerary === false ? (
                   <ItineraryCard itinerary={itinerary} />
                 ) : null
               ) // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists
             }
           </div>
         ) : (
-          <Typography variant="body1" style={{ marginTop: "20px" }}>
-            No itineraries found.
-          </Typography>
+          <Error404 message={errorMessage} route="/viewUpcomingItinerary" />
         )}
         <Help />
       </Box>
