@@ -8,6 +8,8 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 import AdminNavbar from "../../Components/TopNav/Adminnavbar";
 import TouristNavBar from "../../Components/TouristNavBar";
+import Sidebar from '../../Components/Sidebars/Sidebar';
+
 import {
   Box,
   Table,
@@ -53,8 +55,7 @@ const ViewAllActivities = () => {
       .catch((error) => {
         console.error("Error changing the flag of activity!", error);
         message.error(
-          `Error changing the flag of activity: ${
-            error.response ? error.response.data.message : error.message
+          `Error changing the flag of activity: ${error.response ? error.response.data.message : error.message
           }`
         );
       });
@@ -75,128 +76,154 @@ const ViewAllActivities = () => {
   return (
     <Box
       sx={{
-        padding: "20px",
-        maxWidth: "1200px",
-        margin: "auto",
-        display: "flex",
-        flexDirection: "column",
-        overflowY: "visible",
         height: "100vh",
+        paddingTop: "64px",
+        width: "90vw",
+        marginLeft: "5vw",
       }}
     >
-      <Link to="/AdminDashboard"> Back </Link>
-      <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-        <Typography variant="h4">Available activities</Typography>
-      </Box>
+      {/* Navbar */}
+      <AdminNavbar />
 
-      <div style={{ flex: 1 }}>
-        {activities.length > 0 ? (
-          <Box>
-            <TableContainer component={Paper} style={{ borderRadius: 20 }}>
+      {/* Sidebar */}
+      <Sidebar />
+
+      {/* Main Content */}
+      <Box
+        sx={{
+          flex: 1, // Take the remaining width
+          padding: "32px", // Inner padding
+          margin: "0 auto", // Center content horizontally
+          borderRadius: "12px", // Rounded corners
+        }}
+      >
+        {/* Page Title */}
+        <div
+          style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
+        >
+          <div style={{ overflowY: "visible", height: "100vh" }}>
+            <Typography
+              variant="h2"
+              sx={{ textAlign: "center", fontWeight: "bold" }}
+              gutterBottom
+            >
+              Activities
+            </Typography>
+            <br></br>
+            {/* Table Container */}
+            <TableContainer
+              component={Paper}
+              sx={{
+                marginBottom: 4,
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+                borderRadius: "1.5cap",
+              }}
+            >
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Price</TableCell>
-                    <TableCell>Is Open</TableCell>
-                    <TableCell>Category</TableCell>
-                    <TableCell>Tags</TableCell>
-                    <TableCell>Discount</TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Duration</TableCell>
-                    <TableCell>Location</TableCell>
-                    <TableCell>Rating</TableCell>
-                    <TableCell>Flag</TableCell>
-                    <TableCell>Action</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Name</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Price</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Is Open</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Category</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Tags</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Discount</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Date</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Duration</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Location</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Rating</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Flag</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Action</TableCell>
                   </TableRow>
                 </TableHead>
 
                 <TableBody>
-                  {activities.map((activity) => (
-                    <TableRow
-                      key={activity._id}
-                      style={{
-                        backgroundColor: activity.flag
-                          ? "#ffdddd"
-                          : "transparent",
-                      }}
-                    >
-                      {" "}
-                      {/* Change background for flagged activities */}
-                      <TableCell>{activity.name}</TableCell>
-                      <TableCell>{activity.price}</TableCell>
-                      <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
-                      <TableCell>{activity.category}</TableCell>
-                      <TableCell>{activity.tags.join(", ")}</TableCell>
-                      <TableCell>{activity.specialDiscount}</TableCell>
-                      <TableCell>
-                        {new Date(activity.date).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell>{activity.duration}</TableCell>
-                      <TableCell>{activity.location}</TableCell>
-                      <TableCell>
-                        {/* Display Rating on one line */}
-                        <Rating
-                          value={activity.averageRating}
-                          precision={0.1}
-                          readOnly
-                        />
-                      </TableCell>
-                      <TableCell>
-                        {/* Display Flag status in a separate line */}
-                        {activity.flag ? (
-                          <span
-                            style={{
-                              color: "red",
-                              display: "flex",
-                              alignItems: "center",
-                              flexDirection: "column",
-                            }}
-                          >
-                            <WarningIcon style={{ marginRight: "4px" }} />
-                            Inappropriate
-                          </span>
-                        ) : (
-                          <span
-                            style={{
-                              color: "green",
-                              display: "flex",
-                              alignItems: "center",
-                              flexDirection: "column",
-                            }}
-                          >
-                            <CheckCircleIcon style={{ marginRight: "4px" }} />
-                            Appropriate
-                          </span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {/* Display Flag icon on a separate line */}
-                        <Tooltip title="Change Activity Flag">
-                          <IconButton
-                            color="error"
-                            aria-label="Flag Activity"
-                            onClick={() => {
-                              setEditingActivity(activity); // Set the activity to be flagged
-                              flagActivity(activity); // Update the activity immediately
-                            }}
-                          >
-                            <FlagIcon />
-                          </IconButton>
-                        </Tooltip>
+                  {activities.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={12} style={{ textAlign: "center" }}>
+                        <Typography variant="body1" style={{ marginTop: "20px" }}>
+                          No Activities found.
+                        </Typography>
                       </TableCell>
                     </TableRow>
-                  ))}
+                  ) : (
+                    activities.map((activity) => (
+                      <TableRow
+                        key={activity._id}
+                        style={{
+                          backgroundColor: activity.flag
+                            ? "#ffdddd"
+                            : "transparent",
+                        }}
+                      >
+                        <TableCell>{activity.name}</TableCell>
+                        <TableCell>{activity.price}</TableCell>
+                        <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
+                        <TableCell>{activity.category}</TableCell>
+                        <TableCell>{activity.tags.join(", ")}</TableCell>
+                        <TableCell>{activity.specialDiscount}</TableCell>
+                        <TableCell>
+                          {new Date(activity.date).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell>{activity.duration}</TableCell>
+                        <TableCell>{activity.location}</TableCell>
+                        <TableCell>
+                          <Rating
+                            value={activity.averageRating}
+                            precision={0.1}
+                            readOnly
+                          />
+                        </TableCell>
+                        <TableCell>
+                          {activity.flag ? (
+                            <span
+                              style={{
+                                color: "red",
+                                display: "flex",
+                                alignItems: "center",
+                                flexDirection: "column",
+                              }}
+                            >
+                              <WarningIcon style={{ marginRight: "4px" }} />
+                              Inappropriate
+                            </span>
+                          ) : (
+                            <span
+                              style={{
+                                color: "green",
+                                display: "flex",
+                                alignItems: "center",
+                                flexDirection: "column",
+                              }}
+                            >
+                              <CheckCircleIcon style={{ marginRight: "4px" }} />
+                              Appropriate
+                            </span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <Tooltip title="Change Activity Flag">
+                            <IconButton
+                              color="error"
+                              aria-label="Flag Activity"
+                              onClick={() => {
+                                setEditingActivity(activity);
+                                flagActivity(activity);
+                              }}
+                            >
+                              <FlagIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
-          </Box>
-        ) : (
-          <Typography variant="body1" style={{ marginTop: "20px" }}>
-            No Activities found.
-          </Typography>
-        )}
-      </div>
+          </div>
+        </div>
+      </Box>
     </Box>
   );
 };

@@ -83,188 +83,153 @@ const DeleteUser = () => {
 
   return (
     <Box
-  sx={{
-    minHeight: "100vh", // Full viewport height
-    width: "100%", // Full width of the viewport
-    maxWidth: "1400px", // Limit content width for better layout
-    margin: "0 auto", // Center the content horizontally
-    backgroundColor: "#ffffff", // White background
-    paddingTop: "64px", // Adjust for navbar height
-    overflow: "hidden", // Disable both vertical and horizontal scrolling
-    display: "flex",
-    alignItems: "flex-start", // Align content at the top
-    height: "100vh", // Ensure the height fits the viewport
-  }}
->
-  {/* Navbar */}
-  <AdminNavbar />
-  <Sidebar />
-
-  {/* Main Content */}
-  <Box
-    sx={{
-      flex: 1, // Take the remaining width
-      padding: "32px", // Add consistent padding
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      overflow: "hidden", // Prevent any child scrolling
-    }}
-  >
-    {/* Page Title */}
-    <Box sx={{ marginBottom: "24px", textAlign: "center" }}>
-      <Typography
-        variant="h4"
-        sx={{
-          fontWeight: "bold",
-          color: "#3f51b5", // Primary color
-        }}
-      >
-        Active Users
-      </Typography>
-    </Box>
-
-    {/* Table Container */}
-    <TableContainer
-      component={Paper}
       sx={{
-        width: "100%",
-        maxWidth: "900px", // Limit width for larger screens
-        borderRadius: "12px", // Rounded corners
-        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
-        overflow: "hidden", // Ensure no scroll bars
+        height: "100vh",
+        paddingTop: "64px",
+        width: "120vw",
+        display: "flex",
+        justifyContent: "center"
       }}
     >
-      <Table>
-        <TableHead
-          sx={{
-            backgroundColor: "#3f51b5", // Header background color
-          }}
-        >
-          <TableRow>
-            <TableCell
+      {/* Navbar */}
+      <AdminNavbar />
+      <Sidebar />
+
+      {/* Main Content */}
+      <div
+        style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
+      >
+        <div style={{ overflowY: "visible", height: "100vh" }}>
+          <Typography
+            variant="h2"
+            sx={{ textAlign: "center", fontWeight: "bold" }}
+            gutterBottom
+          >
+            Active Users
+          </Typography>
+          <br></br>
+
+          {/* Table Container */}
+          <TableContainer
+            component={Paper}
+            sx={{
+              width: "100%",
+              maxWidth: "900px", // Limit width for larger screens
+              borderRadius: "12px", // Rounded corners
+              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
+              overflow: "hidden", // Ensure no scroll bars
+            }}
+          >
+            <TableContainer
+              component={Paper}
               sx={{
-                color: "white",
-                fontWeight: "bold",
-                fontSize: "16px",
+                marginBottom: 4,
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+                borderRadius: "1.5cap",
               }}
             >
-              User Name
-            </TableCell>
-            <TableCell
+              <Table>
+                <TableHead>
+                  <TableRow sx={{
+                    backgroundColor: "black",
+
+                  }}>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold", color: "white" }}>
+                      User Name
+                    </TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold", color: "white" }}>
+                      Role
+                    </TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold", color: "white" }}>
+                      Status
+                    </TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold", color: "white" }}>
+                      Actions
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {users.map((user, index) => (
+                    <TableRow
+                      key={user._id}
+
+                    >
+                      <TableCell>{user.userName}</TableCell>
+                      <TableCell>{user.role}</TableCell>
+                      <TableCell>{user.status}</TableCell>
+                      <TableCell>
+                        <Tooltip title="Delete User">
+                          <IconButton
+                            color="error"
+                            aria-label="delete user"
+                            onClick={() => handleClickOpen(user.userName)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+
+            {/* Delete Confirmation Dialog */}
+            <Dialog
+              open={open}
+              onClose={handleClose}
               sx={{
-                color: "white",
-                fontWeight: "bold",
-                fontSize: "16px",
-              }}
-            >
-              Role
-            </TableCell>
-            <TableCell
-              sx={{
-                color: "white",
-                fontWeight: "bold",
-                fontSize: "16px",
-              }}
-            >
-              Status
-            </TableCell>
-            <TableCell
-              sx={{
-                color: "white",
-                fontWeight: "bold",
-                fontSize: "16px",
-              }}
-            >
-              Actions
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {users.map((user, index) => (
-            <TableRow
-              key={user._id}
-              sx={{
-                backgroundColor: index % 2 === 0 ? "#f9f9f9" : "white", // Alternate row colors
-                "&:hover": {
-                  backgroundColor: "#f1f1f1", // Highlight on hover
+                "& .MuiDialog-paper": {
+                  borderRadius: "16px", // Rounded corners
+                  padding: "16px", // Inner padding
                 },
               }}
             >
-              <TableCell>{user.userName}</TableCell>
-              <TableCell>{user.role}</TableCell>
-              <TableCell>{user.status}</TableCell>
-              <TableCell>
-                <Tooltip title="Delete User">
-                  <IconButton
-                    color="error"
-                    aria-label="delete user"
-                    onClick={() => handleClickOpen(user.userName)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Tooltip>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-
-    {/* Delete Confirmation Dialog */}
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      sx={{
-        "& .MuiDialog-paper": {
-          borderRadius: "16px", // Rounded corners
-          padding: "16px", // Inner padding
-        },
-      }}
-    >
-      <DialogTitle
-        sx={{
-          fontWeight: "bold",
-          fontSize: "20px",
-          color: "#f44336", // Red for emphasis
-        }}
-      >
-        Confirm Deletion
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          Are you sure you want to delete this account?
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button
-          onClick={handleClose}
-          sx={{
-            backgroundColor: "#e0e0e0", // Subtle gray
-            color: "#333",
-            textTransform: "none",
-            "&:hover": { backgroundColor: "#d6d6d6" }, // Lighter hover effect
-          }}
-        >
-          Cancel
-        </Button>
-        <Button
-          onClick={handleConfirmDelete}
-          sx={{
-            backgroundColor: "#f44336", // Red for delete
-            color: "white",
-            textTransform: "none",
-            "&:hover": { backgroundColor: "#d32f2f" }, // Darker hover effect
-          }}
-        >
-          Delete
-        </Button>
-      </DialogActions>
-    </Dialog>
-  </Box>
-</Box>
+              <DialogTitle
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: "20px",
+                  color: "#f44336", // Red for emphasis
+                }}
+              >
+                Confirm Deletion
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Are you sure you want to delete this account?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={handleClose}
+                  sx={{
+                    backgroundColor: "#e0e0e0", // Subtle gray
+                    color: "#333",
+                    textTransform: "none",
+                    "&:hover": { backgroundColor: "#d6d6d6" }, // Lighter hover effect
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleConfirmDelete}
+                  sx={{
+                    backgroundColor: "#f44336", // Red for delete
+                    color: "white",
+                    textTransform: "none",
+                    "&:hover": { backgroundColor: "#d32f2f" }, // Darker hover effect
+                  }}
+                >
+                  Delete
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </TableContainer>
+        </div>
+      </div>
+    </Box>
   );
 }
-  
+
 
 export default DeleteUser;
