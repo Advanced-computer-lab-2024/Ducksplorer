@@ -7,6 +7,7 @@ import {
   Box,
   Typography,
   Autocomplete,
+  CircularProgress,
 } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -85,10 +86,12 @@ const FlightBookingForm = () => {
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
   const [seats, setSeats] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSearch = async () => {
     if (validateFields()) {
+      setLoading(true);
       const formattedDepartureDate = departureDate.toISOString().split("T")[0]; // Format date as yyyy-mm-dd
       const requestBody = {
         originCode: origin.code,
@@ -123,6 +126,8 @@ const FlightBookingForm = () => {
       } catch (error) {
         console.error("Error fetching flights:", error);
         message.error("Failed to fetch flights. Please try again.");
+      } finally {
+        setLoading(false);
       }
     } else {
       message.error("Error in the Form");
@@ -152,35 +157,34 @@ const FlightBookingForm = () => {
         <Typography variant="h3" style={styles.welcomeText}>
           Flight Booking
         </Typography>
-        <Typography variant="h5" style={styles.descriptionText}>
+        <Typography variant="h1" style={styles.descriptionText}>
           Book your flights with ease.
         </Typography>
       </div>
       <div style={styles.rightSection}>
-        <Container maxWidth="sm">
-          <Box sx={{ mt: 4 }}>
+        <Container maxWidth="sm" style={{ marginTop: "-30vh" }}>
+          <Box>
             <Typography
               variant="h4"
-              style={{ textAlign: "center" }}
-              gutterBottom
+              style={{ textAlign: "center" , marginBottom: "60px"}}
             >
               Flight Booking
             </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+            <Grid container spacing={2} direction="column">
+              <Grid item xs={12}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
                     label="Departure Date"
+                    sx={{ width: '100%' }}
                     value={departureDate}
                     onChange={(newValue) => setDepartureDate(newValue)}
-                    sx={{ width: "100%" }}
                     renderInput={(params) => (
                       <TextField {...params} fullWidth />
                     )}
                   />
                 </LocalizationProvider>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <Autocomplete
                   options={cities}
                   getOptionLabel={(option) =>
@@ -193,7 +197,7 @@ const FlightBookingForm = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <Autocomplete
                   options={cities}
                   getOptionLabel={(option) =>
@@ -206,7 +210,7 @@ const FlightBookingForm = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   label="Number of Seats"
                   type="number"
@@ -218,11 +222,12 @@ const FlightBookingForm = () => {
               <Grid item xs={12}>
                 <Button
                   variant="contained"
-                  sx={{ backgroundColor: "#ff9933" }}
+                  sx={{ backgroundColor: "#ff9933" , marginTop: "30px"}}
                   onClick={handleSearch}
                   fullWidth
+                  disabled={loading}
                 >
-                  Search
+                  {loading ? <CircularProgress  sx={{color:"#ff9933"}}size={24} /> : "Search"}
                 </Button>
               </Grid>
             </Grid>

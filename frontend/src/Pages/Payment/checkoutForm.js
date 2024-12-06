@@ -203,12 +203,14 @@ export default function CheckoutForm() {
         const amount = localStorage.getItem("price");
         const chosenDate = localStorage.getItem("date");
 
-        if(itineraryOrActivity === 'product'){
-          try{
-            await axios.delete("http://localhost:8000/touristRoutes/emptyCart", userName);
+        if (itineraryOrActivity === "product") {
+          try {
+            await axios.delete(
+              "http://localhost:8000/touristRoutes/emptyCart",
+              userName
+            );
             navigate("/myPurchases");
-          }
-          catch(error){
+          } catch (error) {
             message.error("failed to empty cart");
           }
         }
@@ -253,7 +255,7 @@ export default function CheckoutForm() {
           {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ price: amount }),
+            body: JSON.stringify({ finalPrice: amount }),
           }
         );
 

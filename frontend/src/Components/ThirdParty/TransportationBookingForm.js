@@ -11,14 +11,15 @@ import {
   InputLabel,
   Select,
   Autocomplete,
+  CircularProgress,
 } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import axios from "axios";
 import { message } from "antd";
-import TransportationsCards from "./transportationsCards";
-import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { format } from "date-fns";
 
 function isDatePassed(enteredDate) {
   const currentDate = new Date(); // Get the current date and time
@@ -344,6 +345,8 @@ const TransportationBookingForm = () => {
   const [transferType, setTransferType] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [startTime, setStartTime] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleTimeChange = (newTime) => {
     if (newTime) {
@@ -381,13 +384,12 @@ const TransportationBookingForm = () => {
 
   const handleSearch = async () => {
     if (validateFields()) {
+      setLoading(true);
       const dateTime = startDate + "T" + startTime;
       const requestBody = {
         startLocationCode: startLocationCode,
-        //startLocationCode : origin.country,
         endAddressLine: endAddressLine,
         endCountryCode: endCountryCode,
-        //endCountryCode: destination.country,
         transferType: transferType,
         startDateTime: dateTime,
       };
@@ -401,7 +403,19 @@ const TransportationBookingForm = () => {
         const transportationData = response.data.data;
 
         if (transportationData.length > 0) {
-          setTransportations(transportationData);
+          const transportationsDataToStore = {
+            transportations: transportationData,
+            startLocationCode,
+            endAddressLine,
+            endCountryCode,
+            transferType,
+            startDateTime: dateTime,
+          };
+          localStorage.setItem(
+            "transportationsData",
+            JSON.stringify(transportationsDataToStore)
+          );
+          navigate("/transportationsPage");
         } else {
           message.error("No Transportations found.");
         }
@@ -410,6 +424,8 @@ const TransportationBookingForm = () => {
         message.error(
           "No Transportations available for this address at this time"
         );
+      } finally {
+        setLoading(false);
       }
     } else {
       message.error("Error in the Form");
@@ -417,114 +433,157 @@ const TransportationBookingForm = () => {
   };
 
   return (
-    <Container sx={{ maxHeight: "50vh", mt: -25, overflowY: "visible" }}>
-      <Container maxWidth="sm">
-        <Box sx={{ mt: 4 }}>
-          <Typography variant="h4" style={{ textAlign: "center" }} gutterBottom>
-            Transportation Booking
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <Autocomplete
-                options={airports}
-                getOptionLabel={(option) =>
-                  `${option.country}, ${option.label}, ${option.code}`
-                }
-                value={
-                  airports.find(
-                    (airport) => airport.code === startLocationCode
-                  ) || null
-                }
-                onChange={(event, newValue) => {
-                  setStartLocationCode(newValue ? newValue.code : ""); // Set the start location code
-                  setEndCountryCode(newValue ? newValue.countryCode : ""); // Set the end country code
-                }}
-                renderInput={(params) => (
-                  <TextField {...params} label="Airport" fullWidth />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="End Address"
-                value={endAddressLine}
-                onChange={(e) => setEndAddressLine(e.target.value)}
-                fullWidth
-              />
-            </Grid>
-            {/* <Grid item xs={12} sm={6}>
-              <TextField
-                label="end country code"
-                value={endCountryCode}
-                onChange={(e) => setEndCountryCode(e.target.value)}
-                fullWidth
-              />
-            </Grid> */}
-            <Grid item xs={12}>
-              <FormControl fullWidth>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker
-                    label="Start Date"
-                    value={startDate}
-                    sx={{ width: "100%" }}
-                    onChange={(newValue) => handleDateChange(newValue)}
-                    renderInput={(params) => (
-                      <TextField {...params} fullWidth />
-                    )}
-                  />
-                </LocalizationProvider>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <FormControl fullWidth>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <TimePicker
-                    label="Start Time: H:M:S"
-                    value={
-                      startTime ? new Date(`1970-01-01T${startTime}Z`) : null
-                    } // Initialize the value
-                    onChange={handleTimeChange} // Handle time change
-                    renderInput={(params) => (
-                      <TextField {...params} fullWidth />
-                    )}
-                  />
-                </LocalizationProvider>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <FormControl fullWidth>
-                <InputLabel>Service Type</InputLabel>
-                <Select
-                  value={transferType}
-                  onChange={(e) => setTransferType(e.target.value)}
-                  label="transportation type"
+    <div style={styles.container}>
+      <div style={styles.leftSection}>
+        <Typography variant="h3" style={styles.welcomeText}>
+          Transportation Booking
+        </Typography>
+        <Typography variant="h5" style={styles.descriptionText}>
+          Book your transportation with ease.
+        </Typography>
+      </div>
+      <div style={styles.rightSection}>
+        <Container maxWidth="sm" style={{ marginTop: "-30vh" }}>
+          <Box sx={{ mt: 4 }}>
+            <Typography
+              variant="h4"
+              style={{ textAlign: "center" ,  marginBottom: "60px"}}
+              gutterBottom
+            >
+              Transportation Booking
+            </Typography>
+            <Grid container spacing={2} direction="column">
+              <Grid item xs={12}>
+                <Autocomplete
+                  options={airports}
+                  getOptionLabel={(option) =>
+                    `${option.country}, ${option.label}, ${option.code}`
+                  }
+                  value={
+                    airports.find(
+                      (airport) => airport.code === startLocationCode
+                    ) || null
+                  }
+                  onChange={(event, newValue) => {
+                    setStartLocationCode(newValue ? newValue.code : ""); // Set the start location code
+                    setEndCountryCode(newValue ? newValue.countryCode : ""); // Set the end country code
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Airport" fullWidth />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="End Address"
+                  value={endAddressLine}
+                  onChange={(e) => setEndAddressLine(e.target.value)}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      label="Start Date"
+                      value={startDate}
+                      onChange={(newValue) => handleDateChange(newValue)}
+                      renderInput={(params) => (
+                        <TextField {...params} fullWidth />
+                      )}
+                    />
+                  </LocalizationProvider>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <TimePicker
+                      label="Start Time: H:M:S"
+                      value={
+                        startTime ? new Date(`1970-01-01T${startTime}Z`) : null
+                      } // Initialize the value
+                      onChange={handleTimeChange} // Handle time change
+                      renderInput={(params) => (
+                        <TextField {...params} fullWidth />
+                      )}
+                    />
+                  </LocalizationProvider>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel>Service Type</InputLabel>
+                  <Select
+                    value={transferType}
+                    onChange={(e) => setTransferType(e.target.value)}
+                    label="transportation type"
+                  >
+                    <MenuItem value="PRIVATE">Private</MenuItem>
+                    <MenuItem value="SHARED">Shared</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  sx={{ mt: 2, backgroundColor: "#ff9933", color: "white" }}
+                  onClick={handleSearch}
+                  fullWidth
+                  disabled={loading}
                 >
-                  <MenuItem value="PRIVATE">Private</MenuItem>
-                  <MenuItem value="SHARED">Shared</MenuItem>
-                </Select>
-              </FormControl>
+                  {loading ? <CircularProgress sx={{ color: "#ff9933" }} size={24} /> : "Search"}
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                className="blackhover"
-                onClick={handleSearch}
-                fullWidth
-              >
-                Search
-              </Button>
-            </Grid>
-          </Grid>
-        </Box>
-      </Container>
-      {transportations.length > 0 && (
-        <TransportationsCards
-          sx={{ overflowY: "auto" }}
-          transportations={transportations}
-        />
-      )}
-    </Container>
+          </Box>
+        </Container>
+      </div>
+    </div>
   );
+};
+
+const styles = {
+  container: {
+    display: "flex",
+    height: "100vh",
+    width: "100vw",
+    background: 'url("/duckBus.jpg") no-repeat left center fixed',
+    backgroundSize:"cover"
+  },
+  leftSection: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    color: "#fff",
+    padding: "20px",
+  },
+  rightSection: {
+    flex: 0.7,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.95)",
+  },
+  centeredSection: {
+    flex: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.95)",
+  },
+  welcomeText: {
+    fontSize: "3rem",
+    fontWeight: "bold",
+    marginBottom: "20px",
+  },
+  descriptionText: {
+    fontSize: "1.5rem",
+    textAlign: "center",
+  },
 };
 
 export default TransportationBookingForm;
