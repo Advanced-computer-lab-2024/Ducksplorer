@@ -70,9 +70,15 @@ import ViewAllItineraries from "./Pages/Admin/ViewAllItineraries.js";
 import ViewAllActivities from "./Pages/Admin/ViewAllActivities.js";
 import PastBookingDetails from "./Pages/Bookings/myPastBookings.js";
 import GuestDashboard from "./Pages/Dashboards/GuestDashboard.js";
-
+import Wishlist from "./Pages/Products/Wishlist.js";
 import TransportationBooking from "./Pages/ThirdParty/TransportationBooking.js";
+//cart page
+import CartPage from "./Pages/Products/CartPage.js";
 import ChangePassword from "./Pages/Admin/ChangePassword.js";
+import MyOrders from "./Pages/Products/OrdersPage.js";
+
+import MySavedItems from "./Pages/SavedItems.js";
+import Orders from "./Pages/Products/orders.js";
 import { useAuthContext } from "./context/AuthContext.js";
 import ProtectedRoute from "./Components/ProtectedRoute"; // Import the ProtectedRoute component
 
@@ -91,6 +97,11 @@ import EditItinerary from "./Pages/Itinerary/editItinerary.js";
 
 import LandingPage from "./Pages/LandingPage.js";
 import ActivityCard from "../src/Components/activityCard";
+import FlightsPage from './Components/ThirdParty/FlightsPage';
+import HotelsPage from './Components/ThirdParty/HotelsPage';
+import TransportationsPage from './Components/ThirdParty/TransportationsPage'; // Import TransportationsPage
+
+import Error404 from "./Components/Error404.js";
 
 function App() {
   const { authUser } = useAuthContext();
@@ -412,7 +423,7 @@ function App() {
                 <TouristProducts />
               </ProtectedRoute>
             }
-          />
+          />          <Route path="/Wishlist" element={<Wishlist />} />
           <Route
             path="/advertiserDashboard"
             element={
@@ -630,6 +641,15 @@ function App() {
             }
           />
 
+          <Route
+            path="/advertiserReport"
+            element={
+              <ProtectedRoute>
+                <AdvertiserActivityReport />
+              </ProtectedRoute>
+            }
+          />
+
           <Route path="/sellerReport" element={<SellerProductReport />} />
           <Route
             path="/sellerEditAccount"
@@ -673,15 +693,42 @@ function App() {
             }
           />
           <Route
-            path="/myPurchases"
+            path="/myPurchases/:orderNumber"
             element={
               <ProtectedRoute>
                 <MyPurchases />
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/hotelsPage"
+            element={
+              <ProtectedRoute>
+                <HotelsPage />
+              </ProtectedRoute>
+            }
+          />
 
           <Route path="/addPromoCode" element={<CreatePromoCode />} />
+          <Route path="/myOrders" element={<MyOrders />} />
+          <Route path="/myCart" element={<CartPage />} />
+
+
+
+          <Route path="/mySaved" element={<MySavedItems />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/flightsPage" element={<FlightsPage />} />
+          <Route
+            path="/transportationsPage"
+            element={
+              <ProtectedRoute>
+                <TransportationsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="/errorPage" element={<Error404 />} />
+
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

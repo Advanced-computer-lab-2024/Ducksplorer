@@ -10,7 +10,9 @@ const TourGuide = require("../../Models/tourGuideModel");
 const send = require("send");
 const nodemailer = require("nodemailer");
 const Tourist = require("../../Models/touristModel");
-const {createNotification,} = require("../Notifications/NotificationsController.js");
+const {
+  createNotification,
+} = require("../Notifications/NotificationsController.js");
 const sendEmail = async (to, subject, message) => {
   try {
     // Configure the email transporter
@@ -69,14 +71,14 @@ const remindUpcomingItineraries = async (req, res) => {
         const userEmail = touristData.email; // Extract email from the Tourist object
         console.log("User Email:", userEmail);
         const itineraryData = await Itinerary.findOne({ _id: itinerary });
-        const itineraryName = itineraryData.name; // Extract name from the Activity object
+        const itineraryName = itineraryData.name || "Itinerary Name"; // Extract name from the Activity object
 
-        const emailMessage = `Reminder: Your activity "${itineraryName}" is happening on ${new Date(
+        const emailMessage = `Reminder: Your itinerary "${itineraryName}" is happening on ${new Date(
           booking.chosenDate
         ).toLocaleDateString()}. Get ready!`;
 
         // Send the email notification
-        await sendEmail(userEmail, "Upcoming Activity Reminder", emailMessage);
+        await sendEmail(userEmail, "Upcoming Itinerary Reminder", emailMessage);
 
         // Mark the reminder as sent
         booking.reminderSent = true;
@@ -329,7 +331,7 @@ const toggleFlagItinerary = async (req, res) => {
         `Your Itenary titled "${itinerary.name}" has been flagged as inappropriate.`,
         tourGuide.userName,
         "Iterary Flagged"
-      ); 
+      );
 
       await sendEmail(
         tourGuide.email,

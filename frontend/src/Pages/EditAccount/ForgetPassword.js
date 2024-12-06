@@ -20,7 +20,8 @@ function ForgetPassword() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const userName = JSON.parse(localStorage.getItem("userName"));
+  const userName = localStorage.getItem("userName");
+  console.log("username inside forget password is", userName);
 
   // Prevent scrolling and white border
   useEffect(() => {
@@ -52,6 +53,7 @@ function ForgetPassword() {
       );
       if (response.status === 200) {
         message.success("Password changed successfully");
+        localStorage.removeItem("userName");
         navigate("/login");
       } else {
         throw new Error(response.error);
@@ -67,6 +69,7 @@ function ForgetPassword() {
     navigate("/"); // Navigate to the homepage
   };
 
+  
   return (
     <div style={styles.container}>
       <div style={styles.overlay}></div>

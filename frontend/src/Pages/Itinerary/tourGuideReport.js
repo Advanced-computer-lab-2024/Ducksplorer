@@ -8,6 +8,7 @@ import CurrencyConvertor from '../../Components/CurrencyConvertor';
 import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar.js";
 import { message } from 'antd';
 import TourGuideSidebar from "../../Components/Sidebars/TourGuideSidebar.js";
+import Help from "../../Components/HelpIcon.js";
 
 import {
     Box,
@@ -30,7 +31,8 @@ import {
     Rating,
     Radio,
     RadioGroup,
-    FormControlLabel
+    FormControlLabel,
+    CircularProgress
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import TourGuideNavbar from "../../Components/TopNav/TourGuideNavbar.js";
@@ -63,6 +65,7 @@ const ItineraryReport = () => {
     useEffect(() => {
         console.log(userName);
         const fetchItineraries = async () => {
+            setLoading(true);
             try {
                 const response = await axios.get(
                     `http://localhost:8000/tourGuideAccount/report/${userName}`
@@ -72,6 +75,9 @@ const ItineraryReport = () => {
             } catch (error) {
                 console.error("There was an error fetching the itineraries!", error);
                 message.error("error in fetching");
+            }
+            finally {
+                setLoading(false);
             }
         };
         fetchItineraries();
@@ -197,64 +203,55 @@ const ItineraryReport = () => {
         setCurrency(selectedCurrency);
     };
 
-    return (
-        <>
-            <TourGuideSidebar />
-            <TourGuideNavbar/>
-            <div>
+
+    if (loading) {
+        return (
             <Box
-            sx={{
-                p: 6,
-                maxWidth: "125vw", // Ensure the width adjusts within the viewport
-                height: "100vh",
-                margin: "auto", // Center the content horizontally
-                backgroundColor: "#f9f9f9", // Light background
-                borderRadius: "12px", // Rounded corners
-                boxShadow: "0px 4px 12px rgba(0,0,0,0.1)", // Subtle shadow for depth
-                display: "flex",
-                flexDirection: "column",
-                gap: 3, // Spacing between elements
-            }}
-            >
-                <Box
                 sx={{
                     display: "flex",
-                    justifyContent: "center",
+                    flexDirection: "column",
                     alignItems: "center",
-                    mb: 3,
+                    justifyContent: "center",
+                    height: "100vh", // Full screen height
                 }}
-                >
-                <Typography
-                variant="h4"
-                sx={{
-                    fontWeight: "bold",
-                    color: "#3f51b5", // Primary color for the title
-                    textShadow: "1px 1px 4px rgba(0, 0, 0, 0.1)", // Subtle text shadow
-                }}
-                >
-                Itineraries Report
+            >
+                <CircularProgress size={60} thickness={4} />
+                <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
+                    Loading tour guide report...
                 </Typography>
-                    </Box>
+            </Box>
+        );
+    }
+
+    if ((!Array.isArray(itineraries)) || (itineraries.length === 0)) {
+        return <p>No itineraries available.</p>;
+    }
+
+    return (
+        <Box
+            sx={{
+                height: "100vh",
+                paddingTop: "64px",
+                width: "90vw",
+                marginLeft: "5vw",
+            }}
+        >
+            <TourGuideSidebar />
+            <div
+                style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
+            >
+                <div style={{ overflowY: "visible", height: "100vh" }}>
+                    <Typography
+                        variant="h2"
+                        sx={{ textAlign: "center", fontWeight: "bold" }}
+                        gutterBottom
+                    >
+                        Itineraries Report
+                    </Typography>
+                    <br></br>
                     {/* Filtering */}
-                     <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 2,
-                  mb: 3,
-                  marginLeft:"125px"
-                }}
-              >
-                
-                <IconButton
-                  onClick={handleFilterChoiceClick}
-                  sx={{
-                    backgroundColor: "#e3f2fd",
-                    color: "#1976d2",
-                    "&:hover": { backgroundColor: "#bbdefb" },
-                  }}
-                >                       
-                 <FilterAltIcon />
+                    <IconButton onClick={handleFilterChoiceClick}>
+                        <FilterAltIcon style={{ color: "black" }} />
                     </IconButton>
                     </Box>
                     <Menu
@@ -345,41 +342,50 @@ const ItineraryReport = () => {
                         </MenuItem>
                     </Menu>
                     <TableContainer
-                component={Paper}
-                sx={{
-                  borderRadius: "12px", // Rounded corners
-                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)", // Depth for table container
-                  overflow: "hidden", // Prevent content overflow
-                }}
-              >                        <Table>
-  <TableHead
-                    sx={{
-                      backgroundColor: "#3f51b5", // Primary color for table head
-                      "& .MuiTableCell-root": {
-                        color: "#ffffff", // White text for headers
-                        fontWeight: "bold",
-                      },
-                    }}
-                  >                                <TableRow>
-                                    <TableCell>Activities
+                        component={Paper}
+                        sx={{
+                            marginBottom: 4,
+                            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+                            borderRadius: "1.5cap",
+                        }}
+                    >
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Activities
                                         <CurrencyConvertor onCurrencyChange={handleActivityCurrencyChange} />
                                     </TableCell>
-                                    <TableCell>Locations</TableCell>
-                                    <TableCell>Timeline</TableCell>
-                                    <TableCell>Language</TableCell>
-                                    <TableCell>Price
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Locations</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Timeline</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Language</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Price
                                         <CurrencyConvertor onCurrencyChange={handlePriceCurrencyChange} />
                                     </TableCell>
-                                    <TableCell>Available Dates And Times</TableCell>
-                                    <TableCell>Accessibility</TableCell>
-                                    <TableCell>Pick Up Location</TableCell>
-                                    <TableCell>Drop Off Location</TableCell>
-                                    <TableCell>Ratings</TableCell>
-                                    <TableCell>Tags</TableCell>
-                                    <TableCell>Flag</TableCell>
-                                    <TableCell>Active Status</TableCell>
-                                    <TableCell>Number of Bookings</TableCell>
-                                    <TableCell>Earnings
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Available Dates And Times</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Accessibility</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Pick Up Location</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Drop Off Location</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Ratings</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Tags</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Flag</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Active Status</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Number of Bookings</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Earnings
                                         <CurrencyConvertor onCurrencyChange={handleEarningsCurrencyChange} />
                                     </TableCell>
                                 </TableRow>
@@ -388,7 +394,8 @@ const ItineraryReport = () => {
                                 {itineraries.length > 0 ? (
                                     itineraries.map((entry) => entry && entry.itinerary.deletedItinerary === false && entry.itinerary.totalGain !== undefined ? (
                                         <TableRow key={entry.itinerary._id}>
-                                            <TableCell>
+                                            <TableCell >
+
                                                 {entry.itinerary.activity && entry.itinerary.activity.length > 0
                                                     ? entry.itinerary.activity.map((activity, index) => (
                                                         <div key={index}>
@@ -402,7 +409,8 @@ const ItineraryReport = () => {
                                                     : 'No activities available'}
                                             </TableCell>
 
-                                            <TableCell>
+                                            <TableCell >
+
                                                 {entry.itinerary.locations && entry.itinerary.locations.length > 0 ? (
                                                     entry.itinerary.locations.map((location, index) => (
                                                         <div key={index}>
@@ -415,12 +423,16 @@ const ItineraryReport = () => {
                                                 ) : 'No locations available'}
                                             </TableCell>
 
-                                            <TableCell>{entry.itinerary.timeline}</TableCell>
-                                            <TableCell>{entry.itinerary.language}</TableCell>
-                                            <TableCell>
+                                            <TableCell >
+                                                {entry.itinerary.timeline}</TableCell>
+                                            <TableCell >
+                                                {entry.itinerary.language}</TableCell>
+                                            <TableCell >
+
                                                 {(entry.itinerary.price * (priceExchangeRates[priceCurrency] || 1)).toFixed(2)} {priceCurrency}
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell >
+
                                                 {entry.itinerary.availableDatesAndTimes.length > 0
                                                     ? entry.itinerary.availableDatesAndTimes.map((dateTime, index) => {
                                                         const dateObj = new Date(dateTime);
@@ -436,16 +448,21 @@ const ItineraryReport = () => {
                                                     : 'No available dates and times'}
                                             </TableCell>
 
-                                            <TableCell>{entry.itinerary.accessibility}</TableCell>
-                                            <TableCell>{entry.itinerary.pickUpLocation}</TableCell>
-                                            <TableCell>{entry.itinerary.dropOffLocation}</TableCell>
-                                            <TableCell><Rating
-                                                value={entry.itinerary.averageRating}
-                                                precision={0.1}
-                                                readOnly
-                                            /></TableCell>
+                                            <TableCell >
+                                                {entry.itinerary.accessibility}</TableCell>
+                                            <TableCell >
+                                                {entry.itinerary.pickUpLocation}</TableCell>
+                                            <TableCell >
+                                                {entry.itinerary.dropOffLocation}</TableCell>
+                                            <TableCell >
+                                                <Rating
+                                                    value={entry.itinerary.averageRating}
+                                                    precision={0.1}
+                                                    readOnly
+                                                /></TableCell>
 
                                             <TableCell>
+
                                                 {entry.itinerary.tags && entry.itinerary.tags.length > 0
                                                     ? entry.itinerary.tags.map((tag, index) => (
                                                         <div key={index}>
@@ -457,6 +474,7 @@ const ItineraryReport = () => {
                                             </TableCell>
 
                                             <TableCell>
+
                                                 {entry.itinerary.flag ? (
                                                     <span style={{ color: 'red', display: 'flex', alignItems: 'center' }}>
                                                         <WarningIcon style={{ marginRight: '4px' }} />
@@ -470,11 +488,14 @@ const ItineraryReport = () => {
                                                 )}
                                             </TableCell>
 
-                                            <TableCell>
+                                            <TableCell >
+
                                                 {entry.itinerary.isDeactivated ? 'Deactivated' : 'Activated'}
                                             </TableCell>
-                                            <TableCell>{entry.numOfBookings}</TableCell>
-                                            <TableCell>
+                                            <TableCell >
+                                                {entry.numOfBookings}</TableCell>
+                                            <TableCell >
+
                                                 {((entry.totalEarnings * 0.9) * (earningsExchangeRates[earningsCurrency] || 1)).toFixed(2)} {earningsCurrency}
                                             </TableCell>
                                         </TableRow>
@@ -488,9 +509,9 @@ const ItineraryReport = () => {
                             </TableBody>
                         </Table>
                     </TableContainer>
-                </Box>
+                </div>
             </div>
-        </>
+        </Box >
     );
 };
 

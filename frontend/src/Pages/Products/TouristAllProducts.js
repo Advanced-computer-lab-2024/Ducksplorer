@@ -124,55 +124,67 @@ const TouristAllProducts = () => {
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography variant="h4" fontWeight="700">
-            Available Products
+            Products
           </Typography>
         </Box>
 
-        <Box sx={{ mb: 3, display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <TextField
-            label="Search for a product"
-            variant="outlined"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            style={{ marginRight: "10px" }}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSearchProducts}
-            style={{ backgroundColor: "#3f51b5", color: "white" }}
-          >
-            Search
-          </Button>
-        </Box>
-
-        <Box sx={{ mb: 3, display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <Box
+          sx={{
+            mb: 3,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          {/* Filter Section */}
           <TextField
             label="Min Price"
             type="number"
             value={minPrice}
             onChange={(e) => setMinPrice(e.target.value)}
-            style={{ marginRight: "10px" }}
+            sx={{ width: 100 }}
           />
           <TextField
             label="Max Price"
             type="number"
             value={maxPrice}
             onChange={(e) => setMaxPrice(e.target.value)}
-            style={{ marginRight: "10px" }}
+            sx={{ width: 100 }}
           />
           <Button
             variant="contained"
-            color="primary"
+            sx={{
+              backgroundColor: "#ff9933",
+              color: "white",
+              textTransform: "capitalize",
+            }}
             onClick={handleFilterProducts}
-            style={{ backgroundColor: "#3f51b5", color: "white" }}
           >
             Filter
           </Button>
-        </Box>
+          {/* Search Section */}
+          <TextField
+            label="Search for a product"
+            variant="outlined"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            sx={{ width: 200 }}
+          />
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "#ff9933",
+              color: "white",
+              textTransform: "capitalize",
+            }}
+            onClick={handleSearchProducts}
+          >
+            Search
+          </Button>
 
-        <Box sx={{ mb: 3, display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <FormControl variant="outlined" style={{ minWidth: 120 }}>
+          {/* Sort Section */}
+          <FormControl variant="outlined" sx={{ minWidth: 150 }}>
             <InputLabel>Sort By</InputLabel>
             <Select
               value={sortOrder}
@@ -187,24 +199,51 @@ const TouristAllProducts = () => {
             </Select>
           </FormControl>
         </Box>
-
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+        {/* <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", mb: 3, gap: 2 }}>
           {!isGuest && (
-            <Button
-              variant="contained"
-              color="secondary"
-              sx={{
-                paddingX: 4,
-                fontWeight: 600,
-                textTransform: "capitalize",
-                marginLeft: "10px",
-              }}
-              onClick={() => navigate("/myPurchases")}
-            >
-              My Purchases
-            </Button>
+            <>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{
+                  backgroundColor: "#ff9933",
+                  paddingX: 4,
+                  fontWeight: 600,
+                  textTransform: "capitalize",
+                }}
+                onClick={() => navigate("/myCart")}
+              >
+                View Cart
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{
+                  backgroundColor: "#ff9933",
+                  paddingX: 4,
+                  fontWeight: 600,
+                  textTransform: "capitalize",
+                }}
+                onClick={() => navigate("/Wishlist")}
+              >
+                View Wishlist
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{
+                  backgroundColor: "#ff9933",
+                  paddingX: 4,
+                  fontWeight: 600,
+                  textTransform: "capitalize",
+                }}
+                onClick={() => navigate("/orders")}
+              >
+                View All Orders
+              </Button>
+            </>
           )}
-        </Box>
+        </Box> */}
 
         <Grid container spacing={3}>
           {products.filter((product) => product.isArchived !== true).length > 0 ? (
@@ -212,7 +251,8 @@ const TouristAllProducts = () => {
               .filter((product) => product.isArchived !== true)
               .map((product) => (
                 <Grid item xs={12} sm={6} md={4} key={product._id}>
-                  <ProductCard product={product} />
+                  <ProductCard product={product} showRating={true}
+                    showAddToCart={true}/>
                 </Grid>
               ))
           ) : (

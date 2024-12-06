@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Drawer,
   Typography,
@@ -8,14 +8,14 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import { Link } from 'react-router-dom';
-import EventNoteIcon from '@mui/icons-material/EventNote';
-import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import MuseumIcon from '@mui/icons-material/Museum';
+import { Link } from "react-router-dom";
+import EventNoteIcon from "@mui/icons-material/EventNote";
+import EventAvailableIcon from "@mui/icons-material/EventAvailable";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import MuseumIcon from "@mui/icons-material/Museum";
 import WidgetsIcon from "@mui/icons-material/Widgets";
-import SearchIcon from '@mui/icons-material/Search';
-import { useNavigate } from 'react-router-dom';
+import SearchIcon from "@mui/icons-material/Search";
+import { useNavigate } from "react-router-dom";
 const drawerWidth = 300;
 
 const GuestSidebar = () => {
@@ -23,7 +23,7 @@ const GuestSidebar = () => {
   const navigate = useNavigate();
 
   const handleLoginClick = () => {
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
@@ -100,7 +100,9 @@ const GuestSidebar = () => {
             <ListItemIcon>
               <EventAvailableIcon sx={{ color: "success.main" }} />
             </ListItemIcon>
-            {isSidebarOpen && <ListItemText primary="View Upcoming Itineraries" />}
+            {isSidebarOpen && (
+              <ListItemText primary="View Upcoming Itineraries" />
+            )}
           </ListItem>
 
           <ListItem
@@ -195,13 +197,15 @@ const GuestSidebar = () => {
             <ListItemIcon>
               <EventAvailableIcon sx={{ color: "info.main" }} />
             </ListItemIcon>
-            {isSidebarOpen && <ListItemText primary="View Upcoming Historical Places" />}
+            {isSidebarOpen && (
+              <ListItemText primary="View Upcoming Historical Places" />
+            )}
           </ListItem>
 
           <ListItem
             button
             component={Link}
-            to="/activity/sortFilter"
+            to="/activity/SortFilter"
             sx={{
               "&:hover": {
                 backgroundColor: "#f9f9f9", // Light hover effect

@@ -7,6 +7,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CurrencyConvertor from '../../Components/CurrencyConvertor';
 import SellerSidebar from "../../Components/Sidebars/SellerSidebar.js";
 import { message } from 'antd';
+import Help from "../../Components/HelpIcon.js";
 
 import {
   Box,
@@ -29,7 +30,8 @@ import {
   Rating,
   Radio,
   RadioGroup,
-  FormControlLabel
+  FormControlLabel,
+  CircularProgress
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
@@ -56,6 +58,7 @@ const MyPurchases = () => {
     console.log(userName);
     const fetchProducts = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(
           `http://localhost:8000/sellerRoutes/report/${userName}`
         );
@@ -64,6 +67,9 @@ const MyPurchases = () => {
       } catch (error) {
         console.error("There was an error fetching the products!", error);
         message.error("error in fetching");
+      }
+      finally {
+        setLoading(false);
       }
     };
     fetchProducts();
@@ -186,18 +192,54 @@ const MyPurchases = () => {
     return ratingEntry ? ratingEntry.rating : "No rating available";
   };
 
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh", // Full screen height
+        }}
+      >
+        <CircularProgress size={60} thickness={4} />
+        <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
+          Loading seller report...
+        </Typography>
+      </Box>
+    );
+  }
+
+  if ((!Array.isArray(products)) || (products.length === 0)) {
+    return <p>No products available.</p>;
+  }
 
   return (
-    <>
+    <Box
+      sx={{
+        height: "100vh",
+        paddingTop: "64px",
+        width: "90vw",
+        marginLeft: "5vw",
+      }}
+    >
       <SellerSidebar />
-      <div>
-        <Box sx={{ p: 6, maxWidth: "120vh", overflowY: "visible", height: "100vh", marginLeft: "350px", }}>
-          <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-            <Typography variant="h4">Products Report</Typography>
-          </Box>
+      <div
+        style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
+      >
+        <div style={{ overflowY: "visible", height: "100vh" }}>
+          <Typography
+            variant="h2"
+            sx={{ textAlign: "center", fontWeight: "bold" }}
+            gutterBottom
+          >
+            Products Report
+          </Typography>
+          <br></br>
           {/* Filtering */}
           <IconButton onClick={handleFilterChoiceClick}>
-            <FilterAltIcon />
+            <FilterAltIcon style={{ color: "black" }} />
           </IconButton>
           <Menu
             anchorEl={filterAnchorEl}
@@ -285,19 +327,33 @@ const MyPurchases = () => {
               <Button onClick={handleClearAllFilters}>Clear All Filters</Button>
             </MenuItem>
           </Menu>
-          <TableContainer style={{ borderRadius: 20 }} component={Paper}>
+          <TableContainer
+            component={Paper}
+            sx={{
+              marginBottom: 4,
+              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+              borderRadius: "1.5cap",
+            }}
+          >
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Price
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Name</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Price
                     <CurrencyConvertor onCurrencyChange={handlePriceCurrencyChange} />
                   </TableCell>
-                  <TableCell>Rating</TableCell>
-                  <TableCell>Available Quantity</TableCell>
-                  <TableCell>Description</TableCell>
-                  <TableCell>Reviews</TableCell>
-                  <TableCell>Earnings
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Rating</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Available Quantity</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Description</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Reviews</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Earnings
                     <CurrencyConvertor onCurrencyChange={handleEarningsCurrencyChange} />
                   </TableCell>
                 </TableRow>
@@ -351,9 +407,10 @@ const MyPurchases = () => {
               </TableBody>
             </Table>
           </TableContainer>
-        </Box>
+        </div>
+        <Help />
       </div>
-    </>
+    </Box >
   );
 };
 

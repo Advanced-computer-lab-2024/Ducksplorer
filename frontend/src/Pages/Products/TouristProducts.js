@@ -64,12 +64,17 @@ function TouristProducts() {
         </Button>
 
         <Grid container spacing={3}>
-          {products.filter((product) => product.isArchived !== true).length > 0 ? (
+          {products.filter((product) => product.isArchived !== true).length >
+          0 ? (
             products
               .filter((product) => product.isArchived !== true)
               .map((product) => (
                 <Grid item xs={12} sm={6} md={4} key={product._id}>
-                  <ProductCard product={product} />
+                  <ProductCard
+                    product={product}
+                    showRating={true}
+                    showAddToCart={true}
+                  />
                 </Grid>
               ))
           ) : (

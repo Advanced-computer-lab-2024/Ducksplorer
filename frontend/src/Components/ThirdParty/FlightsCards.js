@@ -1,5 +1,8 @@
 import React, { useState , useEffect, useCallback } from 'react';
-import { Card, CardContent, Typography, Box, Grid } from '@mui/material';
+import {  Typography, Box, Grid } from '@mui/material';
+import Card from "@mui/joy/Card";
+import CardContent from "@mui/joy/CardContent";
+import CardOverflow from "@mui/joy/CardOverflow";
 import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot, TimelineOppositeContent } from '@mui/lab';
 import CurrencyConverterGeneral from './CurrencyConverterGeneral'; 
 import { Button } from '@mui/material';
@@ -143,6 +146,7 @@ const FlightsCards = ({ flights , originCity, destinationCity, originCountry, de
                 departureCountry: originCountry,
                 arrivalCountry : destinationCountry,
                 arrivalCity : destinationCity,
+                //image: 
               }
         
               localStorage.setItem('flight', JSON.stringify(flight));
@@ -163,55 +167,69 @@ const FlightsCards = ({ flights , originCity, destinationCity, originCountry, de
     
 
     return (
-        <Box sx={{ flexGrow: 1, mt: 4, overflowY: 'auto' }}>
-            <CurrencyConverterGeneral onCurrencyChange={handleCurrencyChange} initialCurrency={initialCurrency} />
-            <Grid container spacing={2} justifyContent="center">
-                {flights.map((flight, index) => (
-                    <Grid item xs={12} sm={4} key={index} sx={{ mt: 2, overflowY: 'auto' }}>
-                        <Card sx={{ borderRadius: 5, width: '100%', height: '100%' , boxShadow: '0 8px 16px 0 rgba(0,0,0,0.2)', backgroundColor: '#f5f5f5'}}>
-                            <CardContent sx={{ padding: 2 }}>
-                                <Typography variant="h6" component="div" sx={{ textAlign: 'center', padding: 2 }}>
-                                    Flight {index + 1}
-                                </Typography>
-                                {flight.price && (
-                                    <Typography variant="subtitle1" color="text.secondary" sx={{ textAlign: 'center', padding: 2 }}>
-                                        Price: {convertPrice(flight.price.total, flight.price.currency)} {currency}
-                                    </Typography>
-                                )}
-                                {flight.itineraries && flight.itineraries[0] && flight.itineraries[0].segments && flight.itineraries[0].segments[0] && (
-                                    <Timeline position="left">
-                                        <TimelineItem>
-                                            <TimelineOppositeContent color="text.secondary">
-                                                {formatDate(flight.itineraries[0].segments[0].departure.at)} - {formatTime(flight.itineraries[0].segments[0].departure.at)}<br />
-                                                {flight.itineraries[0].segments[0].departure.iataCode}, {flight.itineraries[0].segments[0].departure.terminal}<br />
-                                            </TimelineOppositeContent>
-                                            <TimelineSeparator>
-                                                <TimelineDot />
-                                                <TimelineConnector />
-                                            </TimelineSeparator>
-                                            <TimelineContent>Departure</TimelineContent>
-                                        </TimelineItem>
-                                        <TimelineItem>
-                                            <TimelineOppositeContent color="text.secondary">
-                                                {formatDate(flight.itineraries[0].segments[0].arrival.at)} - {formatTime(flight.itineraries[0].segments[0].arrival.at)}<br />
-                                                {flight.itineraries[0].segments[0].arrival.iataCode}, {flight.itineraries[0].segments[0].arrival.terminal}<br />
-                                            </TimelineOppositeContent>
-                                            <TimelineSeparator>
-                                                <TimelineDot />
-                                            </TimelineSeparator>
-                                            <TimelineContent>Arrival</TimelineContent>
-                                        </TimelineItem>
-                                    </Timeline>
-                                )}
-                                <Button variant="contained" color="primary" onClick={() => handleBooking(flight)} sx={{ mt: 2 }} fullWidth>
-                                    Book Flight Now
-                                </Button>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                ))}
+      <Box sx={{ flexGrow: 1, mt: 4, overflowY: 'visible' , height : "60vh" , marginLeft:5 }}>
+        <Typography variant="h6" component="div" sx={{ color: 'orange', textAlign: 'center', padding: 2 }}>
+          Currency Converter
+        </Typography>
+        <CurrencyConverterGeneral onCurrencyChange={handleCurrencyChange} initialCurrency={initialCurrency} />
+        <Grid container spacing={1} justifyContent="center">
+          {flights.map((flight, index) => (
+            <Grid item xs={12} sm={4} key={index} gap={"20px"}sx={{ mt: 2, overflowY: 'auto' }}>
+              <Card
+                onClick={() => handleBooking(flight)}
+                variant="outlined"
+                className="activity-card"
+                sx={{
+                  width: "30vw",
+                  height: "400px",
+                  cursor: "pointer",
+                }}
+              >
+                <CardOverflow>
+                <CardContent sx={{ padding: 2 }}>
+                  <Typography variant="h6" component="div" sx={{ textAlign: 'center', padding: 2 }}>
+                    Flight {index + 1}
+                  </Typography>
+                  {flight.price && (
+                    <Typography variant="subtitle1" color="text.secondary" sx={{ textAlign: 'center', padding: 2 }}>
+                      Price: {convertPrice(flight.price.total, flight.price.currency)} {currency}
+                    </Typography>
+                  )}
+                  {flight.itineraries && flight.itineraries[0] && flight.itineraries[0].segments && flight.itineraries[0].segments[0] && (
+                    <Timeline position="left">
+                      <TimelineItem>
+                        <TimelineOppositeContent color="text.secondary">
+                          {formatDate(flight.itineraries[0].segments[0].departure.at)} - {formatTime(flight.itineraries[0].segments[0].departure.at)}<br />
+                          {flight.itineraries[0].segments[0].departure.iataCode}, {flight.itineraries[0].segments[0].departure.terminal}<br />
+                        </TimelineOppositeContent>
+                        <TimelineSeparator>
+                          <TimelineDot />
+                          <TimelineConnector />
+                        </TimelineSeparator>
+                        <TimelineContent>Departure</TimelineContent>
+                      </TimelineItem>
+                      <TimelineItem>
+                        <TimelineOppositeContent color="text.secondary">
+                          {formatDate(flight.itineraries[0].segments[0].arrival.at)} - {formatTime(flight.itineraries[0].segments[0].arrival.at)}<br />
+                          {flight.itineraries[0].segments[0].arrival.iataCode}, {flight.itineraries[0].segments[0].arrival.terminal}<br />
+                        </TimelineOppositeContent>
+                        <TimelineSeparator>
+                          <TimelineDot />
+                        </TimelineSeparator>
+                        <TimelineContent>Arrival</TimelineContent>
+                      </TimelineItem>
+                    </Timeline>
+                  )}
+                  <Button variant="contained"  onClick={() => handleBooking(flight)} sx={{ mt: 2 , backgroundColor : "#ff9933"}} fullWidth>
+                    Book Flight Now
+                  </Button>
+                </CardContent>
+                </CardOverflow>
+              </Card>
             </Grid>
-        </Box>
+          ))}
+        </Grid>
+      </Box>
     );
 };
 

@@ -17,6 +17,7 @@ import {
   FormControl,
   Button,
   Rating,
+  IconButton,
 } from "@mui/material";
 import Select, { selectClasses } from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
@@ -26,6 +27,9 @@ import ActivityCard from "../../Components/activityCard";
 import { useNavigate } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+
 const SortActivities = () => {
   const navigate = useNavigate();
   const [activities, setActivities] = useState([]);
@@ -34,6 +38,12 @@ const SortActivities = () => {
 
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
+  const [isSaved, setIsSaved] = useState(false);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const username = user?.username;
+
   // Function to fetch sorted activities
   const fetchSortedActivities = () => {
     const showPreferences = localStorage.getItem("showPreferences");
@@ -57,6 +67,10 @@ const SortActivities = () => {
               return 0; // If both have the same category, retain their relative order
             }
           });
+          Activities = response.data.map((activity) => ({
+            ...activity,
+            saved: activity.saved || { isSaved: false, user: null },
+          }));
           setActivities(Activities);
         } else {
           setActivities(response.data);
@@ -78,74 +92,29 @@ const SortActivities = () => {
     fetchSortedActivities(); // Optional: Remove this line if you only want to load activities after clicking Sort
   }, []);
 
-  const handleBooking = async (activityId) => {
-    try {
-      const userJson = localStorage.getItem("user");
-      const isGuest = localStorage.getItem("guest") === "true";
-      if (isGuest) {
-        message.error("User is not logged in, Please login or sign up.");
-        navigate("/guestDashboard");
-        return;
-      }
-      if (!userJson) {
-        message.error("User is not logged in.");
-        return null;
-      }
-      const user = JSON.parse(userJson);
-      if (!user || !user.username) {
-        message.error("User information is missing.");
-        return null;
-      }
-
-      const type = "activity";
-
-      localStorage.setItem("activityId", activityId);
-      localStorage.setItem("type", type);
-
-      const response = await axios.get(
-        `http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}`
-      );
-
-      if (response.status === 200) {
-        navigate("/payment");
-      } else {
-        message.error("Booking failed.");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      message.error("An error occurred while booking.");
-    }
-  };
-
   return (
-    <>
-      {/* <h4
-        variant="h4"
-        className="oswald-Titles"
+    <div className="yassin fouda" style={{ width: "100%", marginTop: 20 }}>
+      <div
         style={{
-          textAlign: "center",
-          marginBottom: "40px",
-        }}
-      >
-        Upcoming Activities
-      </h4> */}
-      {/* Sorting Controls */}
-      <Box
-        sx={{
           display: "flex",
+          marginBottom: 15,
           justifyContent: "space-between",
-          mb: 3,
         }}
       >
-        <FormControl sx={{ minWidth: 150 }}>
+        <FormControl>
           <Select
             indicator={<KeyboardArrowDown />}
             placeholder="Sort By"
-            color="primary"
             onChange={(e, newValue) => {
               setSortBy(newValue);
             }}
             sx={{
+              color: "orange",
+              borderColor: "orange",
+              backgroundColor: "#ffffff",
+              "&:hover": {
+                backgroundColor: "#FEF4EA",
+              },
               width: 240,
               [`& .${selectClasses.indicator}`]: {
                 transition: "0.2s",
@@ -155,26 +124,117 @@ const SortActivities = () => {
               },
             }}
           >
-            <Option value="date">Date</Option>
-            <Option value="price">Price</Option>
-            <Option value="name">Name</Option>
-            <Option value="duration">Duration</Option>
-            <Option value="category">Category</Option>
-            <Option value="specialDiscount">Discount</Option>
-            <Option value="averageRating">Rating</Option>
+            <Option
+              sx={{
+                color: "orange",
+                backgroundColor: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+              value="date"
+            >
+              Date
+            </Option>
+            <Option
+              sx={{
+                color: "orange",
+                backgroundColor: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+              value="price"
+            >
+              Price
+            </Option>
+            <Option
+              sx={{
+                color: "orange",
+                backgroundColor: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+              value="name"
+            >
+              Name
+            </Option>
+            <Option
+              sx={{
+                color: "orange",
+                backgroundColor: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+              value="duration"
+            >
+              Duration
+            </Option>
+            <Option
+              sx={{
+                color: "orange",
+                backgroundColor: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+              value="category"
+            >
+              Category
+            </Option>
+            <Option
+              sx={{
+                color: "orange",
+                backgroundColor: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+              value="specialDiscount"
+            >
+              Discount
+            </Option>
+            <Option
+              sx={{
+                color: "orange",
+                backgroundColor: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+              value="averageRating"
+            >
+              Rating
+            </Option>
           </Select>
         </FormControl>
 
-        <FormControl sx={{ minWidth: 150 }}>
+        <FormControl sx={{ minWidth: 100 }}>
           <Select
             labelId="order-label"
             placeholder="Order"
             onChange={(e, value) => {
               setOrder(value);
             }}
-            color="primary"
             indicator={<KeyboardArrowDown />}
             sx={{
+              "&.MuiSelect-MenuItem": {
+                backgroundColor: "orange",
+              },
+              "&.Joy-JoySelectListBox": {
+                sx: {
+                  backgroundColor: "orange",
+                },
+              },
+
+              color: "orange",
+              borderColor: "orange",
+              backgroundColor: "#ffffff",
+              "&:hover": {
+                backgroundColor: "#FEF4EA",
+              },
               width: 240,
               [`& .${selectClasses.indicator}`]: {
                 transition: "0.2s",
@@ -184,25 +244,43 @@ const SortActivities = () => {
               },
             }}
           >
-            <Option value="asc">Ascending</Option>
-            <Option value="desc">Descending</Option>
+            <Option
+              value="asc"
+              sx={{
+                color: "orange",
+                backgroundColor: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              Ascending
+            </Option>
+            <Option
+              value="desc"
+              sx={{ color: "orange", backgroundColor: "#ffffff" }}
+            >
+              Descending
+            </Option>
           </Select>
         </FormControl>
 
         <Button
-          variant="contained"
-          color="primary"
+          className="blackhover"
+          sx={{ backgroundColor: "#ff9933", color: "white " }}
           onClick={fetchSortedActivities}
         >
           Sort
         </Button>
-      </Box>
-      {/* Activity Table */}
+      </div>
+
+
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
+          gridTemplateColumns: "repeat(3, 1fr)",
           gap: "24px", // Adjust the gap between items as needed
+          width: "100%",
         }}
       >
         {activities.map((activity) =>
@@ -214,8 +292,29 @@ const SortActivities = () => {
             : null
         )}
       </div>
+
+      {/* <TableCell>
+                    <span
+                      onClick={() =>
+                        handleSaveActivity(
+                          activity._id,
+                          activity.saved?.isSaved
+                        )
+                      }
+                    >
+                      {saveStates[activity._id] ? (
+                        <IconButton>
+                          <BookmarkIcon />
+                        </IconButton>
+                      ) : (
+                        <IconButton>
+                          <BookmarkBorderIcon />
+                        </IconButton>
+                      )}
+                    </span>  SAVED BY JAYDAA
+                  </TableCell> */}
       <Help />
-    </>
+    </div>
   );
 };
 

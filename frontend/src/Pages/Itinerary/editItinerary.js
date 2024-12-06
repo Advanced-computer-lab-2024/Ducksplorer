@@ -187,8 +187,7 @@ function EditItinerary() {
           error
         );
         message.error(
-          `Error updating itinerary: ${
-            error.response ? error.response.data.message : error.message
+          `Error updating itinerary: ${error.response ? error.response.data.message : error.message
           }`
         );
       });
@@ -201,7 +200,7 @@ function EditItinerary() {
         height: "100vh",
       }}
     >
-      <h2 style={{ fontWeight: "bold", textAlign: "center" }}>Edit Activity</h2>
+      <h2 style={{ fontWeight: "bold", textAlign: "center" }}>Edit Itinerary</h2>
       <form onSubmit={handleUpdate} style={{ marginTop: "20px" }} ref={formRef}>
         {formData.activity &&
           formData.activity.map((activity, index) => (

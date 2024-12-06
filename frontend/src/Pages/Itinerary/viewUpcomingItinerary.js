@@ -32,6 +32,8 @@ import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon.js";
 import TouristNavBar from "../../Components/TouristNavBar.js";
 import ItineraryCard from "../../Components/itineraryCard.js";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 
 const ViewUpcomingItinerary = () => {
   const navigate = useNavigate();
@@ -63,6 +65,8 @@ const ViewUpcomingItinerary = () => {
 
   const [selectedFilters, setSelectedFilters] = useState([]);
 
+  const [isSaved, setIsSaved] = useState(false);
+
   //get all pref tags from table
   useEffect(() => {
     const fetchTags = async () => {
@@ -83,6 +87,7 @@ const ViewUpcomingItinerary = () => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
   };
+  
   // Handlers for Sort By dropdown
   const handleSortByClick = (event) => {
     setSortByAnchorEl(event.currentTarget);
@@ -178,24 +183,32 @@ const ViewUpcomingItinerary = () => {
 
   //get upcoming itineraries
   useEffect(() => {
-    const showPreferences = localStorage.getItem("showPreferences") || "false";
-    const user = JSON.parse(localStorage.getItem("user"));
-    const username = user?.username;
-    const role = user?.role;
-    axios
-      .get("http://localhost:8000/itinerary/upcoming", {
-        params: {
-          showPreferences: showPreferences.toString(),
-          username,
-          role,
-        },
-      })
-      .then((response) => {
-        setItineraries(response.data);
-      })
-      .catch((error) => {
+    const fetchItineraries = async () => {
+      const showPreferences = localStorage.getItem("showPreferences");
+      const user = JSON.parse(localStorage.getItem("user"));
+      const username = user?.username;
+      const role = user?.role;
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/itinerary/upcoming",
+          {
+            params: {
+              showPreferences: showPreferences.toString(),
+              username,
+              role,
+            },
+          }
+        );
+        const data = response.data.map((itinerary) => ({
+          ...itinerary,
+          saved: itinerary.saved || { isSaved: false, user: null },
+        }));
+        setItineraries(data);
+      } catch (error) {
         console.error("There was an error fetching the itineraries!", error);
-      });
+      }
+    };
+    fetchItineraries();
   }, []);
 
   //get itineraries based on the sorting criteria
@@ -247,6 +260,11 @@ const ViewUpcomingItinerary = () => {
     handleFilterClose();
   };
 
+  const handleActivityCurrencyChange = (rates, selectedCurrency) => {
+    setActivityExchangeRates(rates);
+    setActivityCurrency(selectedCurrency);
+  };
+
   const handleBooking = async (itineraryId) => {
     try {
       const userJson = localStorage.getItem("user");
@@ -285,14 +303,10 @@ const ViewUpcomingItinerary = () => {
       message.error("An error occurred while booking.");
     }
   };
-  const handleActivityCurrencyChange = (rates, selectedCurrency) => {
-    setActivityExchangeRates(rates);
-    setActivityCurrency(selectedCurrency);
-  };
+
   return (
     <div>
       <TouristNavBar />
-      <TouristSidebar />
       <Box
         sx={{
           padding: "20px",
@@ -301,6 +315,7 @@ const ViewUpcomingItinerary = () => {
           flexDirection: "column",
           overflowY: "visible",
           height: "100vh",
+          width: "80vw",
         }}
       >
         <Link
@@ -309,6 +324,7 @@ const ViewUpcomingItinerary = () => {
         >
           Back
         </Link>
+
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <Typography variant="h4">Upcoming Itineraries</Typography>
         </Box>
@@ -408,7 +424,7 @@ const ViewUpcomingItinerary = () => {
                 onClose={() => setAnchorEl(null)}
               >
                 <MenuItem>
-                  <Typography variant="subtitle1">Select Range:</Typography>
+                  <Typography variant="subtitle1">Select Range:</Typography>{" "}
                   <Slider
                     value={priceRange}
                     onChange={handlePriceRangeChange}
@@ -439,7 +455,10 @@ const ViewUpcomingItinerary = () => {
               Language
               <br />
               <FormControl sx={{ minWidth: 120, marginTop: 1 }}>
-                <InputLabel id="language-select-label"> Language </InputLabel>
+                <InputLabel id="language-select-label" sx={{ marginRight: 2 }}>
+                  {" "}
+                  Language{" "}
+                </InputLabel>
                 <Select
                   labelId="language-select-label"
                   id="language-select"
@@ -499,9 +518,7 @@ const ViewUpcomingItinerary = () => {
               <Button onClick={handleFilter}>Apply Filters</Button>
             </MenuItem>
             <MenuItem>
-              <Button onClick={handleClearAllFilters}>
-                Clear All Filters
-              </Button>
+              <Button onClick={handleClearAllFilters}>Clear All Filters</Button>
             </MenuItem>
           </Menu>
         </Box>
@@ -510,7 +527,7 @@ const ViewUpcomingItinerary = () => {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
+              gridTemplateColumns: "repeat(3, 1fr)",
               gap: "24px", // Adjust the gap between items as needed
               paddingBottom: 24,
             }}
