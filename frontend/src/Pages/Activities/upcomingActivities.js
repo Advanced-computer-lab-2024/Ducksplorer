@@ -175,7 +175,6 @@ const UpcomingActivities = () => {
       }}
     >
       <TouristNavBar />
-      <TouristSidebar />
 
       <Box sx={{ p: 6, maxWidth: 1200, overflowY: "auto", height: "100vh", backgroundColor: "#fff6e6" }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3, backgroundColor: "#fff6e6" }}>

@@ -46,7 +46,6 @@ function ViewMyProducts() {
     }}
   >
     <TouristNavBar />    
-    <TouristSidebar/>
 
       <Button onClick={handleBackButtonClick}>Back</Button>
       <div

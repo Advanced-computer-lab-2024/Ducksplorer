@@ -29,6 +29,7 @@ import Button from "@mui/joy/Button";
 import SortIcon from "@mui/icons-material/Sort";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
 import Error404 from "../../Components/Error404.js";
+import DuckLoading from "../../Components/Loading/duckLoading.js";
 
 function SearchItineraries() {
   const { id } = useParams();
@@ -51,7 +52,7 @@ function SearchItineraries() {
 
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
-
+  const [loading, setLoading] = useState(true);
   const [activityExchangeRates, setActivityExchangeRates] = useState({});
   const [activityCurrency, setActivityCurrency] = useState("EGP");
 
@@ -83,6 +84,7 @@ function SearchItineraries() {
 
       const username = user?.username;
       const role = user?.role;
+      setLoading(true);
       try {
         const response = await axios.get("http://localhost:8000/itinerary/", {
           params: {
@@ -105,6 +107,8 @@ function SearchItineraries() {
         }
       } catch (error) {
         console.error("There was an error fetching the itineraries!", error);
+      } finally {
+        setTimeout(() => setLoading(false), 1000); // Delay of 1 second
       }
     };
     fetchItineraries();
@@ -337,6 +341,13 @@ function SearchItineraries() {
       setShowError(false); // Reset error state if itineraries exist
     }
   }, [itineraries]);
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
 
   return (
     <Box

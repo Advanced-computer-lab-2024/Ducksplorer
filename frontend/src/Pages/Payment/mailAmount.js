@@ -12,12 +12,10 @@ import HotelCardDetailed from "../../Components/hotelCardDetailed.js";
 import CartCardDetailed from "../../Components/cartCardDetailed.js";
 import TransportationCardDetailed from "../../Components/transportationCardDetailed.js";
 import TouristNavBar from "../../Components/TouristNavBar.js";
-import { Paper } from '@mui/material';
+import { Paper } from "@mui/material";
 
 const { Title } = Typography;
 const { Option } = Select;
-
-
 
 function PaymentPage() {
   const flight = localStorage.getItem("flight");
@@ -64,6 +62,53 @@ function PaymentPage() {
       message.success("Address added successfully!");
     } catch (error) {
       console.error("Error adding address:", error);
+    }
+  };
+
+  const sendConfirmationEmail = async () => {
+    try {
+      // Retrieve necessary data from localStorage
+      const user = JSON.parse(localStorage.getItem("user"));
+      const email = user.email;
+      const itemId =
+        localStorage.getItem("activityId") ||
+        localStorage.getItem("itineraryId");
+      const type = localStorage.getItem("type");
+      // const hotel = localStorage.getItem("hotelBooking"); // Example: add this if relevant
+      // const flight = localStorage.getItem("flightBooking"); // Example: add this if relevant
+      // const transportation = localStorage.getItem("transportationBooking"); // Example: add this if relevant
+      console.log("email,item,type:", email, itemId, type);
+      // Make a POST request to the backend
+      const response = await fetch(
+        "http://localhost:8000/payment/send-confirmation",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            itemId,
+            type,
+            // hotel,
+            // flight,
+            // transportation,
+          }),
+        }
+      );
+      console.log(response);
+
+      const result = await response.json();
+      if (response.ok) {
+        message.success("Confirmation email sent successfully!");
+        console.log("Email Response:", result);
+      } else {
+        message.error("Failed to send confirmation email.");
+        console.error("Error sending email:", result);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      message.error("An error occurred while sending the email.");
     }
   };
 
@@ -158,7 +203,10 @@ function PaymentPage() {
       if (response.status === 200) {
         message.success("Payment successfully completed!");
         if (itineraryOrActivity === "product") {
-          await axios.delete("http://localhost:8000/touristRoutes/emptyCart", userName);
+          await axios.delete(
+            "http://localhost:8000/touristRoutes/emptyCart",
+            userName
+          );
           navigate("/orders");
         }
         // Payment succeeded; now create the booking in the backend
@@ -185,11 +233,20 @@ function PaymentPage() {
         if (bookingResult.status === 200) {
           console.log("Booking successfully created:", bookingResult);
           navigate("/myBookings");
+          sendConfirmationEmail();
+          if (localStorage.getItem("type") === "activity") {
+            localStorage.removeItem("activityId");
+          }
+          if (localStorage.getItem("type") === "itinerary") {
+            localStorage.removeItem("itineraryId");
+          }
         } else {
           console.error("Booking creation failed:", bookingResult.message);
         }
       } else {
-        message.error("Error creating payment. Not enough money in the wallet.");
+        message.error(
+          "Error creating payment. Not enough money in the wallet."
+        );
       }
     } catch (error) {
       console.error("Payment initiation failed:", error);
@@ -281,8 +338,7 @@ function PaymentPage() {
         } else {
           message.error("Failed to retrieve activity details.");
         }
-      }
-      else {
+      } else {
         message.error("Failed to retrieve details");
       }
       //console.log(response);
@@ -310,7 +366,6 @@ function PaymentPage() {
     handleDisplayBooked();
   }, [type]);
 
-
   const applyPromoCode = async () => {
     try {
       const response = await axios.post(
@@ -320,7 +375,7 @@ function PaymentPage() {
       const discountPercentage = response.data.discount;
 
       // Calculate the discounted price
-      const discountedPrice = price - ((price * discountPercentage) / 100);
+      const discountedPrice = price - (price * discountPercentage) / 100;
       setDiscount(discountPercentage);
       setFinalPrice(discountedPrice);
     } catch (err) {
@@ -336,14 +391,20 @@ function PaymentPage() {
     }
     try {
       // Call the empty cart API
-      const response = await axios.delete("http://localhost:8000/touristRoutes/emptyCart", {
-        data: { userName }
-      });
+      const response = await axios.delete(
+        "http://localhost:8000/touristRoutes/emptyCart",
+        {
+          data: { userName },
+        }
+      );
       console.log(response.data.message); // Log success message
       // Navigate to "My Purchases" on success
       navigate("/orders");
     } catch (error) {
-      console.error("Error emptying cart:", error.response?.data || error.message);
+      console.error(
+        "Error emptying cart:",
+        error.response?.data || error.message
+      );
       message.error("Failed to empty the cart. Please try again.");
     }
   };
@@ -370,16 +431,30 @@ function PaymentPage() {
       >
         <div>
           {itineraryData ||
-            activityData ||
-            (flightsData && type === "flight") ||
-            (hotelsData && type === "hotel") ||
-            (transportationsData && type === "transportation") ||
-            (cartData && type === "product") ? (
+          activityData ||
+          (flightsData && type === "flight") ||
+          (hotelsData && type === "hotel") ||
+          (transportationsData && type === "transportation") ||
+          (cartData && type === "product") ? (
             type === "itinerary" ? (
-              <div style={{ display: "flex", alignItems: "flex-start", gap: "20px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: "20px",
+                }}
+              >
                 {/* Left Section */}
                 <div style={{ flex: 1 }}>
-                  <Card style={{ width: "50vw", margin: '20px auto', borderRadius: '8px', variant: "middle", jsyt: "center" }}>
+                  <Card
+                    style={{
+                      width: "50vw",
+                      margin: "20px auto",
+                      borderRadius: "8px",
+                      variant: "middle",
+                      jsyt: "center",
+                    }}
+                  >
                     <ItineraryCardDetailed itinerary={itineraryData} />
                   </Card>
                 </div>
@@ -399,15 +474,24 @@ function PaymentPage() {
                   }}
                 >
                   <Form style={{ width: "100%", height: "90%" }}>
-                    <h1 style={{
-                      fontWeight: "bold",
-                      paddingBottom: "5%",
-                      fontSize: 50
-                    }}> Payment Details</h1>
+                    <h1
+                      style={{
+                        fontWeight: "bold",
+                        paddingBottom: "5%",
+                        fontSize: 50,
+                      }}
+                    >
+                      {" "}
+                      Payment Details
+                    </h1>
 
                     <Form.Item
                       name="dateTime"
-                      label={<span style={{ fontWeight: "bold", fontSize: 20 }}>Date and Time</span>}
+                      label={
+                        <span style={{ fontWeight: "bold", fontSize: 20 }}>
+                          Date and Time
+                        </span>
+                      }
                       rules={[
                         {
                           required: true,
@@ -448,7 +532,17 @@ function PaymentPage() {
                     </p>
 
                     <div>
-                      <p style={{ textAlign: "left", marginTop: "5%", marginBottom: "1%", fontWeight: "bold", fontSize: 20 }}>Email</p>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginTop: "5%",
+                          marginBottom: "1%",
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
+                      >
+                        Email
+                      </p>
                       <input
                         type="email"
                         placeholder="Email"
@@ -457,14 +551,25 @@ function PaymentPage() {
                         required
                         readOnly
                         style={{
-                          padding: "1%", width: "100%", borderRadius: "1%",
-                          border: "0.5% solid #ddd"
+                          padding: "1%",
+                          width: "100%",
+                          borderRadius: "1%",
+                          border: "0.5% solid #ddd",
                         }}
-
                       />
                     </div>
                     <div>
-                      <p style={{ textAlign: "left", marginTop: "4%", marginBottom: "1%", fontWeight: "bold", fontSize: 20 }}>Amount</p>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginTop: "4%",
+                          marginBottom: "1%",
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
+                      >
+                        Amount
+                      </p>
                       <input
                         type="number"
                         placeholder="Amount"
@@ -473,21 +578,35 @@ function PaymentPage() {
                         required
                         readOnly
                         style={{
-                          padding: "1%", width: "100%", borderRadius: "1%",
+                          padding: "1%",
+                          width: "100%",
+                          borderRadius: "1%",
                           border: "0.5% solid #ddd",
                         }}
                       />
                     </div>
 
                     <div style={{ marginBottom: "20px" }}>
-                      <p style={{ textAlign: "left", marginTop: "4%", marginBottom: "2px", fontWeight: "bold", fontSize: 20 }}>Promo Code</p>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginTop: "4%",
+                          marginBottom: "2px",
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
+                      >
+                        Promo Code
+                      </p>
                       <input
                         type="text"
                         placeholder="Promo Code"
                         value={promoCode}
                         onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
                         style={{
-                          padding: "1%", width: "100%", borderRadius: "1%",
+                          padding: "1%",
+                          width: "100%",
+                          borderRadius: "1%",
                           border: "0.5% solid #ddd",
                         }}
                       />
@@ -504,24 +623,46 @@ function PaymentPage() {
                         flex: 1,
                         marginRight: "12px",
                         marginBottom: "5%",
-                        backgroundColor: "#ff9933"
-
+                        backgroundColor: "#ff9933",
                       }}
                       onClick={applyPromoCode}
                     >
                       Apply Promo Code
                     </button>
-                    {discount > 0 && <p style={{ textAlign: "left" }}>Discount Applied: {discount}%</p>}
-                    <h3 style={{ textAlign: "left", fontSize: 15, color: "grey" }}>
+                    {discount > 0 && (
+                      <p style={{ textAlign: "left" }}>
+                        Discount Applied: {discount}%
+                      </p>
+                    )}
+                    <h3
+                      style={{ textAlign: "left", fontSize: 15, color: "grey" }}
+                    >
                       Taxes: 10%
                     </h3>
-                    <h3 style={{ textAlign: "left", fontSize: 15, color: "grey" }}>
+                    <h3
+                      style={{ textAlign: "left", fontSize: 15, color: "grey" }}
+                    >
                       Subtotal: {price * 0.9}
                     </h3>
-                    <h3 style={{ textAlign: "left", fontSize: 15, fontWeight: "bold", marginBottom: "5%" }}>Taxes and shipping calculated at checkout</h3>
-                    <h2 style={{
-                      textAlign: "left", marginBottom: "10%", fontWeight: "bold"
-                    }}>Final Price: {finalPrice}EGP</h2>
+                    <h3
+                      style={{
+                        textAlign: "left",
+                        fontSize: 15,
+                        fontWeight: "bold",
+                        marginBottom: "5%",
+                      }}
+                    >
+                      Taxes and shipping calculated at checkout
+                    </h3>
+                    <h2
+                      style={{
+                        textAlign: "left",
+                        marginBottom: "10%",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Final Price: {finalPrice}EGP
+                    </h2>
                     <form style={{ display: "flex", flexDirection: "row" }}>
                       <button
                         size="md"
@@ -534,10 +675,9 @@ function PaymentPage() {
                           fontSize: "1rem",
                           flex: 1,
                           marginRight: "12px",
-                          backgroundColor: "#ff9933"
+                          backgroundColor: "#ff9933",
                         }}
                         onClick={handleVisaSubmit}
-
                       >
                         Visa
                       </button>
@@ -551,7 +691,7 @@ function PaymentPage() {
                           padding: "10px",
                           fontSize: "1rem",
                           flex: 1,
-                          backgroundColor: "#ff9933"
+                          backgroundColor: "#ff9933",
                         }}
                         onClick={handleWalletSubmit}
                       >
@@ -562,10 +702,22 @@ function PaymentPage() {
                 </Paper>
               </div>
             ) : type === "activity" && activityData ? (
-              <div style={{ display: "flex", alignItems: "flex-start", gap: "20px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: "20px",
+                }}
+              >
                 {/* Left Section */}
                 <div style={{ flex: 1 }}>
-                  <Card style={{ width: '800px', margin: '20px auto', borderRadius: '8px' }}>
+                  <Card
+                    style={{
+                      width: "800px",
+                      margin: "20px auto",
+                      borderRadius: "8px",
+                    }}
+                  >
                     <ActivityCardDetailed activity={activityData} />
                   </Card>
                 </div>
@@ -585,14 +737,29 @@ function PaymentPage() {
                   }}
                 >
                   <Form style={{ width: "100%", height: "90%" }}>
-                    <h1 style={{
-                      fontWeight: "bold",
-                      paddingBottom: "5%",
-                      fontSize: 50
-                    }}> Payment Details</h1>
+                    <h1
+                      style={{
+                        fontWeight: "bold",
+                        paddingBottom: "5%",
+                        fontSize: 50,
+                      }}
+                    >
+                      {" "}
+                      Payment Details
+                    </h1>
 
                     <div>
-                      <p style={{ textAlign: "left", marginTop: "3%", marginBottom: "1%", fontWeight: "bold", fontSize: 20 }}>Email</p>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginTop: "3%",
+                          marginBottom: "1%",
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
+                      >
+                        Email
+                      </p>
                       <input
                         type="email"
                         placeholder="Email"
@@ -601,14 +768,25 @@ function PaymentPage() {
                         required
                         readOnly
                         style={{
-                          padding: "1%", width: "100%", borderRadius: "1%",
-                          border: "0.5% solid #ddd"
+                          padding: "1%",
+                          width: "100%",
+                          borderRadius: "1%",
+                          border: "0.5% solid #ddd",
                         }}
-
                       />
                     </div>
                     <div>
-                      <p style={{ textAlign: "left", marginTop: "4%", marginBottom: "1%", fontWeight: "bold", fontSize: 20 }}>Amount</p>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginTop: "4%",
+                          marginBottom: "1%",
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
+                      >
+                        Amount
+                      </p>
                       <input
                         type="number"
                         placeholder="Amount"
@@ -617,21 +795,35 @@ function PaymentPage() {
                         required
                         readOnly
                         style={{
-                          padding: "1%", width: "100%", borderRadius: "1%",
+                          padding: "1%",
+                          width: "100%",
+                          borderRadius: "1%",
                           border: "0.5% solid #ddd",
                         }}
                       />
                     </div>
 
                     <div style={{ marginBottom: "3%" }}>
-                      <p style={{ textAlign: "left", marginTop: "4%", marginBottom: "2px", fontWeight: "bold", fontSize: 20 }}>Promo Code</p>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginTop: "4%",
+                          marginBottom: "2px",
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
+                      >
+                        Promo Code
+                      </p>
                       <input
                         type="text"
                         placeholder="Promo Code"
                         value={promoCode}
                         onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
                         style={{
-                          padding: "1%", width: "100%", borderRadius: "1%",
+                          padding: "1%",
+                          width: "100%",
+                          borderRadius: "1%",
                           border: "0.5% solid #ddd",
                         }}
                       />
@@ -648,24 +840,46 @@ function PaymentPage() {
                         flex: 1,
                         marginRight: "12px",
                         marginBottom: "5%",
-                        backgroundColor: "#ff9933"
-
+                        backgroundColor: "#ff9933",
                       }}
                       onClick={applyPromoCode}
                     >
                       Apply Promo Code
                     </button>
-                    {discount > 0 && <p style={{ textAlign: "left" }}>Discount Applied: {discount}%</p>}
-                    <h3 style={{ textAlign: "left", fontSize: 15, color: "grey" }}>
+                    {discount > 0 && (
+                      <p style={{ textAlign: "left" }}>
+                        Discount Applied: {discount}%
+                      </p>
+                    )}
+                    <h3
+                      style={{ textAlign: "left", fontSize: 15, color: "grey" }}
+                    >
                       Taxes: 10%
                     </h3>
-                    <h3 style={{ textAlign: "left", fontSize: 15, color: "grey" }}>
+                    <h3
+                      style={{ textAlign: "left", fontSize: 15, color: "grey" }}
+                    >
                       Subtotal: {price * 0.9}
                     </h3>
-                    <h3 style={{ textAlign: "left", fontSize: 15, fontWeight: "bold", marginBottom: "5%" }}>Taxes and shipping calculated at checkout</h3>
-                    <h2 style={{
-                      textAlign: "left", marginBottom: "3%", fontWeight: "bold"
-                    }}>Final Price: {finalPrice}EGP</h2>
+                    <h3
+                      style={{
+                        textAlign: "left",
+                        fontSize: 15,
+                        fontWeight: "bold",
+                        marginBottom: "5%",
+                      }}
+                    >
+                      Taxes and shipping calculated at checkout
+                    </h3>
+                    <h2
+                      style={{
+                        textAlign: "left",
+                        marginBottom: "3%",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Final Price: {finalPrice}EGP
+                    </h2>
                     <form style={{ display: "flex", flexDirection: "row" }}>
                       <button
                         size="md"
@@ -678,10 +892,9 @@ function PaymentPage() {
                           fontSize: "1rem",
                           flex: 1,
                           marginRight: "12px",
-                          backgroundColor: "#ff9933"
+                          backgroundColor: "#ff9933",
                         }}
                         onClick={handleVisaSubmit}
-
                       >
                         Visa
                       </button>
@@ -695,7 +908,7 @@ function PaymentPage() {
                           padding: "10px",
                           fontSize: "1rem",
                           flex: 1,
-                          backgroundColor: "#ff9933"
+                          backgroundColor: "#ff9933",
                         }}
                         onClick={handleWalletSubmit}
                       >
@@ -706,10 +919,22 @@ function PaymentPage() {
                 </Paper>
               </div>
             ) : type === "flight" ? (
-              <div style={{ display: "flex", alignItems: "flex-start", gap: "20px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: "20px",
+                }}
+              >
                 {/* Left Section */}
                 <div style={{ flex: 1 }}>
-                  <Card style={{ width: '800px', margin: '20px auto', borderRadius: '8px' }}>
+                  <Card
+                    style={{
+                      width: "800px",
+                      margin: "20px auto",
+                      borderRadius: "8px",
+                    }}
+                  >
                     <FlightCardDetailed flightsData={flightsData} />
                   </Card>
                 </div>
@@ -729,14 +954,29 @@ function PaymentPage() {
                   }}
                 >
                   <Form style={{ width: "100%", height: "90%" }}>
-                    <h1 style={{
-                      fontWeight: "bold",
-                      paddingBottom: "5%",
-                      fontSize: 50
-                    }}> Payment Details</h1>
+                    <h1
+                      style={{
+                        fontWeight: "bold",
+                        paddingBottom: "5%",
+                        fontSize: 50,
+                      }}
+                    >
+                      {" "}
+                      Payment Details
+                    </h1>
 
                     <div>
-                      <p style={{ textAlign: "left", marginTop: "3%", marginBottom: "1%", fontWeight: "bold", fontSize: 20 }}>Email</p>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginTop: "3%",
+                          marginBottom: "1%",
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
+                      >
+                        Email
+                      </p>
                       <input
                         type="email"
                         placeholder="Email"
@@ -745,14 +985,25 @@ function PaymentPage() {
                         required
                         readOnly
                         style={{
-                          padding: "1%", width: "100%", borderRadius: "1%",
-                          border: "0.5% solid #ddd"
+                          padding: "1%",
+                          width: "100%",
+                          borderRadius: "1%",
+                          border: "0.5% solid #ddd",
                         }}
-
                       />
                     </div>
                     <div>
-                      <p style={{ textAlign: "left", marginTop: "4%", marginBottom: "1%", fontWeight: "bold", fontSize: 20 }}>Amount</p>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginTop: "4%",
+                          marginBottom: "1%",
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
+                      >
+                        Amount
+                      </p>
                       <input
                         type="number"
                         placeholder="Amount"
@@ -761,21 +1012,35 @@ function PaymentPage() {
                         required
                         readOnly
                         style={{
-                          padding: "1%", width: "100%", borderRadius: "1%",
+                          padding: "1%",
+                          width: "100%",
+                          borderRadius: "1%",
                           border: "0.5% solid #ddd",
                         }}
                       />
                     </div>
 
                     <div style={{ marginBottom: "3%" }}>
-                      <p style={{ textAlign: "left", marginTop: "4%", marginBottom: "2px", fontWeight: "bold", fontSize: 20 }}>Promo Code</p>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginTop: "4%",
+                          marginBottom: "2px",
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
+                      >
+                        Promo Code
+                      </p>
                       <input
                         type="text"
                         placeholder="Promo Code"
                         value={promoCode}
                         onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
                         style={{
-                          padding: "1%", width: "100%", borderRadius: "1%",
+                          padding: "1%",
+                          width: "100%",
+                          borderRadius: "1%",
                           border: "0.5% solid #ddd",
                         }}
                       />
@@ -792,24 +1057,46 @@ function PaymentPage() {
                         flex: 1,
                         marginRight: "12px",
                         marginBottom: "5%",
-                        backgroundColor: "#ff9933"
-
+                        backgroundColor: "#ff9933",
                       }}
                       onClick={applyPromoCode}
                     >
                       Apply Promo Code
                     </button>
-                    {discount > 0 && <p style={{ textAlign: "left" }}>Discount Applied: {discount}%</p>}
-                    <h3 style={{ textAlign: "left", fontSize: 15, color: "grey" }}>
+                    {discount > 0 && (
+                      <p style={{ textAlign: "left" }}>
+                        Discount Applied: {discount}%
+                      </p>
+                    )}
+                    <h3
+                      style={{ textAlign: "left", fontSize: 15, color: "grey" }}
+                    >
                       Taxes: 10%
                     </h3>
-                    <h3 style={{ textAlign: "left", fontSize: 15, color: "grey" }}>
+                    <h3
+                      style={{ textAlign: "left", fontSize: 15, color: "grey" }}
+                    >
                       Subtotal: {price * 0.9}
                     </h3>
-                    <h3 style={{ textAlign: "left", fontSize: 15, fontWeight: "bold", marginBottom: "5%" }}>Taxes and shipping calculated at checkout</h3>
-                    <h2 style={{
-                      textAlign: "left", marginBottom: "3%", fontWeight: "bold"
-                    }}>Final Price: {finalPrice}EGP</h2>
+                    <h3
+                      style={{
+                        textAlign: "left",
+                        fontSize: 15,
+                        fontWeight: "bold",
+                        marginBottom: "5%",
+                      }}
+                    >
+                      Taxes and shipping calculated at checkout
+                    </h3>
+                    <h2
+                      style={{
+                        textAlign: "left",
+                        marginBottom: "3%",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Final Price: {finalPrice}EGP
+                    </h2>
                     <form style={{ display: "flex", flexDirection: "row" }}>
                       <button
                         size="md"
@@ -822,10 +1109,9 @@ function PaymentPage() {
                           fontSize: "1rem",
                           flex: 1,
                           marginRight: "12px",
-                          backgroundColor: "#ff9933"
+                          backgroundColor: "#ff9933",
                         }}
                         onClick={handleVisaSubmit}
-
                       >
                         Visa
                       </button>
@@ -839,7 +1125,7 @@ function PaymentPage() {
                           padding: "10px",
                           fontSize: "1rem",
                           flex: 1,
-                          backgroundColor: "#ff9933"
+                          backgroundColor: "#ff9933",
                         }}
                         onClick={handleWalletSubmit}
                       >
@@ -850,10 +1136,22 @@ function PaymentPage() {
                 </Paper>
               </div>
             ) : type === "product" && cartData ? (
-              <div style={{ display: "flex", alignItems: "flex-start", gap: "20px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: "20px",
+                }}
+              >
                 {/* Left Section */}
                 <div style={{ flex: 1 }}>
-                  <Card style={{ width: '800px', margin: '20px auto', borderRadius: '8px' }}>
+                  <Card
+                    style={{
+                      width: "800px",
+                      margin: "20px auto",
+                      borderRadius: "8px",
+                    }}
+                  >
                     <CartCardDetailed cartData={cartData} />
                   </Card>
                 </div>
@@ -861,7 +1159,7 @@ function PaymentPage() {
                   elevation={3}
                   style={{
                     width: "800px",
-                    //when pressing on add address 1450px and when not 950 x when 
+                    //when pressing on add address 1450px and when not 950 x when
                     height: "auto",
                     margin: "20px auto",
                     padding: "20px",
@@ -873,16 +1171,34 @@ function PaymentPage() {
                   }}
                 >
                   <Form style={{ width: "100%", height: "100%" }}>
-                    <h1 style={{
-                      fontWeight: "bold",
-                      paddingBottom: "5%",
-                      fontSize: 50
-                    }}> Payment Details</h1>
+                    <h1
+                      style={{
+                        fontWeight: "bold",
+                        paddingBottom: "5%",
+                        fontSize: 50,
+                      }}
+                    >
+                      {" "}
+                      Payment Details
+                    </h1>
 
-                    <AddressDropdown onAddressSelect={handleAddressSelect} onAddAddress={addNewAddress} />
+                    <AddressDropdown
+                      onAddressSelect={handleAddressSelect}
+                      onAddAddress={addNewAddress}
+                    />
 
                     <div>
-                      <p style={{ textAlign: "left", marginTop: "3%", marginBottom: "1%", fontWeight: "bold", fontSize: 20 }}>Email</p>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginTop: "3%",
+                          marginBottom: "1%",
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
+                      >
+                        Email
+                      </p>
                       <input
                         type="email"
                         placeholder="Email"
@@ -891,14 +1207,25 @@ function PaymentPage() {
                         required
                         readOnly
                         style={{
-                          padding: "1%", width: "100%", borderRadius: "1%",
-                          border: "0.5% solid #ddd"
+                          padding: "1%",
+                          width: "100%",
+                          borderRadius: "1%",
+                          border: "0.5% solid #ddd",
                         }}
-
                       />
                     </div>
                     <div>
-                      <p style={{ textAlign: "left", marginTop: "4%", marginBottom: "1%", fontWeight: "bold", fontSize: 20 }}>Amount</p>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginTop: "4%",
+                          marginBottom: "1%",
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
+                      >
+                        Amount
+                      </p>
                       <input
                         type="number"
                         placeholder="Amount"
@@ -907,21 +1234,35 @@ function PaymentPage() {
                         required
                         readOnly
                         style={{
-                          padding: "1%", width: "100%", borderRadius: "1%",
+                          padding: "1%",
+                          width: "100%",
+                          borderRadius: "1%",
                           border: "0.5% solid #ddd",
                         }}
                       />
                     </div>
 
                     <div style={{ marginBottom: "3%" }}>
-                      <p style={{ textAlign: "left", marginTop: "4%", marginBottom: "2px", fontWeight: "bold", fontSize: 20 }}>Promo Code</p>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginTop: "4%",
+                          marginBottom: "2px",
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
+                      >
+                        Promo Code
+                      </p>
                       <input
                         type="text"
                         placeholder="Promo Code"
                         value={promoCode}
                         onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
                         style={{
-                          padding: "1%", width: "100%", borderRadius: "1%",
+                          padding: "1%",
+                          width: "100%",
+                          borderRadius: "1%",
                           border: "0.5% solid #ddd",
                         }}
                       />
@@ -938,24 +1279,46 @@ function PaymentPage() {
                         flex: 1,
                         marginRight: "12px",
                         marginBottom: "5%",
-                        backgroundColor: "#ff9933"
-
+                        backgroundColor: "#ff9933",
                       }}
                       onClick={applyPromoCode}
                     >
                       Apply Promo Code
                     </button>
-                    {discount > 0 && <p style={{ textAlign: "left" }}>Discount Applied: {discount}%</p>}
-                    <h3 style={{ textAlign: "left", fontSize: 15, color: "grey" }}>
+                    {discount > 0 && (
+                      <p style={{ textAlign: "left" }}>
+                        Discount Applied: {discount}%
+                      </p>
+                    )}
+                    <h3
+                      style={{ textAlign: "left", fontSize: 15, color: "grey" }}
+                    >
                       Taxes: 10%
                     </h3>
-                    <h3 style={{ textAlign: "left", fontSize: 15, color: "grey" }}>
+                    <h3
+                      style={{ textAlign: "left", fontSize: 15, color: "grey" }}
+                    >
                       Subtotal: {price * 0.9}
                     </h3>
-                    <h3 style={{ textAlign: "left", fontSize: 15, fontWeight: "bold", marginBottom: "5%" }}>Taxes and shipping calculated at checkout</h3>
-                    <h2 style={{
-                      textAlign: "left", marginBottom: "3%", fontWeight: "bold"
-                    }}>Final Price: {finalPrice}EGP</h2>
+                    <h3
+                      style={{
+                        textAlign: "left",
+                        fontSize: 15,
+                        fontWeight: "bold",
+                        marginBottom: "5%",
+                      }}
+                    >
+                      Taxes and shipping calculated at checkout
+                    </h3>
+                    <h2
+                      style={{
+                        textAlign: "left",
+                        marginBottom: "3%",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Final Price: {finalPrice}EGP
+                    </h2>
                     <form style={{ display: "flex", flexDirection: "row" }}>
                       <button
                         size="md"
@@ -968,10 +1331,9 @@ function PaymentPage() {
                           fontSize: "1rem",
                           flex: 1,
                           marginRight: "12px",
-                          backgroundColor: "#ff9933"
+                          backgroundColor: "#ff9933",
                         }}
                         onClick={handleVisaSubmit}
-
                       >
                         Visa
                       </button>
@@ -985,7 +1347,7 @@ function PaymentPage() {
                           padding: "10px",
                           fontSize: "1rem",
                           flex: 1,
-                          backgroundColor: "#ff9933"
+                          backgroundColor: "#ff9933",
                         }}
                         onClick={handleWalletSubmit}
                       >
@@ -995,456 +1357,677 @@ function PaymentPage() {
                   </Form>
                 </Paper>
               </div>
-            )
-              : type === "hotel" ? (
-                <div style={{ display: "flex", alignItems: "flex-start", gap: "20px" }}>
-                  {/* Left Section */}
-                  <div style={{ flex: 1 }}>
-                    <Card style={{ width: '800px', margin: '20px auto', borderRadius: '8px' }}>
-                      <HotelCardDetailed hotelsData={hotelsData} />
-                    </Card>
-                  </div>
-                  <Paper
-                    elevation={3}
+            ) : type === "hotel" ? (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: "20px",
+                }}
+              >
+                {/* Left Section */}
+                <div style={{ flex: 1 }}>
+                  <Card
                     style={{
                       width: "800px",
-                      minHeight: "600px",
                       margin: "20px auto",
-                      padding: "20px",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      textAlign: "center",
-                      height: "89.5vh",
+                      borderRadius: "8px",
                     }}
                   >
-                    <Form style={{ width: "100%", height: "90%" }}>
-                      <h1 style={{
-                        fontWeight: "bold",
-                        paddingBottom: "5%",
-                        fontSize: 50
-                      }}> Payment Details</h1>
-
-                      <div>
-                        <p style={{ textAlign: "left", marginTop: "3%", marginBottom: "1%", fontWeight: "bold", fontSize: 20 }}>Email</p>
-                        <input
-                          type="email"
-                          placeholder="Email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value * 100)}
-                          required
-                          readOnly
-                          style={{
-                            padding: "1%", width: "100%", borderRadius: "1%",
-                            border: "0.5% solid #ddd"
-                          }}
-
-                        />
-                      </div>
-                      <div>
-                        <p style={{ textAlign: "left", marginTop: "4%", marginBottom: "1%", fontWeight: "bold", fontSize: 20 }}>Amount</p>
-                        <input
-                          type="number"
-                          placeholder="Amount"
-                          value={price}
-                          onChange={(e) => setAmount(e.target.value * 100)}
-                          required
-                          readOnly
-                          style={{
-                            padding: "1%", width: "100%", borderRadius: "1%",
-                            border: "0.5% solid #ddd",
-                          }}
-                        />
-                      </div>
-
-                      <div style={{ marginBottom: "3%" }}>
-                        <p style={{ textAlign: "left", marginTop: "4%", marginBottom: "2px", fontWeight: "bold", fontSize: 20 }}>Promo Code</p>
-                        <input
-                          type="text"
-                          placeholder="Promo Code"
-                          value={promoCode}
-                          onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
-                          style={{
-                            padding: "1%", width: "100%", borderRadius: "1%",
-                            border: "0.5% solid #ddd",
-                          }}
-                        />
-                      </div>
-                      <button
-                        size="md"
-                        variant="solid"
-                        className="blackhover"
-                        zIndex={2}
-                        type="submit"
-                        style={{
-                          padding: "10px",
-                          fontSize: "1rem",
-                          flex: 1,
-                          marginRight: "12px",
-                          marginBottom: "5%",
-                          backgroundColor: "#ff9933"
-
-                        }}
-                        onClick={applyPromoCode}
-                      >
-                        Apply Promo Code
-                      </button>
-                      {discount > 0 && <p style={{ textAlign: "left" }}>Discount Applied: {discount}%</p>}
-                      <h3 style={{ textAlign: "left", fontSize: 15, color: "grey" }}>
-                        Taxes: 10%
-                      </h3>
-                      <h3 style={{ textAlign: "left", fontSize: 15, color: "grey" }}>
-                        Subtotal: {price * 0.9}
-                      </h3>
-                      <h3 style={{ textAlign: "left", fontSize: 15, fontWeight: "bold", marginBottom: "5%" }}>Taxes and shipping calculated at checkout</h3>
-                      <h2 style={{
-                        textAlign: "left", marginBottom: "3%", fontWeight: "bold"
-                      }}>Final Price: {finalPrice}EGP</h2>
-                      <form style={{ display: "flex", flexDirection: "row" }}>
-                        <button
-                          size="md"
-                          variant="solid"
-                          className="blackhover"
-                          zIndex={2}
-                          type="submit"
-                          style={{
-                            padding: "10px",
-                            fontSize: "1rem",
-                            flex: 1,
-                            marginRight: "12px",
-                            backgroundColor: "#ff9933"
-                          }}
-                          onClick={handleVisaSubmit}
-
-                        >
-                          Visa
-                        </button>
-                        <button
-                          size="md"
-                          variant="solid"
-                          className="blackhover"
-                          zIndex={2}
-                          type="submit"
-                          style={{
-                            padding: "10px",
-                            fontSize: "1rem",
-                            flex: 1,
-                            backgroundColor: "#ff9933"
-                          }}
-                          onClick={handleWalletSubmit}
-                        >
-                          Wallet
-                        </button>
-                      </form>
-                    </Form>
-                  </Paper>
+                    <HotelCardDetailed hotelsData={hotelsData} />
+                  </Card>
                 </div>
-              ) : type === "transportation" ? (
-                <div style={{ display: "flex", alignItems: "flex-start", gap: "20px" }}>
-                  {/* Left Section */}
-                  <div style={{ flex: 1 }}>
-                    <Card style={{ width: '800px', margin: '20px auto', borderRadius: '8px' }}>
-                      <TransportationCardDetailed transportation={transportationsData} />
-                    </Card>
-                  </div>
-                  <Paper
-                    elevation={3}
-                    style={{
-                      width: "800px",
-                      minHeight: "600px",
-                      margin: "20px auto",
-                      padding: "20px",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      textAlign: "center",
-                      height: "89.5vh",
-                    }}
-                  >
-                    <Form style={{ width: "100%", height: "90%" }}>
-                      <h1 style={{
+                <Paper
+                  elevation={3}
+                  style={{
+                    width: "800px",
+                    minHeight: "600px",
+                    margin: "20px auto",
+                    padding: "20px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    height: "89.5vh",
+                  }}
+                >
+                  <Form style={{ width: "100%", height: "90%" }}>
+                    <h1
+                      style={{
                         fontWeight: "bold",
                         paddingBottom: "5%",
-                        fontSize: 50
-                      }}> Payment Details</h1>
-
-                      <div>
-                        <p style={{ textAlign: "left", marginTop: "3%", marginBottom: "1%", fontWeight: "bold", fontSize: 20 }}>Email</p>
-                        <input
-                          type="email"
-                          placeholder="Email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value * 100)}
-                          required
-                          readOnly
-                          style={{
-                            padding: "1%", width: "100%", borderRadius: "1%",
-                            border: "0.5% solid #ddd"
-                          }}
-
-                        />
-                      </div>
-                      <div>
-                        <p style={{ textAlign: "left", marginTop: "4%", marginBottom: "1%", fontWeight: "bold", fontSize: 20 }}>Amount</p>
-                        <input
-                          type="number"
-                          placeholder="Amount"
-                          value={price}
-                          onChange={(e) => setAmount(e.target.value * 100)}
-                          required
-                          readOnly
-                          style={{
-                            padding: "1%", width: "100%", borderRadius: "1%",
-                            border: "0.5% solid #ddd",
-                          }}
-                        />
-                      </div>
-
-                      <div style={{ marginBottom: "3%" }}>
-                        <p style={{ textAlign: "left", marginTop: "4%", marginBottom: "2px", fontWeight: "bold", fontSize: 20 }}>Promo Code</p>
-                        <input
-                          type="text"
-                          placeholder="Promo Code"
-                          value={promoCode}
-                          onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
-                          style={{
-                            padding: "1%", width: "100%", borderRadius: "1%",
-                            border: "0.5% solid #ddd",
-                          }}
-                        />
-                      </div>
-                      <button
-                        size="md"
-                        variant="solid"
-                        className="blackhover"
-                        zIndex={2}
-                        type="submit"
-                        style={{
-                          padding: "10px",
-                          fontSize: "1rem",
-                          flex: 1,
-                          marginRight: "12px",
-                          marginBottom: "5%",
-                          backgroundColor: "#ff9933"
-
-                        }}
-                        onClick={applyPromoCode}
-                      >
-                        Apply Promo Code
-                      </button>
-                      {discount > 0 && <p style={{ textAlign: "left" }}>Discount Applied: {discount}%</p>}
-                      <h3 style={{ textAlign: "left", fontSize: 15, color: "grey" }}>
-                        Taxes: 10%
-                      </h3>
-                      <h3 style={{ textAlign: "left", fontSize: 15, color: "grey" }}>
-                        Subtotal: {price * 0.9}
-                      </h3>
-                      <h3 style={{ textAlign: "left", fontSize: 15, fontWeight: "bold", marginBottom: "5%" }}>Taxes and shipping calculated at checkout</h3>
-                      <h2 style={{
-                        textAlign: "left", marginBottom: "3%", fontWeight: "bold"
-                      }}>Final Price: {finalPrice}EGP</h2>
-                      <form style={{ display: "flex", flexDirection: "row" }}>
-                        <button
-                          size="md"
-                          variant="solid"
-                          className="blackhover"
-                          zIndex={2}
-                          type="submit"
-                          style={{
-                            padding: "10px",
-                            fontSize: "1rem",
-                            flex: 1,
-                            marginRight: "12px",
-                            backgroundColor: "#ff9933"
-                          }}
-                          onClick={handleVisaSubmit}
-
-                        >
-                          Visa
-                        </button>
-                        <button
-                          size="md"
-                          variant="solid"
-                          className="blackhover"
-                          zIndex={2}
-                          type="submit"
-                          style={{
-                            padding: "10px",
-                            fontSize: "1rem",
-                            flex: 1,
-                            backgroundColor: "#ff9933"
-                          }}
-                          onClick={handleWalletSubmit}
-                        >
-                          Wallet
-                        </button>
-                      </form>
-                    </Form>
-                  </Paper>
-                </div>)
-                : type === "flight" ? (
-                  <div style={{ display: "flex", alignItems: "flex-start", gap: "20px" }}>
-                    {/* Left Section */}
-                    <div style={{ flex: 1 }}>
-                      <Card style={{ width: '800px', margin: '20px auto', borderRadius: '8px' }}>
-                        <FlightCardDetailed flightsData={flightsData} />
-                      </Card>
-                    </div>
-                    <Paper
-                      elevation={3}
-                      style={{
-                        width: "800px",
-                        minHeight: "600px",
-                        margin: "20px auto",
-                        padding: "20px",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        textAlign: "center",
-                        height: "89.5vh",
+                        fontSize: 50,
                       }}
                     >
-                      <Form style={{ width: "100%", height: "90%" }}>
-                        <h1 style={{
+                      {" "}
+                      Payment Details
+                    </h1>
+
+                    <div>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginTop: "3%",
+                          marginBottom: "1%",
                           fontWeight: "bold",
-                          paddingBottom: "5%",
-                          fontSize: 50
-                        }}> Payment Details</h1>
+                          fontSize: 20,
+                        }}
+                      >
+                        Email
+                      </p>
+                      <input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value * 100)}
+                        required
+                        readOnly
+                        style={{
+                          padding: "1%",
+                          width: "100%",
+                          borderRadius: "1%",
+                          border: "0.5% solid #ddd",
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginTop: "4%",
+                          marginBottom: "1%",
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
+                      >
+                        Amount
+                      </p>
+                      <input
+                        type="number"
+                        placeholder="Amount"
+                        value={price}
+                        onChange={(e) => setAmount(e.target.value * 100)}
+                        required
+                        readOnly
+                        style={{
+                          padding: "1%",
+                          width: "100%",
+                          borderRadius: "1%",
+                          border: "0.5% solid #ddd",
+                        }}
+                      />
+                    </div>
 
-                        <div>
-                          <p style={{ textAlign: "left", marginTop: "3%", marginBottom: "1%", fontWeight: "bold", fontSize: 20 }}>Email</p>
-                          <input
-                            type="email"
-                            placeholder="Email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value * 100)}
-                            required
-                            readOnly
-                            style={{
-                              padding: "1%", width: "100%", borderRadius: "1%",
-                              border: "0.5% solid #ddd"
-                            }}
+                    <div style={{ marginBottom: "3%" }}>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginTop: "4%",
+                          marginBottom: "2px",
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
+                      >
+                        Promo Code
+                      </p>
+                      <input
+                        type="text"
+                        placeholder="Promo Code"
+                        value={promoCode}
+                        onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
+                        style={{
+                          padding: "1%",
+                          width: "100%",
+                          borderRadius: "1%",
+                          border: "0.5% solid #ddd",
+                        }}
+                      />
+                    </div>
+                    <button
+                      size="md"
+                      variant="solid"
+                      className="blackhover"
+                      zIndex={2}
+                      type="submit"
+                      style={{
+                        padding: "10px",
+                        fontSize: "1rem",
+                        flex: 1,
+                        marginRight: "12px",
+                        marginBottom: "5%",
+                        backgroundColor: "#ff9933",
+                      }}
+                      onClick={applyPromoCode}
+                    >
+                      Apply Promo Code
+                    </button>
+                    {discount > 0 && (
+                      <p style={{ textAlign: "left" }}>
+                        Discount Applied: {discount}%
+                      </p>
+                    )}
+                    <h3
+                      style={{ textAlign: "left", fontSize: 15, color: "grey" }}
+                    >
+                      Taxes: 10%
+                    </h3>
+                    <h3
+                      style={{ textAlign: "left", fontSize: 15, color: "grey" }}
+                    >
+                      Subtotal: {price * 0.9}
+                    </h3>
+                    <h3
+                      style={{
+                        textAlign: "left",
+                        fontSize: 15,
+                        fontWeight: "bold",
+                        marginBottom: "5%",
+                      }}
+                    >
+                      Taxes and shipping calculated at checkout
+                    </h3>
+                    <h2
+                      style={{
+                        textAlign: "left",
+                        marginBottom: "3%",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Final Price: {finalPrice}EGP
+                    </h2>
+                    <form style={{ display: "flex", flexDirection: "row" }}>
+                      <button
+                        size="md"
+                        variant="solid"
+                        className="blackhover"
+                        zIndex={2}
+                        type="submit"
+                        style={{
+                          padding: "10px",
+                          fontSize: "1rem",
+                          flex: 1,
+                          marginRight: "12px",
+                          backgroundColor: "#ff9933",
+                        }}
+                        onClick={handleVisaSubmit}
+                      >
+                        Visa
+                      </button>
+                      <button
+                        size="md"
+                        variant="solid"
+                        className="blackhover"
+                        zIndex={2}
+                        type="submit"
+                        style={{
+                          padding: "10px",
+                          fontSize: "1rem",
+                          flex: 1,
+                          backgroundColor: "#ff9933",
+                        }}
+                        onClick={handleWalletSubmit}
+                      >
+                        Wallet
+                      </button>
+                    </form>
+                  </Form>
+                </Paper>
+              </div>
+            ) : type === "transportation" ? (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: "20px",
+                }}
+              >
+                {/* Left Section */}
+                <div style={{ flex: 1 }}>
+                  <Card
+                    style={{
+                      width: "800px",
+                      margin: "20px auto",
+                      borderRadius: "8px",
+                    }}
+                  >
+                    <TransportationCardDetailed
+                      transportation={transportationsData}
+                    />
+                  </Card>
+                </div>
+                <Paper
+                  elevation={3}
+                  style={{
+                    width: "800px",
+                    minHeight: "600px",
+                    margin: "20px auto",
+                    padding: "20px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    height: "89.5vh",
+                  }}
+                >
+                  <Form style={{ width: "100%", height: "90%" }}>
+                    <h1
+                      style={{
+                        fontWeight: "bold",
+                        paddingBottom: "5%",
+                        fontSize: 50,
+                      }}
+                    >
+                      {" "}
+                      Payment Details
+                    </h1>
 
-                          />
-                        </div>
-                        <div>
-                          <p style={{ textAlign: "left", marginTop: "4%", marginBottom: "1%", fontWeight: "bold", fontSize: 20 }}>Amount</p>
-                          <input
-                            type="number"
-                            placeholder="Amount"
-                            value={price}
-                            onChange={(e) => setAmount(e.target.value * 100)}
-                            required
-                            readOnly
-                            style={{
-                              padding: "1%", width: "100%", borderRadius: "1%",
-                              border: "0.5% solid #ddd",
-                            }}
-                          />
-                        </div>
+                    <div>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginTop: "3%",
+                          marginBottom: "1%",
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
+                      >
+                        Email
+                      </p>
+                      <input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value * 100)}
+                        required
+                        readOnly
+                        style={{
+                          padding: "1%",
+                          width: "100%",
+                          borderRadius: "1%",
+                          border: "0.5% solid #ddd",
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginTop: "4%",
+                          marginBottom: "1%",
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
+                      >
+                        Amount
+                      </p>
+                      <input
+                        type="number"
+                        placeholder="Amount"
+                        value={price}
+                        onChange={(e) => setAmount(e.target.value * 100)}
+                        required
+                        readOnly
+                        style={{
+                          padding: "1%",
+                          width: "100%",
+                          borderRadius: "1%",
+                          border: "0.5% solid #ddd",
+                        }}
+                      />
+                    </div>
 
-                        <div style={{ marginBottom: "3%" }}>
-                          <p style={{ textAlign: "left", marginTop: "4%", marginBottom: "2px", fontWeight: "bold", fontSize: 20 }}>Promo Code</p>
-                          <input
-                            type="text"
-                            placeholder="Promo Code"
-                            value={promoCode}
-                            onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
-                            style={{
-                              padding: "1%", width: "100%", borderRadius: "1%",
-                              border: "0.5% solid #ddd",
-                            }}
-                          />
-                        </div>
-                        <button
-                          size="md"
-                          variant="solid"
-                          className="blackhover"
-                          zIndex={2}
-                          type="submit"
-                          style={{
-                            padding: "10px",
-                            fontSize: "1rem",
-                            flex: 1,
-                            marginRight: "12px",
-                            marginBottom: "5%",
-                            backgroundColor: "#ff9933"
+                    <div style={{ marginBottom: "3%" }}>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginTop: "4%",
+                          marginBottom: "2px",
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
+                      >
+                        Promo Code
+                      </p>
+                      <input
+                        type="text"
+                        placeholder="Promo Code"
+                        value={promoCode}
+                        onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
+                        style={{
+                          padding: "1%",
+                          width: "100%",
+                          borderRadius: "1%",
+                          border: "0.5% solid #ddd",
+                        }}
+                      />
+                    </div>
+                    <button
+                      size="md"
+                      variant="solid"
+                      className="blackhover"
+                      zIndex={2}
+                      type="submit"
+                      style={{
+                        padding: "10px",
+                        fontSize: "1rem",
+                        flex: 1,
+                        marginRight: "12px",
+                        marginBottom: "5%",
+                        backgroundColor: "#ff9933",
+                      }}
+                      onClick={applyPromoCode}
+                    >
+                      Apply Promo Code
+                    </button>
+                    {discount > 0 && (
+                      <p style={{ textAlign: "left" }}>
+                        Discount Applied: {discount}%
+                      </p>
+                    )}
+                    <h3
+                      style={{ textAlign: "left", fontSize: 15, color: "grey" }}
+                    >
+                      Taxes: 10%
+                    </h3>
+                    <h3
+                      style={{ textAlign: "left", fontSize: 15, color: "grey" }}
+                    >
+                      Subtotal: {price * 0.9}
+                    </h3>
+                    <h3
+                      style={{
+                        textAlign: "left",
+                        fontSize: 15,
+                        fontWeight: "bold",
+                        marginBottom: "5%",
+                      }}
+                    >
+                      Taxes and shipping calculated at checkout
+                    </h3>
+                    <h2
+                      style={{
+                        textAlign: "left",
+                        marginBottom: "3%",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Final Price: {finalPrice}EGP
+                    </h2>
+                    <form style={{ display: "flex", flexDirection: "row" }}>
+                      <button
+                        size="md"
+                        variant="solid"
+                        className="blackhover"
+                        zIndex={2}
+                        type="submit"
+                        style={{
+                          padding: "10px",
+                          fontSize: "1rem",
+                          flex: 1,
+                          marginRight: "12px",
+                          backgroundColor: "#ff9933",
+                        }}
+                        onClick={handleVisaSubmit}
+                      >
+                        Visa
+                      </button>
+                      <button
+                        size="md"
+                        variant="solid"
+                        className="blackhover"
+                        zIndex={2}
+                        type="submit"
+                        style={{
+                          padding: "10px",
+                          fontSize: "1rem",
+                          flex: 1,
+                          backgroundColor: "#ff9933",
+                        }}
+                        onClick={handleWalletSubmit}
+                      >
+                        Wallet
+                      </button>
+                    </form>
+                  </Form>
+                </Paper>
+              </div>
+            ) : type === "flight" ? (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: "20px",
+                }}
+              >
+                {/* Left Section */}
+                <div style={{ flex: 1 }}>
+                  <Card
+                    style={{
+                      width: "800px",
+                      margin: "20px auto",
+                      borderRadius: "8px",
+                    }}
+                  >
+                    <FlightCardDetailed flightsData={flightsData} />
+                  </Card>
+                </div>
+                <Paper
+                  elevation={3}
+                  style={{
+                    width: "800px",
+                    minHeight: "600px",
+                    margin: "20px auto",
+                    padding: "20px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    height: "89.5vh",
+                  }}
+                >
+                  <Form style={{ width: "100%", height: "90%" }}>
+                    <h1
+                      style={{
+                        fontWeight: "bold",
+                        paddingBottom: "5%",
+                        fontSize: 50,
+                      }}
+                    >
+                      {" "}
+                      Payment Details
+                    </h1>
 
-                          }}
-                          onClick={applyPromoCode}
-                        >
-                          Apply Promo Code
-                        </button>
-                        {discount > 0 && <p style={{ textAlign: "left" }}>Discount Applied: {discount}%</p>}
-                        <h3 style={{ textAlign: "left", fontSize: 15, color: "grey" }}>
-                          Taxes: 10%
-                        </h3>
-                        <h3 style={{ textAlign: "left", fontSize: 15, color: "grey" }}>
-                          Subtotal: {price * 0.9}
-                        </h3>
-                        <h3 style={{ textAlign: "left", fontSize: 15, fontWeight: "bold", marginBottom: "5%" }}>Taxes and shipping calculated at checkout</h3>
-                        <h2 style={{
-                          textAlign: "left", marginBottom: "3%", fontWeight: "bold"
-                        }}>Final Price: {finalPrice}EGP</h2>
-                        <form style={{ display: "flex", flexDirection: "row" }}>
-                          <button
-                            size="md"
-                            variant="solid"
-                            className="blackhover"
-                            zIndex={2}
-                            type="submit"
-                            style={{
-                              padding: "10px",
-                              fontSize: "1rem",
-                              flex: 1,
-                              marginRight: "12px",
-                              backgroundColor: "#ff9933"
-                            }}
-                            onClick={handleVisaSubmit}
+                    <div>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginTop: "3%",
+                          marginBottom: "1%",
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
+                      >
+                        Email
+                      </p>
+                      <input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value * 100)}
+                        required
+                        readOnly
+                        style={{
+                          padding: "1%",
+                          width: "100%",
+                          borderRadius: "1%",
+                          border: "0.5% solid #ddd",
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginTop: "4%",
+                          marginBottom: "1%",
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
+                      >
+                        Amount
+                      </p>
+                      <input
+                        type="number"
+                        placeholder="Amount"
+                        value={price}
+                        onChange={(e) => setAmount(e.target.value * 100)}
+                        required
+                        readOnly
+                        style={{
+                          padding: "1%",
+                          width: "100%",
+                          borderRadius: "1%",
+                          border: "0.5% solid #ddd",
+                        }}
+                      />
+                    </div>
 
-                          >
-                            Visa
-                          </button>
-                          <button
-                            size="md"
-                            variant="solid"
-                            className="blackhover"
-                            zIndex={2}
-                            type="submit"
-                            style={{
-                              padding: "10px",
-                              fontSize: "1rem",
-                              flex: 1,
-                              backgroundColor: "#ff9933"
-                            }}
-                            onClick={handleWalletSubmit}
-                          >
-                            Wallet
-                          </button>
-                          <button
-                            size="md"
-                            variant="solid"
-                            className="blackhover"
-                            zIndex={2}
-                            type="submit"
-                            style={{
-                              padding: "10px",
-                              fontSize: "1rem",
-                              flex: 1,
-                              marginRight: "12px",
-                              backgroundColor: "#ff9933"
-                            }} onClick={handleCashOnDelivery}
-                          >
-                            Cash on Delivery
-                          </button>
-                        </form>
-                      </Form>
-                    </Paper>
-                  </div>
-                ) : null
+                    <div style={{ marginBottom: "3%" }}>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginTop: "4%",
+                          marginBottom: "2px",
+                          fontWeight: "bold",
+                          fontSize: 20,
+                        }}
+                      >
+                        Promo Code
+                      </p>
+                      <input
+                        type="text"
+                        placeholder="Promo Code"
+                        value={promoCode}
+                        onChange={(e) => setPromoCode(e.target.value)} //check if it exists and if yes change price
+                        style={{
+                          padding: "1%",
+                          width: "100%",
+                          borderRadius: "1%",
+                          border: "0.5% solid #ddd",
+                        }}
+                      />
+                    </div>
+                    <button
+                      size="md"
+                      variant="solid"
+                      className="blackhover"
+                      zIndex={2}
+                      type="submit"
+                      style={{
+                        padding: "10px",
+                        fontSize: "1rem",
+                        flex: 1,
+                        marginRight: "12px",
+                        marginBottom: "5%",
+                        backgroundColor: "#ff9933",
+                      }}
+                      onClick={applyPromoCode}
+                    >
+                      Apply Promo Code
+                    </button>
+                    {discount > 0 && (
+                      <p style={{ textAlign: "left" }}>
+                        Discount Applied: {discount}%
+                      </p>
+                    )}
+                    <h3
+                      style={{ textAlign: "left", fontSize: 15, color: "grey" }}
+                    >
+                      Taxes: 10%
+                    </h3>
+                    <h3
+                      style={{ textAlign: "left", fontSize: 15, color: "grey" }}
+                    >
+                      Subtotal: {price * 0.9}
+                    </h3>
+                    <h3
+                      style={{
+                        textAlign: "left",
+                        fontSize: 15,
+                        fontWeight: "bold",
+                        marginBottom: "5%",
+                      }}
+                    >
+                      Taxes and shipping calculated at checkout
+                    </h3>
+                    <h2
+                      style={{
+                        textAlign: "left",
+                        marginBottom: "3%",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Final Price: {finalPrice}EGP
+                    </h2>
+                    <form style={{ display: "flex", flexDirection: "row" }}>
+                      <button
+                        size="md"
+                        variant="solid"
+                        className="blackhover"
+                        zIndex={2}
+                        type="submit"
+                        style={{
+                          padding: "10px",
+                          fontSize: "1rem",
+                          flex: 1,
+                          marginRight: "12px",
+                          backgroundColor: "#ff9933",
+                        }}
+                        onClick={handleVisaSubmit}
+                      >
+                        Visa
+                      </button>
+                      <button
+                        size="md"
+                        variant="solid"
+                        className="blackhover"
+                        zIndex={2}
+                        type="submit"
+                        style={{
+                          padding: "10px",
+                          fontSize: "1rem",
+                          flex: 1,
+                          backgroundColor: "#ff9933",
+                        }}
+                        onClick={handleWalletSubmit}
+                      >
+                        Wallet
+                      </button>
+                      <button
+                        size="md"
+                        variant="solid"
+                        className="blackhover"
+                        zIndex={2}
+                        type="submit"
+                        style={{
+                          padding: "10px",
+                          fontSize: "1rem",
+                          flex: 1,
+                          marginRight: "12px",
+                          backgroundColor: "#ff9933",
+                        }}
+                        onClick={handleCashOnDelivery}
+                      >
+                        Cash on Delivery
+                      </button>
+                    </form>
+                  </Form>
+                </Paper>
+              </div>
+            ) : null
           ) : (
             <p>Loading booking details...</p>
           )}
@@ -1452,7 +2035,7 @@ function PaymentPage() {
 
         <Help />
       </div>
-    </div >
+    </div>
   );
 }
 

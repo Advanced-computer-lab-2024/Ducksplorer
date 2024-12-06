@@ -5,7 +5,6 @@ import axios from "axios";
 import { message } from "antd";
 import UploadFile from "../ProductUploadImage";
 import TouristNavBar from "../TouristNavBar";
-import TouristSidebar from "../Sidebars/TouristSidebar";
 
 let picture = "";
 
@@ -87,7 +86,6 @@ const EditProduct = () => {
     }}
   >
     <TouristNavBar />
-    <TouristSidebar/>
 
     <div
       style={{

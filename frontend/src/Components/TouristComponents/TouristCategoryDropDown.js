@@ -44,7 +44,7 @@ export default function TouristCategoryDropDown(props) {
             {(popupState) => (
                 <>
                     <Button
-                        style={{ marginBottom: "10px" }}
+                        style={{ marginBottom: "10px" , color: 'white', backgroundColor: 'orange'}}
                         variant="contained"
                         {...bindTrigger(popupState)}
                     >

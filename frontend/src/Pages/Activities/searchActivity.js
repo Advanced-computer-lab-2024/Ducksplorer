@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { message } from "antd";
-import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
+import TouristNavBar from "../../Components/TouristNavBar";
 import ActivityCard from "../../Components/activityCard.js";
 import {
   Stack,
@@ -27,8 +27,9 @@ import TouristNavBar from "../../Components/TouristNavBar";
 import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
 import SortIcon from "@mui/icons-material/Sort";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
-import Error404 from "../../Components/Error404.js";
+import DuckLoading from "../../Components/Loading/duckLoading";
 
 function SearchActivity() {
   const { id } = useParams();
@@ -54,16 +55,26 @@ function SearchActivity() {
 
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
+  const [averageRating, setAverageRating] = useState(0); // Set default value to 0
+  const [price, setPrice] = useState("");
+  const [date, setDate] = useState("");
+  const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState([]); // Store fetched categories
+  const [sortBy, setSortBy] = useState("date"); // Default sorting by date
+  const [order, setOrder] = useState("asc"); // Default ascending order
 
+  const [loading, setLoading] = useState(true);
 
-  const [activityExchangeRates, setActivityExchangeRates] = useState({});
-  const [activityCurrency, setActivityCurrency] = useState("EGP");
+  const [displayFilter, setDisplayFilter] = useState(false);
+  const [displaySort, setDisplaySort] = useState(false);
 
-  const [filterAnchorEl, setFilterAnchorEl] = useState(null);
+  const toggleFilter = () => {
+    setDisplayFilter((prev) => !prev);
+  };
 
-  const [selectedFilters, setSelectedFilters] = useState([]);
-
-  const [isSaved, setIsSaved] = useState(false);
+  const toggleSort = () => {
+    setDisplaySort((prev) => !prev);
+  };
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -87,6 +98,7 @@ function SearchActivity() {
       const showPreferences = localStorage.getItem("showPreferences");
       const favCategory = localStorage.getItem("category");
       console.log(showPreferences, favCategory);
+      setLoading(true);
       try {
         const response = await axios.get("http://localhost:8000/activity/", {
           params: {
@@ -110,6 +122,8 @@ function SearchActivity() {
         }
       } catch (error) {
         console.error("There was an error fetching the activities!", error);
+      } finally {
+        setTimeout(() => setLoading(false), 1000); // Delay of 1 second
       }
     };
     fetchActivities();
@@ -177,6 +191,13 @@ function SearchActivity() {
         console.error("There was an error fetching the activities!", error);
       });
   };
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
 
   // Function to fetch activities based on search criteria
   const handleSearchActivities = () => {
@@ -348,6 +369,14 @@ function SearchActivity() {
       setShowError(false); // Reset error state if activities exist
     }
   }, [activities]);
+
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
 
   return (
     <Box

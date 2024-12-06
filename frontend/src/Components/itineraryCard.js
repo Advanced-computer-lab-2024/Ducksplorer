@@ -451,7 +451,7 @@ export default function ItineraryCard({
                 justifyContent: "space-between",
                 position: "absolute",
                 bottom: 10,
-                width: "94%",
+                width: "100%",
               }}
             >
               <Typography
@@ -484,7 +484,7 @@ export default function ItineraryCard({
                   event.stopPropagation();
                   handleBooking(itinerary._id);
                 }}
-                sx={{ backgroundColor: "#ff9933" }}
+                sx={{ backgroundColor: "#ff9933", marginRight: "7%" }}
               >
                 Book Now
               </Button>

@@ -35,7 +35,6 @@ function AllProducts() {
       }}
     >
  <TouristNavBar />
- <TouristSidebar/>      
       <Box
         sx={{
           padding: "20px",
