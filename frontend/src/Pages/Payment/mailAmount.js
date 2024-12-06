@@ -68,7 +68,8 @@ function PaymentPage() {
   const sendConfirmationEmail = async () => {
     try {
       // Retrieve necessary data from localStorage
-      const email = localStorage.getItem("paymentEmail");
+      const user = JSON.parse(localStorage.getItem("user"));
+      const email = user.email;
       const itemId =
         localStorage.getItem("activityId") ||
         localStorage.getItem("itineraryId");
@@ -233,6 +234,12 @@ function PaymentPage() {
           console.log("Booking successfully created:", bookingResult);
           navigate("/myBookings");
           sendConfirmationEmail();
+          if (localStorage.getItem("type") === "activity") {
+            localStorage.removeItem("activityId");
+          }
+          if (localStorage.getItem("type") === "itinerary") {
+            localStorage.removeItem("itineraryId");
+          }
         } else {
           console.error("Booking creation failed:", bookingResult.message);
         }

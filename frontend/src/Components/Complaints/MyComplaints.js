@@ -15,6 +15,7 @@ import { useParams } from "react-router-dom";
 import Help from "../HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar.js";
 import TouristSidebar from "../Sidebars/TouristSidebar.js";
+import DuckLoading from "../../Components/Loading/duckLoading";
 
 const MyComplaints = () => {
   const [complaints, setComplaints] = useState([]);
@@ -41,21 +42,9 @@ const MyComplaints = () => {
 
   if (loading) {
     return (
-      <Box
-        sx={{
-          height: "100vh",
-        }}
-      >
-        <TouristNavBar />
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          height="80vh"
-        >
-          <CircularProgress size={60} thickness={4} />
-        </Box>
-      </Box>
+      <div>
+        <DuckLoading />
+      </div>
     );
   }
 

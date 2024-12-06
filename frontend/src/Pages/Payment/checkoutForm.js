@@ -88,7 +88,8 @@ export default function CheckoutForm() {
   const sendConfirmationEmail = async () => {
     try {
       // Retrieve necessary data from localStorage
-      const email = localStorage.getItem("paymentEmail");
+      const user = JSON.parse(localStorage.getItem("user"));
+      const email = user.email;
       const itemId =
         localStorage.getItem("activityId") ||
         localStorage.getItem("itineraryId");
@@ -97,6 +98,8 @@ export default function CheckoutForm() {
       // const flight = localStorage.getItem("flightBooking"); // Example: add this if relevant
       // const transportation = localStorage.getItem("transportationBooking"); // Example: add this if relevant
       console.log("email,item,type:", email, itemId, type);
+      console.log("user:", user);
+      console.log("xxxxxxxxxxxxxxxx");
       // Make a POST request to the backend
       const response = await fetch(
         "http://localhost:8000/payment/send-confirmation",
@@ -270,6 +273,12 @@ export default function CheckoutForm() {
         console.log("Points Result", pointsResult);
         navigate("/myBookings");
         sendConfirmationEmail();
+        if (localStorage.getItem("type") === "activity") {
+          localStorage.removeItem("activityId");
+        }
+        if (localStorage.getItem("type") === "itinerary") {
+          localStorage.removeItem("itineraryId");
+        }
       }
     } catch (error) {
       setMessage1("Failed to confirm OTP.");
