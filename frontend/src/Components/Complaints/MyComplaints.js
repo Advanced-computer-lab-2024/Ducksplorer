@@ -82,9 +82,10 @@ const MyComplaints = () => {
                 <Card
                   variant="outlined"
                   sx={{
-                    borderColor: "orange",
+                    borderColor: complaint.status ? "green" : "orange",
                     borderRadius: 2,
                     boxShadow: 2,
+                    borderWidth: 2,
                     backgroundColor: "#f9f9f9",
                   }}
                 >
@@ -93,7 +94,7 @@ const MyComplaints = () => {
                       variant="h6"
                       sx={{
                         fontWeight: "bold",
-                        color: "#333",
+                        color: complaint.status ? "green" : "orange",
                         textAlign: "center",
                       }}
                     >
