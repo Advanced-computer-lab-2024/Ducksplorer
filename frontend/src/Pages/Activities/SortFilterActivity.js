@@ -28,7 +28,6 @@ function SortFilterActivity() {
       }}
     >
       <TouristNavBar />
-      <TouristSidebar />
       <div style={{ width: "80%" }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography variant="h4" fontWeight="700">

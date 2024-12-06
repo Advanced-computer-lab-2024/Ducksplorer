@@ -14,7 +14,6 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import Help from "../HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar.js";
-import TouristSidebar from "../Sidebars/TouristSidebar.js";
 import DuckLoading from "../../Components/Loading/duckLoading";
 
 const MyComplaints = () => {
