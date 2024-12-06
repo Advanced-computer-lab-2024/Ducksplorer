@@ -27,12 +27,9 @@ import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon";
 import { Link } from "react-router-dom";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
-<<<<<<< HEAD
 import DuckLoading from "../../Components/Loading/duckLoading";
-=======
 import Error404 from "../../Components/Error404";
 
->>>>>>> 0e82457025ed37054520309c7a0e4f5b74932970
 const BookingDetails = () => {
   const userName = JSON.parse(localStorage.getItem("user")).username;
   //const [booking, setBooking] = useState(null);
@@ -246,29 +243,9 @@ const BookingDetails = () => {
 
   if (loading) {
     return (
-<<<<<<< HEAD
       <div>
         <DuckLoading />
       </div>
-=======
-      <>
-        <TouristNavBar />
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100vh", // Full screen height
-          }}
-        >
-          <CircularProgress size={60} thickness={4} />
-          <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
-            Loading bookings...
-          </Typography>
-        </Box>
-      </>
->>>>>>> 0e82457025ed37054520309c7a0e4f5b74932970
     );
   }
 
@@ -279,27 +256,10 @@ const BookingDetails = () => {
     hotelsBookings.length === 0 &&
     transportationBookings.length === 0
   )
-<<<<<<< HEAD
-    return (
-      <>
-        <TouristNavBar />
-        <p
-          style={{
-            fontSize: "2rem",
-            fontWeight: "bold",
-            fontFamily: "'Roboto', sans-serif",
-          }}
-        >
-          No booking details available.
-        </p>
-      </>
-    );
-=======
     return (<>
       <TouristNavBar />
       <Error404 errorMessage={errorMessage} backMessage={backMessage} route="/touristDashboard" />
     </>);
->>>>>>> 0e82457025ed37054520309c7a0e4f5b74932970
 
   return (
     <Box
