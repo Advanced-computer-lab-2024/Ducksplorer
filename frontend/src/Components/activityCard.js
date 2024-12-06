@@ -268,7 +268,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                 size="md"
                 variant="solid"
                 color="primary"
-                onClick={(event) => handleClick(event, activity._id)}
+                onClick={(event) =>{event.stopPropagation(); handleClick(event, activity._id);}}
                 className="blackhover"
                 sx={{
                   borderRadius: "50%",
@@ -308,9 +308,6 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                   transform: "translateY(50%)",
                   transition: "transform 0.3s",
                   backgroundColor: "#ff9933",
-                  "&:active": {
-                    transform: "translateY(50%) scale(0.9)",
-                  },
                 }}
               >
                 {saveStates[activity._id] ? <Done color="#ff9933" /> : <Add />}
@@ -375,7 +372,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                 </h4>
 
                 <Rating
-                  value={activity.rating}
+                  value={activity.averageRating}
                   icon={<StarIcon sx={{ color: "orange" }} />}
                   emptyIcon={<StarOutlineIcon />}
                   readOnly

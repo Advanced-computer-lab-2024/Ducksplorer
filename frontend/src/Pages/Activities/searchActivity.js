@@ -33,10 +33,10 @@ import DuckLoading from "../../Components/Loading/duckLoading";
 function SearchActivity() {
   const { id } = useParams();
 
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [searchQuery, setSearchQuery] = useState(""); // Single search input
   const [searchTerm, setSearchTerm] = useState(""); // Single search term
   const [activities, setActivities] = useState([]); // Displayed activities
-  const [allActivities, setAllActivities] = useState([]); // Store all fetched activities  
   const isGuest = localStorage.getItem("guest") === "true";
 
   const [selectedFilters, setSelectedFilters] = useState([]);
@@ -52,12 +52,10 @@ function SearchActivity() {
 
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
-  const [averageRating, setAverageRating] = useState(0); // Set default value to 0
   const [price, setPrice] = useState("");
   const [date, setDate] = useState("");
-  const [category, setCategory] = useState("");
-  const [categories, setCategories] = useState([]); // Store fetched categories
-  const [sortBy, setSortBy] = useState("date"); // Default sorting by date
+  const [categories, setCategories] = useState([]);
+  const [error, setError] = useState(false); const [sortBy, setSortBy] = useState("date"); // Default sorting by date
   const [order, setOrder] = useState("asc"); // Default ascending order
   const [activityExchangeRates, setActivityExchangeRates] = useState(null);
   const [activityCurrency, setActivityCurrency] = useState(null);
@@ -111,13 +109,11 @@ function SearchActivity() {
           saved: activity.saved || { isSaved: false, user: null },
         }));
         if (id === undefined) {
-          setAllActivities(data);
           setActivities(data); // Set initial activities to all fetched activities
         } else {
           const tempActivities = response.data.filter(
             (activity) => activity._id === id
           );
-          setAllActivities(tempActivities);
           setActivities(tempActivities);
         }
       } catch (error) {
@@ -129,16 +125,23 @@ function SearchActivity() {
     fetchActivities();
   }, [id]);
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:8000/category")
-      .then((response) => {
-        setCategories(response.data);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the categories!", error);
-      });
-  }, []);
+  const fetchCategories = () => {
+    if (categories.length === 0 && !loading) { // Avoid redundant calls
+      setLoading(true);
+      axios
+        .get(`http://localhost:8000/category`) // Use environment variable for the base URL
+        .then((response) => {
+          setCategories(response.data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+          setError("Failed to fetch categories.");
+          setLoading(false);
+        });
+    }
+  };
+
 
   useEffect(() => {
     if (activities.length === 0) {
@@ -211,6 +214,12 @@ function SearchActivity() {
 
   // Function to fetch activities based on search criteria
   const handleSearchActivities = () => {
+    if (!searchQuery.trim()) {
+      // Optionally, display a message or return early if search is empty
+      console.error("Please enter a search term.");
+      return;
+    }
+
     const query = new URLSearchParams({
       search: searchQuery, // Single search query sent to the backend
     }).toString();
@@ -224,6 +233,7 @@ function SearchActivity() {
         console.error("There was an error fetching the activities!", error);
       });
   };
+
 
   const isFilterSelected = (filter) => selectedFilters.includes(filter);
 
@@ -249,7 +259,7 @@ function SearchActivity() {
           setMaxPrice("");
           break;
         case "category":
-          setCategory("");
+          setCategories("");
           break;
         case "date":
           setDate(null);
@@ -278,6 +288,7 @@ function SearchActivity() {
     setDate(null);
     setRating([]);
     setCategories([]);
+    setShowUpcomingOnly(false);
     setSelectedFilters([]);
 
     axios
@@ -299,7 +310,7 @@ function SearchActivity() {
   };
 
   const handleCategoryChange = (event) => {
-    setCategory(event.target.value);
+    setSelectedCategory(event.target.value); // Update selected category
   };
 
   const handleRatingChange = (event) => {
@@ -322,7 +333,6 @@ function SearchActivity() {
         ...activity,
         saved: activity.saved || { isSaved: false, user: null },
       }));
-      setAllActivities(data);
       setActivities(data);
     } catch (error) {
       console.error("There was an error fetching the activities!", error);
@@ -335,10 +345,12 @@ function SearchActivity() {
       displayUpcomingActivities();
       return;
     }
+
     const query = new URLSearchParams({
-      price,
-      date,
-      category,
+      price: priceRange[0] && priceRange[1] ? `${priceRange[0]}-${priceRange[1]}` : '', // Combine min and max price if set
+      date: date,
+      category: selectedCategory,
+      averageRating: rating, // Include the rating parameter
     }).toString();
 
     axios
@@ -351,22 +363,10 @@ function SearchActivity() {
       });
   };
 
+
   const handleActivityCurrencyChange = (rates, selectedCurrency) => {
     setActivityExchangeRates(rates);
     setActivityCurrency(selectedCurrency);
-  };
-
-  const fetchCategories = () => {
-    if (categories.length === 0) { // Avoid redundant API calls
-      axios
-        .get("http://localhost:8000/category")
-        .then((response) => {
-          setCategories(response.data);
-        })
-        .catch((error) => {
-          console.error("There was an error fetching the categories!", error);
-        });
-    }
   };
 
   if (loading) {
@@ -405,8 +405,8 @@ function SearchActivity() {
         >
           <Input
             placeholder="Search for an activity..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchQuery}  // Use searchQuery here
+            onChange={(e) => setSearchQuery(e.target.value)}  // Update searchQuery instead of searchTerm
             fullWidth
             variant="filled"
             color="primary"
@@ -441,6 +441,7 @@ function SearchActivity() {
                   }}
                 >
                   <Checkbox
+                    style={{ color: "#ff9933" }}
                     checked={showUpcomingOnly}
                     onChange={(e) => setShowUpcomingOnly(e.target.checked)}
                   />
@@ -457,6 +458,7 @@ function SearchActivity() {
                   }}
                 >
                   <Checkbox
+                    style={{ color: "#ff9933" }}
                     checked={isFilterSelected("price")}
                     onChange={(e) => {
                       handleFilterToggle("price");
@@ -491,7 +493,7 @@ function SearchActivity() {
                       valueLabelDisplay="auto"
                       min={0}
                       max={5000}
-                      sx={{ width: 300, marginLeft: 2, marginTop: "10px" }} // Adjust slider width and margin
+                      sx={{ width: 300, marginLeft: 2, marginTop: "10px", color: "#ff9933" }} // Adjust slider width and margin
                     />
                   </MenuItem>
                   <MenuItem>
@@ -516,6 +518,7 @@ function SearchActivity() {
                   }}
                 >
                   <Checkbox
+                    style={{ color: "#ff9933" }}
                     checked={isFilterSelected("category")}
                     onChange={() => handleFilterToggle("category")}
                     paddingRight="40%"
@@ -527,11 +530,41 @@ function SearchActivity() {
                     <Select
                       labelId="category-select-label"
                       id="category-select"
-                      value={category}
+                      value={selectedCategory}
                       onChange={handleCategoryChange}
-                      onOpen={fetchCategories} // Fetch categories when the dropdown is opened
+                      onOpen={fetchCategories}
+                      MenuProps={{
+                        anchorOrigin: {
+                          vertical: 'bottom',
+                          horizontal: 'center', // Ensure it's centered correctly
+                        },
+                        transformOrigin: {
+                          vertical: 'top',
+                          horizontal: 'center',
+                        },
+                        PaperProps: {
+                          style: {
+                            position: 'absolute', // Ensure absolute positioning for dropdown
+                          },
+                        },
+                      }}
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': {
+                            borderColor: '#ff9933', // Set border color to orange
+                          },
+                          '&:hover fieldset': {
+                            borderColor: '#ff9933', // Set border color on hover
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: '#ff9933', // Set border color when focused
+                          },
+                        },
+                        '& .MuiInputBase-input': {
+                          color: '#ff9933', // Change the text color to match the orange theme if needed
+                        },
+                      }}
                     >
-                      {/* Map through the categories to generate MenuItems */}
                       {categories.length > 0 ? (
                         categories.map((category) => (
                           <MenuItem key={category._id} value={category.name}>
@@ -546,6 +579,7 @@ function SearchActivity() {
                 </div>
               </MenuItem>
 
+
               <MenuItem>
                 <div
                   style={{
@@ -555,6 +589,7 @@ function SearchActivity() {
                   }}
                 >
                   <Checkbox
+                    style={{ color: "#ff9933" }}
                     checked={isFilterSelected("rating")}
                     onChange={() => handleFilterToggle("rating")}
                     paddingRight="40%"
@@ -587,6 +622,7 @@ function SearchActivity() {
                   }}
                 >
                   <Checkbox
+                    style={{ color: "#ff9933" }}
                     checked={isFilterSelected("date")}
                     onChange={() =>
                       handleFilterToggle("date")

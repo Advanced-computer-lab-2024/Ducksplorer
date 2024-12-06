@@ -8,13 +8,13 @@ import { Rating } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 
-export default function ActivityCardDetails({ activity }) {
+export default function ProductCardDetails({ product }) {
   return (
     <Card variant="outlined" sx={{ width: "100%", height: "auto" }}>
       <AspectRatio ratio="2">
         <img
-          src={activity.picture || "https://picsum.photos/200/300"}
-          alt={activity.name || "Activity Image"}
+          src={product.picture || "https://picsum.photos/200/300"}
+          alt={product.name || "product Image"}
           loading="lazy"
         />
       </AspectRatio>
@@ -27,27 +27,34 @@ export default function ActivityCardDetails({ activity }) {
             fontSize: 40,
           }}
         >
-          {activity.name || "Unnamed Activity"}
+          {product.name || "Unnamed product"}
         </h4>
         <p>
-          <strong>Is Open:</strong> {activity.isOpen ? "Yes" : "No"}
+          <strong>Description:</strong>{" "}
+          {product.description || "product description"}
         </p>
         <p>
-          <strong>Date:</strong>{" "}
-          {new Date(activity.date).toLocaleDateString() || "N/A"}
+          <strong>Seller:</strong> {product.seller || "Bin Laden"}
         </p>
         <p>
-          <strong>Category:</strong> {activity.category || "N/A"}
+          <strong>Available Quantity:</strong>{" "}
+          {product.availableQuantity || "N/A"}
         </p>
         <p>
-          <strong>Duration:</strong> {activity.duration || "N/A"} hours
+          <strong>Reviews:</strong>
         </p>
         <p>
-          <strong>Location:</strong> {activity.location || "N/A"}
+          {product.reviews.map((review, index) => (
+            <div key={index} style={{ marginBottom: "10px" }}>
+              <strong>
+                {review.buyer}:<br />
+              </strong>{" "}
+              <p style={{ marginLeft: "30px" }}>{review.review}</p>
+            </div>
+          ))}
         </p>
-
         <Rating
-          value={activity.averageRating || 0}
+          value={product.rating || 0}
           icon={<StarIcon sx={{ color: "orange" }} />}
           emptyIcon={<StarOutlineIcon />}
           readOnly
@@ -68,11 +75,11 @@ export default function ActivityCardDetails({ activity }) {
             </Chip>
           }
         >
-          {activity.price}$
+          {product.price}$
         </Typography>
 
         <div style={{ display: "flex", flexWrap: "wrap", marginTop: "5px" }}>
-          {(activity.tags || []).map((tag, index) => (
+          {(product.tags || []).map((tag, index) => (
             <Chip
               key={index}
               size="sm"

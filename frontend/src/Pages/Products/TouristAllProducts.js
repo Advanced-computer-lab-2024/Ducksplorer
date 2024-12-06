@@ -128,12 +128,11 @@ const TouristAllProducts = () => {
     <Box
       sx={{
         height: "100vh",
-
         width: "90vw",
       }}
     >
       <TouristNavBar />
-      <TouristSidebar />
+
       <Container sx={{ mt: 4, mb: 4 }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography fontWeight="700" class="bigTitle">
@@ -215,7 +214,7 @@ const TouristAllProducts = () => {
           0 ? (
             products
               .filter((product) => product.isArchived !== true)
-              .map((product) => <NewProductCard activity={product} />)
+              .map((product) => <NewProductCard product={product} />)
           ) : (
             <Typography variant="body1" color="textSecondary" align="center">
               No products found.
