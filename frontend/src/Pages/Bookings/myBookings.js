@@ -27,6 +27,7 @@ import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon";
 import { Link } from "react-router-dom";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
+import DuckLoading from "../../Components/Loading/duckLoading";
 const BookingDetails = () => {
   const userName = JSON.parse(localStorage.getItem("user")).username;
   //const [booking, setBooking] = useState(null);
@@ -229,23 +230,9 @@ const BookingDetails = () => {
 
   if (loading) {
     return (
-      <>
-      <TouristNavBar/>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100vh", // Full screen height
-        }}
-      >
-        <CircularProgress size={60} thickness={4} />
-        <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
-          Loading bookings...
-        </Typography>
-      </Box>
-      </>
+      <div>
+        <DuckLoading />
+      </div>
     );
   }
 
@@ -256,10 +243,20 @@ const BookingDetails = () => {
     hotelsBookings.length === 0 &&
     transportationBookings.length === 0
   )
-    return (<>
-    <TouristNavBar/>
-    <p style={{fontSize:'2rem' , fontWeight:'bold', fontFamily: "'Roboto', sans-serif",}} >No booking details available.</p>
-    </>);
+    return (
+      <>
+        <TouristNavBar />
+        <p
+          style={{
+            fontSize: "2rem",
+            fontWeight: "bold",
+            fontFamily: "'Roboto', sans-serif",
+          }}
+        >
+          No booking details available.
+        </p>
+      </>
+    );
 
   return (
     <Box

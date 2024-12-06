@@ -1,0 +1,47 @@
+/* Prevent scrolling */
+body {
+  overflow: hidden; /* Disable scrolling */
+  margin: 0; /* Remove default body margin */
+  height: 100vh; /* Ensure body height covers the full viewport */
+}
+
+/* Full-screen container */
+.duck-loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full height */
+  width: 100vw; /* Full width */
+  background: #ffffff; /* Sky-blue to white gradient */
+  overflow: hidden; /* Ensure no child elements can overflow */
+}
+
+/* Video styling */
+.duck-video {
+  width: 100%; /* Increase the size of the video */
+  height: 150%;
+  border-radius: 20px; /* Slightly round the corners */
+}
+/* Text styling */
+.loading-text {
+  margin-top: 20px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  font-family: "Comic Sans MS", "Arial", sans-serif; /* Playful font */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Add a subtle text shadow */
+}
+
+/* Keyframes for floating animation */
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
