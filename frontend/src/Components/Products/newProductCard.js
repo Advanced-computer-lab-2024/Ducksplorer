@@ -18,14 +18,14 @@ import Button from "@mui/joy/Button";
 import axios from "axios";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
-import ActivityCardDetails from "./activityCardDetailed";
+import ProductCardDetails from "../productCardDetailed";
 import { useState, useEffect } from "react";
-import NotificationAddOutlinedIcon from "@mui/icons-material/NotificationAddOutlined";
-import ShareIcon from "@mui/icons-material/Share";
+import Favorite from "@mui/icons-material/Favorite";
+
 import Swal from "sweetalert2";
 
-// ActivityCard component
-export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
+// productCard component
+export default function ProductCard({ product = {}, onRemove, showNotify }) {
   const navigate = useNavigate();
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -34,8 +34,8 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  console.log(image);
-  const handleBooking = async (activityId) => {
+
+  const handleBooking = async (productId) => {
     try {
       const userJson = localStorage.getItem("user");
       const isGuest = localStorage.getItem("guest") === "true";
@@ -54,20 +54,20 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
         return null;
       }
 
-      const type = "activity";
+      const type = "product";
 
-      localStorage.setItem("activityId", activityId);
+      localStorage.setItem("productId", productId);
       localStorage.setItem("type", type);
 
       const response = await axios.get(
-        `http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}`
+        `http://localhost:8000/touristRoutes/viewDesiredproduct/${productId}`
       );
 
       if (response.status === 200) {
         if (response.data.isUpcoming) {
           navigate("/payment");
         } else {
-          message.error("You can't book an old activity");
+          message.error("You can't book an old product");
         }
       } else {
         message.error("Booking failed.");
@@ -88,13 +88,13 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
 
   const username = user?.username;
 
-  const handleSaveActivity = async (event, activityId, currentIsSaved) => {
+  const handleSaveproduct = async (event, productId, currentIsSaved) => {
     event.stopPropagation();
     try {
       const newIsSaved = !currentIsSaved;
 
       const response = await axios.put(
-        `http://localhost:8000/activity/save/${activityId}`,
+        `http://localhost:8000/product/save/${productId}`,
         {
           username: username,
           save: newIsSaved,
@@ -103,15 +103,15 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
       if (response.status === 200) {
         setSaveStates((prevState) => ({
           ...prevState,
-          [activityId]: newIsSaved, // Update the save state for this activity
+          [productId]: newIsSaved, // Update the save state for this product
         }));
         message.success(
           newIsSaved
-            ? "Activity saved successfully!"
-            : "Activity removed from saved list!"
+            ? "product saved successfully!"
+            : "product removed from saved list!"
         );
         if (!newIsSaved && onRemove) {
-          onRemove(activityId);
+          onRemove(productId);
         }
       } else {
         message.error("Failed to save");
@@ -131,25 +131,25 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
 
       try {
         const response = await axios.get(
-          `http://localhost:8000/activity/getSave/${activity._id}/${userName}`
+          `http://localhost:8000/product/getSave/${product._id}/${userName}`
         );
 
         if (response.status === 200) {
           setSaveStates((prevState) => ({
             ...prevState,
-            [activity._id]: response.data.saved, // Update only the relevant activity state
+            [product._id]: response.data.saved, // Update only the relevant product state
           }));
         }
       } catch (error) {
-        console.error(`Failed to fetch save state for ${activity._id}:`, error);
+        console.error(`Failed to fetch save state for ${product._id}:`, error);
       }
     };
     fetchSaveStates();
-  }, [activity._id]);
+  }, [product._id]);
 
   const [notificationStates, setNotificationStates] = useState({});
 
-  const requestNotification = async (event, activityId, currentIsNotified) => {
+  const requestNotification = async (event, productId, currentIsNotified) => {
     event.stopPropagation();
     try {
       const newIsNotified = !currentIsNotified;
@@ -158,26 +158,26 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
         "http://localhost:8000/notification/request",
         {
           user: username,
-          eventId: activityId,
+          eventId: productId,
         }
       );
 
       if (response.status === 201) {
         message.success(
           newIsNotified
-            ? "Notifications enabled for this activity!"
-            : "Notifications disabled for this activity!"
+            ? "Notifications enabled for this product!"
+            : "Notifications disabled for this product!"
         );
         setNotificationStates((prev) => ({
           ...prev,
-          [activityId]: newIsNotified,
+          [productId]: newIsNotified,
         }));
         message.success(
           "You will be notified when this event starts accepting bookings."
         );
       } else if (response.status === 200) {
         message.info(
-          "You have already requested to be notified for this activity"
+          "You have already requested to be notified for this product"
         );
       } else {
         message.error(response.data.message);
@@ -188,8 +188,8 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
     }
   };
 
-  const handleShareLink = (activityId) => {
-    const link = `${window.location.origin}/activity/searchActivities/${activityId}`; // Update with your actual route
+  const handleShareLink = (productId) => {
+    const link = `${window.location.origin}/product/searchActivities/${productId}`; // Update with your actual route
     navigator.clipboard
       .writeText(link)
       .then(() => {
@@ -200,20 +200,20 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
       });
   };
 
-  const handleShareEmail = (activityId) => {
-    const link = `${window.location.origin}/activity/searchActivities/${activityId}`; // Update with your actual route
-    const subject = "Check out this activity";
-    const body = `Here is the link to the activity: ${link}`;
+  const handleShareEmail = (productId) => {
+    const link = `${window.location.origin}/product/searchActivities/${productId}`; // Update with your actual route
+    const subject = "Check out this product";
+    const body = `Here is the link to the product: ${link}`;
     window.location.href = `mailto:?subject=${encodeURIComponent(
       subject
     )}&body=${encodeURIComponent(body)}`;
   };
 
-  const handleClick = (event, activityId) => {
-    // event.stopPropagation();
+  const handleClick = (event, productId) => {
+    event.stopPropagation();
     // setAnchorEl(event.currentTarget);
     Swal.fire({
-      title: "Share Activity",
+      title: "Share product",
       html: `
         <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
           <button id="share-link" style="padding: 10px 20px; font-size: 16px; background-color: #ff9933; color: white; border: none; border-radius: 8px; cursor: pointer;">
@@ -231,19 +231,6 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
         popup: "my-swal-popup", // Optional: Add custom styling via CSS
       },
     });
-
-    // Add click event listeners for custom buttons
-    document.getElementById("share-link").addEventListener("click", () => {
-      console.log("Sharing via link...");
-      handleShareLink(activityId);
-      Swal.fire("Link copied to clipboard!", "", "success");
-    });
-
-    document.getElementById("share-mail").addEventListener("click", () => {
-      console.log("Sharing via mail...");
-      handleShareEmail(activityId);
-      // Swal.fire("Shared via Mail!", "", "success");
-    });
   };
 
   const TheCard = () => {
@@ -251,7 +238,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
       <div style={{ width: "100%", minWidth: "300px", minHeight: "375px" }}>
         <Card
           onClick={handleOpen}
-          className="activity-card"
+          className="product-card"
           variant="outlined"
           sx={{
             width: "100%",
@@ -261,41 +248,15 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
         >
           <CardOverflow>
             <AspectRatio ratio="2">
-              <img src={image} loading="lazy" alt="" />
+              <img src={product.picture || image} loading="lazy" alt="" />
             </AspectRatio>
-            <Tooltip title="Share">
-              <IconButton
-                size="md"
-                variant="solid"
-                color="primary"
-                onClick={(event) =>{event.stopPropagation(); handleClick(event, activity._id);}}
-                className="blackhover"
-                sx={{
-                  borderRadius: "50%",
-                  position: "absolute",
-                  zIndex: 2,
-                  borderRadius: "50%",
-                  right: "1rem",
-                  bottom: 0,
-                  transform: "translateY(50%) translateX(-130%)",
-                  transition: "transform 0.3s",
 
-                  backgroundColor: "#ff9933",
-                }}
-              >
-                <ShareIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Save Activity">
+            <Tooltip title="Save product">
               <IconButton
                 size="md"
-                variant={saveStates[activity._id] ? "soft" : "solid"}
+                variant={saveStates[product._id] ? "soft" : "solid"}
                 onClick={(event) =>
-                  handleSaveActivity(
-                    event,
-                    activity._id,
-                    saveStates[activity._id]
-                  )
+                  handleSaveproduct(event, product._id, saveStates[product._id])
                 }
                 className="blackhover"
                 sx={{
@@ -308,9 +269,16 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                   transform: "translateY(50%)",
                   transition: "transform 0.3s",
                   backgroundColor: "#ff9933",
+                  "&:active": {
+                    transform: "translateY(50%) scale(0.9)",
+                  },
                 }}
               >
-                {saveStates[activity._id] ? <Done color="#ff9933" /> : <Add />}
+                {saveStates[product._id] ? (
+                  <Done color="#ff9933" />
+                ) : (
+                  <Favorite />
+                )}
               </IconButton>
             </Tooltip>
             {showNotify && (
@@ -322,8 +290,8 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                   onClick={(event) =>
                     requestNotification(
                       event,
-                      activity._id,
-                      notificationStates[activity._id]
+                      product._id,
+                      notificationStates[product._id]
                     )
                   }
                   sx={{
@@ -342,9 +310,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                     },
                     backgroundColor: "#ffcc00",
                   }}
-                >
-                  <NotificationAddOutlinedIcon />
-                </IconButton>
+                ></IconButton>
               </Tooltip>
             )}
           </CardOverflow>
@@ -368,11 +334,11 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                     marginRight: 20,
                   }}
                 >
-                  {activity.name}
+                  {product.name}
                 </h4>
 
                 <Rating
-                  value={activity.averageRating}
+                  value={product.rating}
                   icon={<StarIcon sx={{ color: "orange" }} />}
                   emptyIcon={<StarOutlineIcon />}
                   readOnly
@@ -384,22 +350,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                     flexDirection: "row",
                     marginTop: "5px",
                   }}
-                >
-                  {activity.tags.map((tag, index) => (
-                    <Chip
-                      component="span"
-                      size="sm"
-                      variant="outlined"
-                      sx={{
-                        marginRight: 1,
-                        color: "#ff9933",
-                        borderColor: "#ff9933",
-                      }}
-                    >
-                      {tag}
-                    </Chip>
-                  ))}
-                </div>
+                ></div>
               </div>
             </div>
           </div>
@@ -420,21 +371,11 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                 sx={{
                   mt: 1,
                   fontSize: 25,
+                  maxWidth: "30%",
                   fontWeight: "xl",
-                  justifySelf: "flex-start",
                 }}
-                endDecorator={
-                  <Chip
-                    component="span"
-                    size="sm"
-                    variant="soft"
-                    color="success"
-                  >
-                    Lowest price
-                  </Chip>
-                }
               >
-                {activity.price}$
+                {product.price}$
               </Typography>
               <Button
                 size="md"
@@ -443,11 +384,11 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                 zIndex={2}
                 onClick={(event) => {
                   event.stopPropagation();
-                  handleBooking(activity._id);
+                  handleBooking(product._id);
                 }}
                 sx={{ backgroundColor: "#ff9933", marginRight: 1 }}
               >
-                Book Now
+                Add to Cart
               </Button>
             </div>
           </div>
@@ -512,7 +453,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                 &times;
               </button>
 
-              <ActivityCardDetails activity={activity} />
+              <ProductCardDetails product={product} />
             </div>
           </Popover>
         </div>

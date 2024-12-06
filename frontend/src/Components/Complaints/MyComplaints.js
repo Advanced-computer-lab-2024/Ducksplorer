@@ -76,6 +76,7 @@ const MyComplaints = () => {
         {complaints.length > 0 ? (
           <div
             style={{
+              paddingBottom: "20px",
               display: "grid",
               gridTemplateColumns: "repeat(3,1fr)",
               gridGap: "20px",
