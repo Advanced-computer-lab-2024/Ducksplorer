@@ -63,27 +63,29 @@ const MyComplaints = () => {
     <Box
       sx={{
         height: "100vh",
-        backgroundColor: "#ffffff",
-        paddingTop: "64px", // Adjusted for fixed navbar spacing
+        paddingTop: "64px",
       }}
     >
       <TouristNavBar />
-      <TouristSidebar/>
 
+      <Typography
+        variant="h4"
+        align="center"
+        className="bigTitle"
+        sx={{ marginBottom: "20px" }}
+        gutterBottom
+      >
+        My Complaints
+      </Typography>
       <Container
         maxWidth="md"
-        sx={{ mt: 1, mb: 4, overflowY: "auto", height: "calc(100vh - 100px)" }}
+        sx={{
+          mt: 1,
+          mb: 4,
+          overflowY: "visible",
+          height: "100%",
+        }}
       >
-        <Typography
-          variant="h4"
-          align="center"
-          gutterBottom
-          sx={{ fontWeight: "bold", color: "#000000" }}
-        >
-          My Complaints
-        </Typography>
-        <Divider sx={{ mb: 3 }} />
-
         {complaints.length > 0 ? (
           <Grid container spacing={3}>
             {complaints.map((complaint) => (
@@ -91,6 +93,7 @@ const MyComplaints = () => {
                 <Card
                   variant="outlined"
                   sx={{
+                    borderColor: "orange",
                     borderRadius: 2,
                     boxShadow: 2,
                     backgroundColor: "#f9f9f9",
@@ -99,7 +102,11 @@ const MyComplaints = () => {
                   <CardContent>
                     <Typography
                       variant="h6"
-                      sx={{ fontWeight: "bold", color: "#333" }}
+                      sx={{
+                        fontWeight: "bold",
+                        color: "#333",
+                        textAlign: "center",
+                      }}
                     >
                       {complaint.title}
                     </Typography>

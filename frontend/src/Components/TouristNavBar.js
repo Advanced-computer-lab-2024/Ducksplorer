@@ -293,7 +293,7 @@ function TouristNavBar() {
             </Tooltip> */}
             <Button
               className="nav-item"
-              onClick={() => handleNavigation("activity/sortFilter")}
+              onClick={() => handleNavigation("activity/searchActivities")}
               sx={{
                 fontSize: "1rem",
                 fontFamily: "'Josefin Sans', sans-serif",
