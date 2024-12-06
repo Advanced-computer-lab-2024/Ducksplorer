@@ -322,7 +322,7 @@ function TouristNavBar() {
             </Button>
             <Button
               className="nav-item"
-              onClick={() => handleNavigation("viewUpcomingItinerary")}
+              onClick={() => handleNavigation("viewAllTourist")}
               sx={{
                 fontSize: "1.25rem",
                 fontFamily: "'Roboto', sans-serif",

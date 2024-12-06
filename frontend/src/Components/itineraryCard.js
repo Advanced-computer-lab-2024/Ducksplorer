@@ -193,9 +193,6 @@ export default function ItineraryCard({
           `http://localhost:8000/itinerary/getSave/${itinerary._id}/${userName}`
         );
 
-        console.log("hal heya saved: ", response.data);
-        console.log("what is the status ", response.status);
-
         if (response.status === 200) {
           setSaveStates((prevState) => ({
             ...prevState,
@@ -261,7 +258,7 @@ export default function ItineraryCard({
           variant="outlined"
           sx={{
             width: "100%",
-            height: "40vh",
+            height: "50vh",
           }}
           onClick={handleOpen}
         >

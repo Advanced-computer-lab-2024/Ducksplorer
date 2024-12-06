@@ -152,80 +152,12 @@ const FilterActivities = () => {
     }
   };
 
-  const handleSaveActivity = async (activityId, currentIsSaved) => {
-    try {
-      const newIsSaved = !currentIsSaved;
-
-      const response = await axios.put(
-        `http://localhost:8000/activity/save/${activityId}`,
-        {
-          username: username,
-          save: newIsSaved,
-        }
-      );
-      if (response.status === 200) {
-        message.success("Activity saved successfully");
-        setActivities((prevActivities) =>
-          prevActivities.map((activity) =>
-            activity._id === activityId
-              ? {
-                  ...activity,
-                  saved: { ...activity.saved, isSaved: newIsSaved },
-                }
-              : activity
-          )
-        );
-      } else {
-        message.error("Failed to save");
-      }
-      setIsSaved(isSaved);
-    } catch (error) {
-      console.error("Error toggling save state:", error);
-    }
-  };
-
-  const [saveStates, setSaveStates] = useState({});
-
-  useEffect(() => {
-    const fetchSaveStates = async () => {
-      const userJson = localStorage.getItem("user");
-      const user = JSON.parse(userJson);
-      const userName = user.username;
-
-      const newSaveStates = {};
-      await Promise.all(
-        activities.map(async (activity) => {
-          try {
-            const response = await axios.get(
-              `http://localhost:8000/activity/getSave/${activity._id}/${userName}`
-            );
-
-            if (response.status === 200) {
-              newSaveStates[activity._id] = response.data.saved; // Save the state
-            }
-          } catch (error) {
-            console.error(
-              `Failed to fetch save state for ${activity._id}:`,
-              error
-            );
-          }
-        })
-      );
-
-      setSaveStates(newSaveStates); // Update state with all fetched save states
-    };
-
-    if (activities.length > 0) {
-      fetchSaveStates();
-    }
-  }, []);
-
   return (
     <div style={{ width: "100%" }}>
       <Box
         sx={{
           height: "100vh",
-          backgroundColor: "#ffffff",
+          // backgroundColor: "#ffffff",
         }}
       >
         <Box
@@ -306,31 +238,7 @@ const FilterActivities = () => {
             Filter
           </Button>
         </Box>
-        {/* Activity Table */}
-        {/* <TableContainer style={{ borderRadius: 20 }} component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>
-                    Price
-                    <CurrencyConvertor
-                      onCurrencyChange={handleCurrencyChange}
-                    />
-                  </TableCell>
-                  <TableCell>Is Open</TableCell>
-                  <TableCell>Category</TableCell>
-                  <TableCell>Tags</TableCell>
-                  <TableCell>Discount</TableCell>
-                  <TableCell>Dates and Times</TableCell>
-                  <TableCell>Duration</TableCell>
-                  <TableCell>Location</TableCell>
-                  <TableCell>Rating</TableCell>
-                  <TableCell>Booking</TableCell>
-                  <TableCell>Bookmark</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody> */}
+        
         <div
           style={{
             display: "grid",
@@ -347,93 +255,9 @@ const FilterActivities = () => {
                 <ActivityCard activity={activity} />
               ) : null,
 
-            {
-              /* <TableRow key={activity._id}>
-                        <TableCell>{activity.name}</TableCell>
-                        <TableCell>
-                          {(
-                            activity.price * (exchangeRates[currency] || 1)
-                          ).toFixed(2)}{" "}
-                          {currency}
-                        </TableCell>
-                        <TableCell>{activity.isOpen ? "Yes" : "No"}</TableCell>
-                        <TableCell>{activity.category}</TableCell>
-                        <TableCell>{activity.tags.join(", ")}</TableCell>
-                        <TableCell>{activity.specialDiscount}</TableCell>
-                        <TableCell>
-                          {activity.date
-                            ? (() => {
-                                const dateObj = new Date(activity.date);
-                                const date = dateObj
-                                  .toISOString()
-                                  .split("T")[0];
-                                const time = dateObj
-                                  .toTimeString()
-                                  .split(" ")[0];
-                                return (
-                                  <div>
-                                    {date} at {time}
-                                  </div>
-                                );
-                              })()
-                            : "No available date and time"
-                            ? (() => {
-                                const dateObj = new Date(activity.date);
-                                const date = dateObj
-                                  .toISOString()
-                                  .split("T")[0];
-                                const time = dateObj
-                                  .toTimeString()
-                                  .split(" ")[0];
-                                return (
-                                  <div>
-                                    {date} at {time}
-                                  </div>
-                                );
-                              })()
-                            : "No available date and time"}
-                        </TableCell>
-                        <TableCell>{activity.duration}</TableCell>
-                        <TableCell>{activity.location}</TableCell>
-                        <TableCell>
-                          <Rating
-                            value={activity.averageRating}
-                            precision={0.1}
-                            readOnly
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Button onClick={() => handleBooking(activity._id)}>
-                            Book Now
-                          </Button>
-                        </TableCell>
-                        <TableCell>
-                          <span
-                            onClick={() =>
-                              handleSaveActivity(
-                                activity._id,
-                                activity.saved?.isSaved
-                              )
-                            }
-                          >
-                            {saveStates[activity._id] ? (
-                              <IconButton>
-                                <BookmarkIcon />
-                              </IconButton>
-                            ) : (
-                              <IconButton>
-                                <BookmarkBorderIcon />
-                              </IconButton>
-                            )}
-                          </span>
-                        </TableCell>
-                      </TableRow>*/
-            }
+            {}
           )}
         </div>
-        {/* </TableBody>
-            </Table>
-          </TableContainer>  */}
       </Box>
     </div>
   );
