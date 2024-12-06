@@ -3,6 +3,7 @@ import axios from "axios";
 import { message } from "antd";
 import TouristNavBar from "../../Components/TouristNavBar";
 import ActivityCard from "../../Components/activityCard.js";
+import Error404 from "../../Components/Error404";
 import {
   Stack,
   Typography,
@@ -19,11 +20,9 @@ import {
   Rating,
   Grid2,
 } from "@mui/material";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { Link, useParams } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
 import Help from "../../Components/HelpIcon.js";
-import TouristNavBar from "../../Components/TouristNavBar";
 import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
 import SortIcon from "@mui/icons-material/Sort";
@@ -40,18 +39,16 @@ function SearchActivity() {
   const [allActivities, setAllActivities] = useState([]); // Store all fetched activities  
   const isGuest = localStorage.getItem("guest") === "true";
 
+  const [selectedFilters, setSelectedFilters] = useState([]);
+  const [filterAnchorEl, setFilterAnchorEl] = useState(null);
   const errorMessage =
     "The activity you are looking for might be removed or is temporarily unavailable";
   const backMessage = "Back to search again";
   //filtering consts
-  const [price, setPrice] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
-  const [date, setDate] = useState(null);
   const [priceRange, setPriceRange] = useState([0, 5000]);
   const [rating, setRating] = useState(null);
-  const [category, setCategory] = useState("");
-  const [categories, setCategories] = useState([]); // All available categories from backend
 
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
@@ -62,11 +59,30 @@ function SearchActivity() {
   const [categories, setCategories] = useState([]); // Store fetched categories
   const [sortBy, setSortBy] = useState("date"); // Default sorting by date
   const [order, setOrder] = useState("asc"); // Default ascending order
+  const [activityExchangeRates, setActivityExchangeRates] = useState(null);
+  const [activityCurrency, setActivityCurrency] = useState(null);
+
+  //for price slider
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const [loading, setLoading] = useState(true);
 
   const [displayFilter, setDisplayFilter] = useState(false);
   const [displaySort, setDisplaySort] = useState(false);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const username = user?.username;
+
+  //sorting consts
+  const [sortOrder, setSortOrder] = useState("asc"); // Default to 'asc'
+
+  const [sortByAnchorEl, setSortByAnchorEl] = useState(null);
+  const [sortOrderAnchorEl, setSortOrderAnchorEl] = useState(null);
+
+
+  const [showUpcomingOnly, setShowUpcomingOnly] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const toggleFilter = () => {
     setDisplayFilter((prev) => !prev);
@@ -75,22 +91,6 @@ function SearchActivity() {
   const toggleSort = () => {
     setDisplaySort((prev) => !prev);
   };
-
-  const user = JSON.parse(localStorage.getItem("user"));
-
-  const username = user?.username;
-
-  //sorting consts
-  const [sortBy, setSortBy] = useState("price"); // Default to 'price'
-  const [sortOrder, setSortOrder] = useState("asc"); // Default to 'asc'
-
-  const [sortByAnchorEl, setSortByAnchorEl] = useState(null);
-  const [sortOrderAnchorEl, setSortOrderAnchorEl] = useState(null);
-
-  const [order, setOrder] = useState("asc"); // Default ascending order
-
-  const [showUpcomingOnly, setShowUpcomingOnly] = useState(false);
-  const [showError, setShowError] = useState(false);
 
   // Fetch all activities when component mounts
   useEffect(() => {
@@ -139,6 +139,16 @@ function SearchActivity() {
         console.error("There was an error fetching the categories!", error);
       });
   }, []);
+
+  useEffect(() => {
+    if (activities.length === 0) {
+      const timer = setTimeout(() => setShowError(true), 500); // Wait 0.5 second
+      return () => clearTimeout(timer); // Cleanup the timer when the component unmounts or updates
+    } else {
+      setShowError(false); // Reset error state if activities exist
+    }
+  }, [activities]);
+
 
   // Handlers for Sort By dropdown
   const handleSortByClick = (event) => {
@@ -301,8 +311,7 @@ function SearchActivity() {
   //   setTags(value);
   // };
 
-  //for price slider
-  const [anchorEl, setAnchorEl] = useState(null);
+
 
   const displayUpcomingActivities = async () => {
     try {
@@ -359,16 +368,6 @@ function SearchActivity() {
         });
     }
   };
-
-
-  useEffect(() => {
-    if (activities.length === 0) {
-      const timer = setTimeout(() => setShowError(true), 500); // Wait 0.5 second
-      return () => clearTimeout(timer); // Cleanup the timer when the component unmounts or updates
-    } else {
-      setShowError(false); // Reset error state if activities exist
-    }
-  }, [activities]);
 
   if (loading) {
     return (
