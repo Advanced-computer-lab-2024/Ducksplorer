@@ -268,6 +268,7 @@ const BookingDetails = () => {
         paddingTop: "64px",
         width: "90vw",
         marginLeft: "5vw",
+        overflowY: "auto"
       }}
     >
       <TouristNavBar />
@@ -278,7 +279,7 @@ const BookingDetails = () => {
         <div style={{ overflowY: "visible", height: "100vh" }}>
           <Typography
             variant="h2"
-            sx={{ textAlign: "center", fontWeight: "bold" }}
+            sx={{ textAlign: "center", fontWeight: "bold", paddingTop: "5%" }}
             gutterBottom
           >
             Booking Details
