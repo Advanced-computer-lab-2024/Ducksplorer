@@ -46,7 +46,7 @@ export default function ActivityCardDetails({ activity }) {
         </p>
 
         <Rating
-          value={activity.rating || 0}
+          value={activity.averageRating || 0}
           icon={<StarIcon sx={{ color: "orange" }} />}
           emptyIcon={<StarOutlineIcon />}
           readOnly

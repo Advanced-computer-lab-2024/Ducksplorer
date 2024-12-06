@@ -375,7 +375,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                 </h4>
 
                 <Rating
-                  value={activity.rating}
+                  value={activity.averageRating}
                   icon={<StarIcon sx={{ color: "orange" }} />}
                   emptyIcon={<StarOutlineIcon />}
                   readOnly
