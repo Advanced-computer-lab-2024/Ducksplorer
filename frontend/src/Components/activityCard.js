@@ -248,14 +248,14 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
 
   const TheCard = () => {
     return (
-      <div style={{ width: "100%" }}>
+      <div style={{ width: "100%", minWidth: "300px", minHeight: "375px" }}>
         <Card
           onClick={handleOpen}
           className="activity-card"
           variant="outlined"
           sx={{
             width: "100%",
-            height: "400px",
+            height: "100%",
             cursor: "pointer",
           }}
         >

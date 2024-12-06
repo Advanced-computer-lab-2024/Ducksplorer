@@ -288,6 +288,13 @@ button[type="submit"]:hover {
   font-style: normal;
 }
 
+.bigTitle {
+  font-family: "Playwrite HR Lijeva", cursive !important;
+  font-size: 3rem;
+  font-weight: 700;
+  font-style: normal;
+}
+
 .blackhover {
   background-color: #ff9933 !important;
 }
