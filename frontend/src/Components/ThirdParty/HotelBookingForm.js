@@ -15,6 +15,7 @@ import axios from "axios";
 import { message } from "antd";
 import HotelCards from "./HotelCard";
 import { useNavigate } from "react-router-dom";
+import DuckLoading from "../Loading/duckLoading";
 
 const cities = [
   { label: "New York", code: "NYC", country: "USA" },
@@ -146,7 +147,7 @@ const HotelBookingForm = () => {
                 hotels: hotelsData,
                 checkInDate,
                 checkOutDate,
-                city : city.label,
+                city: city.label,
                 country: city.country,
                 adults,
               };
@@ -193,6 +194,13 @@ const HotelBookingForm = () => {
     }
     return true;
   };
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
 
   return (
     <div style={styles.container}>

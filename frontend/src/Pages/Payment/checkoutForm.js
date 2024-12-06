@@ -5,6 +5,7 @@ import axios from "axios";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import Help from "../../Components/HelpIcon.js";
+import DuckLoading from "../../Components/Loading/duckLoading";
 
 export default function CheckoutForm() {
   const stripe = useStripe();
@@ -19,6 +20,7 @@ export default function CheckoutForm() {
   const [showPointsAnimation, setShowPointsAnimation] = useState(false);
   const [loyaltyPoints, setLoyaltyPoints] = useState(0);
   const [totalPoints, setTotalPoints] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const storedClientSecret = localStorage.getItem("clientSecret");
@@ -139,6 +141,7 @@ export default function CheckoutForm() {
       setMessage1("Please enter the OTP.");
       return;
     }
+    setLoading(true);
     try {
       const response = await fetch(
         "http://localhost:8000/payment/confirm-otp",
@@ -326,6 +329,14 @@ export default function CheckoutForm() {
       console.error("Error:", error);
     }
   };
+
+  // if (loading) {
+  //   return (
+  //     <div>
+  //       <DuckLoading />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div

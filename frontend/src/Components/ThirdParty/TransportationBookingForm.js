@@ -20,6 +20,7 @@ import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { format } from "date-fns";
+import DuckLoading from "../Loading/duckLoading";
 
 function isDatePassed(enteredDate) {
   const currentDate = new Date(); // Get the current date and time
@@ -381,6 +382,13 @@ const TransportationBookingForm = () => {
       setStartDate(formattedDate);
     }
   };
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
 
   const handleSearch = async () => {
     if (validateFields()) {
@@ -447,7 +455,7 @@ const TransportationBookingForm = () => {
           <Box sx={{ mt: 4 }}>
             <Typography
               variant="h4"
-              style={{ textAlign: "center" ,  marginBottom: "60px"}}
+              style={{ textAlign: "center", marginBottom: "60px" }}
               gutterBottom
             >
               Transportation Booking
@@ -532,7 +540,11 @@ const TransportationBookingForm = () => {
                   fullWidth
                   disabled={loading}
                 >
-                  {loading ? <CircularProgress sx={{ color: "#ff9933" }} size={24} /> : "Search"}
+                  {loading ? (
+                    <CircularProgress sx={{ color: "#ff9933" }} size={24} />
+                  ) : (
+                    "Search"
+                  )}
                 </Button>
               </Grid>
             </Grid>
@@ -549,7 +561,7 @@ const styles = {
     height: "100vh",
     width: "100vw",
     background: 'url("/duckBus.jpg") no-repeat left center fixed',
-    backgroundSize:"cover"
+    backgroundSize: "cover",
   },
   leftSection: {
     flex: 1,

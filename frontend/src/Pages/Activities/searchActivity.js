@@ -32,6 +32,7 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import SortIcon from "@mui/icons-material/Sort";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import DuckLoading from "../../Components/Loading/duckLoading";
 
 const SearchActivities = () => {
   const { id } = useParams();
@@ -49,6 +50,7 @@ const SearchActivities = () => {
   const [categories, setCategories] = useState([]); // Store fetched categories
   const [sortBy, setSortBy] = useState("date"); // Default sorting by date
   const [order, setOrder] = useState("asc"); // Default ascending order
+  const [loading, setLoading] = useState(true);
 
   const [displayFilter, setDisplayFilter] = useState(false);
   const [displaySort, setDisplaySort] = useState(false);
@@ -71,6 +73,7 @@ const SearchActivities = () => {
       const showPreferences = localStorage.getItem("showPreferences");
       const favCategory = localStorage.getItem("category");
       console.log(showPreferences, favCategory);
+      setLoading(true);
       try {
         const response = await axios.get("http://localhost:8000/activity/", {
           params: {
@@ -94,6 +97,8 @@ const SearchActivities = () => {
         }
       } catch (error) {
         console.error("There was an error fetching the activities!", error);
+      } finally {
+        setTimeout(() => setLoading(false), 1000); // Delay of 1 second
       }
     };
     fetchActivities();
@@ -183,6 +188,13 @@ const SearchActivities = () => {
         console.error("There was an error fetching the activities!", error);
       });
   };
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
 
   const fetchUpcomingActivities = async () => {
     try {

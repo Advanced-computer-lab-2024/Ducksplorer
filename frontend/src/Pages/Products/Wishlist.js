@@ -7,15 +7,18 @@ import ProductCard from "../../Components/Products/ProductCard"; // Import the P
 import Help from "../../Components/HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar";
 import { useNavigate } from "react-router-dom";
+import DuckLoading from "../../Components/Loading/duckLoading";
+import Error404 from "../../Components/Error404.js";
 
 function Wishlist() {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
     const user = JSON.parse(userJson);
     const userName = user.username;
-
+    setLoading(true);
     axios
       .get(`http://localhost:8000/touristRoutes/myWishlist/${userName}`)
 
@@ -26,6 +29,9 @@ function Wishlist() {
       })
       .catch((error) => {
         console.error("There was an error fetching the wishlist!", error);
+      })
+      .finally(() => {
+        setTimeout(() => setLoading(false), 1000); // Delay of 1 second
       });
   }, []);
 
@@ -38,16 +44,23 @@ function Wishlist() {
       prevProducts.filter((product) => product._id !== productId)
     );
   };
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
 
   return (
     <>
       <TouristNavBar />
       <Button onClick={handleBackButtonClick}>Back</Button>
       <Box sx={{ textAlign: "center", mb: 4 }}>
-          <Typography variant="h4" fontWeight="700">
-            My Wishlist
-          </Typography>
-        </Box>
+        <Typography variant="h4" fontWeight="700">
+          My Wishlist
+        </Typography>
+      </Box>
       <div
         style={{
           padding: "20px",
@@ -84,9 +97,9 @@ function Wishlist() {
               </div>
             ))
           ) : (
-            <Typography variant="body1" style={{ marginTop: "20px" }}>
-              No products found in your wishlist.
-            </Typography>
+            <div>
+              <Error404 />
+            </div>
           )}
         </div>
         <Help />
