@@ -11,6 +11,7 @@ import {
   InputLabel,
   Select,
   Autocomplete,
+  CircularProgress,
 } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -344,6 +345,7 @@ const TransportationBookingForm = () => {
   const [transferType, setTransferType] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [startTime, setStartTime] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleTimeChange = (newTime) => {
@@ -382,6 +384,7 @@ const TransportationBookingForm = () => {
 
   const handleSearch = async () => {
     if (validateFields()) {
+      setLoading(true);
       const dateTime = startDate + "T" + startTime;
       const requestBody = {
         startLocationCode: startLocationCode,
@@ -421,6 +424,8 @@ const TransportationBookingForm = () => {
         message.error(
           "No Transportations available for this address at this time"
         );
+      } finally {
+        setLoading(false);
       }
     } else {
       message.error("Error in the Form");
@@ -438,11 +443,11 @@ const TransportationBookingForm = () => {
         </Typography>
       </div>
       <div style={styles.rightSection}>
-        <Container maxWidth="sm">
+        <Container maxWidth="sm" style={{ marginTop: "-30vh" }}>
           <Box sx={{ mt: 4 }}>
             <Typography
               variant="h4"
-              style={{ textAlign: "center" }}
+              style={{ textAlign: "center" ,  marginBottom: "60px"}}
               gutterBottom
             >
               Transportation Booking
@@ -525,8 +530,9 @@ const TransportationBookingForm = () => {
                   sx={{ mt: 2, backgroundColor: "#ff9933", color: "white" }}
                   onClick={handleSearch}
                   fullWidth
+                  disabled={loading}
                 >
-                  Search
+                  {loading ? <CircularProgress sx={{ color: "#ff9933" }} size={24} /> : "Search"}
                 </Button>
               </Grid>
             </Grid>

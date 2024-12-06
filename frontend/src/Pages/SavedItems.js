@@ -209,8 +209,8 @@ function MySavedItems() {
   return (
     <>
       <TouristNavBar />
-      <TouristSidebar />
-      <Box
+      {/* <TouristSidebar /> */}
+      {/* <Box
         sx={{
           padding: "20px",
           maxWidth: "1200px",
@@ -220,7 +220,8 @@ function MySavedItems() {
           overflowY: "visible",
           height: "100vh",
         }}
-      >
+      > */}
+      <div style={{overflowY: 'visible', height:'100vh', width:'100%', display: 'flex', flexDirection: 'column'}}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <Typography variant="h4" sx={{fontFamily: "'Roboto', sans-serif", color: "black"}}>Saved</Typography>
         </Box>
@@ -279,7 +280,7 @@ function MySavedItems() {
               >
                 {/* <Typography variant="h4"> Activities</Typography> */}
               </Box>
-              <Grid container spacing={3}>
+              <Grid container spacing={4}>
                 {Array.isArray(activities) && activities.length > 0 ? (
                   activities.map((activity) =>
                     activity.flag === false &&
@@ -302,7 +303,8 @@ function MySavedItems() {
               </Grid>
             </>
           )}
-      </Box>
+      {/* </Box> */}
+      </div>
     </>
   );
 }

@@ -7,6 +7,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CurrencyConvertor from '../../Components/CurrencyConvertor';
 import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar.js";
 import { message } from 'antd';
+import Help from "../../Components/HelpIcon.js";
 
 import {
     Box,
@@ -213,22 +214,36 @@ const ActivityReport = () => {
             </Box>
         );
     }
-    
+
     if ((!Array.isArray(activities)) || (activities.length === 0)) {
         return <p>No activities available.</p>;
     }
 
     return (
-        <>
+        <Box
+            sx={{
+                height: "100vh",
+                paddingTop: "64px",
+                width: "90vw",
+                marginLeft: "5vw",
+            }}
+        >
             <AdvertiserSidebar />
-            <div>
-                <Box sx={{ p: 6, maxWidth: "120vh", overflowY: "visible", height: "100vh", marginLeft: "350px", }}>
-                    <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-                        <Typography variant="h4">Activities Report</Typography>
-                    </Box>
+            <div
+                style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
+            >
+                <div style={{ overflowY: "visible", height: "100vh" }}>
+                    <Typography
+                        variant="h2"
+                        sx={{ textAlign: "center", fontWeight: "bold" }}
+                        gutterBottom
+                    >
+                        Activities Report
+                    </Typography>
+                    <br></br>
                     {/* Filtering */}
                     <IconButton onClick={handleFilterChoiceClick}>
-                        <FilterAltIcon />
+                        <FilterAltIcon style={{ color: "black" }} />
                     </IconButton>
                     <Menu
                         anchorEl={filterAnchorEl}
@@ -316,26 +331,46 @@ const ActivityReport = () => {
                             <Button onClick={handleClearAllFilters}>Clear All Filters</Button>
                         </MenuItem>
                     </Menu>
-                    <TableContainer style={{ borderRadius: 24 }} component={Paper}>
+                    <TableContainer
+                        component={Paper}
+                        sx={{
+                            marginBottom: 4,
+                            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+                            borderRadius: "1.5cap",
+                        }}
+                    >
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Name</TableCell>
-                                    <TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Name</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+
                                         Price
                                         <CurrencyConvertor onCurrencyChange={handlePriceCurrencyChange} />
                                     </TableCell>
-                                    <TableCell>Is open</TableCell>
-                                    <TableCell>Category</TableCell>
-                                    <TableCell>Tags</TableCell>
-                                    <TableCell>Discount</TableCell>
-                                    <TableCell>Dates and Times</TableCell>
-                                    <TableCell>Duration</TableCell>
-                                    <TableCell>Location</TableCell>
-                                    <TableCell>Rating</TableCell>
-                                    <TableCell>Flag</TableCell>
-                                    <TableCell>Number of Bookings</TableCell>
-                                    <TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Is open</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Category</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Tags</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Discount</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Dates and Times</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Duration</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Location</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Rating</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Flag</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                                        Number of Bookings</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+
                                         Earnings
                                         <CurrencyConvertor onCurrencyChange={handleEarningsCurrencyChange} />
                                     </TableCell>
@@ -399,10 +434,10 @@ const ActivityReport = () => {
                             </TableBody>
                         </Table>
                     </TableContainer>
-
-                </Box>
+                </div>
+                <Help />
             </div>
-        </>
+        </Box >
     );
 };
 
