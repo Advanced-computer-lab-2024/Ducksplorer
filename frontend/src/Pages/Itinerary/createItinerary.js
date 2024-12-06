@@ -223,7 +223,7 @@ const AddItinerary = () => {
               marginBottom: "24px",
               fontWeight: "bold",
               fontSize: "32px", // Larger text size for prominence
-              color: "#3f51b5", // Modern primary color
+              color: "black", // Modern primary color
               textShadow: "1px 1px 2px rgba(0, 0, 0, 0.2)", // Subtle text shadow for depth
               fontFamily: "'Roboto', sans-serif", // Clean and modern font
               letterSpacing: "1px", // Slight spacing for elegance
@@ -280,6 +280,7 @@ const AddItinerary = () => {
                     marginBottom: "16px",
                     transform: "scale(1.2)",
                     cursor: "pointer",
+                    color: "#ff9933"
                   }}
                 />
 
@@ -400,7 +401,10 @@ const AddItinerary = () => {
             ))}
 
             <IconButton onClick={handleAddActivity}>
-              <AddCircleIcon color="primary" />
+              <AddCircleIcon
+                style={{
+                  color: "ff9933",
+                }} />
             </IconButton>
             <h3>Locations:</h3>
             {locations.map((location, index) => (
@@ -421,7 +425,7 @@ const AddItinerary = () => {
                   style={{
                     marginBottom: "16px",
                     fontWeight: "bold",
-                    color: "#3f51b5",
+                    color: "black",
                   }}
                 >
                   Add Locations and Details
@@ -457,7 +461,9 @@ const AddItinerary = () => {
 
                 <Box style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                   <IconButton onClick={handleAddLocation}>
-                    <AddCircleIcon color="primary" />
+                    <AddCircleIcon style={{
+                      color: "ff9933",
+                    }} />
                   </IconButton>
                   <Typography variant="h6" style={{ fontWeight: "bold", color: "#333" }}>
                     Add Location
@@ -537,7 +543,7 @@ const AddItinerary = () => {
                   style={{
                     marginTop: "16px",
                     fontWeight: "bold",
-                    color: "#3f51b5",
+                    color: "black",
                   }}
                 >
                   Available Dates and Times:
@@ -570,7 +576,9 @@ const AddItinerary = () => {
 
             ))}
             <IconButton onClick={handleAddAvailableDate}>
-              <AddCircleIcon color="primary" />
+              <AddCircleIcon style={{
+                color: "ff9933",
+              }} />
             </IconButton>
             <div
               style={{
@@ -589,7 +597,7 @@ const AddItinerary = () => {
                 style={{
                   marginBottom: "16px",
                   fontWeight: "bold",
-                  color: "#3f51b5",
+                  color: "black",
                 }}
               >
                 Additional Details
@@ -684,7 +692,7 @@ const AddItinerary = () => {
             <Button
               type="submit"
               variant="contained"
-              color="primary"
+              className="blackhover"
               sx={{
                 padding: "12px 24px",
                 fontSize: "16px",
@@ -693,14 +701,7 @@ const AddItinerary = () => {
                 borderRadius: "8px",
                 backgroundColor: "#3f51b5",
                 boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                transition: "all 0.3s ease",
-                "&:hover": {
-                  backgroundColor: "#303f9f",
-                  boxShadow: "0px 6px 8px rgba(0, 0, 0, 0.15)",
-                },
-                "&:active": {
-                  transform: "scale(0.98)",
-                },
+                transition: "all 0.3s ease"
               }}
             >
               Add Itinerary
