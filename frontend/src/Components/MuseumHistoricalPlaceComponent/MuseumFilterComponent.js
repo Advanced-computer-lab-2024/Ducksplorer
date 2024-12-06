@@ -82,7 +82,7 @@ const MuseumFilterComponent = ({ onFilter }) => {
     return (
         <div>
             <IconButton onClick={handleFilterChoiceClick}>
-                <FilterAltIcon />
+                    <FilterAltIcon sx={{ color: "black" }} />
             </IconButton>
             <Menu anchorEl={filterAnchorEl} open={Boolean(filterAnchorEl)} onClose={handleFilterClose}>
                 <MenuItem>
