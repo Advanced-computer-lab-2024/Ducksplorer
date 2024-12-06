@@ -37,7 +37,7 @@ function SearchItineraries() {
   const isGuest = localStorage.getItem("guest") === "true";
 
   const errorMessage = "The itinerary you are looking for might be removed or is temporarily unavailable";
-
+  const backMessage = "Back to search again";
   //filtering consts
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
@@ -356,12 +356,7 @@ function SearchItineraries() {
           height: "100vh",
         }}
       >
-        <Link
-          to={isGuest ? "/guestDashboard" : "/touristDashboard"}
-          className="text-sm hover:underline hover:text-blue-600 mt-2 inline-block"
-        >
-          Back
-        </Link>
+
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <Typography variant="h4"> Itineraries</Typography>
         </Box>
@@ -681,7 +676,7 @@ function SearchItineraries() {
             }
           </div>
         ) : (
-          <Error404 message={errorMessage} route="/viewUpcomingItinerary" />
+          <Error404 errorMessage={errorMessage} backMessage={backMessage} route="/viewAllTourist" />
         )}
         <Help />
       </Box>

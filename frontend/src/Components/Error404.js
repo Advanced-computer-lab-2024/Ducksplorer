@@ -1,96 +1,103 @@
 import * as React from "react";
-// import AspectRatio from "@mui/joy/AspectRatio";
-// import Card from "@mui/joy/Card";
-// import CardContent from "@mui/joy/CardContent";
-// import Typography from "@mui/joy/Typography";
-// import Chip from "@mui/joy/Chip";
-// import { Rating } from "@mui/material";
-// import StarIcon from "@mui/icons-material/Star";
-// import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 
-export default function Error404({ route, message }) {
-
+export default function Error404({ route, errorMessage, backMessage }) {
     const navigate = useNavigate();  // Get the navigate function
 
     const handleRedirect = () => {
         navigate(route);
+        window.location.reload();
     };
 
     return (
-        <div variant="outlined" sx={{ width: "100%", height: "auto" }}>
+        <div
+            style={{
+                width: "100%",
+                height: "100vh", // Full viewport height
+                display: "flex",
+                justifyContent: "center", // Center horizontally
+                alignItems: "center", // Center vertically
+                flexDirection: "column",
+                textAlign: "center", // Center text
+                padding: "2rem",
+                boxSizing: "border-box",
+            }}
+        >
             <h1
                 style={{
                     fontFamily: "Inconsolata, monospace",
-                    marginTop: "4rem",
-                    marginLeft: "7.7rem",
+                    margin: "2rem",
                     textTransform: "uppercase",
+                    fontSize: "3rem", // Adjusted font size
+                    letterSpacing: "5px",
+                    color: "#000",
                 }}
             >
                 404 Not Found
             </h1>
 
-            <div style={{ margin: '1rem', padding: '1rem' }}>
-                <img src="DuckError404.png" alt="Duck Error 404" style={{ width: '100%', height: 'auto' }} />
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginBottom: "2rem", // Space below the image
+                }}
+            >
+                <img
+                    src="DuckError404.png"
+                    alt="Duck Error 404"
+                    style={{
+                        width: "70%", // Adjust the image size for better responsiveness
+                        maxWidth: "400px", // Set a max width for better scaling
+                        height: "auto",
+                    }}
+                />
             </div>
 
             <div
                 style={{
-                    marginTop: '10rem',
-                    marginLeft: '5rem',
-                    marginRight: '5rem',
-                    marginBottom: '5rem',
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(32.5rem, 1fr))',
+                    maxWidth: "600px", // Limit the width for large screens
+                    width: "100%",
+                    boxSizing: "border-box",
+                    marginTop: "2rem",
                 }}
             >
-                <div
+                <h2
                     style={{
-                        marginLeft: '5rem',
+                        fontSize: "2.5rem",
+                        fontWeight: "bold",
+                        color: "#000",
                     }}
                 >
-                    <h2
-                        style={{
-                            fontSize: '6rem',
-                            lineHeight: 1.2,
-                            '@media (max-width: 768px)': {
-                                fontSize: '4.8rem',
-                            },
-                        }}
-                    >
-                        I have bad news for you
-                    </h2>
-                    <p
-                        style={{
-                            marginTop: '1.5rem',
-                            fontFamily: '"Space Mono", monospace',
-                            fontSize: '2rem',
-                            fontWeight: 400,
-                            lineHeight: 1.7,
-                            width: '40rem',
-                            '@media (max-width: 768px)': {
-                                fontSize: '1.5rem',
-                            },
-                        }}
-                    >
-                        {message}
-                    </p>
-                    <Button
-                        onClick={handleRedirect}
-                        style={{
-                            backgroundColor: '#ff9933',
-                            color: 'white',
-                            padding: '1rem 2rem',
-                            borderRadius: '5px',
-                            cursor: 'pointer',
-                        }}
-                    >
-                        Back to homepage
-                    </Button>
-                </div>
-            </div>
+                    I have bad news for you
+                </h2>
+                <p
+                    style={{
+                        fontFamily: '"Space Mono", monospace',
+                        fontSize: "1.5rem",
+                        fontWeight: 400,
+                        lineHeight: 1.7,
+                        color: "#000",
+                        marginBottom: "2rem",
+                    }}
+                >
+                    {errorMessage}
+                </p>
 
-        </div >
+                <Button
+                    onClick={handleRedirect}
+                    size="large"
+                    variant="contained"
+                    sx={{
+                        padding: "1rem 2rem",
+                        borderRadius: "5px",
+                    }}
+                    className="blackhover"
+                >
+                    {backMessage}
+                </Button>
+            </div>
+        </div>
     );
 }
