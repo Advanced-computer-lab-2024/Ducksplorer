@@ -11,6 +11,7 @@ import axios from "axios";
 import { message } from "antd";
 import { Link } from "react-router-dom";
 import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar";
+import AdvertiserNavBar from "../../Components/NavBars/AdvertiserNavBar";
 // import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FileUpload from "../../Components/FileUpload";
 import IconButton from "@mui/material/IconButton";
@@ -173,6 +174,7 @@ const AdvertiserEditProfile = () => {
 
   return (
     <box sx={{ height: "100vh" }}>
+      <AdvertiserNavBar />
       <AdvertiserSidebar />
       <Box
         sx={{

@@ -29,6 +29,7 @@ import {
   TableContainer,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import TourGuideNavbar from "../../Components/TopNav/TourGuideNavbar";
 
 export const TagsContext = createContext();
 
@@ -423,6 +424,7 @@ const RUDItinerary = () => {
         marginLeft: "5vw",
       }}
     >
+      <TourGuideNavbar />
       <div
         style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
       >
