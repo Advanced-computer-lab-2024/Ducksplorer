@@ -363,7 +363,14 @@ export default function ProductCard({ product,
 
   const TheCard = () => {
     return (
-      <div style={{ width: "100%", minWidth: "300px", minHeight: "375px" }}>
+      <div
+        style={{
+          width: "100%",
+          minWidth: "300px",
+          minHeight: "375px",
+          height: "100%",
+        }}
+      >
         <Card
           onClick={handleOpen}
           className="product-card"
