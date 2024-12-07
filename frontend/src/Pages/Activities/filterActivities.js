@@ -238,7 +238,7 @@ const FilterActivities = () => {
             Filter
           </Button>
         </Box>
-        
+
         <div
           style={{
             display: "grid",
