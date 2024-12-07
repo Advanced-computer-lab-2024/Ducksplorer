@@ -66,7 +66,8 @@ const BookingDetails = () => {
 
   const errorMessage =
     "The bookings you are looking for might be removed or is temporarily unavailable";
-  const backMessage = "BACK TO TOURIST DASHBOARD";
+  const backMessage1 = "BACK TO TOURIST DASHBOARD";
+  const backMessage2 = "BACK TO ALL BOOKINGS"
 
   useEffect(() => {
     if (selectedCategory === "Past") {
@@ -240,14 +241,6 @@ const BookingDetails = () => {
         "Cannot cancel the booking within 48 hours of the start date or after the start of the activity/itinerary."
       );
     }
-  };
-
-  if (loading) {
-    return (
-      <div>
-        <DuckLoading />
-      </div>
-    );
   }
 
   if (
@@ -262,11 +255,87 @@ const BookingDetails = () => {
         <TouristNavBar />
         <Error404
           errorMessage={errorMessage}
-          backMessage={backMessage}
+          backMessage={backMessage1}
           route="/touristDashboard"
         />
       </>
     );
+
+  else if (
+    activityBookings.length === 0 &&
+    (selectedCategory === "activity")
+  )
+    return (
+      <>
+        <TouristNavBar />
+        <Error404
+          errorMessage={errorMessage}
+          backMessage={backMessage2}
+          route="/myBookings"
+        />
+      </>
+    );
+
+  else if (
+    itineraryBookings.length === 0 &&
+    (selectedCategory === "itinerary")
+  )
+    return (
+      <>
+        <TouristNavBar />
+        <Error404
+          errorMessage={errorMessage}
+          backMessage={backMessage2}
+          route="/myBookings"
+        />
+      </>
+    );
+
+  else if (
+    flightsBookings.length === 0 &&
+    (selectedCategory === "flight")
+  )
+    return (
+      <>
+        <TouristNavBar />
+        <Error404
+          errorMessage={errorMessage}
+          backMessage={backMessage2}
+          route="/myBookings"
+        />
+      </>
+    );
+
+  else if (
+    hotelsBookings.length === 0 &&
+    (selectedCategory === "hotel")
+  )
+    return (
+      <>
+        <TouristNavBar />
+        <Error404
+          errorMessage={errorMessage}
+          backMessage={backMessage2}
+          route="/myBookings"
+        />
+      </>
+    );
+
+  else if (
+    transportationBookings.length === 0 &&
+    (selectedCategory === "transportation")
+  )
+    return (
+      <>
+        <TouristNavBar />
+        <Error404
+          errorMessage={errorMessage}
+          backMessage={backMessage2}
+          route="/myBookings"
+        />
+      </>
+    );
+
 
   return (
     <Box

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { message } from "antd";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import DuckLoading from "../Components/Loading/duckLoading.js";
 import {
   Typography,
   Box,
@@ -163,41 +164,11 @@ function MySavedItems() {
     }
   };
 
-  if (loadingActivity) {
+  if (loadingActivity || loadingItinerary) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100vh", // Full screen height
-        }}
-      >
-        <CircularProgress size={60} thickness={4} />
-        <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
-          Loading saved activities...
-        </Typography>
-      </Box>
-    );
-  }
-
-  if (loadingItinerary) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100vh", // Full screen height
-        }}
-      >
-        <CircularProgress size={60} thickness={4} />
-        <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
-          Loading saved itineraries...
-        </Typography>
-      </Box>
+      <div>
+        <DuckLoading />
+      </div>
     );
   }
 
@@ -220,9 +191,9 @@ function MySavedItems() {
           height: "100vh",
         }}
       > */}
-      <div style={{overflowY: 'visible', height:'100vh', width:'100%', display: 'flex', flexDirection: 'column'}}>
+      <div style={{ overflowY: 'visible', height: '100vh', width: '100%', display: 'flex', flexDirection: 'column' }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Typography variant="h4" sx={{fontFamily: "'Roboto', sans-serif", color: "black"}}>Saved</Typography>
+          <Typography variant="h4" sx={{ fontFamily: "'Roboto', sans-serif", color: "black" }}>Saved</Typography>
         </Box>
 
         <MyChips chipNames={chipNames} onChipClick={handleChipClick} />
@@ -234,34 +205,34 @@ function MySavedItems() {
                 <Typography variant="h4">Itineraries</Typography>
               </Box> */}
               <div style={{ flex: 1 }}>
-              {itineraries.length > 0 ? (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: "24px", // Adjust the gap between items as needed
-              paddingBottom: 24,
-              paddingTop: 24
-            }}
-          >
-            {
-              itineraries.map((itinerary) =>
-                itinerary.flag === false &&
-                  itinerary.isDeactivated === false &&
-                  itinerary.tourGuideDeleted === false &&
-                  itinerary.deletedItinerary === false &&
-                  itinerary.saved.user === username &&
-                  itinerary.saved.isSaved === true ? (
-                  <ItineraryCard itinerary={itinerary} onRemove={handleRemoveItinerary} showNotify={true}/>
-                ) : null
-              ) // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists
-            }
-          </div>
-        ) : (
-          <Typography variant="body1" style={{ marginTop: "20px" }}>
-            No itineraries found.
-          </Typography>
-        )}
+                {itineraries.length > 0 ? (
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(3, 1fr)",
+                      gap: "24px", // Adjust the gap between items as needed
+                      paddingBottom: 24,
+                      paddingTop: 24
+                    }}
+                  >
+                    {
+                      itineraries.map((itinerary) =>
+                        itinerary.flag === false &&
+                          itinerary.isDeactivated === false &&
+                          itinerary.tourGuideDeleted === false &&
+                          itinerary.deletedItinerary === false &&
+                          itinerary.saved.user === username &&
+                          itinerary.saved.isSaved === true ? (
+                          <ItineraryCard itinerary={itinerary} onRemove={handleRemoveItinerary} showNotify={true} />
+                        ) : null
+                      ) // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists
+                    }
+                  </div>
+                ) : (
+                  <Typography variant="body1" style={{ marginTop: "20px" }}>
+                    No itineraries found.
+                  </Typography>
+                )}
               </div>
             </>
           )}
@@ -288,7 +259,7 @@ function MySavedItems() {
                       activity.saved.user === username &&
                       activity.saved.isSaved === true ? (
                       <Grid item xs={12} sm={8} md={6} key={activity._id}>
-                        <ActivityCard activity={activity} onRemove={handleRemoveActivity} showNotify={true}/>
+                        <ActivityCard activity={activity} onRemove={handleRemoveActivity} showNotify={true} />
                       </Grid>
                     ) : null
                   )
@@ -302,7 +273,7 @@ function MySavedItems() {
               </Grid>
             </>
           )}
-      {/* </Box> */}
+        {/* </Box> */}
       </div>
     </>
   );

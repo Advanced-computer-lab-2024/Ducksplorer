@@ -137,8 +137,8 @@ function SearchActivity() {
         .catch((error) => {
           console.error("Error fetching categories:", error);
           setError("Failed to fetch categories.");
-          setLoading(false);
-        });
+        })
+        .finally(() => setLoading(false));
     }
   };
 
@@ -172,6 +172,7 @@ function SearchActivity() {
   const handleSort = () => {
     const showPreferences = localStorage.getItem("showPreferences");
     const favCategory = localStorage.getItem("category");
+    setLoading(true);
     axios
       .get(
         `http://localhost:8000/activity/sort?sortBy=${sortBy}&order=${order}`
@@ -202,8 +203,10 @@ function SearchActivity() {
       })
       .catch((error) => {
         console.error("There was an error fetching the activities!", error);
-      });
+      })
+      .finally(() => setLoading(false));
   };
+
 
   // Function to fetch activities based on search criteria
   const handleSearchActivities = () => {
@@ -245,11 +248,8 @@ function SearchActivity() {
       newFilters.splice(index, 1);
 
       switch (filter) {
-        case "minPrice":
-          setMinPrice("");
-          break;
-        case "maxPrice":
-          setMaxPrice("");
+        case "price":
+          setPrice("");
           break;
         case "category":
           setCategories("");
@@ -347,7 +347,6 @@ function SearchActivity() {
         console.error("There was an error fetching the activities!", error);
       });
   };
-
 
   const handleActivityCurrencyChange = (rates, selectedCurrency) => {
     setActivityExchangeRates(rates);

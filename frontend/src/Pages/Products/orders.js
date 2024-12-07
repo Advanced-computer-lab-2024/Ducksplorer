@@ -72,20 +72,6 @@ const OrdersPage = () => {
     <>
       <TouristNavBar />
       <Box sx={{ padding: 3, maxWidth: "1200px", margin: "auto" }}>
-        <Button
-          onClick={() => window.history.back()}
-          variant="contained"
-          sx={{
-            backgroundColor: "#1a237e",
-            color: "#fff",
-            fontWeight: "bold",
-            borderRadius: "8px",
-            marginBottom: "20px",
-            "&:hover": { backgroundColor: "#0d47a1" },
-          }}
-        >
-          Back
-        </Button>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography variant="h4" fontWeight="700">
             My Orders
@@ -119,6 +105,7 @@ const OrdersPage = () => {
                       <Button
                         variant="contained"
                         size="small"
+                        className="blackhover"
                         sx={{
                           marginRight: 2,
                           backgroundColor: "#ff9933",

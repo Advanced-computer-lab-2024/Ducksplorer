@@ -331,7 +331,13 @@ function SearchItineraries() {
     setActivityCurrency(selectedCurrency);
   };
 
-  
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
 
   useEffect(() => {
     if (itineraries.length === 0) {
@@ -341,13 +347,6 @@ function SearchItineraries() {
       setShowError(false); // Reset error state if itineraries exist
     }
   }, [itineraries]);
-  if (loading) {
-    return (
-      <div>
-        <DuckLoading />
-      </div>
-    );
-  }
 
   return (
     <Box
