@@ -3,7 +3,6 @@
   justify-content: center;
   align-items: center; /* Center the content vertically */
   width: 50vw;
-  margin: 20px auto;
   min-height: 500px; /* Increase the minimum height of the wrapper */
 }
 

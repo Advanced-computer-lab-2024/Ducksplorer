@@ -21,8 +21,13 @@ const Payment = () => {
   }, []);
 
   return (
-    <>
-      <h1>React Stripe Payment hhhhhh</h1>
+    <div style={{ width: "50vw" }}>
+      <h1
+        style={{ textAlign: "center", marginBottom: "30px" }}
+        className="bigTitle"
+      >
+        React Stripe Payment
+      </h1>
       {clientSecret && stripePromise ? (
         <Elements stripe={stripePromise} options={{ clientSecret }}>
           <div className="payment-wrapper">
@@ -32,7 +37,7 @@ const Payment = () => {
       ) : (
         <p>Loading payment form...</p>
       )}
-    </>
+    </div>
   );
 };
 
