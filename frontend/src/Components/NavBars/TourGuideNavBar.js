@@ -17,6 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
+import MyNotifications from "../myNotifications";
 
 function TourGuideNavBar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -83,6 +84,9 @@ function TourGuideNavBar() {
           
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ flexGrow: 0, marginRight: "3vw", display: "flex", alignItems: "center" }}>
+            <Tooltip>
+              <MyNotifications />
+            </Tooltip>
             <Tooltip title="Open Account settings">
               <IconButton
                 onClick={handleOpenUserMenu}
