@@ -153,7 +153,23 @@ const CartPage = () => {
               <NewProductCard product={item.product} />
             ))
           ) : (
-            <h2>Your cart is empty!</h2>
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginBottom: "2rem", // Space below the image
+                }}
+            >
+                <img
+                    src="DuckEmptyCart.jpg"
+                    alt="Duck Error 404"
+                    style={{
+                        width: "70%", // Adjust the image size for better responsiveness
+                        maxWidth: "400px", // Set a max width for better scaling
+                        height: "auto",
+                    }}
+                />
+            </div>
           )}
         </div>
         {cartProducts.length > 0 && (
