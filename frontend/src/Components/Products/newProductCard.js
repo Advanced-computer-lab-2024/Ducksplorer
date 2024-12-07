@@ -251,7 +251,7 @@ export default function ProductCard({ product = {}, onRemove, showNotify }) {
               <img src={product.picture || image} loading="lazy" alt="" />
             </AspectRatio>
 
-            <Tooltip title="Save product">
+            <Tooltip title="Add to Wishlist">
               <IconButton
                 size="md"
                 variant={saveStates[product._id] ? "soft" : "solid"}
