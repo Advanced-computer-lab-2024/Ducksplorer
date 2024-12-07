@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import WarningIcon from "@mui/icons-material/Warning";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { calculateProductRating } from "../../Utilities/averageRating";
@@ -9,8 +9,8 @@ import { calculateAverageRating } from "../../Utilities/averageRating";
 import MyChips from "../../Components/MyChips";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { message } from 'antd';
-
-
+import DuckLoading from "../../Components/Loading/duckLoading";
+import Error404 from "../../Components/Error404";
 import {
   Box,
   Table,
@@ -36,15 +36,30 @@ import {
   Rating,
   CircularProgress
 } from "@mui/material";
-import AdminNavbar from "../../Components/TopNav/Adminnavbar";
+import AdminNavbar from "../../Components/NavBars/AdminNavBar";
 
 const AdminReport = () => {
-  const chipNames = [
+  const chipNames1 = [
     "Activities Report",
     "Itineraries Report",
     "Products Report",
   ];
+  const chipNames2 = [
+    "Users Report",
+    "Revenue Report",
+  ];
+
+  const errorMessage1 =
+    "The flights you are looking for might be removed or is temporarily unavailable";
+  const errorMessage2 =
+    "The activities you are looking for might be removed or is temporarily unavailable";
+  const errorMessage3 =
+    "The itineraries you are looking for might be removed or is temporarily unavailable";
+  const backMessage = "BACK TO ADMIN DASHBOARD";
+
   const [selectedCategory, setSelectedCategory] = useState("Activities Report");
+  const [selectedCategory2, setSelectedCategory2] = useState("Users Report");
+
   const [activities, setActivities] = useState([]);
   const [itineraries, setItineraries] = useState([]);
   const [products, setProducts] = useState([]);
@@ -87,13 +102,11 @@ const AdminReport = () => {
   const [productFilterType, productSetFilterType] = useState("");
   const [productFiltersApplied, productSetFiltersApplied] = useState(false);
 
-  const [activityLoading, activitySetLoading] = useState(false); // State for loading status
-  const [itineraryLoading, itinerarySetLoading] = useState(false); // State for loading status
-  const [productLoading, productSetLoading] = useState(false); // State for loading status
-
   const [errorActivityMessage, activitySetErrorMessage] = useState("");  // State for error message
   const [itineraryErrorMessage, itinerarySetErrorMessage] = useState("");  // State for error message
   const [productErrorMessage, productSetErrorMessage] = useState("");  // State for error message
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -209,10 +222,10 @@ const AdminReport = () => {
   };
 
   const fetchFilteredActivities = async () => {
-    activitySetLoading(true);
     activitySetErrorMessage(""); // Reset error message before fetching
 
     try {
+      setLoading(true);
       let queryString = "";
 
       // Apply date filter if selected
@@ -246,15 +259,15 @@ const AdminReport = () => {
     } catch (error) {
       activitySetErrorMessage("Error fetching activities!");
     } finally {
-      activitySetLoading(false);
+      setLoading(false);
     }
   };
 
   const fetchFilteredItineraries = async () => {
-    itinerarySetLoading(true);
     itinerarySetErrorMessage(""); // Reset error message before fetching
 
     try {
+      setLoading(true);
       let queryString = "";
 
       // Apply date filter if selected
@@ -288,15 +301,15 @@ const AdminReport = () => {
     } catch (error) {
       itinerarySetErrorMessage("Error fetching itineraries!");
     } finally {
-      itinerarySetLoading(false);
+      setLoading(false);
     }
   };
 
   const fetchFilteredProducts = async () => {
-    productSetLoading(true);
     productSetErrorMessage(""); // Reset error message before fetching
 
     try {
+      setLoading(true);
       let queryString = "";
 
       // Apply date filter if selected
@@ -330,7 +343,7 @@ const AdminReport = () => {
     } catch (error) {
       productSetErrorMessage("Error fetching products!");
     } finally {
-      productSetLoading(false);
+      setLoading(false);
     }
   };
 
@@ -448,82 +461,60 @@ const AdminReport = () => {
     console.log(selectedCategory);
   };
 
-  if (selectedCategory === 'Activities Report') {
+  const handleChipClick2 = (chipName) => {
+    setSelectedCategory2(chipName);
 
-    if (activityLoading) {
-      return (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100vh", // Full screen height
-          }}
-        >
-          <CircularProgress size={60} thickness={4} />
-          <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
-            Loading activities report...
-          </Typography>
-        </Box>
-      );
+    // Navigate or update view based on selected category
+    if (chipName === "Users Report") {
+      navigate("/userReport"); // 
     }
+  };
 
-    if ((!Array.isArray(activities)) || (activities.length === 0)) {
-      return <p>No activities available.</p>;
-    }
-
-  }
-  else if (selectedCategory === 'Itineraries Report') {
-
-    if (itineraryLoading) {
-      return (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100vh", // Full screen height
-          }}
-        >
-          <CircularProgress size={60} thickness={4} />
-          <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
-            Loading itineraries report...
-          </Typography>
-        </Box>
-      );
-    }
-
-    if ((!Array.isArray(itineraries)) || (itineraries.length === 0)) {
-      return <p>No itineraries available.</p>;
-    }
-
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
   }
 
-  else if (selectedCategory === 'Products Report') {
-    if (productLoading) {
-      return (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100vh", // Full screen height
-          }}
-        >
-          <CircularProgress size={60} thickness={4} />
-          <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
-            Loading products report...
-          </Typography>
-        </Box>
-      );
-    }
+  else if (products.length === 0 && selectedCategory === "Products Report") {
+    return (
+      <>
+        <AdminNavbar />
+        <Error404
+          errorMessage={errorMessage1}
+          backMessage={backMessage}
+          route="/adminDashboard"
+        />
+      </>
+    );
+  }
 
-    if ((!Array.isArray(products)) || (products.length === 0)) {
-      return <p>No products available.</p>;
-    }
+  else if (activities.length === 0 && selectedCategory === "Activities Report") {
+    return (
+      <>
+        <AdminNavbar />
+        <Error404
+          errorMessage={errorMessage2}
+          backMessage={backMessage}
+          route="/adminDashboard"
+        />
+      </>
+    );
+  }
+
+  else if (itineraries.length === 0 && selectedCategory === "Itineraries Report") {
+    return (
+      <>
+        <AdminNavbar />
+        <Error404
+          errorMessage={errorMessage3}
+          backMessage={backMessage}
+          route="/adminDashboard"
+        />
+      </>
+    );
   }
 
   return (
@@ -539,16 +530,18 @@ const AdminReport = () => {
       <div
         style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
       >
+        <br></br>
+        <MyChips chipNames={chipNames2} onChipClick={handleChipClick2} />
         <div style={{ overflowY: "visible", height: "100vh" }}>
           <Typography
             variant="h2"
             sx={{ textAlign: "center", fontWeight: "bold" }}
             gutterBottom
           >
-            Report
+            Revenue Report
           </Typography>
           <br></br>
-          <MyChips chipNames={chipNames} onChipClick={handleChipClick} />
+          <MyChips chipNames={chipNames1} onChipClick={handleChipClick} />
 
           {selectedCategory === "Activities Report" && (
             <div>

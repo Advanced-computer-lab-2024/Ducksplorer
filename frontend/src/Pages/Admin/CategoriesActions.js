@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { message } from "antd";
-import AdminNavbar from "../../Components/TopNav/Adminnavbar.js";
+import AdminNavbar from "../../Components/NavBars/AdminNavBar";
 import {
   TextField,
   IconButton,
@@ -25,16 +25,33 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
-import Sidebar from "../../Components/Sidebars/Sidebar.js";
+import { useNavigate } from "react-router-dom";
+import MyChips from "../../Components/MyChips";
 
 const DeleteCategory = () => {
   const [categories, setCategories] = useState([]);
   const [open, setOpen] = useState(false);
-  const [selectedCategory, setselectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("Tags");
   const [showTextField, setShowTextField] = useState(false);
   const [newCategory, setNewCategory] = useState("");
   const [editingCategory, setEditingCategory] = useState(null);
   const [editedCategoryName, setEditedCategoryName] = useState("");
+
+  const navigate = useNavigate();
+
+  const chipNames = [
+    "Tags",
+    "Categories",
+  ];
+
+  const handleChipClick = (chipName) => {
+    setSelectedCategory(chipName);
+
+    // Navigate or update view based on selected category
+    if (chipName === "Tags") {
+      navigate("/preferenceTags"); // 
+    }
+  };
 
   const handleAddCategoryClick = () => {
     setShowTextField(!showTextField);
@@ -129,13 +146,13 @@ const DeleteCategory = () => {
   };
 
   const handleClickOpen = (category) => {
-    setselectedCategory(category);
+    setSelectedCategory(category);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setselectedCategory(null);
+    setSelectedCategory(null);
   };
 
   const handleConfirmDelete = () => {
@@ -157,13 +174,14 @@ const DeleteCategory = () => {
     >
       {/* Navbar */}
       <AdminNavbar />
-      <Sidebar />
 
       {/* Main Content */}
       <div
         style={{ marginBottom: "40px", height: "100vh", paddingBottom: "10%" }}
       >
         <div style={{ overflowY: "visible", height: "auto" }}>
+          <MyChips chipNames={chipNames} onChipClick={handleChipClick} />
+          <br></br>
           <Typography
             variant="h2"
             sx={{ textAlign: "center", fontWeight: "bold" }}

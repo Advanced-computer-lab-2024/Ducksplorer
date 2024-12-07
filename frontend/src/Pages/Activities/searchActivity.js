@@ -52,7 +52,8 @@ function SearchActivity() {
   const [price, setPrice] = useState("");
   const [date, setDate] = useState("");
   const [categories, setCategories] = useState([]);
-  const [error, setError] = useState(false); const [sortBy, setSortBy] = useState("date"); // Default sorting by date
+  const [error, setError] = useState(false);
+  const [sortBy, setSortBy] = useState("date"); // Default sorting by date
   const [order, setOrder] = useState("asc"); // Default ascending order
   const [activityExchangeRates, setActivityExchangeRates] = useState(null);
   const [activityCurrency, setActivityCurrency] = useState(null);
@@ -132,7 +133,7 @@ function SearchActivity() {
 
   useEffect(() => {
     if (activities.length === 0) {
-      const timer = setTimeout(() => setShowError(true), 500); // Wait 0.5 second
+      const timer = setTimeout(() => setShowError(true), 100); // Wait 0.5 second
       return () => clearTimeout(timer); // Cleanup the timer when the component unmounts or updates
     } else {
       setShowError(false); // Reset error state if activities exist

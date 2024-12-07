@@ -5,11 +5,11 @@ import { calculateAverageRating } from "../../Utilities/averageRating.js";
 import WarningIcon from '@mui/icons-material/Warning';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CurrencyConvertor from '../../Components/CurrencyConvertor';
-import Sidebar from "../../Components/Sidebars/Sidebar.js";
 import { message } from 'antd';
 import Error404 from "../../Components/Error404.js";
-import AdminNavbar from "../../Components/TopNav/Adminnavbar.js";
+import AdminNavbar from "../../Components/NavBars/AdminNavBar";
 import DuckLoading from "../../Components/Loading/duckLoading.js";
+import MyChips from "../../Components/MyChips";
 
 import {
     Box,
@@ -37,6 +37,7 @@ import {
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { useInternalMessage } from "antd/es/message/useMessage.js";
+import { useNavigate } from "react-router-dom";
 
 const ActivityReport = () => {
     // Accept userNameId as a prop
@@ -47,6 +48,7 @@ const ActivityReport = () => {
     const [filterAnchorEl, setFilterAnchorEl] = useState(null);
 
     const [selectedFilters, setSelectedFilters] = useState([]);
+    const [selectedCategory2, setSelectedCategory2] = useState("Users Report");
 
     const [filterType, setFilterType] = useState("");
     const [filtersApplied, setFiltersApplied] = useState(false);
@@ -56,6 +58,13 @@ const ActivityReport = () => {
 
     const errorMessage = "The itinerary you are looking for might be removed or is temporarily unavailable";
     const backMessage = "BACK TO ADMIN AGAIN"
+    const navigate = useNavigate();
+
+    const chipNames2 = [
+        "Users Report",
+        "Revenue Report",
+    ];
+
     // Handle fetching activities by userName ID
     useEffect(() => {
         const fetchUsers = async () => {
@@ -142,6 +151,15 @@ const ActivityReport = () => {
         setFiltersApplied(true);
     }
 
+    const handleChipClick2 = (chipName) => {
+        setSelectedCategory2(chipName);
+
+        // Navigate or update view based on selected category
+        if (chipName === "Revenue Report") {
+            navigate("/adminReport"); // 
+        }
+    };
+
     if (loading) {
         return (
             <div>
@@ -172,20 +190,20 @@ const ActivityReport = () => {
                 <div
                     style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
                 >
+                    <br></br>
+                    <MyChips chipNames={chipNames2} onChipClick={handleChipClick2} />
                     <div style={{ overflowY: "visible", height: "100vh" }}>
                         <Typography
                             variant="h2"
                             sx={{ textAlign: "center", fontWeight: "bold" }}
                             gutterBottom
                         >
-                            Users
+                            Users Report
                         </Typography>
                         <br></br>
                         {/* Navbar */}
                         <AdminNavbar />
 
-                        {/* Sidebar */}
-                        <Sidebar />
                         {/* Filtering */}
                         <IconButton onClick={handleFilterChoiceClick}>
                             <FilterAltIcon style={{ color: "black" }} />

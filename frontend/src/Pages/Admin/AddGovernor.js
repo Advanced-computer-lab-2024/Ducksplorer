@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import { message } from "antd";
 import IconButton from "@mui/material/IconButton";
@@ -7,14 +7,16 @@ import Iconify from "../../Components/TopNav/iconify.js";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import axios from "axios";
-import Sidebar from "../../Components/Sidebars/Sidebar.js";
 import { Box, Typography } from "@mui/material";
-import AdminNavBar from "../../Components/NavBars/AdminNavBar.js";
+import AdminNavBar from "../../Components/NavBars/AdminNavBar";
+import NavigationTabs from "../../Components/NavigationTabs.js";
 
 function AddGovernor() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const tabs = ["Add Admin", "Add Governor"];
+  const paths = ["/addAdmin", "/addGovernor"];
 
   const handleAdd = async () => {
     try {
@@ -48,37 +50,56 @@ function AddGovernor() {
       <div style={styles.container}>
         <div style={styles.leftSection}>
           <Typography variant="h3" className="duckTitle" style={styles.welcomeText}>
-            Governor Management
+            Add Users
           </Typography>
         </div>
         <div style={styles.rightSection}>
           <Box
             sx={{
-              width: "100%", // Responsive width
-              height: "100%", // Take full height
-              backgroundColor: "#f9f9f9", // Same as the page background
-              borderRadius: "16px", // Rounded corners
-              boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)", // Subtle shadow
+              width: "100%",
+              height: "100%",
+              backgroundColor: "#f9f9f9",
+              borderRadius: "16px",
+              boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
               textAlign: "center",
-              display: "flex", // Flexbox for centering
-              flexDirection: "column", // Column direction
-              justifyContent: "center", // Center vertically
-              alignItems: "center", // Center horizontally
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
+            {/* Chips Section */}
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: "5%",
+                position: "relative",
+                top: "-25%",
+              }}
+            >
+
+              <div>
+                <NavigationTabs tabNames={tabs} paths={paths} />
+              </div>
+            </Box>
+
             {/* Title Section */}
             <h2
               className="bigTitle"
               style={{
                 textAlign: "center",
                 alignSelf: "center",
-                marginTop: "-20vh",
+                marginBottom: "5%",
+                position: "relative", // Add this to use 'top'
+                marginTop: "-20%"
               }}
             >
               Add Governor
             </h2>
 
-            {/* Logo Section */}
+            {/* Logo Section
             <Box sx={{ marginBottom: "24px" }}>
               <img
                 src="logo1.png"
@@ -93,14 +114,11 @@ function AddGovernor() {
                   marginBottom: "5vh",
                 }}
               />
-            </Box>
+            </Box> */}
 
             {/* Form Section */}
             <div style={{ justifyContent: "center", alignContent: "center" }}>
-              <Stack
-                spacing={3}
-                style={{ justifyContent: "center", alignContent: "center" }}
-              >
+              <Stack spacing={3} style={{ justifyContent: "center", alignContent: "center" }}>
                 {/* Username Field */}
                 <TextField
                   name="username"
@@ -112,14 +130,13 @@ function AddGovernor() {
                   InputProps={{
                     style: {
                       fontSize: "16px",
-                      color: "#333",
+                      color: "#ff9933",
                     },
                   }}
                   sx={{
-                    width: "100%",
-                    justifySelf: "center",
-                    justifyContent: "center",
-                    alignContent: "center",
+                    width: "150%",
+                    margin: "auto",
+                    right: "20%",
                     "& .MuiOutlinedInput-root": {
                       "& fieldset": {
                         borderColor: "#ff9800",
@@ -145,8 +162,7 @@ function AddGovernor() {
                   InputProps={{
                     style: {
                       fontSize: "16px",
-                      color: "#333",
-                      width: "100%",
+                      color: "#ff9933",
                     },
                     endAdornment: (
                       <InputAdornment position="end">
@@ -155,9 +171,7 @@ function AddGovernor() {
                           edge="end"
                         >
                           <Iconify
-                            icon={
-                              showPassword ? "eva:eye-fill" : "eva:eye-off-fill"
-                            }
+                            icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
                             style={{ color: "#ff9800", fontSize: "20px" }}
                           />
                         </IconButton>
@@ -165,10 +179,9 @@ function AddGovernor() {
                     ),
                   }}
                   sx={{
-                    width: "100%",
-                    justifySelf: "center",
-                    justifyContent: "center",
-                    alignContent: "center",
+                    width: "150%",
+                    margin: "auto",
+                    right: "20%",
                     "& .MuiOutlinedInput-root": {
                       "& fieldset": {
                         borderColor: "#ff9800",
