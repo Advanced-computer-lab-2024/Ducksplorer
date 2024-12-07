@@ -309,6 +309,7 @@ function SearchActivity() {
   const handleFilter = () => {
     if (showUpcomingOnly) {
       displayUpcomingActivities();
+      return;
     }
 
     const query = new URLSearchParams();

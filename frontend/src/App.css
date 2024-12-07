@@ -315,6 +315,11 @@ searchInput:focus {
   color: #ff9933 !important;
 }
 
+.swal2-icon.custom-icon-color {
+  border-color: #ff9933;
+  color: #ff9933; 
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
