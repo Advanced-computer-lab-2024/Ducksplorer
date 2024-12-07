@@ -214,7 +214,7 @@ const TouristAllProducts = () => {
           0 ? (
             products
               .filter((product) => product.isArchived !== true)
-              .map((product) => <NewProductCard product={product} />)
+              .map((product) => <NewProductCard product={product}  showNotify={false} showAddToCart={true} hideWishlist={false} />)
           ) : (
             <Typography variant="body1" color="textSecondary" align="center">
               No products found.

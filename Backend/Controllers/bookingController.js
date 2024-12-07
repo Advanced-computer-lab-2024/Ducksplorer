@@ -649,6 +649,25 @@ const payWallet = async (req, res) => {
   }
 };
 
+const getWalletBalance = async (req, res) => {
+  try {
+    const { userName } = req.params; // Assuming user ID is passed as a route parameter
+
+    const tourist = await Tourist.findOne({ userName: userName }); 
+
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found' });
+    }
+
+    // Return the wallet balance
+    res.status(200).json( tourist.wallet );
+  } catch (error) {
+    console.error('Error fetching wallet balance:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
 module.exports = {
   receiveLoyaltyPoints,
   updateLevel,
@@ -663,4 +682,5 @@ module.exports = {
   getLevel,
   payWallet,
   payVisa,
+  getWalletBalance
 };

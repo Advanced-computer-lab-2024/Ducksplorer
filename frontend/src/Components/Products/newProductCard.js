@@ -25,10 +25,27 @@ import Favorite from "@mui/icons-material/Favorite";
 import Swal from "sweetalert2";
 
 // productCard component
-export default function ProductCard({ product = {}, onRemove, showNotify }) {
+export default function ProductCard({ product,
+  showArchive,
+  showUnarchive,
+  productID,
+  showRating, //shows the user review , also for myPurchases as a tourist
+  showReview,
+  inCartQuantity,
+  isConfirmButtonVisible = false,
+  showAddToCart = false,
+  onProductRemove,
+  onQuantityChange,
+  showRemoveWishlist,
+  showAverageRatingNo, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
+  removeProductFromWishlist,
+  hideWishlist = true,
+  showPurchase, showNotify }) {
   const navigate = useNavigate();
+  const [productInCart, setProductInCArt] = useState(false);
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [showWishlist, setShowWishlist] = useState(false);
 
   const [open, setOpen] = React.useState(false);
 
@@ -110,9 +127,9 @@ export default function ProductCard({ product = {}, onRemove, showNotify }) {
             ? "product saved successfully!"
             : "product removed from saved list!"
         );
-        if (!newIsSaved && onRemove) {
-          onRemove(productId);
-        }
+        // if (!newIsSaved && onRemove) {
+          // onRemove(productId);
+        // }
       } else {
         message.error("Failed to save");
       }
@@ -188,6 +205,117 @@ export default function ProductCard({ product = {}, onRemove, showNotify }) {
     }
   };
 
+
+  const addToWishlist = async (product) => {
+    const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
+    const user = JSON.parse(userJson);
+    const userName = user.username;
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/touristRoutes/updateWishlist/${userName}`,
+        {
+          products: [product],
+        }
+      );
+      if (response.status === 200) {
+        message.success("Product added to wishlist successfully!");
+        setShowWishlist(true);
+      } else {
+        message.error("Failed to add the product to the wishlist.");
+      }
+    } catch (error) {
+      message.error(
+        "An error occurred while adding the product to the wishlist."
+      );
+    }
+  };
+
+  const handleAddToCartClick =async (e) => {
+    if(!productInCart){
+      try{
+        const userJson = localStorage.getItem("user");
+        const user = JSON.parse(userJson);
+        const userName = user.username;
+        // const newQuantity = quantity;
+        // Send the selected quantity and product details to the backend
+        const response = await axios.put(
+          "http://localhost:8000/touristRoutes/cart",
+          {
+            userName,
+            productId: product._id,
+            // newQuantity,
+          }
+        );
+  
+        if (response.status === 200) {
+          message.success("Product added to cart successfully!");
+          setProductInCArt(!productInCart);
+        } else {
+          message.error("Failed to add product to cart.");
+        }
+      }catch(error){
+        console.error(error);
+        message.error("An error occurred while adding the product to the cart.");
+      }
+    }else{
+      try{
+        const userJson = localStorage.getItem("user");
+        const user = JSON.parse(userJson);
+        const userName = user.username;
+        // const newQuantity = quantity;
+        // Send the selected quantity and product details to the backend
+        const response = await axios.delete(
+          `http://localhost:8000/touristRoutes/cart`, 
+          {
+            params: {
+              userName: userName, // Your user name
+              productId: product._id, // The product ID
+            }
+          }
+        );
+  
+        if (response.status === 200) {
+          message.success("Product removed from successfully!");
+          setProductInCArt(!productInCart);
+        } else {
+          message.error("Failed to remove product to cart.");
+        }
+      }catch(error){
+        console.error(error);
+        message.error("An error occurred while removing the product from the cart.");
+      }
+    }
+    
+  };
+
+
+  const handleRemoveWishlist = async (product) => {
+    const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
+    const user = JSON.parse(userJson);
+    const userName = user.username;
+    console.log("product:", product._id);
+    const productId = product._id;
+    console.log("username:", userName);
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/touristRoutes/removeFromWishlist/${userName}/${productId}`
+      );
+
+      if (response.status === 200) {
+        message.success("Product removed from wishlist successfully");
+        setShowWishlist(false);
+      } else {
+        message.error("Failed to remove product from wishlist");
+      }
+    } catch (error) {
+      console.error(error);
+      message.error("An error occurred while removing the product");
+    }
+  };
+
+
+
+
   const handleShareLink = (productId) => {
     const link = `${window.location.origin}/product/searchActivities/${productId}`; // Update with your actual route
     navigator.clipboard
@@ -257,14 +385,17 @@ export default function ProductCard({ product = {}, onRemove, showNotify }) {
             <AspectRatio ratio="2">
               <img src={product.picture || image} loading="lazy" alt="" />
             </AspectRatio>
-
+            {!hideWishlist && (
             <Tooltip title="Add to Wishlist">
               <IconButton
                 size="md"
-                variant={saveStates[product._id] ? "soft" : "solid"}
-                onClick={(event) =>
-                  handleSaveproduct(event, product._id, saveStates[product._id])
-                }
+                variant={showWishlist ? "soft" : "solid"}
+                onClick={(event) => {
+                  event.stopPropagation(); // Stop event propagation
+                  showWishlist
+                    ? handleRemoveWishlist(product)
+                    : addToWishlist(product);
+                }}
                 className="blackhover"
                 sx={{
                   position: "absolute",
@@ -276,18 +407,16 @@ export default function ProductCard({ product = {}, onRemove, showNotify }) {
                   transform: "translateY(50%)",
                   transition: "transform 0.3s",
                   backgroundColor: "#ff9933",
-                  "&:active": {
-                    transform: "translateY(50%) scale(0.9)",
-                  },
                 }}
               >
-                {saveStates[product._id] ? (
+                {showWishlist ? (
                   <Done color="#ff9933" />
                 ) : (
                   <Favorite />
                 )}
               </IconButton>
             </Tooltip>
+            )}
             {showNotify && (
               <Tooltip title="Request Notifications">
                 <IconButton
@@ -312,9 +441,6 @@ export default function ProductCard({ product = {}, onRemove, showNotify }) {
                     bottom: 0,
                     transform: "translateY(50%) translateX(-260%)",
                     transition: "transform 0.3s",
-                    "&:active": {
-                      transform: "translateY(50%) scale(0.9)",
-                    },
                     backgroundColor: "#ffcc00",
                   }}
                 ></IconButton>
@@ -384,19 +510,21 @@ export default function ProductCard({ product = {}, onRemove, showNotify }) {
               >
                 {product.price}$
               </Typography>
+              {showAddToCart &&(
               <Button
                 size="md"
                 variant="solid"
                 className="blackhover"
                 zIndex={2}
                 onClick={(event) => {
-                  event.stopPropagation();
-                  handleBooking(product._id);
+                  event.stopPropagation(); // Stops propagation
+                  handleAddToCartClick(); // Call the function without passing `event`
                 }}
                 sx={{ backgroundColor: "#ff9933", marginRight: 1 }}
               >
-                Add to Cart
+                {productInCart ? "Remove from Cart" : "Add to Cart"}
               </Button>
+              )}
             </div>
           </div>
         </Card>
