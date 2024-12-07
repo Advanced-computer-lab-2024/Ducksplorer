@@ -42,7 +42,7 @@ export default function ItineraryCard({
   const handleClose = () => setOpen(false);
 
   const handleClick = (event, itineraryId) => {
-    event.stopPropagation();
+    // event.stopPropagation();
     // setAnchorEl(event.currentTarget);
     Swal.fire({
       title: "Share Itinerary",
@@ -272,7 +272,7 @@ export default function ItineraryCard({
                 variant="solid"
                 color="primary"
                 className="blackhover"
-                onClick={(event) => handleClick(event, itinerary._id)}
+                onClick={(event) =>{event.stopPropagation(); handleClick(event, itinerary._id);}}
                 sx={{
                   borderRadius: "50%",
                   position: "absolute",
@@ -282,9 +282,6 @@ export default function ItineraryCard({
                   bottom: 0,
                   transform: "translateY(50%) translateX(-130%)",
                   transition: "transform 0.3s",
-                  "&:active": {
-                    transform: "translateY(50%) scale(0.9)",
-                  },
                   backgroundColor: "#ff9933",
                 }}
               >

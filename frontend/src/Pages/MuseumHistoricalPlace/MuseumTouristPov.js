@@ -20,6 +20,7 @@ import MuseumHistoricalPlaceCard from "../../Components/MuseumHistoricalPlaceCar
 import Input from "@mui/joy/Input";
 
 const MuseumTouristPov = () => {
+  const [searchTerm, setSearchTerm] = useState(""); // Single search term
   const { id } = useParams();
   const [Museums, setMuseums] = useState([]);
   const isGuest = localStorage.getItem("guest") === "true";
@@ -53,9 +54,25 @@ const MuseumTouristPov = () => {
     setCurrency(selectedCurrency);
   };
 
-  const handleSearchResults = (searchResults) => {
-    console.log("this is the data by the search:",searchResults);
-    setMuseums(searchResults);
+  const handleSearchMuseums = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/museum/searchMuseum",
+        {
+          params: {
+            searchTerm,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setMuseums(response.data.results);
+      } else {
+        message.error("Failed to search museums");
+      }
+    } catch (error) {
+      message.error(" No museums found ");
+    }
   };
 
   const handleFilterResults = (filterResults) => {
@@ -70,22 +87,44 @@ const MuseumTouristPov = () => {
     <Box
       sx={{
         height: "100vh",
-        backgroundColor: "#ffffff",
+        width: "100vw",
         paddingTop: "2vh", // Adjust for navbar height
       }}
     >
       <TouristNavBar />
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Container sx={{ width: "100%" }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
-          <Typography variant="h4" fontWeight="700">
-            Museums
-          </Typography>
+        <Typography class="bigTitle">Museums</Typography>
         </Box>
-
-        <Box sx={{ mb: 3, display: "flex", alignItems: "center" }}>
-          <MuseumSearch onSearch={handleSearchResults} />
+        <div
+          style={{
+            //div to surround search bar, button and the filter, and 2 sort icons
+            display: "grid",
+            gridTemplateColumns: "2.5fr 0.5fr auto auto",
+            gap: "16px",
+            paddingBottom: 24,
+            width: "100%",
+          }}
+        >
+          <Input
+            placeholder="Search for a museum..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            fullWidth
+            variant="filled"
+            color="primary"
+          />
+          <Button
+            variant="solid"
+            onClick={handleSearchMuseums}
+            className="blackhover"
+            sx={{ backgroundColor: "#ff9933" }}
+          >
+            Search
+          </Button>
           <MuseumFilterComponent onFilter={handleFilterResults} />
-        </Box>
+        </div>
+        
 
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <Button
