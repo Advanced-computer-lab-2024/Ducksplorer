@@ -221,13 +221,12 @@ const PreferenceTags = () => {
               >
                 <TableRow>
                   <TableCell
-                    sx={{ fontWeight: "bold", fontSize: "16px" }}
+                    sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }}
                   >
                     Tag
                   </TableCell>
                   <TableCell
-                    sx={{ fontWeight: "bold", fontSize: "16px" }}
-                  >
+                    sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }}                  >
                     Actions
                   </TableCell>
                 </TableRow>
@@ -243,7 +242,7 @@ const PreferenceTags = () => {
                       },
                     }}
                   >
-                    <TableCell>
+                    <TableCell sx={{ fontSize: "15px", textAlign: "center", verticalAlign: "middle" }}>
                       {editingTag && editingTag.name === tag.name ? (
                         <Box sx={{ display: "flex", alignItems: "center" }}>
                           <TextField
@@ -274,7 +273,7 @@ const PreferenceTags = () => {
                         tag.name
                       )}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>
                       <Tooltip title="Delete Tag">
                         <IconButton
                           color="error"

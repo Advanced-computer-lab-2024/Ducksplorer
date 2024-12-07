@@ -195,20 +195,20 @@ const ComplaintsDashboard = () => {
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Title</TableCell>
-                <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Date</TableCell>
-                <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Status</TableCell>
-                <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Actions</TableCell>
+                <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }}>Title</TableCell>
+                <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }}>Date</TableCell>
+                <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }}>Status</TableCell>
+                <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }}>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {complaints.length > 0 ? (
                 complaints.map((complaint) => (
                   <TableRow key={complaint._id}>
-                    <TableCell>{complaint.title}</TableCell>
-                    <TableCell>{new Date(complaint.date).toLocaleDateString()}</TableCell>
-                    <TableCell>{complaint.status ? "Resolved" : "Pending"}</TableCell>
-                    <TableCell>
+                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>{complaint.title}</TableCell>
+                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>{new Date(complaint.date).toLocaleDateString()}</TableCell>
+                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>{complaint.status ? "Resolved" : "Pending"}</TableCell>
+                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>
                       <Button
                         onClick={() =>
                           updateComplaintStatus(
@@ -272,8 +272,8 @@ const ComplaintsDashboard = () => {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseReplyDialog}>Cancel</Button>
-            <Button onClick={handleSendReply} variant="contained">
+            <Button className="blackhover" variant="contained" onClick={handleCloseReplyDialog}>Cancel</Button>
+            <Button className="blackhover" onClick={handleSendReply} variant="contained">
               Send Reply
             </Button>
           </DialogActions>

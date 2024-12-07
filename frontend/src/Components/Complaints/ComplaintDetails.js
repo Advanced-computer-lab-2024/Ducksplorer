@@ -51,11 +51,11 @@ const ComplaintDetails = () => {
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
       <Paper elevation={4} sx={{ p: 4, borderRadius: 2 }}>
-        <Typography variant="h4" gutterBottom sx={{ color: '#00796b', fontWeight: 'bold' }}>
+        <Typography variant="h4" gutterBottom sx={{ color: '#ff9933', fontWeight: 'bold' }}>
           Complaint Details
         </Typography>
         <Divider sx={{ mb: 2 }} />
-        
+
         {/* Title */}
         <Box sx={{ mb: 2 }}>
           <Typography variant="h6" color="textPrimary" sx={{ fontWeight: 'bold' }}>
@@ -101,7 +101,7 @@ const ComplaintDetails = () => {
           <Typography variant="h6" color="textPrimary" sx={{ fontWeight: 'bold' }}>
             Responses:
           </Typography>
-          <Typography                     
+          <Typography
             variant="body1"
             color="textSecondary"
             sx={{ mt: 1 }}>
@@ -118,4 +118,3 @@ const ComplaintDetails = () => {
 };
 
 export default ComplaintDetails;
-  
