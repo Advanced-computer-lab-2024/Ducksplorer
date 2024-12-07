@@ -428,13 +428,18 @@ const RUDItinerary = () => {
         style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
       >
         <div style={{ overflowY: "visible", height: "100vh" }}>
-          <Typography
-            variant="h2"
-            sx={{ textAlign: "center", fontWeight: "bold" }}
-            gutterBottom
-          >
-            Itineraries
-          </Typography>
+        <Typography
+          sx={{
+            textAlign: "center", 
+            marginY: 2,          
+            fontSize: "3rem",
+          }}
+          fontWeight="700"
+          className="bigTitle" 
+        >
+          Itineraries
+        </Typography>
+
           <br></br>
           <TableContainer
             component={Paper}

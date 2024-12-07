@@ -235,11 +235,15 @@ const ItineraryReport = () => {
                 style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
             >
                 <div style={{ overflowY: "visible", height: "100vh" }}>
-                    <Typography
-                        variant="h2"
-                        sx={{ textAlign: "center", fontWeight: "bold" }}
-                        gutterBottom
-                    >
+                <Typography
+                  sx={{
+                    textAlign: "center", // Align text to the center
+                    marginY: 2,          // Add vertical margin of 2
+                    fontSize: "3rem",
+                  }}
+                  fontWeight="700"
+                  className="bigTitle" // Fixed to `className` (not `class`)
+                >
                         Itineraries Report
                     </Typography>
                     <br></br>
