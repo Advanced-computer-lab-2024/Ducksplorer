@@ -105,7 +105,7 @@ const TourGuideDashboard = () => {
                   alignItems: "center",
                 }}
               >
-                <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }}>
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }} className="bigTitle">
                   Total Revenue
                 </Typography>
                 <Typography variant="h4" sx={{ fontWeight: "bold" }}>
@@ -127,7 +127,7 @@ const TourGuideDashboard = () => {
                   alignItems: "center",
                 }}
               >
-                <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }}>
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }} className="bigTitle">
                   Total Booked Itineraries
                 </Typography>
                 <Typography variant="h4" sx={{ fontWeight: "bold" }}>
@@ -149,7 +149,7 @@ const TourGuideDashboard = () => {
                   alignItems: "center",
                 }}
               >
-                <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }}>
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }} className="bigTitle">
                   Total Active Itineraries
                 </Typography>
                 <Typography variant="h4" sx={{ fontWeight: "bold" }}>
