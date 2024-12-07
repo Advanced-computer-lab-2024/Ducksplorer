@@ -26,6 +26,8 @@ import { message } from "antd";
 import { Link } from "react-router-dom";
 import AdminNavbar from "../TopNav/Adminnavbar";
 import Sidebar from "../Sidebars/Sidebar";
+import DuckLoading from "../Loading/duckLoading";
+import Help from "../HelpIcon";
 
 const ComplaintsDashboard = () => {
   const [complaints, setComplaints] = useState([]);
@@ -50,8 +52,8 @@ const ComplaintsDashboard = () => {
             statusFilter === "Resolved"
               ? true
               : statusFilter === "Pending"
-                ? false
-                : undefined,
+              ? false
+              : undefined,
         },
       });
       setComplaints(response.data);
@@ -112,19 +114,9 @@ const ComplaintsDashboard = () => {
 
   if (loading) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          marginTop: 50,
-        }}
-      >
-        <CircularProgress size={50} thickness={5} color="primary" />
-        <Typography variant="h6" sx={{ marginTop: 2, color: "#00796b" }}>
-          Loading complaints, please wait...
-        </Typography>
-      </Box>
+      <div>
+        <DuckLoading />
+      </div>
     );
   }
 
@@ -147,7 +139,10 @@ const ComplaintsDashboard = () => {
           borderRadius: "12px",
         }}
       >
-        <Typography variant="h2" sx={{ textAlign: "center", fontWeight: "bold", paddingRight: "5%" }}>
+        <Typography
+          variant="h2"
+          sx={{ textAlign: "center", fontWeight: "bold", paddingRight: "5%" }}
+        >
           Complaints
         </Typography>
 
@@ -158,14 +153,21 @@ const ComplaintsDashboard = () => {
             boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
             borderRadius: "1.5cap",
           }}
-        >          <Table>
+        >
+          {" "}
+          <Table>
             <TableHead>
               <TableRow>
                 <TableCell>
                   <Box sx={{ display: "flex", gap: 2 }}>
-                    <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
-                      <InputLabel
-                        sx={{ backgroundColor: "#ffeccc" }}>Sort by Date</InputLabel>
+                    <FormControl
+                      variant="outlined"
+                      size="small"
+                      sx={{ minWidth: 150 }}
+                    >
+                      <InputLabel sx={{ backgroundColor: "#ffeccc" }}>
+                        Sort by Date
+                      </InputLabel>
                       <Select
                         label="Sort by Date"
                         value={dateFilter}
@@ -177,9 +179,14 @@ const ComplaintsDashboard = () => {
                         <MenuItem value="oldest">Oldest</MenuItem>
                       </Select>
                     </FormControl>
-                    <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
-                      <InputLabel sx={{ backgroundColor: "#ffeccc" }}
-                      >Filter by Status</InputLabel>
+                    <FormControl
+                      variant="outlined"
+                      size="small"
+                      sx={{ minWidth: 150 }}
+                    >
+                      <InputLabel sx={{ backgroundColor: "#ffeccc" }}>
+                        Filter by Status
+                      </InputLabel>
                       <Select
                         label="Filter by Status"
                         value={statusFilter}
@@ -195,20 +202,70 @@ const ComplaintsDashboard = () => {
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }}>Title</TableCell>
-                <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }}>Date</TableCell>
-                <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }}>Status</TableCell>
-                <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }}>Actions</TableCell>
+                <TableCell
+                  sx={{
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    verticalAlign: "middle",
+                  }}
+                >
+                  Title
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    verticalAlign: "middle",
+                  }}
+                >
+                  Date
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    verticalAlign: "middle",
+                  }}
+                >
+                  Status
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    verticalAlign: "middle",
+                  }}
+                >
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {complaints.length > 0 ? (
                 complaints.map((complaint) => (
                   <TableRow key={complaint._id}>
-                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>{complaint.title}</TableCell>
-                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>{new Date(complaint.date).toLocaleDateString()}</TableCell>
-                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>{complaint.status ? "Resolved" : "Pending"}</TableCell>
-                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>
+                    <TableCell
+                      sx={{ textAlign: "center", verticalAlign: "middle" }}
+                    >
+                      {complaint.title}
+                    </TableCell>
+                    <TableCell
+                      sx={{ textAlign: "center", verticalAlign: "middle" }}
+                    >
+                      {new Date(complaint.date).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell
+                      sx={{ textAlign: "center", verticalAlign: "middle" }}
+                    >
+                      {complaint.status ? "Resolved" : "Pending"}
+                    </TableCell>
+                    <TableCell
+                      sx={{ textAlign: "center", verticalAlign: "middle" }}
+                    >
                       <Button
                         onClick={() =>
                           updateComplaintStatus(
@@ -272,8 +329,18 @@ const ComplaintsDashboard = () => {
             />
           </DialogContent>
           <DialogActions>
-            <Button className="blackhover" variant="contained" onClick={handleCloseReplyDialog}>Cancel</Button>
-            <Button className="blackhover" onClick={handleSendReply} variant="contained">
+            <Button
+              className="blackhover"
+              variant="contained"
+              onClick={handleCloseReplyDialog}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="blackhover"
+              onClick={handleSendReply}
+              variant="contained"
+            >
               Send Reply
             </Button>
           </DialogActions>

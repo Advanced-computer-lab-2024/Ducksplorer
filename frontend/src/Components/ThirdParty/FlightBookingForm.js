@@ -16,6 +16,7 @@ import { message } from "antd";
 import FlightsCards from "./FlightsCards";
 import { useNavigate } from "react-router-dom";
 import DuckLoading from "../Loading/duckLoading";
+import Help from "../HelpIcon";
 const cities = [
   { label: "New York", code: "NYC", country: "USA" },
   { label: "Los Angeles", code: "LAX", country: "USA" },
@@ -250,7 +251,9 @@ const FlightBookingForm = () => {
             </Grid>
           </Box>
         </Container>
+        <Help />
       </div>
+      <Help />
     </div>
   );
 };

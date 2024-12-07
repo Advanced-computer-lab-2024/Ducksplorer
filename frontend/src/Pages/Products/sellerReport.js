@@ -8,6 +8,7 @@ import CurrencyConvertor from '../../Components/CurrencyConvertor';
 import SellerSidebar from "../../Components/Sidebars/SellerSidebar.js";
 import { message } from 'antd';
 import Help from "../../Components/HelpIcon.js";
+import DuckLoading from "../../Components/Loading/duckLoading.js";
 
 import {
   Box,
@@ -34,6 +35,7 @@ import {
   CircularProgress
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import SellerNavBar from "../../Components/NavBars/SellerNavBar.js";
 
 const MyPurchases = () => {
   // Accept userNameId as a prop
@@ -194,20 +196,9 @@ const MyPurchases = () => {
 
   if (loading) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100vh", // Full screen height
-        }}
-      >
-        <CircularProgress size={60} thickness={4} />
-        <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
-          Loading seller report...
-        </Typography>
-      </Box>
+      <div>
+        <DuckLoading />
+      </div>
     );
   }
 
@@ -224,7 +215,7 @@ const MyPurchases = () => {
         marginLeft: "5vw",
       }}
     >
-      <SellerSidebar />
+      <SellerNavBar />
       <div
         style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
       >

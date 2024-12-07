@@ -16,8 +16,10 @@ import FileUpload from "../../Components/FileUpload";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Iconify from "../../Components/TopNav/iconify.js";
+import sellerNavBar from "../../Components/NavBars/SellerNavBar";
 // import ProfilePictureUpload from "../../Components/pp";
 import DownloadButton from "../../Components/DownloadButton";
+import SellerNavBar from "../../Components/NavBars/SellerNavBar.js";
 
 const EditProfile = () => {
   const [sellerDetails, setSellerDetails] = useState({
@@ -166,7 +168,7 @@ const EditProfile = () => {
 
   return (
     <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-      <Link to="/sellerDashboard"> Back </Link>
+      <SellerNavBar />
       <Paper
         elevation={4}
         sx={{
@@ -212,7 +214,7 @@ const EditProfile = () => {
           </Box>
 
           <Typography variant="h5" sx={{ mt: 2 }}>
-            Edit Seller Profile
+            Edit Profile
           </Typography>
         </Box>
 
@@ -323,15 +325,6 @@ const EditProfile = () => {
               Edit Profile
             </Button>
           )}
-        </Box>
-
-        <Box sx={{ textAlign: "center", mt: 2 }}>
-          <Link
-            to="/sellerDashboard"
-            style={{ textDecoration: "none", color: "primary.main" }}
-          >
-            Back to Dashboard
-          </Link>
         </Box>
       </Paper>
     </Box>

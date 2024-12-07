@@ -151,20 +151,25 @@ const viewUpcomingActivities = async (req, res) => {
 // };
 
 const filterActivity = async (req, res) => {
-  const { price, date, category, averageRating } = req.query;
+  const { minPrice, maxPrice, date, category, averageRating } = req.query;
   const filters = {};
 
   // Add filters based on query parameters
-  if (price) filters.price = price;
-  if (category) filters.category = category;
+  if (minPrice || maxPrice) {
+    filters.price = {};
+    if (minPrice) {
+      filters.price.$gte = parseFloat(minPrice);
+    }
+    if (maxPrice) {
+      filters.price.$lte = parseFloat(maxPrice);
+    }
+  } if (category) filters.category = category;
 
   // Handle the averageRating filter
   if (averageRating) {
     const numericRating = parseFloat(averageRating);
-    if (!isNaN(numericRating) && numericRating >= 0 && numericRating < 5) {
-      // Set the filters for average rating
-      filters.averageRating = { $gte: numericRating, $lt: numericRating + 1 }; // 3 to 3.9, 4 to 4.9, etc.
-    } else if (numericRating === 5) {
+    filters.averageRating = { $gte: numericRating, $lt: numericRating + 1 }; // 3 to 3.9, 4 to 4.9, etc.
+    if (numericRating === 5) {
       // If the rating is 5, we just want to get those with an average rating of 5
       filters.averageRating = 5;
     } else {

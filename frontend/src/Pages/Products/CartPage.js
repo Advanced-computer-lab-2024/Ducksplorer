@@ -6,6 +6,7 @@ import TouristNavBar from "../../Components/TouristNavBar";
 import { useNavigate } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
 import DuckLoading from "../../Components/Loading/duckLoading";
+import Help from "../../Components/HelpIcon";
 
 const CartPage = () => {
   const [cartProducts, setCartProducts] = useState([]);
@@ -221,6 +222,7 @@ const CartPage = () => {
           </Button>
         </div>
       </Modal>
+      <Help />
     </Box>
   );
 };

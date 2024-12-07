@@ -12,9 +12,9 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import Help from "../HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar.js";
 import DuckLoading from "../../Components/Loading/duckLoading";
+import Help from "../HelpIcon";
 
 const MyComplaints = () => {
   const [complaints, setComplaints] = useState([]);
@@ -166,6 +166,7 @@ const MyComplaints = () => {
           </Box>
         )}
       </Container>
+      <Help />
     </Box>
   );
 };
