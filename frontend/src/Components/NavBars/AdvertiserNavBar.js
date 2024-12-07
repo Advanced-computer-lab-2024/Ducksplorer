@@ -18,6 +18,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
+import MyNotifications from "../myNotifications";
 
 function AdvertiserNavBar() {
   const image = "duckAvatar.png";
@@ -101,6 +102,9 @@ function AdvertiserNavBar() {
           
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ flexGrow: 0, marginRight: "3vw", display: "flex", alignItems: "center" }}>
+            <Tooltip>
+              <MyNotifications />
+            </Tooltip>
             <Tooltip title="Open Account settings">
               <IconButton
                 onClick={handleOpenUserMenu}

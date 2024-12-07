@@ -9,6 +9,7 @@ import Sidebar from "../../Components/Sidebars/Sidebar.js";
 import { message } from 'antd';
 import Error404 from "../../Components/Error404.js";
 import AdminNavbar from "../../Components/TopNav/Adminnavbar.js";
+import DuckLoading from "../../Components/Loading/duckLoading.js";
 
 import {
     Box,
@@ -143,30 +144,9 @@ const ActivityReport = () => {
 
     if (loading) {
         return (
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: "100vh", // Full screen height
-                }}
-            >
-                <CircularProgress size={60} thickness={4} />
-                <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
-                    Loading users report...
-                </Typography>
-            </Box>
-        );
-    }
-
-    if (!Array.isArray(users) || users.length === 0) {
-        return (
-            <Error404
-                errorMessage={errorMessage}
-                backMessage={backMessage}
-                route="/adminDashboard"
-            />
+            <div>
+                <DuckLoading />
+            </div>
         );
     }
 
