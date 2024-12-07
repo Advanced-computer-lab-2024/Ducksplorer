@@ -142,7 +142,7 @@ function TourGuideNavBar() {
                     marginLeft={2}
                     sx={{ color: "black", fontSize: "14px" }}
                   >
-                    View All My Itineraries
+                    All Itineraries
                   </Typography>
                 </IconButton>
               </MenuItem>
@@ -155,7 +155,7 @@ function TourGuideNavBar() {
                     marginLeft={2}
                     sx={{ color: "black", fontSize: "14px" }}
                   >
-                    Create a new Itinerary
+                    Create Itinerary
                   </Typography>
                 </IconButton>
               </MenuItem>

@@ -13,6 +13,7 @@ import CartCardDetailed from "../../Components/cartCardDetailed.js";
 import TransportationCardDetailed from "../../Components/transportationCardDetailed.js";
 import TouristNavBar from "../../Components/TouristNavBar.js";
 import { Paper } from "@mui/material";
+import Swal from "sweetalert2";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -163,6 +164,57 @@ function PaymentPage() {
     }
   };
 
+  const [currentWallet, setCurrentWallet] = useState(null);
+
+  const fetchWalletBalance = async (userName) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/touristRoutes/balance/${userName}`
+      );
+
+      // Extract the wallet balance from the response
+      const wallet = response.data;
+      console.log("res is ", response.data);
+      console.log("balance is", wallet);
+
+      // Display wallet balance in a SweetAlert popup
+      await Swal.fire({
+        title: "Wallet Balance",
+        text: `Your current wallet balance is $${wallet}`,
+        icon: "info",
+        customClass: {
+          icon: "custom-icon-color", // Use this class to style the icon
+        },
+        confirmButtonText: "OK",
+      });
+
+      // Return the wallet balance if needed for further use
+      return wallet;
+    } catch (error) {
+      console.error("Error fetching wallet balance:", error);
+
+      // Show an error popup if something goes wrong
+      await Swal.fire({
+        title: "Error",
+        text: "Failed to fetch wallet balance. Please try again later.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+
+      throw error; // Rethrow the error if you want to handle it elsewhere
+    }
+  };
+
+  // const showWalletPopup = async (walletBalance) => {
+  //   await Swal.fire({
+  //     title: 'Wallet Balance',
+  //     text: `Your current wallet balance is: ${walletBalance} credits`,
+  //     icon: 'info',
+  //     confirmButtonText: 'OK',
+  //     allowOutsideClick: false, // Prevent dismissing the popup by clicking outside
+  //   });
+  // }
+
   const handleWalletSubmit = async (e) => {
     if (cartData && !selectedAddress) {
       message.error("Please choose a delivery address first.");
@@ -207,6 +259,7 @@ function PaymentPage() {
             "http://localhost:8000/touristRoutes/emptyCart",
             userName
           );
+          await fetchWalletBalance(userName);
           navigate("/orders");
         }
         // Payment succeeded; now create the booking in the backend
@@ -232,6 +285,7 @@ function PaymentPage() {
 
         if (bookingResult.status === 200) {
           console.log("Booking successfully created:", bookingResult);
+          await fetchWalletBalance(userName);
           navigate("/myBookings");
           sendConfirmationEmail();
           if (localStorage.getItem("type") === "activity") {
@@ -470,7 +524,7 @@ function PaymentPage() {
                     justifyContent: "center",
                     alignItems: "center",
                     textAlign: "center",
-                    height: "108.5vh",
+                    height: "auto",
                   }}
                 >
                   <Form style={{ width: "100%", height: "90%" }}>

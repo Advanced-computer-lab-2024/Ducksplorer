@@ -36,6 +36,8 @@ const transportationBookingThirdPartyRoutes = require("./Backend/Routes/ThirdPar
 const complaintRoutes = require("./Backend/Routes/complaintRoutes.js");
 const uploadImage = require("./Backend/Middleware/uploadImageMW.js");
 const notificationRoutes = require("./Backend/Routes/Notifications/NotificationRoutes.js");
+const cron = require("node-cron");
+const PurchaseBooking = require("./Backend/Models/purchaseBookingModel.js");
 
 app.use(cors());
 app.use(express.json({ limit: "25mb" }));
@@ -75,6 +77,44 @@ app.post("/uploadImage", (req, res) => {
     .then((url) => res.send(url))
     .catch((err) => res.status(500).send(err.message));
 });
+
+//update order status automatically every 24h
+cron.schedule("0 0 * * *", async () => {
+  const now = new Date();
+  try {
+    console.log("Running scheduled task to update order statuses...");
+
+    // Update "Processing" orders to "Delivering"
+    const processingOrders = await PurchaseBooking.find({
+      status: "Processing",
+      createdAt: { $lte: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000) },
+    });
+
+    for (const order of processingOrders) {
+      order.status = "Delivering";
+      // consol.log(order);
+      await order.save();
+    }
+
+    // Update "Delivering" orders to "Delivered"
+    const deliveringOrders = await PurchaseBooking.find({
+      status: "Delivering",
+      createdAt: { $lte: new Date(now.getTime() - 4 * 24 * 60 * 60 * 1000) },
+    });
+
+    for (const order of deliveringOrders) {
+      order.status = "Delivered";
+      await order.save();
+    }
+
+    console.log(
+      `Task completed: ${processingOrders.length} orders updated to Delivering, ${deliveringOrders.length} orders updated to Delivered.`
+    );
+  } catch (error) {
+    console.error("Error during scheduled task:", error);
+  }
+});
+
 const tourGuideRateRoutes = require("./Backend/Routes/tourGuideRateRoutes.js");
 const tourGuideCommentRoutes = require("./Backend/Routes/tourGuideCommentRoutes.js");
 

@@ -9,13 +9,12 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { message, Tour } from "antd";
-import { Link } from "react-router-dom";
 import FileUpload from "../../Components/FileUpload";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Iconify from "../../Components/TopNav/iconify.js";
 import DownloadButton from "../../Components/DownloadButton";
-import TourGuideNavbar from "../../Components/TopNav/TourGuideNavbar";
+import TourGuideNavBar from "../../Components/NavBars/TourGuideNavBar";
 const TourGuideEditProfile = () => {
   const [tourGuideDetails, setTourGuideDetails] = useState({
     userName: "",
@@ -180,13 +179,13 @@ const TourGuideEditProfile = () => {
 
   return (
     <Box sx={{ height: "100vh" }}>
-      <TourGuideNavbar />
+      <TourGuideNavBar />
       <Box sx={{ p: 4, justifyContent: "center" }}>
         <Paper
           elevation={4}
           sx={{
             p: 4,
-            width: 500,
+            width: 800,
             borderRadius: 3,
             boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
             height: "100%",
@@ -214,9 +213,14 @@ const TourGuideEditProfile = () => {
                   />
                   <label htmlFor="photo">
                     <Button
+                      variant="outlined"
                       component="span"
-                      color="primary"
-                      variant="contained"
+                      sx={{
+                        color:"#ff9933",
+                        borderColor: "#ff9933",
+                        marginBottom: 2,
+                        marginTop: 2,
+                      }}
                     >
                       Upload New Photo
                     </Button>
@@ -224,12 +228,13 @@ const TourGuideEditProfile = () => {
                   {tourGuideDetails.photo && (
                     <Button
                       onClick={handlePhotoDelete}
-                      color="secondary"
-                      variant="contained"
+                      variant="outlined"
+                      color="error"
                     >
                       Delete Photo
                     </Button>
                   )}
+
                 </>
               )}
             </Box>
@@ -324,7 +329,10 @@ const TourGuideEditProfile = () => {
               />
               {isEditing && (
                 <>
-                  <Button onClick={() => handleFileDelete("nationalId")}>
+                  <Button 
+                      variant="outlined"
+                      color="error"
+                      onClick={() => handleFileDelete("nationalId")}>
                     Delete National ID
                   </Button>
                   <FileUpload
@@ -343,7 +351,10 @@ const TourGuideEditProfile = () => {
               />
               {isEditing && (
                 <>
-                  <Button onClick={() => handleFileDelete("certificates")}>
+                  <Button 
+                      variant="outlined"
+                      color="error"
+                      onClick={() => handleFileDelete("certificates")}>
                     Delete Certificates
                   </Button>
                   <FileUpload
@@ -358,8 +369,8 @@ const TourGuideEditProfile = () => {
           <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
             {isEditing ? (
               <Button
+                className="blackhover"
                 variant="contained"
-                color="success"
                 onClick={handleSaveClick}
                 fullWidth
                 sx={{ py: 1.5 }}
@@ -368,6 +379,7 @@ const TourGuideEditProfile = () => {
               </Button>
             ) : (
               <Button
+                className="blackhover"
                 variant="contained"
                 color="primary"
                 onClick={handleEditClick}

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, CssBaseline } from "@mui/material";
-import { Outlet } from "react-router-dom";
-import TourGuideSidebar from "../../Components/Sidebars/TourGuideSidebar";
-import TourGuideNavBar from "../../Components/NavBars/TourGuideNavBar"; // Import the TourGuideNavbar
+import { Box, Typography, Grid, Paper } from "@mui/material";
+import { Line, Bar } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend } from "chart.js";
+import TourGuideNavBar from "../../Components/NavBars/TourGuideNavBar";
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
 
 const TourGuideDashboard = () => {
   const [videoEnded, setVideoEnded] = useState(false);
@@ -10,104 +12,168 @@ const TourGuideDashboard = () => {
   const handleVideoEnd = () => {
     setTimeout(() => {
       setVideoEnded(true);
-    }, 1000); // Delay to allow fade-out animation
+    }, 1000);
   };
 
   useEffect(() => {
-    // Disable scrolling on mount
     document.body.style.overflow = "hidden";
-    // Set background color for the whole page
-    document.body.style.backgroundColor = "#bce4e4";
+    document.body.style.backgroundColor = "#fff6e6";
 
-    // Re-enable scrolling and reset background color on unmount
     return () => {
       document.body.style.overflow = "auto";
       document.body.style.backgroundColor = "";
     };
   }, []);
 
+  const lineChartData = {
+    labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+    datasets: [
+      {
+        label: "Bookings",
+        data: [10, 15, 12, 20, 30, 25, 40],
+        borderColor: "#ff9933",
+        backgroundColor: "rgba(255, 153, 51, 0.2)",
+        pointBackgroundColor: "#ff9933",
+        fill: true,
+      },
+    ],
+  };
+
+  const barChartData = {
+    labels: ["Itinerary A", "Itinerary B", "Itinerary C", "Itinerary D", "Itinerary E"],
+    datasets: [
+      {
+        label: "Bookings",
+        data: [50, 40, 60, 30, 70],
+        backgroundColor: [
+          "#cc7a1a", // Darker shade for highest
+          "#d98a33",
+          "#e6994c",
+          "#f2a966",
+          "#ffbf80", // Lightest shade for lowest
+        ],
+      },
+    ],
+  };
+
   return (
     <Box
-    sx={{
-      position: "relative",
-      width: "100vw",
-      height: "100vh", // Covers the full viewport
-      overflow: "hidden",
-      backgroundImage: 'url("/ducksplorer welcome.jpg")', // Fullscreen background image
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
-    }}
-  >
-    {/* Background Video */}
-    <video
-      autoPlay
-      muted
-      onEnded={handleVideoEnd}
-      style={{
-        position: "fixed",
-        top: 0,
-        left: "5%",
-        width: "100%",
-        height: "100%",
-        objectFit: "cover",
-        zIndex: videoEnded ? -1 : 0, // Hide video after it ends
-        opacity: videoEnded ? 0 : 1, // Fade-out effect
-        transition: "opacity 1s ease-out", // Smooth fade-out
+      sx={{
+        position: "relative",
+        width: "100vw",
+        height: "100vh",
+        overflow: "hidden",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundColor: "#fff6e6",
       }}
     >
-      <source src="/planevidd.mp4" type="video/mp4" />
-      Your browser does not support the video tag.
-    </video>
-
-    {/* Welcome Message with Semi-Transparent Box */}
-    {videoEnded && (
-      <Box
-        sx={{
+      <video
+        autoPlay
+        muted
+        onEnded={handleVideoEnd}
+        style={{
           position: "fixed",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          zIndex: 10,
-          textAlign: "center",
-          color: "white",
-          backgroundColor: "rgba(0, 0, 0, 0.1)", // Semi-transparent black background
-          padding: "40px",
-          borderRadius: "12px",
-          animation: "fadeIn 1.5s ease-out", // Smooth fade-in for text
-          "@keyframes fadeIn": {
-            from: { opacity: 0 },
-            to: { opacity: 1 },
-          },
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          zIndex: videoEnded ? -1 : 0,
+          opacity: videoEnded ? 0 : 1,
+          transition: "opacity 1s ease-out",
         }}
       >
-        <Typography
-          variant="h3"
-          sx={{
-            fontWeight: "bold",
-            background: "navy",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            mb: 2,
-          }}
-        >
-          Welcome to Ducksplorer
-        </Typography>
-        <Typography variant="h5" sx={{ color: "navy" }}>
-          Start your journey now!
-        </Typography>
-      </Box>
-    )}
-    
-      <TourGuideNavBar /> {/* Add the TourGuideNavbar component here */}
-      
-      <Box sx={{ display: "flex" }}>
-        <CssBaseline />
-        {/* <TourGuideSidebar /> */}
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-          <Outlet />
+        <source src="/planevidd.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+
+      {videoEnded && (
+        <Box sx={{ display: "flex", flexDirection: "column", p: 3 }}>
+          <Grid container spacing={2} sx={{ marginBottom: "20px" }}>
+            <Grid item xs={12} md={4}>
+              <Paper
+                elevation={3}
+                sx={{
+                  padding: "20px",
+                  textAlign: "center",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }} className="bigTitle">
+                  Total Revenue
+                </Typography>
+                <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+                  $1500
+                </Typography>
+              </Paper>
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <Paper
+                elevation={3}
+                sx={{
+                  padding: "20px",
+                  textAlign: "center",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }} className="bigTitle">
+                  Total Booked Itineraries
+                </Typography>
+                <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+                  150
+                </Typography>
+              </Paper>
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <Paper
+                elevation={3}
+                sx={{
+                  padding: "20px",
+                  textAlign: "center",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }} className="bigTitle">
+                  Total Active Itineraries
+                </Typography>
+                <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+                  75
+                </Typography>
+              </Paper>
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <Box sx={{ height: "300px" }}>
+                <Line data={lineChartData} />
+              </Box>
+            </Grid>
+            <Grid item xs={6}>
+              <Box sx={{ height: "300px" }}>
+                <Bar data={barChartData} />
+              </Box>
+            </Grid>
+          </Grid>
         </Box>
-      </Box>
+      )}
+
+      <TourGuideNavBar />
     </Box>
   );
 };

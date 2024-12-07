@@ -31,6 +31,7 @@ import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import Button from "@mui/material/Button";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ReportIcon from "@mui/icons-material/Report";
+import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
 
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -495,7 +496,6 @@ function TouristNavBar() {
                 Marketplace
               </Typography>
             </Button>
-
           </Box>
           <Box sx={{ flexGrow: 0, marginRight: "3vw " }}>
             <Tooltip>

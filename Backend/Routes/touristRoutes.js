@@ -45,6 +45,7 @@ const {
   redeemPoints,
   payVisa,
   payWallet,
+  getWalletBalance
 } = require("../Controllers/bookingController");
 
 const {
@@ -78,6 +79,7 @@ router.route("/viewDesiredActivity/:activityId").get(viewDesiredActivity);
 router.route("/viewDesiredItinerary/:itineraryId").get(viewDesiredItinerary);
 router.patch("/payWallet/:userName", payWallet);
 router.patch("/payVisa/:userName", payVisa);
+router.get("/balance/:userName", getWalletBalance);
 
 //view cart
 router.get("/myCart/:userName", viewCart);
