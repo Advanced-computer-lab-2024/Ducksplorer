@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, CssBaseline } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import TourGuideSidebar from "../../Components/Sidebars/TourGuideSidebar";
-import TourGuideNavbar from "../../Components/TopNav/TourGuideNavbar"; // Import the TourGuideNavbar
+import TourGuideNavBar from "../../Components/NavBars/TourGuideNavBar"; // Import the TourGuideNavbar
 
 const TourGuideDashboard = () => {
   const [videoEnded, setVideoEnded] = useState(false);
@@ -56,7 +56,7 @@ const TourGuideDashboard = () => {
         transition: "opacity 1s ease-out", // Smooth fade-out
       }}
     >
-      <source src="/planevid.mp4" type="video/mp4" />
+      <source src="/planevidd.mp4" type="video/mp4" />
       Your browser does not support the video tag.
     </video>
 
@@ -99,11 +99,11 @@ const TourGuideDashboard = () => {
       </Box>
     )}
     
-      <TourGuideNavbar /> {/* Add the TourGuideNavbar component here */}
+      <TourGuideNavBar /> {/* Add the TourGuideNavbar component here */}
       
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <TourGuideSidebar />
+        {/* <TourGuideSidebar /> */}
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <Outlet />
         </Box>

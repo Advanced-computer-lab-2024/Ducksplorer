@@ -5,6 +5,7 @@ import axios from "axios";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import Help from "../../Components/HelpIcon.js";
+import DuckLoading from "../../Components/Loading/duckLoading";
 
 export default function CheckoutForm() {
   const stripe = useStripe();
@@ -19,6 +20,7 @@ export default function CheckoutForm() {
   const [showPointsAnimation, setShowPointsAnimation] = useState(false);
   const [loyaltyPoints, setLoyaltyPoints] = useState(0);
   const [totalPoints, setTotalPoints] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const storedClientSecret = localStorage.getItem("clientSecret");
@@ -88,7 +90,8 @@ export default function CheckoutForm() {
   const sendConfirmationEmail = async () => {
     try {
       // Retrieve necessary data from localStorage
-      const email = localStorage.getItem("paymentEmail");
+      const user = JSON.parse(localStorage.getItem("user"));
+      const email = user.email;
       const itemId =
         localStorage.getItem("activityId") ||
         localStorage.getItem("itineraryId");
@@ -97,6 +100,8 @@ export default function CheckoutForm() {
       // const flight = localStorage.getItem("flightBooking"); // Example: add this if relevant
       // const transportation = localStorage.getItem("transportationBooking"); // Example: add this if relevant
       console.log("email,item,type:", email, itemId, type);
+      console.log("user:", user);
+      console.log("xxxxxxxxxxxxxxxx");
       // Make a POST request to the backend
       const response = await fetch(
         "http://localhost:8000/payment/send-confirmation",
@@ -136,6 +141,7 @@ export default function CheckoutForm() {
       setMessage1("Please enter the OTP.");
       return;
     }
+    setLoading(true);
     try {
       const response = await fetch(
         "http://localhost:8000/payment/confirm-otp",
@@ -203,12 +209,14 @@ export default function CheckoutForm() {
         const amount = localStorage.getItem("price");
         const chosenDate = localStorage.getItem("date");
 
-        if(itineraryOrActivity === 'product'){
-          try{
-            await axios.delete("http://localhost:8000/touristRoutes/emptyCart", userName);
+        if (itineraryOrActivity === "product") {
+          try {
+            await axios.delete(
+              "http://localhost:8000/touristRoutes/emptyCart",
+              userName
+            );
             navigate("/myPurchases");
-          }
-          catch(error){
+          } catch (error) {
             message.error("failed to empty cart");
           }
         }
@@ -253,7 +261,7 @@ export default function CheckoutForm() {
           {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ price: amount }),
+            body: JSON.stringify({ finalPrice: amount }),
           }
         );
 
@@ -268,6 +276,12 @@ export default function CheckoutForm() {
         console.log("Points Result", pointsResult);
         navigate("/myBookings");
         sendConfirmationEmail();
+        if (localStorage.getItem("type") === "activity") {
+          localStorage.removeItem("activityId");
+        }
+        if (localStorage.getItem("type") === "itinerary") {
+          localStorage.removeItem("itineraryId");
+        }
       }
     } catch (error) {
       setMessage1("Failed to confirm OTP.");
@@ -315,6 +329,14 @@ export default function CheckoutForm() {
       console.error("Error:", error);
     }
   };
+
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
 
   return (
     <div

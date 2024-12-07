@@ -24,6 +24,10 @@ import {
 import axios from "axios";
 import { message } from "antd";
 import { Link } from "react-router-dom";
+import AdminNavbar from "../TopNav/Adminnavbar";
+import Sidebar from "../Sidebars/Sidebar";
+import DuckLoading from "../Loading/duckLoading";
+import Help from "../HelpIcon";
 
 const ComplaintsDashboard = () => {
   const [complaints, setComplaints] = useState([]);
@@ -108,277 +112,240 @@ const ComplaintsDashboard = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
+
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        overflowY: "visible",
-        marginTop: 50,
-        width: "180vh",
+        height: "100vh",
+        paddingTop: "64px",
+        width: "90vw",
+        marginLeft: "5vw",
       }}
     >
-      {loading ? (
-        <Box
+      <AdminNavbar />
+      <Sidebar />
+      <Box
+        sx={{
+          flex: 1,
+          padding: "32px",
+          margin: "0 auto",
+          borderRadius: "12px",
+        }}
+      >
+        <Typography
+          variant="h2"
+          sx={{ textAlign: "center", fontWeight: "bold", paddingRight: "5%" }}
+        >
+          Complaints
+        </Typography>
+
+        <TableContainer
+          component={Paper}
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "80vh",
+            margin: "5%",
+            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+            borderRadius: "1.5cap",
           }}
         >
-          <CircularProgress size={50} thickness={5} color="primary" />
-          <Typography variant="h6" sx={{ marginTop: 2, color: "#00796b" }}>
-            Loading complaints, please wait...
-          </Typography>
-        </Box>
-      ) : (
-        <>
-          <TableContainer
-            component={Paper}
-            sx={{
-              width: "100%",
-              boxShadow: 3,
-              mt: 0,
-              marginTop: 0,
-              position: "absolute",
-              top: "0",
-            }}
-          >
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell
-                    colSpan={4}
-                    sx={{ padding: 0, backgroundColor: "#f5f5f5" }}
-                  >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        width: "100%",
-                        px: 3,
-                        py: 2,
-                      }}
+          {" "}
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  <Box sx={{ display: "flex", gap: 2 }}>
+                    <FormControl
+                      variant="outlined"
+                      size="small"
+                      sx={{ minWidth: 150 }}
                     >
-                      <Typography
-                        variant="h4"
-                        component="h2"
-                        sx={{ fontWeight: "bold", color: "#00796b" }}
+                      <InputLabel sx={{ backgroundColor: "#ffeccc" }}>
+                        Sort by Date
+                      </InputLabel>
+                      <Select
+                        label="Sort by Date"
+                        value={dateFilter}
+                        onChange={(e) => setDateFilter(e.target.value)}
+                        sx={{ backgroundColor: "#ffeccc" }}
                       >
-                        Complaints
-                      </Typography>
-
-                      <Box
-                        sx={{
-                          display: "flex",
-                          gap: 2,
-                        }}
-                      >
-                        <FormControl
-                          variant="outlined"
-                          size="small"
-                          sx={{ minWidth: 150 }}
-                        >
-                          <InputLabel>Sort by Date</InputLabel>
-                          <Select
-                            label="Filter by Date"
-                            value={dateFilter}
-                            onChange={(e) => setDateFilter(e.target.value)}
-                          >
-                            <MenuItem value="">All Dates</MenuItem>
-                            <MenuItem value="newest">Newest</MenuItem>
-                            <MenuItem value="oldest">Oldest</MenuItem>
-                          </Select>
-                        </FormControl>
-
-                        <FormControl
-                          variant="outlined"
-                          size="small"
-                          sx={{ minWidth: 150 }}
-                        >
-                          <InputLabel>Filter by Status</InputLabel>
-                          <Select
-                            label="Filter by Status"
-                            value={statusFilter}
-                            onChange={(e) => setStatusFilter(e.target.value)}
-                          >
-                            <MenuItem value="">All Statuses</MenuItem>
-                            <MenuItem value="Resolved">Resolved</MenuItem>
-                            <MenuItem value="Pending">Pending</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Box>
-                    </Box>
-                  </TableCell>
-                </TableRow>
-
-                <TableRow sx={{ backgroundColor: "#00796b" }}>
-                  <TableCell
-                    sx={{
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: "14px",
-                      textAlign: "center",
-                    }}
-                  >
-                    Title
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: "14px",
-                      textAlign: "center",
-                    }}
-                  >
-                    Date
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: "14px",
-                      textAlign: "center",
-                    }}
-                  >
-                    Status
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: "14px",
-                      textAlign: "center",
-                    }}
-                  >
-                    Actions
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-
-              <TableBody>
-                {complaints.length > 0 ? (
-                  complaints.map((complaint, index) => (
-                    <TableRow
-                      key={complaint._id}
-                      sx={{
-                        backgroundColor:
-                          index % 2 === 0 ? "#f1f8e9" : "#ffffff",
-                      }}
+                        <MenuItem value="">All Dates</MenuItem>
+                        <MenuItem value="newest">Newest</MenuItem>
+                        <MenuItem value="oldest">Oldest</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <FormControl
+                      variant="outlined"
+                      size="small"
+                      sx={{ minWidth: 150 }}
                     >
-                      <TableCell sx={{ fontSize: "13px", textAlign: "center" }}>
-                        {complaint.title}
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px", textAlign: "center" }}>
-                        {new Date(complaint.date).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px", textAlign: "center" }}>
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            color: complaint.status ? "green" : "orange",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {complaint.status ? "Resolved" : "Pending"}
-                        </Typography>
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          display: "flex",
-                          justifyContent: "center",
-                          gap: 1,
-                        }}
+                      <InputLabel sx={{ backgroundColor: "#ffeccc" }}>
+                        Filter by Status
+                      </InputLabel>
+                      <Select
+                        label="Filter by Status"
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        sx={{ backgroundColor: "#ffeccc" }}
                       >
-                        <Button
-                          onClick={() =>
-                            updateComplaintStatus(
-                              complaint._id,
-                              !complaint.status
-                            )
-                          }
-                          variant="contained"
-                          color={complaint.status ? "warning" : "success"}
-                          size="small"
-                          sx={{ minWidth: "100px", fontSize: "12px" }}
-                        >
-                          {complaint.status
-                            ? "Mark as Pending"
-                            : "Mark as Resolved"}
-                        </Button>
-                        <Button
-                          component={Link}
-                          to={`/admin/complaints/${complaint._id}`}
-                          variant="contained"
-                          color="primary"
-                          size="small"
-                          sx={{ minWidth: "100px", fontSize: "12px" }}
-                        >
-                          View Details
-                        </Button>
-                        <Button
-                          onClick={() => handleOpenReplyDialog(complaint._id)}
-                          variant="contained"
-                          color="secondary"
-                          size="small"
-                          sx={{ minWidth: "80px", fontSize: "12px" }}
-                        >
-                          Reply
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
+                        <MenuItem value="">All Statuses</MenuItem>
+                        <MenuItem value="Resolved">Resolved</MenuItem>
+                        <MenuItem value="Pending">Pending</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Box>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell
+                  sx={{
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    verticalAlign: "middle",
+                  }}
+                >
+                  Title
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    verticalAlign: "middle",
+                  }}
+                >
+                  Date
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    verticalAlign: "middle",
+                  }}
+                >
+                  Status
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    verticalAlign: "middle",
+                  }}
+                >
+                  Actions
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {complaints.length > 0 ? (
+                complaints.map((complaint) => (
+                  <TableRow key={complaint._id}>
                     <TableCell
-                      colSpan={4}
-                      align="center"
-                      sx={{ padding: "20px", color: "gray", fontSize: "14px" }}
+                      sx={{ textAlign: "center", verticalAlign: "middle" }}
                     >
-                      No complaints available.
+                      {complaint.title}
+                    </TableCell>
+                    <TableCell
+                      sx={{ textAlign: "center", verticalAlign: "middle" }}
+                    >
+                      {new Date(complaint.date).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell
+                      sx={{ textAlign: "center", verticalAlign: "middle" }}
+                    >
+                      {complaint.status ? "Resolved" : "Pending"}
+                    </TableCell>
+                    <TableCell
+                      sx={{ textAlign: "center", verticalAlign: "middle" }}
+                    >
+                      <Button
+                        onClick={() =>
+                          updateComplaintStatus(
+                            complaint._id,
+                            !complaint.status
+                          )
+                        }
+                        variant="contained"
+                        className="blackhover"
+                        size="small"
+                        sx={{ minWidth: "100px", fontSize: "12px" }}
+                      >
+                        {complaint.status
+                          ? "Mark as Pending"
+                          : "Mark as Resolved"}
+                      </Button>
+                      <Button
+                        component={Link}
+                        to={`/admin/complaints/${complaint._id}`}
+                        variant="contained"
+                        className="blackhover"
+                        size="small"
+                        sx={{ minWidth: "100px", fontSize: "12px" }}
+                      >
+                        View Details
+                      </Button>
+                      <Button
+                        onClick={() => handleOpenReplyDialog(complaint._id)}
+                        variant="contained"
+                        className="blackhover"
+                        size="small"
+                        sx={{ minWidth: "80px", fontSize: "12px" }}
+                      >
+                        Reply
+                      </Button>
                     </TableCell>
                   </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </>
-      )}
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} align="center">
+                    No complaints available.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
-      <Dialog
-        open={openReplyDialog}
-        onClose={handleCloseReplyDialog}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>Reply to Complaint</DialogTitle>
-        <DialogContent sx={{ minHeight: "200px" }}>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Reply"
-            type="text"
-            fullWidth
-            multiline
-            rows={6}
-            variant="outlined"
-            value={replyText}
-            onChange={(e) => setReplyText(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseReplyDialog} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleSendReply} color="primary" variant="contained">
-            Send Reply
-          </Button>
-        </DialogActions>
-      </Dialog>
+        <Dialog open={openReplyDialog} onClose={handleCloseReplyDialog}>
+          <DialogTitle>Reply to Complaint</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              label="Reply"
+              fullWidth
+              multiline
+              rows={4}
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              className="blackhover"
+              variant="contained"
+              onClick={handleCloseReplyDialog}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="blackhover"
+              onClick={handleSendReply}
+              variant="contained"
+            >
+              Send Reply
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
     </Box>
   );
 };

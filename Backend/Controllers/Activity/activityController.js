@@ -369,17 +369,17 @@ const filterActivity = async (req, res) => {
     endDate.setHours(23, 59, 59, 999); // Set end of the day to just before midnight
 
     // Ensure the provided date is greater than or equal to the current date
-    if (providedDate >= currentDate) {
+    // if (providedDate >= currentDate) {
       // Filter for activities on the exact provided date range
       filters.date = { $gte: startDate, $lte: endDate };
-    } else {
-      return res
-        .status(400)
-        .json({ error: "The provided date must be today or in the future." });
-    }
+    // } else {
+    //   return res
+    //     .status(400)
+    //     .json({ error: "The provided date must be today or in the future." });
+    // }
   } else {
     // If no date is provided, filter for only upcoming activities
-    filters.date = { $gte: currentDate };
+    // filters.date = { $gte: currentDate };
   }
 
   try {
@@ -401,7 +401,6 @@ const sortActivities = async (req, res) => {
 
   try {
     const activities = await Activity.find({
-      date: { $gte: currentDate },
     }).sort(sortCriteria);
     res.json(activities);
   } catch (error) {

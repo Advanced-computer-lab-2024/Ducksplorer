@@ -10,7 +10,7 @@ import StarOutlineIcon from "@mui/icons-material/StarOutline";
 
 export default function FlightCardDetails({ flightsData }) {
     return (
-        <Card variant="outlined" sx={{ width: "100%", height: "auto" }}>
+        <Card variant="outlined" sx={{ width: "100%", height: "84.5vh" }}>
             <AspectRatio ratio="2">
                 <img
                     src="/flight.png"
@@ -19,8 +19,8 @@ export default function FlightCardDetails({ flightsData }) {
                 />
             </AspectRatio>
 
-            <CardContent>
-                <Typography level="h4" sx={{ fontWeight: "bold" }}>
+            <CardContent sx={{ display: "flex", alignItems: "center" }}>
+                <Typography level="h4" sx={{ fontWeight: "bold", fontSize: 30, margin: "5%" }}>
                     {flightsData.companyName || "Unnamed Flight"}
                 </Typography>
                 <p>
@@ -30,9 +30,6 @@ export default function FlightCardDetails({ flightsData }) {
                 <p>
                     <strong>Arrival Date:</strong> {flightsData.arrivalDate}
                 </p>
-                {/* <p>
-                    <strong>Company Name:</strong> {flightsData.companyName}
-                </p> */}
                 <p>
                     <strong>Departure City:</strong>{" "}
                     {flightsData.departureCity}
@@ -74,14 +71,13 @@ export default function FlightCardDetails({ flightsData }) {
                     {flightsData.currency}
                 </Typography>
 
-                <div style={{ display: "flex", flexWrap: "wrap", marginTop: "5px" }}>
+                <div style={{ display: "flex", flexWrap: "wrap" }}>
                     {(flightsData.tags || []).map((tag, index) => (
                         <Chip
                             key={index}
                             size="sm"
                             variant="outlined"
                             color="primary"
-                            sx={{ marginRight: 1, marginBottom: 1 }}
                         >
                             {tag}
                         </Chip>

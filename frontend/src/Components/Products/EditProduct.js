@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { TextField, Button, Stack , Box} from "@mui/material";
+import { TextField, Button, Stack, Box } from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
 import UploadFile from "../ProductUploadImage";
 import TouristNavBar from "../TouristNavBar";
-import TouristSidebar from "../Sidebars/TouristSidebar";
 
 let picture = "";
 
@@ -74,97 +73,91 @@ const EditProduct = () => {
     }
   };
 
-  const handleBackButtonClick = () => {
-    window.history.back();
-  };
-
   return (
     <Box
-    sx={{
-      height: "100vh",
-      backgroundColor: "#f4f6f9", // Light grey background for better contrast
-      paddingTop: "64px", // Adjust for navbar height
-    }}
-  >
-    <TouristNavBar />
-    <TouristSidebar/>
-
-    <div
-      style={{
-        backgroundImage: "url(../../public/Images/bg-intro-desktop.png)", // Update with your image path
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+      sx={{
         height: "100vh",
-        justifyContent: "center",
-        overflowY: "visible",
-        alignItems: "center",
+        backgroundColor: "#f4f6f9", // Light grey background for better contrast
+        paddingTop: "64px", // Adjust for navbar height
       }}
     >
+      <TouristNavBar />
 
-      <Stack
-        spacing={1}
-        sx={{
-          width: "600px",
-          padding: "10px",
-          backgroundColor: "rgba(255, 255, 255, 0.8)",
-          borderRadius: "10px",
+      <div
+        style={{
+          backgroundImage: "url(../../public/Images/bg-intro-desktop.png)", // Update with your image path
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          height: "100vh",
+          justifyContent: "center",
           overflowY: "visible",
+          alignItems: "center",
         }}
       >
-        <div className="trial-btn text-white cursor-pointer">
-          <span className="text-bold"></span>
-        </div>
-        <TextField
-          name="name"
-          label="product"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <TextField
-          name="price"
-          label="price"
-          type="number"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
-        <TextField
-          name="available quantity"
-          label="available quantity"
-          type="number"
-          value={availableQuantity}
-          onChange={(e) => setAvailableQuantity(e.target.value)}
-        />
-        <div style={{ borderRadius: "3cap" }}>
-          <img
-            name="picture"
-            label="picture"
-            type="text"
-            src={picture}
-            style={{
-              maxWidth: "500px",
-              borderRadius: "3cap",
-            }}
-          />
-        </div>
-        <UploadFile onUpload={handleUpload} />
-        <TextField
-          name="desription"
-          label="description"
-          type="text"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleEdit} // Call function to handle adding the product here
-          style={{ marginTop: "10px" }}
+        <Stack
+          spacing={1}
+          sx={{
+            width: "600px",
+            padding: "10px",
+            backgroundColor: "rgba(255, 255, 255, 0.8)",
+            borderRadius: "10px",
+            overflowY: "visible",
+          }}
         >
-          Save
-        </Button>
-      </Stack>
-    </div>
+          <div className="trial-btn text-white cursor-pointer">
+            <span className="text-bold"></span>
+          </div>
+          <TextField
+            name="name"
+            label="product"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <TextField
+            name="price"
+            label="price"
+            type="number"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
+          <TextField
+            name="available quantity"
+            label="available quantity"
+            type="number"
+            value={availableQuantity}
+            onChange={(e) => setAvailableQuantity(e.target.value)}
+          />
+          <div style={{ borderRadius: "3cap" }}>
+            <img
+              name="picture"
+              label="picture"
+              type="text"
+              src={picture}
+              style={{
+                maxWidth: "500px",
+                borderRadius: "3cap",
+              }}
+            />
+          </div>
+          <UploadFile onUpload={handleUpload} />
+          <TextField
+            name="desription"
+            label="description"
+            type="text"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleEdit} // Call function to handle adding the product here
+            style={{ marginTop: "10px" }}
+          >
+            Save
+          </Button>
+        </Stack>
+      </div>
     </Box>
   );
 };

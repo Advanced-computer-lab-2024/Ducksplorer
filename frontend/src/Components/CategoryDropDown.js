@@ -41,7 +41,7 @@ export default function CategoriesDropDown() {
       {(popupState) => (
         <>
           <Button
-            style={{ marginBottom: "10px" }}
+            style={{ marginBottom: "10px", backgroundColor : "orange" , alignself : "center" , width : "100%" }}
             variant="contained"
             {...bindTrigger(popupState)}
           >

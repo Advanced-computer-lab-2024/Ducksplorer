@@ -9,6 +9,8 @@ import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
 import Help from "../../Components/HelpIcon.js";
 import TouristNavBar from "../../Components/TouristNavBar.js";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
+import DuckLoading from "../../Components/Loading/duckLoading.js";
+
 import {
   Box,
   Button,
@@ -20,6 +22,7 @@ import MuseumHistoricalPlaceCard from "../../Components/MuseumHistoricalPlaceCar
 import Input from "@mui/joy/Input";
 
 const HistoricalPlaceTouristPov = () => {
+  const [searchTerm, setSearchTerm] = useState(""); // Single search term
   const { id } = useParams();
   const [HistoricalPlaces, setHistoricalPlaces] = useState([]);
   const navigate = useNavigate();
@@ -27,7 +30,7 @@ const HistoricalPlaceTouristPov = () => {
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
   const [searchQuery, setSearchQuery] = useState("");
-
+  const [loading, setLoading] = useState(false)
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
@@ -38,6 +41,7 @@ const HistoricalPlaceTouristPov = () => {
     const user = JSON.parse(localStorage.getItem("user"));
     const username = user?.username;
     const role = user?.role;
+    setLoading(true);
 
     axios
       .get(`http://localhost:8000/historicalPlace/getAllHistoricalPlaces`, {
@@ -58,16 +62,37 @@ const HistoricalPlaceTouristPov = () => {
         }
       })
       .catch((error) => {
-        console.error(
-          "There was an error fetching the Historical Places!",
-          error
-        );
+        console.error("There was an error fetching the Historical Places!", error);
         message.error("Error fetching Historical Places!");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [id]);
 
-  const handleSearchResults = (searchResults) => {
-    setHistoricalPlaces(searchResults);
+  const handleSearchHistoricalPLaces = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('http://localhost:8000/historicalPlace/searchHistoricalPlace', {
+        params: {
+          searchTerm,
+        },
+      });
+
+      console.log("Backend Response:", response);
+
+      if (response.status === 200) {
+        setHistoricalPlaces(response.data.results);
+      } else {
+        message.error('No historical places found. Try refining your search.');
+      }
+    } catch (error) {
+      console.error('Error during API call:', error);
+      message.error('An error occurred: ' + error.message);
+    }
+    finally {
+      setLoading(false);
+    }
   };
 
   const handleFilterResults = (filterResults) => {
@@ -78,27 +103,55 @@ const HistoricalPlaceTouristPov = () => {
     navigate("/UpcomingHistoricalPlaces");
   };
 
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
+
   return (
     <Box
       sx={{
         height: "100vh",
-        backgroundColor: "#ffffff",
+        width: "100vw",
         paddingTop: "2vh", // Adjust for navbar height
       }}
     >
       <TouristNavBar />
-      <TouristSidebar />
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Container sx={{ width: "100%" }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
-          <Typography variant="h4">
-            Historical Places
-          </Typography>
+          <Typography class="bigTitle">Historical Places</Typography>
         </Box>
-
-        <Box sx={{ mb: 3, display: "flex", alignItems: "center" }}>
-          <HistoricalPlaceSearch onSearch={handleSearchResults} />
+        <div
+          style={{
+            //div to surround search bar, button and the filter, and 2 sort icons
+            display: "grid",
+            gridTemplateColumns: "2.5fr 0.5fr auto auto",
+            gap: "16px",
+            paddingBottom: 24,
+            width: "100%",
+          }}
+        >
+          <Input
+            placeholder="Search for a museum..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            fullWidth
+            variant="filled"
+            color="primary"
+          />
+          <Button
+            variant="solid"
+            onClick={handleSearchHistoricalPLaces}
+            className="blackhover"
+            sx={{ backgroundColor: "#ff9933", color: 'white' }}
+          >
+            Search
+          </Button>
           <HistoricalPlaceFilterComponent onFilter={handleFilterResults} />
-        </Box>
+        </div>
 
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <Button

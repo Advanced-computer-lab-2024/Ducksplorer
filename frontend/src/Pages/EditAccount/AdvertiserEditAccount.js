@@ -10,7 +10,6 @@ import {
 import axios from "axios";
 import { message } from "antd";
 import { Link } from "react-router-dom";
-import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar";
 // import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FileUpload from "../../Components/FileUpload";
 import IconButton from "@mui/material/IconButton";
@@ -18,6 +17,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Iconify from "../../Components/TopNav/iconify.js";
 // import ProfilePictureUpload from "../../Components/pp";
 import DownloadButton from "../../Components/DownloadButton";
+import AdvertiserNavBar from "../../Components/NavBars/AdvertiserNavBar.js";
 
 const AdvertiserEditProfile = () => {
   const [advertiserDetails, setAdvertiserDetails] = useState({
@@ -172,15 +172,17 @@ const AdvertiserEditProfile = () => {
   };
 
   return (
-    <box sx={{ height: "100vh" }}>
-      <AdvertiserSidebar />
+    <>
       <Box
         sx={{
           p: 5,
           display: "flex",
           flexDirection: "column",
+          overflowY: 'visible',
+          maxHeight: '100vh'
         }}
       >
+      <AdvertiserNavBar/>
         <Link
           to="/advertiserDashboard"
           style={{ textDecoration: "none", color: "primary.main" }}
@@ -195,7 +197,8 @@ const AdvertiserEditProfile = () => {
             width: "700px",
             borderRadius: 3,
             boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
-            height: "100%",
+            maxHeight: "100vh", 
+            overflowY: "visible",
           }}
         >
           <Box
@@ -374,7 +377,7 @@ const AdvertiserEditProfile = () => {
           </Box>
         </Paper>
       </Box>
-    </box>
+    </>
   );
 };
 

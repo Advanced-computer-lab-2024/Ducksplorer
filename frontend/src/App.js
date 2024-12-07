@@ -97,6 +97,11 @@ import EditItinerary from "./Pages/Itinerary/editItinerary.js";
 
 import LandingPage from "./Pages/LandingPage.js";
 import ActivityCard from "../src/Components/activityCard";
+import FlightsPage from './Components/ThirdParty/FlightsPage';
+import HotelsPage from './Components/ThirdParty/HotelsPage';
+import TransportationsPage from './Components/ThirdParty/TransportationsPage'; // Import TransportationsPage
+
+import Error404 from "./Components/Error404.js";
 
 function App() {
   const { authUser } = useAuthContext();
@@ -695,15 +700,35 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/hotelsPage"
+            element={
+              <ProtectedRoute>
+                <HotelsPage />
+              </ProtectedRoute>
+            }
+          />
 
           <Route path="/addPromoCode" element={<CreatePromoCode />} />
           <Route path="/myOrders" element={<MyOrders />} />
           <Route path="/myCart" element={<CartPage />} />
 
 
-          
-          <Route path="/mySaved" element={<MySavedItems/>} />
-          <Route path="/orders" element={<Orders/>} />
+
+          <Route path="/mySaved" element={<MySavedItems />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/flightsPage" element={<FlightsPage />} />
+          <Route
+            path="/transportationsPage"
+            element={
+              <ProtectedRoute>
+                <TransportationsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="/errorPage" element={<Error404 />} />
+
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

@@ -3,19 +3,23 @@ import axios from "axios";
 import { message } from "antd";
 import { Typography } from "@mui/material";
 import { Button, Box } from "@mui/material";
-import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
+import { Container } from "@mui/material";
 import Help from "../../Components/HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar";
 import { useNavigate } from "react-router-dom";
+import DuckLoading from "../../Components/Loading/duckLoading";
+import Error404 from "../../Components/Error404.js";
+import NewProductCard from "../../Components/Products/newProductCard";
 
 function Wishlist() {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
     const user = JSON.parse(userJson);
     const userName = user.username;
-
+    setLoading(true);
     axios
       .get(`http://localhost:8000/touristRoutes/myWishlist/${userName}`)
 
@@ -26,6 +30,9 @@ function Wishlist() {
       })
       .catch((error) => {
         console.error("There was an error fetching the wishlist!", error);
+      })
+      .finally(() => {
+        setTimeout(() => setLoading(false), 1000); // Delay of 1 second
       });
   }, []);
 
@@ -38,40 +45,57 @@ function Wishlist() {
       prevProducts.filter((product) => product._id !== productId)
     );
   };
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
 
   return (
-    <>
+    <Box
+      sx={{
+        height: "100vh",
+        width: "90vw",
+      }}
+    >
       <TouristNavBar />
-      <Button onClick={handleBackButtonClick}>Back</Button>
-      <Box sx={{ textAlign: "center", mb: 4 }}>
-          <Typography variant="h4" fontWeight="700">
+
+      <Container sx={{ mt: 4, mb: 4 }}>
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Typography fontWeight="700" class="bigTitle">
             My Wishlist
           </Typography>
         </Box>
-      <div
-        style={{
-          padding: "20px",
-          margin: "auto",
-          height: "100vh",
-        }}
-      >
+
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
-            overflowY: "visible",
-            padding: "10px",
-            marginTop: "20px",
+            gap: "24px", // Adjust the gap between items as needed
+            width: "100%",
+            paddingBottom: 24,
           }}
         >
           {/* Render the filtered products using the ProductCard component */}
           {products && products.length > 0 ? (
-            products.map((product) => (
-              <div
-                key={product._id}
-                style={{ position: "relative", marginBottom: "20px" }}
-              >
-                <ProductCard
+            products.map((product) => <NewProductCard product={product} />)
+          ) : (
+            <div>
+              <Error404 />
+            </div>
+          )}
+        </div>
+        <Help />
+      </Container>
+    </Box>
+  );
+}
+
+export default Wishlist;
+
+/* <ProductCard
                   key={product._id}
                   product={product}
                   productID={product._id}
@@ -80,19 +104,4 @@ function Wishlist() {
                   showRemoveWishlist={true}
                   removeProductFromWishlist={removeProductFromWishlist}
                   showAddToCart={true}
-                />
-              </div>
-            ))
-          ) : (
-            <Typography variant="body1" style={{ marginTop: "20px" }}>
-              No products found in your wishlist.
-            </Typography>
-          )}
-        </div>
-        <Help />
-      </div>
-    </>
-  );
-}
-
-export default Wishlist;
+                /> */

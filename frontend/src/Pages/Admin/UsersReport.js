@@ -5,8 +5,11 @@ import { calculateAverageRating } from "../../Utilities/averageRating.js";
 import WarningIcon from '@mui/icons-material/Warning';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CurrencyConvertor from '../../Components/CurrencyConvertor';
-import AdminSidebar from "../../Components/Sidebars/Sidebar.js";
+import Sidebar from "../../Components/Sidebars/Sidebar.js";
 import { message } from 'antd';
+import Error404 from "../../Components/Error404.js";
+import AdminNavbar from "../../Components/TopNav/Adminnavbar.js";
+import DuckLoading from "../../Components/Loading/duckLoading.js";
 
 import {
     Box,
@@ -49,8 +52,10 @@ const ActivityReport = () => {
     const [filtersApplied, setFiltersApplied] = useState(false);
 
     const [loading, setLoading] = useState(false);  // State for loading status
-    const [errorMessage, setErrorMessage] = useState("");  // State for error message
+    const [error1Message, setErrorMessage] = useState("");  // State for error message
 
+    const errorMessage = "The itinerary you are looking for might be removed or is temporarily unavailable";
+    const backMessage = "BACK TO ADMIN AGAIN"
     // Handle fetching activities by userName ID
     useEffect(() => {
         const fetchUsers = async () => {
@@ -137,121 +142,143 @@ const ActivityReport = () => {
         setFiltersApplied(true);
     }
 
-    if ((!Array.isArray(users)) || (users.length === 0)) {
-        return <p>No users available.</p>;
-    }
     if (loading) {
         return (
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: "100vh", // Full screen height
-                }}
-            >
-                <CircularProgress size={60} thickness={4} />
-                <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
-                    Loading users report...
-                </Typography>
-            </Box>
+            <div>
+                <DuckLoading />
+            </div>
         );
     }
 
     return (
-        <>
-            <AdminSidebar />
-            <div>
-                <Box sx={{ p: 6, maxWidth: "120vh", overflowY: "visible", height: "100vh", marginLeft: "350px", }}>
-                    <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-                        <Typography variant="h4">Users Report</Typography>
-                    </Box>
-                    {/* Filtering */}
-                    <IconButton onClick={handleFilterChoiceClick}>
-                        <FilterAltIcon />
-                    </IconButton>
-                    <Menu
-                        anchorEl={filterAnchorEl}
-                        open={Boolean(filterAnchorEl)}
-                        onClose={handleFilterClose}
-                    >
-                        {/* Radio Buttons for Filter Selection */}
-                        <MenuItem>
-                            <FormControl>
-                                <RadioGroup
-                                    value={filterType}
-                                    onChange={(e) => {
-                                        setFilterType(e.target.value);
-                                        setMonth(""); // Reset month when filter type changes
-                                    }}
-                                >
-                                    <FormControlLabel
-                                        value="month"
-                                        control={<Radio />}
-                                        label="Choose Month"
-                                    />
-                                    {filterType === "month" && (
-                                        <div style={{ display: "flex", flexDirection: "column", gap: "10px", width: "100%" }}>
-                                            <FormControl fullWidth>
-                                                <InputLabel>Month</InputLabel>
-                                                <Select
-                                                    value={month}
-                                                    onChange={(e) => changeMonth(e.target.value)}
-                                                >
-                                                    {Array.from({ length: 12 }, (_, i) => (
-                                                        <MenuItem key={i + 1} value={i + 1}>
-                                                            {i + 1}
-                                                        </MenuItem>
-                                                    ))}
-                                                </Select>
-                                            </FormControl>
-                                        </div>
-                                    )}
-                                </RadioGroup>
-                            </FormControl>
-                        </MenuItem>
+        <Box
+            sx={{
+                height: "100vh",
+                paddingTop: "64px",
+                width: "90vw",
+                marginLeft: "5vw",
+            }}
+        >
+            {/* Main Content */}
+            <Box
+                sx={{
+                    flex: 1, // Take the remaining width
+                    padding: "32px", // Inner padding
+                    margin: "0 auto", // Center content horizontally
+                    borderRadius: "12px", // Rounded corners
+                }}
+            >
+                {/* Page Title */}
+                <div
+                    style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
+                >
+                    <div style={{ overflowY: "visible", height: "100vh" }}>
+                        <Typography
+                            variant="h2"
+                            sx={{ textAlign: "center", fontWeight: "bold" }}
+                            gutterBottom
+                        >
+                            Users
+                        </Typography>
+                        <br></br>
+                        {/* Navbar */}
+                        <AdminNavbar />
 
-                        {/* Clear Buttons */}
-                        <MenuItem>
-                            <Button onClick={handleClearAllFilters}>Clear All Filters</Button>
-                        </MenuItem>
-                    </Menu>
-                    <TableContainer style={{ borderRadius: 20 }} component={Paper}>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>User Name</TableCell>
-                                    <TableCell>Role</TableCell>
-                                    <TableCell>Email</TableCell>
-                                    <TableCell>Date</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {users.length > 0 ? (
-                                    users.map((userAdded) =>
-                                        userAdded ? (
-                                            <TableRow >
-                                                <TableCell>{userAdded.userName}</TableCell>
-                                                <TableCell>
-                                                    {userAdded.role} </TableCell>
-                                                <TableCell>{userAdded.email}</TableCell>
-                                                <TableCell>{new Date(userAdded.date).toLocaleDateString()}</TableCell>
-                                            </TableRow>
-                                        ) : null
-                                    )
-                                ) : (
+                        {/* Sidebar */}
+                        <Sidebar />
+                        {/* Filtering */}
+                        <IconButton onClick={handleFilterChoiceClick}>
+                            <FilterAltIcon style={{ color: "black" }} />
+                        </IconButton>
+                        <Menu
+                            anchorEl={filterAnchorEl}
+                            open={Boolean(filterAnchorEl)}
+                            onClose={handleFilterClose}
+                        >
+                            {/* Radio Buttons for Filter Selection */}
+                            <MenuItem>
+                                <FormControl>
+                                    <RadioGroup
+                                        value={filterType}
+                                        onChange={(e) => {
+                                            setFilterType(e.target.value);
+                                            setMonth(""); // Reset month when filter type changes
+                                        }}
+                                    >
+                                        <FormControlLabel
+                                            value="month"
+                                            control={<Radio />}
+                                            label="Choose Month"
+                                        />
+                                        {filterType === "month" && (
+                                            <div style={{ display: "flex", flexDirection: "column", gap: "10px", width: "100%" }}>
+                                                <FormControl fullWidth>
+                                                    <InputLabel>Month</InputLabel>
+                                                    <Select
+                                                        value={month}
+                                                        onChange={(e) => changeMonth(e.target.value)}
+                                                    >
+                                                        {Array.from({ length: 12 }, (_, i) => (
+                                                            <MenuItem key={i + 1} value={i + 1}>
+                                                                {i + 1}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </div>
+                                        )}
+                                    </RadioGroup>
+                                </FormControl>
+                            </MenuItem>
+
+                            {/* Clear Buttons */}
+                            <MenuItem>
+                                <Button onClick={handleClearAllFilters}>Clear All Filters</Button>
+                            </MenuItem>
+                        </Menu>
+                        <TableContainer
+                            component={Paper}
+                            sx={{
+                                marginBottom: 4,
+                                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+                                borderRadius: "1.5cap",
+                            }}
+                        >
+                            <Table>
+                                <TableHead>
                                     <TableRow>
-                                        <TableCell colSpan={12}>No users found</TableCell>
+                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }} >User Name</TableCell>
+                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }} >Role</TableCell>
+                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }} >Email</TableCell>
+                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }} >Date</TableCell>
                                     </TableRow>
-                                )}
+                                </TableHead>
+                                <TableBody>
+                                    {users.length > 0 ? (
+                                        users.map((userAdded) =>
+                                            userAdded ? (
+                                                <TableRow >
+                                                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }} >{userAdded.userName}</TableCell>
+                                                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>
+                                                        {userAdded.role} </TableCell>
+                                                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>{userAdded.email}</TableCell>
+                                                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>{new Date(userAdded.date).toLocaleDateString()}</TableCell>
+                                                </TableRow>
+                                            ) : null
+                                        )
+                                    ) : (
+                                        <TableRow>
+                                            <TableCell colSpan={12}>No users found</TableCell>
+                                        </TableRow>
+                                    )}
 
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </Box>
-            </div>
-        </>
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </div>
+                </div>
+            </Box>
+        </Box>
     );
 };
 
