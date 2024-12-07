@@ -241,7 +241,8 @@ const RUDItinerary = () => {
           error
         );
         message.error(
-          `Error updating itinerary: ${error.response ? error.response.data.message : error.message
+          `Error updating itinerary: ${
+            error.response ? error.response.data.message : error.message
           }`
         );
       });
@@ -395,7 +396,7 @@ const RUDItinerary = () => {
   }
   useEffect(() => {
     // Apply styles to the body when the component mounts
-    document.body.style.overflow = "hidden";
+
     document.body.style.margin = "0";
     document.body.style.display = "flex";
     document.body.style.justifyContent = "center";
@@ -404,7 +405,6 @@ const RUDItinerary = () => {
 
     // Clean up styles when the component unmounts
     return () => {
-      document.body.style.overflow = "";
       document.body.style.backgroundColor = "";
       document.body.style.margin = "";
       document.body.style.display = "";
@@ -417,100 +417,93 @@ const RUDItinerary = () => {
     <Box
       sx={{
         height: "100vh",
-        overflowY: "auto",
-        paddingTop: "64px",
+        marginTop: "30vh",
         width: "90vw",
-        marginLeft: "5vw",
       }}
     >
       <TourGuideNavBar />
-      <div
-        style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
+      <Typography
+        variant="h2"
+        className="bigTitle"
+        style={{ textAlign: "center", fontWeight: "bold" }}
+        gutterBottom
       >
-        <div style={{ overflowY: "visible", height: "100vh" }}>
-          <Typography
-            variant="h2"
-            sx={{ textAlign: "center", fontWeight: "bold" }}
-            gutterBottom
-          >
-            Itineraries
-          </Typography>
-          <br></br>
-          <TableContainer
-            component={Paper}
-            sx={{
-              marginBottom: 4,
-              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
-              borderRadius: "1.5cap",
-            }}
-          >
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Activities
-                    <CurrencyConvertor
-                      onCurrencyChange={handleActivityCurrencyChange}
-                    />
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Locations
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Timeline
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Language
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Price
-                    <CurrencyConvertor
-                      onCurrencyChange={handleCurrencyChange}
-                    />
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Available Dates And Times
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Accessibility
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Pick Up Location
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Drop Off Location
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Ratings
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Tags
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Flag
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Active Status
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Actions
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {
-                  itineraries.map((itinerary) =>
-                    itinerary.deletedItinerary === false ? (
-                      <TableRow key={itinerary._id}>
-                        <TableCell>
-                          {itinerary.activity && itinerary.activity.length > 0
-                            ? itinerary.activity.map((activity, index) => (
+        Itineraries
+      </Typography>
+
+      <div style={{ overflowY: "visible", height: "100vh" }}>
+        <TableContainer
+          component={Paper}
+          sx={{
+            marginBottom: 4,
+            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+            borderRadius: "1.5cap",
+          }}
+        >
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                  Activities
+                  <CurrencyConvertor
+                    onCurrencyChange={handleActivityCurrencyChange}
+                  />
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                  Locations
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                  Timeline
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                  Language
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                  Price
+                  <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                  Available Dates And Times
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                  Accessibility
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                  Pick Up Location
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                  Drop Off Location
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                  Ratings
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                  Tags
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                  Flag
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                  Active Status
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                  Actions
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {
+                itineraries.map((itinerary) =>
+                  itinerary.deletedItinerary === false ? (
+                    <TableRow key={itinerary._id}>
+                      <TableCell>
+                        {itinerary.activity && itinerary.activity.length > 0
+                          ? itinerary.activity.map((activity, index) => (
                               <div key={index}>
                                 {activity.name || "N/A"} - Price:
                                 {(
                                   activity.price *
-                                  (activityExchangeRates[activityCurrency] ||
-                                    1)
+                                  (activityExchangeRates[activityCurrency] || 1)
                                 ).toFixed(2)}{" "}
                                 {activityCurrency}
                                 ,<br />
@@ -521,12 +514,12 @@ const RUDItinerary = () => {
                                 {/* Adds an extra line break between activities */}
                               </div>
                             ))
-                            : "No activities available"}
-                        </TableCell>
+                          : "No activities available"}
+                      </TableCell>
 
-                        <TableCell>
-                          {itinerary.locations && itinerary.locations.length > 0
-                            ? itinerary.locations.map((location, index) => (
+                      <TableCell>
+                        {itinerary.locations && itinerary.locations.length > 0
+                          ? itinerary.locations.map((location, index) => (
                               <div key={index}>
                                 <Typography variant="body1">
                                   {index + 1}: {location.trim()}
@@ -534,20 +527,20 @@ const RUDItinerary = () => {
                                 <br />
                               </div>
                             ))
-                            : "No locations available"}
-                        </TableCell>
+                          : "No locations available"}
+                      </TableCell>
 
-                        <TableCell>{itinerary.timeline}</TableCell>
-                        <TableCell>{itinerary.language}</TableCell>
-                        <TableCell>
-                          {(
-                            itinerary.price * (exchangeRates[currency] || 1)
-                          ).toFixed(2)}{" "}
-                          {currency}
-                        </TableCell>
-                        <TableCell>
-                          {itinerary.availableDatesAndTimes.length > 0
-                            ? itinerary.availableDatesAndTimes.map(
+                      <TableCell>{itinerary.timeline}</TableCell>
+                      <TableCell>{itinerary.language}</TableCell>
+                      <TableCell>
+                        {(
+                          itinerary.price * (exchangeRates[currency] || 1)
+                        ).toFixed(2)}{" "}
+                        {currency}
+                      </TableCell>
+                      <TableCell>
+                        {itinerary.availableDatesAndTimes.length > 0
+                          ? itinerary.availableDatesAndTimes.map(
                               (dateTime, index) => {
                                 const dateObj = new Date(dateTime);
                                 const date = dateObj
@@ -565,122 +558,117 @@ const RUDItinerary = () => {
                                 );
                               }
                             )
-                            : "No available dates and times"}
-                        </TableCell>
+                          : "No available dates and times"}
+                      </TableCell>
 
-                        <TableCell>{itinerary.accessibility}</TableCell>
-                        <TableCell>{itinerary.pickUpLocation}</TableCell>
-                        <TableCell>{itinerary.dropOffLocation}</TableCell>
-                        <TableCell>
-                          <Rating
-                            value={itinerary.averageRating}
-                            precision={0.1}
-                            readOnly
-                          />
-                        </TableCell>
+                      <TableCell>{itinerary.accessibility}</TableCell>
+                      <TableCell>{itinerary.pickUpLocation}</TableCell>
+                      <TableCell>{itinerary.dropOffLocation}</TableCell>
+                      <TableCell>
+                        <Rating
+                          value={itinerary.averageRating}
+                          precision={0.1}
+                          readOnly
+                        />
+                      </TableCell>
 
-                        <TableCell>
-                          {itinerary.tags && itinerary.tags.length > 0
-                            ? itinerary.tags.map((tag, index) => (
+                      <TableCell>
+                        {itinerary.tags && itinerary.tags.length > 0
+                          ? itinerary.tags.map((tag, index) => (
                               <div key={index}>
                                 {tag || "N/A"}
                                 <br />
                                 <br />
                               </div>
                             ))
-                            : "No tags available"}
-                        </TableCell>
+                          : "No tags available"}
+                      </TableCell>
 
-                        <TableCell>
-                          {itinerary.flag ? (
-                            <span
-                              style={{
-                                color: "red",
-                                display: "flex",
-                                alignItems: "center",
-                              }}
-                            >
-                              <WarningIcon style={{ marginRight: "4px" }} />
-                              Inappropriate
-                            </span>
-                          ) : (
-                            <span
-                              style={{
-                                color: "green",
-                                display: "flex",
-                                alignItems: "center",
-                              }}
-                            >
-                              <CheckCircleIcon style={{ marginRight: "4px" }} />
-                              Appropriate
-                            </span>
-                          )}
-                        </TableCell>
-
-                        <TableCell>
-                          <Button
-                            variant="contained"
-                            color={
-                              itinerary.isDeactivated ? "success" : "error"
-                            } // it is not active this means the button will activate the itinerary which we want to be in color success (green)
-                            onClick={() => {
-                              console.log(
-                                `Button clicked for itinerary ID: ${itinerary._id}`
-                              ); //For debugging
-                              toggleItineraryActiveStatus(itinerary._id);
+                      <TableCell>
+                        {itinerary.flag ? (
+                          <span
+                            style={{
+                              color: "red",
+                              display: "flex",
+                              alignItems: "center",
                             }}
                           >
-                            {itinerary.isDeactivated
-                              ? "Activate"
-                              : "Deactivate"}
-                          </Button>
-                        </TableCell>
+                            <WarningIcon style={{ marginRight: "4px" }} />
+                            Inappropriate
+                          </span>
+                        ) : (
+                          <span
+                            style={{
+                              color: "green",
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <CheckCircleIcon style={{ marginRight: "4px" }} />
+                            Appropriate
+                          </span>
+                        )}
+                      </TableCell>
 
-                        <TableCell>
-                          <Tooltip title="Delete Itinerary">
-                            <IconButton
-                              color="error"
-                              aria-label="delete category"
-                              onClick={() => handleClickOpen(itinerary._id)}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Edit Itinerary">
-                            <IconButton
-                              color="primary"
-                              aria-label="edit category"
-                              onClick={() => handleEditClick(itinerary)}
-                            >
-                              <EditIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </TableCell>
-                      </TableRow>
-                    ) : null
-                  ) //We don't output a row when the itinerary has been deleted but cannot be removed from the database since it is booked by previous tourists
-                }
+                      <TableCell>
+                        <Button
+                          variant="contained"
+                          color={itinerary.isDeactivated ? "success" : "error"} // it is not active this means the button will activate the itinerary which we want to be in color success (green)
+                          onClick={() => {
+                            console.log(
+                              `Button clicked for itinerary ID: ${itinerary._id}`
+                            ); //For debugging
+                            toggleItineraryActiveStatus(itinerary._id);
+                          }}
+                        >
+                          {itinerary.isDeactivated ? "Activate" : "Deactivate"}
+                        </Button>
+                      </TableCell>
 
-                <Dialog open={open} onClose={handleClose}>
-                  <DialogTitle>Confirm Deletion</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText>
-                      Are you sure you want to delete this Itinerary?
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                      Cancel
-                    </Button>
-                    <Button onClick={handleConfirmDelete} color="error">
-                      Delete
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </div>
+                      <TableCell>
+                        <Tooltip title="Delete Itinerary">
+                          <IconButton
+                            color="error"
+                            aria-label="delete category"
+                            onClick={() => handleClickOpen(itinerary._id)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Edit Itinerary">
+                          <IconButton
+                            color="primary"
+                            aria-label="edit category"
+                            onClick={() => handleEditClick(itinerary)}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  ) : null
+                ) //We don't output a row when the itinerary has been deleted but cannot be removed from the database since it is booked by previous tourists
+              }
+
+              <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>Confirm Deletion</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Are you sure you want to delete this Itinerary?
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose} color="primary">
+                    Cancel
+                  </Button>
+                  <Button onClick={handleConfirmDelete} color="error">
+                    Delete
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </TableBody>
+          </Table>
+        </TableContainer>
       </div>
     </Box>
   );

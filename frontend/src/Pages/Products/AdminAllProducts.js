@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {  message } from "antd";
-import { Typography } from "@mui/material";
+import { message } from "antd";
 import { Button } from "@mui/material";
-import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
+import {
+  Box,
+  Typography,
+  Drawer,
+  Stack,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  Container,
+} from "@mui/material";
+
 import { useNavigate } from "react-router-dom"; // Import to navigate to the edit page
+import NewProductCard from "../../Components/Products/newProductCard";
 
 function AdminAllProducts() {
   const [products, setProducts] = useState([]);
@@ -32,55 +43,65 @@ function AdminAllProducts() {
   };
 
   return (
-    <div
-      style={{
-        padding: "20px",
-        maxWidth: "800px",
-        margin: "auto",
+    <Box
+      sx={{
+        height: "100vh",
+        width: "90vw",
       }}
     >
-      <Button onClick={handleBackButtonClick}>Back</Button>
-
-      <div
-        style={{
-          maxHeight: "400px",
-          overflowY: "visible",
-          padding: "10px",
-          marginTop: "20px",
-          height: "100vh",
-          transform: "translateX(125px)",
-        }}
-      >
-        {/* Render the filtered products using the ProductCard component */}
-        {products.length > 0 ? (
-          products.map((product) => (
-            <div
-              key={product._id}
-              style={{ position: "relative", marginBottom: "20px" }}
-            >
-              <ProductCard
-                product={product}
-                showArchive={true}
-                showUnarchive={true}
-              />
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => handleEditProduct(product._id)}
-                style={{ position: "absolute", right: "10px", top: "10px" }} // Place the button at the top-right corner
-              >
-                Edit
-              </Button>
-            </div>
-          ))
-        ) : (
-          <Typography variant="body1" style={{ marginTop: "20px" }}>
-            No products found.
+      <Container sx={{ mb: 4 }}>
+        <Box sx={{ textAlign: "center", mb: 9 }}>
+          <Typography fontWeight="700" class="bigTitle">
+            Admin Products
           </Typography>
-        )}
-      </div>
-    </div>
+        </Box>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "24px", // Adjust the gap between items as needed
+            width: "100%",
+            paddingBottom: 24,
+          }}
+        >
+          {/* Render the filtered products using the ProductCard component */}
+          {products.length > 0 ? (
+            products.map((product) => (
+              <div
+                key={product._id}
+                style={{
+                  position: "relative",
+                }}
+              >
+                <NewProductCard product={product} />
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => handleEditProduct(product._id)}
+                  style={{ position: "absolute", right: "10px", top: "10px" }} // Place the button at the top-right corner
+                >
+                  Edit
+                </Button>
+              </div>
+            ))
+          ) : (
+            <Typography variant="body1" style={{ marginTop: "20px" }}>
+              No products found.
+            </Typography>
+          )}
+        </div>
+      </Container>
+    </Box>
   );
 }
 
 export default AdminAllProducts;
+
+{
+  /* <ProductCard
+                product={product}
+                showArchive={true}
+                showUnarchive={true}
+              /> */
+}

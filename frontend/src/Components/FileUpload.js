@@ -101,7 +101,12 @@ const FileUpload = ({ onFileSelect, inputId, label }) => {
         id={inputId}
       />
       <label htmlFor={inputId}>
-        <Button variant="outlined" component="span">
+        <Button 
+        sx={{
+          color: "#ff9933",
+          borderColor: "#ff9933", 
+        }}
+        variant="outlined" component="span">
           Upload Document
         </Button>
       </label>

@@ -22,9 +22,6 @@ import {
   CircularProgress,
   Grid,
 } from "@mui/material";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
-import CurrencyConvertor from "../Components/CurrencyConvertor.js";
 import MyChips from "../Components/MyChips.js";
 import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
 import TouristNavBar from "../Components/TouristNavBar.js";
