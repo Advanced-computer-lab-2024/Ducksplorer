@@ -423,10 +423,6 @@ function SearchActivity() {
               anchorEl={filterAnchorEl}
               open={Boolean(filterAnchorEl)}
               onClose={handleFilterClose}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'center',
-              }}
               PaperProps={{
                 style: {
                   position: 'absolute',
