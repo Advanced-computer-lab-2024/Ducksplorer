@@ -37,7 +37,6 @@ import {
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import AdvertiserNavBar from "../../Components/NavBars/AdvertiserNavBar.js";
-import AdvertiserNavBar from "../../Components/NavBars/AdvertiserNavBar.js";
 
 const ActivityReport = () => {
   // Accept userNameId as a prop
