@@ -267,10 +267,10 @@ const ActivityReport = () => {
                             <Table>
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>User Name</TableCell>
-                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Role</TableCell>
-                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Email</TableCell>
-                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Date</TableCell>
+                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }} >User Name</TableCell>
+                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }} >Role</TableCell>
+                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }} >Email</TableCell>
+                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }} >Date</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -278,11 +278,11 @@ const ActivityReport = () => {
                                         users.map((userAdded) =>
                                             userAdded ? (
                                                 <TableRow >
-                                                    <TableCell>{userAdded.userName}</TableCell>
-                                                    <TableCell>
+                                                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }} >{userAdded.userName}</TableCell>
+                                                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>
                                                         {userAdded.role} </TableCell>
-                                                    <TableCell>{userAdded.email}</TableCell>
-                                                    <TableCell>{new Date(userAdded.date).toLocaleDateString()}</TableCell>
+                                                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>{userAdded.email}</TableCell>
+                                                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>{new Date(userAdded.date).toLocaleDateString()}</TableCell>
                                                 </TableRow>
                                             ) : null
                                         )
