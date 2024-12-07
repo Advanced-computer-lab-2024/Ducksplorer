@@ -4,8 +4,7 @@ import { message } from "antd";
 import Iconify from "../../Components/TopNav/iconify.js";
 import axios from "axios";
 import Sidebar from "../../Components/Sidebars/Sidebar.js";
-import AdminNavbar from "../../Components/TopNav/Adminnavbar.js";
-
+import AdminNavBar from "../../Components/NavBars/AdminNavBar.js";
 function AddAdmin() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -44,7 +43,7 @@ function AddAdmin() {
       }}
     >
       {/* Navbar and Sidebar */}
-      <AdminNavbar />
+      <AdminNavBar />
       <Sidebar />
 
       {/* Form Card */}
