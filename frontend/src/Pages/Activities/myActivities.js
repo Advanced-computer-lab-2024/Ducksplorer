@@ -174,9 +174,10 @@ const MyActivities = () => {
           boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
           borderRadius: "1.5cap",
           height: "auto",
+          overflow: "auto",
         }}
       >
-        <Table>
+        <Table sx={{}}>
           <TableHead>
             <TableRow>
               <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
