@@ -22,13 +22,24 @@ const filterItineraries = async (req, res) => {
     }
     if (language) 
         filters.language = language;
-    if (availableDatesAndTimes) {
-        const dateQuery = new Date(availableDatesAndTimes); // Convert the query date string to a Date object
 
-        filters.availableDatesAndTimes = { 
-            $elemMatch: { $eq: dateQuery } // Check for exact match of the date
-        };
+    if (availableDatesAndTimes) {
+        const providedDate = new Date(availableDatesAndTimes);
+        providedDate.setHours(0, 0, 0, 0); // Set provided date to midnight
+    
+        // Define the start and end of the provided date
+        const startDate = providedDate;
+        const endDate = new Date(providedDate);
+        endDate.setHours(23, 59, 59, 999);
+        filters.availableDatesAndTimes = {$elemMatch: { $gte: startDate, $lte: endDate }};
     }
+    // if (availableDatesAndTimes) {
+    //     const dateQuery = new Date(availableDatesAndTimes); // Convert the query date string to a Date object
+
+    //     filters.availableDatesAndTimes = { 
+    //         $elemMatch: { $eq: dateQuery } // Check for exact match of the date
+    //     };
+    // }
     if (tags) {
         filters.tags = { $in: tagsArray };
     }

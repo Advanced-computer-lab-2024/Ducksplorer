@@ -4,37 +4,73 @@ import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import Typography from "@mui/joy/Typography";
 import Chip from "@mui/joy/Chip";
-import { Rating } from "@mui/material";
-import StarIcon from "@mui/icons-material/Star";
-import StarOutlineIcon from "@mui/icons-material/StarOutline";
 
 export default function CartCardDetails({ cartData }) {
     return (
         <Card variant="outlined" sx={{ width: "100%", height: "auto" }}>
-            <AspectRatio ratio="2">
-                <img
-                    src={cartData.image || "https://picsum.photos/200/300"}
-                    alt={cartData.name || "Cart Data Image"}
-                    loading="lazy"
-                />
-            </AspectRatio>
-
-            <CardContent>
-                <Typography level="h4" sx={{ fontWeight: "bold" }}>
-                    {"Cart"}
-                </Typography>
+            <CardContent sx={{ display: "flex", alignItems: "center" }}>
+                <h4 style={{
+                    fontWeight: "bold",
+                    fontSize: 40,
+                    margin: 20,
+                }}>
+                    Cart
+                </h4>
                 {cartData && cartData.products && cartData.products.length > 0 ? (
-                    cartData.products.map((product, index) => (
-                        <div key={index} style={{ marginBottom: "10px" }}>
-                            <p><strong>Product {index + 1}:</strong></p>
-                            <p><strong>Name:</strong> {product.product.name}</p>
-                            <p><strong>Price:</strong> {product.product.price}</p>
-                            <p><strong>Quantity:</strong> {product.quantity}</p>
-                        </div>
-                    ))
+                    <div
+                        style={{
+                            display: "flex",
+                            flexWrap: "wrap",
+                            gap: "3%", // Adds spacing between product groups
+                        }}
+                    >
+                        {cartData.products.map((product, index) => (
+                            <div
+                                key={index}
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column", // Arrange items vertically within each product
+                                    alignItems: "center",
+                                    width: "calc(50% - 2%)", // Two items per row
+                                    marginBottom: "3%",
+                                    border: "1px solid #ddd",
+                                    borderRadius: "8px",
+                                    padding: "10px",
+                                }}
+                            >
+                                {/* Product Name */}
+                                <p style={{ fontWeight: "bold", marginBottom: "10px", textAlign: "center" }}>
+                                    Product {index + 1}: {product.product.name}
+                                </p>
+                                {/* Product Image */}
+                                <img
+                                    src={product.product.picture || "https://picsum.photos/100/100"}
+                                    alt={product.product.name || "Product Image"}
+                                    style={{
+                                        width: "50%",
+                                        height: "50%",
+                                        marginBottom: "10px",
+                                        borderRadius: "8px",
+                                        objectFit: "cover",
+                                    }}
+                                />
+                                {/* Product Details */}
+                                <div style={{ textAlign: "center" }}>
+                                    <p>
+                                        <strong>Price:</strong> {product.product.price}
+                                    </p>
+                                    <p>
+                                        <strong>Quantity:</strong> {product.quantity}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 ) : (
                     <p>No products in the cart.</p>
                 )}
+
+
 
                 <Typography
                     level="title-lg"
@@ -57,7 +93,6 @@ export default function CartCardDetails({ cartData }) {
                 >
                     {localStorage.getItem("totalPrice")}$
                 </Typography>
-
             </CardContent>
         </Card>
     );

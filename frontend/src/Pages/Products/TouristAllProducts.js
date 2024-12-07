@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
-  Button,
-  TextField,
   Typography,
   Drawer,
   Stack,
@@ -12,14 +10,17 @@ import {
   InputLabel,
   FormControl,
   Container,
-  Grid,
 } from "@mui/material";
+import { Button, Input } from "@mui/joy";
 import { message } from "antd";
 import axios from "axios";
 import ProductCard from "../../Components/Products/ProductCard";
 import Help from "../../Components/HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
+import NewProductCard from "../../Components/Products/newProductCard";
+import { setMaxListeners } from "form-data";
+import DuckLoading from "../../Components/Loading/duckLoading";
 
 const searchContainerStyle = {
   display: "flex",
@@ -29,15 +30,17 @@ const searchContainerStyle = {
 
 const TouristAllProducts = () => {
   const navigate = useNavigate();
-  const isGuest = localStorage.getItem('guest') === 'true';
+  const isGuest = localStorage.getItem("guest") === "true";
 
   const [name, setName] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get("http://localhost:8000/adminRoutes/getproducts")
       .then((response) => {
@@ -47,6 +50,9 @@ const TouristAllProducts = () => {
       .catch((error) => {
         console.error("There was an error fetching the products!", error);
         message.error("Failed to fetch products.");
+      })
+      .finally(() => {
+        setTimeout(() => setLoading(false), 1000); // Delay of 1 second
       });
   }, []);
 
@@ -68,6 +74,13 @@ const TouristAllProducts = () => {
       message.error("An error occurred: " + error.message);
     }
   };
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
 
   const handleFilterProducts = async () => {
     try {
@@ -115,64 +128,65 @@ const TouristAllProducts = () => {
     <Box
       sx={{
         height: "100vh",
-        backgroundColor: "#ffffff",
-        paddingTop: "64px",
+        width: "90vw",
       }}
     >
       <TouristNavBar />
-      <TouristSidebar />
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+
+      <Container sx={{ mt: 4, mb: 4 }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
-          <Typography variant="h4" fontWeight="700">
+          <Typography fontWeight="700" class="bigTitle">
             Products
           </Typography>
         </Box>
 
-        <Box sx={{ mb: 3, display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <TextField
-            label="Search for a product"
-            variant="outlined"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            style={{ marginRight: "10px" }}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSearchProducts}
-            style={{ backgroundColor: "#3f51b5", color: "white" }}
-          >
-            Search
-          </Button>
-        </Box>
-
-        <Box sx={{ mb: 3, display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <TextField
-            label="Min Price"
+        <Box
+          sx={{
+            mb: 3,
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          {/* Filter Section */}
+          <Input
+            placeholder="Min Price"
             type="number"
             value={minPrice}
             onChange={(e) => setMinPrice(e.target.value)}
-            style={{ marginRight: "10px" }}
           />
-          <TextField
-            label="Max Price"
+          <Input
+            placeholder="Max Price"
             type="number"
             value={maxPrice}
             onChange={(e) => setMaxPrice(e.target.value)}
-            style={{ marginRight: "10px" }}
           />
           <Button
             variant="contained"
-            color="primary"
+            className="blackhover"
             onClick={handleFilterProducts}
-            style={{ backgroundColor: "#3f51b5", color: "white" }}
+            sx={{ color: "white" }}
           >
             Filter
           </Button>
-        </Box>
+          {/* Search Section */}
+          <Input
+            placeholder="Search for a product"
+            variant="outlined"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
 
-        <Box sx={{ mb: 3, display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <FormControl variant="outlined" style={{ minWidth: 120 }}>
+          <Button
+            variant="contained"
+            className="blackhover"
+            sx={{ color: "white" }}
+            onClick={handleSearchProducts}
+          >
+            Search
+          </Button>
+
+          {/* Sort Section */}
+          <FormControl variant="outlined" sx={{ minWidth: 150 }}>
             <InputLabel>Sort By</InputLabel>
             <Select
               value={sortOrder}
@@ -187,62 +201,27 @@ const TouristAllProducts = () => {
             </Select>
           </FormControl>
         </Box>
-
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          {!isGuest && (
-            <Button
-              variant="contained"
-              color="secondary"
-              sx={{
-                paddingX: 4,
-                fontWeight: 600,
-                textTransform: "capitalize",
-                marginLeft: "10px",
-              }}
-              onClick={() => navigate("/myCart")}
-            >
-              View Cart
-            </Button>
-          )}
-        </Box>
-
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          {!isGuest && (
-            <Button
-              variant="contained"
-              color="secondary"
-              sx={{
-                paddingX: 4,
-                fontWeight: 600,
-                textTransform: "capitalize",
-                marginLeft: "10px",
-              }}
-              onClick={() => navigate("/Wishlist")}
-            >
-              View Wishlist
-            </Button>
-          )}
-        </Box>
-
-        <Grid container spacing={3}>
-          {products.filter((product) => product.isArchived !== true).length > 0 ? (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "24px", // Adjust the gap between items as needed
+            width: "100%",
+            paddingBottom: 24,
+          }}
+        >
+          {products.filter((product) => product.isArchived !== true).length >
+          0 ? (
             products
               .filter((product) => product.isArchived !== true)
-              .map((product) => (
-                <Grid item xs={12} sm={6} md={4} key={product._id}>
-                  <ProductCard product={product} showRating={true}
-                    showAddToCart={true}/>
-                </Grid>
-              ))
+              .map((product) => <NewProductCard product={product} />)
           ) : (
-            <Grid item xs={12}>
-              <Typography variant="body1" color="textSecondary" align="center">
-                No products found.
-              </Typography>
-            </Grid>
+            <Typography variant="body1" color="textSecondary" align="center">
+              No products found.
+            </Typography>
           )}
-        </Grid>
-        <Help />
+          <Help />
+        </div>
       </Container>
     </Box>
   );

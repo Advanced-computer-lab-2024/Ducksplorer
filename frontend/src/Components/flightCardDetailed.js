@@ -10,18 +10,18 @@ import StarOutlineIcon from "@mui/icons-material/StarOutline";
 
 export default function FlightCardDetails({ flightsData }) {
     return (
-        <Card variant="outlined" sx={{ width: "100%", height: "auto" }}>
+        <Card variant="outlined" sx={{ width: "100%", height: "84.5vh" }}>
             <AspectRatio ratio="2">
                 <img
-                    src={flightsData.image || "https://picsum.photos/200/300"}
+                    src="/flight.png"
                     alt={flightsData.name || "Flight Image"}
                     loading="lazy"
                 />
             </AspectRatio>
 
-            <CardContent>
-                <Typography level="h4" sx={{ fontWeight: "bold" }}>
-                    {flightsData.name || "Unnamed Flight"}
+            <CardContent sx={{ display: "flex", alignItems: "center" }}>
+                <Typography level="h4" sx={{ fontWeight: "bold", fontSize: 30, margin: "5%" }}>
+                    {flightsData.companyName || "Unnamed Flight"}
                 </Typography>
                 <p>
                     <strong>Departure Date:</strong>{" "}
@@ -29,9 +29,6 @@ export default function FlightCardDetails({ flightsData }) {
                 </p>
                 <p>
                     <strong>Arrival Date:</strong> {flightsData.arrivalDate}
-                </p>
-                <p>
-                    <strong>Company Name:</strong> {flightsData.companyName}
                 </p>
                 <p>
                     <strong>Departure City:</strong>{" "}
@@ -74,14 +71,13 @@ export default function FlightCardDetails({ flightsData }) {
                     {flightsData.currency}
                 </Typography>
 
-                <div style={{ display: "flex", flexWrap: "wrap", marginTop: "5px" }}>
+                <div style={{ display: "flex", flexWrap: "wrap" }}>
                     {(flightsData.tags || []).map((tag, index) => (
                         <Chip
                             key={index}
                             size="sm"
                             variant="outlined"
                             color="primary"
-                            sx={{ marginRight: 1, marginBottom: 1 }}
                         >
                             {tag}
                         </Chip>

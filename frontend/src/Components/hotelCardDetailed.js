@@ -8,8 +8,8 @@ import Chip from "@mui/joy/Chip";
 
 export default function HotelCardDetailed({ hotelsData }) {
     return (
-        <Card variant="outlined" sx={{ width: "100%", height: "auto" }}>
-            <AspectRatio ratio="2">
+        <Card variant="outlined" sx={{ width: "100%", height: "84.5vh" }}>
+            <AspectRatio ratio="1.5">
                 <img
                     src={hotelsData.image || "https://picsum.photos/200/300"}
                     alt={hotelsData.name || "Hotel Image"}
@@ -17,8 +17,8 @@ export default function HotelCardDetailed({ hotelsData }) {
                 />
             </AspectRatio>
 
-            <CardContent>
-                <Typography level="h4" sx={{ fontWeight: "bold" }}>
+            <CardContent sx={{ display: "flex", alignItems: "center" }}>
+                <Typography level="h4" sx={{ fontWeight: "bold", fontSize: 30, margin: "2%" }}>
                     {hotelsData.hotelName || "Unnamed Hotel"}
                 </Typography>
                 <p><strong>Location:</strong> {hotelsData.city}{"  ,"}{hotelsData.country}</p>

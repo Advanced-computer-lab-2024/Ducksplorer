@@ -4,10 +4,12 @@ import ProductCard from "../../Components/Products/ProductCard"; // Adjust the p
 import { message, Button, Modal } from "antd";
 import TouristNavBar from "../../Components/TouristNavBar";
 import { useNavigate } from "react-router-dom";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import DuckLoading from "../../Components/Loading/duckLoading";
 
 const CartPage = () => {
   const [cartProducts, setCartProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [totalPrice, setTotalPrice] = useState(0); // State to store total pric
   const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false); // Controls the modal visibility
   const userJson = localStorage.getItem("user"); // Get the logged-in user's details
@@ -86,6 +88,7 @@ const CartPage = () => {
   useEffect(() => {
     const fetchCart = async () => {
       console.log(userName);
+      setLoading(true);
       try {
         const response = await axios.get(
           `http://localhost:8000/touristRoutes/myCart/${userName}`
@@ -107,15 +110,30 @@ const CartPage = () => {
       } catch (error) {
         console.error(error);
         message.error("An error occurred while fetching the cart.");
+      } finally {
+        setTimeout(() => setLoading(false), 1000); // Delay of 1 second
       }
     };
 
     fetchCart();
   }, [userName]);
 
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
+
   return (
-    <Box syle = {{overflowY: 'visible', height: '100vh'}}>
+    <Box syle={{ overflowY: "visible", height: "100vh" }}>
       <TouristNavBar />
+      <Box sx={{ textAlign: "center", mb: 4 }}>
+        <Typography variant="h4" fontWeight="700">
+          My Cart
+        </Typography>
+      </Box>
       <div
         style={{
           display: "grid",
@@ -123,7 +141,7 @@ const CartPage = () => {
           gap: "20px", // Spacing between cards
           padding: "20px",
           justifyContent: "center",
-          overflowY: 'visible'
+          overflowY: "visible",
         }}
       >
         {cartProducts.length > 0 ? (
@@ -160,8 +178,9 @@ const CartPage = () => {
             size="large"
             onClick={() => setIsCheckoutModalVisible(true)}
             style={{
-              backgroundColor: "#1890ff", // Ensure visible background color
-              color: "#fff", // Ensure text is visible
+              backgroundColor: "#ff9933", // Ensure visible background color
+              color: "#fff",
+              "&:hover": { backgroundColor: "#e68a00" },
               border: "none", // Remove any conflicting borders
               padding: "10px 20px",
               fontSize: "1.2rem",
@@ -169,8 +188,6 @@ const CartPage = () => {
               boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Add a subtle shadow
               transition: "background-color 0.3s ease", // Smooth transition for hover
             }}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = "#40a9ff")} // Optional hover effect
-            onMouseLeave={(e) => (e.target.style.backgroundColor = "#1890ff")}
           >
             Checkout
           </Button>
@@ -190,7 +207,7 @@ const CartPage = () => {
             size="large"
             onClick={handleConfirmCheckout} // Call the handler
             style={{
-              backgroundColor: "#1890ff", // Ensure visible background color
+              backgroundColor: "#ff9933", // Ensure visible background color
               color: "#fff", // Ensure text is visible
               border: "none", // Remove any conflicting borders
               padding: "10px 20px",
@@ -199,8 +216,6 @@ const CartPage = () => {
               boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Add a subtle shadow
               transition: "background-color 0.3s ease", // Smooth transition for hover
             }}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = "#40a9ff")} // Optional hover effect
-            onMouseLeave={(e) => (e.target.style.backgroundColor = "#1890ff")}
           >
             Confirm
           </Button>

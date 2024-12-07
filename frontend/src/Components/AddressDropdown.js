@@ -29,7 +29,7 @@ const AddressDropdown = ({ onAddressSelect, onAddAddress }) => {
     };
 
     fetchAddresses();
-  }, );
+  },);
 
   // Handle dropdown change
   const handleAddressChange = (e) => {
@@ -73,7 +73,7 @@ const AddressDropdown = ({ onAddressSelect, onAddAddress }) => {
 
   return (
     <div>
-      <label htmlFor="addressDropdown">Choose a delivery address:</label>
+      <label htmlFor="addressDropdown" style={{ width: "100%", textAlign: "left", fontWeight: "bold" }}>Choose a delivery address:</label>
       <select
         id="addressDropdown"
         value={selectedAddress}
@@ -88,68 +88,83 @@ const AddressDropdown = ({ onAddressSelect, onAddAddress }) => {
             {`${address.street}, ${address.city}, ${address.state || ""}, ${address.country} (${address.postalCode})`}
           </option>
         ))) : (
-            <Typography> No Addresses Yet </Typography>
+          <Typography> No Addresses Yet </Typography>
         )}
       </select>
       <Button
-        variant="contained"
-        color="primary"
         onClick={() => setShowForm(!showForm)}
-        style={{ marginTop: "10px", width: "100%" }}
+
+        style={{
+          marginTop: "10px", width: "100%", backgroundColor: "#ff9933",
+          boxShadow: "0"
+        }}
+        className="blackhover"
+        type="submit"
       >
         {showForm ? "Cancel" : "Add New Address"}
       </Button>
-      { showForm && 
+      {
+        showForm &&
         <>
-        <Typography variant="h6" mt={2}>
-        Add a New Address:
-      </Typography>
-      <form onSubmit={handleAddAddress}>
-        <TextField
-          label="Street"
-          value={newAddress.street}
-          onChange={(e) => setNewAddress({ ...newAddress, street: e.target.value })}
-          fullWidth
-          required
-          margin="normal"
-        />
-        <TextField
-          label="City"
-          value={newAddress.city}
-          onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
-          fullWidth
-          required
-          margin="normal"
-        />
-        <TextField
-          label="State"
-          value={newAddress.state}
-          onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Country"
-          value={newAddress.country}
-          onChange={(e) => setNewAddress({ ...newAddress, country: e.target.value })}
-          fullWidth
-          required
-          margin="normal"
-        />
-        <TextField
-          label="Postal Code"
-          value={newAddress.postalCode}
-          onChange={(e) => setNewAddress({ ...newAddress, postalCode: e.target.value })}
-          fullWidth
-          required
-          margin="normal"
-        />
-        <Button type="submit" variant="contained" color="primary" fullWidth onClick={handleAddAddress}>
-          Add Address
-        </Button>
-        </form>
-        </>}
-    </div>
+          <Typography variant="h6" mt={2} style={{
+            padding: "2px"
+          }}>
+            Add a New Address:
+          </Typography>
+          <form onSubmit={handleAddAddress}>
+            <TextField
+              label="Street"
+              value={newAddress.street}
+              onChange={(e) => setNewAddress({ ...newAddress, street: e.target.value })}
+              fullWidth
+              required
+              margin="normal"
+            />
+            <TextField
+              label="City"
+              value={newAddress.city}
+              onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
+              fullWidth
+              required
+              margin="normal"
+            />
+            <TextField
+              label="State"
+              value={newAddress.state}
+              onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              label="Country"
+              value={newAddress.country}
+              onChange={(e) => setNewAddress({ ...newAddress, country: e.target.value })}
+              fullWidth
+              required
+              margin="normal"
+            />
+            <TextField
+              label="Postal Code"
+              value={newAddress.postalCode}
+              onChange={(e) => setNewAddress({ ...newAddress, postalCode: e.target.value })}
+              fullWidth
+              required
+              margin="normal"
+            />
+            <Button onClick={handleAddAddress}
+              variant="contained"
+              style={{
+                marginTop: "10px", width: "100%", backgroundColor: "#ff9933"
+              }}
+              className="blackhover"
+              zIndex={2}
+              type="submit">
+              Add Address
+            </Button>
+          </form>
+        </>
+      }
+    </div >
   );
 };
 

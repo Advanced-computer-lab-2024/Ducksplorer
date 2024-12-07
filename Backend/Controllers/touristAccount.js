@@ -6,10 +6,36 @@ const { schedule } = require("node-cron");
 const cron = require("node-cron");
 const nodemailer = require("nodemailer");
 const send = require("send");
+const Cron = require("../Models/cronModel.js");
 const PromoCode = require("../Models/promoCodeModel.js");
 const {
   createNotification,
 } = require("./Notifications/NotificationsController.js");
+let isCronEnabled = false; // Toggle to enable/disable cron job
+
+let cronJob = null;
+
+// Define the cron job but don't start it immediately
+const setupCronJob = () => {
+  cronJob = cron.schedule("44 20 * * *", async () => {
+    if (isCronEnabled) {
+      console.log("Cron job triggered...");
+      await notifyUpcomingActivities();
+    } else {
+      console.log("Cron job is disabled.");
+    }
+  });
+};
+
+// Initialize the cron job setup
+setupCronJob();
+
+const toggleCron = (state) => {
+  isCronEnabled = state;
+  console.log(
+    `Cron job state updated: ${isCronEnabled ? "Enabled" : "Disabled"}`
+  );
+};
 
 const transporter = nodemailer.createTransport({
   service: "gmail", // Or another email service provider
@@ -231,6 +257,15 @@ const bod = async (res) => {
     };
   }
 };
+cron.schedule("00 00 * * *", async () => {
+  try {
+    //const cronState = await Cron.findOne({ name: "birthday" });
+    console.log("Executing scheduled cron job: birthday");
+    await bod();
+  } catch (error) {
+    console.error("Error executing scheduled cron job:", error);
+  }
+});
 
 module.exports = {
   getTouristDetails,
@@ -240,4 +275,5 @@ module.exports = {
   deleteMyTouristAccount,
   schedule,
   bod,
+  toggleCron,
 };

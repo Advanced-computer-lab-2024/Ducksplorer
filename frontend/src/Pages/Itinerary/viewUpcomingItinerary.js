@@ -87,6 +87,7 @@ const ViewUpcomingItinerary = () => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
   };
+  
   // Handlers for Sort By dropdown
   const handleSortByClick = (event) => {
     setSortByAnchorEl(event.currentTarget);
@@ -303,77 +304,6 @@ const ViewUpcomingItinerary = () => {
     }
   };
 
-  const handleSaveItinerary = async (itineraryId, currentIsSaved) => {
-    try {
-      const user = JSON.parse(localStorage.getItem("user"));
-      const username = user?.username;
-      const newIsSaved = !currentIsSaved;
-
-      const response = await axios.put(
-        `http://localhost:8000/itinerary/save/${itineraryId}`,
-        {
-          username: username,
-          save: newIsSaved,
-        }
-      );
-      if (response.status === 200) {
-        message.success("Itinerary saved successfully");
-        setItineraries((prevItineraries) =>
-          prevItineraries.map((itinerary) =>
-            itinerary._id === itineraryId
-              ? {
-                ...itinerary,
-                saved: { ...itinerary.saved, isSaved: newIsSaved },
-              }
-              : itinerary
-          )
-        );
-      } else {
-        message.error("Failed to save");
-      }
-      setIsSaved(isSaved);
-    } catch (error) {
-      console.error("Error toggling save state:", error);
-    }
-  };
-
-  const [saveStates, setSaveStates] = useState({});
-
-  useEffect(() => {
-    const fetchSaveStates = async () => {
-      const userJson = localStorage.getItem("user");
-      const user = JSON.parse(userJson);
-      const userName = user.username;
-
-      // Loop through itineraries to fetch save states
-      const newSaveStates = {};
-      await Promise.all(
-        itineraries.map(async (itinerary) => {
-          try {
-            const response = await axios.get(
-              `http://localhost:8000/itinerary/getSave/${itinerary._id}/${userName}`
-            );
-
-            if (response.status === 200) {
-              newSaveStates[itinerary._id] = response.data.saved; // Save the state
-            }
-          } catch (error) {
-            console.error(
-              `Failed to fetch save state for ${itinerary._id}:`,
-              error
-            );
-          }
-        })
-      );
-
-      setSaveStates(newSaveStates); // Update state with all fetched save states
-    };
-
-    if (itineraries.length > 0) {
-      fetchSaveStates();
-    }
-  }, [itineraries]);
-
   return (
     <div>
       <TouristNavBar />
@@ -385,6 +315,7 @@ const ViewUpcomingItinerary = () => {
           flexDirection: "column",
           overflowY: "visible",
           height: "100vh",
+          width: "80vw",
         }}
       >
         <Link
@@ -393,6 +324,7 @@ const ViewUpcomingItinerary = () => {
         >
           Back
         </Link>
+
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <Typography variant="h4">Upcoming Itineraries</Typography>
         </Box>
@@ -492,7 +424,7 @@ const ViewUpcomingItinerary = () => {
                 onClose={() => setAnchorEl(null)}
               >
                 <MenuItem>
-                  <Typography variant="subtitle1">Select Range:</Typography> {" "}
+                  <Typography variant="subtitle1">Select Range:</Typography>{" "}
                   <Slider
                     value={priceRange}
                     onChange={handlePriceRangeChange}
@@ -523,7 +455,10 @@ const ViewUpcomingItinerary = () => {
               Language
               <br />
               <FormControl sx={{ minWidth: 120, marginTop: 1 }}>
-                <InputLabel id="language-select-label" sx={{ marginRight: 2 }}> Language </InputLabel>
+                <InputLabel id="language-select-label" sx={{ marginRight: 2 }}>
+                  {" "}
+                  Language{" "}
+                </InputLabel>
                 <Select
                   labelId="language-select-label"
                   id="language-select"
@@ -592,16 +527,16 @@ const ViewUpcomingItinerary = () => {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
+              gridTemplateColumns: "repeat(3, 1fr)",
               gap: "24px", // Adjust the gap between items as needed
               paddingBottom: 24,
             }}
           >
             {itineraries.map((itinerary) =>
               itinerary.flag === false &&
-                itinerary.isDeactivated === false &&
-                itinerary.tourGuideDeleted === false &&
-                itinerary.deletedItinerary === false ? (
+              itinerary.isDeactivated === false &&
+              itinerary.tourGuideDeleted === false &&
+              itinerary.deletedItinerary === false ? (
                 <ItineraryCard itinerary={itinerary} />
               ) : null
             )}
@@ -613,22 +548,6 @@ const ViewUpcomingItinerary = () => {
         )}
 
         <Help />
-
-        {/* <TableCell>
-                                          <span
-                                            onClick={() => handleSaveItinerary(itinerary._id, itinerary.saved?.isSaved)}
-                                          >
-                                            {saveStates[itinerary._id] ? (
-                                              <IconButton>
-                                                <BookmarkIcon />
-                                              </IconButton>
-                                            ) : (
-                                              <IconButton>
-                                                <BookmarkBorderIcon />
-                                              </IconButton>
-                                            )}
-                                          </span>
-                                        </TableCell> */}
       </Box>
     </div>
   );

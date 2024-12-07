@@ -133,7 +133,7 @@ const Help = () => {
                 onChange={handleChange}
               />
             </label> */}
-            <button type="submit">Submit</button>
+            <button className="blackhover" type="submit">Submit</button>
           </form>
         </div>
       )}

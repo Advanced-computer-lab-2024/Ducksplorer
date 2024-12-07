@@ -24,7 +24,6 @@ import CurrencyConvertor from "../Components/CurrencyConvertor.js";
 import MyChips from "../Components/MyChips.js";
 import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
 import TouristNavBar from "../Components/TouristNavBar.js";
-import TouristSidebar from "../Components/Sidebars/TouristSidebar.js";
 import ItineraryCard from "../Components/itineraryCard.js";
 import ActivityCard from "../Components/activityCard.js";
 
@@ -209,8 +208,8 @@ function MySavedItems() {
   return (
     <>
       <TouristNavBar />
-      <TouristSidebar />
-      <Box
+      {/* <TouristSidebar /> */}
+      {/* <Box
         sx={{
           padding: "20px",
           maxWidth: "1200px",
@@ -220,9 +219,10 @@ function MySavedItems() {
           overflowY: "visible",
           height: "100vh",
         }}
-      >
+      > */}
+      <div style={{overflowY: 'visible', height:'100vh', width:'100%', display: 'flex', flexDirection: 'column'}}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Typography variant="h4">Saved</Typography>
+          <Typography variant="h4" sx={{fontFamily: "'Roboto', sans-serif", color: "black"}}>Saved</Typography>
         </Box>
 
         <MyChips chipNames={chipNames} onChipClick={handleChipClick} />
@@ -230,17 +230,18 @@ function MySavedItems() {
         {(selectedCategory === "Itineraries" ||
           selectedCategory === "All") && (
             <>
-              <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+              {/* <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
                 <Typography variant="h4">Itineraries</Typography>
-              </Box>
+              </Box> */}
               <div style={{ flex: 1 }}>
               {itineraries.length > 0 ? (
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
+              gridTemplateColumns: "repeat(3, 1fr)",
               gap: "24px", // Adjust the gap between items as needed
               paddingBottom: 24,
+              paddingTop: 24
             }}
           >
             {
@@ -276,9 +277,9 @@ function MySavedItems() {
                   marginTop: "20px",
                 }}
               >
-                <Typography variant="h4"> Activities</Typography>
+                {/* <Typography variant="h4"> Activities</Typography> */}
               </Box>
-              <Grid container spacing={3}>
+              <Grid container spacing={4}>
                 {Array.isArray(activities) && activities.length > 0 ? (
                   activities.map((activity) =>
                     activity.flag === false &&
@@ -286,7 +287,7 @@ function MySavedItems() {
                       activity.deletedActivity === false &&
                       activity.saved.user === username &&
                       activity.saved.isSaved === true ? (
-                      <Grid item xs={12} sm={6} md={4} key={activity._id}>
+                      <Grid item xs={12} sm={8} md={6} key={activity._id}>
                         <ActivityCard activity={activity} onRemove={handleRemoveActivity} showNotify={true}/>
                       </Grid>
                     ) : null
@@ -301,7 +302,8 @@ function MySavedItems() {
               </Grid>
             </>
           )}
-      </Box>
+      {/* </Box> */}
+      </div>
     </>
   );
 }

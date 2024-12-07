@@ -95,14 +95,16 @@ function MyNotifications() {
   return (
     <>
       <audio ref={audioRef} src="quack.mp3" />
-      <Tooltip title="Notifications">
+      <Tooltip >
         <IconButton
           color={open ? "primary" : "default"}
           onClick={handleOpen}
           sx={{ p: 0, ml: 4, width: 40, height: 40 }}
         >
           <Badge badgeContent={totalUnRead} color="error">
-            <NotificationsIcon sx={{ color: "black" }} />
+            <NotificationsIcon sx={{ color: "black", '&:hover': {
+                  color: "#ff9933"
+                },}} />
           </Badge>
         </IconButton>
       </Tooltip>

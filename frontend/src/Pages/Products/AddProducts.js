@@ -1,9 +1,11 @@
-// src/Components/AllProducts.js
 import React, { useState, useRef } from "react";
 import axios from "axios";
 import { message } from "antd";
-import { TextField, Button, Stack } from "@mui/material";
+import { Paper, Stack } from "@mui/material";
+import { Button, Input } from "@mui/joy";
 import UploadFile from "../../Components/ProductUploadImage";
+import { Typography } from "@mui/material";
+import SellerNavBar from "../../Components/NavBars/SellerNavBar";
 
 let picture = "";
 
@@ -12,13 +14,12 @@ function AddProducts() {
   const [price, setPrice] = useState("");
   const [availableQuantity, setAvailableQuantity] = useState("");
   const [description, setDescription] = useState("");
-  // const [picture, setPicture] = useState("");
   const [URL, setURL] = useState("");
-  const fileInputRef = useRef(null); // Use a ref to access the file input
+  const fileInputRef = useRef(null);
 
   const handleAddProduct = async () => {
     try {
-      const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
+      const userJson = localStorage.getItem("user");
       const user = JSON.parse(userJson);
       const userName = user.username;
       const seller = userName;
@@ -59,77 +60,135 @@ function AddProducts() {
   };
 
   return (
-    <div style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
-      <h2>Add Product</h2>
-      <Button onClick={handleBackClick}>Back</Button>
-      <Stack spacing={2}>
-        <TextField
-          label="Product Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          variant="outlined"
-          fullWidth
-        />
-        <TextField
-          label="Price"
-          type="number"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          variant="outlined"
-          fullWidth
-        />
-        <TextField
-          label="Available Quantity"
-          type="number"
-          value={availableQuantity}
-          onChange={(e) => setAvailableQuantity(e.target.value)}
-          variant="outlined"
-          fullWidth
-        />
-        {/* <TextField
-          label="Picture URL"
-          value={picture}
-          onChange={(e) => setPicture(e.target.value)}
-          variant="outlined"
-          fullWidth
-        /> */}
-        {/* <form>
-          <input
-            type="file"
-            id="image"
-            name="image"
-            accept="image/*"
-            required
-            onChange={() => {
-              const file = fileInputRef.current.files[0];
-              setPicture(file);
+    <div style={{height:"100vh"}}>
+    <SellerNavBar/>
+    <div style={styles.container}>
+      <div style={styles.leftSection}>
+        <Typography variant="h3" style={styles.welcomeText}>
+          Add Your Product
+        </Typography>
+        <Typography variant="h5" style={styles.descriptionText}>
+          Fill in the details to add a new product.
+        </Typography>
+      </div>
+      <div style={styles.rightSection}>
+        <Paper sx={{ height: "100%" , width:"100%" , paddingTop:"40px" , backgroundColor: "rgba(255,255,255,0.65)"}}>
+          <div style={{ marginBottom: "40px" }}>
+            {/* <Button
+              onClick={handleBackClick}
+              sx={{ marginBottom: "10px", width: "100px" }}
+              className="blackhover"
+            >
+              Back
+            </Button> */}
+            <h2
+              className="bigTitle"
+              style={{
+                textAlign: "center",
+                alignSelf: "center",
+              }}
+            >
+              Add Product
+            </h2>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              columnGap: "30px",
+              rowGap: "20px",
             }}
-          />
-        </form> */}
-
-        <UploadFile onUpload={handleUpload} />
-
-        <TextField
-          label="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          variant="outlined"
-          multiline
-          rows={4}
-          fullWidth
-        />
-
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleAddProduct} // Call function to handle adding the product here
-          style={{ marginTop: "10px" }}
-        >
-          Add Product
-        </Button>
-      </Stack>
+          >
+            <Input
+              placeholder="Product Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              variant="outlined"
+              sx = {{width:"80%" , alignSelf:"center"}}
+              size="lg"
+            />
+            <Input
+              placeholder="Price"
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              sx = {{width:"80%" , alignSelf:"center"}}
+              variant="outlined"
+              size="lg"
+            />
+            <Input
+              placeholder="Available Quantity"
+              type="number"
+              value={availableQuantity}
+              onChange={(e) => setAvailableQuantity(e.target.value)}
+              variant="outlined"
+              sx = {{width:"80%" , alignSelf:"center"}}
+              size="lg"
+            />
+            <Input
+              placeholder="Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              variant="outlined"
+              multiline
+              sx = {{width:"80%" , alignSelf:"center"}}
+              size="lg"
+              rows={4}
+            />
+            <div style={{width:"80%" , alignSelf:"center"}}>
+            <UploadFile onUpload={handleUpload}  />
+            </div>
+            <Button
+              className="blackhover"
+              color="primary"
+              onClick={handleAddProduct}
+              style={{ marginTop: "10px" , width:"80%" , alignSelf:"center"}}
+              size="lg"
+            >
+              Add Product
+            </Button>
+          </div>
+        </Paper>
+      </div>
+    </div>
     </div>
   );
 }
+
+const styles = {
+  container: {
+    display: "flex",
+    height: "100vh",
+    width: "100vw",
+    background: 'url("/duckProducts.jpg") no-repeat left center fixed',
+    backgroundSize: "cover",
+  },
+  leftSection: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    color: "#fff",
+    padding: "20px",
+  },
+  rightSection: {
+    flex: 0.7,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.85)",
+  },
+  welcomeText: {
+    fontSize: "3rem",
+    fontWeight: "bold",
+    marginBottom: "20px",
+  },
+  descriptionText: {
+    fontSize: "1.5rem",
+    textAlign: "center",
+  },
+};
 
 export default AddProducts;

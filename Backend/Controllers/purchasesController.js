@@ -182,11 +182,33 @@ const purchaseProduct = async (req, res) => {
   }
 };
 
+const cancelOrder = async (req, res) => {
+  const { username, orderNumber } = req.params;
+
+  try {
+    // Find and delete all documents with the specified username and order number
+    const result = await PurchaseBooking.deleteMany({
+      buyer: username, // Ensure you're matching the buyer field
+      orderNumber: orderNumber,
+    });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "No purchases found for this order number" });
+    }
+
+    res.status(200).json({ message: "Order canceled successfully", deletedCount: result.deletedCount });
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred while canceling the order", error: error.message });
+  }
+};
+
+
 module.exports = {
   getMyPurchases,
   updatePurchase,
   getGroupedPurchases,
   getPurchasesByOrderNumber,
   getOrderProducts,
+  cancelOrder,
   // getMyOrder,
 };

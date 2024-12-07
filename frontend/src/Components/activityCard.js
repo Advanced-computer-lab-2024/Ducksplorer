@@ -20,7 +20,9 @@ import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import ActivityCardDetails from "./activityCardDetailed";
 import { useState, useEffect } from "react";
-import NotificationAddOutlinedIcon from '@mui/icons-material/NotificationAddOutlined';
+import NotificationAddOutlinedIcon from "@mui/icons-material/NotificationAddOutlined";
+import ShareIcon from "@mui/icons-material/Share";
+import Swal from "sweetalert2";
 
 // ActivityCard component
 export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
@@ -32,7 +34,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  console.log(image);
   const handleBooking = async (activityId) => {
     try {
       const userJson = localStorage.getItem("user");
@@ -81,7 +83,6 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
       `https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`
     );
   }, []);
-
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -133,9 +134,6 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
           `http://localhost:8000/activity/getSave/${activity._id}/${userName}`
         );
 
-        console.log("hal heya saved: ", response.data);
-        console.log("what is the status ", response.status);
-
         if (response.status === 200) {
           setSaveStates((prevState) => ({
             ...prevState,
@@ -155,11 +153,14 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
     event.stopPropagation();
     try {
       const newIsNotified = !currentIsNotified;
-      
-      const response = await axios.post('http://localhost:8000/notification/request', {
-        user: username,
-        eventId: activityId,
-      });
+
+      const response = await axios.post(
+        "http://localhost:8000/notification/request",
+        {
+          user: username,
+          eventId: activityId,
+        }
+      );
 
       if (response.status === 201) {
         message.success(
@@ -171,29 +172,90 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
           ...prev,
           [activityId]: newIsNotified,
         }));
-        message.success('You will be notified when this event starts accepting bookings.');
-      } else if(response.status === 200){
-        message.info('You have already requested to be notified for this activity');
-      }
-      else {
+        message.success(
+          "You will be notified when this event starts accepting bookings."
+        );
+      } else if (response.status === 200) {
+        message.info(
+          "You have already requested to be notified for this activity"
+        );
+      } else {
         message.error(response.data.message);
       }
     } catch (error) {
-      console.error('Error requesting notification:', error);
-      message.error('Failed to request notification.');
+      console.error("Error requesting notification:", error);
+      message.error("Failed to request notification.");
     }
+  };
+
+  const handleShareLink = (activityId) => {
+    const link = `${window.location.origin}/activity/searchActivities/${activityId}`; // Update with your actual route
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        message.success("Link copied to clipboard!");
+      })
+      .catch(() => {
+        message.error("Failed to copy link.");
+      });
+  };
+
+  const handleShareEmail = (activityId) => {
+    const link = `${window.location.origin}/activity/searchActivities/${activityId}`; // Update with your actual route
+    const subject = "Check out this activity";
+    const body = `Here is the link to the activity: ${link}`;
+    window.location.href = `mailto:?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+  };
+
+  const handleClick = (event, activityId) => {
+    // event.stopPropagation();
+    // setAnchorEl(event.currentTarget);
+    Swal.fire({
+      title: "Share Activity",
+      html: `
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+          <button id="share-link" style="padding: 10px 20px; font-size: 16px; background-color: #ff9933; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            Share via Link
+          </button>
+          <Button className="blackhover" id="share-mail" style="padding: 10px 20px; font-size: 16px; background-color: #ff9933; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            Share via Mail
+          </Button>
+        </div>
+      `,
+      showConfirmButton: false, // Hide default OK button
+      width: "400px", // Set the width of the popup
+      padding: "20px", // Add padding to the popup
+      customClass: {
+        popup: "my-swal-popup", // Optional: Add custom styling via CSS
+      },
+    });
+
+    // Add click event listeners for custom buttons
+    document.getElementById("share-link").addEventListener("click", () => {
+      console.log("Sharing via link...");
+      handleShareLink(activityId);
+      Swal.fire("Link copied to clipboard!", "", "success");
+    });
+
+    document.getElementById("share-mail").addEventListener("click", () => {
+      console.log("Sharing via mail...");
+      handleShareEmail(activityId);
+      // Swal.fire("Shared via Mail!", "", "success");
+    });
   };
 
   const TheCard = () => {
     return (
-      <div style={{ width: "100%" }}>
+      <div style={{ width: "100%", minWidth: "300px", minHeight: "375px" }}>
         <Card
           onClick={handleOpen}
           className="activity-card"
           variant="outlined"
           sx={{
             width: "100%",
-            height: "400px",
+            height: "100%",
             cursor: "pointer",
           }}
         >
@@ -201,51 +263,84 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
             <AspectRatio ratio="2">
               <img src={image} loading="lazy" alt="" />
             </AspectRatio>
+            <Tooltip title="Share">
+              <IconButton
+                size="md"
+                variant="solid"
+                color="primary"
+                onClick={(event) =>{event.stopPropagation(); handleClick(event, activity._id);}}
+                className="blackhover"
+                sx={{
+                  borderRadius: "50%",
+                  position: "absolute",
+                  zIndex: 2,
+                  borderRadius: "50%",
+                  right: "1rem",
+                  bottom: 0,
+                  transform: "translateY(50%) translateX(-130%)",
+                  transition: "transform 0.3s",
+
+                  backgroundColor: "#ff9933",
+                }}
+              >
+                <ShareIcon />
+              </IconButton>
+            </Tooltip>
             <Tooltip title="Save Activity">
               <IconButton
                 size="md"
                 variant={saveStates[activity._id] ? "soft" : "solid"}
-                color={saveStates[activity._id] ? "neutral" : "primary"}
-                onClick={(event) => handleSaveActivity(event, activity._id, saveStates[activity._id])}
+                onClick={(event) =>
+                  handleSaveActivity(
+                    event,
+                    activity._id,
+                    saveStates[activity._id]
+                  )
+                }
+                className="blackhover"
                 sx={{
                   position: "absolute",
                   zIndex: 2,
+                  color: "white",
                   borderRadius: "50%",
                   right: "1rem",
                   bottom: 0,
                   transform: "translateY(50%)",
                   transition: "transform 0.3s",
                   backgroundColor: "#ff9933",
-                  "&:active": {
-                    transform: "translateY(50%) scale(0.9)",
-                  },
                 }}
               >
                 {saveStates[activity._id] ? <Done color="#ff9933" /> : <Add />}
               </IconButton>
             </Tooltip>
             {showNotify && (
-                <Tooltip title="Request Notifications">
+              <Tooltip title="Request Notifications">
                 <IconButton
                   size="md"
                   variant="solid"
                   color="primary"
                   onClick={(event) =>
-                    requestNotification(event, activity._id, notificationStates[activity._id])
+                    requestNotification(
+                      event,
+                      activity._id,
+                      notificationStates[activity._id]
+                    )
                   }
                   sx={{
                     borderRadius: "50%",
                     position: "absolute",
                     zIndex: 2,
                     borderRadius: "50%",
-                    right: "1rem",
+                    display: "flex",
+                    justifyContent: "center  ",
+                    alignItems: "center",
                     bottom: 0,
-                    transform: "translateY(50%) translateX(-110%)",
+                    transform: "translateY(50%) translateX(-260%)",
                     transition: "transform 0.3s",
                     "&:active": {
                       transform: "translateY(50%) scale(0.9)",
                     },
-                    backgroundColor:  "#ffcc00",
+                    backgroundColor: "#ffcc00",
                   }}
                 >
                   <NotificationAddOutlinedIcon />
@@ -263,7 +358,6 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
               <div
                 style={{
                   display: "flex",
-
                   flexDirection: "column",
                 }}
               >
@@ -278,7 +372,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                 </h4>
 
                 <Rating
-                  value={activity.rating}
+                  value={activity.averageRating}
                   icon={<StarIcon sx={{ color: "orange" }} />}
                   emptyIcon={<StarOutlineIcon />}
                   readOnly
@@ -296,8 +390,11 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                       component="span"
                       size="sm"
                       variant="outlined"
-                      color="primary"
-                      sx={{ marginRight: 1 }}
+                      sx={{
+                        marginRight: 1,
+                        color: "#ff9933",
+                        borderColor: "#ff9933",
+                      }}
                     >
                       {tag}
                     </Chip>
@@ -315,7 +412,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                 justifyContent: "space-between",
                 position: "absolute",
                 bottom: 10,
-                width: "90%",
+                width: "95%",
               }}
             >
               <Typography
@@ -342,77 +439,83 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
               <Button
                 size="md"
                 variant="solid"
-                color="primary"
                 className="blackhover"
                 zIndex={2}
                 onClick={(event) => {
                   event.stopPropagation();
                   handleBooking(activity._id);
                 }}
-                sx={{ backgroundColor: "#ff9933" }}
+                sx={{ backgroundColor: "#ff9933", marginRight: 1 }}
               >
                 Book Now
               </Button>
             </div>
           </div>
         </Card>
-        <Popover
-          open={open}
-          anchorEl={null}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: "center",
-            horizontal: "center",
-          }}
-          transformOrigin={{
-            vertical: "center",
-            horizontal: "center",
-          }}
-          sx={{
-            "& .MuiPopover-paper": {
-              position: "fixed",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              background: "none",
-              boxShadow: "none",
-              padding: 0,
-            },
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          <div
-            style={{
-              position: "relative",
-              display: "flex",
-              flexDirection: "column",
-              width: "60vw",
-              maxWidth: "90%",
-              maxHeight: "80vh",
-              overflow: "auto",
-              padding: "30px",
-              borderRadius: "16px",
-              backgroundColor: "#f5f5f5",
+          <Popover
+            open={open}
+            anchorEl={null}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "center",
+              horizontal: "center",
+            }}
+            transformOrigin={{
+              vertical: "center",
+              horizontal: "center",
+            }}
+            sx={{
+              "& .MuiPopover-paper": {
+                height: "100vh",
+                background: "none",
+                boxShadow: "none",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: 0,
+              },
             }}
           >
-            <button
-              onClick={handleClose}
+            <div
               style={{
-                position: "absolute",
-                top: "10px",
-                right: "10px",
-                background: "transparent",
-                border: "none",
-                fontSize: "1.5rem",
-                cursor: "pointer",
-                color: "#333",
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                width: "60vw",
+                maxWidth: "90%",
+                maxHeight: "80vh",
+                overflow: "auto",
+                borderRadius: "16px",
+                backgroundColor: "#f5f5f5",
               }}
             >
-              &times;
-            </button>
+              <button
+                onClick={handleClose}
+                style={{
+                  position: "absolute",
+                  top: "10px",
+                  right: "10px",
+                  background: "transparent",
+                  border: "none",
+                  fontSize: "1.5rem",
+                  cursor: "pointer",
+                  color: "#333",
+                }}
+              >
+                &times;
+              </button>
 
-            <ActivityCardDetails activity={activity} />
-          </div>
-        </Popover>
+              <ActivityCardDetails activity={activity} />
+            </div>
+          </Popover>
+        </div>
       </div>
     );
   };
