@@ -6,7 +6,7 @@ import CategoriesDropDown from "./CategoryDropDown";
 import StandAloneToggleButton from "./ToggleButton";
 import AdvertiserSidebar from "./Sidebars/AdvertiserSidebar";
 import { useNavigate } from "react-router-dom";
-import SellerNavBar from "./NavBars/SellerNavBar";
+import AdvertiserNavBar from "./NavBars/AdvertiserNavBar";
 
 let tags = [];
 
@@ -122,7 +122,7 @@ const AddActivityForm = () => {
 
   return (
     <>
-      <SellerNavBar />
+      <AdvertiserNavBar />
     <div style={styles.container}>
       <div style={styles.leftSection}>
         <Typography variant="h3" style={styles.welcomeText}>
