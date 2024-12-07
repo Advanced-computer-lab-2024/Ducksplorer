@@ -44,7 +44,6 @@ const TouristAllProducts = () => {
     axios
       .get("http://localhost:8000/adminRoutes/getproducts")
       .then((response) => {
-        message.success("Products fetched successfully");
         setProducts(response.data);
       })
       .catch((error) => {
