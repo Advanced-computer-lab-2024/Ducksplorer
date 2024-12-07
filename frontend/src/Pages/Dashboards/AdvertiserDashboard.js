@@ -57,7 +57,7 @@ function AdvertiserDashboard() {
         transition: "opacity 1s ease-out", // Smooth fade-out
       }}
     >
-      <source src="/planevid.mp4" type="video/mp4" />
+      <source src="/planevidd.mp4" type="video/mp4" />
       Your browser does not support the video tag.
     </video>
 
