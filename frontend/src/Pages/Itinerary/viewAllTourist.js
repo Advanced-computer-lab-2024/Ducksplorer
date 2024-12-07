@@ -411,6 +411,7 @@ function SearchItineraries() {
                   }}
                 >
                   <Checkbox
+                    style={{ color: "#ff9933" }}
                     checked={showUpcomingOnly}
                     onChange={(e) => setShowUpcomingOnly(e.target.checked)}
                   />
@@ -427,6 +428,7 @@ function SearchItineraries() {
                   }}
                 >
                   <Checkbox
+                    style={{ color: "#ff9933" }}
                     checked={isFilterSelected("price")}
                     onChange={(e) => {
                       handleFilterToggle("price");
@@ -486,6 +488,7 @@ function SearchItineraries() {
                   }}
                 >
                   <Checkbox
+                    style={{ color: "#ff9933" }}
                     checked={isFilterSelected("language")}
                     onChange={() => handleFilterToggle("language")}
                     paddingRight="40%"
@@ -521,6 +524,7 @@ function SearchItineraries() {
                   }}
                 >
                   <Checkbox
+                    style={{ color: "#ff9933" }}
                     checked={isFilterSelected("availableDatesAndTimes")}
                     onChange={() =>
                       handleFilterToggle("availableDatesAndTimes")
@@ -546,6 +550,7 @@ function SearchItineraries() {
                   }}
                 >
                   <Checkbox
+                    style={{ color: "#ff9933" }}
                     checked={isFilterSelected("tags")}
                     onChange={() => handleFilterToggle("tags")}
                   />
@@ -561,7 +566,8 @@ function SearchItineraries() {
                     >
                       {allTags.map((tag) => (
                         <MenuItem key={tag._id} value={tag.name}>
-                          <Checkbox checked={tags.indexOf(tag.name) > -1} />
+                          <Checkbox style={{ color: "#ff9933" }}
+                            checked={tags.indexOf(tag.name) > -1} />
                           {tag.name}
                         </MenuItem>
                       ))}
@@ -691,9 +697,9 @@ function SearchItineraries() {
           >
             {itineraries.map((itinerary) =>
               !itinerary.flag &&
-              !itinerary.isDeactivated &&
-              !itinerary.tourGuideDeleted &&
-              !itinerary.deletedItinerary ? (
+                !itinerary.isDeactivated &&
+                !itinerary.tourGuideDeleted &&
+                !itinerary.deletedItinerary ? (
                 <ItineraryCard key={itinerary._id} itinerary={itinerary} />
               ) : null
             )}

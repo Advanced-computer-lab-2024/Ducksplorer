@@ -45,9 +45,6 @@ function SearchActivity() {
     "The activity you are looking for might be removed or is temporarily unavailable";
   const backMessage = "Back to search again";
   //filtering consts
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-  const [priceRange, setPriceRange] = useState([0, 5000]);
   const [rating, setRating] = useState(null);
 
   const [exchangeRates, setExchangeRates] = useState({});
@@ -266,8 +263,7 @@ function SearchActivity() {
   };
   //clear all filters
   const handleClearAllFilters = () => {
-    setMinPrice("");
-    setMaxPrice("");
+    setPrice("");
     setDate(null);
     setRating([]);
     setCategories([]);
@@ -284,12 +280,6 @@ function SearchActivity() {
       });
 
     handleFilterClose();
-  };
-
-  const handlePriceRangeChange = (event, newValue) => {
-    setPriceRange(newValue);
-    setMinPrice(newValue[0]);
-    setMaxPrice(newValue[1]);
   };
 
   const handleCategoryChange = (event) => {
@@ -319,11 +309,10 @@ function SearchActivity() {
   const handleFilter = () => {
     if (showUpcomingOnly) {
       displayUpcomingActivities();
-      return;
     }
 
     const query = new URLSearchParams();
-    if (priceRange[0] && priceRange[1]) query.append('price', `${priceRange[0]}-${priceRange[1]}`);
+    if (price) query.append('price', price);
     if (date) query.append('date', date);
     if (selectedCategory) query.append('category', selectedCategory);
     if (rating) query.append('averageRating', rating);
@@ -429,7 +418,9 @@ function SearchActivity() {
                 </div>
               </MenuItem>
 
-              <MenuItem>
+              <MenuItem anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={() => setAnchorEl(null)}>
                 <div
                   style={{
                     display: "flex",
@@ -444,49 +435,23 @@ function SearchActivity() {
                       handleFilterToggle("price");
                       if (!e.target.checked) {
                         // Reset price filters if unchecked
-                        setMinPrice("");
-                        setMaxPrice("");
-                        setPriceRange([0, 5000]); // Reset the slider to initial values
+                        setPrice("");
                       }
                     }}
                   />
                   <span>Price </span>
                   <br />
-                  <Button
-                    onClick={(e) => setAnchorEl(e.currentTarget)}
-                    className="blackhover"
-                    sx={{ backgroundColor: "#ff9933" }}
-                  >
-                    Select Price Range
-                  </Button>
                 </div>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={() => setAnchorEl(null)}
-                >
-                  <MenuItem>
-                    <Typography variant="subtitle1">Select Range:</Typography>
-                    <Slider
-                      value={priceRange}
-                      onChange={handlePriceRangeChange}
-                      valueLabelDisplay="auto"
-                      min={0}
-                      max={5000}
-                      sx={{ width: 300, marginLeft: 2, marginTop: "10px", color: "#ff9933" }} // Adjust slider width and margin
-                    />
-                  </MenuItem>
-                  <MenuItem>
-                    <Typography variant="body1">
-                      Selected Min: {priceRange[0]}
-                    </Typography>
-                  </MenuItem>
-                  <MenuItem>
-                    <Typography variant="body1">
-                      Selected Max: {priceRange[1]}
-                    </Typography>
-                  </MenuItem>
-                </Menu>
+                <Input
+                  placeholder="Enter a price"
+                  type="number"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  fullWidth
+                  variant="filled"
+                  color="#ff9933"
+                />
+
               </MenuItem>
 
               <MenuItem>
@@ -513,21 +478,6 @@ function SearchActivity() {
                       value={selectedCategory}
                       onChange={handleCategoryChange}
                       onOpen={fetchCategories}
-                      MenuProps={{
-                        anchorOrigin: {
-                          vertical: 'bottom',
-                          horizontal: 'center', // Ensure it's centered correctly
-                        },
-                        transformOrigin: {
-                          vertical: 'top',
-                          horizontal: 'center',
-                        },
-                        PaperProps: {
-                          style: {
-                            position: 'absolute', // Ensure absolute positioning for dropdown
-                          },
-                        },
-                      }}
                       sx={{
                         '& .MuiOutlinedInput-root': {
                           '& fieldset': {
