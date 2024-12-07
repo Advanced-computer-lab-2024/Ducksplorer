@@ -81,6 +81,7 @@ const BookingDetails = () => {
 
   const fetchTourGuideName = async (bookingId) => {
     try {
+      setLoading(true);
       const response = await axios.get(
         `http://localhost:8000/tourGuideRate/getUserNameById/${bookingId}`
       );
@@ -89,6 +90,9 @@ const BookingDetails = () => {
     } catch (error) {
       console.error("Error fetching tour guide name:", error.message);
       return "N/A";
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -118,6 +122,7 @@ const BookingDetails = () => {
   };
   const fetchBookings = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(
         `http://localhost:8000/touristRoutes/booking`,
         {
@@ -147,7 +152,7 @@ const BookingDetails = () => {
         error.response ? error.response.data : error.message
       );
     } finally {
-      setTimeout(() => setLoading(false), 1000); // Delay of 1 second
+      setLoading(false);
     }
   };
 
@@ -157,6 +162,7 @@ const BookingDetails = () => {
 
   const handleDeleteBooking = async (type, itemId, price, booking) => {
     try {
+      setLoading(true);
       const response = await axios.patch(
         `http://localhost:8000/touristRoutes/booking/${userName}`,
         {
@@ -195,10 +201,14 @@ const BookingDetails = () => {
         "Cannot cancel the booking within 48 hours of the start date or after the start of the activity/itinerary."
       );
     }
+    finally {
+      setLoading(false);
+    }
   };
 
   const handleDeleteThirdPartyBooking = async (type, price, booking) => {
     try {
+      setLoading(true);
       console.log("BookingID", booking);
       const response = await axios.patch(
         `http://localhost:8000/touristRoutes/booking/${userName}`,
@@ -241,8 +251,18 @@ const BookingDetails = () => {
         "Cannot cancel the booking within 48 hours of the start date or after the start of the activity/itinerary."
       );
     }
+    finally {
+      setLoading(false);
+    }
   }
 
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
   if (
     activityBookings.length === 0 &&
     itineraryBookings.length === 0 &&
