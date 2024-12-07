@@ -214,11 +214,6 @@ function SearchActivity() {
 
   // Function to fetch activities based on search criteria
   const handleSearchActivities = () => {
-    if (!searchQuery.trim()) {
-      // Optionally, display a message or return early if search is empty
-      console.error("Please enter a search term.");
-      return;
-    }
 
     const query = new URLSearchParams({
       search: searchQuery, // Single search query sent to the backend
@@ -238,8 +233,13 @@ function SearchActivity() {
   const isFilterSelected = (filter) => selectedFilters.includes(filter);
 
   const handleFilterChoiceClick = (event) => {
-    setFilterAnchorEl(event.currentTarget);
+    if (filterAnchorEl === event.currentTarget) {
+      setFilterAnchorEl(null);
+    } else {
+      setFilterAnchorEl(event.currentTarget);
+    }
   };
+
   const handleFilterClose = () => {
     setFilterAnchorEl(null);
   };
@@ -317,13 +317,6 @@ function SearchActivity() {
     setRating(event.target.value);
   };
 
-  // const handleTagsChange = (event) => {
-  //   const value = event.target.value;
-  //   setTags(value);
-  // };
-
-
-
   const displayUpcomingActivities = async () => {
     try {
       const response = await axios.get(
@@ -346,12 +339,11 @@ function SearchActivity() {
       return;
     }
 
-    const query = new URLSearchParams({
-      price: priceRange[0] && priceRange[1] ? `${priceRange[0]}-${priceRange[1]}` : '', // Combine min and max price if set
-      date: date,
-      category: selectedCategory,
-      averageRating: rating, // Include the rating parameter
-    }).toString();
+    const query = new URLSearchParams();
+    if (priceRange[0] && priceRange[1]) query.append('price', `${priceRange[0]}-${priceRange[1]}`);
+    if (date) query.append('date', date);
+    if (selectedCategory) query.append('category', selectedCategory);
+    if (rating) query.append('averageRating', rating);
 
     axios
       .get(`http://localhost:8000/activity/filter?${query}`)
@@ -431,7 +423,17 @@ function SearchActivity() {
               anchorEl={filterAnchorEl}
               open={Boolean(filterAnchorEl)}
               onClose={handleFilterClose}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'center',
+              }}
+              PaperProps={{
+                style: {
+                  position: 'absolute',
+                },
+              }}
             >
+
               <MenuItem>
                 <div
                   style={{
@@ -828,7 +830,7 @@ function SearchActivity() {
         )}
         <Help />
       </Container>
-    </Box>
+    </Box >
   );
 }
 
