@@ -38,11 +38,10 @@ const viewCart = async (req, res) => {
 
 const addProductToCart = async (req, res) => {
   try {
-    const { userName, productId, newQuantity } = req.body;
-    const quantity = +newQuantity;
+    const { userName, productId } = req.body;
     console.log(userName, productId);
     // Validate input
-    if (!userName || typeof userName !== "string" || userName.trim() === "") {
+    if (!userName || typeof userName !== "string") {
       console.log("is this the issue?");
       return res.status(400).json({ message: "Invalid or missing username." });
     }
@@ -68,18 +67,19 @@ const addProductToCart = async (req, res) => {
     }
 
     if (cart.products) {
-      // Check if the product is already in the cart
-      const productIndex = cart.products.findIndex(
-        (item) => item.product.toString() === productId
-      );
+      cart.products.push({ product: productId, quantity: 1 });
 
-      if (productIndex !== -1) {
-        // add the quantity to the quantity existing if already there
-        cart.products[productIndex].quantity += quantity;
-      } else {
-        // Add the product to the cart
-        cart.products.push({ product: productId, quantity: quantity });
-      }
+      // // Check if the product is already in the cart
+      // const productIndex = cart.products.findIndex(
+      //   (item) => item.product.toString() === productId
+      // );
+
+      // if (productIndex !== -1) {
+      //   // add the quantity to the quantity existing if already there
+      //   cart.products[productIndex].quantity += quantity;
+      // } else {
+      //   // Add the product to the cart
+      // }
     }
     console.log("cart is", cart);
 
@@ -101,8 +101,7 @@ const addProductToCart = async (req, res) => {
 };
 
 const createCart = async (req, res) => {
-  const { userName, productId, newQuantity } = req.body;
-  const quantity = +newQuantity;
+  const { userName, productId} = req.body;
   console.log("req body inside", userName);
   try {
 
@@ -113,7 +112,7 @@ const createCart = async (req, res) => {
       products: [],
     });
 
-    newCart.products.push({ product: productId, quantity: quantity });
+    newCart.products.push({ product: productId, quantity: 1 });
     const cart = await newCart.save();
     res.status(200).json(cart);
   } catch (error) {
