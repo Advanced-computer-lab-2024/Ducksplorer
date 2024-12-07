@@ -7,11 +7,10 @@ import Iconify from "../../Components/TopNav/iconify.js";
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import axios from 'axios';
-import AdminNavbar from '../../Components/TopNav/Adminnavbar.js';
-import Sidebar from '../../Components/Sidebars/Sidebar';
+import AdminNavbar from "../../Components/NavBars/AdminNavBar";
 import { Box } from '@mui/material';
 import GovernorNavBar from '../../Components/NavBars/GovernorNavBar.js';
-
+import { useNavigate } from "react-router-dom";
 
 function ChangePassword() {
   const [password, setPassword] = useState('');
@@ -19,50 +18,51 @@ function ChangePassword() {
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const [showNewPassword, setShowNewPassword] = useState(false); // State for password visibility
   const role = JSON.parse(localStorage.getItem('user')).role;
+  const navigate = useNavigate();
 
-const validatePassword = () => {
-    if(!password || !newPassword) {
-        message.error('Please fill all fields');
-        return false;
+  const validatePassword = () => {
+    if (!password || !newPassword) {
+      message.error('Please fill all fields');
+      return false;
     }
     return true;
   };
 
   const changePassword = async () => {
     try {
-        if(!validatePassword()) return;
-        const response = await axios.post("http://localhost:8000/admin/changePassword", {
-            userName: JSON.parse(localStorage.getItem('user')).username,
-            password: password,
-            newPassword: newPassword
-    }
-    );
-    console.log(response);
-    if (response.status === 200) {
+      if (!validatePassword()) return;
+      const response = await axios.post("http://localhost:8000/admin/changePassword", {
+        userName: JSON.parse(localStorage.getItem('user')).username,
+        password: password,
+        newPassword: newPassword
+      }
+      );
+      console.log(response);
+      if (response.status === 200) {
         message.success('Password changed successfully');
         window.location.href = "/login"; // Replace with your URL
+      }
+      else
+        throw new Error(response.error);
+    } catch (error) {
+      message.error(error.response.data.error);
     }
-    else 
-      throw new Error(response.error);
-  } catch (error) {
-    message.error(error.response.data.error);
   }
-}
 
 
 
   return (
     <Box
-  sx={{
-    minHeight: "100vh",
-    paddingTop: "64px", // Adjust for navbar height
-    overflowY: "auto",
-  }}
->
-  {/* Navbar */}
-  {role==="Admin" && <AdminNavbar />}
-  {role==="Governor" && <GovernorNavBar/>}
-       <div className="text-center">
+      sx={{
+        minHeight: "100vh",
+        paddingTop: "64px", // Adjust for navbar height
+        overflowY: "auto",
+      }}
+    >
+      {/* Navbar */}
+      {role === "Admin" && <AdminNavbar />}
+      {role === "Governor" && <GovernorNavBar />}
+      <div className="text-center">
         <img
           src="logo3.png"
           style={{ width: "300px", height: "200px", justifyContent: "center" }}

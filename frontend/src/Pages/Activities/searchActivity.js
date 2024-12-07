@@ -134,7 +134,7 @@ function SearchActivity() {
 
   useEffect(() => {
     if (activities.length === 0) {
-      const timer = setTimeout(() => setShowError(true), 500); // Wait 0.5 second
+      const timer = setTimeout(() => setShowError(true), 100); // Wait 0.5 second
       return () => clearTimeout(timer); // Cleanup the timer when the component unmounts or updates
     } else {
       setShowError(false); // Reset error state if activities exist

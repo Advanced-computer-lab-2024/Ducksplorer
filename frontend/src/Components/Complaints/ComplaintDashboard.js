@@ -25,7 +25,6 @@ import axios from "axios";
 import { message } from "antd";
 import { Link } from "react-router-dom";
 import AdminNavbar from "../TopNav/Adminnavbar";
-import Sidebar from "../Sidebars/Sidebar";
 import DuckLoading from "../Loading/duckLoading";
 import Help from "../HelpIcon";
 
