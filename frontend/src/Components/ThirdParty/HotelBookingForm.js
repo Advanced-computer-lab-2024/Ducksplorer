@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import {
   TextField,
   Button,
@@ -194,6 +194,15 @@ const HotelBookingForm = () => {
     }
     return true;
   };
+
+ 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   if (loading) {
     return (
       <div>
@@ -202,14 +211,13 @@ const HotelBookingForm = () => {
     );
   }
 
+ 
+
   return (
     <div style={styles.container}>
       <div style={styles.leftSection}>
-        <Typography variant="h3" style={styles.welcomeText}>
+        <Typography variant="h3" className="duckTitle" style={styles.welcomeText}>
           Hotel Booking
-        </Typography>
-        <Typography variant="h5" style={styles.descriptionText}>
-          Book your hotels with ease.
         </Typography>
       </div>
       <div style={styles.rightSection}>
@@ -297,7 +305,7 @@ const HotelBookingForm = () => {
 const styles = {
   container: {
     display: "flex",
-    height: "100vh",
+    height: "120vh",
     width: "100vw",
     background: 'url("/duckHotel.jpg") no-repeat left center fixed',
     backgroundSize: "cover",
@@ -324,6 +332,7 @@ const styles = {
     fontSize: "3rem",
     fontWeight: "bold",
     marginBottom: "20px",
+    position: "fixed",
   },
   descriptionText: {
     fontSize: "1.5rem",

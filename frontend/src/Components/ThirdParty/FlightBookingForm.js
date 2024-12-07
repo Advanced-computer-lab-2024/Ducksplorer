@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   Button,
@@ -89,6 +89,13 @@ const FlightBookingForm = () => {
   const [seats, setSeats] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
 
   const handleSearch = async () => {
     if (validateFields()) {
@@ -159,14 +166,12 @@ const FlightBookingForm = () => {
     return true;
   };
 
+
   return (
     <div style={styles.container}>
       <div style={styles.leftSection}>
-        <Typography variant="h3" style={styles.welcomeText}>
+        <Typography variant="h3" className="duckTitle" style={styles.welcomeText}>
           Flight Booking
-        </Typography>
-        <Typography variant="h1" style={styles.descriptionText}>
-          Book your flights with ease.
         </Typography>
       </div>
       <div style={styles.rightSection}>
@@ -253,7 +258,7 @@ const FlightBookingForm = () => {
 const styles = {
   container: {
     display: "flex",
-    height: "100vh",
+    height: "120vh",
     width: "100vw",
     background: 'url("/duckPlane.jpg") no-repeat left center fixed',
     backgroundSize: "cover",
@@ -287,6 +292,8 @@ const styles = {
     fontSize: "3rem",
     fontWeight: "bold",
     marginBottom: "20px",
+    position: "fixed",
+
   },
   descriptionText: {
     fontSize: "1.5rem",
