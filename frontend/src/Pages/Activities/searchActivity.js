@@ -22,6 +22,7 @@ import {
   InputLabel,
   Rating,
   Grid2,
+  Tooltip,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
@@ -398,16 +399,20 @@ function SearchActivity() {
 
           <div>
             {/* Filtering */}
-            <IconButton onClick={handleGetUpcomingActivities}>
-              {" "}
-              {/* try to make it on the right later */}
-              <UpdateIcon sx={{ color: "black" }} />
-            </IconButton>
-            <IconButton onClick={handleFilterChoiceClick}>
-              {" "}
-              {/* try to make it on the right later */}
-              <FilterAltIcon sx={{ color: "black" }} />
-            </IconButton>
+            <Tooltip title="Upcoming Activities">
+              <IconButton onClick={handleGetUpcomingActivities}>
+                {" "}
+                {/* try to make it on the right later */}
+                <UpdateIcon sx={{ color: "black" }} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Filter Activities">
+              <IconButton onClick={handleFilterChoiceClick}>
+                {" "}
+                {/* try to make it on the right later */}
+                <FilterAltIcon sx={{ color: "black" }} />
+              </IconButton>
+            </Tooltip>
             <Menu
               anchorEl={filterAnchorEl}
               open={Boolean(filterAnchorEl)}
@@ -611,10 +616,11 @@ function SearchActivity() {
                 </div>
               </MenuItem>
             </Menu>
-
-            <IconButton onClick={handleSortByClick}>
-              <SortIcon sx={{ color: "black" }} />
-            </IconButton>
+            <Tooltip title="Sort Activities">
+              <IconButton onClick={handleSortByClick}>
+                <SortIcon sx={{ color: "black" }} />
+              </IconButton>
+            </Tooltip>
             <Menu
               anchorEl={sortByAnchorEl}
               open={Boolean(sortByAnchorEl)}
@@ -693,9 +699,11 @@ function SearchActivity() {
             </Menu>
 
             {/* Sort Order Menu */}
-            <IconButton onClick={handleSortOrderClick}>
-              <SwapVertIcon sx={{ color: "black" }} />
-            </IconButton>
+            <Tooltip title="Sort Order">
+              <IconButton onClick={handleSortOrderClick}>
+                <SwapVertIcon sx={{ color: "black" }} />
+              </IconButton>
+            </Tooltip>
             <Menu
               anchorEl={sortOrderAnchorEl}
               open={Boolean(sortOrderAnchorEl)}
