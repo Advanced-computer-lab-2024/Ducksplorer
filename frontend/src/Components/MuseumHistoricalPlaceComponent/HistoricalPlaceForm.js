@@ -86,11 +86,8 @@ function HistoricalPlaceForm() {
     <>
       <div style={styles.container}>
         <div style={styles.leftSection}>
-          <Typography variant="h3" style={styles.welcomeText}>
+          <Typography variant="h3" className="duckTitle" style={styles.welcomeText}>
             Add a new historical place
-          </Typography>
-          <Typography variant="h5" style={styles.descriptionText}>
-            Fill in the details to add a new historical place to the database.
           </Typography>
         </div>
         <div style={styles.rightSection}>
@@ -238,6 +235,7 @@ const styles = {
     fontSize: "3rem",
     fontWeight: "bold",
     marginBottom: "20px",
+    position: "fixed",
   },
   descriptionText: {
     fontSize: "1.5rem",

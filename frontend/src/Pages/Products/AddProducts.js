@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { message } from "antd";
 import { Paper, Stack } from "@mui/material";
@@ -59,16 +59,20 @@ function AddProducts() {
     picture = url;
   };
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   return (
-    <div style={{height:"100vh"}}>
+    <div style={{height:"100vh" , overflow: "hidden"}}>
     <SellerNavBar/>
     <div style={styles.container}>
       <div style={styles.leftSection}>
-        <Typography variant="h3" style={styles.welcomeText}>
+        <Typography variant="h3" className="duckTitle"  style={styles.welcomeText}>
           Add Your Product
-        </Typography>
-        <Typography variant="h5" style={styles.descriptionText}>
-          Fill in the details to add a new product.
         </Typography>
       </div>
       <div style={styles.rightSection}>
@@ -158,7 +162,7 @@ function AddProducts() {
 const styles = {
   container: {
     display: "flex",
-    height: "100vh",
+    height: "120vh",
     width: "100vw",
     background: 'url("/duckProducts.jpg") no-repeat left center fixed',
     backgroundSize: "cover",
@@ -184,6 +188,7 @@ const styles = {
     fontSize: "3rem",
     fontWeight: "bold",
     marginBottom: "20px",
+    position: "fixed",
   },
   descriptionText: {
     fontSize: "1.5rem",

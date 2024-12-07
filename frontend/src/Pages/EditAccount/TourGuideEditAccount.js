@@ -8,13 +8,14 @@ import {
   Avatar,
 } from "@mui/material";
 import axios from "axios";
-import { message } from "antd";
+import { message, Tour } from "antd";
 import { Link } from "react-router-dom";
 import FileUpload from "../../Components/FileUpload";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Iconify from "../../Components/TopNav/iconify.js";
 import DownloadButton from "../../Components/DownloadButton";
+import TourGuideNavbar from "../../Components/TopNav/TourGuideNavbar";
 const TourGuideEditProfile = () => {
   const [tourGuideDetails, setTourGuideDetails] = useState({
     userName: "",
@@ -29,7 +30,6 @@ const TourGuideEditProfile = () => {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
-
 
   const handlePhotoUpload = async () => {
     const photoFile = document.getElementById("photo").files[0];
@@ -180,6 +180,7 @@ const TourGuideEditProfile = () => {
 
   return (
     <Box sx={{ height: "100vh" }}>
+      <TourGuideNavbar />
       <Box sx={{ p: 4, justifyContent: "center" }}>
         <Paper
           elevation={4}
@@ -378,9 +379,7 @@ const TourGuideEditProfile = () => {
             )}
           </Box>
 
-          <Box sx={{ textAlign: "center", mt: 2 }}>
-          
-          </Box>
+          <Box sx={{ textAlign: "center", mt: 2 }}></Box>
         </Paper>
       </Box>
     </Box>

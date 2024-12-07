@@ -197,11 +197,13 @@ const DeleteCategory = () => {
               <Button
                 variant="contained"
                 onClick={() => handleAdd(newCategory)}
+                className="blackhover"
                 sx={{
                   borderRadius: "8px",
                   padding: "10px 24px",
                   textTransform: "none",
                   fontWeight: "bold",
+                  color: "white"
                 }}
               >
                 Add

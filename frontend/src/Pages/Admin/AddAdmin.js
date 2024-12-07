@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { Typography, Box, Button, IconButton, InputAdornment, Stack, TextField } from "@mui/material";
 import { message } from "antd";
 import Iconify from "../../Components/TopNav/iconify.js";
@@ -32,13 +32,19 @@ function AddAdmin() {
       message.error("An error occurred: " + error.message);
     }
   };
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
 
   return (
     <>
       <AdminNavBar />
       <div style={styles.container}>
         <div style={styles.leftSection}>
-          <Typography variant="h3" style={styles.welcomeText}>
+          <Typography variant="h3" className="duckTitle" style={styles.welcomeText}>
             Admin Management
           </Typography>
         </div>
@@ -200,7 +206,7 @@ function AddAdmin() {
 const styles = {
   container: {
     display: "flex",
-    height: "100vh",
+    height: "120vh",
     width: "100vw",
     background: 'url("/duckAdmin.jpg") no-repeat left center fixed',
     backgroundSize: "cover",
@@ -227,6 +233,7 @@ const styles = {
     fontSize: "3rem",
     fontWeight: "bold",
     marginBottom: "20px",
+    position: "fixed",
   },
   descriptionText: {
     fontSize: "1.5rem",

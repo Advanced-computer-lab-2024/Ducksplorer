@@ -8,7 +8,7 @@ import { Button } from "@mui/material";
 import StandAloneToggleButtonIt from "../../Components/ToggleItinerary";
 import Typography from "@mui/joy/Typography";
 import TourGuideSidebar from "../../Components/Sidebars/TourGuideSidebar";
-import TourGuideNavbar from "../../Components/TopNav/TourGuideNavbar"; // Import the TourGuideNavbar
+import TourGuideNavBar from "../../Components/NavBars/TourGuideNavBar"; // Import the TourGuideNavbar
 import {
   Table,
   TableBody,
@@ -202,8 +202,7 @@ const AddItinerary = () => {
         height: "100vh",
       }}
     >
-      <TourGuideSidebar />
-      <TourGuideNavbar />
+      <TourGuideNavBar />
       <Paper
         elevation={3}
         sx={{

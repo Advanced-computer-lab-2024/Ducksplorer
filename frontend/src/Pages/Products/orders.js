@@ -15,6 +15,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 import axios from "axios";
+import Help from "../../Components/HelpIcon";
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
@@ -82,12 +83,26 @@ const OrdersPage = () => {
             {error}
           </Typography>
         ) : orders.length > 0 ? (
-          <TableContainer component={Paper} sx={{ borderRadius: "12px" }} elevation={3}>
+          <TableContainer
+            component={Paper}
+            sx={{ borderRadius: "12px" }}
+            elevation={3}
+          >
             <Table>
               <TableHead>
                 <TableRow sx={{ backgroundColor: "#F5F5F5" }}>
-                  {["Order Number", "Status", "Date", "Total Quantity", "Total Price", "Actions"].map((text) => (
-                    <TableCell key={text} sx={{ fontWeight: "bold", textAlign: "center" }}>
+                  {[
+                    "Order Number",
+                    "Status",
+                    "Date",
+                    "Total Quantity",
+                    "Total Price",
+                    "Actions",
+                  ].map((text) => (
+                    <TableCell
+                      key={text}
+                      sx={{ fontWeight: "bold", textAlign: "center" }}
+                    >
                       {text}
                     </TableCell>
                   ))}
@@ -96,11 +111,21 @@ const OrdersPage = () => {
               <TableBody>
                 {orders.map((order) => (
                   <TableRow key={order._id} hover>
-                    <TableCell sx={{ textAlign: "center" }}>{order.orderNumber}</TableCell>
-                    <TableCell sx={{ textAlign: "center" }}>{order.status}</TableCell>
-                    <TableCell sx={{ textAlign: "center" }}>{new Date(order.date).toLocaleDateString()}</TableCell>
-                    <TableCell sx={{ textAlign: "center" }}>{order.totalQuantity}</TableCell>
-                    <TableCell sx={{ textAlign: "center" }}>${order.totalPrice.toFixed(2)}</TableCell>
+                    <TableCell sx={{ textAlign: "center" }}>
+                      {order.orderNumber}
+                    </TableCell>
+                    <TableCell sx={{ textAlign: "center" }}>
+                      {order.status}
+                    </TableCell>
+                    <TableCell sx={{ textAlign: "center" }}>
+                      {new Date(order.date).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell sx={{ textAlign: "center" }}>
+                      {order.totalQuantity}
+                    </TableCell>
+                    <TableCell sx={{ textAlign: "center" }}>
+                      ${order.totalPrice.toFixed(2)}
+                    </TableCell>
                     <TableCell sx={{ textAlign: "center" }}>
                       <Button
                         variant="contained"
@@ -125,11 +150,17 @@ const OrdersPage = () => {
                         sx={{
                           backgroundColor:
                             order.status !== "Processing" ? "#d3d3d3" : "red",
-                          color: order.status !== "Processing" ? "#808080" : "#fff",
-                          cursor: order.status !== "Processing" ? "not-allowed" : "pointer",
+                          color:
+                            order.status !== "Processing" ? "#808080" : "#fff",
+                          cursor:
+                            order.status !== "Processing"
+                              ? "not-allowed"
+                              : "pointer",
                           "&:hover": {
                             backgroundColor:
-                              order.status === "Processing" ? "#b71c1c" : "#d3d3d3",
+                              order.status === "Processing"
+                                ? "#b71c1c"
+                                : "#d3d3d3",
                           },
                         }}
                       >
@@ -150,6 +181,7 @@ const OrdersPage = () => {
           </Typography>
         )}
       </Box>
+      <Help />
     </>
   );
 };

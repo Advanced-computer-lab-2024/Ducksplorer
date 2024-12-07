@@ -146,7 +146,7 @@ const HistoricalPlaceTouristPov = () => {
             variant="solid"
             onClick={handleSearchHistoricalPLaces}
             className="blackhover"
-            sx={{ backgroundColor: "#ff9933" }}
+            sx={{ backgroundColor: "#ff9933", color: 'white' }}
           >
             Search
           </Button>

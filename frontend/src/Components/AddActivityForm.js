@@ -125,11 +125,8 @@ const AddActivityForm = () => {
       <AdvertiserNavBar />
     <div style={styles.container}>
       <div style={styles.leftSection}>
-        <Typography variant="h3" style={styles.welcomeText}>
+        <Typography variant="h3" className="duckTitle" style={styles.welcomeText}>
           Add Activity
-        </Typography>
-        <Typography variant="h1" style={styles.descriptionText}>
-          Create your activity with ease.
         </Typography>
       </div>
       <div style={styles.rightSection}>
@@ -339,6 +336,8 @@ const styles = {
     fontSize: "3rem",
     fontWeight: "bold",
     marginBottom: "20px",
+    position: "fixed",
+
   },
   descriptionText: {
     fontSize: "1.5rem",

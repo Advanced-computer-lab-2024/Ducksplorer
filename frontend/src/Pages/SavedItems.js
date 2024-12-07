@@ -4,6 +4,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import DuckLoading from "../Components/Loading/duckLoading.js";
 import {
+
   Typography,
   Box,
   TableContainer,
@@ -17,7 +18,7 @@ import {
   Rating,
   Tooltip,
   CircularProgress,
-  Grid
+  Grid,
 } from "@mui/material";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
@@ -27,6 +28,7 @@ import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
 import TouristNavBar from "../Components/TouristNavBar.js";
 import ItineraryCard from "../Components/itineraryCard.js";
 import ActivityCard from "../Components/activityCard.js";
+import Help from "../Components/HelpIcon.js";
 
 function MySavedItems() {
   const { id } = useParams();
@@ -90,8 +92,7 @@ function MySavedItems() {
         }
       } catch (error) {
         console.error("There was an error fetching the itineraries!", error);
-      }
-      finally {
+      } finally {
         setLoadingItinerary(false);
       }
     };
@@ -126,8 +127,7 @@ function MySavedItems() {
         }
       } catch (error) {
         console.error("There was an error fetching the activities!", error);
-      }
-      finally {
+      } finally {
         setLoadingActivity(false);
       }
     };
@@ -148,19 +148,24 @@ function MySavedItems() {
 
   const requestNotification = async (eventId) => {
     try {
-      const response = await axios.post('http://localhost:8000/notification/request', {
-        user: username,
-        eventId: eventId,
-      });
+      const response = await axios.post(
+        "http://localhost:8000/notification/request",
+        {
+          user: username,
+          eventId: eventId,
+        }
+      );
 
       if (response.status === 201) {
-        message.success('You will be notified when this event starts accepting bookings.');
+        message.success(
+          "You will be notified when this event starts accepting bookings."
+        );
       } else {
         message.error(response.data.message);
       }
     } catch (error) {
-      console.error('Error requesting notification:', error);
-      message.error('Failed to request notification.');
+      console.error("Error requesting notification:", error);
+      message.error("Failed to request notification.");
     }
   };
 
@@ -170,7 +175,7 @@ function MySavedItems() {
         <DuckLoading />
       </div>
     );
-  }
+
 
   if ((!Array.isArray(itineraries) && !Array.isArray(activities)) || (itineraries.length === 0 && activities.length === 0)) {
     return <p>No saved data available.</p>;
@@ -198,10 +203,9 @@ function MySavedItems() {
 
         <MyChips chipNames={chipNames} onChipClick={handleChipClick} />
 
-        {(selectedCategory === "Itineraries" ||
-          selectedCategory === "All") && (
-            <>
-              {/* <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+        {(selectedCategory === "Itineraries" || selectedCategory === "All") && (
+          <>
+            {/* <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
                 <Typography variant="h4">Itineraries</Typography>
               </Box> */}
               <div style={{ flex: 1 }}>
@@ -275,6 +279,7 @@ function MySavedItems() {
           )}
         {/* </Box> */}
       </div>
+      <Help />
     </>
   );
 }

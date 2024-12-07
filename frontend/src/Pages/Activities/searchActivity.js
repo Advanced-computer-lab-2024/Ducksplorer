@@ -65,9 +65,6 @@ function SearchActivity() {
 
   const [loading, setLoading] = useState(true);
 
-  const [displayFilter, setDisplayFilter] = useState(false);
-  const [displaySort, setDisplaySort] = useState(false);
-
   const user = JSON.parse(localStorage.getItem("user"));
 
   const username = user?.username;
@@ -82,13 +79,6 @@ function SearchActivity() {
   const [showUpcomingOnly, setShowUpcomingOnly] = useState(false);
   const [showError, setShowError] = useState(false);
 
-  const toggleFilter = () => {
-    setDisplayFilter((prev) => !prev);
-  };
-
-  const toggleSort = () => {
-    setDisplaySort((prev) => !prev);
-  };
 
   // Fetch all activities when component mounts
   useEffect(() => {
