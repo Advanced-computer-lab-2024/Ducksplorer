@@ -10,15 +10,12 @@ import Help from "../../Components/HelpIcon.js";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 import TouristNavBar from "../../Components/TouristNavBar.js";
 import DuckLoading from "../../Components/Loading/duckLoading.js";
-import {
-  Box,
-  Button,
-  Typography,
-  Grid,
-  Container,
-} from "@mui/material";
+import { Box, Button, Typography, Grid, Container } from "@mui/material";
 import MuseumHistoricalPlaceCard from "../../Components/MuseumHistoricalPlaceCard";
 import Input from "@mui/joy/Input";
+import Error404 from "../../Components/Error404.js";
+import MyChips from "../../Components/MyChips.js";
+import HistoricalPlaceTouristPov from "./HistoricalPlaceTouristPov";
 
 const MuseumTouristPov = () => {
   const [searchTerm, setSearchTerm] = useState(""); // Single search term
@@ -30,6 +27,9 @@ const MuseumTouristPov = () => {
   const [searchQuery, setSearchQuery] = useState(""); // Add this line
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const chipNames = ["Museums", "Historical Places"];
+  const [selectedCategory, setSelectedCategory] = useState("Museums");
+
   useEffect(() => {
     setLoading(true);
     axios
@@ -78,9 +78,8 @@ const MuseumTouristPov = () => {
       }
     } catch (error) {
       message.error(" No museums found ");
-    }
-    finally {
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -91,6 +90,14 @@ const MuseumTouristPov = () => {
   const goToUpcomingPage = () => {
     navigate("/UpcomingMuseums");
   };
+
+  const handleChipClick = (chipName) => {
+    setSelectedCategory(chipName);
+  };
+
+  const errorMessage =
+    "There are currently no upcoming museum visits. Try again in a few";
+  const backMessage = "Back to search again";
 
   if (loading) {
     return (
@@ -109,71 +116,66 @@ const MuseumTouristPov = () => {
       }}
     >
       <TouristNavBar />
-      <Container sx={{ width: "100%" }}>
-        <Box sx={{ textAlign: "center", mb: 4 }}>
-          <Typography class="bigTitle">Museums</Typography>
-        </Box>
-        <div
-          style={{
-            //div to surround search bar, button and the filter, and 2 sort icons
-            display: "grid",
-            gridTemplateColumns: "2.5fr 0.5fr auto auto",
-            gap: "16px",
-            paddingBottom: 24,
-            width: "100%",
-          }}
-        >
-          <Input
-            placeholder="Search for a museum..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            fullWidth
-            variant="filled"
-            color="primary"
-          />
-          <Button
-            variant="solid"
-            onClick={handleSearchMuseums}
-            className="blackhover"
-            sx={{ backgroundColor: "#ff9933" , color: 'white'}}
-          >
-            Search
-          </Button>
-          <MuseumFilterComponent onFilter={handleFilterResults} />
-        </div>
+      <div style={{ marginLeft: "4%", marginTop: "2%" }}>
+        <MyChips chipNames={chipNames} onChipClick={handleChipClick} />
+      </div>
 
-
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={{
-              paddingX: 4,
-              fontWeight: 600,
-              textTransform: "capitalize",
+      {selectedCategory === "Museums" && (
+        <Container sx={{ width: "100%" }}>
+          <Box sx={{ textAlign: "center", mb: 4 }}>
+            <Typography class="bigTitle">Museums</Typography>
+          </Box>
+          <div
+            style={{
+              //div to surround search bar, button and the filter, and 2 sort icons
+              display: "grid",
+              gridTemplateColumns: "2.5fr 0.5fr auto auto",
+              gap: "16px",
+              paddingBottom: 24,
+              width: "100%",
             }}
-            onClick={goToUpcomingPage}
           >
-            Get Upcoming Museum Visits
-          </Button>
-        </Box>
+            <Input
+              placeholder="Search for a museum..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              fullWidth
+              variant="filled"
+              color="primary"
+            />
+            <Button
+              variant="solid"
+              onClick={handleSearchMuseums}
+              className="blackhover"
+              sx={{ backgroundColor: "#ff9933", color: "white" }}
+            >
+              Search
+            </Button>
+            <MuseumFilterComponent onFilter={handleFilterResults} />
+          </div>
 
-        <Grid container spacing={3}>
-          {Array.isArray(Museums) && Museums.length > 0 ? (
-            Museums.map((museum) => (
-              <Grid item xs={12} sm={6} md={4} key={museum._id}>
-                <MuseumHistoricalPlaceCard place={museum} />
+          <Grid container spacing={3}>
+            {Array.isArray(Museums) && Museums.length > 0 ? (
+              Museums.map((museum) => (
+                <Grid item xs={12} sm={6} md={4} key={museum._id}>
+                  <MuseumHistoricalPlaceCard place={museum} />
+                </Grid>
+              ))
+            ) : (
+              <Grid item xs={12}>
+                <Error404
+                  errorMessage={errorMessage}
+                  backMessage={backMessage}
+                  route="/MuseumTouristPov"
+                />
               </Grid>
-            ))
-          ) : (
-            <Grid item xs={12}>
-              <Typography variant="body1" color="textSecondary" align="center">
-                No museums available
-              </Typography>
-            </Grid>
-          )}
-        </Grid>
-      </Container>
+            )}
+          </Grid>
+        </Container>
+      )}
+      {selectedCategory === "Historical Places" && (
+        <HistoricalPlaceTouristPov />
+      )}
       <Help />
     </Box>
   );
