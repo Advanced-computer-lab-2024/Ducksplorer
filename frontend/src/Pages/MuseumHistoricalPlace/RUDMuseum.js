@@ -10,22 +10,23 @@ import { Link } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 
 import {
-  Box,
-  Button,
-  Table,
-  Typography,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField,
-} from "@mui/material";
+    Box,
+    Button,
+    Table,
+    Typography,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    TextField,
+} from '@mui/material';
+import GovernorNavBar from '../../Components/NavBars/GovernorNavBar';
 
 const RUDMuseum = () => {
   const navigate = useNavigate();
@@ -183,12 +184,14 @@ const RUDMuseum = () => {
     navigate("/CreateTagMuseum");
   };
 
-  return (
-    <>
-      <Box sx={{ p: 6, maxWidth: 1200, overflowY: "visible", height: "100vh" }}>
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Typography variant="h4">Museums</Typography>
-        </Box>
+    return (
+        <>
+        <GovernorNavBar/>
+            <Link to="/governorDashboard"> Back </Link>
+            <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'visible', height: '100vh' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+                    <Typography variant="h4">Museums</Typography>
+                </Box>
 
         {/* Button to navigate to page to create tags */}
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>

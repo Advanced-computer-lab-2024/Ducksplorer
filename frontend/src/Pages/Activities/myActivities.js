@@ -6,9 +6,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { calculateAverageRating } from "../../Utilities/averageRating.js";
 import StandAloneToggleButton from "../../Components/ToggleButton.js";
-import WarningIcon from "@mui/icons-material/Warning";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import TouristNavBar from "../../Components/TouristNavBar.js";
+import WarningIcon from '@mui/icons-material/Warning';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Help from "../../Components/HelpIcon";
 import Error404 from "../../Components/Error404.js";
 import {
@@ -160,7 +159,6 @@ const MyActivities = () => {
       }}
     >
       <AdvertiserNavBar />
-      <AdvertiserSidebar />
       <div
         style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
       >

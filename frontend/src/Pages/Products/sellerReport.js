@@ -35,6 +35,7 @@ import {
   CircularProgress
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import SellerNavBar from "../../Components/NavBars/SellerNavBar.js";
 
 const MyPurchases = () => {
   // Accept userNameId as a prop
@@ -214,7 +215,7 @@ const MyPurchases = () => {
         marginLeft: "5vw",
       }}
     >
-      <SellerSidebar />
+      <SellerNavBar />
       <div
         style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
       >

@@ -3,6 +3,7 @@ import { Box, Typography, CssBaseline } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import SellerSidebar from "../../Components/Sidebars/SellerSidebar";
 import SellerNavbar from "../../Components/TopNav/SellerNavbar"; // Import SellerNavbar
+import SellerNavBar from "../../Components/NavBars/SellerNavBar";
 
 const SellerDashboard = () => {
   const [videoEnded, setVideoEnded] = useState(false);
@@ -101,9 +102,9 @@ const SellerDashboard = () => {
 
       <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
         <CssBaseline />
-        <SellerNavbar /> {/* Add SellerNavbar */}
+        <SellerNavBar /> {/* Add SellerNavbar */}
         <Box sx={{ display: "flex", flexGrow: 1 }}>
-          <SellerSidebar /> {/* Add SellerSidebar */}
+          {/* <SellerSidebar /> Add SellerSidebar */}
           <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
             <Outlet />
           </Box>

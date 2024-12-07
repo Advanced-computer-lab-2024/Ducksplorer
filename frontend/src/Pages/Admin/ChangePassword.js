@@ -10,6 +10,7 @@ import axios from 'axios';
 import AdminNavbar from '../../Components/TopNav/Adminnavbar.js';
 import Sidebar from '../../Components/Sidebars/Sidebar';
 import { Box } from '@mui/material';
+import GovernorNavBar from '../../Components/NavBars/GovernorNavBar.js';
 
 
 function ChangePassword() {
@@ -54,14 +55,13 @@ const validatePassword = () => {
     <Box
   sx={{
     minHeight: "100vh",
-    backgroundColor: "#ffffff",
     paddingTop: "64px", // Adjust for navbar height
     overflowY: "auto",
   }}
 >
   {/* Navbar */}
-  <AdminNavbar />
-      <Sidebar />
+  {role==="Admin" && <AdminNavbar />}
+  {role==="Governor" && <GovernorNavBar/>}
        <div className="text-center">
         <img
           src="logo3.png"

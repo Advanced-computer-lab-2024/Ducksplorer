@@ -19,7 +19,7 @@ import Iconify from "../../Components/TopNav/iconify.js";
 import sellerNavBar from "../../Components/NavBars/SellerNavBar";
 // import ProfilePictureUpload from "../../Components/pp";
 import DownloadButton from "../../Components/DownloadButton";
-import SellerNavBar from "../../Components/NavBars/SellerNavBar";
+import SellerNavBar from "../../Components/NavBars/SellerNavBar.js";
 
 const EditProfile = () => {
   const [sellerDetails, setSellerDetails] = useState({
@@ -214,7 +214,7 @@ const EditProfile = () => {
           </Box>
 
           <Typography variant="h5" sx={{ mt: 2 }}>
-            Edit Seller Profile
+            Edit Profile
           </Typography>
         </Box>
 

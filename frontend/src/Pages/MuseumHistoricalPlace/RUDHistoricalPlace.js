@@ -25,7 +25,8 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-} from "@mui/material";
+} from '@mui/material';
+import GovernorNavBar from '../../Components/NavBars/GovernorNavBar';
 
 const RUDHistoricalPlace = () => {
   const navigate = useNavigate();
@@ -199,11 +200,11 @@ const RUDHistoricalPlace = () => {
 
   return (
     <>
-      <Box sx={{ p: 6, maxWidth: 1200, overflowY: "visible", height: "100vh" }}>
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Typography variant="h4">
-            Available Historical Place Visits
-          </Typography>
+    <GovernorNavBar/>
+      <Link to="/governorDashboard"> Back </Link>
+      <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'visible', height: '100vh' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+          <Typography variant="h4">Available Historical Place Visits</Typography>
         </Box>
 
         {/* Button to navigate to page to create tags */}

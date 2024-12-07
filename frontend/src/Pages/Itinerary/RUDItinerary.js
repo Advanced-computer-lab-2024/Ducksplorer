@@ -29,7 +29,7 @@ import {
   TableContainer,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import TourGuideNavbar from "../../Components/TopNav/TourGuideNavbar";
+import TourGuideNavBar from "../../Components/NavBars/TourGuideNavBar";
 
 export const TagsContext = createContext();
 

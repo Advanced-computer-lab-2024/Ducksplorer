@@ -37,6 +37,7 @@ import {
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import AdvertiserNavBar from "../../Components/NavBars/AdvertiserNavBar.js";
+import AdvertiserNavBar from "../../Components/NavBars/AdvertiserNavBar.js";
 
 const ActivityReport = () => {
   // Accept userNameId as a prop
@@ -217,64 +218,63 @@ const ActivityReport = () => {
     return <p>No activities available.</p>;
   }
 
-  return (
-    <Box
-      sx={{
-        height: "100vh",
-        paddingTop: "64px",
-        width: "90vw",
-        marginLeft: "5vw",
-      }}
-    >
-      <AdvertiserNavBar />
-      <AdvertiserSidebar />
-      <div
-        style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
-      >
-        <div style={{ overflowY: "visible", height: "100vh" }}>
-          <Typography
-            variant="h2"
-            sx={{ textAlign: "center", fontWeight: "bold" }}
-            gutterBottom
-          >
-            Activities Report
-          </Typography>
-          <br></br>
-          {/* Filtering */}
-          <IconButton onClick={handleFilterChoiceClick}>
-            <FilterAltIcon style={{ color: "black" }} />
-          </IconButton>
-          <Menu
-            anchorEl={filterAnchorEl}
-            open={Boolean(filterAnchorEl)}
-            onClose={handleFilterClose}
-          >
-            {/* Radio Buttons for Filter Selection */}
-            <MenuItem>
-              <FormControl>
-                <RadioGroup
-                  value={filterType} // This should be managed in state
-                  onChange={(e) => {
-                    setFilterType(e.target.value); // Update the selected filter type
-                    setDate(""); // Clear previous values
-                    setMonth("");
-                    setYear("");
-                  }}
-                >
-                  {/* Date Filter */}
-                  <FormControlLabel
-                    value="date"
-                    control={<Radio />}
-                    label="Choose a Date"
-                  />
-                  {filterType === "date" && (
-                    <TextField
-                      type="date"
-                      value={date}
-                      onChange={(e) => changeDate(e.target.value)}
-                      style={{ marginTop: "10px", width: "100%" }}
-                    />
-                  )}
+    return (
+        <Box
+            sx={{
+                height: "100vh",
+                paddingTop: "64px",
+                width: "90vw",
+                marginLeft: "5vw",
+            }}
+        >
+            <AdvertiserNavBar />
+            <div
+                style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
+            >
+                <div style={{ overflowY: "visible", height: "100vh" }}>
+                    <Typography
+                        variant="h2"
+                        sx={{ textAlign: "center", fontWeight: "bold" }}
+                        gutterBottom
+                    >
+                        Activities Report
+                    </Typography>
+                    <br></br>
+                    {/* Filtering */}
+                    <IconButton onClick={handleFilterChoiceClick}>
+                        <FilterAltIcon style={{ color: "black" }} />
+                    </IconButton>
+                    <Menu
+                        anchorEl={filterAnchorEl}
+                        open={Boolean(filterAnchorEl)}
+                        onClose={handleFilterClose}
+                    >
+                        {/* Radio Buttons for Filter Selection */}
+                        <MenuItem>
+                            <FormControl>
+                                <RadioGroup
+                                    value={filterType} // This should be managed in state
+                                    onChange={(e) => {
+                                        setFilterType(e.target.value); // Update the selected filter type
+                                        setDate(""); // Clear previous values
+                                        setMonth("");
+                                        setYear("");
+                                    }}
+                                >
+                                    {/* Date Filter */}
+                                    <FormControlLabel
+                                        value="date"
+                                        control={<Radio />}
+                                        label="Choose a Date"
+                                    />
+                                    {filterType === "date" && (
+                                        <TextField
+                                            type="date"
+                                            value={date}
+                                            onChange={(e) => changeDate(e.target.value)}
+                                            style={{ marginTop: "10px", width: "100%" }}
+                                        />
+                                    )}
 
                   {/* Month and/or Year Filter */}
                   <FormControlLabel

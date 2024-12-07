@@ -194,11 +194,13 @@ const PreferenceTags = () => {
               <Button
                 variant="contained"
                 onClick={() => handleAdd(newTag)}
+                className="blackhover"
                 sx={{
                   borderRadius: "8px",
                   padding: "10px 24px",
                   textTransform: "none",
                   fontWeight: "bold",
+                  color: "white"
                 }}
               >
                 Add
