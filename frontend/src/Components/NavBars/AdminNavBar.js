@@ -22,6 +22,7 @@ import LabelIcon from "@mui/icons-material/Label";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import WidgetsIcon from "@mui/icons-material/Widgets";
+import MyNotifications from "../myNotifications";
 
 function AdminNavBar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -88,6 +89,9 @@ function AdminNavBar() {
 
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ flexGrow: 0, marginRight: "3vw", display: "flex", alignItems: "center" }}>
+            <Tooltip>
+              <MyNotifications />
+            </Tooltip>
             <Tooltip title="Open Account settings">
               <IconButton
                 onClick={handleOpenUserMenu}
