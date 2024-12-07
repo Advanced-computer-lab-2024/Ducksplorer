@@ -1,8 +1,8 @@
-// This file is a component which we import inside the createMuseum page
 import React, { useState, useEffect } from "react";
 import { message, Select } from "antd";
 import Input from "@mui/joy/Input"; // Import Input from MUI
 import Button from "@mui/joy/Button"; // Import Button from MUI
+import Typography from "@mui/material/Typography";
 
 function MuseumForm() {
   const [description, setDescription] = useState("");
@@ -15,7 +15,6 @@ function MuseumForm() {
   const [museumName, setMuseumName] = useState("");
   const [museumCategory, setMuseumCategory] = useState("");
   const [tags, setTags] = useState([]);
-  // const [createdBy, setCreatedBy] = useState(''); no longer needed because we have the logged in user
   const [error, setError] = useState(null);
   const [museumTagsOptions, setMuseumTagsOptions] = useState([]); // State to store fetched museum tags
 
@@ -96,108 +95,164 @@ function MuseumForm() {
   };
 
   return (
-    <div style={{ width: "50vw" }}>
-      <form
-        className="create"
-        onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column" }}
-      >
-        <h2
-          style={{ textAlign: "center", fontSize: "50px" }}
-          className="oswald-Titles"
-        >
-          Add a new museum
-        </h2>
-        <label>Museum Description:</label>
-        <Input
-          type="text"
-          onChange={(e) => setDescription(e.target.value)}
-          value={description}
-          required
-        />
-        <label>Pictures (URL):</label>
-        <Input
-          type="text"
-          onChange={(e) => setPictures(e.target.value)}
-          value={pictures}
-          required
-        />{" "}
-        {/* Changed to accept URL */}
-        <label>Museum Location:</label>
-        <Input
-          type="text"
-          onChange={(e) => setLocation(e.target.value)}
-          value={location}
-          required
-        />
-        <label>Museum Opening Time:</label>
-        <Input
-          type="number"
-          onChange={(e) => setOpeningTime(e.target.value)}
-          value={openingTime}
-          required
-        />
-        <label>Museum Closing Time:</label>
-        <Input
-          type="number"
-          onChange={(e) => setClosingTime(e.target.value)}
-          value={closingTime}
-          required
-        />
-        <label>Museum Ticket Prices:</label>
-        <Input
-          type="number"
-          onChange={(e) => setTicketPrices(e.target.value)}
-          value={ticketPrices}
-          required
-        />
-        <label>Museum Visit Date:</label>
-        <Input
-          type="date"
-          onChange={(e) => setMuseumDate(e.target.value)}
-          value={museumDate}
-          required
-        />
-        <label>Museum Name:</label>
-        <Input
-          type="text"
-          onChange={(e) => setMuseumName(e.target.value)}
-          value={museumName}
-          required
-        />
-        <label>Museum Category:</label>
-        <Input
-          type="text"
-          onChange={(e) => setMuseumCategory(e.target.value)}
-          value={museumCategory}
-          required
-        />
-        {/* <label>Tags:</label>
-            <Input type="text" onChange={(e) => setTags(e.target.value)} value={tags} /> */}
-        <label>Tags:</label>
-        <Select
-          mode="multiple"
-          allowClear
-          style={{ width: "100%" }}
-          placeholder="Select Museum tags"
-          value={tags}
-          onChange={handleTagChange}
-        >
-          {museumTagsOptions.map((tag) => (
-            <Select.Option key={tag._id} value={tag.museumTag}>
-              {tag.museumTag}
-            </Select.Option>
-          ))}
-        </Select>
-        {/* <label>Created By:</label>
-            <Input type="text" onChange={(e) => setCreatedBy(e.target.value)} value={createdBy} /> */}
-        <Button sx={{ mt: 3 }} type="submit">
-          Add a museum
-        </Button>
-        {error && <div className="error">{error}</div>}
-      </form>
-    </div>
+    <>
+      <div style={styles.container}>
+        <div style={styles.leftSection}>
+          <Typography variant="h3" className="duckTitle"  style={styles.welcomeText}>
+            Add a new museum
+          </Typography>
+        </div>
+        <div style={styles.rightSection}>
+          <div style={{ width: "50vw" }}>
+            <Typography
+              variant="h4"
+              style={{ textAlign: "center", marginBottom: "60px" , marginTop: "40px"}}
+               class="bigTitle"
+            >
+              Add a Museum
+            </Typography>
+            <form
+              className="create"
+              onSubmit={handleSubmit}
+              style={{ display: "flex", flexDirection: "column", alignItems: "center", rowGap: "20px" }}
+            >
+              <Input
+                placeholder="Museum Description"
+                type="text"
+                onChange={(e) => setDescription(e.target.value)}
+                value={description}
+                required
+                sx={{ width: "80%" }}
+              />
+              <Input
+                placeholder="Pictures (URL)"
+                type="text"
+                onChange={(e) => setPictures(e.target.value)}
+                value={pictures}
+                required
+                sx={{ width: "80%" }}
+              />
+              <Input
+                placeholder="Museum Location"
+                type="text"
+                onChange={(e) => setLocation(e.target.value)}
+                value={location}
+                required
+                sx={{ width: "80%" }}
+              />
+              <Input
+                placeholder="Museum Opening Time"
+                type="number"
+                onChange={(e) => setOpeningTime(e.target.value)}
+                value={openingTime}
+                required
+                sx={{ width: "80%" }}
+              />
+              <Input
+                placeholder="Museum Closing Time"
+                type="number"
+                onChange={(e) => setClosingTime(e.target.value)}
+                value={closingTime}
+                required
+                sx={{ width: "80%" }}
+              />
+              <Input
+                placeholder="Museum Ticket Prices"
+                type="number"
+                onChange={(e) => setTicketPrices(e.target.value)}
+                value={ticketPrices}
+                required
+                sx={{ width: "80%" }}
+              />
+              <Input
+                placeholder="Museum Visit Date"
+                type="date"
+                onChange={(e) => setMuseumDate(e.target.value)}
+                value={museumDate}
+                required
+                sx={{ width: "80%" }}
+              />
+              <Input
+                placeholder="Museum Name"
+                type="text"
+                onChange={(e) => setMuseumName(e.target.value)}
+                value={museumName}
+                required
+                sx={{ width: "80%" }}
+              />
+              <Input
+                placeholder="Museum Category"
+                type="text"
+                onChange={(e) => setMuseumCategory(e.target.value)}
+                value={museumCategory}
+                required
+                sx={{ width: "80%" }}
+              />
+              <Select
+                mode="multiple"
+                allowClear
+                style={{ width: "80%" }}
+                placeholder="Select Museum tags"
+                value={tags}
+                onChange={handleTagChange}
+              >
+                {museumTagsOptions.map((tag) => (
+                  <Select.Option key={tag._id} value={tag.museumTag}>
+                    {tag.museumTag}
+                  </Select.Option>
+                ))}
+              </Select>
+              <Button
+                style={{ mt: 3, backgroundColor: "#ff9933", width: "80%" }}
+                type="submit"
+              >
+                Add a museum
+              </Button>
+              {error && <div className="error">{error}</div>}
+            </form>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
+
+const styles = {
+  container: {
+    display: "flex",
+    height: "120vh",
+    width: "100vw",
+    background: 'url("/duckMuseum.jpg") no-repeat left center fixed',
+    backgroundSize: "cover",
+    overflowY: "visible",
+  },
+  leftSection: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    color: "#fff",
+    padding: "20px",
+  },
+  rightSection: {
+    flex: 0.7,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.95)",
+  },
+  welcomeText: {
+    fontSize: "3rem",
+    fontWeight: "bold",
+    marginBottom: "20px",
+    position: "fixed",
+  },
+  descriptionText: {
+    fontSize: "1.5rem",
+    textAlign: "center",
+  },
+};
 
 export default MuseumForm;

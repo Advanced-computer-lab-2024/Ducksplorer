@@ -1,5 +1,5 @@
 import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar";
-import AdvertiserNavbar from "../../Components/TopNav/AdvertiserNavbar"; // Import the Navbar
+import AdvertiserNavBar from "../../Components/NavBars/AdvertiserNavBar"; // Import the Navbar
 import React, { useState, useEffect } from "react";
 import { Box, Typography, CssBaseline } from "@mui/material";
 import { Outlet } from "react-router-dom";
@@ -39,7 +39,7 @@ function AdvertiserDashboard() {
       backgroundRepeat: "no-repeat",
     }}
   >
-    <AdvertiserNavbar /> {/* Add the Navbar */}
+    <AdvertiserNavBar /> {/* Add the Navbar */}
     {/* Background Video */}
     <video
       autoPlay
@@ -57,7 +57,7 @@ function AdvertiserDashboard() {
         transition: "opacity 1s ease-out", // Smooth fade-out
       }}
     >
-      <source src="/planevid.mp4" type="video/mp4" />
+      <source src="/planevidd.mp4" type="video/mp4" />
       Your browser does not support the video tag.
     </video>
 
@@ -102,7 +102,7 @@ function AdvertiserDashboard() {
 
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AdvertiserSidebar /> {/* Add the Sidebar */}
+      {/* <AdvertiserSidebar /> Add the Sidebar */}
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Outlet /> {/* Ensure the Outlet is inside the main Box */}
       </Box>

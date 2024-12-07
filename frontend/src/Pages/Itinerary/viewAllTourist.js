@@ -331,8 +331,6 @@ function SearchItineraries() {
     setActivityCurrency(selectedCurrency);
   };
 
-  
-
   useEffect(() => {
     if (itineraries.length === 0) {
       const timer = setTimeout(() => setShowError(true), 500); // Wait 0.5 second
@@ -341,6 +339,7 @@ function SearchItineraries() {
       setShowError(false); // Reset error state if itineraries exist
     }
   }, [itineraries]);
+
   if (loading) {
     return (
       <div>
@@ -363,7 +362,6 @@ function SearchItineraries() {
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography class="bigTitle">Itineraries</Typography>
         </Box>
-
 
         <div
           style={{

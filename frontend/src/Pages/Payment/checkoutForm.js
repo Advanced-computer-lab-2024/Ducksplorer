@@ -330,13 +330,13 @@ export default function CheckoutForm() {
     }
   };
 
-  // if (loading) {
-  //   return (
-  //     <div>
-  //       <DuckLoading />
-  //     </div>
-  //   );
-  // }
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
 
   return (
     <div

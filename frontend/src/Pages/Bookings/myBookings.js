@@ -66,7 +66,8 @@ const BookingDetails = () => {
 
   const errorMessage =
     "The bookings you are looking for might be removed or is temporarily unavailable";
-  const backMessage = "BACK TO TOURIST DASHBOARD";
+  const backMessage1 = "BACK TO TOURIST DASHBOARD";
+  const backMessage2 = "BACK TO ALL BOOKINGS"
 
   useEffect(() => {
     if (selectedCategory === "Past") {
@@ -80,6 +81,7 @@ const BookingDetails = () => {
 
   const fetchTourGuideName = async (bookingId) => {
     try {
+      setLoading(true);
       const response = await axios.get(
         `http://localhost:8000/tourGuideRate/getUserNameById/${bookingId}`
       );
@@ -88,6 +90,9 @@ const BookingDetails = () => {
     } catch (error) {
       console.error("Error fetching tour guide name:", error.message);
       return "N/A";
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -117,6 +122,7 @@ const BookingDetails = () => {
   };
   const fetchBookings = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(
         `http://localhost:8000/touristRoutes/booking`,
         {
@@ -146,7 +152,7 @@ const BookingDetails = () => {
         error.response ? error.response.data : error.message
       );
     } finally {
-      setTimeout(() => setLoading(false), 1000); // Delay of 1 second
+      setLoading(false);
     }
   };
 
@@ -156,6 +162,7 @@ const BookingDetails = () => {
 
   const handleDeleteBooking = async (type, itemId, price, booking) => {
     try {
+      setLoading(true);
       const response = await axios.patch(
         `http://localhost:8000/touristRoutes/booking/${userName}`,
         {
@@ -194,10 +201,14 @@ const BookingDetails = () => {
         "Cannot cancel the booking within 48 hours of the start date or after the start of the activity/itinerary."
       );
     }
+    finally {
+      setLoading(false);
+    }
   };
 
   const handleDeleteThirdPartyBooking = async (type, price, booking) => {
     try {
+      setLoading(true);
       console.log("BookingID", booking);
       const response = await axios.patch(
         `http://localhost:8000/touristRoutes/booking/${userName}`,
@@ -240,7 +251,10 @@ const BookingDetails = () => {
         "Cannot cancel the booking within 48 hours of the start date or after the start of the activity/itinerary."
       );
     }
-  };
+    finally {
+      setLoading(false);
+    }
+  }
 
   if (loading) {
     return (
@@ -249,7 +263,6 @@ const BookingDetails = () => {
       </div>
     );
   }
-
   if (
     activityBookings.length === 0 &&
     itineraryBookings.length === 0 &&
@@ -262,11 +275,87 @@ const BookingDetails = () => {
         <TouristNavBar />
         <Error404
           errorMessage={errorMessage}
-          backMessage={backMessage}
+          backMessage={backMessage1}
           route="/touristDashboard"
         />
       </>
     );
+
+  else if (
+    activityBookings.length === 0 &&
+    (selectedCategory === "activity")
+  )
+    return (
+      <>
+        <TouristNavBar />
+        <Error404
+          errorMessage={errorMessage}
+          backMessage={backMessage2}
+          route="/myBookings"
+        />
+      </>
+    );
+
+  else if (
+    itineraryBookings.length === 0 &&
+    (selectedCategory === "itinerary")
+  )
+    return (
+      <>
+        <TouristNavBar />
+        <Error404
+          errorMessage={errorMessage}
+          backMessage={backMessage2}
+          route="/myBookings"
+        />
+      </>
+    );
+
+  else if (
+    flightsBookings.length === 0 &&
+    (selectedCategory === "flight")
+  )
+    return (
+      <>
+        <TouristNavBar />
+        <Error404
+          errorMessage={errorMessage}
+          backMessage={backMessage2}
+          route="/myBookings"
+        />
+      </>
+    );
+
+  else if (
+    hotelsBookings.length === 0 &&
+    (selectedCategory === "hotel")
+  )
+    return (
+      <>
+        <TouristNavBar />
+        <Error404
+          errorMessage={errorMessage}
+          backMessage={backMessage2}
+          route="/myBookings"
+        />
+      </>
+    );
+
+  else if (
+    transportationBookings.length === 0 &&
+    (selectedCategory === "transportation")
+  )
+    return (
+      <>
+        <TouristNavBar />
+        <Error404
+          errorMessage={errorMessage}
+          backMessage={backMessage2}
+          route="/myBookings"
+        />
+      </>
+    );
+
 
   return (
     <Box

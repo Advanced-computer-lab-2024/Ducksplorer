@@ -9,6 +9,7 @@ import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon.js";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 import TouristNavBar from "../../Components/TouristNavBar.js";
+import DuckLoading from "../../Components/Loading/duckLoading.js";
 import {
   Box,
   Button,
@@ -28,8 +29,9 @@ const MuseumTouristPov = () => {
   const [currency, setCurrency] = useState("EGP");
   const [searchQuery, setSearchQuery] = useState(""); // Add this line
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
+    setLoading(true);
     axios
       .get(`http://localhost:8000/museum/getAllMuseums`)
       .then((response) => {
@@ -41,11 +43,14 @@ const MuseumTouristPov = () => {
           );
           setMuseums(tempMuseums);
         }
-        console.log("this is how the data should be:",response.data);
+        console.log("this is how the data should be:", response.data);
       })
       .catch((error) => {
         console.error("There was an error fetching the museums!", error);
         message.error("Error fetching museums!");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [id]);
 
@@ -56,6 +61,7 @@ const MuseumTouristPov = () => {
 
   const handleSearchMuseums = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(
         "http://localhost:8000/museum/searchMuseum",
         {
@@ -73,6 +79,9 @@ const MuseumTouristPov = () => {
     } catch (error) {
       message.error(" No museums found ");
     }
+    finally {
+      setLoading(false)
+    }
   };
 
   const handleFilterResults = (filterResults) => {
@@ -82,6 +91,14 @@ const MuseumTouristPov = () => {
   const goToUpcomingPage = () => {
     navigate("/UpcomingMuseums");
   };
+
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
 
   return (
     <Box
@@ -94,7 +111,7 @@ const MuseumTouristPov = () => {
       <TouristNavBar />
       <Container sx={{ width: "100%" }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
-        <Typography class="bigTitle">Museums</Typography>
+          <Typography class="bigTitle">Museums</Typography>
         </Box>
         <div
           style={{
@@ -118,13 +135,13 @@ const MuseumTouristPov = () => {
             variant="solid"
             onClick={handleSearchMuseums}
             className="blackhover"
-            sx={{ backgroundColor: "#ff9933" }}
+            sx={{ backgroundColor: "#ff9933" , color: 'white'}}
           >
             Search
           </Button>
           <MuseumFilterComponent onFilter={handleFilterResults} />
         </div>
-        
+
 
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <Button

@@ -197,11 +197,13 @@ const DeleteCategory = () => {
               <Button
                 variant="contained"
                 onClick={() => handleAdd(newCategory)}
+                className="blackhover"
                 sx={{
                   borderRadius: "8px",
                   padding: "10px 24px",
                   textTransform: "none",
                   fontWeight: "bold",
+                  color: "white"
                 }}
               >
                 Add
@@ -222,20 +224,15 @@ const DeleteCategory = () => {
             <Table>
               <TableHead
               >
-                <TableRow>
+                <TableRow >
                   <TableCell
-                    sx={{ fontWeight: "bold", fontSize: "16px" }}
-                  >
+                    sx={{
+                      fontWeight: "bold", fontSize: "16px", textAlign: "center", verticalAlign: "middle"
+                    }}>
                     Category
                   </TableCell>
                   <TableCell
-                    sx={{ fontWeight: "bold", fontSize: "16px" }}
-                  >
-                    Activities
-                  </TableCell>
-                  <TableCell
-                    sx={{ fontWeight: "bold", fontSize: "16px" }}
-                  >
+                    sx={{ fontWeight: "bold", fontSize: "16px", textAlign: "center", verticalAlign: "middle" }}>
                     Actions
                   </TableCell>
                 </TableRow>
@@ -245,7 +242,7 @@ const DeleteCategory = () => {
                   <TableRow
                     key={category._id}
                   >
-                    <TableCell>
+                    <TableCell style={{ textAlign: "center", verticalAlign: "middle" }}>
                       {editingCategory && editingCategory.name === category.name ? (
                         <Box sx={{ display: "flex", alignItems: "center" }}>
                           <TextField
@@ -278,8 +275,7 @@ const DeleteCategory = () => {
                         category.name
                       )}
                     </TableCell>
-                    <TableCell>{category.activities.join(", ")}</TableCell>
-                    <TableCell>
+                    <TableCell style={{ textAlign: "center", verticalAlign: "middle" }}>
                       <Tooltip title="Delete Category">
                         <IconButton
                           color="error"
@@ -379,7 +375,7 @@ const DeleteCategory = () => {
           </TableContainer>
         </div>
       </div>
-    </Box>
+    </Box >
 
   );
 };

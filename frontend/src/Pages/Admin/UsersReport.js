@@ -9,6 +9,7 @@ import Sidebar from "../../Components/Sidebars/Sidebar.js";
 import { message } from 'antd';
 import Error404 from "../../Components/Error404.js";
 import AdminNavbar from "../../Components/TopNav/Adminnavbar.js";
+import DuckLoading from "../../Components/Loading/duckLoading.js";
 
 import {
     Box,
@@ -143,30 +144,9 @@ const ActivityReport = () => {
 
     if (loading) {
         return (
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: "100vh", // Full screen height
-                }}
-            >
-                <CircularProgress size={60} thickness={4} />
-                <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
-                    Loading users report...
-                </Typography>
-            </Box>
-        );
-    }
-
-    if (!Array.isArray(users) || users.length === 0) {
-        return (
-            <Error404
-                errorMessage={errorMessage}
-                backMessage={backMessage}
-                route="/adminDashboard"
-            />
+            <div>
+                <DuckLoading />
+            </div>
         );
     }
 
@@ -267,10 +247,10 @@ const ActivityReport = () => {
                             <Table>
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>User Name</TableCell>
-                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Role</TableCell>
-                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Email</TableCell>
-                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Date</TableCell>
+                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }} >User Name</TableCell>
+                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }} >Role</TableCell>
+                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }} >Email</TableCell>
+                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }} >Date</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -278,11 +258,11 @@ const ActivityReport = () => {
                                         users.map((userAdded) =>
                                             userAdded ? (
                                                 <TableRow >
-                                                    <TableCell>{userAdded.userName}</TableCell>
-                                                    <TableCell>
+                                                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }} >{userAdded.userName}</TableCell>
+                                                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>
                                                         {userAdded.role} </TableCell>
-                                                    <TableCell>{userAdded.email}</TableCell>
-                                                    <TableCell>{new Date(userAdded.date).toLocaleDateString()}</TableCell>
+                                                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>{userAdded.email}</TableCell>
+                                                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>{new Date(userAdded.date).toLocaleDateString()}</TableCell>
                                                 </TableRow>
                                             ) : null
                                         )

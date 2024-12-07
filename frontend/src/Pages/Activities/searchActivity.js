@@ -65,9 +65,6 @@ function SearchActivity() {
 
   const [loading, setLoading] = useState(true);
 
-  const [displayFilter, setDisplayFilter] = useState(false);
-  const [displaySort, setDisplaySort] = useState(false);
-
   const user = JSON.parse(localStorage.getItem("user"));
 
   const username = user?.username;
@@ -82,13 +79,6 @@ function SearchActivity() {
   const [showUpcomingOnly, setShowUpcomingOnly] = useState(false);
   const [showError, setShowError] = useState(false);
 
-  const toggleFilter = () => {
-    setDisplayFilter((prev) => !prev);
-  };
-
-  const toggleSort = () => {
-    setDisplaySort((prev) => !prev);
-  };
 
   // Fetch all activities when component mounts
   useEffect(() => {
@@ -137,8 +127,8 @@ function SearchActivity() {
         .catch((error) => {
           console.error("Error fetching categories:", error);
           setError("Failed to fetch categories.");
-          setLoading(false);
-        });
+        })
+        .finally(() => setLoading(false));
     }
   };
 
@@ -172,6 +162,7 @@ function SearchActivity() {
   const handleSort = () => {
     const showPreferences = localStorage.getItem("showPreferences");
     const favCategory = localStorage.getItem("category");
+    setLoading(true);
     axios
       .get(
         `http://localhost:8000/activity/sort?sortBy=${sortBy}&order=${order}`
@@ -202,23 +193,13 @@ function SearchActivity() {
       })
       .catch((error) => {
         console.error("There was an error fetching the activities!", error);
-      });
+      })
+      .finally(() => setLoading(false));
   };
-  if (loading) {
-    return (
-      <div>
-        <DuckLoading />
-      </div>
-    );
-  }
+
 
   // Function to fetch activities based on search criteria
   const handleSearchActivities = () => {
-    if (!searchQuery.trim()) {
-      // Optionally, display a message or return early if search is empty
-      console.error("Please enter a search term.");
-      return;
-    }
 
     const query = new URLSearchParams({
       search: searchQuery, // Single search query sent to the backend
@@ -238,8 +219,13 @@ function SearchActivity() {
   const isFilterSelected = (filter) => selectedFilters.includes(filter);
 
   const handleFilterChoiceClick = (event) => {
-    setFilterAnchorEl(event.currentTarget);
+    if (filterAnchorEl === event.currentTarget) {
+      setFilterAnchorEl(null);
+    } else {
+      setFilterAnchorEl(event.currentTarget);
+    }
   };
+
   const handleFilterClose = () => {
     setFilterAnchorEl(null);
   };
@@ -252,11 +238,8 @@ function SearchActivity() {
       newFilters.splice(index, 1);
 
       switch (filter) {
-        case "minPrice":
-          setMinPrice("");
-          break;
-        case "maxPrice":
-          setMaxPrice("");
+        case "price":
+          setPrice("");
           break;
         case "category":
           setCategories("");
@@ -317,13 +300,6 @@ function SearchActivity() {
     setRating(event.target.value);
   };
 
-  // const handleTagsChange = (event) => {
-  //   const value = event.target.value;
-  //   setTags(value);
-  // };
-
-
-
   const displayUpcomingActivities = async () => {
     try {
       const response = await axios.get(
@@ -346,12 +322,11 @@ function SearchActivity() {
       return;
     }
 
-    const query = new URLSearchParams({
-      price: priceRange[0] && priceRange[1] ? `${priceRange[0]}-${priceRange[1]}` : '', // Combine min and max price if set
-      date: date,
-      category: selectedCategory,
-      averageRating: rating, // Include the rating parameter
-    }).toString();
+    const query = new URLSearchParams();
+    if (priceRange[0] && priceRange[1]) query.append('price', `${priceRange[0]}-${priceRange[1]}`);
+    if (date) query.append('date', date);
+    if (selectedCategory) query.append('category', selectedCategory);
+    if (rating) query.append('averageRating', rating);
 
     axios
       .get(`http://localhost:8000/activity/filter?${query}`)
@@ -362,7 +337,6 @@ function SearchActivity() {
         console.error("There was an error fetching the activities!", error);
       });
   };
-
 
   const handleActivityCurrencyChange = (rates, selectedCurrency) => {
     setActivityExchangeRates(rates);
@@ -431,7 +405,13 @@ function SearchActivity() {
               anchorEl={filterAnchorEl}
               open={Boolean(filterAnchorEl)}
               onClose={handleFilterClose}
+              PaperProps={{
+                style: {
+                  position: 'absolute',
+                },
+              }}
             >
+
               <MenuItem>
                 <div
                   style={{
@@ -828,7 +808,7 @@ function SearchActivity() {
         )}
         <Help />
       </Container>
-    </Box>
+    </Box >
   );
 }
 

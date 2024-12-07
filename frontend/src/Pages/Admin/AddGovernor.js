@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import Button from "@mui/material/Button";
 import { message } from "antd";
 import IconButton from "@mui/material/IconButton";
@@ -9,7 +9,7 @@ import Stack from "@mui/material/Stack";
 import axios from "axios";
 import Sidebar from "../../Components/Sidebars/Sidebar.js";
 import { Box, Typography } from "@mui/material";
-import AdminNavbar from "../../Components/TopNav/Adminnavbar.js";
+import AdminNavBar from "../../Components/NavBars/AdminNavBar.js";
 
 function AddGovernor() {
   const [userName, setUserName] = useState("");
@@ -35,158 +35,223 @@ function AddGovernor() {
       message.error("An error occurred: " + error.message);
     }
   };
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
 
   return (
-    <Box
-    sx={{
-      minHeight: "100vh", // Full viewport height
-      width: "130%", // Full viewport width
-      display: "flex",
-      justifyContent: "center", // Center horizontally
-      alignItems: "center", // Center vertically
-      backgroundColor: "#ffffff",
-      paddingTop: "64px", // Adjust for navbar height
-      overflowY: "hidden", // Disable scrolling for cleaner centering
-    }}
-  >
-    {/* Navbar */}
-    <AdminNavbar />
-    <Sidebar />
-  
-    {/* Main Content */}
-    <Box
-      sx={{
-        width: "100%",
-        maxWidth: "500px",
-        backgroundColor: "#ffffff", // White card background
-        borderRadius: "12px", // Rounded corners
-        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
-        padding: "32px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        textAlign: "center",
-      }}
-    >
-      {/* Title */}
-      <Typography
-        variant="h4"
-        sx={{
-          color: "orange",
-          fontWeight: "bold",
-          textShadow: "2px 2px 4px #aaa",
-          marginBottom: "24px",
-        }}
-      >
-        Add Governor
-      </Typography>
-  
-      {/* Logo */}
-      <img
-        src="logo1.png"
-        style={{
-          width: "150px",
-          height: "150px",
-          marginBottom: "24px",
-        }}
-        alt="Logo"
-      />
-  
-      {/* Form */}
-      <Stack spacing={3} sx={{ width: "100%" }}>
-        <TextField
-          name="username"
-          label="Username"
-          type="text"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-          fullWidth
-          InputLabelProps={{ style: { color: "#777" } }}
-          InputProps={{
-            style: {
-              fontSize: "16px",
-              color: "#333",
-            },
-          }}
-          sx={{
-            "& .MuiOutlinedInput-root": {
-              "& fieldset": {
-                borderColor: "orange",
-              },
-              "&:hover fieldset": {
-                borderColor: "orange",
-              },
-              "&.Mui-focused fieldset": {
-                borderColor: "orange",
-              },
-            },
-          }}
-        />
-  
-        <TextField
-          name="password"
-          label="Password"
-          type={showPassword ? "text" : "password"}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          fullWidth
-          InputLabelProps={{ style: { color: "#777" } }}
-          InputProps={{
-            style: {
-              fontSize: "16px",
-              color: "#333",
-            },
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => setShowPassword(!showPassword)}
-                  edge="end"
+    <>
+      <AdminNavBar />
+      <div style={styles.container}>
+        <div style={styles.leftSection}>
+          <Typography variant="h3" className="duckTitle" style={styles.welcomeText}>
+            Governor Management
+          </Typography>
+        </div>
+        <div style={styles.rightSection}>
+          <Box
+            sx={{
+              width: "100%", // Responsive width
+              height: "100%", // Take full height
+              backgroundColor: "#f9f9f9", // Same as the page background
+              borderRadius: "16px", // Rounded corners
+              boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)", // Subtle shadow
+              textAlign: "center",
+              display: "flex", // Flexbox for centering
+              flexDirection: "column", // Column direction
+              justifyContent: "center", // Center vertically
+              alignItems: "center", // Center horizontally
+            }}
+          >
+            {/* Title Section */}
+            <h2
+              className="bigTitle"
+              style={{
+                textAlign: "center",
+                alignSelf: "center",
+                marginTop: "-20vh",
+              }}
+            >
+              Add Governor
+            </h2>
+
+            {/* Logo Section */}
+            <Box sx={{ marginBottom: "24px" }}>
+              <img
+                src="logo1.png"
+                alt="Logo"
+                style={{
+                  alignContent: "center",
+                  justifyContent: "center",
+                  justifySelf: "center",
+                  width: "150px",
+                  height: "auto",
+                  marginTop: "5vh",
+                  marginBottom: "5vh",
+                }}
+              />
+            </Box>
+
+            {/* Form Section */}
+            <div style={{ justifyContent: "center", alignContent: "center" }}>
+              <Stack
+                spacing={3}
+                style={{ justifyContent: "center", alignContent: "center" }}
+              >
+                {/* Username Field */}
+                <TextField
+                  name="username"
+                  label="Username"
+                  type="text"
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  InputLabelProps={{ style: { color: "#777" } }}
+                  InputProps={{
+                    style: {
+                      fontSize: "16px",
+                      color: "#333",
+                    },
+                  }}
+                  sx={{
+                    width: "100%",
+                    justifySelf: "center",
+                    justifyContent: "center",
+                    alignContent: "center",
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "#ff9800",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#ff9800",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#ff9800",
+                      },
+                    },
+                  }}
+                />
+
+                {/* Password Field */}
+                <TextField
+                  name="password"
+                  label="Password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  InputLabelProps={{ style: { color: "#777" } }}
+                  InputProps={{
+                    style: {
+                      fontSize: "16px",
+                      color: "#333",
+                      width: "100%",
+                    },
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() => setShowPassword(!showPassword)}
+                          edge="end"
+                        >
+                          <Iconify
+                            icon={
+                              showPassword ? "eva:eye-fill" : "eva:eye-off-fill"
+                            }
+                            style={{ color: "#ff9800", fontSize: "20px" }}
+                          />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    width: "100%",
+                    justifySelf: "center",
+                    justifyContent: "center",
+                    alignContent: "center",
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "#ff9800",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#ff9800",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#ff9800",
+                      },
+                    },
+                  }}
+                />
+
+                {/* Add Governor Button */}
+                <Button
+                  variant="contained"
+                  onClick={handleAdd}
+                  sx={{
+                    backgroundColor: "#ff9800",
+                    color: "white",
+                    fontWeight: "bold",
+                    textTransform: "none",
+                    borderRadius: "25px",
+                    padding: "12px 24px",
+                    fontSize: "16px",
+                    width: "100%",
+                    justifySelf: "center",
+                    justifyContent: "center",
+                    alignContent: "center",
+                    "&:hover": {
+                      backgroundColor: "#e68a00", // Darker hover color
+                    },
+                  }}
+                  fullWidth
                 >
-                  <Iconify
-                    icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
-                    style={{ color: "orange", fontSize: "24px" }}
-                  />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-          sx={{
-            "& .MuiOutlinedInput-root": {
-              "& fieldset": {
-                borderColor: "orange",
-              },
-              "&:hover fieldset": {
-                borderColor: "orange",
-              },
-              "&.Mui-focused fieldset": {
-                borderColor: "orange",
-              },
-            },
-          }}
-        />
-  
-        <Button
-          variant="contained"
-          onClick={handleAdd}
-          sx={{
-            backgroundColor: "orange",
-            color: "white",
-            fontWeight: "bold",
-            textTransform: "none",
-            borderRadius: "25px",
-            padding: "10px 0",
-            fontSize: "16px",
-            "&:hover": {
-              backgroundColor: "#e68a00",
-            },
-          }}
-          fullWidth
-        >
-          Add Governor
-        </Button>
-      </Stack>
-    </Box>
-  </Box>
+                  Add Governor
+                </Button>
+              </Stack>
+            </div>
+          </Box>
+        </div>
+      </div>
+    </>
   );
-}  
+}
+
+const styles = {
+  container: {
+    display: "flex",
+    height: "120vh",
+    width: "100vw",
+    background: 'url("/duckAdmin.jpg") no-repeat left center fixed',
+    backgroundSize: "cover",
+    overflowY: "visible",
+  },
+  leftSection: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    color: "#fff",
+    padding: "20px",
+  },
+  rightSection: {
+    flex: 0.7,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.95)",
+  },
+  welcomeText: {
+    fontSize: "3rem",
+    fontWeight: "bold",
+    marginBottom: "20px",
+    position: "fixed",
+  },
+  descriptionText: {
+    fontSize: "1.5rem",
+    textAlign: "center",
+  },
+};
+
 export default AddGovernor;

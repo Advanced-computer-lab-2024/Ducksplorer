@@ -7,7 +7,7 @@ import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import WarningIcon from "@mui/icons-material/Warning";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useNavigate } from "react-router-dom";
-
+import TourGuideNavbar from "../../Components/NavBars/TourGuideNavBar";
 import {
   IconButton,
   Button,
@@ -26,9 +26,10 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  TableContainer
+  TableContainer,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import TourGuideNavBar from "../../Components/NavBars/TourGuideNavBar";
 
 export const TagsContext = createContext();
 
@@ -422,7 +423,7 @@ const RUDItinerary = () => {
         marginLeft: "5vw",
       }}
     >
-      <Link to="/tourGuideDashboard"> Back </Link>
+      <TourGuideNavBar />
       <div
         style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
       >
@@ -443,7 +444,7 @@ const RUDItinerary = () => {
               borderRadius: "1.5cap",
             }}
           >
-            <Table >
+            <Table>
               <TableHead>
                 <TableRow>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
@@ -453,34 +454,47 @@ const RUDItinerary = () => {
                     />
                   </TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Locations</TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Timeline</TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Language</TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-
-                    Price
-                    <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                    Locations
                   </TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Available Dates And Times</TableCell>
+                    Timeline
+                  </TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Accessibility</TableCell>
+                    Language
+                  </TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Pick Up Location</TableCell>
+                    Price
+                    <CurrencyConvertor
+                      onCurrencyChange={handleCurrencyChange}
+                    />
+                  </TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Drop Off Location</TableCell>
+                    Available Dates And Times
+                  </TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Ratings</TableCell>
+                    Accessibility
+                  </TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Tags</TableCell>
+                    Pick Up Location
+                  </TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Flag</TableCell>
+                    Drop Off Location
+                  </TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Active Status</TableCell>
+                    Ratings
+                  </TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Actions</TableCell>
+                    Tags
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Flag
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Active Status
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Actions
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -495,7 +509,8 @@ const RUDItinerary = () => {
                                 {activity.name || "N/A"} - Price:
                                 {(
                                   activity.price *
-                                  (activityExchangeRates[activityCurrency] || 1)
+                                  (activityExchangeRates[activityCurrency] ||
+                                    1)
                                 ).toFixed(2)}{" "}
                                 {activityCurrency}
                                 ,<br />
@@ -535,8 +550,12 @@ const RUDItinerary = () => {
                             ? itinerary.availableDatesAndTimes.map(
                               (dateTime, index) => {
                                 const dateObj = new Date(dateTime);
-                                const date = dateObj.toISOString().split("T")[0]; // YYYY-MM-DD format
-                                const time = dateObj.toTimeString().split(" ")[0]; // HH:MM:SS format
+                                const date = dateObj
+                                  .toISOString()
+                                  .split("T")[0]; // YYYY-MM-DD format
+                                const time = dateObj
+                                  .toTimeString()
+                                  .split(" ")[0]; // HH:MM:SS format
                                 return (
                                   <div key={index}>
                                     Date {index + 1}: {date}
@@ -601,7 +620,9 @@ const RUDItinerary = () => {
                         <TableCell>
                           <Button
                             variant="contained"
-                            color={itinerary.isDeactivated ? "success" : "error"} // it is not active this means the button will activate the itinerary which we want to be in color success (green)
+                            color={
+                              itinerary.isDeactivated ? "success" : "error"
+                            } // it is not active this means the button will activate the itinerary which we want to be in color success (green)
                             onClick={() => {
                               console.log(
                                 `Button clicked for itinerary ID: ${itinerary._id}`
@@ -609,7 +630,9 @@ const RUDItinerary = () => {
                               toggleItineraryActiveStatus(itinerary._id);
                             }}
                           >
-                            {itinerary.isDeactivated ? "Activate" : "Deactivate"}
+                            {itinerary.isDeactivated
+                              ? "Activate"
+                              : "Deactivate"}
                           </Button>
                         </TableCell>
 
@@ -638,7 +661,6 @@ const RUDItinerary = () => {
                   ) //We don't output a row when the itinerary has been deleted but cannot be removed from the database since it is booked by previous tourists
                 }
 
-
                 <Dialog open={open} onClose={handleClose}>
                   <DialogTitle>Confirm Deletion</DialogTitle>
                   <DialogContent>
@@ -660,7 +682,7 @@ const RUDItinerary = () => {
           </TableContainer>
         </div>
       </div>
-    </Box >
+    </Box>
   );
 };
 

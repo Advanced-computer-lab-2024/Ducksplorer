@@ -51,7 +51,6 @@ const Adminproducts = () => {
     navigate("/FilterProducts");
   };
 
-
   // Placeholder functions for button actions
   const handleAddProduct = () => {
     navigate("/AddProducts");
@@ -94,9 +93,9 @@ const Adminproducts = () => {
     navigate("/SortProducts");
   };
 
-  const handleViewMyProducts = ()=> {
-    navigate('/ViewMyProducts');
-  }
+  const handleViewMyProducts = () => {
+    navigate("/ViewMyProducts");
+  };
 
   const handleBackClick = () => {
     window.history.back();
@@ -105,7 +104,6 @@ const Adminproducts = () => {
   return (
     <div>
       {/* Search Container at the Top */}
-      <Button onClick={handleBackClick}> Back </Button>
       <div style={searchContainerStyle}>
         <Stack spacing={2}>
           <TextField
