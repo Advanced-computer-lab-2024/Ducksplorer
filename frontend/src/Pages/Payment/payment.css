@@ -1,0 +1,37 @@
+.payment-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Center the content vertically */
+  width: 50vw;
+  margin: 20px auto;
+  min-height: 500px; /* Increase the minimum height of the wrapper */
+}
+
+.payment-form {
+  width: 100%;
+  max-width: 1000px !important; /* Increase the max-width of the form */
+  min-width: 400px; /* Set a larger minimum width */
+  padding: 30px; /* Increase padding for more space inside the form */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  min-height: 500px; /* Increase the minimum height of the form */
+}
+
+.payment-element {
+  flex-shrink: 0; /* Prevent shrinking */
+  width: 200%; /* Take full width of container */
+}
+
+.payment-form button,
+.payment-form .payment-element {
+  width: 200%;
+  min-width: 300px; /* Set a larger minimum width for buttons */
+  margin-top: 10px;
+}
+
+.payment-form p {
+  word-wrap: break-word;
+  font-size: 18px; /* Increase the font size for better readability */
+  line-height: 1.7;
+}
