@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Typography, Container, Paper, CircularProgress, Box, Divider } from '@mui/material';
 import axios from 'axios';
+import DuckLoading from '../Loading/duckLoading';
 
 const ComplaintDetails = () => {
   const { id } = useParams(); // Get the complaint ID from the URL
@@ -35,12 +36,9 @@ const ComplaintDetails = () => {
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="80vh">
-        <CircularProgress size={60} thickness={4} />
-        <Typography variant="h6" color="textSecondary" sx={{ ml: 2 }}>
-          Loading complaint details...
-        </Typography>
-      </Box>
+      <div>
+        <DuckLoading />
+      </div>
     );
   }
 

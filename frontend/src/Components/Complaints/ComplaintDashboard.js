@@ -26,6 +26,7 @@ import { message } from "antd";
 import { Link } from "react-router-dom";
 import AdminNavbar from "../TopNav/Adminnavbar";
 import Sidebar from "../Sidebars/Sidebar";
+import DuckLoading from "../Loading/duckLoading";
 
 const ComplaintsDashboard = () => {
   const [complaints, setComplaints] = useState([]);
@@ -112,19 +113,9 @@ const ComplaintsDashboard = () => {
 
   if (loading) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          marginTop: 50,
-        }}
-      >
-        <CircularProgress size={50} thickness={5} color="primary" />
-        <Typography variant="h6" sx={{ marginTop: 2, color: "#00796b" }}>
-          Loading complaints, please wait...
-        </Typography>
-      </Box>
+      <div>
+        <DuckLoading />
+      </div>
     );
   }
 

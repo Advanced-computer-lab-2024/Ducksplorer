@@ -204,13 +204,6 @@ function SearchActivity() {
         console.error("There was an error fetching the activities!", error);
       });
   };
-  if (loading) {
-    return (
-      <div>
-        <DuckLoading />
-      </div>
-    );
-  }
 
   // Function to fetch activities based on search criteria
   const handleSearchActivities = () => {

@@ -8,6 +8,7 @@ import CurrencyConvertor from '../../Components/CurrencyConvertor';
 import SellerSidebar from "../../Components/Sidebars/SellerSidebar.js";
 import { message } from 'antd';
 import Help from "../../Components/HelpIcon.js";
+import DuckLoading from "../../Components/Loading/duckLoading.js";
 
 import {
   Box,
@@ -194,20 +195,9 @@ const MyPurchases = () => {
 
   if (loading) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100vh", // Full screen height
-        }}
-      >
-        <CircularProgress size={60} thickness={4} />
-        <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
-          Loading seller report...
-        </Typography>
-      </Box>
+      <div>
+        <DuckLoading />
+      </div>
     );
   }
 
