@@ -5,7 +5,6 @@ import { calculateAverageRating } from "../../Utilities/averageRating.js";
 import WarningIcon from "@mui/icons-material/Warning";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
-import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar.js";
 
 import { message } from "antd";
 import Help from "../../Components/HelpIcon.js";
@@ -36,7 +35,6 @@ import {
   CircularProgress,
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import AdvertiserNavBar from "../../Components/NavBars/AdvertiserNavBar.js";
 import AdvertiserNavBar from "../../Components/NavBars/AdvertiserNavBar.js";
 
 const ActivityReport = () => {

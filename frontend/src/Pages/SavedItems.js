@@ -3,6 +3,8 @@ import { message } from "antd";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import DuckLoading from "../Components/Loading/duckLoading.js";
+import Error404 from "../Components/Error404.js";
+
 import {
 
   Typography,
@@ -52,6 +54,10 @@ function MySavedItems() {
 
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
+
+  const errorMessage =
+    "The savedItems you are looking for might be removed or is temporarily unavailable";
+  const backMessage = "BACK TO TOURIST DASHBOARD";
 
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
@@ -175,10 +181,19 @@ function MySavedItems() {
         <DuckLoading />
       </div>
     );
-
+  }
 
   if ((!Array.isArray(itineraries) && !Array.isArray(activities)) || (itineraries.length === 0 && activities.length === 0)) {
-    return <p>No saved data available.</p>;
+    return (
+      <>
+        <TouristNavBar />
+        <Error404
+          errorMessage={errorMessage}
+          backMessage={backMessage}
+          route="/touristDashboard"
+        />
+      </>
+    );
   }
 
   return (
@@ -208,38 +223,38 @@ function MySavedItems() {
             {/* <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
                 <Typography variant="h4">Itineraries</Typography>
               </Box> */}
-              <div style={{ flex: 1 }}>
-                {itineraries.length > 0 ? (
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "repeat(3, 1fr)",
-                      gap: "24px", // Adjust the gap between items as needed
-                      paddingBottom: 24,
-                      paddingTop: 24
-                    }}
-                  >
-                    {
-                      itineraries.map((itinerary) =>
-                        itinerary.flag === false &&
-                          itinerary.isDeactivated === false &&
-                          itinerary.tourGuideDeleted === false &&
-                          itinerary.deletedItinerary === false &&
-                          itinerary.saved.user === username &&
-                          itinerary.saved.isSaved === true ? (
-                          <ItineraryCard itinerary={itinerary} onRemove={handleRemoveItinerary} showNotify={true} />
-                        ) : null
-                      ) // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists
-                    }
-                  </div>
-                ) : (
-                  <Typography variant="body1" style={{ marginTop: "20px" }}>
-                    No itineraries found.
-                  </Typography>
-                )}
-              </div>
-            </>
-          )}
+            <div style={{ flex: 1 }}>
+              {itineraries.length > 0 ? (
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(3, 1fr)",
+                    gap: "24px", // Adjust the gap between items as needed
+                    paddingBottom: 24,
+                    paddingTop: 24
+                  }}
+                >
+                  {
+                    itineraries.map((itinerary) =>
+                      itinerary.flag === false &&
+                        itinerary.isDeactivated === false &&
+                        itinerary.tourGuideDeleted === false &&
+                        itinerary.deletedItinerary === false &&
+                        itinerary.saved.user === username &&
+                        itinerary.saved.isSaved === true ? (
+                        <ItineraryCard itinerary={itinerary} onRemove={handleRemoveItinerary} showNotify={true} />
+                      ) : null
+                    ) // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists
+                  }
+                </div>
+              ) : (
+                <Typography variant="body1" style={{ marginTop: "20px" }}>
+                  No itineraries found.
+                </Typography>
+              )}
+            </div>
+          </>
+        )}
 
         {(selectedCategory === "Activities" ||
           selectedCategory === "All") && (
@@ -279,9 +294,9 @@ function MySavedItems() {
           )}
         {/* </Box> */}
       </div>
-      <Help />
     </>
   );
 }
+
 
 export default MySavedItems;
