@@ -166,7 +166,6 @@ const EditProfile = () => {
 
   return (
     <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-      <Link to="/sellerDashboard"> Back </Link>
       <Paper
         elevation={4}
         sx={{
@@ -323,15 +322,6 @@ const EditProfile = () => {
               Edit Profile
             </Button>
           )}
-        </Box>
-
-        <Box sx={{ textAlign: "center", mt: 2 }}>
-          <Link
-            to="/sellerDashboard"
-            style={{ textDecoration: "none", color: "primary.main" }}
-          >
-            Back to Dashboard
-          </Link>
         </Box>
       </Paper>
     </Box>

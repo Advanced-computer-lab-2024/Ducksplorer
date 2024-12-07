@@ -26,7 +26,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  TableContainer
+  TableContainer,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
@@ -240,7 +240,8 @@ const RUDItinerary = () => {
           error
         );
         message.error(
-          `Error updating itinerary: ${error.response ? error.response.data.message : error.message
+          `Error updating itinerary: ${
+            error.response ? error.response.data.message : error.message
           }`
         );
       });
@@ -422,7 +423,6 @@ const RUDItinerary = () => {
         marginLeft: "5vw",
       }}
     >
-      <Link to="/tourGuideDashboard"> Back </Link>
       <div
         style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
       >
@@ -443,7 +443,7 @@ const RUDItinerary = () => {
               borderRadius: "1.5cap",
             }}
           >
-            <Table >
+            <Table>
               <TableHead>
                 <TableRow>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
@@ -453,34 +453,47 @@ const RUDItinerary = () => {
                     />
                   </TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Locations</TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Timeline</TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Language</TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-
-                    Price
-                    <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                    Locations
                   </TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Available Dates And Times</TableCell>
+                    Timeline
+                  </TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Accessibility</TableCell>
+                    Language
+                  </TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Pick Up Location</TableCell>
+                    Price
+                    <CurrencyConvertor
+                      onCurrencyChange={handleCurrencyChange}
+                    />
+                  </TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Drop Off Location</TableCell>
+                    Available Dates And Times
+                  </TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Ratings</TableCell>
+                    Accessibility
+                  </TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Tags</TableCell>
+                    Pick Up Location
+                  </TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Flag</TableCell>
+                    Drop Off Location
+                  </TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Active Status</TableCell>
+                    Ratings
+                  </TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Actions</TableCell>
+                    Tags
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Flag
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Active Status
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Actions
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -491,34 +504,35 @@ const RUDItinerary = () => {
                         <TableCell>
                           {itinerary.activity && itinerary.activity.length > 0
                             ? itinerary.activity.map((activity, index) => (
-                              <div key={index}>
-                                {activity.name || "N/A"} - Price:
-                                {(
-                                  activity.price *
-                                  (activityExchangeRates[activityCurrency] || 1)
-                                ).toFixed(2)}{" "}
-                                {activityCurrency}
-                                ,<br />
-                                Location: {activity.location || "N/A"},<br />
-                                Category: {activity.category || "N/A"}
-                                <br />
-                                <br />{" "}
-                                {/* Adds an extra line break between activities */}
-                              </div>
-                            ))
+                                <div key={index}>
+                                  {activity.name || "N/A"} - Price:
+                                  {(
+                                    activity.price *
+                                    (activityExchangeRates[activityCurrency] ||
+                                      1)
+                                  ).toFixed(2)}{" "}
+                                  {activityCurrency}
+                                  ,<br />
+                                  Location: {activity.location || "N/A"},<br />
+                                  Category: {activity.category || "N/A"}
+                                  <br />
+                                  <br />{" "}
+                                  {/* Adds an extra line break between activities */}
+                                </div>
+                              ))
                             : "No activities available"}
                         </TableCell>
 
                         <TableCell>
                           {itinerary.locations && itinerary.locations.length > 0
                             ? itinerary.locations.map((location, index) => (
-                              <div key={index}>
-                                <Typography variant="body1">
-                                  {index + 1}: {location.trim()}
-                                </Typography>
-                                <br />
-                              </div>
-                            ))
+                                <div key={index}>
+                                  <Typography variant="body1">
+                                    {index + 1}: {location.trim()}
+                                  </Typography>
+                                  <br />
+                                </div>
+                              ))
                             : "No locations available"}
                         </TableCell>
 
@@ -533,19 +547,23 @@ const RUDItinerary = () => {
                         <TableCell>
                           {itinerary.availableDatesAndTimes.length > 0
                             ? itinerary.availableDatesAndTimes.map(
-                              (dateTime, index) => {
-                                const dateObj = new Date(dateTime);
-                                const date = dateObj.toISOString().split("T")[0]; // YYYY-MM-DD format
-                                const time = dateObj.toTimeString().split(" ")[0]; // HH:MM:SS format
-                                return (
-                                  <div key={index}>
-                                    Date {index + 1}: {date}
-                                    <br />
-                                    Time {index + 1}: {time}
-                                  </div>
-                                );
-                              }
-                            )
+                                (dateTime, index) => {
+                                  const dateObj = new Date(dateTime);
+                                  const date = dateObj
+                                    .toISOString()
+                                    .split("T")[0]; // YYYY-MM-DD format
+                                  const time = dateObj
+                                    .toTimeString()
+                                    .split(" ")[0]; // HH:MM:SS format
+                                  return (
+                                    <div key={index}>
+                                      Date {index + 1}: {date}
+                                      <br />
+                                      Time {index + 1}: {time}
+                                    </div>
+                                  );
+                                }
+                              )
                             : "No available dates and times"}
                         </TableCell>
 
@@ -563,12 +581,12 @@ const RUDItinerary = () => {
                         <TableCell>
                           {itinerary.tags && itinerary.tags.length > 0
                             ? itinerary.tags.map((tag, index) => (
-                              <div key={index}>
-                                {tag || "N/A"}
-                                <br />
-                                <br />
-                              </div>
-                            ))
+                                <div key={index}>
+                                  {tag || "N/A"}
+                                  <br />
+                                  <br />
+                                </div>
+                              ))
                             : "No tags available"}
                         </TableCell>
 
@@ -601,7 +619,9 @@ const RUDItinerary = () => {
                         <TableCell>
                           <Button
                             variant="contained"
-                            color={itinerary.isDeactivated ? "success" : "error"} // it is not active this means the button will activate the itinerary which we want to be in color success (green)
+                            color={
+                              itinerary.isDeactivated ? "success" : "error"
+                            } // it is not active this means the button will activate the itinerary which we want to be in color success (green)
                             onClick={() => {
                               console.log(
                                 `Button clicked for itinerary ID: ${itinerary._id}`
@@ -609,7 +629,9 @@ const RUDItinerary = () => {
                               toggleItineraryActiveStatus(itinerary._id);
                             }}
                           >
-                            {itinerary.isDeactivated ? "Activate" : "Deactivate"}
+                            {itinerary.isDeactivated
+                              ? "Activate"
+                              : "Deactivate"}
                           </Button>
                         </TableCell>
 
@@ -638,7 +660,6 @@ const RUDItinerary = () => {
                   ) //We don't output a row when the itinerary has been deleted but cannot be removed from the database since it is booked by previous tourists
                 }
 
-
                 <Dialog open={open} onClose={handleClose}>
                   <DialogTitle>Confirm Deletion</DialogTitle>
                   <DialogContent>
@@ -660,7 +681,7 @@ const RUDItinerary = () => {
           </TableContainer>
         </div>
       </div>
-    </Box >
+    </Box>
   );
 };
 

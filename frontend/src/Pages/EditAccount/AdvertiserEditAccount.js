@@ -181,12 +181,6 @@ const AdvertiserEditProfile = () => {
           flexDirection: "column",
         }}
       >
-        <Link
-          to="/advertiserDashboard"
-          style={{ textDecoration: "none", color: "primary.main" }}
-        >
-          Back to Dashboard
-        </Link>
         <Paper
           elevation={4}
           sx={{
