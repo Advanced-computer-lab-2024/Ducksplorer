@@ -9,6 +9,7 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
+import AddIconCard from "../../Components/AddIconCard";
 import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
 import { message } from "antd";
@@ -184,6 +185,7 @@ const ProductDashboard = () => {
             paddingBottom: 24,
           }}
         >
+          <AddIconCard/>
           {products.filter((product) => !product.isArchived).length > 0 ? (
             products
               .filter((product) => !product.isArchived)

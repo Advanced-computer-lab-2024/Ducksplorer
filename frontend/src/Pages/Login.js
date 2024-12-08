@@ -190,16 +190,12 @@ function Login() {
             Login to continue your adventure
           </Typography> */}
           <Stack spacing={2} mt={3} >
-          <TextField
-        label="Username"
-        value={userName}
-        onChange={(e) => setUserName(e.target.value)}
-        fullWidth
-        InputLabelProps={{
-          shrink: !!userName, // Shrinks only if `userName` has a value
-        }}
-      />
-
+            <TextField
+              label="Username"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              fullWidth
+            />
             <TextField
               label="Password"
               type={showPassword ? "text" : "password"}

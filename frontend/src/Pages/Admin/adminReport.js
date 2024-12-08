@@ -373,6 +373,10 @@ const AdminReport = () => {
     );
   };
 
+  useEffect(() => {
+    document.body.style.overflow = "auto";
+  }, []);
+
   const changeActivityDate = (newDate) => {
     activitySetDate(newDate);
     activitySetMonth("");
@@ -507,7 +511,6 @@ const AdminReport = () => {
         height: "100vh",
         paddingTop: "64px",
         width: "90vw",
-        marginLeft: "5vw",
       }}
     >
       <AdminNavbar />

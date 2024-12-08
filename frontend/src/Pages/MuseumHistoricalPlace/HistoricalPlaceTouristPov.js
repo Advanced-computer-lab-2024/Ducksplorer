@@ -11,10 +11,12 @@ import TouristNavBar from "../../Components/TouristNavBar.js";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 import DuckLoading from "../../Components/Loading/duckLoading.js";
 import NavigationTabs from "../../Components/NavigationTabs.js";
-import { Box, Button, Typography, Grid, Container } from "@mui/material";
+import { Box, Button, Typography, Grid, Container,IconButton,Tooltip } from "@mui/material";
 import MuseumHistoricalPlaceCard from "../../Components/MuseumHistoricalPlaceCard";
 import Input from "@mui/joy/Input";
 import Error404 from "../../Components/Error404.js";
+import UpdateIcon from "@mui/icons-material/Update";
+
 
 const HistoricalPlaceTouristPov = () => {
   const [searchTerm, setSearchTerm] = useState(""); // Single search term
@@ -27,6 +29,7 @@ const HistoricalPlaceTouristPov = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const tabs = ["Museums", "Historical Places"];
+  const [pastOrUpcoming,setPastOrUpcoming] = useState(false); 
   const paths = ["/MuseumTouristPov", "/HistoricalPlaceTouristPov"];
 
   const handleCurrencyChange = (rates, selectedCurrency) => {
@@ -98,13 +101,67 @@ const HistoricalPlaceTouristPov = () => {
     }
   };
 
+  const handleUpcoming = () => {
+    if(!pastOrUpcoming){
+      axios
+      .get(
+        `http://localhost:8000/historicalPlace/getAllUpcomingHistoricalPlaces`
+      )
+      .then((response) => {
+        setHistoricalPlaces(response.data.upcomingHistoricalPlaces);
+      })
+      .catch((error) => {
+        console.error(
+          "There was an error fetching the upcoming historical place visits!",
+          error
+        );
+        message.error("Error fetching upcoming historical place visits!");
+      });
+    }else{
+      const showPreferences = localStorage.getItem("showPreferences");
+      const user = JSON.parse(localStorage.getItem("user"));
+      const username = user?.username;
+      const role = user?.role;
+      setLoading(true);
+
+    axios
+      .get(`http://localhost:8000/historicalPlace/getAllHistoricalPlaces`, {
+        params: {
+          showPreferences: showPreferences.toString(),
+          username,
+          role,
+        },
+      })
+      .then((response) => {
+        if (id === undefined) {
+          setHistoricalPlaces(response.data);
+        } else {
+          const tempHistoricalPlaces = response.data.filter(
+            (historicalPlace) => historicalPlace._id === id
+          );
+          setHistoricalPlaces(tempHistoricalPlaces);
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "There was an error fetching the Historical Places!",
+          error
+        );
+        message.error("Error fetching Historical Places!");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+    }
+    setPastOrUpcoming(!pastOrUpcoming)
+    
+  };
+
   const handleFilterResults = (filterResults) => {
     setHistoricalPlaces(filterResults);
   };
 
-  const goToUpcomingPage = () => {
-    navigate("/UpcomingHistoricalPlaces");
-  };
+  
 
   const errorMessage =
     "There are currently no upcoming historical places. Try again in a few";
@@ -160,6 +217,13 @@ const HistoricalPlaceTouristPov = () => {
           >
             Search
           </Button>
+          <Tooltip title={pastOrUpcoming ? "All Historical Places" : "Upcoming Historical Places"}>
+              <IconButton onClick={handleUpcoming}>
+                {" "}
+                {/* try to make it on the right later */}
+                <UpdateIcon sx={{ color: "black" }} />
+              </IconButton>
+            </Tooltip>
           <HistoricalPlaceFilterComponent onFilter={handleFilterResults} />
         </div>
 
