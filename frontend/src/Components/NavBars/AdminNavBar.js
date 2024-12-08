@@ -22,6 +22,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import MyNotifications from "../myNotifications";
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import Button from "@mui/material/Button";
 
 function AdminNavBar() {
@@ -222,6 +223,19 @@ function AdminNavBar() {
                     sx={{ color: "black", fontSize: "14px" }}
                   >
                     Change Password
+                  </Typography>
+                </IconButton>
+              </MenuItem>
+              {/*Add create promo code*/}
+              <MenuItem onClick={() => handleNavigation("addPromoCode")}>
+                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
+                  <LocalOfferIcon sx={{ fontSize: 20, color: "black" }} />
+                  <Typography
+                    textAlign="center"
+                    marginLeft={2}
+                    sx={{ color: "black", fontSize: "14px" }}
+                  >
+                    Create Promo Code
                   </Typography>
                 </IconButton>
               </MenuItem>
