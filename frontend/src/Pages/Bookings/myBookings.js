@@ -19,7 +19,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import MyChips from "../../Components/MyChips";
+import MyTabs from "../../Components/MyTabs";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { message } from "antd";
 import TouristNavBar from "../../Components/TouristNavBar";
@@ -53,8 +53,8 @@ const BookingDetails = () => {
   const isGuest = localStorage.getItem("guest") === "true";
   const navigate = useNavigate();
   const [tourGuideNames, setTourGuideNames] = useState({});
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const chipNames = [
+  const [selectedTab, setSelectedTab] = useState("All");
+  const tabNames = [
     "Past",
     "All",
     "Activities",
@@ -70,14 +70,10 @@ const BookingDetails = () => {
   const backMessage2 = "BACK TO ALL BOOKINGS"
 
   useEffect(() => {
-    if (selectedCategory === "Past") {
+    if (selectedTab === "Past") {
       navigate("/myPastBookings");
     }
-  }, [selectedCategory, navigate]);
-
-  const handleChipClick = (chipName) => {
-    setSelectedCategory(chipName);
-  };
+  }, [selectedTab, navigate]);
 
   const fetchTourGuideName = async (bookingId) => {
     try {
@@ -283,7 +279,7 @@ const BookingDetails = () => {
 
   else if (
     activityBookings.length === 0 &&
-    (selectedCategory === "activity")
+    (selectedTab === "activity")
   )
     return (
       <>
@@ -298,7 +294,7 @@ const BookingDetails = () => {
 
   else if (
     itineraryBookings.length === 0 &&
-    (selectedCategory === "itinerary")
+    (selectedTab === "itinerary")
   )
     return (
       <>
@@ -313,7 +309,7 @@ const BookingDetails = () => {
 
   else if (
     flightsBookings.length === 0 &&
-    (selectedCategory === "flight")
+    (selectedTab === "flight")
   )
     return (
       <>
@@ -328,7 +324,7 @@ const BookingDetails = () => {
 
   else if (
     hotelsBookings.length === 0 &&
-    (selectedCategory === "hotel")
+    (selectedTab === "hotel")
   )
     return (
       <>
@@ -343,7 +339,7 @@ const BookingDetails = () => {
 
   else if (
     transportationBookings.length === 0 &&
-    (selectedCategory === "transportation")
+    (selectedTab === "transportation")
   )
     return (
       <>
@@ -375,21 +371,22 @@ const BookingDetails = () => {
           <Typography
             variant="h2"
             sx={{ textAlign: "center", fontWeight: "bold", paddingTop: "5%" }}
-            gutterBottom
+            gutterBottom class="bigTitle"
+
           >
             Booking Details
           </Typography>
           <br></br>
-          <MyChips chipNames={chipNames} onChipClick={handleChipClick} />
+          <MyTabs tabNames={tabNames} onTabClick={(tabName) => setSelectedTab(tabName)} />
           {/* Activities Table */}
-          {(selectedCategory === "Activities" ||
-            selectedCategory === "All") && (
+          {(selectedTab === "Activities" ||
+            selectedTab === "All") && (
               <div>
                 {" "}
                 <Typography
                   variant="h5"
                   sx={{ fontWeight: "bold", marginBottom: "20px" }}
-                  gutterBottom
+                  gutterBottom 
                 >
                   Activities
                 </Typography>
@@ -519,8 +516,8 @@ const BookingDetails = () => {
               </div>
             )}
           {/* Itineraries Table */}
-          {(selectedCategory === "Itineraries" ||
-            selectedCategory === "All") && (
+          {(selectedTab === "Itineraries" ||
+            selectedTab === "All") && (
               <div>
                 {" "}
                 <Typography variant="h5" sx={{ fontWeight: "bold" }} gutterBottom>
@@ -684,7 +681,7 @@ const BookingDetails = () => {
               </div>
             )}
           {/* Flights Table */}
-          {(selectedCategory === "Flights" || selectedCategory === "All") && (
+          {(selectedTab === "Flights" || selectedTab === "All") && (
             <div>
               {" "}
               <Typography
@@ -832,7 +829,7 @@ const BookingDetails = () => {
             </div>
           )}
           {/* Hotels Table */}
-          {(selectedCategory === "Hotels" || selectedCategory === "All") && (
+          {(selectedTab === "Hotels" || selectedTab === "All") && (
             <div>
               <Typography
                 variant="h5"
@@ -927,8 +924,8 @@ const BookingDetails = () => {
             </div>
           )}
           {/* Transportation Table */}
-          {(selectedCategory === "Transportation" ||
-            selectedCategory === "All") && (
+          {(selectedTab === "Transportation" ||
+            selectedTab === "All") && (
               <div>
                 {" "}
                 <Typography

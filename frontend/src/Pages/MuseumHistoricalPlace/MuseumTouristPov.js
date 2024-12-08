@@ -14,7 +14,7 @@ import { Box, Button, Typography, Grid, Container } from "@mui/material";
 import MuseumHistoricalPlaceCard from "../../Components/MuseumHistoricalPlaceCard";
 import Input from "@mui/joy/Input";
 import Error404 from "../../Components/Error404.js";
-import MyTabs from "../../Components/MyTabs.js";
+import NavigationTabs from "../../Components/NavigationTabs.js";
 import HistoricalPlaceTouristPov from "./HistoricalPlaceTouristPov";
 
 const MuseumTouristPov = () => {
@@ -27,8 +27,8 @@ const MuseumTouristPov = () => {
   const [searchQuery, setSearchQuery] = useState(""); // Add this line
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const tabNames = ["Museums", "Historical Places"];
-  const [selectedTab, setSelectedTab] = useState("Museums");
+  const tabs = ["Museums", "Historical Places"];
+  const paths = ["/MuseumTouristPov", "/HistoricalPlaceTouristPov"];
 
   useEffect(() => {
     setLoading(true);
@@ -113,10 +113,11 @@ const MuseumTouristPov = () => {
     >
       <TouristNavBar />
       <div style={{ marginLeft: "4%", marginTop: "2%" }}>
-        <MyTabs tabNames={tabNames} onTabClick={(tabName) => setSelectedTab(tabName)} />
+        <div>
+          <NavigationTabs tabNames={tabs} paths={paths} />
+        </div>
       </div>
 
-      {selectedTab === "Museums" && (
         <Container sx={{ width: "100%" }}>
           <Box sx={{ textAlign: "center", mb: 4 }}>
             <Typography class="bigTitle">Museums</Typography>
@@ -168,10 +169,6 @@ const MuseumTouristPov = () => {
             )}
           </Grid>
         </Container>
-      )}
-      {selectedTab === "Historical Places" && (
-        <HistoricalPlaceTouristPov />
-      )}
       <Help />
     </Box>
   );

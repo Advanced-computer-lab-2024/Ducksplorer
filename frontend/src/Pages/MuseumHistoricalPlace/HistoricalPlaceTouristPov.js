@@ -10,7 +10,7 @@ import Help from "../../Components/HelpIcon.js";
 import TouristNavBar from "../../Components/TouristNavBar.js";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 import DuckLoading from "../../Components/Loading/duckLoading.js";
-
+import NavigationTabs from "../../Components/NavigationTabs.js";
 import { Box, Button, Typography, Grid, Container } from "@mui/material";
 import MuseumHistoricalPlaceCard from "../../Components/MuseumHistoricalPlaceCard";
 import Input from "@mui/joy/Input";
@@ -26,6 +26,9 @@ const HistoricalPlaceTouristPov = () => {
   const [currency, setCurrency] = useState("EGP");
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
+  const tabs = ["Museums", "Historical Places"];
+  const paths = ["/MuseumTouristPov", "/HistoricalPlaceTouristPov"];
+
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
@@ -124,6 +127,9 @@ const HistoricalPlaceTouristPov = () => {
       }}
     >
       <TouristNavBar />
+      <div>
+        <NavigationTabs tabNames={tabs} paths={paths} />
+      </div>
       <Container sx={{ width: "100%" }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography class="bigTitle">Historical Places</Typography>
