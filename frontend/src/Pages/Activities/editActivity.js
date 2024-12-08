@@ -10,7 +10,7 @@ import WarningIcon from "@mui/icons-material/Warning";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useNavigate } from "react-router-dom";
 import StandAloneToggleButton from "../../Components/ToggleButton.js";
-import AdvertiserNavBar from "../../Components/TopNav/AdvertiserNavbar.js"
+import AdvertiserNavBar from "../../Components/NavBars/AdvertiserNavBar.js"
 import {
     Rating,
     Checkbox,

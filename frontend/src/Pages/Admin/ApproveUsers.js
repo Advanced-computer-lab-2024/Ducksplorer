@@ -61,6 +61,10 @@ const ApproveUsers = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = "auto";
+  }, []);
+
   const handleApprove = (username) => {
     setLoading(true);
     axios

@@ -145,12 +145,19 @@ const login = async (req, res) => {
         tourist = await Tourist.findOne({ userName });
       }
 
+      if (user.role == "Tourist") {
+        dob = tourist.DOB;
+      } else {
+        dob = "";
+      }
+
       generateToken(user.userName, res);
 
       res.status(200).json({
         _id: user._id,
         username: user.userName,
         role: user.role,
+        dob: dob,
         email: user.role === "Tourist" ? tourist.email : " ",
         token: jwt.sign({ userName: user.userName }, process.env.JWT_SECRET, {
           expiresIn: "15d",

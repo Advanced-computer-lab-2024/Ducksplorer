@@ -207,7 +207,7 @@ function MySavedItems() {
           <Typography
             variant="h4"
             className="bigTitle"
-            sx={{ color: "black", fontWeight: 'bold' }}
+            sx={{ color: "black", fontWeight: 'bold', fontsize:'700px' }}
           >
             Saved
           </Typography>

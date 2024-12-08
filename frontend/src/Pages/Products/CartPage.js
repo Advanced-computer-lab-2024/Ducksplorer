@@ -14,6 +14,7 @@ const CartPage = () => {
   const [loading, setLoading] = useState(true);
   const [totalPrice, setTotalPrice] = useState(0); // State to store total pric
   const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false); // Controls the modal visibility
+  const [renderTrigger, setRenderTrigger] = useState(false);
   const userJson = localStorage.getItem("user"); // Get the logged-in user's details
   const user = JSON.parse(userJson);
   const userName = user.username;
@@ -41,28 +42,41 @@ const CartPage = () => {
       const orderNumber = +orderNumberStr;
       localStorage.setItem("orderNumber", orderNumber + 1); // Increment the order number
 
-      for (const item of cartProducts) {
-        // Extract details
-        const { product, quantity } = item;
+      const paymentData = {
+        userName,
+        cartProducts,
+        orderNumber,
+      };
 
-        // Call the backend API
-        const response = await axios.put(
-          "http://localhost:8000/touristRoutes/addPurchase",
-          {
-            userName,
-            productId: product._id,
-            chosenQuantity: quantity,
-            orderNumber: orderNumber,
-          }
-        );
-        const type = "product";
+      const type = "product";
 
-        localStorage.setItem("cartId", cartProducts._id);
-        localStorage.setItem("type", type);
-        if (response.status === 201) {
-          navigate("/payment");
-        }
-      }
+      localStorage.setItem("cartId", cartProducts._id);
+      localStorage.setItem("type", type);
+
+      navigate("/payment", { state: paymentData });
+
+      // for (const item of cartProducts) {
+      //   // Extract details
+      //   const { product, quantity } = item;
+
+      //   // Call the backend API
+      //   const response = await axios.put(
+      //     "http://localhost:8000/touristRoutes/addPurchase",
+      //     {
+      //       userName,
+      //       productId: product._id,
+      //       chosenQuantity: quantity,
+      //       orderNumber: orderNumber,
+      //     }
+      //   );
+      //   const type = "product";
+
+      //   localStorage.setItem("cartId", cartProducts._id);
+      //   localStorage.setItem("type", type);
+      //   if (response.status === 201) {
+      //     navigate("/payment");
+      //   }
+      // }
 
       // Optionally clear the cart (both frontend and backend)
       setCartProducts([]); // Clear frontend cart state
@@ -81,10 +95,13 @@ const CartPage = () => {
       }, 0);
       setTotalPrice(total); // Update the total price state
     };
-
     calculateTotalPrice();
     localStorage.setItem("totalPrice", totalPrice);
   }, [cartProducts]);
+
+  const handleConfirm = () => {
+    setRenderTrigger((prev) => !prev);
+  };
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -100,10 +117,8 @@ const CartPage = () => {
           const cartData = response.data.cart;
           if (!cartData) {
             setCartProducts([]); // Set an empty list for display
-            message.info("Your cart is empty.");
           } else {
             setCartProducts(cartData.products); // Populate with product details
-            message.success("cart loaded successfully!");
           }
         } else {
           message.error("Failed to fetch cart details.");
@@ -117,7 +132,7 @@ const CartPage = () => {
     };
 
     fetchCart();
-  }, [userName]);
+  }, [userName, renderTrigger]);
 
   if (loading) {
     return (
@@ -147,49 +162,60 @@ const CartPage = () => {
             width: "100%",
           }}
         >
-          {cartProducts.length > 0 ? (
-            cartProducts.map((item, index) => (
-              <NewProductCard product={item.product} />
-            ))
-          ) : (
-            <div
+          {cartProducts.length > 0
+            ? cartProducts.map((item, index) => (
+                <NewProductCard
+                  product={item.product}
+                  showQuantity={true}
+                  inCart={true}
+                  quantityInCart={item.quantity}
+                  onConfirm={handleConfirm}
+                />
+              ))
+            : null}
+        </div>
+        {cartProducts.length <= 0 && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column", // Stack image and text vertically
+              alignItems: "center", // Center both horizontally
+              justifyContent: "center", // Center vertically within the parent
+              marginBottom: "2rem", // Space below the image and text
+              alignContent: "center",
+              alignSelf: "center",
+              justifySelf: "center",
+            }}
+          >
+            <img
+              src="DuckEmptyCart.jpg"
+              alt="Duck Empty Cart"
               style={{
-                display: "flex",
-                flexDirection: "column", // Stack image and text vertically
-                alignItems: "center", // Center both horizontally
-                justifyContent: "center", // Center vertically within the parent
-                marginBottom: "2rem", // Space below the image and text
-                alignContent: 'center'
+                width: "70%", // Adjust the image size for better responsiveness
+                maxWidth: "400px", // Set a max width for better scaling
+                height: "auto",
+              }}
+            />
+            <p
+              style={{
+                marginTop: "1rem", // Add spacing between the image and text
+                fontSize: "1.2rem", // Adjust the text size
+                textAlign: "center", // Center-align the text
+                color: "#555", // Change color for better contrast
               }}
             >
-              <img
-                src="DuckEmptyCart.jpg"
-                alt="Duck Empty Cart"
-                style={{
-                  width: "70%", // Adjust the image size for better responsiveness
-                  maxWidth: "400px", // Set a max width for better scaling
-                  height: "auto",
-                }}
-              />
-              <p
-                style={{
-                  marginTop: "1rem", // Add spacing between the image and text
-                  fontSize: "1.2rem", // Adjust the text size
-                  textAlign: "center", // Center-align the text
-                  color: "#555", // Change color for better contrast
-                }}
-              >
-                Your Cart is Empty, Start shopping now!
-              </p>
-            </div>
-          )}
-        </div>
+              Your Cart is Empty, Start shopping now!
+            </p>
+          </div>
+        )}
         {cartProducts.length > 0 && (
           <div style={{ textAlign: "center", marginTop: "20px" }}>
             <Button
               type="primary"
               size="large"
-              onClick={() => setIsCheckoutModalVisible(true)}
+              onClick={() => {
+                setIsCheckoutModalVisible(true);
+              }}
               style={{
                 backgroundColor: "#ff9933", // Ensure visible background color
                 color: "#fff",

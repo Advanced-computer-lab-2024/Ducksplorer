@@ -1,19 +1,26 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Typography, Box, Grid, IconButton, Tooltip } from '@mui/material';
-import Card from '@mui/joy/Card';
-import CardContent from '@mui/joy/CardContent';
-import StarIcon from '@mui/icons-material/Star';
-import CurrencyConverterGeneral from './CurrencyConverterGeneral'; // Adjust the import path as needed
-import PersonIcon from '@mui/icons-material/Person';
-import PaymentIcon from '@mui/icons-material/Payment';
-import { message } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
-import Button from '@mui/material/Button';
+import React, { useState, useEffect, useCallback } from "react";
+import { Typography, Box, Grid, IconButton, Tooltip } from "@mui/material";
+import Card from "@mui/joy/Card";
+import CardContent from "@mui/joy/CardContent";
+import StarIcon from "@mui/icons-material/Star";
+import CurrencyConverterGeneral from "./CurrencyConverterGeneral"; // Adjust the import path as needed
+import PersonIcon from "@mui/icons-material/Person";
+import PaymentIcon from "@mui/icons-material/Payment";
+import { message } from "antd";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import Button from "@mui/material/Button";
 
-const HotelCards = ({ hotels, checkInDate, checkOutDate, adults, city, country }) => {
-  const initialCurrency = 'USD';
-  const [currency, setCurrency] = useState('USD');
+const HotelCards = ({
+  hotels,
+  checkInDate,
+  checkOutDate,
+  adults,
+  city,
+  country,
+}) => {
+  const initialCurrency = "USD";
+  const [currency, setCurrency] = useState("USD");
   const [exchangeRates, setExchangeRates] = useState({});
   const navigate = useNavigate();
 
@@ -22,16 +29,32 @@ const HotelCards = ({ hotels, checkInDate, checkOutDate, adults, city, country }
   }, [initialCurrency]);
 
   const convertPriceToEgp = (price) => {
-    if (!exchangeRates || !exchangeRates['EUR'] || !exchangeRates['EGP']) {
+    if (!exchangeRates || !exchangeRates["EUR"] || !exchangeRates["EGP"]) {
       return price;
     }
-    const rate = exchangeRates['EGP'] / exchangeRates['EUR'];
+    const rate = exchangeRates["EGP"] / exchangeRates["EUR"];
     return (price * rate).toFixed(2);
-  }
+  };
+  const isUser18OrOlder = (dob) => {
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+
+    // Adjust age if the current month is before the birth month or it's the birth month but the current day is before the birth day
+    if (
+      monthDifference < 0 ||
+      (monthDifference === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+
+    return age >= 18;
+  };
 
   const handleBooking = async (hotelBooking) => {
     try {
-      const userJson = localStorage.getItem('user');
+      const userJson = localStorage.getItem("user");
       if (!userJson) {
         message.error("User is not logged in.");
         return null;
@@ -41,27 +64,40 @@ const HotelCards = ({ hotels, checkInDate, checkOutDate, adults, city, country }
         message.error("User information is missing.");
         return null;
       }
+      const dob = user.dob;
+      console.log("dob", dob);
+      if (!isUser18OrOlder(dob)) {
+        message.error("You must be at least 18 years old to book a hotel.");
+        return;
+      }
       const nameBefore = hotelBooking.title.match(/^(\d+)\.\s*(.*)$/);
       const name = nameBefore ? nameBefore[2] : hotelBooking.title;
 
-      const type = 'hotel';
+      const type = "hotel";
       const hotel = {
-        price: hotelBooking.priceForDisplay ? convertPriceToEgp(parseFloat(hotelBooking.priceForDisplay.replace('$', ''))) : (hotelBooking.priceSummary && extractPrice(hotelBooking.priceSummary)),
-        currency: 'EGP',
+        price: hotelBooking.priceForDisplay
+          ? convertPriceToEgp(
+              parseFloat(hotelBooking.priceForDisplay.replace("$", ""))
+            )
+          : hotelBooking.priceSummary &&
+            extractPrice(hotelBooking.priceSummary),
+        currency: "EGP",
         checkInDate: checkInDate,
         checkOutDate: checkOutDate,
         hotelName: name,
         city: city,
         country: country,
         rating: hotelBooking.bubbleRating.rating,
-        image: hotelBooking.cardPhotos[0]?.sizes?.urlTemplate.split('?')[0] || "hotel1.jpg",
-      }
+        image:
+          hotelBooking.cardPhotos[0]?.sizes?.urlTemplate.split("?")[0] ||
+          "hotel1.jpg",
+      };
 
-      localStorage.setItem('hotel', JSON.stringify(hotel));
-      localStorage.setItem('type', type);
+      localStorage.setItem("hotel", JSON.stringify(hotel));
+      localStorage.setItem("type", type);
 
       if (hotelBooking) {
-        navigate('/payment');
+        navigate("/payment");
       } else {
         message.error("Please Choose a hotel.");
       }
@@ -76,10 +112,12 @@ const HotelCards = ({ hotels, checkInDate, checkOutDate, adults, city, country }
     const currentHotel = newHotels[index];
     const totalImages = currentHotel.cardPhotos.length;
 
-    if (direction === 'left') {
-      currentHotel.currentImageIndex = (currentHotel.currentImageIndex - 1 + totalImages) % totalImages;
-    } else if (direction === 'right') {
-      currentHotel.currentImageIndex = (currentHotel.currentImageIndex + 1) % totalImages;
+    if (direction === "left") {
+      currentHotel.currentImageIndex =
+        (currentHotel.currentImageIndex - 1 + totalImages) % totalImages;
+    } else if (direction === "right") {
+      currentHotel.currentImageIndex =
+        (currentHotel.currentImageIndex + 1) % totalImages;
     }
   };
 
@@ -89,7 +127,11 @@ const HotelCards = ({ hotels, checkInDate, checkOutDate, adults, city, country }
   }, []);
 
   const convertPrice = (price, fromCurrency) => {
-    if (!exchangeRates || !exchangeRates[fromCurrency] || !exchangeRates[currency]) {
+    if (
+      !exchangeRates ||
+      !exchangeRates[fromCurrency] ||
+      !exchangeRates[currency]
+    ) {
       return price;
     }
     const rate = exchangeRates[currency] / exchangeRates[fromCurrency];
@@ -97,8 +139,8 @@ const HotelCards = ({ hotels, checkInDate, checkOutDate, adults, city, country }
   };
 
   const extractPrice = (priceString) => {
-    const price = priceString.split('$')[1];
-    return price ? price.trim() : 'N/A';
+    const price = priceString.split("$")[1];
+    return price ? price.trim() : "N/A";
   };
 
   const handleShareLink = (hotelId) => {
@@ -159,12 +201,20 @@ const HotelCards = ({ hotels, checkInDate, checkOutDate, adults, city, country }
   };
 
   return (
-    <Box sx={{ flexGrow: 1, mt: 4, overflowY: 'visible' , height:"90vh" }}>
-       <Typography variant="h6" component="div" sx={{ color: 'orange', textAlign: 'center', padding: 2 }}>
-          Currency Converter
-        </Typography>
-        <div style={{marginBottom:"20px"}}>
-      <CurrencyConverterGeneral onCurrencyChange={handleCurrencyChange} initialCurrency={currency} style={{marginBottom:"20px"}} />
+    <Box sx={{ flexGrow: 1, mt: 4, overflowY: "visible", height: "90vh" }}>
+      <Typography
+        variant="h6"
+        component="div"
+        sx={{ color: "orange", textAlign: "center", padding: 2 }}
+      >
+        Currency Converter
+      </Typography>
+      <div style={{ marginBottom: "20px" }}>
+        <CurrencyConverterGeneral
+          onCurrencyChange={handleCurrencyChange}
+          initialCurrency={currency}
+          style={{ marginBottom: "20px" }}
+        />
       </div>
       <Grid container spacing={1} justifyContent="center">
         {hotels.map((hotel, index) => {
@@ -175,7 +225,7 @@ const HotelCards = ({ hotels, checkInDate, checkOutDate, adults, city, country }
           const titleMatch = hotel.title.match(/^(\d+)\.\s*(.*)$/);
           const titleText = titleMatch ? titleMatch[2] : hotel.title;
           const avatarLetter = titleText.charAt(0);
-          const isDuplicate = hotels.slice(0, index).some(h => {
+          const isDuplicate = hotels.slice(0, index).some((h) => {
             const hTitleMatch = h.title.match(/^(\d+)\.\s*(.*)$/);
             const hTitleText = hTitleMatch ? hTitleMatch[2] : h.title;
             return hTitleText === titleText;
@@ -184,50 +234,98 @@ const HotelCards = ({ hotels, checkInDate, checkOutDate, adults, city, country }
             return null;
           }
 
-            return (
+          return (
             <Grid item xs={12} sm={6} md={4} key={index}>
               <Card
-              onClick={() => handleBooking(hotel)}
-              variant="outlined"
-              className="activity-card"
-              sx={{
-                width: "90%",
-                height: "350px",
-                cursor: "pointer",
-                margin: "0 auto",
-              }}
+                onClick={() => handleBooking(hotel)}
+                variant="outlined"
+                className="activity-card"
+                sx={{
+                  width: "90%",
+                  height: "350px",
+                  cursor: "pointer",
+                  margin: "0 auto",
+                }}
               >
-              <Box sx={{ position: 'relative', overflow: 'hidden', '&:hover img': { opacity: 0.7, transition: 'opacity 0.3s ease-in-out' } }}>
-                <img
-                src={hotel.cardPhotos[hotel.currentImageIndex]?.sizes?.urlTemplate.split('?')[0] || "hotel1.jpg"}
-                alt={`${hotel.title} image`}
-                style={{ width: '100%', height: '200px', objectFit: 'cover' }}
-                onError={(e) => { e.target.onerror = null; e.target.src = "hotel1.jpg"; }}
-                onLoad={() => console.log(`Image loaded: ${hotel.cardPhotos[hotel.currentImageIndex]?.sizes?.urlTemplate.split('?')[0] || "hotel1.jpg"}`)}
-                />
-              </Box>
-              <CardContent>
-                <Typography variant="h6" color="text.secondary" align="center">
-                {titleText}
-                </Typography>
-              </CardContent>
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <IconButton aria-label="rating" sx={{ fontSize: 15 }}>
-                <StarIcon sx={{ color: 'gold' }} /> {hotel.bubbleRating.rating} ({hotel.bubbleRating.count}){' ratings'}
-                </IconButton>
-                <IconButton aria-label="person" sx={{ fontSize: 15 }}>
-                <PersonIcon /> 2
-                </IconButton>
-                <IconButton aria-label="booking" sx={{ fontSize: 15 }}>
-                <PaymentIcon sx={{ color: 'green' }} /> {hotel.priceForDisplay ? convertPrice(parseFloat(hotel.priceForDisplay.replace('$', '')), 'USD') : (hotel.priceSummary && extractPrice(hotel.priceSummary)) || 'N/A'} {currency}
-                </IconButton>
-              </div>
-              <Button variant="contained" sx={{backgroundColor:"#ff9933"}} fullWidth onClick={() => handleBooking(hotel)}>
-                Book Hotel
-              </Button>
+                <Box
+                  sx={{
+                    position: "relative",
+                    overflow: "hidden",
+                    "&:hover img": {
+                      opacity: 0.7,
+                      transition: "opacity 0.3s ease-in-out",
+                    },
+                  }}
+                >
+                  <img
+                    src={
+                      hotel.cardPhotos[
+                        hotel.currentImageIndex
+                      ]?.sizes?.urlTemplate.split("?")[0] || "hotel1.jpg"
+                    }
+                    alt={`${hotel.title} image`}
+                    style={{
+                      width: "100%",
+                      height: "200px",
+                      objectFit: "cover",
+                    }}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "hotel1.jpg";
+                    }}
+                    onLoad={() =>
+                      console.log(
+                        `Image loaded: ${
+                          hotel.cardPhotos[
+                            hotel.currentImageIndex
+                          ]?.sizes?.urlTemplate.split("?")[0] || "hotel1.jpg"
+                        }`
+                      )
+                    }
+                  />
+                </Box>
+                <CardContent>
+                  <Typography
+                    variant="h6"
+                    color="text.secondary"
+                    align="center"
+                  >
+                    {titleText}
+                  </Typography>
+                </CardContent>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <IconButton aria-label="rating" sx={{ fontSize: 15 }}>
+                    <StarIcon sx={{ color: "gold" }} />{" "}
+                    {hotel.bubbleRating.rating} ({hotel.bubbleRating.count})
+                    {" ratings"}
+                  </IconButton>
+                  <IconButton aria-label="person" sx={{ fontSize: 15 }}>
+                    <PersonIcon /> 2
+                  </IconButton>
+                  <IconButton aria-label="booking" sx={{ fontSize: 15 }}>
+                    <PaymentIcon sx={{ color: "green" }} />{" "}
+                    {hotel.priceForDisplay
+                      ? convertPrice(
+                          parseFloat(hotel.priceForDisplay.replace("$", "")),
+                          "USD"
+                        )
+                      : (hotel.priceSummary &&
+                          extractPrice(hotel.priceSummary)) ||
+                        "N/A"}{" "}
+                    {currency}
+                  </IconButton>
+                </div>
+                <Button
+                  variant="contained"
+                  sx={{ backgroundColor: "#ff9933" }}
+                  fullWidth
+                  onClick={() => handleBooking(hotel)}
+                >
+                  Book Hotel
+                </Button>
               </Card>
             </Grid>
-            );
+          );
         })}
       </Grid>
     </Box>

@@ -74,6 +74,10 @@ const AdvertiserEditProfile = () => {
   };
 
   useEffect(() => {
+    document.body.style.overflow = "auto";
+  }, []);
+
+  useEffect(() => {
     const userJson = localStorage.getItem("user");
     const user = JSON.parse(userJson);
     const userName = user.username;

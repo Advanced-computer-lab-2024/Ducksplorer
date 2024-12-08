@@ -104,50 +104,10 @@ const RUDHistoricalPlace = () => {
   // Responsible for when the user clicks on edit icon
   const handleEditClick = (historicalPlace) => {
     localStorage.setItem("selectedHistoricalPlace", JSON.stringify(historicalPlace));
+    setEditingHistoricalPlace(historicalPlace); // Update editing state
+    setFormData(historicalPlace); // Pre-fill form data
     navigate(`/editHistoricalPlace`);
-  };
-
-  // When the edit icon is clicked the handleUpdate method calls the backend to execute this update
-  const handleUpdate = (event) => {
-    event.preventDefault();
-    axios
-      .put(
-        `http://localhost:8000/historicalPlace/updateHistoricalPlace/${editingHistoricalPlace._id}`,
-        formData
-      )
-      .then(() => {
-        setHistoricalPlaces(
-          historicalPlaces.map((historicalPlace) =>
-            historicalPlace._id === editingHistoricalPlace._id
-              ? formData
-              : historicalPlace
-          )
-        );
-        message.success("Historical Place updated successfully!");
-        setEditingHistoricalPlace(null);
-      })
-      .catch((error) =>
-        message.error("Error updating Historical Place!", error)
-      );
-  };
-
-  const handleCancelEdit = () => {
-    setEditingHistoricalPlace(null); // Reset the editing state
-    setFormData({
-      // Reset form data
-      description: "",
-      pictures: "",
-      location: "",
-      ticketPrices: "",
-      openingTime: "",
-      closingTime: "",
-      HistoricalPlaceDate: "",
-      HistoricalPlaceName: "",
-      HistoricalPlaceCategory: "",
-      tags: [],
-      // createdBy: ''
-    });
-  };
+};
 
   // When the delete icon is clicked a popup saying are you sure appears, this method opens it
   const handleClickOpen = (historicalPlace) => {
@@ -294,7 +254,6 @@ const RUDHistoricalPlace = () => {
                         {historicalPlace.HistoricalPlaceCategory}
                       </TableCell>
                       <TableCell>{historicalPlace.tags.join(", ")}</TableCell>
-                      {/* <TableCell>{historicalPlace.createdBy}</TableCell> */}
                       <TableCell>
                         <Tooltip title="Delete Historical Place">
                           <IconButton
@@ -318,127 +277,6 @@ const RUDHistoricalPlace = () => {
                 </TableBody>
               </Table>
             </TableContainer>
-
-            {/* Update form */}
-            {editingHistoricalPlace && (
-              <form onSubmit={handleUpdate} style={{ marginTop: "20px" }}>
-                <Typography variant="h6">Edit Historical Place</Typography>
-                <TextField
-                  label="Description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                  required
-                />
-                <TextField
-                  label="Location"
-                  name="location"
-                  value={formData.location}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                  required
-                />
-                <TextField
-                  label="Picture"
-                  name="pictures"
-                  value={formData.pictures}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                  required
-                />
-                <TextField
-                  label="Ticket Price"
-                  name="ticketPrices"
-                  value={formData.ticketPrices}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                  required
-                />
-                <TextField
-                  label="Opening Time"
-                  name="openingTime"
-                  value={formData.openingTime}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                  required
-                />
-                <TextField
-                  label="Closing Time"
-                  name="closingTime"
-                  value={formData.closingTime}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                  required
-                />
-                <TextField
-                  label="Date"
-                  name="HistoricalPlaceDate"
-                  value={formData.HistoricalPlaceDate}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                  required
-                />
-                <TextField
-                  label="Name"
-                  name="HistoricalPlaceName"
-                  value={formData.HistoricalPlaceName}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                  required
-                />
-                <TextField
-                  label="Category"
-                  name="HistoricalPlaceCategory"
-                  value={formData.HistoricalPlaceCategory}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                  required
-                />
-
-                {/* Tags dropdown */}
-                <label>Tags:</label>
-                <Select
-                  mode="multiple"
-                  allowClear
-                  style={{ width: "100%" }}
-                  placeholder="Select tags"
-                  value={formData.tags} // Ensure the current tags are displayed in the dropdown
-                  onChange={(selectedTags) =>
-                    setFormData({ ...formData, tags: selectedTags })
-                  } // Handle adding/removing tags
-                >
-                  {historicalPlaceTagsOptions.map((tag) => (
-                    <Select.Option key={tag._id} value={tag.historicalPlaceTag}>
-                      {tag.historicalPlaceTag}
-                    </Select.Option>
-                  ))}
-                </Select>
-
-                <Box sx={{ mt: 2 }}>
-                  <Button type="submit" variant="contained" color="primary">
-                    Update
-                  </Button>
-                  <Button
-                    onClick={handleCancelEdit}
-                    variant="contained"
-                    color="secondary"
-                    sx={{ ml: 2 }}
-                  >
-                    Cancel
-                  </Button>
-                </Box>
-              </form>
-            )}
 
             {/* Confirmation Dialog for Deletion */}
             <Dialog open={open} onClose={handleClose}>

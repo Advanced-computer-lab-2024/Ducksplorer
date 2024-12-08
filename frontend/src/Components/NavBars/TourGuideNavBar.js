@@ -181,7 +181,7 @@ function TourGuideNavBar() {
                 sx={{ p: 0, ml: 4, width: 40, height: 40 }}
               >
                 <img
-                  src={"duckavatar.png"}
+                  src={"/duckavatar.png"}
                   alt="Avatar"
                   style={{
                     maxWidth: "50px",

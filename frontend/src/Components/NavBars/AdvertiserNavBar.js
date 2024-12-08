@@ -22,7 +22,7 @@ import MyNotifications from "../myNotifications";
 import Button from "@mui/material/Button";
 
 function AdvertiserNavBar() {
-  const image = "duckAvatar.png";
+  const image = "/duckAvatar.png";
   const [anchorElUser, setAnchorElUser] = useState(null);
   const navigate = useNavigate();
 

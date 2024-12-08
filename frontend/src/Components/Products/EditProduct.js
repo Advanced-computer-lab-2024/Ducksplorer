@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { TextField, Button, Stack, Box } from "@mui/material";
+import { TextField, Button, Stack, Box, Typography } from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
 import UploadFile from "../ProductUploadImage";
 import TouristNavBar from "../TouristNavBar";
+import useUserRole from "../getRole";
+import AdminNavBar from "../NavBars/AdminNavBar";
+import SellerNavBar from "../NavBars/SellerNavBar";
 
 let picture = "";
 
@@ -15,6 +18,7 @@ const EditProduct = () => {
   const [availableQuantity, setAvailableQuantity] = useState("");
   const [URL, setURL] = useState("");
   const [description, setDescription] = useState("");
+  const role = useUserRole();
 
   const getPreviousData = async () => {
     try {
@@ -69,97 +73,166 @@ const EditProduct = () => {
         message.error("Failed to edit products");
       }
     } catch (error) {
-      message.error("An error occurred: " + error.message);
-    }
-  };
+        message.error("An error occurred: " + error.message);
+      }
+    };
 
-  return (
-    <Box
+    return (
+      <Box
+  sx={{
+    height: "auto",
+    backgroundColor: "#f4f6f9", // Light grey background
+    marginTop:"50vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    
+  }}
+>
+  {role === "Admin" ? <AdminNavBar/> : <SellerNavBar/>} 
+  <div
+    style={{
+      backgroundImage: "url(../../public/Images/bg-intro-desktop.png)", // Ensure this path is correct
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundAttachment: "fixed",
+      height: "100%",
+      width: "100%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    }}
+  >
+    <Stack
+      spacing={3}
       sx={{
-        height: "100vh",
-        backgroundColor: "#f4f6f9", // Light grey background for better contrast
-        paddingTop: "64px", // Adjust for navbar height
+        width: "60vw",  // Responsive width
+        padding: "20px",
+        backgroundColor: "rgba(255, 255, 255, 0.95)", // Slightly more opaque white
+        borderRadius: "15px",
+        boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)", // Subtle shadow for depth
+        transition: "transform 0.2s ease-in-out",
+        '&:hover': {
+          transform: "scale(1.02)", // Slight zoom on hover
+        },
       }}
     >
-      <TouristNavBar />
+      <Typography
+        variant="h4"
+        className="bigTitle"
+        sx={{
+          textAlign: "center",
+          color: "#333",
+          fontWeight: "bold",
+        }}
+      >
+        Edit Product
+      </Typography>
+
+      <TextField
+        name="name"
+        label="Product Name"
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        fullWidth
+        sx={{
+          "& .MuiOutlinedInput-root": {
+            borderRadius: "10px",
+          },
+        }}
+      />
+      <TextField
+        name="price"
+        label="Price"
+        type="number"
+        value={price}
+        onChange={(e) => setPrice(e.target.value)}
+        fullWidth
+        sx={{
+          "& .MuiOutlinedInput-root": {
+            borderRadius: "10px",
+          },
+        }}
+      />
+      <TextField
+        name="available quantity"
+        label="Available Quantity"
+        type="number"
+        value={availableQuantity}
+        onChange={(e) => setAvailableQuantity(e.target.value)}
+        fullWidth
+        sx={{
+          "& .MuiOutlinedInput-root": {
+            borderRadius: "10px",
+          },
+        }}
+      />
 
       <div
         style={{
-          backgroundImage: "url(../../public/Images/bg-intro-desktop.png)", // Update with your image path
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          height: "100vh",
+          display: "flex",
           justifyContent: "center",
-          overflowY: "visible",
           alignItems: "center",
+          borderRadius: "10px",
+          overflow: "hidden",
+          marginBottom: "10px",
         }}
       >
-        <Stack
-          spacing={1}
-          sx={{
-            width: "600px",
-            padding: "10px",
-            backgroundColor: "rgba(255, 255, 255, 0.8)",
+        <img
+          name="picture"
+          alt="Product"
+          src={picture || "../../public/Images/placeholder.png"} // Fallback placeholder image
+          style={{
+            maxWidth: "100%",
+            maxHeight: "300px",
             borderRadius: "10px",
-            overflowY: "visible",
           }}
-        >
-          <div className="trial-btn text-white cursor-pointer">
-            <span className="text-bold"></span>
-          </div>
-          <TextField
-            name="name"
-            label="product"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <TextField
-            name="price"
-            label="price"
-            type="number"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-          />
-          <TextField
-            name="available quantity"
-            label="available quantity"
-            type="number"
-            value={availableQuantity}
-            onChange={(e) => setAvailableQuantity(e.target.value)}
-          />
-          <div style={{ borderRadius: "3cap" }}>
-            <img
-              name="picture"
-              label="picture"
-              type="text"
-              src={picture}
-              style={{
-                maxWidth: "500px",
-                borderRadius: "3cap",
-              }}
-            />
-          </div>
-          <UploadFile onUpload={handleUpload} />
-          <TextField
-            name="desription"
-            label="description"
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleEdit} // Call function to handle adding the product here
-            style={{ marginTop: "10px" }}
-          >
-            Save
-          </Button>
-        </Stack>
+        />
       </div>
-    </Box>
+
+      <UploadFile onUpload={handleUpload} />
+
+      <TextField
+        name="description"
+        label="Description"
+        type="text"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        multiline
+        rows={4}
+        fullWidth
+        sx={{
+          "& .MuiOutlinedInput-root": {
+            borderRadius: "10px",
+          },
+        }}
+      />
+
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleEdit}
+        className="blackhover"
+        sx={{
+          marginTop: "10px",
+          padding: "10px",
+          borderRadius: "10px",
+          fontSize: "16px",
+          fontWeight: "bold",
+          backgroundColor: "#007bff",
+          "&:hover": {
+            backgroundColor: "#0056b3",
+          },
+        }}
+      >
+        Save Changes
+      </Button>
+    </Stack>
+  </div>
+</Box>
+
   );
-};
+}  
 
 export default EditProduct;

@@ -90,6 +90,7 @@ function AddProducts() {
               style={{
                 textAlign: "center",
                 alignSelf: "center",
+                marginTop: "10%",
               }}
             >
               Add Product
