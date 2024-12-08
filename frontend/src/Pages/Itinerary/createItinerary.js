@@ -352,6 +352,7 @@ const AddItinerary = () => {
                             label="isOpen"
                             type="checkbox"
                             checked={activity.isOpen}
+                            style={{ color: "#ff9933" }}
                             onChange={() => handleActivityChange(index, "isOpen", !activity.isOpen)}
                           />
                         </div>
