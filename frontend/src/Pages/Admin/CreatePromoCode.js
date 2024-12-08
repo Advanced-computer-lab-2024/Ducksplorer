@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import { message } from "antd";
 import TextField from "@mui/material/TextField";
@@ -12,7 +12,15 @@ function CreatePromoCode() {
   const [value, setValue] = useState("");
   const [date, setDate] = useState("");
 
-  const handleAdd = async () => {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
+  const handleAdd = async (e) => {
+    e.preventDefault();
     try {
       const response = await axios.post(
         "http://localhost:8000/admin/addPromoCode",
@@ -42,7 +50,7 @@ function CreatePromoCode() {
             className="duckTitle"
             style={styles.welcomeText}
           >
-            Create Promo Code
+            Promo Code
           </Typography>
         </div>
         <div style={styles.rightSection}>
@@ -60,23 +68,20 @@ function CreatePromoCode() {
               alignItems: "center",
             }}
           >
-             <h2
+            <h2
               className="bigTitle"
               style={{
                 textAlign: "center",
                 alignSelf: "center",
                 marginBottom: "5%",
-                position: "relative", // Add this to use 'top'
+                position: "relative",
                 marginTop: "-20%",
               }}
             >
               Create Promo Code
             </h2>
-            <div style={{ justifyContent: "center", alignContent: "center" , backgroundColor: "rgba(255,255,255,0.5)" }}>
-              <Stack
-                spacing={3}
-                style={{ justifyContent: "center", alignContent: "center" }}
-              >
+            <form onSubmit={handleAdd} style={styles.form}>
+              <Stack spacing={3} style={{ justifyContent: "center", alignContent: "center" }}>
                 <TextField
                   name="code"
                   label="Code"
@@ -137,7 +142,7 @@ function CreatePromoCode() {
                 <Button
                  className="blackhover"
                   variant="contained"
-                  onClick={handleAdd}
+                  type="submit"
                   sx={{
                     backgroundColor: "#ff9800",
                     color: "white",
@@ -156,7 +161,7 @@ function CreatePromoCode() {
                   Create Promo Code
                 </Button>
               </Stack>
-            </div>
+            </form>
           </Box>
         </div>
       </div>
@@ -167,11 +172,10 @@ function CreatePromoCode() {
 const styles = {
   container: {
     display: "flex",
-    height: "120vh",
+    height: "100vh",
     width: "100vw",
-    background: 'url("/duckPromo.jpg") no-repeat left center fixed',
+    background: "url('/duckPromo.jpg') no-repeat center center fixed",
     backgroundSize: "cover",
-    overflowY: "visible",
   },
   leftSection: {
     flex: 1,
@@ -188,13 +192,17 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(255,255,255,0.75)",
+    backgroundColor: "rgba(255,255,255,0.85)",
   },
   welcomeText: {
     fontSize: "3rem",
     fontWeight: "bold",
     marginBottom: "20px",
-    position: "fixed",
+  },
+  form: {
+    justifyContent: "center",
+    alignContent: "center",
+    backgroundColor: "rgba(255,255,255,0.5)",
   },
 };
 
