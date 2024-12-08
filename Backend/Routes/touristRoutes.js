@@ -105,7 +105,7 @@ router.delete("/cancelOrder/:username/:orderNumber", cancelOrder);
 router.get("/myOrders/:buyer", getMyOrders);
 
 router.put("/updatePurchases/:buyer", updatePurchase);
-router.put("/updateProducts/:id", touristUpdateProductRating);
+router.put("/updateProducts/:id", touristUpdateProductRating);//done 
 router.get("/getRating/:id/rating/:buyer", getProductRating);
 router.put("/addReview/:id", touristUpdateProductReview);
 
