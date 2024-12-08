@@ -499,7 +499,7 @@ function SearchActivity() {
                           },
                         },
                         "& .MuiInputBase-input": {
-                          color: "#ff9933", // Change the text color to match the orange theme if needed
+                          color: "black", // Change the text color to match the orange theme if needed
                         },
                       }}
                     >

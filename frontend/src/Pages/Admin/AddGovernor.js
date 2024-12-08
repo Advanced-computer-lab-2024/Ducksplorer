@@ -30,7 +30,7 @@ function AddGovernor() {
       );
       if (response.status === 200) {
         message.success("Governor added successfully");
-      }  else {
+      } else {
         throw new Error(response.error);
       }
     } catch (error) {
@@ -39,9 +39,9 @@ function AddGovernor() {
     }
   };
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, []);
 
@@ -50,7 +50,11 @@ function AddGovernor() {
       <AdminNavBar />
       <div style={styles.container}>
         <div style={styles.leftSection}>
-          <Typography variant="h3" className="duckTitle" style={styles.welcomeText}>
+          <Typography
+            variant="h3"
+            className="duckTitle"
+            style={styles.welcomeText}
+          >
             Add Users
           </Typography>
         </div>
@@ -80,7 +84,6 @@ function AddGovernor() {
                 top: "-25%",
               }}
             >
-
               <div>
                 <NavigationTabs tabNames={tabs} paths={paths} />
               </div>
@@ -94,7 +97,7 @@ function AddGovernor() {
                 alignSelf: "center",
                 marginBottom: "5%",
                 position: "relative", // Add this to use 'top'
-                marginTop: "-20%"
+                marginTop: "-20%",
               }}
             >
               Add Governor
@@ -119,7 +122,10 @@ function AddGovernor() {
 
             {/* Form Section */}
             <div style={{ justifyContent: "center", alignContent: "center" }}>
-              <Stack spacing={3} style={{ justifyContent: "center", alignContent: "center" }}>
+              <Stack
+                spacing={3}
+                style={{ justifyContent: "center", alignContent: "center" }}
+              >
                 {/* Username Field */}
                 <TextField
                   name="username"
@@ -172,7 +178,9 @@ function AddGovernor() {
                           edge="end"
                         >
                           <Iconify
-                            icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
+                            icon={
+                              showPassword ? "eva:eye-fill" : "eva:eye-off-fill"
+                            }
                             style={{ color: "#ff9800", fontSize: "20px" }}
                           />
                         </IconButton>
