@@ -3,6 +3,7 @@ import axios from "axios";
 import { message } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import StandAloneToggleButton from "../../Components/ToggleButton.js";
+import GovernorNavBar from "../../Components/NavBars/GovernorNavBar.js";
 
 import {
     Box,
@@ -79,7 +80,7 @@ function EditMuseum() {
                 height: "100vh",
             }}
         >
-            <AdvertiserNavBar />
+            <GovernorNavBar />
 
             <Box
                 sx={{

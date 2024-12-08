@@ -163,7 +163,7 @@ const PreferenceTags = () => {
     >
       {/* Navbar */}
       <AdminNavbar />
-      \
+      
       {/* Main Content */}
       <div
         style={{ marginBottom: "40px", height: "100vh", paddingBottom: "10%" }}
