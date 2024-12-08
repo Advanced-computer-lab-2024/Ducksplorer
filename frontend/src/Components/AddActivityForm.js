@@ -149,7 +149,7 @@ const AddActivityForm = () => {
   };
 
   return (
-    <>
+    <div>
       <AdvertiserNavBar />
       <div style={styles.container}>
         <div style={styles.leftSection}>
@@ -161,9 +161,10 @@ const AddActivityForm = () => {
             Add Activity
           </Typography>
         </div>
+
         <div style={styles.rightSection}>
-          <Container maxWidth="sm" style={{}}>
-            <Box sx={{ marginTop: "40px" }}>
+          <Container maxWidth="sm">
+            <Box>
               <h2
                 className="bigTitle"
                 style={{
@@ -208,12 +209,12 @@ const AddActivityForm = () => {
                       border: "1px solid rgba(0,0,0,.2)",
                       borderRadius: 5,
                       height: 55,
+                      justifyContent: "space-between",
                     }}
                   >
                     <p
                       style={{
                         color: "rgba(0, 0, 0, 0.6) ",
-                        marginRight: 488,
                         paddingTop: 16,
                         paddingLeft: 12,
                       }}
@@ -225,6 +226,11 @@ const AddActivityForm = () => {
                       label="isOpen"
                       type="checkbox"
                       checked={isOpen}
+                      style={{
+                        alignSelf: "center",
+                        marginRight: 12,
+                        borderRadius: "5px",
+                      }}
                       onChange={() => setIsOpen(!isOpen)}
                     />
                   </div>
@@ -332,7 +338,7 @@ const AddActivityForm = () => {
           </Container>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -30,7 +30,10 @@ const AdvertiserNavbar = () => {
   const handleTogglePreferences = () => {
     setShowPreferences((prev) => {
       const updatedPreference = !prev;
-      localStorage.setItem("showPreferences", JSON.stringify(updatedPreference));
+      localStorage.setItem(
+        "showPreferences",
+        JSON.stringify(updatedPreference)
+      );
       return updatedPreference;
     });
   };
@@ -89,7 +92,8 @@ const AdvertiserNavbar = () => {
                 fontSize: 50, // Size of the icon
                 color: "#004d40", // Icon color
                 cursor: "pointer",
-                transition: "transform 0.3s ease-in-out, color 0.3s ease-in-out",
+                transition:
+                  "transform 0.3s ease-in-out, color 0.3s ease-in-out",
                 "&:hover": {
                   transform: "scale(1.1)", // Scale effect on hover
                   color: "#00695c", // Change color on hover

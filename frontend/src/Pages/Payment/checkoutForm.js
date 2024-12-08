@@ -5,7 +5,6 @@ import axios from "axios";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import Help from "../../Components/HelpIcon.js";
-import DuckLoading from "../../Components/Loading/duckLoading";
 
 export default function CheckoutForm() {
   const stripe = useStripe();
@@ -20,7 +19,6 @@ export default function CheckoutForm() {
   const [showPointsAnimation, setShowPointsAnimation] = useState(false);
   const [loyaltyPoints, setLoyaltyPoints] = useState(0);
   const [totalPoints, setTotalPoints] = useState(0);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const storedClientSecret = localStorage.getItem("clientSecret");
@@ -90,8 +88,7 @@ export default function CheckoutForm() {
   const sendConfirmationEmail = async () => {
     try {
       // Retrieve necessary data from localStorage
-      const user = JSON.parse(localStorage.getItem("user"));
-      const email = user.email;
+      const email = localStorage.getItem("paymentEmail");
       const itemId =
         localStorage.getItem("activityId") ||
         localStorage.getItem("itineraryId");
@@ -100,8 +97,6 @@ export default function CheckoutForm() {
       // const flight = localStorage.getItem("flightBooking"); // Example: add this if relevant
       // const transportation = localStorage.getItem("transportationBooking"); // Example: add this if relevant
       console.log("email,item,type:", email, itemId, type);
-      console.log("user:", user);
-      console.log("xxxxxxxxxxxxxxxx");
       // Make a POST request to the backend
       const response = await fetch(
         "http://localhost:8000/payment/send-confirmation",
@@ -141,7 +136,6 @@ export default function CheckoutForm() {
       setMessage1("Please enter the OTP.");
       return;
     }
-    setLoading(true);
     try {
       const response = await fetch(
         "http://localhost:8000/payment/confirm-otp",
@@ -276,12 +270,6 @@ export default function CheckoutForm() {
         console.log("Points Result", pointsResult);
         navigate("/myBookings");
         sendConfirmationEmail();
-        if (localStorage.getItem("type") === "activity") {
-          localStorage.removeItem("activityId");
-        }
-        if (localStorage.getItem("type") === "itinerary") {
-          localStorage.removeItem("itineraryId");
-        }
       }
     } catch (error) {
       setMessage1("Failed to confirm OTP.");
@@ -330,22 +318,13 @@ export default function CheckoutForm() {
     }
   };
 
-  if (loading) {
-    return (
-      <div>
-        <DuckLoading />
-      </div>
-    );
-  }
-
   return (
     <div
       style={{
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "80vh",
-        backgroundColor: "#f9f9f9",
+        width: "50vw",
         padding: "20px",
       }}
     >

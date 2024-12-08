@@ -24,8 +24,7 @@ import {
 import axios from "axios";
 import { message } from "antd";
 import { Link } from "react-router-dom";
-import AdminNavbar from "../TopNav/Adminnavbar";
-import Sidebar from "../Sidebars/Sidebar";
+import AdminNavbar from "../NavBars/AdminNavBar";
 import DuckLoading from "../Loading/duckLoading";
 import Help from "../HelpIcon";
 
@@ -52,8 +51,8 @@ const ComplaintsDashboard = () => {
             statusFilter === "Resolved"
               ? true
               : statusFilter === "Pending"
-              ? false
-              : undefined,
+                ? false
+                : undefined,
         },
       });
       setComplaints(response.data);
@@ -124,24 +123,27 @@ const ComplaintsDashboard = () => {
     <Box
       sx={{
         height: "100vh",
-        paddingTop: "64px",
+
         width: "90vw",
-        marginLeft: "5vw",
       }}
     >
       <AdminNavbar />
-      <Sidebar />
+
       <Box
         sx={{
-          flex: 1,
           padding: "32px",
           margin: "0 auto",
           borderRadius: "12px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
         }}
       >
         <Typography
           variant="h2"
-          sx={{ textAlign: "center", fontWeight: "bold", paddingRight: "5%" }}
+          className="bigTitle"
+          sx={{ textAlign: "center", fontWeight: "bold" }}
         >
           Complaints
         </Typography>
@@ -288,7 +290,11 @@ const ComplaintsDashboard = () => {
                         variant="contained"
                         className="blackhover"
                         size="small"
-                        sx={{ minWidth: "100px", fontSize: "12px" }}
+                        sx={{
+                          minWidth: "100px",
+                          fontSize: "12px",
+                          margin: "7.5px",
+                        }}
                       >
                         View Details
                       </Button>

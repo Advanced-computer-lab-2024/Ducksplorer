@@ -1,15 +1,18 @@
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Typography, Box, Button, IconButton, InputAdornment, Stack, TextField } from "@mui/material";
 import { message } from "antd";
 import Iconify from "../../Components/TopNav/iconify.js";
 import axios from "axios";
-import Sidebar from "../../Components/Sidebars/Sidebar.js";
 import AdminNavBar from "../../Components/NavBars/AdminNavBar.js";
+import NavigationTabs from "../../Components/NavigationTabs.js";
 
 function AddAdmin() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const tabs = ["Add Admin", "Add Governor"];
+  const paths = ["/addAdmin", "/addGovernor"];
+
 
   const handleAdd = async () => {
     try {
@@ -45,30 +48,56 @@ function AddAdmin() {
       <div style={styles.container}>
         <div style={styles.leftSection}>
           <Typography variant="h3" className="duckTitle" style={styles.welcomeText}>
-            Admin Management
+            Add Users
           </Typography>
         </div>
         <div style={styles.rightSection}>
           <Box
             sx={{
-              width: "100%", // Responsive width
-              height: "100%", // Take full height
-              backgroundColor: "#f9f9f9", // Same as the page background
-              borderRadius: "16px", // Rounded corners
-              boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)", // Subtle shadow
+              width: "100%",
+              height: "100%",
+              backgroundColor: "#f9f9f9",
+              borderRadius: "16px",
+              boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
               textAlign: "center",
-              display: "flex", // Flexbox for centering
-              flexDirection: "column", // Column direction
-              justifyContent: "center", // Center vertically
-              alignItems: "center", // Center horizontally
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
+            {/* Chips Section */}
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: "5%",
+                position: "relative",
+                top: "-25%",
+              }}
+            >
+
+              <div>
+                <NavigationTabs tabNames={tabs} paths={paths} />
+              </div>
+            </Box>
+
             {/* Title Section */}
-            <h2 className="bigTitle" style={{ textAlign: "center", alignSelf: "center" , marginTop:"-20vh"}}>
+            <h2
+              className="bigTitle"
+              style={{
+                textAlign: "center",
+                alignSelf: "center",
+                marginBottom: "5%",
+                position: "relative", // Add this to use 'top'
+                marginTop: "-20%"
+              }}
+            >
               Add Admin
             </h2>
 
-            {/* Logo Section */}
+            {/* Logo Section
             <Box sx={{ marginBottom: "24px" }}>
               <img
                 src="logo1.png"
@@ -83,7 +112,7 @@ function AddAdmin() {
                   marginBottom: "5vh",
                 }}
               />
-            </Box>
+            </Box> */}
 
             {/* Form Section */}
             <div style={{ justifyContent: "center", alignContent: "center" }}>
@@ -99,14 +128,13 @@ function AddAdmin() {
                   InputProps={{
                     style: {
                       fontSize: "16px",
-                      color: "#333",
+                      color: "#ff9933",
                     },
                   }}
                   sx={{
-                    width: "100%",
-                    justifySelf: "center",
-                    justifyContent: "center",
-                    alignContent: "center",
+                    width: "150%",
+                    margin: "auto",
+                    right: "20%",
                     "& .MuiOutlinedInput-root": {
                       "& fieldset": {
                         borderColor: "#ff9800",
@@ -132,8 +160,7 @@ function AddAdmin() {
                   InputProps={{
                     style: {
                       fontSize: "16px",
-                      color: "#333",
-                      width: "100%",
+                      color: "#ff9933",
                     },
                     endAdornment: (
                       <InputAdornment position="end">
@@ -142,9 +169,7 @@ function AddAdmin() {
                           edge="end"
                         >
                           <Iconify
-                            icon={
-                              showPassword ? "eva:eye-fill" : "eva:eye-off-fill"
-                            }
+                            icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
                             style={{ color: "#ff9800", fontSize: "20px" }}
                           />
                         </IconButton>
@@ -152,10 +177,9 @@ function AddAdmin() {
                     ),
                   }}
                   sx={{
-                    width: "100%",
-                    justifySelf: "center",
-                    justifyContent: "center",
-                    alignContent: "center",
+                    width: "150%",
+                    margin: "auto",
+                    right: "20%",
                     "& .MuiOutlinedInput-root": {
                       "& fieldset": {
                         borderColor: "#ff9800",

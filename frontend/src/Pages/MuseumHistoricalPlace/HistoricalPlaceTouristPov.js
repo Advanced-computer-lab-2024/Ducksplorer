@@ -9,15 +9,12 @@ import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
 import Help from "../../Components/HelpIcon.js";
 import TouristNavBar from "../../Components/TouristNavBar.js";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
-import {
-  Box,
-  Button,
-  Typography,
-  Grid,
-  Container,
-} from "@mui/material";
+import DuckLoading from "../../Components/Loading/duckLoading.js";
+
+import { Box, Button, Typography, Grid, Container } from "@mui/material";
 import MuseumHistoricalPlaceCard from "../../Components/MuseumHistoricalPlaceCard";
 import Input from "@mui/joy/Input";
+import Error404 from "../../Components/Error404.js";
 
 const HistoricalPlaceTouristPov = () => {
   const [searchTerm, setSearchTerm] = useState(""); // Single search term
@@ -28,7 +25,7 @@ const HistoricalPlaceTouristPov = () => {
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
   const [searchQuery, setSearchQuery] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
@@ -39,6 +36,7 @@ const HistoricalPlaceTouristPov = () => {
     const user = JSON.parse(localStorage.getItem("user"));
     const username = user?.username;
     const role = user?.role;
+    setLoading(true);
 
     axios
       .get(`http://localhost:8000/historicalPlace/getAllHistoricalPlaces`, {
@@ -64,27 +62,36 @@ const HistoricalPlaceTouristPov = () => {
           error
         );
         message.error("Error fetching Historical Places!");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [id]);
 
-  const handleSearchHistoricalPLaces =async () => {
+  const handleSearchHistoricalPLaces = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/historicalPlace/searchHistoricalPlace', {
-        params: {
-          searchTerm,
-        },
-      });
+      setLoading(true);
+      const response = await axios.get(
+        "http://localhost:8000/historicalPlace/searchHistoricalPlace",
+        {
+          params: {
+            searchTerm,
+          },
+        }
+      );
 
       console.log("Backend Response:", response);
 
       if (response.status === 200) {
-       setHistoricalPlaces(response.data.results);
+        setHistoricalPlaces(response.data.results);
       } else {
-        message.error('No historical places found. Try refining your search.');
+        message.error("No historical places found. Try refining your search.");
       }
     } catch (error) {
-      console.error('Error during API call:', error);
-      message.error('An error occurred: ' + error.message);
+      console.error("Error during API call:", error);
+      message.error("An error occurred: " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -95,6 +102,18 @@ const HistoricalPlaceTouristPov = () => {
   const goToUpcomingPage = () => {
     navigate("/UpcomingHistoricalPlaces");
   };
+
+  const errorMessage =
+    "There are currently no upcoming historical places. Try again in a few";
+  const backMessage = "Back to search again";
+
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
 
   return (
     <Box
@@ -107,7 +126,7 @@ const HistoricalPlaceTouristPov = () => {
       <TouristNavBar />
       <Container sx={{ width: "100%" }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
-        <Typography class="bigTitle">Historical Places</Typography>
+          <Typography class="bigTitle">Historical Places</Typography>
         </Box>
         <div
           style={{
@@ -131,22 +150,12 @@ const HistoricalPlaceTouristPov = () => {
             variant="solid"
             onClick={handleSearchHistoricalPLaces}
             className="blackhover"
-            sx={{ backgroundColor: "#ff9933", color: 'white' }}
+            sx={{ backgroundColor: "#ff9933", color: "white" }}
           >
             Search
           </Button>
           <HistoricalPlaceFilterComponent onFilter={handleFilterResults} />
         </div>
-
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={goToUpcomingPage}
-          >
-            Get Upcoming Historical Place Visits
-          </Button>
-        </Box>
 
         <Grid container spacing={3}>
           {Array.isArray(HistoricalPlaces) && HistoricalPlaces.length > 0 ? (
@@ -157,9 +166,14 @@ const HistoricalPlaceTouristPov = () => {
             ))
           ) : (
             <Grid item xs={12}>
-              <Typography variant="body1" color="textSecondary" align="center">
+              {/* <Typography variant="body1" color="textSecondary" align="center">
                 No Historical Places available
-              </Typography>
+              </Typography> */}
+              <Error404
+                errorMessage={errorMessage}
+                backMessage={backMessage}
+                route="/HistoricalPlaceTouristPov"
+              />
             </Grid>
           )}
         </Grid>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { message } from "antd";
-import AdminNavbar from "../../Components/TopNav/Adminnavbar";
+import AdminNavbar from "../../Components/NavBars/AdminNavBar";
 import {
   Box,
   Button,
@@ -21,12 +21,15 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
-import Sidebar from "../../Components/Sidebars/Sidebar";
 import DeleteIcon from "@mui/icons-material/Delete";
+import NavigationTabs from "../../Components/NavigationTabs.js";
+
 const DeleteUser = () => {
   const [users, setUsers] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState("");
+  const tabs = ["Approve Pending Users", "Delete Users"];
+  const paths = ["/pendingusers", "/deleteusers"];
 
   useEffect(() => {
     axios
@@ -84,22 +87,22 @@ const DeleteUser = () => {
   return (
     <Box
       sx={{
-        height: "auto",
+        height: "100vh",
         paddingTop: "64px",
-        width: "120vw",
-        display: "flex",
-        justifyContent: "center"
+        width: "90vw",
+        marginLeft: "5vw",
       }}
     >
-      {/* Navbar */}
       <AdminNavbar />
-      <Sidebar />
 
-      {/* Main Content */}
+      <div>
+        <NavigationTabs tabNames={tabs} paths={paths} />
+      </div>
+
       <div
-        style={{ marginBottom: "40px", height: "100vh", paddingBottom: "10%" }}
+        style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
       >
-        <div style={{ overflowY: "visible", height: "auto" }}>
+        <div style={{ overflowY: "visible", height: "100vh" }}>
           <Typography
             variant="h2"
             sx={{ textAlign: "center", fontWeight: "bold" }}
@@ -119,48 +122,48 @@ const DeleteUser = () => {
               overflow: "hidden", // Ensure no scroll bars
             }}
           >
-              <Table>
-                <TableHead>
-                  <TableRow sx={{
-                  }}>
-                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
-                      User Name
-                    </TableCell>
-                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
-                      Role
-                    </TableCell>
-                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
-                      Status
-                    </TableCell>
-                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
-                      Actions
+            <Table>
+              <TableHead>
+                <TableRow sx={{
+                }}>
+                  <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
+                    User Name
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
+                    Role
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
+                    Status
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
+                    Actions
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {users.map((user, index) => (
+                  <TableRow
+                    key={user._id}
+
+                  >
+                    <TableCell>{user.userName}</TableCell>
+                    <TableCell>{user.role}</TableCell>
+                    <TableCell>{user.status}</TableCell>
+                    <TableCell>
+                      <Tooltip title="Delete User">
+                        <IconButton
+                          color="error"
+                          aria-label="delete user"
+                          onClick={() => handleClickOpen(user.userName)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
-                </TableHead>
-                <TableBody>
-                  {users.map((user, index) => (
-                    <TableRow
-                      key={user._id}
-
-                    >
-                      <TableCell>{user.userName}</TableCell>
-                      <TableCell>{user.role}</TableCell>
-                      <TableCell>{user.status}</TableCell>
-                      <TableCell>
-                        <Tooltip title="Delete User">
-                          <IconButton
-                            color="error"
-                            aria-label="delete user"
-                            onClick={() => handleClickOpen(user.userName)}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                ))}
+              </TableBody>
+            </Table>
 
             {/* Delete Confirmation Dialog */}
             <Dialog

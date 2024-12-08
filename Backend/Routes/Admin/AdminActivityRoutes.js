@@ -1,26 +1,26 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const {
   createCategory,
   getCategoriesbyName,
   updateCategory,
   deleteCategory,
-  getAllCategories
-} = require('../../Controllers/Admin/AdminActivity.js');
+  getAllCategories,
+} = require("../../Controllers/Admin/AdminActivity.js");
 
 // Create a new activity category
-router.post('/', createCategory);
+router.post("/", createCategory);//done
 
 // Get all activity categories
-router.get('/', getCategoriesbyName);
+router.get("/", getCategoriesbyName); //done
 
 // Get all activity categories
-router.get('/all', getAllCategories);
+router.get("/all", getAllCategories); //done
 
 // Update an activity category
-router.put('/', updateCategory);
+router.put("/", updateCategory); //done 
 
 // Delete an activity category
-router.delete('/', deleteCategory);
+router.delete("/", deleteCategory); //done fixed BE
 
 module.exports = router;

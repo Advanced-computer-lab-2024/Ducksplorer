@@ -17,6 +17,7 @@ function ChangePassword() {
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const [showNewPassword, setShowNewPassword] = useState(false); // State for password visibility
   const role = JSON.parse(localStorage.getItem('user')).role;
+  const navigate = useNavigate();
 
   const validatePassword = () => {
     if(!password || !newPassword) {
@@ -28,24 +29,24 @@ function ChangePassword() {
 
   const changePassword = async () => {
     try {
-        if(!validatePassword()) return;
-        const response = await axios.post("http://localhost:8000/admin/changePassword", {
-            userName: JSON.parse(localStorage.getItem('user')).username,
-            password: password,
-            newPassword: newPassword
-    }
-    );
-    console.log(response);
-    if (response.status === 200) {
+      if (!validatePassword()) return;
+      const response = await axios.post("http://localhost:8000/admin/changePassword", {
+        userName: JSON.parse(localStorage.getItem('user')).username,
+        password: password,
+        newPassword: newPassword
+      }
+      );
+      console.log(response);
+      if (response.status === 200) {
         message.success('Password changed successfully');
         window.location.href = "/login"; // Replace with your URL
+      }
+      else
+        throw new Error(response.error);
+    } catch (error) {
+      message.error(error.response.data.error);
     }
-    else 
-      throw new Error(response.error);
-  } catch (error) {
-    message.error(error.response.data.error);
   }
-}
 
   const handleKeyPress = (event) => {
     if (event.key === 'Enter') {

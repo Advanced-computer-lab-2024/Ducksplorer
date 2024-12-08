@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import ProductCard from "../../Components/Products/ProductCard"; // Adjust the path as necessary
+
 import { message, Button, Modal } from "antd";
 import TouristNavBar from "../../Components/TouristNavBar";
 import { useNavigate } from "react-router-dom";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Container } from "@mui/material";
 import DuckLoading from "../../Components/Loading/duckLoading";
 import Help from "../../Components/HelpIcon";
+import NewProductCard from "../../Components/Products/newProductCard";
 
 const CartPage = () => {
   const [cartProducts, setCartProducts] = useState([]);
@@ -54,7 +55,6 @@ const CartPage = () => {
             orderNumber: orderNumber,
           }
         );
-        //await axios.delete("http://localhost:8000/touristRoutes/cart", { params: { userName ,productId: product._id } }); // Clear product from cart
         const type = "product";
 
         localStorage.setItem("cartId", cartProducts._id);
@@ -128,101 +128,114 @@ const CartPage = () => {
   }
 
   return (
-    <Box syle={{ overflowY: "visible", height: "100vh" }}>
+    <Box sx={{ height: "100vh", width: "90vw" }}>
       <TouristNavBar />
-      <Box sx={{ textAlign: "center", mb: 4 }}>
-        <Typography variant="h4" fontWeight="700">
-          My Cart
-        </Typography>
-      </Box>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(2, 1fr)", // 3 cards per row
-          gap: "20px", // Spacing between cards
-          padding: "20px",
-          justifyContent: "center",
-          overflowY: "visible",
-        }}
-      >
-        {cartProducts.length > 0 ? (
-          cartProducts.map((item, index) => (
+
+      <Container sx={{ mt: 4, mb: 6 }}>
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Typography fontWeight="700" class="bigTitle">
+            My Cart
+          </Typography>
+        </Box>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)", // 3 cards per row
+            gap: "24px", // Spacing between cards
+            paddingBottom: 24,
+            width: "100%",
+          }}
+        >
+          {cartProducts.length > 0 ? (
+            cartProducts.map((item, index) => (
+              <NewProductCard product={item.product} />
+            ))
+          ) : (
             <div
-              key={item.product._id || index}
               style={{
-                maxWidth: "600px", // Decrease card size
-                margin: "auto", // Center each card
+                display: "flex",
+                flexDirection: "column", // Stack image and text vertically
+                alignItems: "center", // Center both horizontally
+                justifyContent: "center", // Center vertically within the parent
+                marginBottom: "2rem", // Space below the image and text
+                alignContent: 'center'
               }}
             >
-              <ProductCard
-                product={item.product}
-                productID={item.product._id}
-                showAddToCart={false}
-                showReview={false}
-                showRating={false}
-                showAverageRating={true}
-                isConfirmButtonVisible={true}
-                inCartQuantity={item.quantity}
-                onProductRemove={handleRemoveProduct} // Pass the handler
-                onQuantityChange={handleQuantityChange} // Pass the handler for quantity changes
+              <img
+                src="DuckEmptyCart.jpg"
+                alt="Duck Empty Cart"
+                style={{
+                  width: "70%", // Adjust the image size for better responsiveness
+                  maxWidth: "400px", // Set a max width for better scaling
+                  height: "auto",
+                }}
               />
+              <p
+                style={{
+                  marginTop: "1rem", // Add spacing between the image and text
+                  fontSize: "1.2rem", // Adjust the text size
+                  textAlign: "center", // Center-align the text
+                  color: "#555", // Change color for better contrast
+                }}
+              >
+                Your Cart is Empty, Start shopping now!
+              </p>
             </div>
-          ))
-        ) : (
-          <h2>Your cart is empty!</h2>
+          )}
+        </div>
+        {cartProducts.length > 0 && (
+          <div style={{ textAlign: "center", marginTop: "20px" }}>
+            <Button
+              type="primary"
+              size="large"
+              onClick={() => setIsCheckoutModalVisible(true)}
+              style={{
+                backgroundColor: "#ff9933", // Ensure visible background color
+                color: "#fff",
+                "&:hover": { backgroundColor: "#e68a00" },
+                border: "none", // Remove any conflicting borders
+                padding: "10px 20px",
+                fontSize: "1.2rem",
+                borderRadius: "5px", // Add a clear shape
+                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Add a subtle shadow
+                transition: "background-color 0.3s ease", // Smooth transition for hover
+              }}
+            >
+              Checkout
+            </Button>
+          </div>
         )}
-      </div>
-      {cartProducts.length > 0 && (
-        <div style={{ textAlign: "center", marginTop: "20px" }}>
-          <Button
-            type="primary"
-            size="large"
-            onClick={() => setIsCheckoutModalVisible(true)}
-            style={{
-              backgroundColor: "#ff9933", // Ensure visible background color
-              color: "#fff",
-              "&:hover": { backgroundColor: "#e68a00" },
-              border: "none", // Remove any conflicting borders
-              padding: "10px 20px",
-              fontSize: "1.2rem",
-              borderRadius: "5px", // Add a clear shape
-              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Add a subtle shadow
-              transition: "background-color 0.3s ease", // Smooth transition for hover
-            }}
-          >
-            Checkout
-          </Button>
-        </div>
-      )}
-      {/* Checkout Modal */}
-      <Modal
-        title="Checkout"
-        visible={isCheckoutModalVisible}
-        onCancel={() => setIsCheckoutModalVisible(false)} // Close the modal
-        footer={null} // Footer is empty; we'll handle the confirm button inside
-      >
-        <div style={{ textAlign: "center" }}>
-          <h2>Total Price: ${totalPrice.toFixed(2)}</h2>
-          <Button
-            type="primary"
-            size="large"
-            onClick={handleConfirmCheckout} // Call the handler
-            style={{
-              backgroundColor: "#ff9933", // Ensure visible background color
-              color: "#fff", // Ensure text is visible
-              border: "none", // Remove any conflicting borders
-              padding: "10px 20px",
-              fontSize: "1.2rem",
-              borderRadius: "5px", // Add a clear shape
-              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Add a subtle shadow
-              transition: "background-color 0.3s ease", // Smooth transition for hover
-            }}
-          >
-            Confirm
-          </Button>
-        </div>
-      </Modal>
-      <Help />
+        {/* Checkout Modal */}
+        <Modal
+          title="Checkout"
+          visible={isCheckoutModalVisible}
+          onCancel={() => setIsCheckoutModalVisible(false)} // Close the modal
+          footer={null} // Footer is empty; we'll handle the confirm button inside
+        >
+          <div style={{ textAlign: "center" }}>
+            <h2>Total Price: ${totalPrice.toFixed(2)}</h2>
+            <Button
+              type="primary"
+              size="large"
+              onClick={handleConfirmCheckout} // Call the handler
+              style={{
+                backgroundColor: "#ff9933", // Ensure visible background color
+                color: "#fff", // Ensure text is visible
+                border: "none", // Remove any conflicting borders
+                padding: "10px 20px",
+                fontSize: "1.2rem",
+                borderRadius: "5px", // Add a clear shape
+                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Add a subtle shadow
+                transition: "background-color 0.3s ease", // Smooth transition for hover
+              }}
+            >
+              Confirm
+            </Button>
+          </div>
+        </Modal>
+        <Help />
+      </Container>
     </Box>
   );
 };

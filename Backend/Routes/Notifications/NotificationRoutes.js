@@ -10,11 +10,11 @@ const {
 } = require("../../Controllers/Notifications/notificationRequestController.js");
 const router = express.Router();
 
-router.get("/getNotifications/:user", getNotifications);
-router.put("/markAsSeen/:id", markAsSeen);
-router.get("/getAllNotifications", getAllNotifications);
-router.post("/testNotification", testNotification);
+router.get("/getNotifications/:user", getNotifications); //done
+router.put("/markAsSeen/:id", markAsSeen); //done
+router.get("/getAllNotifications", getAllNotifications); //done
+router.post("/testNotification", testNotification);//done
 
-router.post("/request", requestNotification);
+router.post("/request", requestNotification);//done
 
 module.exports = router;

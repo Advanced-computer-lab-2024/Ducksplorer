@@ -5,7 +5,6 @@ import { calculateAverageRating } from "../../Utilities/averageRating.js";
 import WarningIcon from "@mui/icons-material/Warning";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
-import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar.js";
 
 import { message } from "antd";
 import Help from "../../Components/HelpIcon.js";
@@ -217,280 +216,269 @@ const ActivityReport = () => {
     return <p>No activities available.</p>;
   }
 
-    return (
-        <Box
-            sx={{
-                height: "100vh",
-                paddingTop: "64px",
-                width: "90vw",
-                marginLeft: "5vw",
-            }}
-        >
-            <AdvertiserNavBar />
-            <div
-                style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
-            >
-                <div style={{ overflowY: "visible", height: "100vh" }}>
-                    <Typography
-                        variant="h2"
-                        sx={{ textAlign: "center", fontWeight: "bold" }}
-                        gutterBottom
-                    >
-                        Activities Report
-                    </Typography>
-                    <br></br>
-                    {/* Filtering */}
-                    <IconButton onClick={handleFilterChoiceClick}>
-                        <FilterAltIcon style={{ color: "black" }} />
-                    </IconButton>
-                    <Menu
-                        anchorEl={filterAnchorEl}
-                        open={Boolean(filterAnchorEl)}
-                        onClose={handleFilterClose}
-                    >
-                        {/* Radio Buttons for Filter Selection */}
-                        <MenuItem>
-                            <FormControl>
-                                <RadioGroup
-                                    value={filterType} // This should be managed in state
-                                    onChange={(e) => {
-                                        setFilterType(e.target.value); // Update the selected filter type
-                                        setDate(""); // Clear previous values
-                                        setMonth("");
-                                        setYear("");
-                                    }}
-                                >
-                                    {/* Date Filter */}
-                                    <FormControlLabel
-                                        value="date"
-                                        control={<Radio />}
-                                        label="Choose a Date"
-                                    />
-                                    {filterType === "date" && (
-                                        <TextField
-                                            type="date"
-                                            value={date}
-                                            onChange={(e) => changeDate(e.target.value)}
-                                            style={{ marginTop: "10px", width: "100%" }}
-                                        />
-                                    )}
+  return (
+    <Box
+      sx={{
+        marginTop: "10vh",
+        height: "100vh",
+        width: "90vw",
+      }}
+    >
+      <AdvertiserNavBar />
+      <Typography
+        variant="h2"
+        className="bigTitle"
+        sx={{ textAlign: "center", fontWeight: "bold" }}
+        gutterBottom
+      >
+        Activities Report
+      </Typography>
 
-                  {/* Month and/or Year Filter */}
-                  <FormControlLabel
-                    value="monthYear"
-                    control={<Radio />}
-                    label="Choose Month/Year"
-                  />
-                  {filterType === "monthYear" && (
-                    <div>
-                      {/* Month Dropdown */}
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "10px",
-                          width: "100%",
+      {/* Filtering */}
+      <IconButton onClick={handleFilterChoiceClick}>
+        <FilterAltIcon style={{ color: "black" }} />
+      </IconButton>
+      <Menu
+        anchorEl={filterAnchorEl}
+        open={Boolean(filterAnchorEl)}
+        onClose={handleFilterClose}
+      >
+        {/* Radio Buttons for Filter Selection */}
+        <MenuItem>
+          <FormControl>
+            <RadioGroup
+              value={filterType} // This should be managed in state
+              onChange={(e) => {
+                setFilterType(e.target.value); // Update the selected filter type
+                setDate(""); // Clear previous values
+                setMonth("");
+                setYear("");
+              }}
+            >
+              {/* Date Filter */}
+              <FormControlLabel
+                value="date"
+                control={<Radio />}
+                label="Choose a Date"
+              />
+              {filterType === "date" && (
+                <TextField
+                  type="date"
+                  value={date}
+                  onChange={(e) => changeDate(e.target.value)}
+                  style={{ marginTop: "10px", width: "100%" }}
+                />
+              )}
+
+              {/* Month and/or Year Filter */}
+              <FormControlLabel
+                value="monthYear"
+                control={<Radio />}
+                label="Choose Month/Year"
+              />
+              {filterType === "monthYear" && (
+                <div>
+                  {/* Month Dropdown */}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "10px",
+                      width: "100%",
+                    }}
+                  >
+                    <FormControl fullWidth>
+                      <InputLabel>Month</InputLabel>
+                      <Select
+                        value={month}
+                        onChange={(e) => {
+                          changeMonth(e.target.value);
                         }}
                       >
-                        <FormControl fullWidth>
-                          <InputLabel>Month</InputLabel>
-                          <Select
-                            value={month}
-                            onChange={(e) => {
-                              changeMonth(e.target.value);
-                            }}
-                          >
-                            {Array.from({ length: 12 }, (_, i) => (
-                              <MenuItem key={i + 1} value={i + 1}>
-                                {i + 1}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                        {/* Year Dropdown */}
-                        <FormControl fullWidth>
-                          <InputLabel>Year</InputLabel>
-                          <Select
-                            value={year}
-                            onChange={(e) => {
-                              changeYear(e.target.value);
-                            }}
-                          >
-                            {generateYearOptions().map((yr) => (
-                              <MenuItem key={yr} value={yr}>
-                                {yr}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </div>
-                    </div>
-                  )}
-                </RadioGroup>
-              </FormControl>
-            </MenuItem>
+                        {Array.from({ length: 12 }, (_, i) => (
+                          <MenuItem key={i + 1} value={i + 1}>
+                            {i + 1}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    {/* Year Dropdown */}
+                    <FormControl fullWidth>
+                      <InputLabel>Year</InputLabel>
+                      <Select
+                        value={year}
+                        onChange={(e) => {
+                          changeYear(e.target.value);
+                        }}
+                      >
+                        {generateYearOptions().map((yr) => (
+                          <MenuItem key={yr} value={yr}>
+                            {yr}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </div>
+                </div>
+              )}
+            </RadioGroup>
+          </FormControl>
+        </MenuItem>
 
-            {/* Clear Buttons */}
-            <MenuItem>
-              <Button onClick={handleClearAllFilters}>Clear All Filters</Button>
-            </MenuItem>
-          </Menu>
-          <TableContainer
-            component={Paper}
-            sx={{
-              marginBottom: 4,
-              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
-              borderRadius: "1.5cap",
-            }}
-          >
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Name
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Price
-                    <CurrencyConvertor
-                      onCurrencyChange={handlePriceCurrencyChange}
-                    />
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Is open
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Category
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Tags
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Discount
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Dates and Times
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Duration
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Location
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Rating
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Flag
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Number of Bookings
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Earnings
-                    <CurrencyConvertor
-                      onCurrencyChange={handleEarningsCurrencyChange}
-                    />
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {activities.length > 0 ? (
-                  activities.map((entry) =>
-                    entry &&
-                    entry.activity.deletedActivity === false &&
-                    entry.activity.totalGain !== undefined ? (
-                      <TableRow key={entry.activity._id}>
-                        <TableCell>{entry.activity.name}</TableCell>
-                        <TableCell>
-                          {(
-                            entry.activity.price *
-                            (priceExchangeRates[priceCurrency] || 1)
-                          ).toFixed(2)}{" "}
-                          {priceCurrency}
-                        </TableCell>
-                        <TableCell>
-                          {entry.activity.isOpen ? "Yes" : "No"}
-                        </TableCell>
-                        <TableCell>{entry.activity.category}</TableCell>
-                        <TableCell>{entry.activity.tags.join(", ")}</TableCell>
-                        <TableCell>{entry.activity.specialDiscount}</TableCell>
-                        <TableCell>
-                          {entry.activity.date
-                            ? (() => {
-                                const dateObj = new Date(entry.activity.date);
-                                const date = dateObj
-                                  .toISOString()
-                                  .split("T")[0];
-                                const time = dateObj
-                                  .toTimeString()
-                                  .split(" ")[0];
-                                return (
-                                  <div>
-                                    {date} at {time}
-                                  </div>
-                                );
-                              })()
-                            : "No available date"}
-                        </TableCell>
-                        <TableCell>{entry.activity.duration}</TableCell>
-                        <TableCell>{entry.activity.location}</TableCell>
-                        <TableCell>
-                          <Rating
-                            value={calculateAverageRating(
-                              entry.activity.ratings
-                            )}
-                            precision={0.1}
-                            readOnly
-                          />
-                        </TableCell>
-                        <TableCell>
-                          {entry.activity.flag ? (
-                            <span
-                              style={{
-                                color: "red",
-                                display: "flex",
-                                alignItems: "center",
-                              }}
-                            >
-                              <WarningIcon style={{ marginRight: "4px" }} />
-                              Inappropriate
-                            </span>
-                          ) : (
-                            <span
-                              style={{
-                                color: "green",
-                                display: "flex",
-                                alignItems: "center",
-                              }}
-                            >
-                              <CheckCircleIcon style={{ marginRight: "4px" }} />
-                              Appropriate
-                            </span>
-                          )}
-                        </TableCell>
-                        <TableCell>{entry.numOfBookings}</TableCell>
-                        <TableCell>
-                          {(
-                            entry.totalEarnings *
-                            0.9 *
-                            (earningsExchangeRates[earningsCurrency] || 1)
-                          ).toFixed(2)}{" "}
-                          {earningsCurrency}
-                        </TableCell>
-                      </TableRow>
-                    ) : null
-                  )
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={12}>No activities found</TableCell>
+        {/* Clear Buttons */}
+        <MenuItem>
+          <Button onClick={handleClearAllFilters}>Clear All Filters</Button>
+        </MenuItem>
+      </Menu>
+      <TableContainer
+        component={Paper}
+        sx={{
+          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+          borderRadius: "1.5cap",
+          height: "auto",
+          overflow: "auto",
+        }}
+      >
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                Name
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                Price
+                <CurrencyConvertor
+                  onCurrencyChange={handlePriceCurrencyChange}
+                />
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                Is open
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                Category
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                Tags
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                Discount
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                Dates and Times
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                Duration
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                Location
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                Rating
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                Flag
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                Number of Bookings
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                Earnings
+                <CurrencyConvertor
+                  onCurrencyChange={handleEarningsCurrencyChange}
+                />
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {activities.length > 0 ? (
+              activities.map((entry) =>
+                entry &&
+                entry.activity.deletedActivity === false &&
+                entry.activity.totalGain !== undefined ? (
+                  <TableRow key={entry.activity._id}>
+                    <TableCell>{entry.activity.name}</TableCell>
+                    <TableCell>
+                      {(
+                        entry.activity.price *
+                        (priceExchangeRates[priceCurrency] || 1)
+                      ).toFixed(2)}{" "}
+                      {priceCurrency}
+                    </TableCell>
+                    <TableCell>
+                      {entry.activity.isOpen ? "Yes" : "No"}
+                    </TableCell>
+                    <TableCell>{entry.activity.category}</TableCell>
+                    <TableCell>{entry.activity.tags.join(", ")}</TableCell>
+                    <TableCell>{entry.activity.specialDiscount}</TableCell>
+                    <TableCell>
+                      {entry.activity.date
+                        ? (() => {
+                            const dateObj = new Date(entry.activity.date);
+                            const date = dateObj.toISOString().split("T")[0];
+                            const time = dateObj.toTimeString().split(" ")[0];
+                            return (
+                              <div>
+                                {date} at {time}
+                              </div>
+                            );
+                          })()
+                        : "No available date"}
+                    </TableCell>
+                    <TableCell>{entry.activity.duration}</TableCell>
+                    <TableCell>{entry.activity.location}</TableCell>
+                    <TableCell>
+                      <Rating
+                        value={calculateAverageRating(entry.activity.ratings)}
+                        precision={0.1}
+                        readOnly
+                      />
+                    </TableCell>
+                    <TableCell>
+                      {entry.activity.flag ? (
+                        <span
+                          style={{
+                            color: "red",
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <WarningIcon style={{ marginRight: "4px" }} />
+                          Inappropriate
+                        </span>
+                      ) : (
+                        <span
+                          style={{
+                            color: "green",
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <CheckCircleIcon style={{ marginRight: "4px" }} />
+                          Appropriate
+                        </span>
+                      )}
+                    </TableCell>
+                    <TableCell>{entry.numOfBookings}</TableCell>
+                    <TableCell>
+                      {(
+                        entry.totalEarnings *
+                        0.9 *
+                        (earningsExchangeRates[earningsCurrency] || 1)
+                      ).toFixed(2)}{" "}
+                      {earningsCurrency}
+                    </TableCell>
                   </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </div>
-        <Help />
-      </div>
+                ) : null
+              )
+            ) : (
+              <TableRow>
+                <TableCell colSpan={12}>No activities found</TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Help />
     </Box>
   );
 };

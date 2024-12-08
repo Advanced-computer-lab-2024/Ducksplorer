@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
-import { Link } from "react-router-dom";
 // import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FileUpload from "../../Components/FileUpload";
 import IconButton from "@mui/material/IconButton";
@@ -196,15 +195,24 @@ const EditProfile = () => {
                   style={{ display: "none" }}
                 />
                 <label htmlFor="photo">
-                  <Button component="span" color="primary" variant="contained">
-                    Upload New Photo
-                  </Button>
+                <Button
+                      variant="outlined"
+                      component="span"
+                      sx={{
+                        color:"#ff9933",
+                        borderColor: "#ff9933",
+                        marginBottom: 2,
+                        marginTop: 2,
+                      }}
+                    >
+                      Upload New Photo
+                    </Button>
                 </label>
                 {sellerDetails.photo && (
                   <Button
                     onClick={handlePhotoDelete}
-                    color="secondary"
-                    variant="contained"
+                    color="error"
+                    variant="outlined"
                   >
                     Delete Photo
                   </Button>
@@ -291,7 +299,7 @@ const EditProfile = () => {
             />
             {isEditing && (
               <>
-                <Button onClick={() => handleFileDelete("uploads")}>
+                <Button variant="outlined" color="error" onClick={() => handleFileDelete("uploads")}>
                   Delete uploaded file
                 </Button>
                 <FileUpload
@@ -306,6 +314,7 @@ const EditProfile = () => {
         <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
           {isEditing ? (
             <Button
+            className="blackhover"
               variant="contained"
               color="success"
               onClick={handleSaveClick}
@@ -316,6 +325,7 @@ const EditProfile = () => {
             </Button>
           ) : (
             <Button
+            className="blackhover"
               variant="contained"
               color="primary"
               onClick={handleEditClick}

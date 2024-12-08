@@ -4,7 +4,7 @@ import { message } from "antd";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import axios from "axios";
-import Sidebar from "../../Components/Sidebars/Sidebar.js";
+import AdminNavbar from "../../Components/NavBars/AdminNavBar";
 
 function CreatePromoCode() {
   const [code, setCode] = useState("");
@@ -33,7 +33,7 @@ function CreatePromoCode() {
 
   return (
     <>
-      <Sidebar />
+      <AdminNavbar />
       <div style={{ height: "80vh", transform: "translateX(125px)" }}>
         <div className="text-center">
           <h4

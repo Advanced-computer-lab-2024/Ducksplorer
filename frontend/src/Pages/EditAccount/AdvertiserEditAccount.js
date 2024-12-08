@@ -230,6 +230,7 @@ const AdvertiserEditProfile = () => {
                   />
                   <label htmlFor="photo">
                     <Button
+                    className="blackhover"
                       component="span"
                       color="primary"
                       variant="contained"
@@ -238,13 +239,12 @@ const AdvertiserEditProfile = () => {
                     </Button>
                   </label>
                   {advertiserDetails.photo && (
-                    <Button
-                      onClick={handlePhotoDelete}
-                      color="secondary"
-                      variant="contained"
-                    >
-                      Delete Photo
-                    </Button>
+                    <Button 
+                      variant="outlined"
+                      color="error"
+                      onClick={() => handlePhotoDelete()}>
+                    Delete Photo
+                  </Button>
                   )}
                 </>
               )}
@@ -340,7 +340,10 @@ const AdvertiserEditProfile = () => {
               />
               {isEditing && (
                 <>
-                  <Button onClick={() => handleFileDelete("uploads")}>
+                  <Button 
+                  variant="outlined"
+                      color="error"
+                  onClick={() => handleFileDelete("uploads")}>
                     Delete uploaded file
                   </Button>
                   <FileUpload
@@ -355,6 +358,7 @@ const AdvertiserEditProfile = () => {
           <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
             {isEditing ? (
               <Button
+              className="blackhover"
                 variant="contained"
                 color="success"
                 onClick={handleSaveClick}
@@ -365,6 +369,7 @@ const AdvertiserEditProfile = () => {
               </Button>
             ) : (
               <Button
+              className="blackhover"
                 variant="contained"
                 color="primary"
                 onClick={handleEditClick}

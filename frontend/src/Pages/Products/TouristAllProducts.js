@@ -3,48 +3,40 @@ import { useNavigate } from "react-router-dom";
 import {
   Box,
   Typography,
-  Drawer,
-  Stack,
-  MenuItem,
-  Select,
-  InputLabel,
-  FormControl,
   Container,
+  IconButton,
+  Tooltip,
+  Menu,
+  MenuItem,
 } from "@mui/material";
-import { Button, Input } from "@mui/joy";
+import Input from "@mui/joy/Input";
+import Button from "@mui/joy/Button";
 import { message } from "antd";
 import axios from "axios";
-import ProductCard from "../../Components/Products/ProductCard";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import SwapVertIcon from "@mui/icons-material/SwapVert"; // Ensure this is imported
+import NewProductCard from "../../Components/Products/newProductCard";
 import Help from "../../Components/HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar";
-import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
-import NewProductCard from "../../Components/Products/newProductCard";
-import { setMaxListeners } from "form-data";
 import DuckLoading from "../../Components/Loading/duckLoading";
-
-const searchContainerStyle = {
-  display: "flex",
-  justifyContent: "center",
-  marginBottom: "20px",
-};
 
 const TouristAllProducts = () => {
   const navigate = useNavigate();
   const isGuest = localStorage.getItem("guest") === "true";
-
-  const [name, setName] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filterAnchorEl, setFilterAnchorEl] = useState(null); // Menu state for filter
+  const [sortOrderAnchorEl, setSortOrderAnchorEl] = useState(null); // Menu state for sorting
 
   useEffect(() => {
     setLoading(true);
     axios
       .get("http://localhost:8000/adminRoutes/getproducts")
       .then((response) => {
-        message.success("Products fetched successfully");
         setProducts(response.data);
       })
       .catch((error) => {
@@ -52,7 +44,7 @@ const TouristAllProducts = () => {
         message.error("Failed to fetch products.");
       })
       .finally(() => {
-        setTimeout(() => setLoading(false), 1000); // Delay of 1 second
+        setLoading(false);
       });
   }, []);
 
@@ -61,7 +53,7 @@ const TouristAllProducts = () => {
       const response = await axios.get(
         "http://localhost:8000/sellerRoutes/findProduct",
         {
-          params: { name },
+          params: { name: searchQuery },
         }
       );
       if (response.status === 200) {
@@ -74,13 +66,14 @@ const TouristAllProducts = () => {
       message.error("An error occurred: " + error.message);
     }
   };
-  if (loading) {
-    return (
-      <div>
-        <DuckLoading />
-      </div>
-    );
-  }
+
+  const handleFilterChoiceClick = (event) => {
+    setFilterAnchorEl(event.currentTarget); // Open the filter menu
+  };
+
+  const handleFilterClose = () => {
+    setFilterAnchorEl(null); // Close the filter menu
+  };
 
   const handleFilterProducts = async () => {
     try {
@@ -99,6 +92,14 @@ const TouristAllProducts = () => {
     } catch (error) {
       message.error("An error occurred: " + error.message);
     }
+  };
+
+  const handleSortOrderClick = (event) => {
+    setSortOrderAnchorEl(event.currentTarget); // Open the sort menu
+  };
+
+  const handleSortOrderClose = () => {
+    setSortOrderAnchorEl(null); // Close the sort menu
   };
 
   const handleSortProducts = async (order) => {
@@ -124,97 +125,157 @@ const TouristAllProducts = () => {
     window.history.back();
   };
 
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
+
   return (
     <Box
       sx={{
         height: "100vh",
-        width: "90vw",
+        backgroundColor: "fff6e6",
+        width: "100vw",
+        paddingTop: "2vh", // Adjust for navbar height
       }}
     >
       <TouristNavBar />
 
-      <Container sx={{ mt: 4, mb: 4 }}>
+      <Container sx={{ width: "100%" }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
-          <Typography fontWeight="700" class="bigTitle">
-            Products
-          </Typography>
+          <Typography class="bigTitle">Products</Typography>
         </Box>
 
-        <Box
-          sx={{
-            mb: 3,
-            display: "flex",
-            justifyContent: "space-between",
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "2.5fr 0.5fr auto auto",
+            gap: "16px",
+            paddingBottom: 24,
+            width: "100%",
           }}
         >
-          {/* Filter Section */}
           <Input
-            placeholder="Min Price"
-            type="number"
-            value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
-          />
-          <Input
-            placeholder="Max Price"
-            type="number"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
-          />
-          <Button
-            variant="contained"
-            className="blackhover"
-            onClick={handleFilterProducts}
-            sx={{ color: "white" }}
-          >
-            Filter
-          </Button>
-          {/* Search Section */}
-          <Input
-            placeholder="Search for a product"
-            variant="outlined"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            placeholder="Search for a product..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            fullWidth
+            variant="filled"
+            color="primary"
           />
 
           <Button
-            variant="contained"
-            className="blackhover"
-            sx={{ color: "white" }}
+            variant="solid"
             onClick={handleSearchProducts}
+            className="blackhover"
+            sx={{ backgroundColor: "#ff9933" }}
           >
             Search
           </Button>
+          <Tooltip title="Filter Products">
+            <IconButton onClick={handleFilterChoiceClick}>
+              <FilterAltIcon sx={{ color: "black" }} />
+            </IconButton>
+          </Tooltip>
+          <Menu
+            anchorEl={filterAnchorEl}
+            open={Boolean(filterAnchorEl)}
+            onClose={handleFilterClose}
+          >
+            <MenuItem>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "16px",
+                }}
+              >
+                <Input
+                  placeholder="Enter minimum price"
+                  type="number"
+                  value={minPrice}
+                  onChange={(e) => setMinPrice(e.target.value)}
+                  fullWidth
+                  variant="filled"
+                  color="primary"
+                />
+                <Input
+                  placeholder="Enter maximum price"
+                  type="number"
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(e.target.value)}
+                  fullWidth
+                  variant="filled"
+                  color="primary"
+                />
+                <Button
+                  variant="contained"
+                  onClick={handleFilterProducts}
+                  sx={{ marginTop: "16px", backgroundColor: "#ff9933" }}
+                >
+                  Apply Filter
+                </Button>
+              </div>
+            </MenuItem>
+          </Menu>
 
           {/* Sort Section */}
-          <FormControl variant="outlined" sx={{ minWidth: 150 }}>
-            <InputLabel>Sort By</InputLabel>
-            <Select
-              value={sortOrder}
-              onChange={(e) => {
-                setSortOrder(e.target.value);
-                handleSortProducts(e.target.value);
+          <Tooltip title="Sort Order">
+            <IconButton onClick={handleSortOrderClick}>
+              <SwapVertIcon sx={{ color: "black" }} />
+            </IconButton>
+          </Tooltip>
+
+          <Menu
+            anchorEl={sortOrderAnchorEl}
+            open={Boolean(sortOrderAnchorEl)}
+            onClose={handleSortOrderClose}
+          >
+            <MenuItem
+              onClick={() => {
+                setSortOrder("asc");
+                handleSortProducts("asc");
+                handleSortOrderClose();
               }}
-              label="Sort By"
             >
-              <MenuItem value="1">Price Ascending</MenuItem>
-              <MenuItem value="0">Price Descending</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
+              Ascending
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                setSortOrder("desc");
+                handleSortProducts("desc");
+                handleSortOrderClose();
+              }}
+            >
+              Descending
+            </MenuItem>
+          </Menu>
+        </div>
+
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "24px", // Adjust the gap between items as needed
+            gap: "24px",
             width: "100%",
             paddingBottom: 24,
           }}
         >
-          {products.filter((product) => product.isArchived !== true).length >
-          0 ? (
+          {products.filter((product) => !product.isArchived).length > 0 ? (
             products
-              .filter((product) => product.isArchived !== true)
-              .map((product) => <NewProductCard product={product} />)
+              .filter((product) => !product.isArchived)
+              .map((product) => (
+                <NewProductCard
+                  key={product._id}
+                  product={product}
+                  showNotify={false}
+                  showAddToCart={true}
+                  hideWishlist={false}
+                />
+              ))
           ) : (
             <Typography variant="body1" color="textSecondary" align="center">
               No products found.

@@ -47,10 +47,12 @@ const OrdersPage = () => {
     fetchOrders();
   }, [username]);
 
-  const handleCancelOrder = async (orderNumber) => {
+  const handleCancelOrder = async (orderNumber, totalPrice) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8000/touristRoutes/cancelOrder/${username}/${orderNumber}`
+        `http://localhost:8000/touristRoutes/cancelOrder/${username}/${orderNumber}`, {
+          data: {totalPrice}
+        }
       );
       if (response.status === 200) {
         message.success("Order cancelled successfully");
@@ -72,23 +74,9 @@ const OrdersPage = () => {
   return (
     <>
       <TouristNavBar />
-      <Box sx={{ padding: 3, maxWidth: "1200px", margin: "auto" }}>
-        <Button
-          onClick={() => window.history.back()}
-          variant="contained"
-          sx={{
-            backgroundColor: "#1a237e",
-            color: "#fff",
-            fontWeight: "bold",
-            borderRadius: "8px",
-            marginBottom: "20px",
-            "&:hover": { backgroundColor: "#0d47a1" },
-          }}
-        >
-          Back
-        </Button>
+      <Box sx={{ padding: 3, maxWidth: "1200px", margin: "auto" , overflowY: 'visible', height: '100vh'}}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
-          <Typography variant="h4" fontWeight="700">
+          <Typography variant="h4" fontWeight="700" className="bigTitle">
             My Orders
           </Typography>
         </Box>
@@ -144,6 +132,7 @@ const OrdersPage = () => {
                       <Button
                         variant="contained"
                         size="small"
+                        className="blackhover"
                         sx={{
                           marginRight: 2,
                           backgroundColor: "#ff9933",
@@ -158,7 +147,7 @@ const OrdersPage = () => {
                         variant="contained"
                         size="small"
                         color="error"
-                        onClick={() => handleCancelOrder(order.orderNumber)}
+                        onClick={() => handleCancelOrder(order.orderNumber, order.totalPrice)}
                         disabled={order.status !== "Processing"}
                         sx={{
                           backgroundColor:

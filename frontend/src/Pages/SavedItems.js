@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { message } from "antd";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import DuckLoading from "../Components/Loading/duckLoading.js";
+import Error404 from "../Components/Error404.js";
+
 import {
   Typography,
   Box,
@@ -17,12 +20,10 @@ import {
   Tooltip,
   CircularProgress,
   Grid,
+  Tabs,
+  Tab
 } from "@mui/material";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
-import CurrencyConvertor from "../Components/CurrencyConvertor.js";
-import MyChips from "../Components/MyChips.js";
-import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
+import MyTabs from "../Components/MyTabs.js";
 import TouristNavBar from "../Components/TouristNavBar.js";
 import ItineraryCard from "../Components/itineraryCard.js";
 import ActivityCard from "../Components/activityCard.js";
@@ -31,8 +32,8 @@ import Help from "../Components/HelpIcon.js";
 function MySavedItems() {
   const { id } = useParams();
 
-  const chipNames = ["All", "Itineraries", "Activities"];
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const tabNames = ["All", "Itineraries", "Activities"];
+  const [selectedTab, setSelectedTab] = useState("All");
 
   const [itineraries, setItineraries] = useState([]);
 
@@ -51,13 +52,13 @@ function MySavedItems() {
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
 
+  const errorMessage =
+    "The savedItems you are looking for might be removed or is temporarily unavailable";
+  const backMessage = "BACK TO TOURIST DASHBOARD";
+
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
-  };
-
-  const handleChipClick = (chipName) => {
-    setSelectedCategory(chipName);
   };
 
   useEffect(() => {
@@ -88,6 +89,9 @@ function MySavedItems() {
           );
           setItineraries(tempItineraries);
         }
+        console.log("Itineraries Length: ", itineraries.length);
+        console.log("Activities Length: ", activities.length);
+
       } catch (error) {
         console.error("There was an error fetching the itineraries!", error);
       } finally {
@@ -167,41 +171,11 @@ function MySavedItems() {
     }
   };
 
-  if (loadingActivity) {
+  if (loadingActivity || loadingItinerary) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100vh", // Full screen height
-        }}
-      >
-        <CircularProgress size={60} thickness={4} />
-        <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
-          Loading saved activities...
-        </Typography>
-      </Box>
-    );
-  }
-
-  if (loadingItinerary) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100vh", // Full screen height
-        }}
-      >
-        <CircularProgress size={60} thickness={4} />
-        <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
-          Loading saved itineraries...
-        </Typography>
-      </Box>
+      <div>
+        <DuckLoading />
+      </div>
     );
   }
 
@@ -209,45 +183,36 @@ function MySavedItems() {
     (!Array.isArray(itineraries) && !Array.isArray(activities)) ||
     (itineraries.length === 0 && activities.length === 0)
   ) {
-    return <p>No saved data available.</p>;
+    return (
+      <>
+        <TouristNavBar />
+        <Error404
+          errorMessage={errorMessage}
+          backMessage={backMessage}
+          route="/touristDashboard"
+        />
+      </>
+    );
   }
 
   return (
     <>
       <TouristNavBar />
-      {/* <TouristSidebar /> */}
-      {/* <Box
-        sx={{
-          padding: "20px",
-          maxWidth: "1200px",
-          margin: "auto",
-          display: "flex",
-          flexDirection: "column",
-          overflowY: "visible",
-          height: "100vh",
-        }}
-      > */}
-      <div
-        style={{
-          overflowY: "visible",
-          height: "100vh",
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
+      
+      <div style={{ overflowY: 'visible', height: '100vh', width: '100%', display: 'flex', flexDirection: 'column' }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <Typography
             variant="h4"
-            sx={{ fontFamily: "'Roboto', sans-serif", color: "black" }}
+            className="bigTitle"
+            sx={{  color: "black", fontWeight: 'bold' }}
           >
             Saved
           </Typography>
         </Box>
 
-        <MyChips chipNames={chipNames} onChipClick={handleChipClick} />
+        <MyTabs tabNames={tabNames} onTabClick={(tabName) => setSelectedTab(tabName)} />
 
-        {(selectedCategory === "Itineraries" || selectedCategory === "All") && (
+        {(selectedTab === "Itineraries" || selectedTab === "All") && (
           <>
             {/* <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
                 <Typography variant="h4">Itineraries</Typography>
@@ -260,22 +225,18 @@ function MySavedItems() {
                     gridTemplateColumns: "repeat(3, 1fr)",
                     gap: "24px", // Adjust the gap between items as needed
                     paddingBottom: 24,
-                    paddingTop: 24,
+                    paddingTop: 24
                   }}
                 >
                   {
                     itineraries.map((itinerary) =>
                       itinerary.flag === false &&
-                      itinerary.isDeactivated === false &&
-                      itinerary.tourGuideDeleted === false &&
-                      itinerary.deletedItinerary === false &&
-                      itinerary.saved.user === username &&
-                      itinerary.saved.isSaved === true ? (
-                        <ItineraryCard
-                          itinerary={itinerary}
-                          onRemove={handleRemoveItinerary}
-                          showNotify={true}
-                        />
+                        itinerary.isDeactivated === false &&
+                        itinerary.tourGuideDeleted === false &&
+                        itinerary.deletedItinerary === false &&
+                        itinerary.saved.user === username &&
+                        itinerary.saved.isSaved === true ? (
+                        <ItineraryCard itinerary={itinerary} onRemove={handleRemoveItinerary} showNotify={true} />
                       ) : null
                     ) // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists
                   }
@@ -289,49 +250,42 @@ function MySavedItems() {
           </>
         )}
 
-        {(selectedCategory === "Activities" || selectedCategory === "All") && (
-          <>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                mb: 3,
-                marginTop: "20px",
-              }}
-            >
-              {/* <Typography variant="h4"> Activities</Typography> */}
-            </Box>
-            <Grid container spacing={4}>
-              {Array.isArray(activities) && activities.length > 0 ? (
-                activities.map((activity) =>
-                  activity.flag === false &&
-                  activity.advertiserDeleted === false &&
-                  activity.deletedActivity === false &&
-                  activity.saved.user === username &&
-                  activity.saved.isSaved === true ? (
-                    <Grid item xs={12} sm={8} md={6} key={activity._id}>
-                      <ActivityCard
-                        activity={activity}
-                        onRemove={handleRemoveActivity}
-                        showNotify={true}
-                      />
-                    </Grid>
-                  ) : null
-                )
-              ) : (
-                <Grid item xs={12}>
-                  <Typography
-                    variant="body1"
-                    color="textSecondary"
-                    align="center"
-                  >
-                    No activities available
-                  </Typography>
-                </Grid>
-              )}
-            </Grid>
-          </>
-        )}
+        {(selectedTab === "Activities" ||
+          selectedTab === "All") && (
+            <>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  mb: 3,
+                  marginTop: "20px",
+                }}
+              >
+                {/* <Typography variant="h4"> Activities</Typography> */}
+              </Box>
+              <Grid container spacing={4}>
+                {Array.isArray(activities) && activities.length > 0 ? (
+                  activities.map((activity) =>
+                    activity.flag === false &&
+                      activity.advertiserDeleted === false &&
+                      activity.deletedActivity === false &&
+                      activity.saved.user === username &&
+                      activity.saved.isSaved === true ? (
+                      <Grid item xs={12} sm={8} md={6} key={activity._id}>
+                        <ActivityCard activity={activity} onRemove={handleRemoveActivity} showNotify={true} />
+                      </Grid>
+                    ) : null
+                  )
+                ) : (
+                  <Grid item xs={12}>
+                    <Typography variant="body1" color="textSecondary" align="center">
+                      No activities available
+                    </Typography>
+                  </Grid>
+                )}
+              </Grid>
+            </>
+          )}
         {/* </Box> */}
       </div>
       <Help />

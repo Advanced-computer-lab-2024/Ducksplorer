@@ -16,7 +16,6 @@ import LockIcon from "@mui/icons-material/Lock";
 import PeopleIcon from "@mui/icons-material/People";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import CategoryIcon from "@mui/icons-material/Category";
 import ReportIcon from "@mui/icons-material/Report";
 import LabelIcon from "@mui/icons-material/Label";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -147,20 +146,7 @@ function AdminNavBar() {
                     marginLeft={2}
                     sx={{ color: "black", fontSize: "14px" }}
                   >
-                    Approve Pending Users
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={() => handleNavigation("deleteusers")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <DeleteIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Delete Users
+                    User Managment
                   </Typography>
                 </IconButton>
               </MenuItem>
@@ -173,33 +159,7 @@ function AdminNavBar() {
                     marginLeft={2}
                     sx={{ color: "black", fontSize: "14px" }}
                   >
-                    Add Admin
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={() => handleNavigation("addGovernor")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <PersonAddIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Add Governor
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={() => handleNavigation("categoriesActions")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <CategoryIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Categories
+                    Add Users
                   </Typography>
                 </IconButton>
               </MenuItem>
@@ -225,7 +185,7 @@ function AdminNavBar() {
                     marginLeft={2}
                     sx={{ color: "black", fontSize: "14px" }}
                   >
-                    Tags
+                    Browse Selections
                   </Typography>
                 </IconButton>
               </MenuItem>
@@ -251,20 +211,7 @@ function AdminNavBar() {
                     marginLeft={2}
                     sx={{ color: "black", fontSize: "14px" }}
                   >
-                    View all Activities
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={() => handleNavigation("ViewAllItineraries")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <EventNoteIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    View All Itineraries
+                    Events
                   </Typography>
                 </IconButton>
               </MenuItem>
@@ -277,20 +224,7 @@ function AdminNavBar() {
                     marginLeft={2}
                     sx={{ color: "black", fontSize: "14px" }}
                   >
-                    Revenue Report
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={() => handleNavigation("userReport")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <EventNoteIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Users Report
+                    Reports
                   </Typography>
                 </IconButton>
               </MenuItem>

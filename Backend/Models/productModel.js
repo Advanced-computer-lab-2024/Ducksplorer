@@ -58,6 +58,11 @@ const productSchema = new mongoose.Schema({
   totalGain: {
     type: Number,
     required: false
+  },
+  averageRating:{
+    type: Number,
+    default:0,
+    required: false
   }
 });
 
