@@ -3,6 +3,7 @@ import axios from "axios";
 import { message } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import StandAloneToggleButton from "../../Components/ToggleButton.js";
+import GovernorNavBar from "../../Components/NavBars/GovernorNavBar.js";
 
 import {
     Box,
@@ -14,11 +15,11 @@ import {
 import AdvertiserNavBar from "../../Components/TopNav/AdvertiserNavbar";
 
 function EditMuseum() {
-    let allTags = JSON.parse(localStorage.getItem("selectedTags"));
+    let allTags = JSON.parse(localStorage.getItem("MuseumTags"));
     const { state } = useLocation();
     const navigate = useNavigate();
     const museum = JSON.parse(localStorage.getItem("selectedMuseum"));
-    const formRef = useRef(null); // For auto-scrolling
+    const formRef = useRef(null);
 
     // Form state
     const [formData, setFormData] = useState({
@@ -50,13 +51,13 @@ function EditMuseum() {
     // Handle tag selection
     const handleTagChange = (tag) => {
         setFormData((prevData) => {
-            const updatedTags = Array.isArray(prevData.tags) ? prevData.tags : [];
-            const newTags = updatedTags.includes(tag)
-                ? updatedTags.filter((t) => t !== tag) // Remove tag
-                : [...updatedTags, tag]; // Add tag
-            return { ...prevData, tags: newTags };
+            const updatedTags = prevData.tags.includes(tag)
+                ? prevData.tags.filter((t) => t !== tag) // Remove the tag
+                : [...prevData.tags, tag]; // Add the tag
+            return { ...prevData, tags: updatedTags };
         });
-    };
+    };      
+
 
     // Update the museum details
     const handleUpdate = (event) => {
@@ -79,7 +80,7 @@ function EditMuseum() {
                 height: "100vh",
             }}
         >
-            <AdvertiserNavBar />
+            <GovernorNavBar />
 
             <Box
                 sx={{
@@ -111,6 +112,24 @@ function EditMuseum() {
                         <Box />
                         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                             <form onSubmit={handleUpdate} style={{ marginTop: "20px" }}>
+                            <TextField
+                                    label="Museum Name"
+                                    name="museumName"
+                                    value={formData.museumName}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                    required
+                                />
+                                <TextField
+                                    label="Museum Category"
+                                    name="museumCategory"
+                                    value={formData.museumCategory}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                    required
+                                />
                                 <TextField
                                     label="Description"
                                     name="description"
@@ -148,6 +167,16 @@ function EditMuseum() {
                                     required
                                 />
                                 <TextField
+                                    label="Museum Date"
+                                    name="museumDate"
+                                    value={formData.museumDate}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    type="datetime-local"
+                                    sx={{ mb: 2 }}
+                                    required
+                                />
+                                <TextField
                                     label="Opening Time"
                                     name="openingTime"
                                     value={formData.openingTime}
@@ -160,34 +189,6 @@ function EditMuseum() {
                                     label="Closing Time"
                                     name="closingTime"
                                     value={formData.closingTime}
-                                    onChange={handleInputChange}
-                                    fullWidth
-                                    sx={{ mb: 2 }}
-                                    required
-                                />
-                                <TextField
-                                    label="Museum Date"
-                                    name="museumDate"
-                                    value={formData.museumDate}
-                                    onChange={handleInputChange}
-                                    fullWidth
-                                    type="datetime-local"
-                                    sx={{ mb: 2 }}
-                                    required
-                                />
-                                <TextField
-                                    label="Museum Name"
-                                    name="museumName"
-                                    value={formData.museumName}
-                                    onChange={handleInputChange}
-                                    fullWidth
-                                    sx={{ mb: 2 }}
-                                    required
-                                />
-                                <TextField
-                                    label="Museum Category"
-                                    name="museumCategory"
-                                    value={formData.museumCategory}
                                     onChange={handleInputChange}
                                     fullWidth
                                     sx={{ mb: 2 }}
@@ -212,18 +213,19 @@ function EditMuseum() {
                                     {allTags.map((element) => {
                                         return (
                                             <StandAloneToggleButton
+                                                tagType={"museum"}
                                                 key={element._id}
-                                                name={element.museumTag}
+                                                name={element.name}
                                                 tags={formData.tags}
-                                                selected={museum.tags.includes(element.museumTag)}
-                                                onChange={() => handleTagChange(element.museumTag)}
+                                                selected={formData.tags.includes(element.museumTag)} // Correct comparison here
+                                                onChange={() => handleTagChange(element.name)} // Pass the tag name
                                             />
                                         );
                                     })}
                                 </div>
 
                                 <Box sx={{ mt: 2 }}>
-                                    <Button type="submit" variant="contained" className="blackhover">
+                                    <Button type="submit" variant="contained" className="blackhover" onClick={handleUpdate}>
                                         Update
                                     </Button>
                                 </Box>

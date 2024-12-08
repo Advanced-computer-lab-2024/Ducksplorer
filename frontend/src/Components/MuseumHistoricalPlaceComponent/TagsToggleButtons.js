@@ -12,15 +12,23 @@ function TagsToggleButtons(props) {
   useEffect(() => {
     const fetchTags = async () => {
       let url = "";
-      if (props.tagType === "museum") {
-        url = "http://localhost:8000/museumTags/getAllMuseumTags";
-      } else if (props.tagType === "historicalPlace") {
-        url = "http://localhost:8000/historicalPlaceTags/getAllHistoricalPlaceTags";
-      }
+      let response ;
+      // if (props.tagType === "museum") {
+      //   url = "http://localhost:8000/museumTags/getAllMuseumTags";
+      // } else if (props.tagType === "historicalPlace") {
+      //   url = "http://localhost:8000/historicalPlaceTags/getAllHistoricalPlaceTags";
+      // }
 
       try {
-        const response = await axios.get(url);
+        if (props.tagType === "museum") {
+          response = await axios.get("http://localhost:8000/museumTags/getAllMuseumTags");        
+        } else if (props.tagType === "historicalPlace") {
+          response = await axios.get("http://localhost:8000/historicalPlaceTags/getAllHistoricalPlaceTags");        
+        }
+        
         const data = response.data;
+
+        console.log("Tags",data);
 
         if (props.tagType === "museum") {
           const museumTags = data.map((element) => ({
@@ -28,12 +36,14 @@ function TagsToggleButtons(props) {
             name: element.museumTag,
           }));
           setAllTags(museumTags);
+          console.log(museumTags);
           localStorage.setItem("MuseumTags", JSON.stringify(museumTags));
         } else if (props.tagType === "historicalPlace") {
           const historicalPlaceTags = data.map((element) => ({
             _id: element._id,
             name: element.historicalPlaceTag,
           }));
+          console.log(historicalPlaceTags);
           setAllTags(historicalPlaceTags);
           localStorage.setItem("HistoricalTags", JSON.stringify(historicalPlaceTags));
         }
@@ -46,16 +56,11 @@ function TagsToggleButtons(props) {
   }, [props.tagType]);
 
   const handleTagChange = () => {
-    setSelected(!selected);
-
-    if (selected) {
-      // Remove the tag
-      const updatedTags = props.tags.filter((tag) => tag !== props.name);
-      props.setTags(updatedTags); // Pass the updated tags back to the parent
-    } else {
-      // Add the tag
-      props.setTags([...props.tags, props.name]);
-    }
+      setSelected(!selected);
+      props.tags.includes(props.name)
+        ? props.tags.splice(props.tags.indexOf(props.name), 1)
+        : props.tags.push(props.name);
+      console.log(props.tags);
   };
 
   return (

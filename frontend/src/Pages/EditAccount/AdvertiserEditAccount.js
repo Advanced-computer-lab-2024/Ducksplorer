@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FileUpload from "../../Components/FileUpload";
 import IconButton from "@mui/material/IconButton";
@@ -32,6 +32,7 @@ const AdvertiserEditProfile = () => {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const navigate = useNavigate(); // Initialize the useNavigate hook
 
   const handlePhotoUpload = async () => {
     const photoFile = document.getElementById("photo").files[0];
@@ -71,6 +72,10 @@ const AdvertiserEditProfile = () => {
     console.log("before the call", uploadsFile);
     advertiserDetails.uploads = await handleFileUpload(uploadsFile);
   };
+
+  useEffect(() => {
+    document.body.style.overflow = "auto";
+  }, []);
 
   useEffect(() => {
     const userJson = localStorage.getItem("user");
@@ -171,37 +176,47 @@ const AdvertiserEditProfile = () => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    const userJson = localStorage.getItem("user");
+    const user = JSON.parse(userJson);
+    const userName = user.username;
+    if (userName) {
+      try {
+        const response = await axios.delete(
+          `http://localhost:8000/advertiserAccount/deleteMyAdvertiserAccount/${userName}`
+        );
+        alert(response.data.message);
+        navigate("/login");
+      } catch (error) {
+        console.error("Error deleting account:", error);
+        alert("Failed to delete account. Please try again.");
+      }
+    }
+  };
+
   return (
     <>
       <Box
         sx={{
-          p: 5,
-          display: "flex",
-          flexDirection: "column",
-          overflowY: 'visible',
-          maxHeight: '100vh'
+          height: "100vh",
         }}
       >
         <AdvertiserNavBar />
-
-        <Paper
-          elevation={4}
+        <Box
           sx={{
-            marginTop: "30px",
             p: 4,
-            width: "60vw",
-            borderRadius: 3,
-            boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
-            maxHeight: "100vh",
-            overflowY: "visible",
+            justifyContent: "center",
           }}
         >
-          <Box
+          <Paper
+            elevation={4}
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              mb: 3,
+              marginTop: "30px",
+              p: 5,
+              width: "60vw",
+              borderRadius: 3,
+              boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
+              height: "100%",
             }}
           >
             <Box
@@ -209,11 +224,12 @@ const AdvertiserEditProfile = () => {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
+                mb: 3,
               }}
             >
               <Avatar
                 src={advertiserDetails.photo}
-                sx={{ width: 80, height: 80 }}
+                sx={{ width: 64, height: 64 }}
               />
               {isEditing && (
                 <>
@@ -237,144 +253,150 @@ const AdvertiserEditProfile = () => {
                     <Button
                       variant="outlined"
                       color="error"
-                      onClick={() => handlePhotoDelete()}>
+                      onClick={() => handlePhotoDelete()}
+                    >
                       Delete Photo
                     </Button>
                   )}
                 </>
               )}
+              <h2 className="bigTitle"
+                style={{ fontWeight: "bold", textAlign: "center", marginTop: "3%" }}> Edit Profile</h2>
             </Box>
-
-            <h2 className="bigTitle"
-              style={{ fontWeight: "bold", textAlign: "center", marginTop: "3%" }}> Edit Profile</h2>
-          </Box>
-
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-            <TextField
-              label="Username"
-              name="userName"
-              value={advertiserDetails.userName}
-              onChange={handleChange}
-              InputProps={{ readOnly: true }}
-              variant="outlined"
-              fullWidth
-            />
-            <TextField
-              label="Email"
-              name="email"
-              value={advertiserDetails.email}
-              onChange={handleChange}
-              InputProps={{ readOnly: !isEditing }}
-              variant="outlined"
-              fullWidth
-            />
-            <TextField
-              name="password"
-              label="Password"
-              type={showPassword ? "text" : "password"} // Toggle password visibility
-              value={advertiserDetails.password}
-              height="50"
-              width="20"
-              onChange={handleChange}
-              InputProps={{
-                readOnly: !isEditing,
-
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword(!showPassword)}
-                      edge="end"
-                    >
-                      <Iconify
-                        icon={
-                          showPassword ? "eva:eye-fill" : "eva:eye-off-fill"
-                        }
-                        style={{ color: "#602b37", fontSize: "40px" }}
-                      />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <TextField
-              label="Website Link"
-              name="websiteLink"
-              value={advertiserDetails.websiteLink}
-              onChange={handleChange}
-              InputProps={{ readOnly: !isEditing }}
-              variant="outlined"
-              fullWidth
-            />
-            <TextField
-              label="Hotline"
-              name="hotline"
-              value={advertiserDetails.hotline}
-              type="number"
-              onChange={handleChange}
-              InputProps={{ readOnly: !isEditing }}
-              variant="outlined"
-              fullWidth
-            />
-            <TextField
-              label="Company Profile"
-              name="companyProfile"
-              value={advertiserDetails.companyProfile}
-              onChange={handleChange}
-              InputProps={{ readOnly: !isEditing }}
-              variant="outlined"
-              fullWidth
-              multiline
-              rows={3}
-            />
-            <Box disabled={!isEditing} sx={{ display: "flex", gap: 2, mt: 3 }}>
-              <label>Uploads:</label>
-              <DownloadButton
-                fileUrl={advertiserDetails.uploads}
-                label="Download uploaded file"
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <TextField
+                label="Username"
+                name="userName"
+                value={advertiserDetails.userName}
+                onChange={handleChange}
+                InputProps={{ readOnly: true }}
+                variant="outlined"
+                fullWidth
               />
-              {isEditing && (
-                <>
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    onClick={() => handleFileDelete("uploads")}>
-                    Delete uploaded file
-                  </Button>
-                  <FileUpload
-                    inputId="uploads"
-                    onFileSelect={handleUploadsSelect}
-                  />
-                </>
+              <TextField
+                label="Email"
+                name="email"
+                value={advertiserDetails.email}
+                onChange={handleChange}
+                InputProps={{ readOnly: !isEditing }}
+                variant="outlined"
+                fullWidth
+              />
+              <TextField
+                name="password"
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                value={advertiserDetails.password}
+                onChange={handleChange}
+                InputProps={{
+                  readOnly: !isEditing,
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword(!showPassword)}
+                        edge="end"
+                      >
+                        <Iconify
+                          icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
+                          style={{ color: "#602b37", fontSize: "40px" }}
+                        />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <TextField
+                label="Website Link"
+                name="websiteLink"
+                value={advertiserDetails.websiteLink}
+                onChange={handleChange}
+                InputProps={{ readOnly: !isEditing }}
+                variant="outlined"
+                fullWidth
+              />
+              <TextField
+                label="Hotline"
+                name="hotline"
+                value={advertiserDetails.hotline}
+                type="number"
+                onChange={handleChange}
+                InputProps={{ readOnly: !isEditing }}
+                variant="outlined"
+                fullWidth
+              />
+              <TextField
+                label="Company Profile"
+                name="companyProfile"
+                value={advertiserDetails.companyProfile}
+                onChange={handleChange}
+                InputProps={{ readOnly: !isEditing }}
+                variant="outlined"
+                fullWidth
+                multiline
+                rows={3}
+              />
+              <Box disabled={!isEditing} sx={{ display: "flex", gap: 2, mt: 3 }}>
+                <label>Uploads:</label>
+                <DownloadButton
+                  fileUrl={advertiserDetails.uploads}
+                  label="Download uploaded file"
+                />
+                {isEditing && (
+                  <>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={() => handleFileDelete("uploads")}
+                    >
+                      Delete uploaded file
+                    </Button>
+                    <FileUpload
+                      inputId="uploads"
+                      onFileSelect={handleUploadsSelect}
+                    />
+                  </>
+                )}
+              </Box>
+            </Box>
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+              {isEditing ? (
+                <Button
+                  className="blackhover"
+                  variant="contained"
+                  color="success"
+                  onClick={handleSaveClick}
+                  fullWidth
+                  sx={{ py: 1.5 }}
+                >
+                  Save Changes
+                </Button>
+              ) : (
+                <Button
+                  className="blackhover"
+                  variant="contained"
+                  color="primary"
+                  onClick={handleEditClick}
+                  fullWidth
+                  sx={{ py: 1.5 }}
+                >
+                  Edit Profile
+                </Button>
               )}
             </Box>
-          </Box>
-
-          <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-            {isEditing ? (
-              <Button
-                className="blackhover"
-                variant="contained"
-                color="success"
-                onClick={handleSaveClick}
-                fullWidth
-                sx={{ py: 1.5 }}
-              >
-                Save Changes
-              </Button>
-            ) : (
-              <Button
-                className="blackhover"
-                variant="contained"
-                color="primary"
-                onClick={handleEditClick}
-                fullWidth
-                sx={{ py: 1.5 }}
-              >
-                Edit Profile
-              </Button>
-            )}
-          </Box>
-        </Paper>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={handleDeleteAccount}
+              fullWidth
+              sx={{
+                py: 1.5,
+                marginTop: "3%",
+              }}
+            >
+              Delete My Account
+            </Button>
+          </Paper>
+        </Box>
       </Box>
     </>
   );

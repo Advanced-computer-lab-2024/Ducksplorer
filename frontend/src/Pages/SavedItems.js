@@ -52,7 +52,7 @@ function MySavedItems() {
   const [currency, setCurrency] = useState("EGP");
 
   const errorMessage =
-    "The savedItems you are looking for might be removed or is temporarily unavailable";
+    "You currently have no savedItems ";
   const backMessage = "BACK TO TOURIST DASHBOARD";
 
   const handleCurrencyChange = (rates, selectedCurrency) => {
@@ -203,14 +203,18 @@ function MySavedItems() {
           flexDirection: "column",
         }}
       >
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+        {/* <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <Typography
             variant="h4"
             className="bigTitle"
-            sx={{ color: "black", fontWeight: 'bold' }}
+            sx={{ color: "black", fontWeight: 'bold', fontsize:'700px' }}
           >
             Saved
           </Typography>
+        </Box> */}
+
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Typography class="bigTitle">Saved</Typography>
         </Box>
 
         <MyTabs tabNames={tabNames} onTabClick={(tabName) => setSelectedTab(tabName)} />
@@ -251,9 +255,11 @@ function MySavedItems() {
                   })}
                 </div>
               ) : (
-                <Typography variant="body1" style={{ marginTop: "20px" }}>
-                  No itineraries found.
-                </Typography>
+                <Error404
+                  errorMessage={errorMessage}
+                  backMessage={backMessage}
+                  route="/touristDashboard"
+                />
               )}
             </div>
           </>
@@ -301,19 +307,18 @@ function MySavedItems() {
                   ) : null;
                 })
               ) : (
-                <Typography
-                  variant="body1"
-                  color="textSecondary"
-                  align="center"
-                >
-                  No activities available
-                </Typography>
+                <Error404
+                  errorMessage={errorMessage}
+                  backMessage={backMessage}
+                  route="/touristDashboard"
+                />      
               )}
             </div>
           </>
         )}
         {/* </Box> */}
       </div>
+      <Help/>
     </>
   );
 }

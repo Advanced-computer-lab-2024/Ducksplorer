@@ -32,6 +32,8 @@ import Button from "@mui/material/Button";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ReportIcon from "@mui/icons-material/Report";
 import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
+import MailIcon from '@mui/icons-material/Mail';
+import MailLockIcon from '@mui/icons-material/MailLock';
 
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -79,11 +81,11 @@ function TouristNavBar() {
         console.log(response.data);
         const level = response.data;
         if (level === 1) {
-          setImage("level1.png");
+          setImage("/level1.png");
         } else if (level === 2) {
-          setImage("level2.png");
+          setImage("/level2.png");
         } else if (level === 3) {
-          setImage("level3.png");
+          setImage("/level3.png");
         }
       })
       .catch((error) => {
@@ -110,6 +112,16 @@ function TouristNavBar() {
   const handleTogglePreferences = () => {
     setShowPreferences((prev) => !prev);
     localStorage.setItem("showPreferences", !showPreferences);
+  };
+
+  const [notifyViaMail, setNotifyViaMail] = React.useState(() => {
+    const savedNotify = localStorage.getItem("notifyViaMail");
+    return savedNotify !== null ? JSON.parse(savedNotify) : false;
+  });
+
+  const handleToggleNotifyViaMail = () => {
+    setNotifyViaMail((prev) => !prev);
+    localStorage.setItem("notifyViaMail", !notifyViaMail);
   };
 
   return (
@@ -578,6 +590,25 @@ function TouristNavBar() {
                     sx={{ color: "black", fontSize: "14px" }}
                   >
                     Show Preferences
+                  </Typography>
+                </IconButton>
+              </MenuItem>
+
+              <MenuItem onClick={handleToggleNotifyViaMail}>
+                <IconButton
+                  sx={{ textAlign: "center", p: 0.5, color: "black" }}
+                >
+                  {notifyViaMail ? (
+                    <MailIcon sx={{ fontSize: 20, color: "green" }} />
+                  ) : (
+                    <MailLockIcon sx={{ fontSize: 20, color: "red" }} />
+                  )}
+                  <Typography
+                    textAlign="center"
+                    marginLeft={2}
+                    sx={{ color: "black", fontSize: "14px" }}
+                  >
+                    Notify via Mail
                   </Typography>
                 </IconButton>
               </MenuItem>

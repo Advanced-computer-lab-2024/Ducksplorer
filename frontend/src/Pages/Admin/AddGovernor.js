@@ -137,17 +137,6 @@ function AddGovernor() {
                     width: "150%",
                     margin: "auto",
                     right: "20%",
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "#ff9800",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "#ff9800",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#ff9800",
-                      },
-                    },
                   }}
                 />
 
@@ -182,17 +171,6 @@ function AddGovernor() {
                     width: "150%",
                     margin: "auto",
                     right: "20%",
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "#ff9800",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "#ff9800",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#ff9800",
-                      },
-                    },
                   }}
                 />
 
@@ -200,6 +178,7 @@ function AddGovernor() {
                 <Button
                   variant="contained"
                   onClick={handleAdd}
+                  className="blackhover"
                   sx={{
                     backgroundColor: "#ff9800",
                     color: "white",

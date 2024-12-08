@@ -135,17 +135,6 @@ function AddAdmin() {
                     width: "150%",
                     margin: "auto",
                     right: "20%",
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "#ff9800",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "#ff9800",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#ff9800",
-                      },
-                    },
                   }}
                 />
 
@@ -180,23 +169,13 @@ function AddAdmin() {
                     width: "150%",
                     margin: "auto",
                     right: "20%",
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "#ff9800",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "#ff9800",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#ff9800",
-                      },
-                    },
                   }}
                 />
 
                 {/* Add Admin Button */}
                 <Button
                   variant="contained"
+                  className= "blackhover"
                   onClick={handleAdd}
                   sx={{
                     backgroundColor: "#ff9800",
@@ -210,9 +189,6 @@ function AddAdmin() {
                     justifySelf: "center",
                     justifyContent: "center",
                     alignContent: "center",
-                    "&:hover": {
-                      backgroundColor: "#e68a00", // Darker hover color
-                    },
                   }}
                   fullWidth
                 >

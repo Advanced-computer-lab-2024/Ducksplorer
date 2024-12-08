@@ -61,6 +61,10 @@ const ApproveUsers = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = "auto";
+  }, []);
+
   const handleApprove = (username) => {
     setLoading(true);
     axios
@@ -151,9 +155,9 @@ const ApproveUsers = () => {
     <Box
       sx={{
         height: "100vh",
-        paddingTop: "64px",
+        paddingTop: "14px",
         width: "90vw",
-        marginLeft: "5vw",
+        // marginLeft: "5vw",
       }}
     >
       <AdminNavbar />
@@ -171,7 +175,9 @@ const ApproveUsers = () => {
             sx={{ textAlign: "center", fontWeight: "bold" }}
             gutterBottom
           >
+          <Typography variant="h5" sx={{ fontWeight: "bold", color: "black", fontSize: "50px" }} className="bigTitle"> {/* Increased text size */}
             Pending Users
+          </Typography>
           </Typography>
           <br></br>
 

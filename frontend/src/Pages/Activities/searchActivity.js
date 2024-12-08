@@ -72,7 +72,7 @@ function SearchActivity() {
   const username = user?.username;
 
   //sorting consts
-  const [sortOrder, setSortOrder] = useState("asc"); // Default to 'asc'
+  const [sortOrder, setSortOrder] = useState("desc"); // Default to 'asc'
 
   const [sortByAnchorEl, setSortByAnchorEl] = useState(null);
   const [sortOrderAnchorEl, setSortOrderAnchorEl] = useState(null);
@@ -115,23 +115,26 @@ function SearchActivity() {
     fetchActivities();
   }, [id]);
 
-  const fetchCategories = () => {
-    if (categories.length === 0 && !loading) {
-      // Avoid redundant calls
-      setLoading(true);
-      axios
-        .get(`http://localhost:8000/category`) // Use environment variable for the base URL
-        .then((response) => {
-          setCategories(response.data);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching categories:", error);
-          setError("Failed to fetch categories.");
-        })
-        .finally(() => setLoading(false));
-    }
-  };
+  useEffect(() => {
+    const fetchCategories = () => {
+      if (categories.length === 0 && !loading) {
+        // Avoid redundant calls
+        setLoading(true);
+        axios
+          .get(`http://localhost:8000/category`) // Use environment variable for the base URL
+          .then((response) => {
+            setCategories(response.data);
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.error("Error fetching categories:", error);
+            setError("Failed to fetch categories.");
+          })
+          .finally(() => setLoading(false));
+      }
+    };
+    fetchCategories();
+  });
 
   useEffect(() => {
     if (activities.length === 0) {
@@ -158,13 +161,13 @@ function SearchActivity() {
     setSortOrderAnchorEl(null);
   };
 
-  const handleSort = () => {
+  const handleSort = (sortBy, sortOrder) => {
     const showPreferences = localStorage.getItem("showPreferences");
     const favCategory = localStorage.getItem("category");
     setLoading(true);
     axios
       .get(
-        `http://localhost:8000/activity/sort?sortBy=${sortBy}&order=${order}`
+        `http://localhost:8000/activity/sort?sortBy=${sortBy}&order=${sortOrder}`
       )
       .then((response) => {
         if (showPreferences === "true") {
@@ -483,7 +486,6 @@ function SearchActivity() {
                       id="category-select"
                       value={selectedCategory}
                       onChange={handleCategoryChange}
-                      onOpen={fetchCategories}
                       sx={{
                         "& .MuiOutlinedInput-root": {
                           "& fieldset": {

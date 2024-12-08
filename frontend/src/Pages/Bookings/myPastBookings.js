@@ -26,6 +26,7 @@ import { Link } from "react-router-dom";
 import Help from "../../Components/HelpIcon";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 import DuckLoading from "../../Components/Loading/duckLoading";
+import { message } from "statuses";
 
 const PastBookingDetails = () => {
   const userName = JSON.parse(localStorage.getItem("user")).username;
@@ -117,7 +118,7 @@ const PastBookingDetails = () => {
         { rating: newRating }
       );
       console.log("Rating response:", response.data);
-      alert("Activity rating submitted successfully!");
+      message.success("Activity rating submitted successfully!");
 
       setSelectedActivityRatings((prevRatings) => ({
         ...prevRatings,
@@ -154,7 +155,7 @@ const PastBookingDetails = () => {
         { rating: newRating }
       );
       console.log("Rating response:", response.data);
-      alert("Itinerary rating submitted successfully!");
+      message.success("Itinerary rating submitted successfully!");
 
       setSelectedItineraryRatings((prevRatings) => ({
         ...prevRatings,
@@ -244,7 +245,7 @@ const PastBookingDetails = () => {
           rating: tourGuideRating,
         }
       );
-      alert("Tour Guide rated successfully!");
+      message.success("Tour Guide rated successfully!");
       setTourGuideRating(0);
     } catch (error) {
       console.error("Error rating tour guide:", error.message);
@@ -260,7 +261,7 @@ const PastBookingDetails = () => {
           comment: tourGuideComment,
         }
       );
-      alert("Comment submitted successfully!");
+      message.success("Comment submitted successfully!");
       setTourGuideComment("");
     } catch (error) {
       console.error("Error submitting comment:", error.message);
@@ -308,7 +309,6 @@ const PastBookingDetails = () => {
         height: "100vh",
         paddingTop: "64px",
         width: "90vw",
-        marginLeft: "5vw",
       }}
     >
       <TouristNavBar />
@@ -601,7 +601,7 @@ const PastBookingDetails = () => {
                                 size="small"
                                 style={{ marginTop: "5px" }}
                               >
-                                Rate&Comment
+                                Rate & Comment
                               </Button>
                             </div>
                           </TableCell>
