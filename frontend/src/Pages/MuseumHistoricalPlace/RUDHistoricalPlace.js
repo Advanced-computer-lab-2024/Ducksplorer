@@ -34,10 +34,7 @@ const RUDHistoricalPlace = () => {
   const [open, setOpen] = useState(false);
   const [selectedHistoricalPlace, setSelectedHistoricalPlace] = useState(null);
   const [editingHistoricalPlace, setEditingHistoricalPlace] = useState(null);
-  const [historicalPlaceTagsOptions, setHistoricalPlaceTagsOptions] = useState(
-    []
-  );
-
+  const [historicalPlaceTagsOptions, setHistoricalPlaceTagsOptions] = useState([]);
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
 
@@ -106,11 +103,8 @@ const RUDHistoricalPlace = () => {
 
   // Responsible for when the user clicks on edit icon
   const handleEditClick = (historicalPlace) => {
-    setFormData({
-      ...historicalPlace,
-      tags: historicalPlace.tags || [], // Ensure tags field is populated
-    });
-    setEditingHistoricalPlace(historicalPlace);
+    localStorage.setItem("selectedHistoricalPlace", JSON.stringify(historicalPlace));
+    navigate(`/editHistoricalPlace`);
   };
 
   // When the edit icon is clicked the handleUpdate method calls the backend to execute this update
