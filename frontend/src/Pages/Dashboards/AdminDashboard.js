@@ -34,11 +34,6 @@ const AdminDashboard = () => {
     };
   }, []);
 
-  useEffect(() => {
-    // Reset videoEnded flag on login
-    localStorage.setItem('videoEnded', 'false');
-  }, []);
-
   const lineChartData = {
     labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
     datasets: [

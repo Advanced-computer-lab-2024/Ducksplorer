@@ -67,16 +67,7 @@ function Login() {
           Advertiser: "/advertiserDashboard",
           Seller: "/sellerDashboard",
         };
-        // window.location.href = roleToDashboard[userRole] || "/";
-        // const userRole = response.data.role;
-        // const roleToDashboard = {
-        //   Admin: "/AdminDashboard",
-        //   Tourist: "/touristDashboard",
-        //   Guide: "/tourGuideDashboard",
-        //   Governor: "/governorDashboard",
-        //   Advertiser: "/advertiserDashboard",
-        //   Seller: "/sellerDashboard",
-        // };
+        localStorage.setItem('videoEnded', 'false');
         window.location.href = roleToDashboard[userRole] || "/";
         localStorage.setItem("user", JSON.stringify(response.data));
       } else {
