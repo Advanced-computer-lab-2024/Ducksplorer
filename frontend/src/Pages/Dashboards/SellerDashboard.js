@@ -2,16 +2,28 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, Grid, Paper, CssBaseline } from "@mui/material";
 import { Line, Bar } from "react-chartjs-2";
 import { Outlet } from "react-router-dom";
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend } from "chart.js";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 import SellerNavBar from "../../Components/NavBars/SellerNavBar";
 
 const SellerDashboard = () => {
-  const [videoEnded, setVideoEnded] = useState(localStorage.getItem('videoEnded') === 'true');
+  const [videoEnded, setVideoEnded] = useState(
+    localStorage.getItem("videoEnded") === "true"
+  );
 
   const handleVideoEnd = () => {
     setTimeout(() => {
       setVideoEnded(true);
-      localStorage.setItem('videoEnded', 'true');
+      localStorage.setItem("videoEnded", "true");
     }, 1000); // Delay to allow fade-out animation
   };
 
@@ -29,7 +41,15 @@ const SellerDashboard = () => {
   }, []);
 
   const lineChartData = {
-    labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+    labels: [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ],
     datasets: [
       {
         label: "Products Sold",
@@ -96,7 +116,11 @@ const SellerDashboard = () => {
 
       {videoEnded && (
         <Box sx={{ display: "flex", flexDirection: "column", p: 3 }}>
-          <Grid container spacing={2} sx={{ marginBottom: "90px", marginTop: "20px" }}>
+          <Grid
+            container
+            spacing={2}
+            sx={{ marginBottom: "90px", marginTop: "20px" }}
+          >
             <Grid item xs={12} md={4}>
               <Paper
                 elevation={3}
@@ -110,10 +134,14 @@ const SellerDashboard = () => {
                   alignItems: "center",
                 }}
               >
-                <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }} className="bigTitle">
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: "bold", color: "black" }}
+                  className="bigTitle"
+                >
                   Total Revenue
                 </Typography>
-                <Typography variant="h4" sx={{ fontWeight: "bold" }} >
+                <Typography variant="h4" sx={{ fontWeight: "bold" }}>
                   $20000
                 </Typography>
               </Paper>
@@ -132,7 +160,11 @@ const SellerDashboard = () => {
                   alignItems: "center",
                 }}
               >
-                <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }} className="bigTitle">
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: "bold", color: "black" }}
+                  className="bigTitle"
+                >
                   Total Products Sold
                 </Typography>
                 <Typography variant="h4" sx={{ fontWeight: "bold" }}>
@@ -154,7 +186,11 @@ const SellerDashboard = () => {
                   alignItems: "center",
                 }}
               >
-                <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }} className="bigTitle">
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: "bold", color: "black" }}
+                  className="bigTitle"
+                >
                   Frequently Purchased
                 </Typography>
                 <Typography variant="h4" sx={{ fontWeight: "bold" }}>
@@ -163,18 +199,30 @@ const SellerDashboard = () => {
               </Paper>
             </Grid>
           </Grid>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Box sx={{ height: "300px" }}>
-                <Line data={lineChartData} />
-              </Box>
-            </Grid>
-            <Grid item xs={6}>
-              <Box sx={{ height: "300px" }}>
-                <Bar data={barChartData} />
-              </Box>
-            </Grid>
-          </Grid>
+          <div style={{ display: "flex" }}>
+            <Box
+              sx={{
+                height: "40vh",
+                width: "80%",
+                borderRadius: "3cap",
+              }}
+            >
+              <Line data={lineChartData} style={{ height: "100%" }} />
+            </Box>
+
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "40vh",
+                width: "80%",
+                borderRadius: "3cap",
+              }}
+            >
+              <Bar data={barChartData} style={{ height: "100%" }} />
+            </Box>
+          </div>
         </Box>
       )}
 
