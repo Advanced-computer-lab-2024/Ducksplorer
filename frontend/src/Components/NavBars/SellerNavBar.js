@@ -111,7 +111,67 @@ function SellerNavBar() {
             </a>
           </Tooltip>
           
-          <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("ProductDashboard")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                Manage Products
+              </Typography>
+            </Button>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("sellerReport")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                Report
+              </Typography>
+            </Button>
+          </Box>
+          
           <Box sx={{ flexGrow: 0, marginRight: "3vw", display: "flex", alignItems: "center" }}>
             <Tooltip>
               <MyNotifications />
@@ -164,46 +224,6 @@ function SellerNavBar() {
                   </Typography>
                 </IconButton>
               </MenuItem>
-
-              <MenuItem onClick={() => handleNavigation("ProductDashboard")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <ShoppingCartIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Manage Products
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={() => handleNavigation("sellerReport")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <SummarizeIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Report
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={handleDeleteAccount}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <DeleteIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Delete My Account
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
               <MenuItem onClick={handleLogout}>
                 <IconButton sx={{ textAlign: "center", p: 0.5 }}>
                   <LockIcon sx={{ fontSize: 20, color: "black" }} />

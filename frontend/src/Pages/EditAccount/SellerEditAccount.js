@@ -19,6 +19,7 @@ import sellerNavBar from "../../Components/NavBars/SellerNavBar";
 // import ProfilePictureUpload from "../../Components/pp";
 import DownloadButton from "../../Components/DownloadButton";
 import SellerNavBar from "../../Components/NavBars/SellerNavBar.js";
+import { Link, useNavigate } from "react-router-dom";
 
 const EditProfile = () => {
   const [sellerDetails, setSellerDetails] = useState({
@@ -33,6 +34,7 @@ const EditProfile = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const navigate = useNavigate(); // Initialize the useNavigate hook
 
   const handlePhotoUpload = async () => {
     const photoFile = document.getElementById("photo").files[0];
@@ -162,6 +164,24 @@ const EditProfile = () => {
     } catch (error) {
       message.error("Error deleting file");
       console.error("Error deleting file:", error);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    const userJson = localStorage.getItem("user");
+    const user = JSON.parse(userJson);
+    const userName = user.username;
+    if (userName) {
+      try {
+        const response = await axios.delete(
+          `http://localhost:8000/sellerAccount/deleteMySellerAccount/${userName}`
+        );
+        alert(response.data.message);
+        navigate("/login");
+      } catch (error) {
+        console.error("Error deleting account:", error);
+        alert("Failed to delete account. Please try again.");
+      }
     }
   };
 
@@ -335,6 +355,18 @@ const EditProfile = () => {
             </Button>
           )}
         </Box>
+        <Button
+          variant="outlined"
+          color="error"
+          onClick={handleDeleteAccount}
+          fullWidth
+          sx={{
+            py: 1.5,
+            marginTop: "3%",
+          }}
+        >
+          Delete My Account
+        </Button>
       </Paper>
     </Box>
   );

@@ -522,7 +522,9 @@ const AdminReport = () => {
             sx={{ textAlign: "center", fontWeight: "bold" }}
             gutterBottom
           >
-            Revenue Report
+          <Typography variant="h5" sx={{ fontWeight: "bold", color: "black", fontSize: "50px" }} className="bigTitle"> {/* Increased text size */}
+          Revenue Report
+          </Typography>
           </Typography>
           <br></br>
           <MyTabs tabNames={tabNames} onTabClick={(tabName) => setSelectedTab(tabName)} />
@@ -535,7 +537,7 @@ const AdminReport = () => {
                 sx={{ fontWeight: "bold", marginBottom: "20px" }}
                 gutterBottom
               >
-                Activities
+                {/* Activities */}
               </Typography>
               {/* Filtering */}
               <IconButton onClick={activityHandleFilterChoiceClick}>

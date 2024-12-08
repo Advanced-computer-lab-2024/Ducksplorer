@@ -15,6 +15,8 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Iconify from "../../Components/TopNav/iconify.js";
 import DownloadButton from "../../Components/DownloadButton";
 import TourGuideNavBar from "../../Components/NavBars/TourGuideNavBar";
+import { Link, useNavigate } from "react-router-dom";
+
 const TourGuideEditProfile = () => {
   const [tourGuideDetails, setTourGuideDetails] = useState({
     userName: "",
@@ -29,6 +31,7 @@ const TourGuideEditProfile = () => {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const navigate = useNavigate(); // Initialize the useNavigate hook
 
   const handlePhotoUpload = async () => {
     const photoFile = document.getElementById("photo").files[0];
@@ -174,6 +177,24 @@ const TourGuideEditProfile = () => {
     } catch (error) {
       message.error("Error deleting file");
       console.error("Error deleting file:", error);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    const userJson = localStorage.getItem("user");
+    const user = JSON.parse(userJson);
+    const userName = user.username;
+    if (userName) {
+      try {
+        const response = await axios.delete(
+          `http://localhost:8000/tourGuideAccount/deleteMyTourGuideAccount/${userName}`
+        );
+        alert(response.data.message);
+        navigate("/login");
+      } catch (error) {
+        console.error("Error deleting account:", error);
+        alert("Failed to delete account. Please try again.");
+      }
     }
   };
 
@@ -389,6 +410,19 @@ const TourGuideEditProfile = () => {
               </Button>
             )}
           </Box>
+
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={handleDeleteAccount}
+            fullWidth
+            sx={{
+              py: 1.5,
+              marginTop: "3%",
+            }}
+          >
+            Delete My Account
+          </Button>
 
           <Box sx={{ textAlign: "center", mt: 2 }}></Box>
         </Paper>

@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
 import MyNotifications from "../myNotifications";
+import Button from "@mui/material/Button";
 
 function AdvertiserNavBar() {
   const image = "duckAvatar.png";
@@ -53,22 +54,6 @@ function AdvertiserNavBar() {
       });
   };
 
-  const handleDeleteAccount = async () => {
-    const userJson = localStorage.getItem('user');
-    const user = JSON.parse(userJson);
-    const userName = user.username;
-    if (userName) {
-      try {
-        const response = await axios.delete(`http://localhost:8000/advertiserAccount/deleteMyAdvertiserAccount/${userName}`);
-        alert(response.data.message);
-        navigate('/login');
-      } catch (error) {
-        console.error("Error deleting account:", error);
-        alert("Failed to delete account. Please try again.");
-      }
-    }
-  };
-
   return (
     <AppBar
       position="fixed"
@@ -99,8 +84,95 @@ function AdvertiserNavBar() {
               </h2>
             </a>
           </Tooltip>
-          
-          <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("activity/addActivity")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                Add Activity
+              </Typography>
+            </Button>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("activity/myActivities")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                My Activities
+              </Typography>
+            </Button>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("advertiserReport")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                Report
+              </Typography>
+            </Button>
+          </Box>
           <Box sx={{ flexGrow: 0, marginRight: "3vw", display: "flex", alignItems: "center" }}>
             <Tooltip>
               <MyNotifications />
@@ -151,59 +223,6 @@ function AdvertiserNavBar() {
                   </Typography>
                 </IconButton>
               </MenuItem>
-
-              <MenuItem onClick={() => handleNavigation("activity/addActivity")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <AddIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Add Activity
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={() => handleNavigation("activity/myActivities")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <PeopleIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    My Activities
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={() => handleNavigation("advertiserReport")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <SummarizeIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Report
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={handleDeleteAccount}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <DeleteIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Delete My Account
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
               <MenuItem onClick={handleLogout}>
                 <IconButton sx={{ textAlign: "center", p: 0.5 }}>
                   <LockIcon sx={{ fontSize: 20, color: "black" }} />

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, CssBaseline } from "@mui/material";
+import { Box, Typography, Grid, Paper, CssBaseline } from "@mui/material";
+import { Line, Bar } from "react-chartjs-2";
 import { Outlet } from "react-router-dom";
-import GovernorSidebar from "../../Components/Sidebars/GovernorSidebar";
-import GovernorNavbar from "../../Components/TopNav/GovernorNavbar"; // Import GovernorNavbar
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend } from "chart.js";
 import GovernorNavBar from "../../Components/NavBars/GovernorNavBar";
 
 const GovernorDashboard = () => {
@@ -26,91 +26,167 @@ const GovernorDashboard = () => {
       document.body.style.backgroundColor = "";
     };
   }, []);
-  
+
+  const lineChartData = {
+    labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+    datasets: [
+      {
+        label: "Visitors",
+        data: [12, 15, 10, 34, 40, 25, 20],
+        borderColor: "#ff9933",
+        backgroundColor: "rgba(255, 153, 51, 0.2)",
+        pointBackgroundColor: "#ff9933",
+        fill: true,
+      },
+    ],
+  };
+
+  const barChartData = {
+    labels: ["The Pyramids", "Statue of Liberty", "The Big Ben", "The Louvre", "Egyptian Museum"],
+    datasets: [
+      {
+        label: "Visitors",
+        data: [30, 50, 40, 70, 60],
+        backgroundColor: [
+          "#cc7a1a", // Darker shade for highest
+          "#d98a33",
+          "#e6994c",
+          "#f2a966",
+          "#ffbf80", // Lightest shade for lowest
+        ],
+      },
+    ],
+  };
+
   return (
     <Box
-    sx={{
-      position: "relative",
-      width: "100vw",
-      height: "100vh", // Covers the full viewport
-      overflow: "hidden",
-      backgroundImage: 'url("/ducksplorer welcome.jpg")', // Fullscreen background image
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
-    }}
-  >
-    {/* Background Video */}
-    <video
-      autoPlay
-      muted
-      onEnded={handleVideoEnd}
-      style={{
-        position: "fixed",
-        top: 0,
-        left: "5%",
-        width: "100%",
-        height: "100%",
-        objectFit: "cover",
-        zIndex: videoEnded ? -1 : 0, // Hide video after it ends
-        opacity: videoEnded ? 0 : 1, // Fade-out effect
-        transition: "opacity 1s ease-out", // Smooth fade-out
+      sx={{
+        position: "relative",
+        width: "100vw",
+        height: "100vh",
+        overflow: "hidden",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundColor: "#fff6e6",
       }}
     >
-      <source src="/planevidd.mp4" type="video/mp4" />
-      Your browser does not support the video tag.
-    </video>
-
-    {/* Welcome Message with Semi-Transparent Box */}
-    {videoEnded && (
-      <Box
-        sx={{
+      <video
+        autoPlay
+        muted
+        onEnded={handleVideoEnd}
+        style={{
           position: "fixed",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          zIndex: 10,
-          textAlign: "center",
-          color: "white",
-          backgroundColor: "rgba(0, 0, 0, 0.1)", // Semi-transparent black background
-          padding: "40px",
-          borderRadius: "12px",
-          animation: "fadeIn 1.5s ease-out", // Smooth fade-in for text
-          "@keyframes fadeIn": {
-            from: { opacity: 0 },
-            to: { opacity: 1 },
-          },
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          zIndex: videoEnded ? -1 : 0,
+          opacity: videoEnded ? 0 : 1,
+          transition: "opacity 1s ease-out",
         }}
       >
-        <Typography
-          variant="h3"
-          sx={{
-            fontWeight: "bold",
-            background: "navy",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            mb: 2,
-          }}
-        >
-          Welcome to Ducksplorer
-        </Typography>
-        <Typography variant="h5" sx={{ color: "navy" }}>
-          Start your journey now!
-        </Typography>
-      </Box>
-    )}
+        <source src="/planevidd.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
 
-    <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-      <CssBaseline />
-      <GovernorNavBar /> {/* Add GovernorNavbar */}
-      <Box sx={{ display: "flex", flexGrow: 1 }}>
-        {/* <GovernorSidebar /> */}
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-          <Outlet />
+      {/* Welcome Message with Semi-Transparent Box */}
+      {videoEnded && (
+        <Box sx={{ display: "flex", flexDirection: "column", p: 3 }}>
+          <Grid container spacing={2} sx={{ marginBottom: "90px", marginTop: "20px" }}>
+            <Grid item xs={12} md={4}>
+              <Paper
+                elevation={3}
+                sx={{
+                  padding: "20px",
+                  textAlign: "center",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }} className="bigTitle">
+                  Total Revenue
+                </Typography>
+                <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+                  $15000
+                </Typography>
+              </Paper>
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <Paper
+                elevation={3}
+                sx={{
+                  padding: "20px",
+                  textAlign: "center",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }} className="bigTitle">
+                  Total Visitors
+                </Typography>
+                <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+                  1200
+                </Typography>
+              </Paper>
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <Paper
+                elevation={3}
+                sx={{
+                  padding: "20px",
+                  textAlign: "center",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }} className="bigTitle">
+                  Most Visited
+                </Typography>
+                <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+                The Louvre
+                </Typography>
+              </Paper>
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <Box sx={{ height: "300px" }}>
+                <Line data={lineChartData} />
+              </Box>
+            </Grid>
+            <Grid item xs={6}>
+              <Box sx={{ height: "300px" }}>
+                <Bar data={barChartData} />
+              </Box>
+            </Grid>
+          </Grid>
+        </Box>
+      )}
+
+      <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+        <CssBaseline />
+        <GovernorNavBar /> {/* Add GovernorNavbar */}
+        <Box sx={{ display: "flex", flexGrow: 1 }}>
+          {/* <GovernorSidebar /> Add GovernorSidebar */}
+          <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <Outlet />
+          </Box>
         </Box>
       </Box>
     </Box>
-  </Box>
   );
 };
 

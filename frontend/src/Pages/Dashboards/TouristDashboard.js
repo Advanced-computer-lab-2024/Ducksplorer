@@ -11,6 +11,7 @@ const TouristDashboard = () => {
   const handleVideoEnd = () => {
     setTimeout(() => {
       setVideoEnded(true);
+      document.body.style.backgroundColor = "#FEF4EA"; // Change background color when video ends
     }, 1000); // Delay to allow fade-out animation
   };
 
@@ -34,10 +35,11 @@ const TouristDashboard = () => {
         width: "100vw",
         height: "100vh", // Covers the full viewport
         overflow: "hidden",
-        backgroundImage: 'url("/ducksplorer welcome.jpg")', // Fullscreen background image
+        backgroundColor: "#fff6e6",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
+        backgroundColor: videoEnded ? "#FEF4EA" : "#bce4e4", // Change background color behind the whole page
       }}
     >
       {/* Background Video */}
@@ -72,7 +74,7 @@ const TouristDashboard = () => {
             zIndex: 10,
             textAlign: "center",
             color: "white",
-            backgroundColor: "rgba(0, 0, 0, 0.1)", // Semi-transparent black background
+            backgroundColor: "rgba(255, 254, 244, 0.8)", // Make the box behind the text dimmer
             padding: "40px",
             borderRadius: "12px",
             animation: "fadeIn 1.5s ease-out", // Smooth fade-in for text
@@ -86,15 +88,17 @@ const TouristDashboard = () => {
             variant="h3"
             sx={{
               fontWeight: "bold",
-              background: "navy",
+              background: "orange",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               mb: 2,
             }}
           >
+          <Typography variant="h5" sx={{ fontWeight: "bold", fontSize: "50px", color: "orange" }} className="bigTitle"> {/* Increased text size */}
             Welcome to Ducksplorer
           </Typography>
-          <Typography variant="h5" sx={{ color: "navy" }}>
+          </Typography>
+          <Typography variant="h5" sx={{ fontWeight: "bold", color: "orange"}} className="bigTitle"> {/* Increased text size */}
             Start your journey now!
           </Typography>
         </Box>

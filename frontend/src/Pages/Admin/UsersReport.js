@@ -186,7 +186,9 @@ const ActivityReport = () => {
                             sx={{ textAlign: "center", fontWeight: "bold" }}
                             gutterBottom
                         >
+                        <Typography variant="h5" sx={{ fontWeight: "bold", color: "black", fontSize: "50px" }} className="bigTitle"> {/* Increased text size */}
                             Users Report
+                        </Typography>
                         </Typography>
                         <br></br>
                         {/* Navbar */}
