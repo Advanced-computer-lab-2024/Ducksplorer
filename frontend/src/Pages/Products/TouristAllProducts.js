@@ -119,12 +119,12 @@ const TouristAllProducts = () => {
       const response = await axios.get(
         "http://localhost:8000/adminRoutes/sortProducts",
         {
-          params: { sortingDecider: order }, // Pass 'asc' or 'desc' based on the selected option
+          params: { sortOrder: order }, // Pass 'asc' or 'desc' based on the selected option
         }
       );
       if (response.status === 200) {
         message.success("Products sorted successfully");
-        setProducts(response.data); // Set the sorted products to the state
+        setProducts(response.data.products); // Set the sorted products to the state
         handleSortOrderClose(); // Close the sort menu after sorting
       } else {
         message.error("Failed to sort products");
