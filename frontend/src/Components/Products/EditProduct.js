@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { TextField, Button, Stack, Box, Typography } from "@mui/material";
+import { TextField, Button, Stack, Box, Typography, IconButton } from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
 import UploadFile from "../ProductUploadImage";
@@ -8,6 +8,9 @@ import TouristNavBar from "../TouristNavBar";
 import useUserRole from "../getRole";
 import AdminNavBar from "../NavBars/AdminNavBar";
 import SellerNavBar from "../NavBars/SellerNavBar";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useNavigate } from "react-router-dom";
+
 
 let picture = "";
 
@@ -19,6 +22,7 @@ const EditProduct = () => {
   const [URL, setURL] = useState("");
   const [description, setDescription] = useState("");
   const role = useUserRole();
+  const navigate = useNavigate();
 
   const getPreviousData = async () => {
     try {
@@ -53,6 +57,12 @@ const EditProduct = () => {
     picture = url;
   };
 
+
+  const handleGoBack = () => {
+    navigate(-1); // Navigate to the previous page
+  };
+
+
   const handleEdit = async () => {
     const data = {};
     if (name !== "") data.name = name;
@@ -75,6 +85,7 @@ const EditProduct = () => {
     } catch (error) {
         message.error("An error occurred: " + error.message);
       }
+      navigate(-1);
     };
 
     return (
@@ -128,7 +139,7 @@ const EditProduct = () => {
       >
         Edit Product
       </Typography>
-
+      
       <TextField
         name="name"
         label="Product Name"
@@ -227,6 +238,18 @@ const EditProduct = () => {
         }}
       >
         Save Changes
+      </Button>
+      <Button
+              variant="outlined"
+              color="error"
+              onClick={handleGoBack}
+              fullWidth
+              sx={{
+                py: 1.5,
+                marginTop: "3%",
+              }}
+            >
+          Cancel
       </Button>
     </Stack>
   </div>

@@ -119,9 +119,15 @@ function TouristNavBar() {
     return savedNotify !== null ? JSON.parse(savedNotify) : false;
   });
 
-  const handleToggleNotifyViaMail = () => {
+  const handleToggleNotifyViaMail =async () => {
     setNotifyViaMail((prev) => !prev);
     localStorage.setItem("notifyViaMail", !notifyViaMail);
+    try {
+      const response = await axios.post("http://localhost:8000/toggle-cron");
+      console.log("Cron job state toggled:", response.data);
+    } catch (error) {
+      console.error("Error toggling cron state:", error);
+    }
   };
 
   return (
