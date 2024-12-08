@@ -8,15 +8,15 @@ const router = express.Router(); //creates an instance of the Router which is in
 // const upload = multer({ dest: 'uploads/' }); // Or configure storage options
 // router.post("/addHistoricalPlace", upload.array('pictures', 10), addHistoricalPlace); // 'pictures' should match the key used in FormData
 
-router.post("/addHistoricalPlace", addHistoricalPlace);
-router.get("/getHistoricalPlace/:id", getHistoricalPlace);
-router.get("/getAllMyHistoricalPlaces/:userName", getAllMyHistoricalPlaces);
-router.get("/getAllHistoricalPlaces", getAllHistoricalPlaces);
-router.put("/updateHistoricalPlace/:id", updateHistoricalPlace);
-router.delete("/deleteHistoricalPlace/:id", deleteHistoricalPlace);
-router.get("/getAllUpcomingHistoricalPlaces", getAllUpcomingHistoricalPlaces);
-router.get("/searchHistoricalPlace", searchHistoricalPlace);
+router.post("/addHistoricalPlace", addHistoricalPlace); //done
+router.get("/getHistoricalPlace/:id", getHistoricalPlace);//done
+router.get("/getAllMyHistoricalPlaces/:userName", getAllMyHistoricalPlaces);//done
+router.get("/getAllHistoricalPlaces", getAllHistoricalPlaces);//done
+router.put("/updateHistoricalPlace/:id", updateHistoricalPlace);//done
+router.delete("/deleteHistoricalPlace/:id", deleteHistoricalPlace);//done
+router.get("/getAllUpcomingHistoricalPlaces", getAllUpcomingHistoricalPlaces);//done
+router.get("/searchHistoricalPlace", searchHistoricalPlace);//done
 //router.patch('/createTags/:id', createTags);
-router.get('/filterByTags', filterByTags);
+router.get('/filterByTags', filterByTags);//done
 
 module.exports = router;

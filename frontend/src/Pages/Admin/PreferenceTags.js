@@ -26,7 +26,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import { useNavigate } from "react-router-dom";
-import MyChips from "../../Components/MyChips";
+import NavigationTabs from "../../Components/NavigationTabs";
 
 const PreferenceTags = () => {
   const [tags, setTags] = useState([]);
@@ -36,23 +36,13 @@ const PreferenceTags = () => {
   const [newTag, setNewTag] = useState("");
   const [editingTag, setEditingTag] = useState(null);
   const [editedTagName, setEditedTagName] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("Tags");
 
-  const navigate = useNavigate();
-
-  const chipNames = [
+  const tabs = [
     "Tags",
     "Categories",
   ];
 
-  const handleChipClick = (chipName) => {
-    setSelectedCategory(chipName);
-
-    // Navigate or update view based on selected category
-    if (chipName === "Categories") {
-      navigate("/categoriesActions"); // 
-    }
-  };
+  const paths = ["/preferenceTags", "/categoriesActions"];
 
   const handleAddtagClick = () => {
     setShowTextField(!showTextField);
@@ -173,12 +163,14 @@ const PreferenceTags = () => {
     >
       {/* Navbar */}
       <AdminNavbar />
-\
+      \
       {/* Main Content */}
       <div
         style={{ marginBottom: "40px", height: "100vh", paddingBottom: "10%" }}
       >
-        <MyChips chipNames={chipNames} onChipClick={handleChipClick} />
+        <div>
+          <NavigationTabs tabNames={tabs} paths={paths} />
+        </div>
         <br></br>
         <div style={{ overflowY: "visible", height: "auto" }}>
           <Typography

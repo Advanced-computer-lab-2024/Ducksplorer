@@ -55,7 +55,6 @@ const CartPage = () => {
             orderNumber: orderNumber,
           }
         );
-        //await axios.delete("http://localhost:8000/touristRoutes/cart", { params: { userName ,productId: product._id } }); // Clear product from cart
         const type = "product";
 
         localStorage.setItem("cartId", cartProducts._id);
@@ -153,7 +152,36 @@ const CartPage = () => {
               <NewProductCard product={item.product} />
             ))
           ) : (
-            <h2>Your cart is empty!</h2>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column", // Stack image and text vertically
+                alignItems: "center", // Center both horizontally
+                justifyContent: "center", // Center vertically within the parent
+                marginBottom: "2rem", // Space below the image and text
+                alignContent: 'center'
+              }}
+            >
+              <img
+                src="DuckEmptyCart.jpg"
+                alt="Duck Empty Cart"
+                style={{
+                  width: "70%", // Adjust the image size for better responsiveness
+                  maxWidth: "400px", // Set a max width for better scaling
+                  height: "auto",
+                }}
+              />
+              <p
+                style={{
+                  marginTop: "1rem", // Add spacing between the image and text
+                  fontSize: "1.2rem", // Adjust the text size
+                  textAlign: "center", // Center-align the text
+                  color: "#555", // Change color for better contrast
+                }}
+              >
+                Your Cart is Empty, Start shopping now!
+              </p>
+            </div>
           )}
         </div>
         {cartProducts.length > 0 && (

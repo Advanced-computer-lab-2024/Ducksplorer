@@ -172,7 +172,7 @@ const EditProfile = () => {
         elevation={4}
         sx={{
           p: 4,
-          width: 500,
+          width: "60vw",
           borderRadius: 3,
           boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
         }}
@@ -195,18 +195,18 @@ const EditProfile = () => {
                   style={{ display: "none" }}
                 />
                 <label htmlFor="photo">
-                <Button
-                      variant="outlined"
-                      component="span"
-                      sx={{
-                        color:"#ff9933",
-                        borderColor: "#ff9933",
-                        marginBottom: 2,
-                        marginTop: 2,
-                      }}
-                    >
-                      Upload New Photo
-                    </Button>
+                  <Button
+                    variant="outlined"
+                    component="span"
+                    sx={{
+                      color: "#ff9933",
+                      borderColor: "#ff9933",
+                      marginBottom: 2,
+                      marginTop: 2,
+                    }}
+                  >
+                    Upload New Photo
+                  </Button>
                 </label>
                 {sellerDetails.photo && (
                   <Button
@@ -221,9 +221,8 @@ const EditProfile = () => {
             )}
           </Box>
 
-          <Typography variant="h5" sx={{ mt: 2 }}>
-            Edit Profile
-          </Typography>
+          <h2 className="bigTitle"
+            style={{ fontWeight: "bold", textAlign: "center", marginTop: "3%" }}> Edit Profile</h2>
         </Box>
 
         <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -314,7 +313,7 @@ const EditProfile = () => {
         <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
           {isEditing ? (
             <Button
-            className="blackhover"
+              className="blackhover"
               variant="contained"
               color="success"
               onClick={handleSaveClick}
@@ -325,7 +324,7 @@ const EditProfile = () => {
             </Button>
           ) : (
             <Button
-            className="blackhover"
+              className="blackhover"
               variant="contained"
               color="primary"
               onClick={handleEditClick}

@@ -87,7 +87,7 @@ const ViewUpcomingItinerary = () => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
   };
-  
+
   // Handlers for Sort By dropdown
   const handleSortByClick = (event) => {
     setSortByAnchorEl(event.currentTarget);
@@ -403,6 +403,7 @@ const ViewUpcomingItinerary = () => {
             <MenuItem>
               <Checkbox
                 checked={isFilterSelected("price")}
+                style={{ color: "#ff9933" }}
                 onChange={(e) => {
                   handleFilterToggle("price");
                   if (!e.target.checked) {
@@ -449,6 +450,7 @@ const ViewUpcomingItinerary = () => {
 
             <MenuItem>
               <Checkbox
+                style={{ color: "#ff9933" }}
                 checked={isFilterSelected("language")}
                 onChange={() => handleFilterToggle("language")}
               />
@@ -476,6 +478,7 @@ const ViewUpcomingItinerary = () => {
 
             <MenuItem>
               <Checkbox
+                style={{ color: "#ff9933" }}
                 checked={isFilterSelected("availableDatesAndTimes")}
                 onChange={() => handleFilterToggle("availableDatesAndTimes")}
               />
@@ -491,6 +494,7 @@ const ViewUpcomingItinerary = () => {
 
             <MenuItem>
               <Checkbox
+                style={{ color: "#ff9933" }}
                 checked={isFilterSelected("tags")}
                 onChange={() => handleFilterToggle("tags")}
               />
@@ -506,7 +510,8 @@ const ViewUpcomingItinerary = () => {
                 >
                   {allTags.map((tag) => (
                     <MenuItem key={tag._id} value={tag.name}>
-                      <Checkbox checked={tags.indexOf(tag.name) > -1} />
+                      <Checkbox style={{ color: "#ff9933" }}
+                        checked={tags.indexOf(tag.name) > -1} />
                       {tag.name}
                     </MenuItem>
                   ))}
@@ -534,9 +539,9 @@ const ViewUpcomingItinerary = () => {
           >
             {itineraries.map((itinerary) =>
               itinerary.flag === false &&
-              itinerary.isDeactivated === false &&
-              itinerary.tourGuideDeleted === false &&
-              itinerary.deletedItinerary === false ? (
+                itinerary.isDeactivated === false &&
+                itinerary.tourGuideDeleted === false &&
+                itinerary.deletedItinerary === false ? (
                 <ItineraryCard itinerary={itinerary} />
               ) : null
             )}

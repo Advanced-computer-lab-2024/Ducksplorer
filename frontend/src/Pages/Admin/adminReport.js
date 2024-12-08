@@ -6,11 +6,13 @@ import WarningIcon from "@mui/icons-material/Warning";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { calculateProductRating } from "../../Utilities/averageRating";
 import { calculateAverageRating } from "../../Utilities/averageRating";
-import MyChips from "../../Components/MyChips";
+import MyTabs from "../../Components/MyTabs.js";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { message } from 'antd';
 import DuckLoading from "../../Components/Loading/duckLoading";
 import Error404 from "../../Components/Error404";
+import NavigationTabs from "../../Components/NavigationTabs.js";
+
 import {
   Box,
   Table,
@@ -39,15 +41,11 @@ import {
 import AdminNavbar from "../../Components/NavBars/AdminNavBar";
 
 const AdminReport = () => {
-  const chipNames1 = [
-    "Activities Report",
-    "Itineraries Report",
-    "Products Report",
-  ];
-  const chipNames2 = [
-    "Users Report",
-    "Revenue Report",
-  ];
+
+  const tabs = ["Users Report", "Revenue Report"];
+  const paths = ["/userReport", "/adminReport"];
+  const tabNames = ["Activities Report", "Itineraries Report", "Products Report"];
+  const [selectedTab, setSelectedTab] = useState("Activities Report");
 
   const errorMessage1 =
     "The flights you are looking for might be removed or is temporarily unavailable";
@@ -57,8 +55,6 @@ const AdminReport = () => {
     "The itineraries you are looking for might be removed or is temporarily unavailable";
   const backMessage = "BACK TO ADMIN DASHBOARD";
 
-  const [selectedCategory, setSelectedCategory] = useState("Activities Report");
-  const [selectedCategory2, setSelectedCategory2] = useState("Users Report");
 
   const [activities, setActivities] = useState([]);
   const [itineraries, setItineraries] = useState([]);
@@ -350,21 +346,21 @@ const AdminReport = () => {
   useEffect(() => {
     if (!activityFiltersApplied) return;
     if (!activityDate && !activityMonth && !activityYear) return;
-    if (selectedCategory == "Activities Report")
+    if (selectedTab == "Activities Report")
       fetchFilteredActivities();
   }, [activityFiltersApplied, activityDate, activityMonth, activityYear]);
 
   useEffect(() => {
     if (!itineraryFiltersApplied) return;
     if (!itineraryDate && !itineraryMonth && !itineraryYear) return;
-    if (selectedCategory == "Itineraries Report")
+    if (selectedTab == "Itineraries Report")
       fetchFilteredItineraries();
   }, [itineraryFiltersApplied, itineraryDate, itineraryMonth, itineraryYear]);
 
   useEffect(() => {
     if (!productFiltersApplied) return;
     if (!productDate && !productMonth && !productYear) return;
-    if (selectedCategory == "Products Report")
+    if (selectedTab == "Products Report")
       fetchFilteredProducts();
   }, [productFiltersApplied, productDate, productMonth, productYear]);
 
@@ -456,20 +452,6 @@ const AdminReport = () => {
     return ratingEntry ? ratingEntry.rating : "No rating available";
   };
 
-  const handleChipClick = (chipName) => {
-    setSelectedCategory(chipName);
-    console.log(selectedCategory);
-  };
-
-  const handleChipClick2 = (chipName) => {
-    setSelectedCategory2(chipName);
-
-    // Navigate or update view based on selected category
-    if (chipName === "Users Report") {
-      navigate("/userReport"); // 
-    }
-  };
-
   if (loading) {
     return (
       <div>
@@ -478,7 +460,7 @@ const AdminReport = () => {
     );
   }
 
-  else if (products.length === 0 && selectedCategory === "Products Report") {
+  else if (products.length === 0 && selectedTab === "Products Report") {
     return (
       <>
         <AdminNavbar />
@@ -491,7 +473,7 @@ const AdminReport = () => {
     );
   }
 
-  else if (activities.length === 0 && selectedCategory === "Activities Report") {
+  else if (activities.length === 0 && selectedTab === "Activities Report") {
     return (
       <>
         <AdminNavbar />
@@ -504,7 +486,7 @@ const AdminReport = () => {
     );
   }
 
-  else if (itineraries.length === 0 && selectedCategory === "Itineraries Report") {
+  else if (itineraries.length === 0 && selectedTab === "Itineraries Report") {
     return (
       <>
         <AdminNavbar />
@@ -530,8 +512,10 @@ const AdminReport = () => {
       <div
         style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
       >
-        <br></br>
-        <MyChips chipNames={chipNames2} onChipClick={handleChipClick2} />
+
+        <div>
+          <NavigationTabs tabNames={tabs} paths={paths} />
+        </div>
         <div style={{ overflowY: "visible", height: "100vh" }}>
           <Typography
             variant="h2"
@@ -541,9 +525,9 @@ const AdminReport = () => {
             Revenue Report
           </Typography>
           <br></br>
-          <MyChips chipNames={chipNames1} onChipClick={handleChipClick} />
+          <MyTabs tabNames={tabNames} onTabClick={(tabName) => setSelectedTab(tabName)} />
 
-          {selectedCategory === "Activities Report" && (
+          {selectedTab === "Activities Report" && (
             <div>
               {" "}
               <Typography
@@ -736,7 +720,7 @@ const AdminReport = () => {
             </div>
           )}
 
-          {selectedCategory === "Itineraries Report" && (
+          {selectedTab === "Itineraries Report" && (
             <div>
               {" "}
               <Typography variant="h5" sx={{ fontWeight: "bold" }} gutterBottom>
@@ -973,7 +957,7 @@ const AdminReport = () => {
             </div>
           )}
 
-          {selectedCategory === "Products Report" && (
+          {selectedTab === "Products Report" && (
             <div>
               {" "}
               <Typography

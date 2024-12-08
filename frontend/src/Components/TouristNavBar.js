@@ -118,7 +118,7 @@ function TouristNavBar() {
       sx={{
         backgroundColor: "white",
         width: "100vw",
-        height: "9vh",
+        height: "10vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",

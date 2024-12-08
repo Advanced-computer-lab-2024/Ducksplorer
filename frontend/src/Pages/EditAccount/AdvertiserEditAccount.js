@@ -182,22 +182,17 @@ const AdvertiserEditProfile = () => {
           maxHeight: '100vh'
         }}
       >
-      <AdvertiserNavBar/>
-        <Link
-          to="/advertiserDashboard"
-          style={{ textDecoration: "none", color: "primary.main" }}
-        >
-          Back to Dashboard
-        </Link>
+        <AdvertiserNavBar />
+
         <Paper
           elevation={4}
           sx={{
             marginTop: "30px",
             p: 4,
-            width: "700px",
+            width: "60vw",
             borderRadius: 3,
             boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
-            maxHeight: "100vh", 
+            maxHeight: "100vh",
             overflowY: "visible",
           }}
         >
@@ -230,7 +225,7 @@ const AdvertiserEditProfile = () => {
                   />
                   <label htmlFor="photo">
                     <Button
-                    className="blackhover"
+                      className="blackhover"
                       component="span"
                       color="primary"
                       variant="contained"
@@ -239,20 +234,19 @@ const AdvertiserEditProfile = () => {
                     </Button>
                   </label>
                   {advertiserDetails.photo && (
-                    <Button 
+                    <Button
                       variant="outlined"
                       color="error"
                       onClick={() => handlePhotoDelete()}>
-                    Delete Photo
-                  </Button>
+                      Delete Photo
+                    </Button>
                   )}
                 </>
               )}
             </Box>
 
-            <Typography variant="h5" sx={{ mt: 2 }}>
-              Edit Profile
-            </Typography>
+            <h2 className="bigTitle"
+              style={{ fontWeight: "bold", textAlign: "center", marginTop: "3%" }}> Edit Profile</h2>
           </Box>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -340,10 +334,10 @@ const AdvertiserEditProfile = () => {
               />
               {isEditing && (
                 <>
-                  <Button 
-                  variant="outlined"
-                      color="error"
-                  onClick={() => handleFileDelete("uploads")}>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={() => handleFileDelete("uploads")}>
                     Delete uploaded file
                   </Button>
                   <FileUpload
@@ -358,7 +352,7 @@ const AdvertiserEditProfile = () => {
           <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
             {isEditing ? (
               <Button
-              className="blackhover"
+                className="blackhover"
                 variant="contained"
                 color="success"
                 onClick={handleSaveClick}
@@ -369,7 +363,7 @@ const AdvertiserEditProfile = () => {
               </Button>
             ) : (
               <Button
-              className="blackhover"
+                className="blackhover"
                 variant="contained"
                 color="primary"
                 onClick={handleEditClick}

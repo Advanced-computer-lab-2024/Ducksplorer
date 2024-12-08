@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import WarningIcon from "@mui/icons-material/Warning";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import AdminNavbar from "../../Components/NavBars/AdminNavBar";
-import MyChips from "../../Components/MyChips";
+import NavigationTabs from "../../Components/NavigationTabs";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -27,25 +27,17 @@ import {
 const ViewAllActivities = () => {
   const [activities, setActivities] = useState([]);
   const [editingActivity, setEditingActivity] = useState(null); // Stores the currently selected activity for editing
-  const [selectedCategory, setSelectedCategory] = useState("Activities");
+  const [selectedTab, setSelectedTab] = useState("Activities");
   const navigate = useNavigate();
-  const chipNames = [
+  const tabs = [
     "Activities",
     "Itineraries",
   ];
-
-  const handleChipClick = (chipName) => {
-    setSelectedCategory(chipName);
-
-    // Navigate or update view based on selected category
-    if (chipName === "Itineraries") {
-      navigate("/ViewAllItineraries"); // 
-    }
-  };
+  const paths = ["/ViewAllActivities", "/ViewAllItineraries"];
 
   // Default rendering of all activities
   useEffect(() => {
-    if (selectedCategory === "Activities") {
+    if (selectedTab === "Activities") {
       axios
         .get("http://localhost:8000/activity/")
         .then((response) => {
@@ -55,7 +47,7 @@ const ViewAllActivities = () => {
           console.error("There was an error fetching the activities!", error);
         });
     }
-  }, [selectedCategory]);
+  }, [selectedTab]);
 
   const handleSetFlag = (activityId, newFlagState) => {
     axios
@@ -118,13 +110,15 @@ const ViewAllActivities = () => {
             <Typography
               variant="h2"
               sx={{ textAlign: "center", fontWeight: "bold" }}
-              gutterBottom
+              gutterBottom className="bigTitle"
             >
               Events
             </Typography>
             <br></br>
-            <MyChips chipNames={chipNames} onChipClick={handleChipClick} selectedChip={selectedCategory} />
-            {selectedCategory === "Activities" && (
+            <div>
+              <NavigationTabs tabNames={tabs} paths={paths} />
+            </div>
+            {selectedTab === "Activities" && (
               <TableContainer
                 component={Paper}
                 sx={{
