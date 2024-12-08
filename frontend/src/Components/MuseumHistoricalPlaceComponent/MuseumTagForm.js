@@ -42,22 +42,78 @@ function MuseumTagForm() {
         }
     };
 
+
     return (
-        <div>
-            <h3>Add a New Museum Tag</h3>
-            <form onSubmit={handleSubmit}>
-                <label>Tag:</label>
+        <div style={styles.container}>
+            <h3 className="bigTitle" style={styles.header}>Add a New Museum Tag</h3>
+            <form onSubmit={handleSubmit} style={styles.form}>
+                <label style={styles.label}>Tag:</label>
                 <input
                     type="text"
                     value={museumTag}
                     onChange={(e) => setMuseumTag(e.target.value)}
                     placeholder="Enter museum tag"
                     required
+                    style={styles.input}
                 />
-                <button type="submit">Add Tag</button>
+                <button type="submit" style={styles.button} className='blackhover'>
+                    Add Tag
+                </button>
             </form>
         </div>
     );
 }
+
+const styles = {
+    container: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '20px',
+        border: '1px solid #ddd',
+        borderRadius: '8px',
+        backgroundColor: '#f9f9f9',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        width: '70vw',
+        margin: 'auto',
+        marginTop: '50px',
+    },
+    header: {
+        marginBottom: '20px',
+        fontSize: '1.5rem',
+        color: '#333',
+    },
+    form: {
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+    },
+    label: {
+        marginBottom: '8px',
+        fontSize: '1rem',
+        color: '#555',
+    },
+    input: {
+        padding: '10px',
+        marginBottom: '20px',
+        border: '1px solid #ccc',
+        borderRadius: '4px',
+        fontSize: '1rem',
+        outline: 'none',
+    },
+    button: {
+        padding: '10px 20px',
+        border: 'none',
+        borderRadius: '4px',
+        backgroundColor: '#4CAF50',
+        color: 'white',
+        fontSize: '1rem',
+        cursor: 'pointer',
+        transition: 'background-color 0.3s ease',
+    },
+    buttonHover: {
+        backgroundColor: '#45a049',
+    },
+};
 
 export default MuseumTagForm;

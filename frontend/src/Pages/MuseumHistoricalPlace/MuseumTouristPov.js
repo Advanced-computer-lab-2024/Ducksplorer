@@ -14,7 +14,7 @@ import { Box, Button, Typography, Grid, Container } from "@mui/material";
 import MuseumHistoricalPlaceCard from "../../Components/MuseumHistoricalPlaceCard";
 import Input from "@mui/joy/Input";
 import Error404 from "../../Components/Error404.js";
-import MyChips from "../../Components/MyChips.js";
+import NavigationTabs from "../../Components/NavigationTabs.js";
 import HistoricalPlaceTouristPov from "./HistoricalPlaceTouristPov";
 
 const MuseumTouristPov = () => {
@@ -27,8 +27,8 @@ const MuseumTouristPov = () => {
   const [searchQuery, setSearchQuery] = useState(""); // Add this line
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const chipNames = ["Museums", "Historical Places"];
-  const [selectedCategory, setSelectedCategory] = useState("Museums");
+  const tabs = ["Museums", "Historical Places"];
+  const paths = ["/MuseumTouristPov", "/HistoricalPlaceTouristPov"];
 
   useEffect(() => {
     setLoading(true);
@@ -91,10 +91,6 @@ const MuseumTouristPov = () => {
     navigate("/UpcomingMuseums");
   };
 
-  const handleChipClick = (chipName) => {
-    setSelectedCategory(chipName);
-  };
-
   const errorMessage =
     "There are currently no upcoming museum visits. Try again in a few";
   const backMessage = "Back to search again";
@@ -117,10 +113,11 @@ const MuseumTouristPov = () => {
     >
       <TouristNavBar />
       <div style={{ marginLeft: "4%", marginTop: "2%" }}>
-        <MyChips chipNames={chipNames} onChipClick={handleChipClick} />
+        <div>
+          <NavigationTabs tabNames={tabs} paths={paths} />
+        </div>
       </div>
 
-      {selectedCategory === "Museums" && (
         <Container sx={{ width: "100%" }}>
           <Box sx={{ textAlign: "center", mb: 4 }}>
             <Typography class="bigTitle">Museums</Typography>
@@ -172,10 +169,6 @@ const MuseumTouristPov = () => {
             )}
           </Grid>
         </Container>
-      )}
-      {selectedCategory === "Historical Places" && (
-        <HistoricalPlaceTouristPov />
-      )}
       <Help />
     </Box>
   );

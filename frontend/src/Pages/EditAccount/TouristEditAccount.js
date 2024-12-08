@@ -254,7 +254,7 @@ const EditProfile = () => {
           sx={{
             marginTop: "30px",
             p: 5,
-            width: "700px",
+            width: "60vw",
             borderRadius: 3,
             boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
             height: "100%",
@@ -271,9 +271,8 @@ const EditProfile = () => {
             <Avatar sx={{ bgcolor: "primary.main", width: 64, height: 64 }}>
               <AccountCircleIcon fontSize="large" />
             </Avatar>
-            <Typography variant="h5" sx={{ mt: 2 }}>
-              Edit Tourist Profile
-            </Typography>
+            <h2 className="bigTitle"
+              style={{ fontWeight: "bold", textAlign: "center", marginTop: "3%" }}> Edit Profile</h2>
           </Box>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -379,7 +378,7 @@ const EditProfile = () => {
                 readOnly: true,
               }}
             />
-            <Button variant="outlined" onClick={handleRedeemClick} sx={{borderColor:'orange', color:'orange'}}>
+            <Button variant="outlined" onClick={handleRedeemClick} sx={{ borderColor: 'orange', color: 'orange' }}>
               Redeem points
             </Button>
           </Box>
@@ -394,7 +393,7 @@ const EditProfile = () => {
           >
             {isEditing && (
               <>
-                <Typography variant="h6" sx={{ mt: 2 , marginBottom: '3%'}}>
+                <Typography variant="h6" sx={{ mt: 2, marginBottom: '3%' }}>
                   Choose Favourite Category
                 </Typography>
                 <TouristCategoryDropDown
@@ -494,7 +493,7 @@ const EditProfile = () => {
             </Button>
           </Box>
         </Paper>
-      </Box>
+      </Box >
       <Help />
       <Dialog
         open={open}
@@ -579,7 +578,7 @@ const EditProfile = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </Box >
   );
 };
 

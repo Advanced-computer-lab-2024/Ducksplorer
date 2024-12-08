@@ -3,6 +3,7 @@ import axios from "axios";
 import { message } from "antd";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 import ItineraryCard from "../../Components/itineraryCard.js";
+import UpdateIcon from "@mui/icons-material/Update";
 import {
   Stack,
   Typography,
@@ -270,6 +271,31 @@ function SearchItineraries() {
     }
     return encodeURIComponent(tags);
   };
+  const handleGetUpcomingItineraries = async (event) => {
+    const showPreferences = localStorage.getItem("showPreferences");
+    const user = JSON.parse(localStorage.getItem("user"));
+    const username = user?.username;
+    const role = user?.role;
+
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/itinerary/upcoming",
+        {
+          params: {
+            showPreferences: showPreferences?.toString(),
+            username,
+            role,
+          },
+        }
+      );
+      console.log("res is", response.data);
+      setItineraries(response.data); // Update state with fetched itineraries
+    } catch (error) {
+      console.error("There was an error fetching the itineraries!", error);
+    }
+
+    console.log("Displaying Upcoming Itineraries");
+  };
 
   const displayUpcomingItineraries = async () => {
     const showPreferences = localStorage.getItem("showPreferences");
@@ -391,6 +417,11 @@ function SearchItineraries() {
           </Button>
 
           <div>
+            <IconButton onClick={handleGetUpcomingItineraries}>
+              {" "}
+              {/* try to make it on the right later */}
+              <UpdateIcon sx={{ color: "black" }} />
+            </IconButton>
             {/* Filtering */}
             <IconButton onClick={handleFilterChoiceClick}>
               {" "}
@@ -402,23 +433,6 @@ function SearchItineraries() {
               open={Boolean(filterAnchorEl)}
               onClose={handleFilterClose}
             >
-              <MenuItem>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "16px",
-                  }}
-                >
-                  <Checkbox
-                    style={{ color: "#ff9933" }}
-                    checked={showUpcomingOnly}
-                    onChange={(e) => setShowUpcomingOnly(e.target.checked)}
-                  />
-                  <span>Upcoming Itineraries</span>
-                </div>
-              </MenuItem>
-
               <MenuItem>
                 <div
                   style={{
@@ -566,8 +580,10 @@ function SearchItineraries() {
                     >
                       {allTags.map((tag) => (
                         <MenuItem key={tag._id} value={tag.name}>
-                          <Checkbox style={{ color: "#ff9933" }}
-                            checked={tags.indexOf(tag.name) > -1} />
+                          <Checkbox
+                            style={{ color: "#ff9933" }}
+                            checked={tags.indexOf(tag.name) > -1}
+                          />
                           {tag.name}
                         </MenuItem>
                       ))}
@@ -697,9 +713,9 @@ function SearchItineraries() {
           >
             {itineraries.map((itinerary) =>
               !itinerary.flag &&
-                !itinerary.isDeactivated &&
-                !itinerary.tourGuideDeleted &&
-                !itinerary.deletedItinerary ? (
+              !itinerary.isDeactivated &&
+              !itinerary.tourGuideDeleted &&
+              !itinerary.deletedItinerary ? (
                 <ItineraryCard key={itinerary._id} itinerary={itinerary} />
               ) : null
             )}

@@ -4,6 +4,9 @@ import { message } from "antd";
 import TouristNavBar from "../../Components/TouristNavBar";
 import ActivityCard from "../../Components/activityCard.js";
 import Error404 from "../../Components/Error404";
+import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
+import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
+import UpdateIcon from "@mui/icons-material/Update";
 import {
   Stack,
   Typography,
@@ -19,6 +22,7 @@ import {
   InputLabel,
   Rating,
   Grid2,
+  Tooltip,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
@@ -33,7 +37,7 @@ import DuckLoading from "../../Components/Loading/duckLoading";
 function SearchActivity() {
   const { id } = useParams();
 
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState(""); // Single search input
   const [searchTerm, setSearchTerm] = useState(""); // Single search term
   const [activities, setActivities] = useState([]); // Displayed activities
@@ -52,7 +56,8 @@ function SearchActivity() {
   const [price, setPrice] = useState("");
   const [date, setDate] = useState("");
   const [categories, setCategories] = useState([]);
-  const [error, setError] = useState(false); const [sortBy, setSortBy] = useState("date"); // Default sorting by date
+  const [error, setError] = useState(false);
+  const [sortBy, setSortBy] = useState("date"); // Default sorting by date
   const [order, setOrder] = useState("asc"); // Default ascending order
   const [activityExchangeRates, setActivityExchangeRates] = useState(null);
   const [activityCurrency, setActivityCurrency] = useState(null);
@@ -72,10 +77,8 @@ function SearchActivity() {
   const [sortByAnchorEl, setSortByAnchorEl] = useState(null);
   const [sortOrderAnchorEl, setSortOrderAnchorEl] = useState(null);
 
-
   const [showUpcomingOnly, setShowUpcomingOnly] = useState(false);
   const [showError, setShowError] = useState(false);
-
 
   // Fetch all activities when component mounts
   useEffect(() => {
@@ -113,7 +116,8 @@ function SearchActivity() {
   }, [id]);
 
   const fetchCategories = () => {
-    if (categories.length === 0 && !loading) { // Avoid redundant calls
+    if (categories.length === 0 && !loading) {
+      // Avoid redundant calls
       setLoading(true);
       axios
         .get(`http://localhost:8000/category`) // Use environment variable for the base URL
@@ -129,16 +133,14 @@ function SearchActivity() {
     }
   };
 
-
   useEffect(() => {
     if (activities.length === 0) {
-      const timer = setTimeout(() => setShowError(true), 500); // Wait 0.5 second
+      const timer = setTimeout(() => setShowError(true), 100); // Wait 0.5 second
       return () => clearTimeout(timer); // Cleanup the timer when the component unmounts or updates
     } else {
       setShowError(false); // Reset error state if activities exist
     }
   }, [activities]);
-
 
   // Handlers for Sort By dropdown
   const handleSortByClick = (event) => {
@@ -194,10 +196,8 @@ function SearchActivity() {
       .finally(() => setLoading(false));
   };
 
-
   // Function to fetch activities based on search criteria
   const handleSearchActivities = () => {
-
     const query = new URLSearchParams({
       search: searchQuery, // Single search query sent to the backend
     }).toString();
@@ -211,7 +211,6 @@ function SearchActivity() {
         console.error("There was an error fetching the activities!", error);
       });
   };
-
 
   const isFilterSelected = (filter) => selectedFilters.includes(filter);
 
@@ -290,6 +289,21 @@ function SearchActivity() {
     setRating(event.target.value);
   };
 
+  const handleGetUpcomingActivities = async (event) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/activity/upcoming"
+      );
+      const data = response.data.map((activity) => ({
+        ...activity,
+        saved: activity.saved || { isSaved: false, user: null },
+      }));
+      setActivities(data); // Updates the state with the fetched activities
+    } catch (error) {
+      console.error("There was an error fetching the activities!", error);
+    }
+  };
+
   const displayUpcomingActivities = async () => {
     try {
       const response = await axios.get(
@@ -309,13 +323,14 @@ function SearchActivity() {
   const handleFilter = () => {
     if (showUpcomingOnly) {
       displayUpcomingActivities();
+      return;
     }
 
     const query = new URLSearchParams();
-    if (price) query.append('price', price);
-    if (date) query.append('date', date);
-    if (selectedCategory) query.append('category', selectedCategory);
-    if (rating) query.append('averageRating', rating);
+    if (price) query.append("price", price);
+    if (date) query.append("date", date);
+    if (selectedCategory) query.append("category", selectedCategory);
+    if (rating) query.append("averageRating", rating);
 
     axios
       .get(`http://localhost:8000/activity/filter?${query}`)
@@ -355,7 +370,6 @@ function SearchActivity() {
           <Typography class="bigTitle">Activities</Typography>
         </Box>
 
-
         <div
           style={{
             //div to surround search bar, button and the filter, and 2 sort icons
@@ -368,8 +382,8 @@ function SearchActivity() {
         >
           <Input
             placeholder="Search for an activity..."
-            value={searchQuery}  // Use searchQuery here
-            onChange={(e) => setSearchQuery(e.target.value)}  // Update searchQuery instead of searchTerm
+            value={searchQuery} // Use searchQuery here
+            onChange={(e) => setSearchQuery(e.target.value)} // Update searchQuery instead of searchTerm
             fullWidth
             variant="filled"
             color="primary"
@@ -385,42 +399,35 @@ function SearchActivity() {
 
           <div>
             {/* Filtering */}
-            <IconButton onClick={handleFilterChoiceClick}>
-              {" "}
-              {/* try to make it on the right later */}
-              <FilterAltIcon sx={{ color: "black" }} />
-            </IconButton>
+            <Tooltip title="Upcoming Activities">
+              <IconButton onClick={handleGetUpcomingActivities}>
+                {" "}
+                {/* try to make it on the right later */}
+                <UpdateIcon sx={{ color: "black" }} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Filter Activities">
+              <IconButton onClick={handleFilterChoiceClick}>
+                {" "}
+                {/* try to make it on the right later */}
+                <FilterAltIcon sx={{ color: "black" }} />
+              </IconButton>
+            </Tooltip>
             <Menu
               anchorEl={filterAnchorEl}
               open={Boolean(filterAnchorEl)}
               onClose={handleFilterClose}
               PaperProps={{
                 style: {
-                  position: 'absolute',
+                  position: "absolute",
                 },
               }}
             >
-
-              <MenuItem>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "16px",
-                  }}
-                >
-                  <Checkbox
-                    style={{ color: "#ff9933" }}
-                    checked={showUpcomingOnly}
-                    onChange={(e) => setShowUpcomingOnly(e.target.checked)}
-                  />
-                  <span>Upcoming Activities</span>
-                </div>
-              </MenuItem>
-
-              <MenuItem anchorEl={anchorEl}
+              <MenuItem
+                anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
-                onClose={() => setAnchorEl(null)}>
+                onClose={() => setAnchorEl(null)}
+              >
                 <div
                   style={{
                     display: "flex",
@@ -451,7 +458,6 @@ function SearchActivity() {
                   variant="filled"
                   color="#ff9933"
                 />
-
               </MenuItem>
 
               <MenuItem>
@@ -479,19 +485,19 @@ function SearchActivity() {
                       onChange={handleCategoryChange}
                       onOpen={fetchCategories}
                       sx={{
-                        '& .MuiOutlinedInput-root': {
-                          '& fieldset': {
-                            borderColor: '#ff9933', // Set border color to orange
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": {
+                            borderColor: "#ff9933", // Set border color to orange
                           },
-                          '&:hover fieldset': {
-                            borderColor: '#ff9933', // Set border color on hover
+                          "&:hover fieldset": {
+                            borderColor: "#ff9933", // Set border color on hover
                           },
-                          '&.Mui-focused fieldset': {
-                            borderColor: '#ff9933', // Set border color when focused
+                          "&.Mui-focused fieldset": {
+                            borderColor: "#ff9933", // Set border color when focused
                           },
                         },
-                        '& .MuiInputBase-input': {
-                          color: '#ff9933', // Change the text color to match the orange theme if needed
+                        "& .MuiInputBase-input": {
+                          color: "#ff9933", // Change the text color to match the orange theme if needed
                         },
                       }}
                     >
@@ -508,7 +514,6 @@ function SearchActivity() {
                   </FormControl>
                 </div>
               </MenuItem>
-
 
               <MenuItem>
                 <div
@@ -554,9 +559,7 @@ function SearchActivity() {
                   <Checkbox
                     style={{ color: "#ff9933" }}
                     checked={isFilterSelected("date")}
-                    onChange={() =>
-                      handleFilterToggle("date")
-                    }
+                    onChange={() => handleFilterToggle("date")}
                   />
                   Date
                   <br />
@@ -613,10 +616,11 @@ function SearchActivity() {
                 </div>
               </MenuItem>
             </Menu>
-
-            <IconButton onClick={handleSortByClick}>
-              <SortIcon sx={{ color: "black" }} />
-            </IconButton>
+            <Tooltip title="Sort Activities">
+              <IconButton onClick={handleSortByClick}>
+                <SortIcon sx={{ color: "black" }} />
+              </IconButton>
+            </Tooltip>
             <Menu
               anchorEl={sortByAnchorEl}
               open={Boolean(sortByAnchorEl)}
@@ -695,9 +699,11 @@ function SearchActivity() {
             </Menu>
 
             {/* Sort Order Menu */}
-            <IconButton onClick={handleSortOrderClick}>
-              <SwapVertIcon sx={{ color: "black" }} />
-            </IconButton>
+            <Tooltip title="Sort Order">
+              <IconButton onClick={handleSortOrderClick}>
+                <SwapVertIcon sx={{ color: "black" }} />
+              </IconButton>
+            </Tooltip>
             <Menu
               anchorEl={sortOrderAnchorEl}
               open={Boolean(sortOrderAnchorEl)}
@@ -740,9 +746,9 @@ function SearchActivity() {
           >
             {activities.map((activity) =>
               !activity.flag &&
-                !activity.isDeactivated &&
-                !activity.tourGuideDeleted &&
-                !activity.deletedActivity ? (
+              !activity.isDeactivated &&
+              !activity.tourGuideDeleted &&
+              !activity.deletedActivity ? (
                 <ActivityCard key={activity._id} activity={activity} />
               ) : null
             )}
@@ -758,7 +764,7 @@ function SearchActivity() {
         )}
         <Help />
       </Container>
-    </Box >
+    </Box>
   );
 }
 

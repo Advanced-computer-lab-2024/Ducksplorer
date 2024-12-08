@@ -422,83 +422,92 @@ const RUDItinerary = () => {
       }}
     >
       <TourGuideNavBar />
-      <Typography
-        variant="h2"
-        className="bigTitle"
-        style={{ textAlign: "center", fontWeight: "bold" }}
-        gutterBottom
+      <div
+        style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
       >
-        Itineraries
-      </Typography>
-
-      <div style={{ overflowY: "visible", height: "100vh" }}>
-        <TableContainer
-          component={Paper}
+        <div style={{ overflowY: "visible", height: "100vh" }}>
+        <Typography
           sx={{
-            marginBottom: 4,
-            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
-            borderRadius: "1.5cap",
+            textAlign: "center", 
+            marginY: 2,          
+            fontSize: "3rem",
           }}
+          fontWeight="700"
+          className="bigTitle" 
         >
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                  Activities
-                  <CurrencyConvertor
-                    onCurrencyChange={handleActivityCurrencyChange}
-                  />
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                  Locations
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                  Timeline
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                  Language
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                  Price
-                  <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                  Available Dates And Times
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                  Accessibility
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                  Pick Up Location
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                  Drop Off Location
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                  Ratings
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                  Tags
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                  Flag
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                  Active Status
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                  Actions
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {
-                itineraries.map((itinerary) =>
-                  itinerary.deletedItinerary === false ? (
-                    <TableRow key={itinerary._id}>
-                      <TableCell>
-                        {itinerary.activity && itinerary.activity.length > 0
-                          ? itinerary.activity.map((activity, index) => (
+          Itineraries
+        </Typography>
+
+          <br></br>
+          <TableContainer
+            component={Paper}
+            sx={{
+              marginBottom: 4,
+              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+              borderRadius: "1.5cap",
+            }}
+          >
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Activities
+                    <CurrencyConvertor
+                      onCurrencyChange={handleActivityCurrencyChange}
+                    />
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Locations
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Timeline
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Language
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Price
+                    <CurrencyConvertor
+                      onCurrencyChange={handleCurrencyChange}
+                    />
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Available Dates And Times
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Accessibility
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Pick Up Location
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Drop Off Location
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Ratings
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Tags
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Flag
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Active Status
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Actions
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {
+                  itineraries.map((itinerary) =>
+                    itinerary.deletedItinerary === false ? (
+                      <TableRow key={itinerary._id}>
+                        <TableCell>
+                          {itinerary.activity && itinerary.activity.length > 0
+                            ? itinerary.activity.map((activity, index) => (
                               <div key={index}>
                                 {activity.name || "N/A"} - Price:
                                 {(
@@ -669,6 +678,7 @@ const RUDItinerary = () => {
             </TableBody>
           </Table>
         </TableContainer>
+      </div>
       </div>
     </Box>
   );
