@@ -196,38 +196,96 @@ const viewMyPastBookings = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+const isUser18OrOlder = (dob) => {
+  const today = new Date();
+  const birthDate = new Date(dob);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDifference = today.getMonth() - birthDate.getMonth();
+
+  // Adjust age if the current month is before the birth month or it's the birth month but the current day is before the birth day
+  if (
+    monthDifference < 0 ||
+    (monthDifference === 0 && today.getDate() < birthDate.getDate())
+  ) {
+    age--;
+  }
+
+  return age >= 18;
+};
 
 const viewDesiredActivity = async (req, res) => {
   try {
-    const { activityId } = req.params;
+    const { activityId, user } = req.params; // Destructure user from params
 
+    // Fetch the activity based on the provided activityId
     const result = await Activity.findOne({ _id: activityId });
 
     if (!result) {
       return res.status(404).json({ message: "Activity not found" });
     }
 
-    const now = new Date();
+    // Fetch the tourist (user) from the database based on the userName
+    const tourist = await Tourist.findOne({ userName: user });
+
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found" });
+    }
+
+    // Check if the user is 18 or older using the isUser18OrOlder function
+    const isAdult = isUser18OrOlder(tourist.DOB);
+    if (!isAdult) {
+      return res.status(400).json({
+        message: "You must be at least 18 years old to book this activity.",
+      });
+    }
+
+    // Check if the activity is upcoming
     const activityDate = new Date(result.date);
-    const isUpcoming = activityDate > now;
+    const isUpcoming = activityDate > new Date();
 
     res.status(200).json({
       ...result.toObject(),
       isUpcoming,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    if (
+      error.message ===
+      "You must be at least 18 years old to book this activity."
+    ) {
+      return res
+        .status(400)
+        .json({ message: "You are less than 18 years old." });
+    }
+
+    // For other errors, return a generic error message
+    res.status(500).json({ message: "An error occurred" });
   }
 };
 
 const viewDesiredItinerary = async (req, res) => {
   try {
-    const { itineraryId } = req.params;
+    const { itineraryId, user } = req.params; // Destructure user from params
 
+    // Fetch the itinerary based on the provided itineraryId
     const result = await Itinerary.findOne({ _id: itineraryId });
 
     if (!result) {
       return res.status(404).json({ message: "Itinerary not found" });
+    }
+
+    // Fetch the tourist (user) from the database based on the userName
+    const tourist = await Tourist.findOne({ userName: user });
+
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found" });
+    }
+
+    // Check if the user is 18 or older using the isUser18OrOlder function
+    const isAdult = isUser18OrOlder(tourist.DOB);
+    if (!isAdult) {
+      return res.status(400).json({
+        message: "You must be at least 18 years old to book this itinerary.",
+      });
     }
 
     // Check if any available date is in the future
@@ -237,12 +295,29 @@ const viewDesiredItinerary = async (req, res) => {
       return itineraryDate > now; // Check if the date is in the future
     });
 
+    // Return the itinerary data along with the isUpcoming flag
     res.status(200).json({
       ...result.toObject(),
       isUpcoming,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error:", error);
+
+    // If the error is related to age verification
+    if (
+      error.message ===
+      "You must be at least 18 years old to book this itinerary."
+    ) {
+      return res.status(400).json({
+        message:
+          "You are less than 18 years old and cannot book this itinerary.",
+      });
+    }
+
+    // For other errors, return a generic error message
+    res
+      .status(500)
+      .json({ message: "An error occurred while retrieving the itinerary." });
   }
 };
 
@@ -653,20 +728,19 @@ const getWalletBalance = async (req, res) => {
   try {
     const { userName } = req.params; // Assuming user ID is passed as a route parameter
 
-    const tourist = await Tourist.findOne({ userName: userName }); 
+    const tourist = await Tourist.findOne({ userName: userName });
 
     if (!tourist) {
-      return res.status(404).json({ message: 'Tourist not found' });
+      return res.status(404).json({ message: "Tourist not found" });
     }
 
     // Return the wallet balance
-    res.status(200).json( tourist.wallet );
+    res.status(200).json(tourist.wallet);
   } catch (error) {
-    console.error('Error fetching wallet balance:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error("Error fetching wallet balance:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 module.exports = {
   receiveLoyaltyPoints,
@@ -682,5 +756,5 @@ module.exports = {
   getLevel,
   payWallet,
   payVisa,
-  getWalletBalance
+  getWalletBalance,
 };

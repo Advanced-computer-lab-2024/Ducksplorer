@@ -45,7 +45,7 @@ const {
   redeemPoints,
   payVisa,
   payWallet,
-  getWalletBalance
+  getWalletBalance,
 } = require("../Controllers/bookingController");
 
 const {
@@ -75,8 +75,10 @@ router.get("/getLevel/:userName", getLevel);
 router.route("/booking").get(getMyBookings);
 router.route("/booking/:user").post(createBooking).patch(cancelMyBooking);
 router.route("/myUpcomingBookings").get(viewMyUpcomingBookings);
-router.route("/viewDesiredActivity/:activityId").get(viewDesiredActivity);
-router.route("/viewDesiredItinerary/:itineraryId").get(viewDesiredItinerary);
+router.route("/viewDesiredActivity/:activityId/:user").get(viewDesiredActivity);
+router
+  .route("/viewDesiredItinerary/:itineraryId/:user")
+  .get(viewDesiredItinerary);
 router.patch("/payWallet/:userName", payWallet);
 router.patch("/payVisa/:userName", payVisa);
 router.get("/balance/:userName", getWalletBalance);
@@ -105,7 +107,7 @@ router.delete("/cancelOrder/:username/:orderNumber", cancelOrder);
 router.get("/myOrders/:buyer", getMyOrders);
 
 router.put("/updatePurchases/:buyer", updatePurchase);
-router.put("/updateProducts/:id", touristUpdateProductRating);//done 
+router.put("/updateProducts/:id", touristUpdateProductRating); //done
 router.get("/getRating/:id/rating/:buyer", getProductRating);
 router.put("/addReview/:id", touristUpdateProductReview);
 

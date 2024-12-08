@@ -26,7 +26,7 @@ const Payment = () => {
         style={{ textAlign: "center", marginBottom: "30px" }}
         className="bigTitle"
       >
-        React Stripe Payment
+        Payment 
       </h1>
       {clientSecret && stripePromise ? (
         <Elements stripe={stripePromise} options={{ clientSecret }}>

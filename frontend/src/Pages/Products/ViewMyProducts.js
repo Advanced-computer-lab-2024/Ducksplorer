@@ -1,17 +1,40 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import {
+  Box,
+  Typography,
+  Container,
+  IconButton,
+  Tooltip,
+  Menu,
+  MenuItem,
+} from "@mui/material";
+import Input from "@mui/joy/Input";
+import Button from "@mui/joy/Button";
 import { message } from "antd";
-import { Typography } from "@mui/material";
-import { Button, Box } from "@mui/material";
-import ProductCard from "../../Components/Products/ProductCard"; // Import the ProductCard component
-import { useNavigate } from "react-router-dom"; // Import to navigate to the edit page
-import TouristNavBar from "../../Components/TouristNavBar";
-import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
+import axios from "axios";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import SwapVertIcon from "@mui/icons-material/SwapVert"; // Ensure this is imported
+import NewProductCard from "../../Components/Products/newProductCard";
+import Help from "../../Components/HelpIcon";
+import SellerNavBar from "../../Components/NavBars/SellerNavBar";
+import DuckLoading from "../../Components/Loading/duckLoading";
+import NavigationTabs from "../../Components/NavigationTabs";
 
-
-function ViewMyProducts() {
+const ProductDashboard = () => {
+  const navigate = useNavigate();
+  const isGuest = localStorage.getItem("guest") === "true";
+  const [searchQuery, setSearchQuery] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [sortOrder, setSortOrder] = useState("");
   const [products, setProducts] = useState([]);
-  const navigate = useNavigate(); // Initialize useNavigate for navigation
+  const [loading, setLoading] = useState(true);
+  const [filterAnchorEl, setFilterAnchorEl] = useState(null); // Menu state for filter
+  const [sortOrderAnchorEl, setSortOrderAnchorEl] = useState(null); // Menu state for sorting
+
+  const tabs=["All Products","My Products"];
+  const paths=["/ProductDashboard","/ViewMyProducts"]
 
   useEffect(() => {
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
@@ -25,78 +48,163 @@ function ViewMyProducts() {
       })
       .catch((error) => {
         console.error("There was an error fetching the products!", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
-  const handleEditProduct = (productId) => {
-    // Navigate to the edit product page with the product ID
-    navigate(`/editProduct/${productId}`);
+
+  const handleSearchProducts = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/sellerRoutes/findProduct",
+        {
+          params: { name: searchQuery },
+        }
+      );
+      if (response.status === 200) {
+        message.success("Products searched successfully");
+        setProducts(response.data);
+      } else {
+        message.error("Failed to search products");
+      }
+    } catch (error) {
+      message.error("An error occurred: " + error.message);
+    }
+  };
+
+  const handleFilterChoiceClick = (event) => {
+    setFilterAnchorEl(event.currentTarget); // Open the filter menu
+  };
+
+  const handleFilterClose = () => {
+    setFilterAnchorEl(null); // Close the filter menu
+  };
+
+  const handleFilterProducts = async () => {
+    if (!minPrice || !maxPrice || parseFloat(minPrice) > parseFloat(maxPrice)) {
+      message.error("Please enter valid price ranges.");
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/adminRoutes/filterProducts",
+        {
+          params: { minPrice, maxPrice },
+        }
+      );
+      if (response.status === 200) {
+        message.success("Products filtered successfully");
+        setProducts(response.data);
+        handleFilterClose(); // Close the filter menu after applying filter
+      } else {
+        message.error("Failed to filter products");
+      }
+    } catch (error) {
+      message.error("An error occurred: " + error.message);
+    }
+  };
+
+  const handleSortOrderClick = (event) => {
+    setSortOrderAnchorEl(event.currentTarget); // Open the sort menu
+  };
+
+  const handleSortOrderClose = () => {
+    setSortOrderAnchorEl(null); // Close the sort menu
+  };
+
+  const handleViewMyProducts = () => {
+    navigate("/ViewMyProducts");
+  };
+  const handleAddProduct = () => {
+    navigate("/AddProducts");
+  };
+
+  const handleSortProducts = async (order) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/adminRoutes/sortProducts",
+        {
+          params: { sortOrder: order }, // Pass 'asc' or 'desc' based on the selected option
+        }
+      );
+      if (response.status === 200) {
+        message.success("Products sorted successfully");
+        setProducts(response.data.products); // Set the sorted products to the state
+        handleSortOrderClose(); // Close the sort menu after sorting
+      } else {
+        message.error("Failed to sort products");
+      }
+    } catch (error) {
+      message.error("An error occurred: " + error.message);
+    }
   };
 
   const handleBackButtonClick = () => {
     window.history.back();
   };
 
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
+
   return (
     <Box
-    sx={{
-      height: "100vh",
-      backgroundColor: "#f9f9f9",
-      paddingTop: "64px", // Adjust for navbar height
-    }}
-  >
-    <TouristNavBar />    
+      sx={{
+        height: "100vh",
+        backgroundColor: "fff6e6",
+        width: "100vw",
+        paddingTop: "2vh", // Adjust for navbar height
+      }}
+    >
+      <SellerNavBar />
 
-      <Button onClick={handleBackButtonClick}>Back</Button>
-      <div
-        style={{
-          padding: "20px",
-          margin: "auto",
-          height: "100vh",
-        }}
-      >
+      <Container sx={{ width: "100%" }}>
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Typography class="bigTitle">Products</Typography>
+          <div>
+                <NavigationTabs tabNames={tabs} paths={paths} />
+          </div>
+        </Box>
+
+        
+
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
-            overflowY: "visible",
-            padding: "10px",
-            marginTop: "20px",
+            gap: "24px",
+            width: "100%",
+            paddingBottom: 24,
           }}
         >
-          {/* Render the filtered products using the ProductCard component */}
-          {products.length > 0 ? (
-            products.map((product) => (
-              <div
-                key={product._id}
-                style={{ position: "relative", marginBottom: "20px" }}
-              >
-                <ProductCard
+          {products.filter((product) => !product.isArchived).length > 0 ? (
+            products
+              .filter((product) => !product.isArchived)
+              .map((product) => (
+                <NewProductCard
+                  key={product._id}
                   product={product}
-                  showArchive={true}
-                  showAverageRating={true}
-                  showUnarchive={true}
-                  productID={product._id}
+                  showAddToCart={false}
+                  hideWishlist={true}
+                  showEditProduct={true}
                 />
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => handleEditProduct(product._id)}
-                  style={{ position: "absolute", right: "10px", top: "10px" }} // Place the button at the top-right corner
-                >
-                  Edit
-                </Button>
-              </div>
-            ))
+              ))
           ) : (
-            <Typography variant="body1" style={{ marginTop: "20px" }}>
-              No products found.
+            <Typography variant="h6" color="text.secondary">
+              No products available.
             </Typography>
           )}
         </div>
-      </div>
+      </Container>
     </Box>
   );
-}
+};
 
-export default ViewMyProducts;
+export default ProductDashboard;
