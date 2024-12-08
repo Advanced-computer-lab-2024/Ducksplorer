@@ -33,6 +33,7 @@ import UpcomingActivities from "./Pages/Activities/upcomingActivities.js";
 import SearchActivities from "./Pages/Activities/searchActivity.js";
 import SortFilterActivity from "./Pages/Activities/SortFilterActivity.js";
 import MyActivities from "./Pages/Activities/myActivities.js";
+import EditActivity from "./Pages/Activities/editActivity.js";
 import AdvertiserDashboard from "./Pages/Dashboards/AdvertiserDashboard.js";
 import ClinicLocation from "./Pages/location.js";
 import ProductDashboard from "./Pages/Products/ProductDashboard.js";
@@ -485,6 +486,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <MyActivities />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/editActivity"
+            element={
+              <ProtectedRoute>
+                <EditActivity />
               </ProtectedRoute>
             }
           />

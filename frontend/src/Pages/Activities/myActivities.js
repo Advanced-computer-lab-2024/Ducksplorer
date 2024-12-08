@@ -35,6 +35,7 @@ import {
 } from "@mui/material";
 import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar.js";
 import AdvertiserNavBar from "../../Components/NavBars/AdvertiserNavBar.js";
+import { useNavigate } from "react-router-dom";
 const MyActivities = () => {
   // Accept userNameId as a prop
   const userName = JSON.parse(localStorage.getItem("user")).username;
@@ -42,6 +43,8 @@ const MyActivities = () => {
   const [open, setOpen] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [editingActivity, setEditingActivity] = useState(null);
+  const [selectedTags, setSelectedTags] = useState([]); // For storing selected tags
+  const [availableTags, setAvailableTags] = useState([]); // For storing fetched tags
   let allTags = JSON.parse(localStorage.getItem("tags"));
 
   const [formData, setFormData] = useState({
@@ -59,7 +62,7 @@ const MyActivities = () => {
 
   // Ref to the form for scrolling
   const formRef = useRef(null);
-
+  const navigate = useNavigate();
   // Handle fetching activities by userName ID
   useEffect(() => {
     console.log(userName);
@@ -78,9 +81,26 @@ const MyActivities = () => {
 
   // Handle edit button click
   const handleEditClick = (activity) => {
-    setFormData(activity); // Set form data to the selected activity's values
-    setEditingActivity(activity);
+    setFormData({
+      ...activity,
+      locations: activity.locations || [], // Include locations if applicable for the activity
+    });
+    setSelectedTags(activity.tags || []); // Ensure selected tags are set from the activity
+    setEditingActivity(activity); // Set the activity being edited
+
+    navigate("/editActivity", {
+      state: {
+        activity: activity,
+        data: {
+          ...activity,
+          locations: activity.locations || [], // Include locations for the activity
+        },
+        tags: availableTags, // Available tags for the activity
+        tagsSelected: activity.tags || [], // Selected tags for the activity
+      },
+    });
   };
+
 
   // Scroll to the form whenever editingActivity is set
   useEffect(() => {
@@ -231,15 +251,15 @@ const MyActivities = () => {
                   <TableCell>
                     {activity.date
                       ? (() => {
-                          const dateObj = new Date(activity.date);
-                          const date = dateObj.toISOString().split("T")[0];
-                          const time = dateObj.toTimeString().split(" ")[0];
-                          return (
-                            <div>
-                              {date} at {time}
-                            </div>
-                          );
-                        })()
+                        const dateObj = new Date(activity.date);
+                        const date = dateObj.toISOString().split("T")[0];
+                        const time = dateObj.toTimeString().split(" ")[0];
+                        return (
+                          <div>
+                            {date} at {time}
+                          </div>
+                        );
+                      })()
                       : "No available date and time"}
                   </TableCell>
                   <TableCell>{activity.duration}</TableCell>
@@ -311,105 +331,6 @@ const MyActivities = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      {editingActivity && (
-        <form
-          onSubmit={handleUpdate}
-          style={{ marginTop: "20px" }}
-          ref={formRef}
-        >
-          <TextField
-            label="Name"
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-            fullWidth
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            label="Price"
-            name="price"
-            value={formData.price}
-            onChange={handleInputChange}
-            fullWidth
-            sx={{ mb: 2 }}
-            type="number"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={formData.isOpen}
-                onChange={handleCheckboxChange}
-                name="isOpen"
-              />
-            }
-            label="Is open"
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            label="Discount"
-            name="specialDiscount"
-            value={formData.specialDiscount}
-            onChange={handleInputChange}
-            fullWidth
-            sx={{ mb: 2 }}
-            type="number"
-          />
-          <TextField
-            label="Date"
-            name="date"
-            value={formData.date}
-            onChange={handleInputChange}
-            fullWidth
-            sx={{ mb: 2 }}
-            type="datetime-local"
-          />
-          <TextField
-            label="Category"
-            name="category"
-            value={formData.category}
-            onChange={handleInputChange}
-            fullWidth
-            sx={{ mb: 2 }}
-          />
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              flexWrap: "wrap",
-            }}
-          >
-            {allTags.map((element) => {
-              return (
-                <StandAloneToggleButton
-                  key={element._id}
-                  name={element.name}
-                  tags={formData.tags}
-                />
-              );
-            })}
-          </div>
-          <TextField
-            label="Duration"
-            name="duration"
-            value={formData.duration}
-            onChange={handleInputChange}
-            fullWidth
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            label="Location"
-            name="location"
-            value={formData.location}
-            onChange={handleInputChange}
-            fullWidth
-            sx={{ mb: 2 }}
-          />
-          <Button type="submit" variant="contained" className="blackhover">
-            Update Activity
-          </Button>
-        </form>
-      )}
-
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>

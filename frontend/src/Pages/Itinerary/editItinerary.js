@@ -365,6 +365,7 @@ function EditItinerary() {
               <label key={tag.name}>
                 <input
                   type="checkbox"
+                  style={{ color: "#ff9933" }}
                   value={tag.name}
                   checked={selectedTags.includes(tag.name)}
                   onChange={() => handleCheckboxChange(tag.name)}
