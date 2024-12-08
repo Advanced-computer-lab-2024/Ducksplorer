@@ -4,16 +4,16 @@ const { viewMyItineraries, filterMyItineraries } = require("../Controllers/Repor
 
 const router = express.Router();
 
-router.get("/viewaccount/:userName", getTourGuideDetails);
+router.get("/viewaccount/:userName", getTourGuideDetails);//done
 
-router.get("/report/:tourGuideName", viewMyItineraries);
+router.get("/report/:tourGuideName", viewMyItineraries);//done
 
-router.get("/filterReport/:tourGuideName", filterMyItineraries);
+router.get("/filterReport/:tourGuideName", filterMyItineraries);//done
 
-router.put("/editaccount", updateTourGuideDetails);
+router.put("/editaccount", updateTourGuideDetails);//done but not tested
 
-router.post('/removeFileUrl', removeFileUrl);
+router.post('/removeFileUrl', removeFileUrl);//done but not tested
 
-router.delete("/deleteMyTourGuideAccount/:userName", deleteMyTourGuideAccount);
+router.delete("/deleteMyTourGuideAccount/:userName", deleteMyTourGuideAccount);//done
 
 module.exports = router;

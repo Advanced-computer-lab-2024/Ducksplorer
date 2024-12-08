@@ -4,14 +4,16 @@ const { viewMyActivities, filterMyActivities } = require('../Controllers/Reports
 
 const router = express.Router();
 
-router.get("/viewaccount/:userName", getAdvertiserDetails);
+router.get("/viewaccount/:userName", getAdvertiserDetails); //done
 
-router.put("/editaccount", updateAdvertiserDetails);
-router.post('/removeFileUrl', removeFileUrl);
+router.put("/editaccount", updateAdvertiserDetails); //done without body
 
-router.delete("/deleteMyAdvertiserAccount/:userName", deleteMyAdvertiserAccount);
+router.post('/removeFileUrl', removeFileUrl); //done without body
 
-router.route("/report/:advertiserName").get(viewMyActivities);
-router.route("/filterReport/:advertiserName").get(filterMyActivities);
+router.delete("/deleteMyAdvertiserAccount/:userName", deleteMyAdvertiserAccount);//done
+
+router.route("/report/:advertiserName").get(viewMyActivities); //done
+
+router.route("/filterReport/:advertiserName").get(filterMyActivities);//done
 
 module.exports = router;

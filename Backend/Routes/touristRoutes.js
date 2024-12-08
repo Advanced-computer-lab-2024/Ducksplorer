@@ -64,60 +64,60 @@ const { validatePromoCode } = require("../Controllers/promoCodeController");
 const { bod } = require("../Controllers/touristAccount");
 const router = express.Router();
 
-router.get("/getproducts", getProducts);
-router.get("/findProduct", findProduct);
-router.put("/sortProducts", sortProducts);
-router.get("/filterProducts", filterProducts);
-router.patch("/loyalty/:price/:userName", receiveLoyaltyPoints);
-router.patch("/redeemPoints/:userName", redeemPoints);
-router.get("/myPastBookings", viewMyPastBookings);
-router.get("/getLevel/:userName", getLevel);
-router.route("/booking").get(getMyBookings);
-router.route("/booking/:user").post(createBooking).patch(cancelMyBooking);
-router.route("/myUpcomingBookings").get(viewMyUpcomingBookings);
-router.route("/viewDesiredActivity/:activityId/:user").get(viewDesiredActivity);
+router.get("/getproducts", getProducts);//done
+router.get("/findProduct", findProduct);//done
+router.put("/sortProducts", sortProducts);//done
+router.get("/filterProducts", filterProducts);//done
+router.patch("/loyalty/:price/:userName", receiveLoyaltyPoints);//done but not tested
+router.patch("/redeemPoints/:userName", redeemPoints);//done but not tested
+router.get("/myPastBookings", viewMyPastBookings);//done
+router.get("/getLevel/:userName", getLevel);//done
+router.route("/booking").get(getMyBookings);//done
+router.route("/booking/:user").post(createBooking).patch(cancelMyBooking);//done but not tested
+router.route("/myUpcomingBookings").get(viewMyUpcomingBookings);//done
+router.route("/viewDesiredActivity/:activityId/:user").get(viewDesiredActivity);//done
 router
   .route("/viewDesiredItinerary/:itineraryId/:user")
-  .get(viewDesiredItinerary);
-router.patch("/payWallet/:userName", payWallet);
-router.patch("/payVisa/:userName", payVisa);
-router.get("/balance/:userName", getWalletBalance);
+  .get(viewDesiredItinerary);//done
+router.patch("/payWallet/:userName", payWallet);//done but not tested
+router.patch("/payVisa/:userName", payVisa);//done but not tested
+router.get("/balance/:userName", getWalletBalance);//done
 
 //view cart
-router.get("/myCart/:userName", viewCart);
+router.get("/myCart/:userName", viewCart);//done
 //add to cart
-router.put("/cart", addProductToCart);
+router.put("/cart", addProductToCart);//done but not tested
 //remove from cart
-router.delete("/cart", removeProductFromCart);
+router.delete("/cart", removeProductFromCart); //done but not tested
 //edit the product quantity in the product
-router.patch("/cart", updateProductQuantity);
+router.patch("/cart", updateProductQuantity);//done but not tested
 //add purchases from cart
-router.put("/addPurchase", addPurchase2);
+router.put("/addPurchase", addPurchase2);//done but not tested
 
-router.delete("/emptyCart", emptyCart);
+router.delete("/emptyCart", emptyCart);//done but not tested 
 
 //router.patch("/loyalty/:name/:userName",receiveLoyaltyPoints);
-router.get("/myPurchases/:buyer", getMyPurchases);
+router.get("/myPurchases/:buyer", getMyPurchases);//done
 // router.get("/myOrder", getMyOrder);
-router.get("/groupedPurchases/:buyer", getGroupedPurchases);
-router.get("/orderDetails/:orderNumber", getPurchasesByOrderNumber);
-router.get("/getOrderProducts/:productId", getOrderProducts);
-router.delete("/cancelOrder/:username/:orderNumber", cancelOrder);
+router.get("/groupedPurchases/:buyer", getGroupedPurchases);//done
+router.get("/orderDetails/:orderNumber", getPurchasesByOrderNumber);//done
+router.get("/getOrderProducts/:productId", getOrderProducts);//done
+router.delete("/cancelOrder/:username/:orderNumber", cancelOrder);//done but not tested
 
 router.get("/myOrders/:buyer", getMyOrders);
 
-router.put("/updatePurchases/:buyer", updatePurchase);
-router.put("/updateProducts/:id", touristUpdateProductRating); //done
-router.get("/getRating/:id/rating/:buyer", getProductRating);
-router.put("/addReview/:id", touristUpdateProductReview);
+router.put("/updatePurchases/:buyer", updatePurchase);//done but not tested
+router.put("/updateProducts/:id", touristUpdateProductRating);//done but not tested
+router.get("/getRating/:id/rating/:buyer", getProductRating);//done
+router.put("/addReview/:id", touristUpdateProductReview);//done but not tested
 
-router.get("/myWishlist/:username", getMyWishlist);
-router.put("/updateWishlist/:username", updateWishlist);
-router.put("/removeFromWishlist/:username/:productId", removeFromWishlist);
+router.get("/myWishlist/:username", getMyWishlist);//done
+router.put("/updateWishlist/:username", updateWishlist);//done but not tested
+router.put("/removeFromWishlist/:username/:productId", removeFromWishlist); // done but not tested
 
-router.post("/validCode", validatePromoCode);
+router.post("/validCode", validatePromoCode); //done but not tested
 
-router.get("/addresses/:userName", getAddresses);
-router.post("/newAddress/:userName", addAddress);
+router.get("/addresses/:userName", getAddresses);//done
+router.post("/newAddress/:userName", addAddress); //done but not tested
 
 module.exports = router;
