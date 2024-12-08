@@ -150,7 +150,6 @@ const login = async (req, res) => {
       res.status(200).json({
         _id: user._id,
         username: user.userName,
-        dob: tourist.DOB,
         role: user.role,
         email: user.role === "Tourist" ? tourist.email : " ",
         token: jwt.sign({ userName: user.userName }, process.env.JWT_SECRET, {
