@@ -42,7 +42,7 @@ export default function ProductCard({ product,
   showAverageRatingNo, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
   removeProductFromWishlist,
   hideWishlist = true,
-  showPurchase, showNotify }) {
+  showPurchase}) {
   const navigate = useNavigate();
   const [notified,setNotified] = useState(false);
   const [productInCart, setProductInCArt] = useState(false);

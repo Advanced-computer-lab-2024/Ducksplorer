@@ -284,7 +284,6 @@ const TouristAllProducts = () => {
                 <NewProductCard
                   key={product._id}
                   product={product}
-                  showNotify={false}
                   showAddToCart={true}
                   hideWishlist={false}
                 />
