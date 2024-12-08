@@ -14,6 +14,7 @@ const CartPage = () => {
   const [loading, setLoading] = useState(true);
   const [totalPrice, setTotalPrice] = useState(0); // State to store total pric
   const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false); // Controls the modal visibility
+  const [renderTrigger, setRenderTrigger] = useState(false);
   const userJson = localStorage.getItem("user"); // Get the logged-in user's details
   const user = JSON.parse(userJson);
   const userName = user.username;
@@ -52,7 +53,7 @@ const CartPage = () => {
       localStorage.setItem("cartId", cartProducts._id);
       localStorage.setItem("type", type);
 
-      navigate("/payment", { state:  paymentData });
+      navigate("/payment", { state: paymentData });
 
       // for (const item of cartProducts) {
       //   // Extract details
@@ -94,10 +95,13 @@ const CartPage = () => {
       }, 0);
       setTotalPrice(total); // Update the total price state
     };
-
     calculateTotalPrice();
     localStorage.setItem("totalPrice", totalPrice);
   }, [cartProducts]);
+
+  const handleConfirm = () => {
+    setRenderTrigger((prev) => !prev);
+  };
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -128,7 +132,7 @@ const CartPage = () => {
     };
 
     fetchCart();
-  }, [userName]);
+  }, [userName, renderTrigger]);
 
   if (loading) {
     return (
@@ -160,7 +164,13 @@ const CartPage = () => {
         >
           {cartProducts.length > 0
             ? cartProducts.map((item, index) => (
-                <NewProductCard product={item.product} />
+                <NewProductCard
+                  product={item.product}
+                  showQuantity={true}
+                  inCart={true}
+                  quantityInCart={item.quantity}
+                  onConfirm={handleConfirm}
+                />
               ))
             : null}
         </div>
@@ -203,7 +213,9 @@ const CartPage = () => {
             <Button
               type="primary"
               size="large"
-              onClick={() => setIsCheckoutModalVisible(true)}
+              onClick={() => {
+                setIsCheckoutModalVisible(true);
+              }}
               style={{
                 backgroundColor: "#ff9933", // Ensure visible background color
                 color: "#fff",

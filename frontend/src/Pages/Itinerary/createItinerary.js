@@ -232,7 +232,8 @@ const AddItinerary = () => {
         <div style={styles.rightSection}>
           <Paper
             sx={{
-              height: "100%",
+              marginTop: "8vh",
+              height: "99%",
               width: "100%",
               backgroundColor: "rgba(255,255,255,0.65)",
             }}
@@ -613,6 +614,7 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(255,255,255,0.95)",
+    paddingBottom: "20px", // Add padding to the bottom
   },
   welcomeText: {
     fontSize: "3rem",
@@ -679,6 +681,7 @@ const styles = {
     borderRadius: "8px",
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
     marginTop: "16px",
+    marginBottom: "20px", // Add margin to the bottom
   },
   submitButton: {
     width: "50%",
