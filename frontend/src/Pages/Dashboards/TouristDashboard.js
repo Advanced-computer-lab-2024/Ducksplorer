@@ -57,7 +57,7 @@ const TouristDashboard = () => {
           transition: "opacity 1s ease-out", // Smooth fade-out
         }}
       >
-        <source src="/planevid.mp4" type="video/mp4" />
+        <source src="/planevidd.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
@@ -104,7 +104,6 @@ const TouristDashboard = () => {
       <CssBaseline />
       <TouristNavBar />
       <Box sx={{ display: "flex" }}>
-        <TouristSidebar />
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <Outlet />
         </Box>

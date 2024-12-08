@@ -24,11 +24,12 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { message } from "antd";
-import Sidebar from "../../Components/Sidebars/Sidebar";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
-import AdminNavbar from "../../Components/TopNav/Adminnavbar";
+import AdminNavbar from "../../Components/NavBars/AdminNavBar";
+import DuckLoading from "../../Components/Loading/duckLoading";
+import NavigationTabs from "../../Components/NavigationTabs.js";
 
 const ApproveUsers = () => {
   const [pendingUsers, setPendingUsers] = useState([]);
@@ -40,6 +41,8 @@ const ApproveUsers = () => {
     action: null,
     userName: "",
   });
+  const tabs = ["Approve Pending Users", "Delete Users"];
+  const paths = ["/pendingusers", "/deleteusers"];
 
   useEffect(() => {
     setLoading(true)
@@ -134,20 +137,9 @@ const ApproveUsers = () => {
 
   if (loading) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100vh", // Full screen height
-        }}
-      >
-        <CircularProgress size={60} thickness={4} />
-        <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
-          Loading pending users...
-        </Typography>
-      </Box>
+      <div>
+        <DuckLoading />
+      </div>
     );
   }
 
@@ -164,8 +156,11 @@ const ApproveUsers = () => {
         marginLeft: "5vw",
       }}
     >
-      <Sidebar />
       <AdminNavbar />
+
+      <div>
+        <NavigationTabs tabNames={tabs} paths={paths} />
+      </div>
 
       <div
         style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}

@@ -199,15 +199,15 @@ const RUDActivity = () => {
                   <TableCell>
                     {activity.date
                       ? (() => {
-                          const dateObj = new Date(activity.date);
-                          const date = dateObj.toISOString().split("T")[0];
-                          const time = dateObj.toTimeString().split(" ")[0];
-                          return (
-                            <div>
-                              {date} at {time}
-                            </div>
-                          );
-                        })()
+                        const dateObj = new Date(activity.date);
+                        const date = dateObj.toISOString().split("T")[0];
+                        const time = dateObj.toTimeString().split(" ")[0];
+                        return (
+                          <div>
+                            {date} at {time}
+                          </div>
+                        );
+                      })()
                       : "No available date and time"}
                   </TableCell>
                   <TableCell>{activity.duration}</TableCell>
@@ -297,6 +297,7 @@ const RUDActivity = () => {
             <FormControlLabel
               control={
                 <Checkbox
+                  style={{ color: "#ff9933" }}
                   checked={formData.isOpen}
                   onChange={handleCheckboxChange}
                   name="isOpen"

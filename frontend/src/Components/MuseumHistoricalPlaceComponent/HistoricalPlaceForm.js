@@ -1,8 +1,8 @@
-// This file is a component which we import inside the createHistoricalPlace page
 import React, { useState, useEffect } from "react";
 import { message, Select } from "antd";
 import Input from "@mui/joy/Input"; // Import Input from MUI
 import Button from "@mui/joy/Button"; // Import Button from MUI
+import Typography from "@mui/material/Typography";
 
 function HistoricalPlaceForm() {
   const [description, setDescription] = useState("");
@@ -15,11 +15,8 @@ function HistoricalPlaceForm() {
   const [HistoricalPlaceName, setHistoricalPlaceName] = useState("");
   const [HistoricalPlaceCategory, setHistoricalPlaceCategory] = useState("");
   const [tags, setTags] = useState([]);
-  // const [createdBy, setCreatedBy] = useState(''); //np longer needed because we take the user logged in
   const [error, setError] = useState(null);
-  const [historicalPlaceTagsOptions, setHistoricalPlaceTagsOptions] = useState(
-    []
-  );
+  const [historicalPlaceTagsOptions, setHistoricalPlaceTagsOptions] = useState([]);
 
   // Fetch tags from backend
   useEffect(() => {
@@ -39,7 +36,7 @@ function HistoricalPlaceForm() {
     fetchTags();
   }, []);
 
-  //Responisble for taking the data Inputted in the form and sending to the method of the backend which will create a new historical place
+  // Responsible for taking the data Inputted in the form and sending to the method of the backend which will create a new historical place
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
@@ -86,106 +83,164 @@ function HistoricalPlaceForm() {
   };
 
   return (
-    <div style={{ width: "50vw" }}>
-      <form
-        className="create"
-        onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column" }}
-      >
-        <h2
-          style={{ textAlign: "center", fontSize: "50px" }}
-          className="oswald-Titles"
-        >
-          Add a new Historical Place
-        </h2>
-        <label>Historical Place Description:</label>
-        <Input
-          type="text"
-          onChange={(e) => setDescription(e.target.value)}
-          value={description}
-          required
-        />
-        <label>Pictures (URL):</label>
-        <Input
-          type="text"
-          onChange={(e) => setPictures(e.target.value)}
-          value={pictures}
-          required
-        />{" "}
-        {/* Changed to accept URL */}
-        <label>Historical Place Location:</label>
-        <Input
-          type="text"
-          onChange={(e) => setLocation(e.target.value)}
-          value={location}
-          required
-        />
-        <label>Historical Place Opening Time:</label>
-        <Input
-          type="number"
-          onChange={(e) => setOpeningTime(e.target.value)}
-          value={openingTime}
-          required
-        />
-        <label>Historical Place Closing Time:</label>
-        <Input
-          type="number"
-          onChange={(e) => setClosingTime(e.target.value)}
-          value={closingTime}
-          required
-        />
-        <label>Historical Place Ticket Prices:</label>
-        <Input
-          type="number"
-          onChange={(e) => setTicketPrices(e.target.value)}
-          value={ticketPrices}
-          required
-        />
-        <label>MuseHistorical Placeum Visit Date:</label>
-        <Input
-          type="date"
-          onChange={(e) => setHistoricalPlaceDate(e.target.value)}
-          value={HistoricalPlaceDate}
-          required
-        />
-        <label>Historical Place Name:</label>
-        <Input
-          type="text"
-          onChange={(e) => setHistoricalPlaceName(e.target.value)}
-          value={HistoricalPlaceName}
-          required
-        />
-        <label>Historical Place Category:</label>
-        <Input
-          type="text"
-          onChange={(e) => setHistoricalPlaceCategory(e.target.value)}
-          value={HistoricalPlaceCategory}
-          required
-        />
-        <label>Tags:</label>
-        <Select
-          mode="multiple"
-          allowClear
-          style={{ width: "100%" }}
-          placeholder="Select tags"
-          value={tags}
-          onChange={(selectedTags) => setTags(selectedTags)} // Update tags state
-        >
-          {historicalPlaceTagsOptions.map((tag) => (
-            <Select.Option key={tag._id} value={tag.historicalPlaceTag}>
-              {tag.historicalPlaceTag}
-            </Select.Option>
-          ))}
-        </Select>
-        {/* <label>Created By:</label>
-            <Input type="text" onChange={(e) => setCreatedBy(e.target.value)} value={createdBy} /> */}
-        <Button type="submit" sx={{ mt: 3 }}>
-          Add a Historical Place
-        </Button>
-        {error && <div className="error">{error}</div>}
-      </form>
-    </div>
+    <>
+      <div style={styles.container}>
+        <div style={styles.leftSection}>
+          <Typography variant="h3" className="duckTitle" style={styles.welcomeText}>
+            Add a new historical place
+          </Typography>
+        </div>
+        <div style={styles.rightSection}>
+          <div style={{ width: "50vw" }}>
+            <Typography
+              variant="h4"
+              style={{ textAlign: "center", marginBottom: "60px", marginTop: "40px" }}
+              class="bigTitle"
+            >
+              Add a Historical Place
+            </Typography>
+            <form
+              className="create"
+              onSubmit={handleSubmit}
+              style={{ display: "flex", flexDirection: "column", alignItems: "center", rowGap: "20px" }}
+            >
+              <Input
+                placeholder="Historical Place Description"
+                type="text"
+                onChange={(e) => setDescription(e.target.value)}
+                value={description}
+                required
+                sx={{ width: "80%" }}
+              />
+              <Input
+                placeholder="Pictures (URL)"
+                type="text"
+                onChange={(e) => setPictures(e.target.value)}
+                value={pictures}
+                required
+                sx={{ width: "80%" }}
+              />
+              <Input
+                placeholder="Historical Place Location"
+                type="text"
+                onChange={(e) => setLocation(e.target.value)}
+                value={location}
+                required
+                sx={{ width: "80%" }}
+              />
+              <Input
+                placeholder="Historical Place Opening Time"
+                type="number"
+                onChange={(e) => setOpeningTime(e.target.value)}
+                value={openingTime}
+                required
+                sx={{ width: "80%" }}
+              />
+              <Input
+                placeholder="Historical Place Closing Time"
+                type="number"
+                onChange={(e) => setClosingTime(e.target.value)}
+                value={closingTime}
+                required
+                sx={{ width: "80%" }}
+              />
+              <Input
+                placeholder="Historical Place Ticket Prices"
+                type="number"
+                onChange={(e) => setTicketPrices(e.target.value)}
+                value={ticketPrices}
+                required
+                sx={{ width: "80%" }}
+              />
+              <Input
+                placeholder="Historical Place Visit Date"
+                type="date"
+                onChange={(e) => setHistoricalPlaceDate(e.target.value)}
+                value={HistoricalPlaceDate}
+                required
+                sx={{ width: "80%" }}
+              />
+              <Input
+                placeholder="Historical Place Name"
+                type="text"
+                onChange={(e) => setHistoricalPlaceName(e.target.value)}
+                value={HistoricalPlaceName}
+                required
+                sx={{ width: "80%" }}
+              />
+              <Input
+                placeholder="Historical Place Category"
+                type="text"
+                onChange={(e) => setHistoricalPlaceCategory(e.target.value)}
+                value={HistoricalPlaceCategory}
+                required
+                sx={{ width: "80%" }}
+              />
+              <Select
+                mode="multiple"
+                allowClear
+                style={{ width: "80%" }}
+                placeholder="Select Historical Place tags"
+                value={tags}
+                onChange={(selectedTags) => setTags(selectedTags)} // Update tags state
+              >
+                {historicalPlaceTagsOptions.map((tag) => (
+                  <Select.Option key={tag._id} value={tag.historicalPlaceTag}>
+                    {tag.historicalPlaceTag}
+                  </Select.Option>
+                ))}
+              </Select>
+              <Button
+                style={{ mt: 3, backgroundColor: "#ff9933", width: "80%" }}
+                type="submit"
+              >
+                Add a Historical Place
+              </Button>
+              {error && <div className="error">{error}</div>}
+            </form>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
+
+const styles = {
+  container: {
+    display: "flex",
+    height: "120vh",
+    width: "100vw",
+    background: 'url("/duckHistorical.jpg") no-repeat left center fixed',
+    backgroundSize: "cover",
+    overflowY: "visible",
+  },
+  leftSection: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    color: "#fff",
+    padding: "20px",
+  },
+  rightSection: {
+    flex: 0.7,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.95)",
+  },
+  welcomeText: {
+    fontSize: "3rem",
+    fontWeight: "bold",
+    marginBottom: "20px",
+    position: "fixed",
+  },
+  descriptionText: {
+    fontSize: "1.5rem",
+    textAlign: "center",
+  },
+};
 
 export default HistoricalPlaceForm;

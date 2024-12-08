@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TextField,
   Button,
@@ -20,6 +20,7 @@ import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { format } from "date-fns";
+import DuckLoading from "../Loading/duckLoading";
 
 function isDatePassed(enteredDate) {
   const currentDate = new Date(); // Get the current date and time
@@ -381,6 +382,21 @@ const TransportationBookingForm = () => {
       setStartDate(formattedDate);
     }
   };
+  
+  useEffect(() => {
+      document.body.style.overflow = 'hidden';
+        return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
 
   const handleSearch = async () => {
     if (validateFields()) {
@@ -432,14 +448,13 @@ const TransportationBookingForm = () => {
     }
   };
 
+  
+
   return (
     <div style={styles.container}>
       <div style={styles.leftSection}>
-        <Typography variant="h3" style={styles.welcomeText}>
+        <Typography variant="h3" className="duckTitle" style={styles.welcomeText}>
           Transportation Booking
-        </Typography>
-        <Typography variant="h5" style={styles.descriptionText}>
-          Book your transportation with ease.
         </Typography>
       </div>
       <div style={styles.rightSection}>
@@ -447,7 +462,7 @@ const TransportationBookingForm = () => {
           <Box sx={{ mt: 4 }}>
             <Typography
               variant="h4"
-              style={{ textAlign: "center" ,  marginBottom: "60px"}}
+              style={{ textAlign: "center", marginBottom: "60px" }}
               gutterBottom
             >
               Transportation Booking
@@ -532,7 +547,11 @@ const TransportationBookingForm = () => {
                   fullWidth
                   disabled={loading}
                 >
-                  {loading ? <CircularProgress sx={{ color: "#ff9933" }} size={24} /> : "Search"}
+                  {loading ? (
+                    <CircularProgress sx={{ color: "#ff9933" }} size={24} />
+                  ) : (
+                    "Search"
+                  )}
                 </Button>
               </Grid>
             </Grid>
@@ -546,10 +565,10 @@ const TransportationBookingForm = () => {
 const styles = {
   container: {
     display: "flex",
-    height: "100vh",
+    height: "120vh",
     width: "100vw",
     background: 'url("/duckBus.jpg") no-repeat left center fixed',
-    backgroundSize:"cover"
+    backgroundSize: "cover",
   },
   leftSection: {
     flex: 1,
@@ -579,6 +598,7 @@ const styles = {
     fontSize: "3rem",
     fontWeight: "bold",
     marginBottom: "20px",
+    position: "fixed",
   },
   descriptionText: {
     fontSize: "1.5rem",

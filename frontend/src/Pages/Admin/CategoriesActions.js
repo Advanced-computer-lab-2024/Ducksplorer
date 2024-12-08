@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { message } from "antd";
-import AdminNavbar from "../../Components/TopNav/Adminnavbar.js";
+import AdminNavbar from "../../Components/NavBars/AdminNavBar";
 import {
   TextField,
   IconButton,
@@ -25,16 +25,25 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
-import Sidebar from "../../Components/Sidebars/Sidebar.js";
+import { useNavigate } from "react-router-dom";
+import NavigationTabs from "../../Components/NavigationTabs";
 
 const DeleteCategory = () => {
   const [categories, setCategories] = useState([]);
   const [open, setOpen] = useState(false);
-  const [selectedCategory, setselectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("Tags");
   const [showTextField, setShowTextField] = useState(false);
   const [newCategory, setNewCategory] = useState("");
   const [editingCategory, setEditingCategory] = useState(null);
   const [editedCategoryName, setEditedCategoryName] = useState("");
+
+  const tabs = [
+    "Tags",
+    "Categories",
+  ];
+
+  const paths = ["/preferenceTags", "/categoriesActions"];
+
 
   const handleAddCategoryClick = () => {
     setShowTextField(!showTextField);
@@ -129,13 +138,13 @@ const DeleteCategory = () => {
   };
 
   const handleClickOpen = (category) => {
-    setselectedCategory(category);
+    setSelectedCategory(category);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setselectedCategory(null);
+    setSelectedCategory(null);
   };
 
   const handleConfirmDelete = () => {
@@ -157,13 +166,16 @@ const DeleteCategory = () => {
     >
       {/* Navbar */}
       <AdminNavbar />
-      <Sidebar />
 
       {/* Main Content */}
       <div
         style={{ marginBottom: "40px", height: "100vh", paddingBottom: "10%" }}
       >
         <div style={{ overflowY: "visible", height: "auto" }}>
+          <div>
+            <NavigationTabs tabNames={tabs} paths={paths} />
+          </div>
+          <br></br>
           <Typography
             variant="h2"
             sx={{ textAlign: "center", fontWeight: "bold" }}
@@ -197,11 +209,13 @@ const DeleteCategory = () => {
               <Button
                 variant="contained"
                 onClick={() => handleAdd(newCategory)}
+                className="blackhover"
                 sx={{
                   borderRadius: "8px",
                   padding: "10px 24px",
                   textTransform: "none",
                   fontWeight: "bold",
+                  color: "white"
                 }}
               >
                 Add
@@ -222,20 +236,15 @@ const DeleteCategory = () => {
             <Table>
               <TableHead
               >
-                <TableRow>
+                <TableRow >
                   <TableCell
-                    sx={{ fontWeight: "bold", fontSize: "16px" }}
-                  >
+                    sx={{
+                      fontWeight: "bold", fontSize: "16px", textAlign: "center", verticalAlign: "middle"
+                    }}>
                     Category
                   </TableCell>
                   <TableCell
-                    sx={{ fontWeight: "bold", fontSize: "16px" }}
-                  >
-                    Activities
-                  </TableCell>
-                  <TableCell
-                    sx={{ fontWeight: "bold", fontSize: "16px" }}
-                  >
+                    sx={{ fontWeight: "bold", fontSize: "16px", textAlign: "center", verticalAlign: "middle" }}>
                     Actions
                   </TableCell>
                 </TableRow>
@@ -245,7 +254,7 @@ const DeleteCategory = () => {
                   <TableRow
                     key={category._id}
                   >
-                    <TableCell>
+                    <TableCell style={{ textAlign: "center", verticalAlign: "middle" }}>
                       {editingCategory && editingCategory.name === category.name ? (
                         <Box sx={{ display: "flex", alignItems: "center" }}>
                           <TextField
@@ -278,8 +287,7 @@ const DeleteCategory = () => {
                         category.name
                       )}
                     </TableCell>
-                    <TableCell>{category.activities.join(", ")}</TableCell>
-                    <TableCell>
+                    <TableCell style={{ textAlign: "center", verticalAlign: "middle" }}>
                       <Tooltip title="Delete Category">
                         <IconButton
                           color="error"
@@ -379,7 +387,7 @@ const DeleteCategory = () => {
           </TableContainer>
         </div>
       </div>
-    </Box>
+    </Box >
 
   );
 };

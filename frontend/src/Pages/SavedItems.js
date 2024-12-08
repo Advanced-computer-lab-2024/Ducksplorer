@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { message } from "antd";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import DuckLoading from "../Components/Loading/duckLoading.js";
+import Error404 from "../Components/Error404.js";
+
 import {
   Typography,
   Box,
@@ -16,23 +19,20 @@ import {
   Rating,
   Tooltip,
   CircularProgress,
-  Grid
+  Grid,
 } from "@mui/material";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
-import CurrencyConvertor from "../Components/CurrencyConvertor.js";
-import MyChips from "../Components/MyChips.js";
+import MyTabs from "../Components/MyTabs.js";
 import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
 import TouristNavBar from "../Components/TouristNavBar.js";
-import TouristSidebar from "../Components/Sidebars/TouristSidebar.js";
 import ItineraryCard from "../Components/itineraryCard.js";
 import ActivityCard from "../Components/activityCard.js";
+import Help from "../Components/HelpIcon.js";
 
 function MySavedItems() {
   const { id } = useParams();
 
-  const chipNames = ["All", "Itineraries", "Activities"];
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const tabNames = ["All", "Itineraries", "Activities"];
+  const [selectedTab, setSelectedTab] = useState("All");
 
   const [itineraries, setItineraries] = useState([]);
 
@@ -51,13 +51,13 @@ function MySavedItems() {
   const [exchangeRates, setExchangeRates] = useState({});
   const [currency, setCurrency] = useState("EGP");
 
+  const errorMessage =
+    "The savedItems you are looking for might be removed or is temporarily unavailable";
+  const backMessage = "BACK TO TOURIST DASHBOARD";
+
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
-  };
-
-  const handleChipClick = (chipName) => {
-    setSelectedCategory(chipName);
   };
 
   useEffect(() => {
@@ -90,8 +90,7 @@ function MySavedItems() {
         }
       } catch (error) {
         console.error("There was an error fetching the itineraries!", error);
-      }
-      finally {
+      } finally {
         setLoadingItinerary(false);
       }
     };
@@ -126,8 +125,7 @@ function MySavedItems() {
         }
       } catch (error) {
         console.error("There was an error fetching the activities!", error);
-      }
-      finally {
+      } finally {
         setLoadingActivity(false);
       }
     };
@@ -148,162 +146,173 @@ function MySavedItems() {
 
   const requestNotification = async (eventId) => {
     try {
-      const response = await axios.post('http://localhost:8000/notification/request', {
-        user: username,
-        eventId: eventId,
-      });
+      const response = await axios.post(
+        "http://localhost:8000/notification/request",
+        {
+          user: username,
+          eventId: eventId,
+        }
+      );
 
       if (response.status === 201) {
-        message.success('You will be notified when this event starts accepting bookings.');
+        message.success(
+          "You will be notified when this event starts accepting bookings."
+        );
       } else {
         message.error(response.data.message);
       }
     } catch (error) {
-      console.error('Error requesting notification:', error);
-      message.error('Failed to request notification.');
+      console.error("Error requesting notification:", error);
+      message.error("Failed to request notification.");
     }
   };
 
-  if (loadingActivity) {
+  if (loadingActivity || loadingItinerary) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100vh", // Full screen height
-        }}
-      >
-        <CircularProgress size={60} thickness={4} />
-        <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
-          Loading saved activities...
-        </Typography>
-      </Box>
+      <div>
+        <DuckLoading />
+      </div>
     );
   }
 
-  if (loadingItinerary) {
+  if (
+    (!Array.isArray(itineraries) && !Array.isArray(activities)) ||
+    (itineraries.length === 0 && activities.length === 0)
+  ) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100vh", // Full screen height
-        }}
-      >
-        <CircularProgress size={60} thickness={4} />
-        <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
-          Loading saved itineraries...
-        </Typography>
-      </Box>
+      <>
+        <TouristNavBar />
+        <Error404
+          errorMessage={errorMessage}
+          backMessage={backMessage}
+          route="/touristDashboard"
+        />
+      </>
     );
-  }
-
-  if ((!Array.isArray(itineraries) && !Array.isArray(activities)) || (itineraries.length === 0 && activities.length === 0)) {
-    return <p>No saved data available.</p>;
   }
 
   return (
     <>
       <TouristNavBar />
-      {/* <TouristSidebar /> */}
-      {/* <Box
-        sx={{
-          padding: "20px",
-          maxWidth: "1200px",
-          margin: "auto",
-          display: "flex",
-          flexDirection: "column",
+      <div
+        style={{
           overflowY: "visible",
           height: "100vh",
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
         }}
-      > */}
-      <div style={{overflowY: 'visible', height:'100vh', width:'100%', display: 'flex', flexDirection: 'column'}}>
+      >
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Typography variant="h4" sx={{fontFamily: "'Roboto', sans-serif", color: "black"}}>Saved</Typography>
+          <Typography
+            variant="h4"
+            className="bigTitle"
+            sx={{ color: "black", fontWeight: 'bold' }}
+          >
+            Saved
+          </Typography>
         </Box>
 
-        <MyChips chipNames={chipNames} onChipClick={handleChipClick} />
+        <MyTabs tabNames={tabNames} onTabClick={(tabName) => setSelectedTab(tabName)} />
 
-        {(selectedCategory === "Itineraries" ||
-          selectedCategory === "All") && (
-            <>
-              {/* <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+        {(selectedTab === "Itineraries" || selectedTab === "All") && (
+          <>
+            {/* <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
                 <Typography variant="h4">Itineraries</Typography>
               </Box> */}
-              <div style={{ flex: 1 }}>
+            <div style={{ flex: 1 }}>
               {itineraries.length > 0 ? (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: "24px", // Adjust the gap between items as needed
-              paddingBottom: 24,
-              paddingTop: 24
-            }}
-          >
-            {
-              itineraries.map((itinerary) =>
-                itinerary.flag === false &&
-                  itinerary.isDeactivated === false &&
-                  itinerary.tourGuideDeleted === false &&
-                  itinerary.deletedItinerary === false &&
-                  itinerary.saved.user === username &&
-                  itinerary.saved.isSaved === true ? (
-                  <ItineraryCard itinerary={itinerary} onRemove={handleRemoveItinerary} showNotify={true}/>
-                ) : null
-              ) // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists
-            }
-          </div>
-        ) : (
-          <Typography variant="body1" style={{ marginTop: "20px" }}>
-            No itineraries found.
-          </Typography>
-        )}
-              </div>
-            </>
-          )}
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(3, 1fr)",
+                    gap: "24px", // Adjust the gap between items as needed
+                    paddingBottom: 24,
+                    paddingTop: 24,
+                  }}
+                >
+                  {itineraries.map((itinerary) => {
+                    const isSavedByUser = itinerary.saved.some(
+                      (entry) =>
+                        entry.user === username && entry.isSaved === true
+                    );
 
-        {(selectedCategory === "Activities" ||
-          selectedCategory === "All") && (
-            <>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  mb: 3,
-                  marginTop: "20px",
-                }}
-              >
-                {/* <Typography variant="h4"> Activities</Typography> */}
-              </Box>
-              <Grid container spacing={4}>
-                {Array.isArray(activities) && activities.length > 0 ? (
-                  activities.map((activity) =>
-                    activity.flag === false &&
-                      activity.advertiserDeleted === false &&
-                      activity.deletedActivity === false &&
-                      activity.saved.user === username &&
-                      activity.saved.isSaved === true ? (
-                      <Grid item xs={12} sm={8} md={6} key={activity._id}>
-                        <ActivityCard activity={activity} onRemove={handleRemoveActivity} showNotify={true}/>
-                      </Grid>
-                    ) : null
-                  )
-                ) : (
-                  <Grid item xs={12}>
-                    <Typography variant="body1" color="textSecondary" align="center">
-                      No activities available
-                    </Typography>
-                  </Grid>
-                )}
-              </Grid>
-            </>
-          )}
-      {/* </Box> */}
+                    return itinerary.flag === false &&
+                      itinerary.isDeactivated === false &&
+                      itinerary.tourGuideDeleted === false &&
+                      itinerary.deletedItinerary === false &&
+                      isSavedByUser ? (
+                      <ItineraryCard
+                        itinerary={itinerary}
+                        onRemove={handleRemoveItinerary}
+                        showNotify={true}
+                      />
+                    ) : null;
+                  })}
+                </div>
+              ) : (
+                <Typography variant="body1" style={{ marginTop: "20px" }}>
+                  No itineraries found.
+                </Typography>
+              )}
+            </div>
+          </>
+        )}
+
+        {(selectedTab === "Activities" || selectedTab === "All") && (
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                mb: 3,
+                marginTop: "20px",
+              }}
+            >
+              {/* <Typography variant="h4">Activities</Typography> */}
+            </Box>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: "24px", // Adjust the gap between items as needed
+                paddingBottom: 24,
+                paddingTop: 24,
+              }}
+            >
+              {Array.isArray(activities) && activities.length > 0 ? (
+                activities.map((activity) => {
+                  const isSavedByUser =
+                    activity.saved &&
+                    activity.saved.some(
+                      (entry) =>
+                        entry.user === username && entry.isSaved === true
+                    );
+
+                  return activity.flag === false &&
+                    activity.advertiserDeleted === false &&
+                    activity.deletedActivity === false &&
+                    isSavedByUser ? (
+                    <ActivityCard
+                      activity={activity}
+                      onRemove={handleRemoveActivity}
+                      showNotify={true}
+                    />
+                  ) : null;
+                })
+              ) : (
+                <Typography
+                  variant="body1"
+                  color="textSecondary"
+                  align="center"
+                >
+                  No activities available
+                </Typography>
+              )}
+            </div>
+          </>
+        )}
+        {/* </Box> */}
       </div>
     </>
   );

@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Box, TextField, Button, Modal, Typography } from "@mui/material";
-import L from 'leaflet'; 
-import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS
+import L from "leaflet";
+import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
 
 // Set default icon URLs
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-    iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-    iconUrl: require('leaflet/dist/images/marker-icon.png'),
-    shadowUrl: require('leaflet/dist/images/marker-shadow.png')
+  iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
+  iconUrl: require("leaflet/dist/images/marker-icon.png"),
+  shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
 });
 
 const ClinicLocation = () => {
@@ -23,7 +23,9 @@ const ClinicLocation = () => {
 
   const fetchAddress = (latitude, longitude) => {
     setIsAddressLoading(true);
-    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
+    fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+    )
       .then((response) => response.json())
       .then((data) => {
         setLocationAddress(data.display_name);
@@ -34,21 +36,24 @@ const ClinicLocation = () => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    localStorage.setItem('selectedLocation', locationAddress); // Save location to localStorage
+    localStorage.setItem("selectedLocation", locationAddress); // Save location to localStorage
     setIsModalOpen(true);
-};
+  };
 
-const closeModal = () => {
+  const closeModal = () => {
     setIsModalOpen(false);
     window.location.href = "../activity/addActivity"; // Change to your desired action
-};
-
+  };
 
   useEffect(() => {
     const initialCoordinates = { lat: 30.0444, lng: 31.2357 }; // Cairo, Egypt
-    mapInstance = L.map(mapContainer.current).setView([initialCoordinates.lat, initialCoordinates.lng], 12);
+    mapInstance = L.map(mapContainer.current).setView(
+      [initialCoordinates.lat, initialCoordinates.lng],
+      12
+    );
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(mapInstance);
 
     mapInstance.on("click", function (event) {
@@ -68,10 +73,30 @@ const closeModal = () => {
   }, []);
 
   return (
-    <Box className="container3" sx={{ mt: 10, px: 5, pb: 10 }}>
-      <Typography variant="h4" gutterBottom>
-        Mark the location of your clinic on the map
-      </Typography>
+    <Box
+      className="container3"
+      sx={{
+        mt: 10,
+        px: 5,
+        pb: 10,
+        alignContent: "center",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100%",
+        }}
+      >
+        <Typography variant="h4" gutterBottom className="bigTitle">
+          Mark the location of your activity on the map
+        </Typography>
+      </Box>
       <Box
         ref={mapContainer}
         sx={{
@@ -84,10 +109,22 @@ const closeModal = () => {
 
       <form id="clinicForm" onSubmit={handleFormSubmit}>
         <div className="form-group">
-          <TextField fullWidth label="Location Address" value={locationAddress} onChange={(e) => setLocationAddress(e.target.value)} required sx={{ mb: 2 }} />
+          <TextField
+            fullWidth
+            label="Location Address"
+            value={locationAddress}
+            onChange={(e) => setLocationAddress(e.target.value)}
+            required
+            sx={{ mb: 2 }}
+          />
         </div>
-     
-        <Button type="submit" variant="contained" color="secondary" className="btn-secondary">
+
+        <Button
+          type="submit"
+          variant="contained"
+          color="secondary"
+          className="blackhover"
+        >
           Submit
         </Button>
       </form>
@@ -108,7 +145,7 @@ const closeModal = () => {
         >
           <Typography variant="h5">Success</Typography>
           <Typography>Your location has been recorded</Typography>
-          <Button onClick={closeModal} color="secondary">
+          <Button onClick={closeModal} className="blackhover" sx={{color:"white"}}>
             Close
           </Button>
         </Box>

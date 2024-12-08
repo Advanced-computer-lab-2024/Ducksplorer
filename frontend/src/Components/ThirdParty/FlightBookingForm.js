@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   Button,
@@ -15,6 +15,8 @@ import axios from "axios";
 import { message } from "antd";
 import FlightsCards from "./FlightsCards";
 import { useNavigate } from "react-router-dom";
+import DuckLoading from "../Loading/duckLoading";
+import Help from "../HelpIcon";
 const cities = [
   { label: "New York", code: "NYC", country: "USA" },
   { label: "Los Angeles", code: "LAX", country: "USA" },
@@ -88,6 +90,13 @@ const FlightBookingForm = () => {
   const [seats, setSeats] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
 
   const handleSearch = async () => {
     if (validateFields()) {
@@ -133,6 +142,13 @@ const FlightBookingForm = () => {
       message.error("Error in the Form");
     }
   };
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
+  }
 
   const validateFields = () => {
     if (!departureDate || !origin || !destination || !seats) {
@@ -151,14 +167,12 @@ const FlightBookingForm = () => {
     return true;
   };
 
+
   return (
     <div style={styles.container}>
       <div style={styles.leftSection}>
-        <Typography variant="h3" style={styles.welcomeText}>
+        <Typography variant="h3" className="duckTitle" style={styles.welcomeText}>
           Flight Booking
-        </Typography>
-        <Typography variant="h1" style={styles.descriptionText}>
-          Book your flights with ease.
         </Typography>
       </div>
       <div style={styles.rightSection}>
@@ -166,7 +180,7 @@ const FlightBookingForm = () => {
           <Box>
             <Typography
               variant="h4"
-              style={{ textAlign: "center" , marginBottom: "60px"}}
+              style={{ textAlign: "center", marginBottom: "60px" }}
             >
               Flight Booking
             </Typography>
@@ -175,7 +189,7 @@ const FlightBookingForm = () => {
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
                     label="Departure Date"
-                    sx={{ width: '100%' }}
+                    sx={{ width: "100%" }}
                     value={departureDate}
                     onChange={(newValue) => setDepartureDate(newValue)}
                     renderInput={(params) => (
@@ -222,18 +236,24 @@ const FlightBookingForm = () => {
               <Grid item xs={12}>
                 <Button
                   variant="contained"
-                  sx={{ backgroundColor: "#ff9933" , marginTop: "30px"}}
+                  sx={{ backgroundColor: "#ff9933", marginTop: "30px" }}
                   onClick={handleSearch}
                   fullWidth
                   disabled={loading}
                 >
-                  {loading ? <CircularProgress  sx={{color:"#ff9933"}}size={24} /> : "Search"}
+                  {loading ? (
+                    <CircularProgress sx={{ color: "#ff9933" }} size={24} />
+                  ) : (
+                    "Search"
+                  )}
                 </Button>
               </Grid>
             </Grid>
           </Box>
         </Container>
+        <Help />
       </div>
+      <Help />
     </div>
   );
 };
@@ -241,7 +261,7 @@ const FlightBookingForm = () => {
 const styles = {
   container: {
     display: "flex",
-    height: "100vh",
+    height: "120vh",
     width: "100vw",
     background: 'url("/duckPlane.jpg") no-repeat left center fixed',
     backgroundSize: "cover",
@@ -275,6 +295,8 @@ const styles = {
     fontSize: "3rem",
     fontWeight: "bold",
     marginBottom: "20px",
+    position: "fixed",
+
   },
   descriptionText: {
     fontSize: "1.5rem",

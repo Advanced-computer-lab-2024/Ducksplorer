@@ -5,12 +5,12 @@ const router = express.Router();
 const {
   getCityCode,
   getFlights,
-  touristBooking,
+  // touristBooking,
 } = require("../../Controllers/ThirdParty/bookings.js");
 
-router.get(`/city-and-airport-search/:city`, getCityCode);
-router.post("/flight-search", getFlights);
+router.get(`/city-and-airport-search/:city`, getCityCode); //done
+router.post("/flight-search", getFlights);//done
 
-router.put("/tourist-booking", touristBooking);
+// router.put("/tourist-booking", touristBooking);
 
 module.exports = router;

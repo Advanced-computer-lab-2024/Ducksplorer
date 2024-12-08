@@ -6,6 +6,10 @@ import {
   Typography,
   Paper,
   Avatar,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
@@ -15,12 +19,13 @@ import TouristNavBar from "../../Components/TouristNavBar.js";
 import InputAdornment from "@mui/material/InputAdornment";
 import Iconify from "../../Components/TopNav/iconify.js";
 // import ProfilePictureUpload from "../../Components/pp.js"; // Import ProfilePictureUpload component
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import StandAloneToggleButton from "../../Components/ToggleButton.js";
 import TouristCategoryDropDown from "../../Components/TouristComponents/TouristCategoryDropDown.js";
 import TagsToggleButtons from "../../Components/MuseumHistoricalPlaceComponent/TagsToggleButtons.js";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 import Help from "../../Components/HelpIcon.js";
+
 const EditProfile = () => {
   const [touristDetails, setTouristDetails] = useState({
     userName: "",
@@ -199,17 +204,45 @@ const EditProfile = () => {
     }));
   };
 
+  const [open, setOpen] = useState(false); // State for the dialog
+  const [userName, setUserName] = useState("");
+  const handleDeleteClick = () => {
+    const userJson = localStorage.getItem("user");
+    const user = JSON.parse(userJson);
+    setUserName(user?.username || "");
+    setOpen(true); // Open the confirmation dialog
+  };
+
+  const handleClose = () => {
+    setOpen(false); // Close the dialog
+  };
+
+  const navigate = useNavigate(); // Initialize the useNavigate hook
+
+  const handleDeleteAccount = async () => {
+    if (userName) {
+      try {
+        const response = await axios.delete(
+          `http://localhost:8000/touristAccount/deleteMyTouristAccount/${userName}`
+        );
+        alert(response.data.message); // Show success message
+        navigate("/login"); // Redirect to the login page
+      } catch (error) {
+        console.error("Error deleting account:", error);
+        alert("Failed to delete account. Please try again.");
+      }
+    }
+    handleClose(); // Close the dialog after deletion
+  };
+
   return (
     <Box
-    sx={{
-     
-      height: "100vh",
-    }}
-  >
-    <TouristNavBar />
-    <TouristSidebar/>
-   
- 
+      sx={{
+        height: "100vh",
+      }}
+    >
+      <TouristNavBar />
+
       <Box
         sx={{
           p: 4,
@@ -221,7 +254,7 @@ const EditProfile = () => {
           sx={{
             marginTop: "30px",
             p: 5,
-            width: "700px",
+            width: "60vw",
             borderRadius: 3,
             boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
             height: "100%",
@@ -238,9 +271,8 @@ const EditProfile = () => {
             <Avatar sx={{ bgcolor: "primary.main", width: 64, height: 64 }}>
               <AccountCircleIcon fontSize="large" />
             </Avatar>
-            <Typography variant="h5" sx={{ mt: 2 }}>
-              Edit Tourist Profile
-            </Typography>
+            <h2 className="bigTitle"
+              style={{ fontWeight: "bold", textAlign: "center", marginTop: "3%" }}> Edit Profile</h2>
           </Box>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -346,7 +378,7 @@ const EditProfile = () => {
                 readOnly: true,
               }}
             />
-            <Button variant="outlined" onClick={handleRedeemClick}>
+            <Button variant="outlined" onClick={handleRedeemClick} sx={{ borderColor: 'orange', color: 'orange' }}>
               Redeem points
             </Button>
           </Box>
@@ -361,7 +393,7 @@ const EditProfile = () => {
           >
             {isEditing && (
               <>
-                <Typography variant="h6" sx={{ mt: 2 }}>
+                <Typography variant="h6" sx={{ mt: 2, marginBottom: '3%' }}>
                   Choose Favourite Category
                 </Typography>
                 <TouristCategoryDropDown
@@ -439,7 +471,7 @@ const EditProfile = () => {
             ) : (
               <Button
                 variant="contained"
-                color="primary"
+                className="blackhover"
                 onClick={handleEditClick}
                 fullWidth
                 sx={{ py: 1.5 }}
@@ -447,11 +479,106 @@ const EditProfile = () => {
                 Edit Profile
               </Button>
             )}
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={handleDeleteClick}
+              fullWidth
+              sx={{
+                py: 1.5,
+                marginTop: "3%",
+              }}
+            >
+              Delete My Account
+            </Button>
           </Box>
         </Paper>
-      </Box>
+      </Box >
       <Help />
-    </Box>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        fullWidth
+        maxWidth="sm" // Keeps the width manageable; adjust if needed
+        sx={{
+          "& .MuiDialog-paper": {
+            borderRadius: 2, // Rounded corners
+            padding: 2, // Padding inside the dialog
+            boxShadow: 3, // Subtle shadow for better aesthetics
+            height: "300px", // Increased height for more space
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{
+            fontWeight: "bold",
+            textAlign: "center",
+            borderBottom: "1px solid #e0e0e0", // Subtle separator
+            paddingBottom: 2,
+          }}
+        >
+          Confirm Deletion
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            textAlign: "center",
+            color: "text.secondary", // Theme-based secondary text color
+            padding: "24px", // Spacing inside the content
+            display: "flex",
+            flexDirection: "column", // Align content vertically
+            justifyContent: "center", // Center vertically
+            height: "100%", // Utilize full height
+          }}
+        >
+          <Typography variant="body1" sx={{ marginBottom: 1 }}>
+            Are you sure you want to delete your account?
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{ color: "error.main", fontWeight: "bold" }}
+          >
+            This action cannot be undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            justifyContent: "center", // Center buttons
+            padding: "8px 24px", // Spacing around buttons
+          }}
+        >
+          <Button
+            onClick={handleClose}
+            color="primary"
+            variant="outlined"
+            sx={{
+              fontWeight: "bold",
+              padding: "8px 16px", // Add padding for better appearance
+              borderColor: "primary.main",
+              "&:hover": {
+                backgroundColor: "primary.light",
+              },
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleDeleteAccount}
+            sx={{
+              color: "white",
+              backgroundColor: "error.main",
+              fontWeight: "bold",
+              padding: "8px 16px",
+              "&:hover": {
+                backgroundColor: "error.dark",
+              },
+            }}
+            variant="contained"
+          >
+            Yes, Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box >
   );
 };
 

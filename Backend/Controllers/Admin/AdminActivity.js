@@ -1,4 +1,4 @@
-const ActivityCategory = require('../../Models/activityCategory');
+const ActivityCategory = require("../../Models/activityCategory");
 
 // Create a new activity category
 const createCategory = async (req, res) => {
@@ -14,11 +14,11 @@ const createCategory = async (req, res) => {
 
 const getCategoriesbyName = async (req, res) => {
   try {
-    const {name} = req.body;
-    const categories = await ActivityCategory.find({name});
+    const { name } = req.body;
+    const categories = await ActivityCategory.find({ name });
     console.log(categories);
     if (!categories || categories.length === 0) {
-      return res.status(404).json({ message: 'Categories not found' });
+      return res.status(404).json({ message: "Categories not found" });
     }
     res.status(200).json(categories);
   } catch (error) {
@@ -36,7 +36,7 @@ const updateCategory = async (req, res) => {
       { new: true }
     );
     if (!updatedCategory) {
-      return res.status(404).json({ message: 'Category not found' });
+      return res.status(404).json({ message: "Category not found" });
     }
     res.status(200).json(updatedCategory);
   } catch (error) {
@@ -46,11 +46,11 @@ const updateCategory = async (req, res) => {
 const deleteCategory = async (req, res) => {
   const { name } = req.body;
   try {
-    const deletedCategory = await ActivityCategory.findOneAndDelete(name);
+    const deletedCategory = await ActivityCategory.findOneAndDelete({name});
     if (!deletedCategory) {
-      return res.status(404).json({ message: 'Category not found' });
+      return res.status(404).json({ message: "Category not found" });
     }
-    res.status(200).json({ message: 'Category deleted successfully' });
+    res.status(200).json({ message: "Category deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -70,5 +70,5 @@ module.exports = {
   getCategoriesbyName,
   updateCategory,
   deleteCategory,
-  getAllCategories
+  getAllCategories,
 };

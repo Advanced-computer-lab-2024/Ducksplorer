@@ -119,10 +119,12 @@ const itinerarySchema = new Schema(
       default: false,
       required: false,
     },
-    saved: {
-      user: { type: String, required: false, default: null },
-      isSaved: { type: Boolean, required: false, default: false },
-    },
+    saved: [
+      {
+        user: { type: String, required: false, default: null }, // Username of the user who saved the activity
+        isSaved: { type: Boolean, required: false, default: false }, // Whether the activity is saved
+      },
+    ],
     totalGain: {
       type: Number,
       required: false,

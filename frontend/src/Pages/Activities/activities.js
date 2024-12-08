@@ -185,7 +185,6 @@ const DeleteCategory = () => {
     }}
   >
     <TouristNavBar />
-    <TouristSidebar/>
 
   
       <Sidebar />

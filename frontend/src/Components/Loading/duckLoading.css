@@ -1,0 +1,46 @@
+@import url("https://fonts.googleapis.com/css2?family=Playwrite+HR+Lijeva:wght@100..400&display=swap");
+/* Full-screen container */
+.duck-loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full height */
+  width: 100vw; /* Full width */
+  background: #ffffff;
+  overflow: hidden; /* Ensure no child elements can overflow */
+  position: fixed; /* Fix the container to the viewport */
+  top: 0; /* Align to the top of the page */
+  left: 0; /* Align to the left of the page */
+  z-index: 9999; /* Make sure the container is on top of other elements */
+}
+
+/* Video styling */
+.duck-video {
+  width: 50%; /* Increase the size of the video */
+  height: auto;
+  animation: float 2s infinite ease-in-out;
+}
+/* Text styling */
+.loading-text {
+  margin-top: 20px;
+  font-size: 35px;
+  font-weight: bold;
+  font-family: "Playwrite HR Lijeva", cursive !important;
+  color: #ff9933;
+  font-family: "Comic Sans MS", "Arial", sans-serif; /* Playful font */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Add a subtle text shadow */
+}
+
+/* Keyframes for floating animation */
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}

@@ -26,40 +26,40 @@ const { createPromoCode } = require("../../Controllers/promoCodeController.js");
 
 const router = express.Router();
 
-router.post("/addAdmin", addAdmin);
+router.post("/addAdmin", addAdmin); //done
 
-router.post("/addGovernor", addGovernor);
+router.post("/addGovernor", addGovernor); //done
 
-router.delete("/deleteuser", deleteUser);
+router.delete("/deleteuser", deleteUser); // done
 
 router.route("/acceptReject").put(approveUser).delete(rejectUser); //done
 
 router.get("/getpending", getPendingUsers); //done
 
-router.get("/", getUsers);
+router.get("/", getUsers); //done
 
-router.get("/pendingDetails", getPendingUserDetails); //done
+router.get("/pendingDetails", getPendingUserDetails); //done bas betawel awy
 
-router.post("/changePassword", changePassword);
+router.post("/changePassword", changePassword); //done
 
-router.get("/reportItineraries", viewAllItineraries);
+router.get("/reportItineraries", viewAllItineraries); //done
 
-router.get("/reportActivities", viewAllActivities);
+router.get("/reportActivities", viewAllActivities); //done
 
-router.get("/reportProducts", viewAllProducts);
+router.get("/reportProducts", viewAllProducts); //done
 
-router.route("/filterReportActivities").get(filterAllActivities);
+router.route("/filterReportActivities").get(filterAllActivities); //done
 
-router.route("/filterReportItineraries").get(filterAllItineraries);
+router.route("/filterReportItineraries").get(filterAllItineraries); //done
 
-router.route("/filterReportProducts").get(filterAllProducts);
+router.route("/filterReportProducts").get(filterAllProducts); //done
 
-router.get("/getAllUsersWithEmails", getAllUsersWithEmails);
+router.get("/getAllUsersWithEmails", getAllUsersWithEmails); //done
 
 router.get(
   "/getAllUsersWithEmailsFilteredByMonth",
-  getAllUsersWithEmailsFilteredByMonth
-);
+  getAllUsersWithEmailsFilteredByMonth 
+); //done
 
 router.post("/addPromoCode", createPromoCode);
 

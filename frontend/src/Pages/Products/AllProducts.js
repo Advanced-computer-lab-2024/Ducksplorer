@@ -34,8 +34,7 @@ function AllProducts() {
         paddingTop: "64px", // Adjust for navbar height
       }}
     >
- <TouristNavBar />
- <TouristSidebar/>      
+      <TouristNavBar />
       <Box
         sx={{
           padding: "20px",
@@ -44,24 +43,6 @@ function AllProducts() {
           height: "100%",
         }}
       >
-        {/* Back Button */}
-        <Button
-          onClick={handleBackButtonClick}
-          variant="contained"
-          sx={{
-            backgroundColor: "#1a237e",
-            color: "#fff",
-            fontWeight: "bold",
-            borderRadius: "8px",
-            marginBottom: "20px",
-            "&:hover": {
-              backgroundColor: "#0d47a1",
-            },
-          }}
-        >
-          Back
-        </Button>
-
         {/* Product Grid */}
         <Box
           sx={{

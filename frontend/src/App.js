@@ -16,6 +16,8 @@ import CreateHistoricalPlace from "./Pages/MuseumHistoricalPlace/CreateHistorica
 import CreateMuseum from "./Pages/MuseumHistoricalPlace/CreateMuseum.js";
 import RUDMuseum from "./Pages/MuseumHistoricalPlace/RUDMuseum.js";
 import RUDHistoricalPlace from "./Pages/MuseumHistoricalPlace/RUDHistoricalPlace.js";
+import EditMuseum from "../../frontend/src/Pages/MuseumHistoricalPlace/editMuseum.js"
+import EditHistoricalPlace from "../../frontend/src/Pages/MuseumHistoricalPlace/editHistoricalPlace.js"
 import MuseumTouristPov from "./Pages/MuseumHistoricalPlace/MuseumTouristPov.js";
 import HistoricalPlaceTouristPov from "./Pages/MuseumHistoricalPlace/HistoricalPlaceTouristPov.js";
 import UpcomingHistoricalPlaces from "./Pages/MuseumHistoricalPlace/UpcomingHistoricalPlaces.js";
@@ -33,6 +35,7 @@ import UpcomingActivities from "./Pages/Activities/upcomingActivities.js";
 import SearchActivities from "./Pages/Activities/searchActivity.js";
 import SortFilterActivity from "./Pages/Activities/SortFilterActivity.js";
 import MyActivities from "./Pages/Activities/myActivities.js";
+import EditActivity from "./Pages/Activities/editActivity.js";
 import AdvertiserDashboard from "./Pages/Dashboards/AdvertiserDashboard.js";
 import ClinicLocation from "./Pages/location.js";
 import ProductDashboard from "./Pages/Products/ProductDashboard.js";
@@ -245,6 +248,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <RUDHistoricalPlace />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/editMuseum"
+            element={
+              <ProtectedRoute>
+                <EditMuseum />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/editHistoricalPlace"
+            element={
+              <ProtectedRoute>
+                <EditHistoricalPlace />
               </ProtectedRoute>
             }
           />
@@ -485,6 +504,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <MyActivities />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/editActivity"
+            element={
+              <ProtectedRoute>
+                <EditActivity />
               </ProtectedRoute>
             }
           />

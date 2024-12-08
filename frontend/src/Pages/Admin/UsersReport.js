@@ -5,10 +5,11 @@ import { calculateAverageRating } from "../../Utilities/averageRating.js";
 import WarningIcon from '@mui/icons-material/Warning';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CurrencyConvertor from '../../Components/CurrencyConvertor';
-import Sidebar from "../../Components/Sidebars/Sidebar.js";
 import { message } from 'antd';
 import Error404 from "../../Components/Error404.js";
-import AdminNavbar from "../../Components/TopNav/Adminnavbar.js";
+import AdminNavbar from "../../Components/NavBars/AdminNavBar";
+import DuckLoading from "../../Components/Loading/duckLoading.js";
+import NavigationTabs from "../../Components/NavigationTabs.js";
 
 import {
     Box,
@@ -36,6 +37,7 @@ import {
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { useInternalMessage } from "antd/es/message/useMessage.js";
+import { useNavigate } from "react-router-dom";
 
 const ActivityReport = () => {
     // Accept userNameId as a prop
@@ -46,6 +48,7 @@ const ActivityReport = () => {
     const [filterAnchorEl, setFilterAnchorEl] = useState(null);
 
     const [selectedFilters, setSelectedFilters] = useState([]);
+    const [selectedCategory2, setSelectedCategory2] = useState("Users Report");
 
     const [filterType, setFilterType] = useState("");
     const [filtersApplied, setFiltersApplied] = useState(false);
@@ -55,6 +58,10 @@ const ActivityReport = () => {
 
     const errorMessage = "The itinerary you are looking for might be removed or is temporarily unavailable";
     const backMessage = "BACK TO ADMIN AGAIN"
+
+    const tabs = ["Users Report", "Revenue Report"];
+    const paths = ["/userReport", "/adminReport"];
+
     // Handle fetching activities by userName ID
     useEffect(() => {
         const fetchUsers = async () => {
@@ -143,30 +150,9 @@ const ActivityReport = () => {
 
     if (loading) {
         return (
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: "100vh", // Full screen height
-                }}
-            >
-                <CircularProgress size={60} thickness={4} />
-                <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
-                    Loading users report...
-                </Typography>
-            </Box>
-        );
-    }
-
-    if (!Array.isArray(users) || users.length === 0) {
-        return (
-            <Error404
-                errorMessage={errorMessage}
-                backMessage={backMessage}
-                route="/adminDashboard"
-            />
+            <div>
+                <DuckLoading />
+            </div>
         );
     }
 
@@ -192,20 +178,20 @@ const ActivityReport = () => {
                 <div
                     style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
                 >
+                    <br></br>
+                    <NavigationTabs tabNames={tabs} paths={paths} />
                     <div style={{ overflowY: "visible", height: "100vh" }}>
                         <Typography
                             variant="h2"
                             sx={{ textAlign: "center", fontWeight: "bold" }}
                             gutterBottom
                         >
-                            Users
+                            Users Report
                         </Typography>
                         <br></br>
                         {/* Navbar */}
                         <AdminNavbar />
 
-                        {/* Sidebar */}
-                        <Sidebar />
                         {/* Filtering */}
                         <IconButton onClick={handleFilterChoiceClick}>
                             <FilterAltIcon style={{ color: "black" }} />
@@ -267,10 +253,10 @@ const ActivityReport = () => {
                             <Table>
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>User Name</TableCell>
-                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Role</TableCell>
-                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Email</TableCell>
-                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Date</TableCell>
+                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }} >User Name</TableCell>
+                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }} >Role</TableCell>
+                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }} >Email</TableCell>
+                                        <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }} >Date</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -278,11 +264,11 @@ const ActivityReport = () => {
                                         users.map((userAdded) =>
                                             userAdded ? (
                                                 <TableRow >
-                                                    <TableCell>{userAdded.userName}</TableCell>
-                                                    <TableCell>
+                                                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }} >{userAdded.userName}</TableCell>
+                                                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>
                                                         {userAdded.role} </TableCell>
-                                                    <TableCell>{userAdded.email}</TableCell>
-                                                    <TableCell>{new Date(userAdded.date).toLocaleDateString()}</TableCell>
+                                                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>{userAdded.email}</TableCell>
+                                                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>{new Date(userAdded.date).toLocaleDateString()}</TableCell>
                                                 </TableRow>
                                             ) : null
                                         )

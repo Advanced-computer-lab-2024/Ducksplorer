@@ -42,7 +42,7 @@ export default function ItineraryCard({
   const handleClose = () => setOpen(false);
 
   const handleClick = (event, itineraryId) => {
-    event.stopPropagation();
+    // event.stopPropagation();
     // setAnchorEl(event.currentTarget);
     Swal.fire({
       title: "Share Itinerary",
@@ -252,13 +252,13 @@ export default function ItineraryCard({
 
   const TheCard = () => {
     return (
-      <div>
+      <div style={{ width: "100%", minWidth: "300px", minHeight: "375px" }}>
         <Card
           className="itinerary-card"
           variant="outlined"
           sx={{
             width: "100%",
-            height: "50vh",
+            height: "100%",
           }}
           onClick={handleOpen}
         >
@@ -272,7 +272,7 @@ export default function ItineraryCard({
                 variant="solid"
                 color="primary"
                 className="blackhover"
-                onClick={(event) => handleClick(event, itinerary._id)}
+                onClick={(event) =>{event.stopPropagation(); handleClick(event, itinerary._id);}}
                 sx={{
                   borderRadius: "50%",
                   position: "absolute",
@@ -282,9 +282,6 @@ export default function ItineraryCard({
                   bottom: 0,
                   transform: "translateY(50%) translateX(-130%)",
                   transition: "transform 0.3s",
-                  "&:active": {
-                    transform: "translateY(50%) scale(0.9)",
-                  },
                   backgroundColor: "#ff9933",
                 }}
               >
@@ -292,7 +289,7 @@ export default function ItineraryCard({
               </IconButton>
             </Tooltip>
 
-            <Tooltip title="Save itinerary">
+            <Tooltip title="Save Itinerary">
               <IconButton
                 size="md"
                 variant="solid"
@@ -366,6 +363,7 @@ export default function ItineraryCard({
                       notificationStates[itinerary._id]
                     )
                   }
+                  className="blackhover"
                   sx={{
                     borderRadius: "50%",
                     position: "absolute",
@@ -431,7 +429,7 @@ export default function ItineraryCard({
                       variant="outlined"
                       sx={{
                         marginRight: 1,
-                        marginBottom: 1,
+                        marginBottom: 4,
                         color: "#ff9933",
                         borderColor: "#ff9933",
                       }}
@@ -451,7 +449,7 @@ export default function ItineraryCard({
                 justifyContent: "space-between",
                 position: "absolute",
                 bottom: 10,
-                width: "94%",
+                width: "100%",
               }}
             >
               <Typography
@@ -476,15 +474,15 @@ export default function ItineraryCard({
                 {itinerary.price}$
               </Typography>
               <Button
-                size="md"
                 variant="solid"
                 className="blackhover"
                 zIndex={2}
+                size="md"
                 onClick={(event) => {
                   event.stopPropagation();
                   handleBooking(itinerary._id);
                 }}
-                sx={{ backgroundColor: "#ff9933" }}
+                sx={{ backgroundColor: "#ff9933", marginRight: "7%" }}
               >
                 Book Now
               </Button>

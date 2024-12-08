@@ -3,6 +3,7 @@ import { Box, Typography, CssBaseline } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import GovernorSidebar from "../../Components/Sidebars/GovernorSidebar";
 import GovernorNavbar from "../../Components/TopNav/GovernorNavbar"; // Import GovernorNavbar
+import GovernorNavBar from "../../Components/NavBars/GovernorNavBar";
 
 const GovernorDashboard = () => {
   const [videoEnded, setVideoEnded] = useState(false);
@@ -56,7 +57,7 @@ const GovernorDashboard = () => {
         transition: "opacity 1s ease-out", // Smooth fade-out
       }}
     >
-      <source src="/planevid.mp4" type="video/mp4" />
+      <source src="/planevidd.mp4" type="video/mp4" />
       Your browser does not support the video tag.
     </video>
 
@@ -101,9 +102,9 @@ const GovernorDashboard = () => {
 
     <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <CssBaseline />
-      <GovernorNavbar /> {/* Add GovernorNavbar */}
+      <GovernorNavBar /> {/* Add GovernorNavbar */}
       <Box sx={{ display: "flex", flexGrow: 1 }}>
-        <GovernorSidebar />
+        {/* <GovernorSidebar /> */}
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <Outlet />
         </Box>

@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import FlightsCards from './FlightsCards';
-import TouristNavbar from '../TouristNavBar'; // Import TouristNavbar
+import React, { useEffect, useState } from "react";
+import FlightsCards from "./FlightsCards";
+import TouristNavbar from "../TouristNavBar"; // Import TouristNavbar
 
 const FlightsPage = () => {
   const [flightsData, setFlightsData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedFlightsData = localStorage.getItem('flightsData');
+    setLoading(true);
+    const storedFlightsData = localStorage.getItem("flightsData");
     if (storedFlightsData) {
       setFlightsData(JSON.parse(storedFlightsData));
     }
@@ -29,8 +31,9 @@ const FlightsPage = () => {
           fontSize: "40px",
           fontWeight: "700",
           color: "orange",
-          fontSize: '2rem'
-        }}>
+          fontSize: "2rem",
+        }}
+      >
         Available Flights
       </h1>
       <FlightsCards
@@ -47,12 +50,12 @@ const FlightsPage = () => {
 
 const styles = {
   container: {
-    display: 'flex',
-    flexDirection: 'column', // Add this line to stack elements vertically
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100vh',
-    width: '100vw',
+    display: "flex",
+    flexDirection: "column", // Add this line to stack elements vertically
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100vh",
+    width: "100vw",
     backgroundColor: "#fff6e6",
   },
 };

@@ -324,8 +324,7 @@ export default function CheckoutForm() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "80vh",
-        backgroundColor: "#f9f9f9",
+        width: "50vw",
         padding: "20px",
       }}
     >

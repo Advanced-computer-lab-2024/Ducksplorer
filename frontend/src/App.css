@@ -15,7 +15,7 @@ body {
   align-items: center;
   padding: 20px;
   background-color: #fff6e6 !important;
-  height: 120vh;
+  height: 100vh;
   background-color: #fef4ea;
 }
 
@@ -288,6 +288,13 @@ button[type="submit"]:hover {
   font-style: normal;
 }
 
+.bigTitle {
+  font-family: "Playwrite HR Lijeva", cursive !important;
+  font-size: 3rem;
+  font-weight: 700;
+  font-style: normal;
+}
+
 .blackhover {
   background-color: #ff9933 !important;
 }
@@ -306,6 +313,11 @@ button[type="submit"]:hover {
 
 searchInput:focus {
   color: #ff9933 !important;
+}
+
+.swal2-icon.custom-icon-color {
+  border-color: #ff9933;
+  color: #ff9933;
 }
 
 @tailwind base;

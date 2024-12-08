@@ -30,6 +30,8 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import Button from "@mui/material/Button";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import ReportIcon from "@mui/icons-material/Report";
+import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
 
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -116,7 +118,7 @@ function TouristNavBar() {
       sx={{
         backgroundColor: "white",
         width: "100vw",
-        height: "9vh",
+        height: "10vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -293,7 +295,7 @@ function TouristNavBar() {
             </Tooltip> */}
             <Button
               className="nav-item"
-              onClick={() => handleNavigation("activity/sortFilter")}
+              onClick={() => handleNavigation("activity/searchActivities")}
               sx={{
                 fontSize: "1rem",
                 fontFamily: "'Josefin Sans', sans-serif",
@@ -436,6 +438,36 @@ function TouristNavBar() {
                 Transportation
               </Typography>
             </Button>
+
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("MuseumTouristPov")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                Landmarks
+              </Typography>
+            </Button>
+
             <Button
               className="nav-item"
               onClick={() => handleNavigation("TouristAllProducts")}
@@ -464,15 +496,6 @@ function TouristNavBar() {
                 Marketplace
               </Typography>
             </Button>
-
-            {/* <Tooltip title="View My Bookings">
-              <IconButton onClick={() => handleNavigation("mybookings")}>
-                <BookmarkAddedIcon />
-                <Typography textAlign="center" marginLeft={2}>
-                  My Bookings
-                </Typography>
-              </IconButton>
-            </Tooltip> */}
           </Box>
           <Box sx={{ flexGrow: 0, marginRight: "3vw " }}>
             <Tooltip>
@@ -540,26 +563,6 @@ function TouristNavBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem onClick={handleCloseUserMenu}>
-                <IconButton
-                  component="a"
-                  href="/editAccount"
-                  sx={{ textAlign: "center", p: 0.5 }}
-                >
-                  <AccountCircleIcon sx={{ fontSize: 20, color: "blue" }} />
-                  <Typography sx={{ ml: 1 }} variant="body2">
-                    Profile
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-              <MenuItem onClick={handleLogout}>
-                <IconButton component="a" sx={{ textAlign: "center", p: 0.5 }}>
-                  <LockIcon sx={{ fontSize: 20, color: "gold" }} />
-                  <Typography sx={{ ml: 1 }} variant="body2">
-                    Logout
-                  </Typography>
-                </IconButton>
-              </MenuItem>
               <MenuItem onClick={handleTogglePreferences}>
                 <IconButton
                   sx={{ textAlign: "center", p: 0.5, color: "black" }}
@@ -619,7 +622,7 @@ function TouristNavBar() {
                   href="/mybookings"
                   sx={{ textAlign: "center", p: 0.5 }}
                 >
-                  <BookmarkAddedIcon sx={{ color: "black" }} />
+                  <BookmarkAddedIcon sx={{ fontSize: 20, color: "black" }} />
                   <Typography
                     textAlign="center"
                     marginLeft={2}
@@ -636,13 +639,30 @@ function TouristNavBar() {
                   href="/orders"
                   sx={{ textAlign: "center", p: 0.5 }}
                 >
-                  <StorefrontIcon sx={{ color: "black" }} />
+                  <StorefrontIcon sx={{ fontSize: 20, color: "black" }} />
                   <Typography
                     textAlign="center"
                     marginLeft={2}
                     sx={{ color: "black", fontSize: "14px" }}
                   >
                     My Orders
+                  </Typography>
+                </IconButton>
+              </MenuItem>
+
+              <MenuItem onClick={handleCloseUserMenu}>
+                <IconButton
+                  component="a"
+                  href="/myComplaints"
+                  sx={{ textAlign: "center", p: 0.5 }}
+                >
+                  <ReportIcon sx={{ fontSize: 20, color: "black" }} />
+                  <Typography
+                    textAlign="center"
+                    marginLeft={2}
+                    sx={{ color: "black", fontSize: "14px" }}
+                  >
+                    My Complaints
                   </Typography>
                 </IconButton>
               </MenuItem>

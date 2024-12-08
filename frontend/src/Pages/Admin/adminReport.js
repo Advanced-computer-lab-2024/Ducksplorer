@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import WarningIcon from "@mui/icons-material/Warning";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { calculateProductRating } from "../../Utilities/averageRating";
 import { calculateAverageRating } from "../../Utilities/averageRating";
-import MyChips from "../../Components/MyChips";
+import MyTabs from "../../Components/MyTabs.js";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { message } from 'antd';
-
+import DuckLoading from "../../Components/Loading/duckLoading";
+import Error404 from "../../Components/Error404";
+import NavigationTabs from "../../Components/NavigationTabs.js";
 
 import {
   Box,
@@ -36,15 +38,24 @@ import {
   Rating,
   CircularProgress
 } from "@mui/material";
-import AdminNavbar from "../../Components/TopNav/Adminnavbar";
+import AdminNavbar from "../../Components/NavBars/AdminNavBar";
 
 const AdminReport = () => {
-  const chipNames = [
-    "Activities Report",
-    "Itineraries Report",
-    "Products Report",
-  ];
-  const [selectedCategory, setSelectedCategory] = useState("Activities Report");
+
+  const tabs = ["Users Report", "Revenue Report"];
+  const paths = ["/userReport", "/adminReport"];
+  const tabNames = ["Activities Report", "Itineraries Report", "Products Report"];
+  const [selectedTab, setSelectedTab] = useState("Activities Report");
+
+  const errorMessage1 =
+    "The flights you are looking for might be removed or is temporarily unavailable";
+  const errorMessage2 =
+    "The activities you are looking for might be removed or is temporarily unavailable";
+  const errorMessage3 =
+    "The itineraries you are looking for might be removed or is temporarily unavailable";
+  const backMessage = "BACK TO ADMIN DASHBOARD";
+
+
   const [activities, setActivities] = useState([]);
   const [itineraries, setItineraries] = useState([]);
   const [products, setProducts] = useState([]);
@@ -87,13 +98,11 @@ const AdminReport = () => {
   const [productFilterType, productSetFilterType] = useState("");
   const [productFiltersApplied, productSetFiltersApplied] = useState(false);
 
-  const [activityLoading, activitySetLoading] = useState(false); // State for loading status
-  const [itineraryLoading, itinerarySetLoading] = useState(false); // State for loading status
-  const [productLoading, productSetLoading] = useState(false); // State for loading status
-
   const [errorActivityMessage, activitySetErrorMessage] = useState("");  // State for error message
   const [itineraryErrorMessage, itinerarySetErrorMessage] = useState("");  // State for error message
   const [productErrorMessage, productSetErrorMessage] = useState("");  // State for error message
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -209,10 +218,10 @@ const AdminReport = () => {
   };
 
   const fetchFilteredActivities = async () => {
-    activitySetLoading(true);
     activitySetErrorMessage(""); // Reset error message before fetching
 
     try {
+      setLoading(true);
       let queryString = "";
 
       // Apply date filter if selected
@@ -246,15 +255,15 @@ const AdminReport = () => {
     } catch (error) {
       activitySetErrorMessage("Error fetching activities!");
     } finally {
-      activitySetLoading(false);
+      setLoading(false);
     }
   };
 
   const fetchFilteredItineraries = async () => {
-    itinerarySetLoading(true);
     itinerarySetErrorMessage(""); // Reset error message before fetching
 
     try {
+      setLoading(true);
       let queryString = "";
 
       // Apply date filter if selected
@@ -288,15 +297,15 @@ const AdminReport = () => {
     } catch (error) {
       itinerarySetErrorMessage("Error fetching itineraries!");
     } finally {
-      itinerarySetLoading(false);
+      setLoading(false);
     }
   };
 
   const fetchFilteredProducts = async () => {
-    productSetLoading(true);
     productSetErrorMessage(""); // Reset error message before fetching
 
     try {
+      setLoading(true);
       let queryString = "";
 
       // Apply date filter if selected
@@ -330,28 +339,28 @@ const AdminReport = () => {
     } catch (error) {
       productSetErrorMessage("Error fetching products!");
     } finally {
-      productSetLoading(false);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     if (!activityFiltersApplied) return;
     if (!activityDate && !activityMonth && !activityYear) return;
-    if (selectedCategory == "Activities Report")
+    if (selectedTab == "Activities Report")
       fetchFilteredActivities();
   }, [activityFiltersApplied, activityDate, activityMonth, activityYear]);
 
   useEffect(() => {
     if (!itineraryFiltersApplied) return;
     if (!itineraryDate && !itineraryMonth && !itineraryYear) return;
-    if (selectedCategory == "Itineraries Report")
+    if (selectedTab == "Itineraries Report")
       fetchFilteredItineraries();
   }, [itineraryFiltersApplied, itineraryDate, itineraryMonth, itineraryYear]);
 
   useEffect(() => {
     if (!productFiltersApplied) return;
     if (!productDate && !productMonth && !productYear) return;
-    if (selectedCategory == "Products Report")
+    if (selectedTab == "Products Report")
       fetchFilteredProducts();
   }, [productFiltersApplied, productDate, productMonth, productYear]);
 
@@ -443,87 +452,51 @@ const AdminReport = () => {
     return ratingEntry ? ratingEntry.rating : "No rating available";
   };
 
-  const handleChipClick = (chipName) => {
-    setSelectedCategory(chipName);
-    console.log(selectedCategory);
-  };
-
-  if (selectedCategory === 'Activities Report') {
-
-    if (activityLoading) {
-      return (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100vh", // Full screen height
-          }}
-        >
-          <CircularProgress size={60} thickness={4} />
-          <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
-            Loading activities report...
-          </Typography>
-        </Box>
-      );
-    }
-
-    if ((!Array.isArray(activities)) || (activities.length === 0)) {
-      return <p>No activities available.</p>;
-    }
-
-  }
-  else if (selectedCategory === 'Itineraries Report') {
-
-    if (itineraryLoading) {
-      return (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100vh", // Full screen height
-          }}
-        >
-          <CircularProgress size={60} thickness={4} />
-          <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
-            Loading itineraries report...
-          </Typography>
-        </Box>
-      );
-    }
-
-    if ((!Array.isArray(itineraries)) || (itineraries.length === 0)) {
-      return <p>No itineraries available.</p>;
-    }
-
+  if (loading) {
+    return (
+      <div>
+        <DuckLoading />
+      </div>
+    );
   }
 
-  else if (selectedCategory === 'Products Report') {
-    if (productLoading) {
-      return (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100vh", // Full screen height
-          }}
-        >
-          <CircularProgress size={60} thickness={4} />
-          <Typography sx={{ mt: 2 }} variant="h6" color="text.secondary">
-            Loading products report...
-          </Typography>
-        </Box>
-      );
-    }
+  else if (products.length === 0 && selectedTab === "Products Report") {
+    return (
+      <>
+        <AdminNavbar />
+        <Error404
+          errorMessage={errorMessage1}
+          backMessage={backMessage}
+          route="/adminDashboard"
+        />
+      </>
+    );
+  }
 
-    if ((!Array.isArray(products)) || (products.length === 0)) {
-      return <p>No products available.</p>;
-    }
+  else if (activities.length === 0 && selectedTab === "Activities Report") {
+    return (
+      <>
+        <AdminNavbar />
+        <Error404
+          errorMessage={errorMessage2}
+          backMessage={backMessage}
+          route="/adminDashboard"
+        />
+      </>
+    );
+  }
+
+  else if (itineraries.length === 0 && selectedTab === "Itineraries Report") {
+    return (
+      <>
+        <AdminNavbar />
+        <Error404
+          errorMessage={errorMessage3}
+          backMessage={backMessage}
+          route="/adminDashboard"
+        />
+      </>
+    );
   }
 
   return (
@@ -539,18 +512,22 @@ const AdminReport = () => {
       <div
         style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
       >
+
+        <div>
+          <NavigationTabs tabNames={tabs} paths={paths} />
+        </div>
         <div style={{ overflowY: "visible", height: "100vh" }}>
           <Typography
             variant="h2"
             sx={{ textAlign: "center", fontWeight: "bold" }}
             gutterBottom
           >
-            Report
+            Revenue Report
           </Typography>
           <br></br>
-          <MyChips chipNames={chipNames} onChipClick={handleChipClick} />
+          <MyTabs tabNames={tabNames} onTabClick={(tabName) => setSelectedTab(tabName)} />
 
-          {selectedCategory === "Activities Report" && (
+          {selectedTab === "Activities Report" && (
             <div>
               {" "}
               <Typography
@@ -743,7 +720,7 @@ const AdminReport = () => {
             </div>
           )}
 
-          {selectedCategory === "Itineraries Report" && (
+          {selectedTab === "Itineraries Report" && (
             <div>
               {" "}
               <Typography variant="h5" sx={{ fontWeight: "bold" }} gutterBottom>
@@ -980,7 +957,7 @@ const AdminReport = () => {
             </div>
           )}
 
-          {selectedCategory === "Products Report" && (
+          {selectedTab === "Products Report" && (
             <div>
               {" "}
               <Typography

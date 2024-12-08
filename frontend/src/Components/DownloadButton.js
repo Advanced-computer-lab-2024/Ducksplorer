@@ -41,7 +41,7 @@ const DownloadButton = ({ fileUrl, label }) => {
   };
 
   return (
-    <Button variant="contained" onClick={handleDownload}>
+    <Button className="blackhover" variant="contained" onClick={handleDownload}>
       {label}
     </Button>
   );
