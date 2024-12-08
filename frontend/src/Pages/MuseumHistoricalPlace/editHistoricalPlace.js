@@ -24,17 +24,20 @@ function EditHistoricalPlace() {
     const selectedTags = historicalPlace.tags;
     // Form state
     const [formData, setFormData] = useState({
-        description: museum.description || "",
-        location: museum.location || "",
-        pictures: museum.pictures || "",
-        ticketPrices: museum.ticketPrices || "",
-        openingTime: museum.openingTime || "",
-        closingTime: museum.closingTime || "",
-        museumDate: museum.museumDate ? new Date(museum.museumDate).toISOString().slice(0, 16) : "",
-        museumName: museum.museumName || "",
-        museumCategory: museum.museumCategory || "",
-        tags: selectedTags || [],
+        description: historicalPlace.description || "",
+        location: historicalPlace.location || "",
+        pictures: historicalPlace.pictures || "",
+        ticketPrices: historicalPlace.ticketPrices || "",
+        openingTime: historicalPlace.openingTime || "",
+        closingTime: historicalPlace.closingTime || "",
+        historicalDate: historicalPlace.HistoricalPlaceDate 
+            ? new Date(historicalPlace.HistoricalPlaceDate).toISOString().slice(0, 16) 
+            : "",
+        historicalPlaceName: historicalPlace.HistoricalPlaceName || "",
+        historicalPlaceCategory: historicalPlace.HistoricalPlaceCategory || "",
+        tags: historicalPlace.tags || [],
     });
+    
 
     // Scroll to form on edit
     useEffect(() => {
@@ -52,28 +55,44 @@ function EditHistoricalPlace() {
     // Handle tag selection
     const handleTagChange = (tag) => {
         setFormData((prevData) => {
-            const updatedTags = Array.isArray(prevData.tags) ? prevData.tags : [];
-            const newTags = updatedTags.includes(tag)
-                ? updatedTags.filter((t) => t !== tag) // Remove tag
-                : [...updatedTags, tag]; // Add tag
-            return { ...prevData, tags: newTags };
+            const updatedTags = prevData.tags.includes(tag)
+                ? prevData.tags.filter((t) => t !== tag) // Remove the tag
+                : [...prevData.tags, tag]; // Add the tag
+            return { ...prevData, tags: updatedTags };
         });
-    };
+    };    
 
     // Update the museum details
-    const handleUpdate = (event) => {
-        event.preventDefault();
-        axios
-            .put(`http://localhost:8000/museum/updateMuseum/${museum._id}`, formData)
-            .then(() => {
-                message.success("Museum updated successfully!");
-                navigate("/RUDHistoricalPlace"); // Redirect back to the RUDMuseum page
-            })
-            .catch((error) => {
-                console.error("Error updating museum:", error);
-                message.error("Failed to update the museum!");
-            });
-    };
+ // Update the museum details
+const handleUpdate = (event) => {
+    event.preventDefault();
+
+    // Combine and clean the data to send only the necessary fields
+    const payload = {
+        ...formData,
+        tags: formData.tags.map((tag) => tag.trim()), // Ensure no accidental whitespace
+    };    
+
+    axios
+        .put(
+            `http://localhost:8000/historicalPlace/updateHistoricalPlace/${historicalPlace._id}`,
+            payload
+        )
+        .then((response) => {
+            // Update local storage only if the backend update succeeds
+            localStorage.setItem(
+                "selectedHistoricalPlace",
+                JSON.stringify(response.data)
+            );
+            message.success("Historical Place updated successfully!");
+            navigate("/RUDHistoricalPlace");
+        })
+        .catch((error) => {
+            console.error("Update failed:", error);
+            message.error("Error updating Historical Place!");
+        });
+    }        
+
 
     return (
         <Box
@@ -113,6 +132,24 @@ function EditHistoricalPlace() {
                         <Box />
                         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                             <form onSubmit={handleUpdate} style={{ marginTop: "20px" }}>
+                            <TextField
+                                    label="Name"
+                                    name="historicalPlaceName"
+                                    value={formData.historicalPlaceName}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                    required
+                                />
+                                <TextField
+                                    label="Category"
+                                    name="historicalPlaceCategory"
+                                    value={formData.historicalPlaceCategory}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                    required
+                                />
                                 <TextField
                                     label="Description"
                                     name="description"
@@ -150,6 +187,16 @@ function EditHistoricalPlace() {
                                     required
                                 />
                                 <TextField
+                                    name="historicalMuseumDate"
+                                    type="datetime-local"
+                                    value={formData.historicalDate}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                    required
+                                />
+
+                                <TextField
                                     label="Opening Time"
                                     name="openingTime"
                                     value={formData.openingTime}
@@ -167,35 +214,7 @@ function EditHistoricalPlace() {
                                     sx={{ mb: 2 }}
                                     required
                                 />
-                                <TextField
-                                    label="Date"
-                                    name="museumDate"
-                                    type="datetime-local"
-                                    value={formData.museumDate}
-                                    onChange={handleInputChange}
-                                    fullWidth
-                                    sx={{ mb: 2 }}
-                                    required
-                                />
-                                <TextField
-                                    label="Name"
-                                    name="museumName"
-                                    value={formData.museumName}
-                                    onChange={handleInputChange}
-                                    fullWidth
-                                    sx={{ mb: 2 }}
-                                    required
-                                />
-                                <TextField
-                                    label="Category"
-                                    name="museumCategory"
-                                    value={formData.museumCategory}
-                                    onChange={handleInputChange}
-                                    fullWidth
-                                    sx={{ mb: 2 }}
-                                    required
-                                />
-
+                                
                                 {/* Tags dropdown */}
                                 <div
                                     style={{
@@ -226,7 +245,7 @@ function EditHistoricalPlace() {
                                     })}
                                 </div>
                                 <Box sx={{ mt: 2 }}>
-                                    <Button type="submit" variant="contained" className="blackhover">
+                                    <Button type="submit" variant="contained" className="blackhover" onClick={handleUpdate}>
                                         Update
                                     </Button>
                                 </Box>
