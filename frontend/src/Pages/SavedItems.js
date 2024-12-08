@@ -20,10 +20,9 @@ import {
   Tooltip,
   CircularProgress,
   Grid,
-  Tabs,
-  Tab
 } from "@mui/material";
 import MyTabs from "../Components/MyTabs.js";
+import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
 import TouristNavBar from "../Components/TouristNavBar.js";
 import ItineraryCard from "../Components/itineraryCard.js";
 import ActivityCard from "../Components/activityCard.js";
@@ -89,9 +88,6 @@ function MySavedItems() {
           );
           setItineraries(tempItineraries);
         }
-        console.log("Itineraries Length: ", itineraries.length);
-        console.log("Activities Length: ", activities.length);
-
       } catch (error) {
         console.error("There was an error fetching the itineraries!", error);
       } finally {
@@ -198,13 +194,20 @@ function MySavedItems() {
   return (
     <>
       <TouristNavBar />
-      
-      <div style={{ overflowY: 'visible', height: '100vh', width: '100%', display: 'flex', flexDirection: 'column' }}>
+      <div
+        style={{
+          overflowY: "visible",
+          height: "100vh",
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <Typography
             variant="h4"
             className="bigTitle"
-            sx={{  color: "black", fontWeight: 'bold' }}
+            sx={{ color: "black", fontWeight: 'bold' }}
           >
             Saved
           </Typography>
@@ -225,21 +228,27 @@ function MySavedItems() {
                     gridTemplateColumns: "repeat(3, 1fr)",
                     gap: "24px", // Adjust the gap between items as needed
                     paddingBottom: 24,
-                    paddingTop: 24
+                    paddingTop: 24,
                   }}
                 >
-                  {
-                    itineraries.map((itinerary) =>
-                      itinerary.flag === false &&
-                        itinerary.isDeactivated === false &&
-                        itinerary.tourGuideDeleted === false &&
-                        itinerary.deletedItinerary === false &&
-                        itinerary.saved.user === username &&
-                        itinerary.saved.isSaved === true ? (
-                        <ItineraryCard itinerary={itinerary} onRemove={handleRemoveItinerary} showNotify={true} />
-                      ) : null
-                    ) // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists
-                  }
+                  {itineraries.map((itinerary) => {
+                    const isSavedByUser = itinerary.saved.some(
+                      (entry) =>
+                        entry.user === username && entry.isSaved === true
+                    );
+
+                    return itinerary.flag === false &&
+                      itinerary.isDeactivated === false &&
+                      itinerary.tourGuideDeleted === false &&
+                      itinerary.deletedItinerary === false &&
+                      isSavedByUser ? (
+                      <ItineraryCard
+                        itinerary={itinerary}
+                        onRemove={handleRemoveItinerary}
+                        showNotify={true}
+                      />
+                    ) : null;
+                  })}
                 </div>
               ) : (
                 <Typography variant="body1" style={{ marginTop: "20px" }}>
@@ -250,45 +259,61 @@ function MySavedItems() {
           </>
         )}
 
-        {(selectedTab === "Activities" ||
-          selectedTab === "All") && (
-            <>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  mb: 3,
-                  marginTop: "20px",
-                }}
-              >
-                {/* <Typography variant="h4"> Activities</Typography> */}
-              </Box>
-              <Grid container spacing={4}>
-                {Array.isArray(activities) && activities.length > 0 ? (
-                  activities.map((activity) =>
-                    activity.flag === false &&
-                      activity.advertiserDeleted === false &&
-                      activity.deletedActivity === false &&
-                      activity.saved.user === username &&
-                      activity.saved.isSaved === true ? (
-                      <Grid item xs={12} sm={8} md={6} key={activity._id}>
-                        <ActivityCard activity={activity} onRemove={handleRemoveActivity} showNotify={true} />
-                      </Grid>
-                    ) : null
-                  )
-                ) : (
-                  <Grid item xs={12}>
-                    <Typography variant="body1" color="textSecondary" align="center">
-                      No activities available
-                    </Typography>
-                  </Grid>
-                )}
-              </Grid>
-            </>
-          )}
+        {(selectedTab === "Activities" || selectedTab === "All") && (
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                mb: 3,
+                marginTop: "20px",
+              }}
+            >
+              {/* <Typography variant="h4">Activities</Typography> */}
+            </Box>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: "24px", // Adjust the gap between items as needed
+                paddingBottom: 24,
+                paddingTop: 24,
+              }}
+            >
+              {Array.isArray(activities) && activities.length > 0 ? (
+                activities.map((activity) => {
+                  const isSavedByUser =
+                    activity.saved &&
+                    activity.saved.some(
+                      (entry) =>
+                        entry.user === username && entry.isSaved === true
+                    );
+
+                  return activity.flag === false &&
+                    activity.advertiserDeleted === false &&
+                    activity.deletedActivity === false &&
+                    isSavedByUser ? (
+                    <ActivityCard
+                      activity={activity}
+                      onRemove={handleRemoveActivity}
+                      showNotify={true}
+                    />
+                  ) : null;
+                })
+              ) : (
+                <Typography
+                  variant="body1"
+                  color="textSecondary"
+                  align="center"
+                >
+                  No activities available
+                </Typography>
+              )}
+            </div>
+          </>
+        )}
         {/* </Box> */}
       </div>
-      <Help />
     </>
   );
 }
