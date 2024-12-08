@@ -44,16 +44,19 @@ export default function ProductCard({
   showAverageRatingNo, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
   removeProductFromWishlist,
   hideWishlist = true,
-  showPurchase}) {
+  showPurchase,
+  showNotify,
+  quantityInCart = 0,
+}) {
   const navigate = useNavigate();
   const role = useUserRole();
-  const [notified,setNotified] = useState(false);
+  const [notified, setNotified] = useState(false);
   const [productInCart, setProductInCart] = useState(false);
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [showWishlist, setShowWishlist] = useState(false);
   const [archived, setArchived] = useState(product.isArchived);
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(quantityInCart);
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => setOpen(true);
@@ -64,7 +67,7 @@ export default function ProductCard({
       `https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`
     );
   }, []);
-  const checkIfInWishlist = async () =>{
+  const checkIfInWishlist = async () => {
     try {
       const userJson = localStorage.getItem("user");
       const user = JSON.parse(userJson);
@@ -75,7 +78,7 @@ export default function ProductCard({
       const response = await axios.get(
         `http://localhost:8000/touristRoutes/myWishlist/${userName}`
       );
-      if(!response.data[0]){
+      if (!response.data[0]) {
         return;
       }
       // Check if the product ID exists in the cart data
@@ -91,7 +94,7 @@ export default function ProductCard({
       console.error("Error checking product in wishlist:", error);
       message.error("Failed to check product in wishlist.");
     }
-  }
+  };
   const checkIfInCart = async () => {
     try {
       const userJson = localStorage.getItem("user");
@@ -104,7 +107,7 @@ export default function ProductCard({
         `http://localhost:8000/touristRoutes/myCart/${userName}`
       );
       // console.log(response.data);
-      if(!response.data.cart){
+      if (!response.data.cart) {
         return;
       }
       // Check if the product ID exists in the cart data
@@ -155,15 +158,10 @@ export default function ProductCard({
     }
   };
 
-
-
-
-
-  const handleEditProduct =() =>{
+  const handleEditProduct = () => {
     const productId = product._id;
     navigate(`/editProduct/${productId}`);
   };
-
 
   const handleAddToCartClick = async (e) => {
     if (quantity > 0) {
@@ -173,7 +171,7 @@ export default function ProductCard({
         const userName = user.username;
         const newQuantity = quantity;
         console.log("this is the quantity i am requesting", newQuantity);
-        const response = await axios.patch(
+        const response = await axios.put(
           "http://localhost:8000/touristRoutes/cart",
           {
             userName,
@@ -274,34 +272,38 @@ export default function ProductCard({
               <img src={product.picture || image} loading="lazy" alt="" />
             </AspectRatio>
             {!hideWishlist && (
-            <Tooltip  title= {showRemoveWishlist ? "Remove from Wishlist" : "Add to Wishlist"}>
-              <IconButton
-                size="md"
-                variant={showWishlist ? "soft" : "solid"}
-                onClick={(event) => {
-                  event.stopPropagation(); // Stop event propagation
-                  showRemoveWishlist ? handleRemoveWishlist(product): addToWishlist(product);
-                }}
-                className="blackhover"
-                sx={{
-                  position: "absolute",
-                  zIndex: 2,
-                  color: "white",
-                  borderRadius: "50%",
-                  right: "1rem",
-                  bottom: 0,
-                  transform: "translateY(50%)",
-                  transition: "transform 0.3s",
-                  backgroundColor: "#ff9933",
-                }}
+              <Tooltip
+                title={
+                  showRemoveWishlist
+                    ? "Remove from Wishlist"
+                    : "Add to Wishlist"
+                }
               >
-                {showRemoveWishlist ? (
-                  <Done color="#ff9933" />
-                ) : (
-                  <Favorite />
-                )}
-              </IconButton>
-            </Tooltip>
+                <IconButton
+                  size="md"
+                  variant={showWishlist ? "soft" : "solid"}
+                  onClick={(event) => {
+                    event.stopPropagation(); // Stop event propagation
+                    showRemoveWishlist
+                      ? handleRemoveWishlist(product)
+                      : addToWishlist(product);
+                  }}
+                  className="blackhover"
+                  sx={{
+                    position: "absolute",
+                    zIndex: 2,
+                    color: "white",
+                    borderRadius: "50%",
+                    right: "1rem",
+                    bottom: 0,
+                    transform: "translateY(50%)",
+                    transition: "transform 0.3s",
+                    backgroundColor: "#ff9933",
+                  }}
+                >
+                  {showRemoveWishlist ? <Done color="#ff9933" /> : <Favorite />}
+                </IconButton>
+              </Tooltip>
             )}
           </CardOverflow>
           <div style={{ height: "10%" }}>
@@ -472,24 +474,25 @@ export default function ProductCard({
                   ? "Sold Out"
                   : "Add To Cart"}
               </Button>
-              )}
-              {role==="Admin" || showEditProduct &&(
-              <Button
-                size="md"
-                variant="solid"
-                className="blackhover"
-                zIndex={2}
-                onClick={(event) => {
-                  event.stopPropagation(); // Stops propagation
-                  handleEditProduct(); // Call the function without passing `event`
-                }}
-                sx={{ backgroundColor: "#ff9933", marginRight: 1 }}
-              >
-                Edit Product
-              </Button>
-              )}
-              {product.availableQuantity === 0 && (
-                <div
+            )}
+            {role === "Admin" ||
+              (showEditProduct && (
+                <Button
+                  size="md"
+                  variant="solid"
+                  className="blackhover"
+                  zIndex={2}
+                  onClick={(event) => {
+                    event.stopPropagation(); // Stops propagation
+                    handleEditProduct(); // Call the function without passing `event`
+                  }}
+                  sx={{ backgroundColor: "#ff9933", marginRight: 1 }}
+                >
+                  Edit Product
+                </Button>
+              ))}
+            {product.availableQuantity === 0 && (
+              <div
                 style={{
                   position: "absolute",
                   top: "50%",
@@ -507,10 +510,10 @@ export default function ProductCard({
                   textTransform: "uppercase",
                   zIndex: 2, // Ensure it appears above other content
                 }}
-                >
-                  Sold Out
-                </div>
-              )}
+              >
+                Sold Out
+              </div>
+            )}
           </div>
         </Card>
         <div
