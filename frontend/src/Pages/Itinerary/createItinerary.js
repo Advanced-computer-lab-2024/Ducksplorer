@@ -291,6 +291,7 @@ const AddItinerary = () => {
                         required
                         style={styles.input}
                       />
+                     <label style={{textAlign:"center"}}>Check if you want it Open</label>
                       <input
                         type="checkbox"
                         checked={activity.isOpen}
