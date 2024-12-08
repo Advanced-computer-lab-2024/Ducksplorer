@@ -206,9 +206,10 @@ const RUDHistoricalPlace = () => {
               <Table>
                 <TableHead>
                   <TableRow>
+                  <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Name</TableCell>
                     <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Description</TableCell>
                     <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Location</TableCell>
-                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Pictures</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Picture</TableCell>
                     <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
                       Ticket Price
                       <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
@@ -216,7 +217,6 @@ const RUDHistoricalPlace = () => {
                     <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Opening Time</TableCell>
                     <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Closing Time</TableCell>
                     <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Date</TableCell>
-                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Name</TableCell>
                     <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Category</TableCell>
                     <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Tags</TableCell>
                     {/* <TableCell>Created By</TableCell> */}
@@ -226,6 +226,7 @@ const RUDHistoricalPlace = () => {
                 <TableBody>
                   {historicalPlaces.map((historicalPlace) => (
                     <TableRow key={historicalPlace._id}>
+                      <TableCell>{historicalPlace.HistoricalPlaceName}</TableCell>
                       <TableCell>{historicalPlace.description}</TableCell>
                       <TableCell>{historicalPlace.location}</TableCell>
                       <TableCell>
@@ -248,8 +249,7 @@ const RUDHistoricalPlace = () => {
                       </TableCell>
                       <TableCell>{historicalPlace.openingTime}</TableCell>
                       <TableCell>{historicalPlace.closingTime}</TableCell>
-                      <TableCell>{historicalPlace.HistoricalPlaceDate}</TableCell>
-                      <TableCell>{historicalPlace.HistoricalPlaceName}</TableCell>
+                      <TableCell>{new Date(historicalPlace.HistoricalPlaceDate).toLocaleDateString()}</TableCell>
                       <TableCell>
                         {historicalPlace.HistoricalPlaceCategory}
                       </TableCell>
