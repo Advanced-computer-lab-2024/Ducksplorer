@@ -726,7 +726,7 @@ function SearchItineraries() {
               errorMessage={errorMessage}
               backMessage={backMessage}
               route="/viewAllTourist"
-            />
+            />  
           )
         )}
         <Help />

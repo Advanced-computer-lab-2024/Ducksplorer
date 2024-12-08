@@ -45,7 +45,7 @@ const AdminReport = () => {
   const tabs = ["Users Report", "Revenue Report"];
   const paths = ["/userReport", "/adminReport"];
   const tabNames = ["Activities Report", "Itineraries Report", "Products Report"];
-  const [selectedTab, setSelectedTab] = useState("Activities Report");
+  const [selectedTab, setSelectedTab] = useState(tabNames[0]);
 
   const errorMessage1 =
     "The flights you are looking for might be removed or is temporarily unavailable";
@@ -164,7 +164,7 @@ const AdminReport = () => {
     activitySetYear("");
     activitySetSelectedFilters([]);
     activitySetFiltersApplied(false);
-
+    
     try {
       const response = await axios.get(
         `http://localhost:8000/admin/reportActivities`
@@ -219,7 +219,7 @@ const AdminReport = () => {
 
   const fetchFilteredActivities = async () => {
     activitySetErrorMessage(""); // Reset error message before fetching
-
+    
     try {
       setLoading(true);
       let queryString = "";
@@ -373,6 +373,10 @@ const AdminReport = () => {
     );
   };
 
+  useEffect(() => {
+    document.body.style.overflow = "auto";
+  }, []);
+
   const changeActivityDate = (newDate) => {
     activitySetDate(newDate);
     activitySetMonth("");
@@ -464,11 +468,12 @@ const AdminReport = () => {
     return (
       <>
         <AdminNavbar />
-        <Error404
+        {/* <Error404
           errorMessage={errorMessage1}
           backMessage={backMessage}
           route="/adminDashboard"
-        />
+        /> */}
+        <DuckLoading/>
       </>
     );
   }
@@ -477,11 +482,12 @@ const AdminReport = () => {
     return (
       <>
         <AdminNavbar />
-        <Error404
+        {/* <Error404
           errorMessage={errorMessage2}
           backMessage={backMessage}
           route="/adminDashboard"
-        />
+        /> */}
+        <DuckLoading/>
       </>
     );
   }
@@ -505,7 +511,6 @@ const AdminReport = () => {
         height: "100vh",
         paddingTop: "64px",
         width: "90vw",
-        marginLeft: "5vw",
       }}
     >
       <AdminNavbar />
@@ -520,23 +525,17 @@ const AdminReport = () => {
           <Typography
             variant="h2"
             sx={{ textAlign: "center", fontWeight: "bold" }}
-            gutterBottom
+            gutterBottom className="bigTitle"
           >
-            Revenue Report
+          <Typography variant="h5" sx={{ fontWeight: "bold", color: "black", fontSize: "50px" }} className="bigTitle"> {/* Increased text size */}
+          Revenue Report
+          </Typography>
           </Typography>
           <br></br>
           <MyTabs tabNames={tabNames} onTabClick={(tabName) => setSelectedTab(tabName)} />
 
           {selectedTab === "Activities Report" && (
             <div>
-              {" "}
-              <Typography
-                variant="h5"
-                sx={{ fontWeight: "bold", marginBottom: "20px" }}
-                gutterBottom
-              >
-                Activities
-              </Typography>
               {/* Filtering */}
               <IconButton onClick={activityHandleFilterChoiceClick}>
                 <FilterAltIcon style={{ color: "black" }} />
@@ -722,10 +721,6 @@ const AdminReport = () => {
 
           {selectedTab === "Itineraries Report" && (
             <div>
-              {" "}
-              <Typography variant="h5" sx={{ fontWeight: "bold" }} gutterBottom>
-                Itineraries
-              </Typography>
               {/* Filtering */}
               <IconButton onClick={itineraryHandleFilterChoiceClick}>
                 <FilterAltIcon />
@@ -959,14 +954,6 @@ const AdminReport = () => {
 
           {selectedTab === "Products Report" && (
             <div>
-              {" "}
-              <Typography
-                variant="h5"
-                sx={{ marginTop: "40px", fontWeight: "bold" }}
-                gutterBottom
-              >
-                Products
-              </Typography>
               {/* Filtering */}
               <IconButton onClick={productHandleFilterChoiceClick}>
                 <FilterAltIcon />

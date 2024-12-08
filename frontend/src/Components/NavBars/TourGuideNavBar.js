@@ -18,6 +18,7 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
 import MyNotifications from "../myNotifications";
+import Button from "@mui/material/Button";
 
 function TourGuideNavBar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -57,7 +58,7 @@ function TourGuideNavBar() {
       sx={{
         backgroundColor: "white",
         width: "100vw",
-        height: "7vh",
+        height: "10vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -81,8 +82,95 @@ function TourGuideNavBar() {
               </h2>
             </a>
           </Tooltip>
-          
-          <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("rudItinerary")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                All Itineraries
+              </Typography>
+            </Button>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("createItinerary")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                Create Itinerary
+              </Typography>
+            </Button>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("tourGuideReport")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                Report
+              </Typography>
+            </Button>
+          </Box>
           <Box sx={{ flexGrow: 0, marginRight: "3vw", display: "flex", alignItems: "center" }}>
             <Tooltip>
               <MyNotifications />
@@ -93,7 +181,7 @@ function TourGuideNavBar() {
                 sx={{ p: 0, ml: 4, width: 40, height: 40 }}
               >
                 <img
-                  src={"duckavatar.png"}
+                  src={"/duckavatar.png"}
                   alt="Avatar"
                   style={{
                     maxWidth: "50px",
@@ -133,46 +221,6 @@ function TourGuideNavBar() {
                   </Typography>
                 </IconButton>
               </MenuItem>
-
-              <MenuItem component={Link} to="/rudItinerary">
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <EventNoteIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    All Itineraries
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem component={Link} to="/createItinerary">
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <AddIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Create Itinerary
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem component={Link} to="/tourGuideReport">
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <SummarizeIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Report
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
               <MenuItem onClick={handleLogout}>
                 <IconButton sx={{ textAlign: "center", p: 0.5 }}>
                   <DeleteIcon sx={{ fontSize: 20, color: "black" }} />

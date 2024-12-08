@@ -91,7 +91,7 @@ const AdvertiserDashboard = () => {
 
       {videoEnded && (
         <Box sx={{ display: "flex", flexDirection: "column", p: 3 }}>
-          <Grid container spacing={2} sx={{ marginBottom: "20px" }}>
+          <Grid container spacing={2} sx={{ marginBottom: "90px", marginTop: "20px" }}>
             <Grid item xs={12} md={4}>
               <Paper
                 elevation={3}

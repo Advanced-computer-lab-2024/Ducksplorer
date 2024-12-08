@@ -34,20 +34,18 @@ router.post("/toggle-cron", async (req, res) => {
     res.status(500).json({ message: "Error toggling cron state.", error });
   }
 });
-router.post("/createCron", createCron);
+router.post("/createCron", createCron);//done but idk what is this
 
-router.get("/viewaccount/:userName", getTouristDetails);
+router.get("/viewaccount/:userName", getTouristDetails);//done
 
-router.put("/editaccount", updateTouristDetails);
+router.put("/editaccount", updateTouristDetails);//done but not tested
 
-router.delete("/deleteMyTouristAccount/:userName", deleteMyTouristAccount);
+router.delete("/deleteMyTouristAccount/:userName", deleteMyTouristAccount);//done but not tested
 
-router.delete("/deleteMyTouristAccount/:userName", deleteMyTouristAccount);
+router.get("/preferences/:userName", getTouristPreferences);//done
 
-router.get("/preferences/:userName", getTouristPreferences);
+router.get("/favoriteCategory/:userName", getFavoriteCategory);//done
 
-router.get("/favoriteCategory/:userName", getFavoriteCategory);
-
-router.post("/bod", bod);
+router.post("/bod", bod);//done but idk what is this
 
 module.exports = router;

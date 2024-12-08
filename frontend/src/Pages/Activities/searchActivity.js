@@ -72,7 +72,7 @@ function SearchActivity() {
   const username = user?.username;
 
   //sorting consts
-  const [sortOrder, setSortOrder] = useState("asc"); // Default to 'asc'
+  const [sortOrder, setSortOrder] = useState("desc"); // Default to 'asc'
 
   const [sortByAnchorEl, setSortByAnchorEl] = useState(null);
   const [sortOrderAnchorEl, setSortOrderAnchorEl] = useState(null);
@@ -164,7 +164,7 @@ function SearchActivity() {
     setLoading(true);
     axios
       .get(
-        `http://localhost:8000/activity/sort?sortBy=${sortBy}&order=${order}`
+        `http://localhost:8000/activity/sort?sortBy=${sortBy}&order=${sortOrder}`
       )
       .then((response) => {
         if (showPreferences === "true") {

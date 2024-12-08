@@ -15,6 +15,9 @@ import LockIcon from "@mui/icons-material/Lock";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Button from "@mui/material/Button";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 function GovernorNavBar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -80,6 +83,125 @@ function GovernorNavBar() {
           </Tooltip>
           
           <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ flexGrow: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("createMuseum")}
+              sx={{
+                fontSize: "1rem",
+                fontFamily: "'Josefin Sans', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Lobster', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                Add New Museum
+              </Typography>
+            </Button>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("RUDMuseum")}
+              sx={{
+                fontSize: "1rem",
+                fontFamily: "'Josefin Sans', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Lobster', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                All Museums
+              </Typography>
+            </Button>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("createHistoricalPlace")}
+              sx={{
+                fontSize: "1rem",
+                fontFamily: "'Josefin Sans', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Lobster', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                Add New Historical Place
+              </Typography>
+            </Button>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("RUDHistoricalPlace")}
+              sx={{
+                fontSize: "1rem",
+                fontFamily: "'Josefin Sans', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Lobster', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                All Historical Places
+              </Typography>
+            </Button>
+          </Box>
+          <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ flexGrow: 0, marginRight: "3vw", display: "flex", alignItems: "center" }}>
             <Tooltip title="Open Account settings">
               <IconButton
@@ -87,7 +209,7 @@ function GovernorNavBar() {
                 sx={{ p: 0, ml: 4, width: 40, height: 40 }}
               >
                 <img
-                  src={"duckavatar.png"}
+                  src={"/duckavatar.png"}
                   alt="Avatar"
                   style={{
                     maxWidth: "50px",
@@ -127,59 +249,6 @@ function GovernorNavBar() {
                   </Typography>
                 </IconButton>
               </MenuItem>
-
-              <MenuItem onClick={() => handleNavigation("RUDMuseum")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <MuseumIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    View All My Museums
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={() => handleNavigation("createMuseum")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <AddIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Create a new Museum
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={() => handleNavigation("RUDHistoricalPlace")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <MuseumIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    View All My Historical Places
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={() => handleNavigation("createHistoricalPlace")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <AddIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Create a new Historical Place
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
               <MenuItem onClick={handleLogout}>
                 <IconButton sx={{ textAlign: "center", p: 0.5 }}>
                   <LockIcon sx={{ fontSize: 20, color: "black" }} />

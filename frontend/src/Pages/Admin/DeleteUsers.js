@@ -88,9 +88,9 @@ const DeleteUser = () => {
     <Box
       sx={{
         height: "100vh",
-        paddingTop: "64px",
+        paddingTop: "14px",
         width: "90vw",
-        marginLeft: "5vw",
+        // marginLeft: "5vw",
       }}
     >
       <AdminNavbar />
@@ -108,7 +108,9 @@ const DeleteUser = () => {
             sx={{ textAlign: "center", fontWeight: "bold" }}
             gutterBottom
           >
+          <Typography variant="h5" sx={{ fontWeight: "bold", color: "black", fontSize: "50px" }} className="bigTitle"> {/* Increased text size */}
             Active Users
+          </Typography>
           </Typography>
           <br></br>
 
@@ -120,6 +122,7 @@ const DeleteUser = () => {
               borderRadius: "12px", // Rounded corners
               boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
               overflow: "hidden", // Ensure no scroll bars
+              margin: "auto", // Center the container
             }}
           >
             <Table>

@@ -23,9 +23,7 @@ const viewCart = async (req, res) => {
     );
 
     if (!cart) {
-      return res
-        .status(200)
-        .json({ message: "Cart is empty", cart: null });
+      return res.status(200).json({ message: "Cart is empty", cart: null });
     }
 
     // Respond with the cart details, including populated products
@@ -38,7 +36,7 @@ const viewCart = async (req, res) => {
 
 const addProductToCart = async (req, res) => {
   try {
-    const { userName, productId } = req.body;
+    const { userName, productId, newQuantity } = req.body;
     console.log(userName, productId);
     // Validate input
     if (!userName || typeof userName !== "string") {
@@ -58,7 +56,6 @@ const addProductToCart = async (req, res) => {
       return res.status(404).json({ message: "Product not found." });
     }
 
-
     // Find or create the cart
     let cart = await Cart.findOne({ username: userName });
     if (!cart) {
@@ -67,7 +64,7 @@ const addProductToCart = async (req, res) => {
     }
 
     if (cart.products) {
-      cart.products.push({ product: productId, quantity: 1 });
+      cart.products.push({ product: productId, quantity: newQuantity });
 
       // // Check if the product is already in the cart
       // const productIndex = cart.products.findIndex(
@@ -101,10 +98,9 @@ const addProductToCart = async (req, res) => {
 };
 
 const createCart = async (req, res) => {
-  const { userName, productId} = req.body;
+  const { userName, productId, newQuantity } = req.body;
   console.log("req body inside", userName);
   try {
-
     console.log("before create");
 
     const newCart = new Cart({
@@ -112,7 +108,7 @@ const createCart = async (req, res) => {
       products: [],
     });
 
-    newCart.products.push({ product: productId, quantity: 1 });
+    newCart.products.push({ product: productId, quantity: newQuantity });
     const cart = await newCart.save();
     res.status(200).json(cart);
   } catch (error) {
@@ -238,12 +234,12 @@ const addPurchase2 = async (req, res) => {
     product.availableQuantity -= chosenQuantitynum;
     product.sales = (product.sales || 0) + chosenPrice;
 
-    if(product.availableQuantity === 0){
+    if (product.availableQuantity === 0) {
       await createNotification(
         `Product ${product.name} is out of stock`,
         product.seller,
-        'Out of stock'
-      )
+        "Out of stock"
+      );
     }
 
     await product.save();
@@ -274,11 +270,11 @@ const addPurchase2 = async (req, res) => {
   }
 };
 
-
-
 const getMyOrders = async (req, res) => {
   try {
-    const myPurchases = await PurchaseBooking.find({ buyer: req.params.buyer }).populate("product");
+    const myPurchases = await PurchaseBooking.find({
+      buyer: req.params.buyer,
+    }).populate("product");
     res.status(200).json(myPurchases);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -286,26 +282,31 @@ const getMyOrders = async (req, res) => {
 };
 
 const getAddresses = async (req, res) => {
-  try{
-    const tourist = await touristModel.findOne({userName: req.params.userName});
-    if(!tourist){
-      return res.status(400).json({message: "tourist not found"});
+  try {
+    const tourist = await touristModel.findOne({
+      userName: req.params.userName,
+    });
+    if (!tourist) {
+      return res.status(400).json({ message: "tourist not found" });
     }
     return res.status(200).json(tourist.addresses);
-  }
-  catch(error){
+  } catch (error) {
     return res.status(500).json({ message: error.message });
   }
-}
+};
 
 const addAddress = async (req, res) => {
-  try{
+  try {
     const { street, city, state, postalCode, country } = req.body;
     if (!street || !city || !postalCode || !country || !state) {
-      return res.status(400).json({ error: "All required fields must be provided" });
+      return res
+        .status(400)
+        .json({ error: "All required fields must be provided" });
     }
 
-    const tourist = await touristModel.findOne({ userName: req.params.userName });
+    const tourist = await touristModel.findOne({
+      userName: req.params.userName,
+    });
     if (!tourist) return res.status(404).json({ error: "Tourist not found" });
 
     // Add the new address
@@ -314,27 +315,30 @@ const addAddress = async (req, res) => {
     // Save the updated document
     await tourist.save();
 
-    return res.status(200).json({ message: "Address added successfully", addresses: tourist.addresses });
-  }
-  catch(error){
+    return res
+      .status(200)
+      .json({
+        message: "Address added successfully",
+        addresses: tourist.addresses,
+      });
+  } catch (error) {
     return res.status(400).json(error);
   }
-}
+};
 
 const emptyCart = async (req, res) => {
   const { userName } = req.body;
-  try{
+  try {
     const cart = await Cart.findOne({ username: userName });
-    if(!cart){
-      return res.status(404).json({error: "cart not found"});
+    if (!cart) {
+      return res.status(404).json({ error: "cart not found" });
     }
     await Cart.deleteOne({ _id: cart._id });
     return res.status(200).json({ message: "cart deleted successfully" });
-  }
-  catch(error){
+  } catch (error) {
     return res.status(400).json(error);
   }
-}
+};
 
 module.exports = {
   addProductToCart,
@@ -345,5 +349,5 @@ module.exports = {
   getMyOrders,
   getAddresses,
   addAddress,
-  emptyCart
+  emptyCart,
 };

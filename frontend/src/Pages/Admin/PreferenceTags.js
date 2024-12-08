@@ -178,7 +178,9 @@ const PreferenceTags = () => {
             sx={{ textAlign: "center", fontWeight: "bold" }}
             gutterBottom
           >
+          <Typography variant="h5" sx={{ fontWeight: "bold", color: "black", fontSize: "50px" }} className="bigTitle"> {/* Increased text size */}
             Available Tags
+          </Typography>
           </Typography>
           <br></br>
 
