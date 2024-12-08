@@ -21,6 +21,8 @@ import { useNavigate } from "react-router-dom";
 import ProductCardDetails from "../productCardDetailed";
 import { useState, useEffect } from "react";
 import Favorite from "@mui/icons-material/Favorite";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+
 
 import Swal from "sweetalert2";
 
@@ -42,6 +44,7 @@ export default function ProductCard({ product,
   hideWishlist = true,
   showPurchase, showNotify }) {
   const navigate = useNavigate();
+  const [notified,setNotified] = useState(false);
   const [productInCart, setProductInCArt] = useState(false);
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -185,6 +188,7 @@ export default function ProductCard({ product,
             ? "Notifications enabled for this product!"
             : "Notifications disabled for this product!"
         );
+        setNotified(!notified);
         setNotificationStates((prev) => ({
           ...prev,
           [productId]: newIsNotified,
@@ -416,35 +420,6 @@ export default function ProductCard({ product,
                 )}
               </IconButton>
             </Tooltip>
-            )}
-            {showNotify && (
-              <Tooltip title="Request Notifications">
-                <IconButton
-                  size="md"
-                  variant="solid"
-                  color="primary"
-                  onClick={(event) =>
-                    requestNotification(
-                      event,
-                      product._id,
-                      notificationStates[product._id]
-                    )
-                  }
-                  sx={{
-                    borderRadius: "50%",
-                    position: "absolute",
-                    zIndex: 2,
-                    borderRadius: "50%",
-                    display: "flex",
-                    justifyContent: "center  ",
-                    alignItems: "center",
-                    bottom: 0,
-                    transform: "translateY(50%) translateX(-260%)",
-                    transition: "transform 0.3s",
-                    backgroundColor: "#ffcc00",
-                  }}
-                ></IconButton>
-              </Tooltip>
             )}
           </CardOverflow>
           <div style={{ height: "10%" }}>
