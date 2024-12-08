@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, CssBaseline } from "@mui/material";
+import { Box, Typography, CssBaseline, Button } from "@mui/material";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 import { Outlet } from "react-router-dom";
 import TouristNavBar from "../../Components/TouristNavBar";
@@ -16,6 +16,34 @@ const TouristDashboard = () => {
     }, 1000); // Delay to allow fade-out animation
   };
 
+  const openDemoVideo = () => {
+    const videoFilePath = "/duck-toy.mp4"; // Correct path to your demo video file
+  
+    // Create the popup window with a defined width, height, and centered position
+    const popupWindow = window.open(
+      "",
+      "DemoVideoPopup",
+      "width=800,height=450,top=" + (window.innerHeight / 2 - 225) + ",left=" + (window.innerWidth / 2 - 400)
+    );
+  
+    popupWindow.document.write(`
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Removed the <title> tag to avoid showing a title -->
+      </head>
+      <body style="text-align: center; display: flex; justify-content: center; align-items: center; margin: 0; height: 100vh;">
+        <video controls autoplay style="max-width: 100%; height: auto; border: none;">
+          <source src="${videoFilePath}" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </body>
+      </html>
+    `);
+  };
+  
   useEffect(() => {
     // Disable scrolling on mount
     document.body.style.overflow = "hidden";
@@ -97,13 +125,52 @@ const TouristDashboard = () => {
               mb: 2,
             }}
           >
-          <Typography variant="h5" sx={{ fontWeight: "bold", fontSize: "50px", color: "orange" }} className="bigTitle"> {/* Increased text size */}
-            Welcome to Ducksplorer
+            <Typography
+              variant="h5"
+              sx={{ fontWeight: "bold", fontSize: "50px", color: "orange" }}
+              className="bigTitle"
+            >
+              {" "}
+              {/* Increased text size */}
+              Welcome to Ducksplorer
+            </Typography>
           </Typography>
-          </Typography>
-          <Typography variant="h5" sx={{ fontWeight: "bold", color: "orange"}} className="bigTitle"> {/* Increased text size */}
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: "bold", color: "orange" }}
+            className="bigTitle"
+          >
+            {" "}
+            {/* Increased text size */}
             Start your journey now!
           </Typography>
+        </Box>
+      )}
+
+      {/* Button Container Positioned Below the Welcome Message */}
+      {videoEnded && (
+        <Box
+          sx={{
+            position: "fixed",
+            top: "60%", // Position the button lower than the welcome message
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 10,
+            textAlign: "center",
+          }}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{
+              mt: 3,
+              backgroundColor: "#FF9800",
+              "&:hover": { backgroundColor: "#F57C00" },
+            }}
+            onClick={openDemoVideo}
+          >
+            View a Demo of How to Use Our Website
+          </Button>
         </Box>
       )}
 
