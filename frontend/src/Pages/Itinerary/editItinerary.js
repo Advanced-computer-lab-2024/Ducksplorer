@@ -391,15 +391,15 @@ function EditItinerary() {
                 <div
                   style={{
                     display: "flex",
-                    flexDirection: "column", // Stack the label and toggle buttons vertically
-                    alignItems: "flex-start", // Align items to the start
+                    flexDirection: "column",
+                    alignItems: "flex-start",
                   }}
                 >
                   <label
                     style={{
                       fontSize: "16px",
                       fontWeight: "bold",
-                      marginBottom: "10px", // Add space between the label and the toggle buttons
+                      marginBottom: "10px",
                     }}
                   >
                     Tags

@@ -205,113 +205,154 @@ function EditActivity() {
 
 
     return (
-        <div
-            style={{
-                overflow: "visible",
+        <Box
+            sx={{
                 height: "100vh",
             }}
         >
             <AdvertiserNavBar />
-            <h2 style={{ fontWeight: "bold", textAlign: "center" }}>Edit Activity</h2>
-            <form
-                onSubmit={handleUpdate}
-                style={{ marginTop: "20px" }}
-                ref={formRef}
+
+            <Box
+                sx={{
+                    p: 4,
+                    justifyContent: "center",
+                }}
             >
-                <TextField
-                    label="Name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    fullWidth
-                    sx={{ mb: 2 }}
-                />
-                <TextField
-                    label="Price"
-                    name="price"
-                    value={formData.price}
-                    onChange={handleInputChange}
-                    fullWidth
-                    sx={{ mb: 2 }}
-                    type="number"
-                />
-                <FormControlLabel
-                    control={
-                        <Checkbox
-                            style={{ color: "#ff9933" }}
-                            checked={formData.isOpen}
-                            onChange={handleCheckboxChange}
-                            name="isOpen"
-                        />
-                    }
-                    label="Is open"
-                    sx={{ mb: 2 }}
-                />
-                <TextField
-                    label="Discount"
-                    name="specialDiscount"
-                    value={formData.specialDiscount}
-                    onChange={handleInputChange}
-                    fullWidth
-                    sx={{ mb: 2 }}
-                    type="number"
-                />
-                <TextField
-                    label="Date"
-                    name="date"
-                    value={formData.date}
-                    onChange={handleInputChange}
-                    fullWidth
-                    sx={{ mb: 2 }}
-                    type="datetime-local"
-                />
-                <TextField
-                    label="Category"
-                    name="category"
-                    value={formData.category}
-                    onChange={handleInputChange}
-                    fullWidth
-                    sx={{ mb: 2 }}
-                />
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        flexWrap: "wrap",
+                <Paper
+                    elevation={4}
+                    sx={{
+                        marginTop: "30px",
+                        p: 5,
+                        width: "700px",
+                        borderRadius: 3,
+                        boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
+                        height: "100%",
                     }}
                 >
-                    {allTags.map((element) => {
-                        return (
-                            <StandAloneToggleButton
-                                key={element._id}
-                                name={element.name}
-                                tags={formData.tags}
-                            />
-                        );
-                    })}
-                </div>
-                <TextField
-                    label="Duration"
-                    name="duration"
-                    value={formData.duration}
-                    onChange={handleInputChange}
-                    fullWidth
-                    sx={{ mb: 2 }}
-                />
-                <TextField
-                    label="Location"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleInputChange}
-                    fullWidth
-                    sx={{ mb: 2 }}
-                />
-                <Button type="submit" variant="contained" className="blackhover">
-                    Update Activity
-                </Button>
-            </form>
-        </div>
-    )
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            mb: 3,
+                        }}
+                    >
+                        <h2 style={{ fontWeight: "bold", textAlign: "center" }}>Edit Activity</h2>
+                        <Box />
+                        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                            <form
+                                onSubmit={handleUpdate}
+                                style={{ marginTop: "20px" }}
+                                ref={formRef}
+                            >
+                                <TextField
+                                    label="Name"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                />
+                                <TextField
+                                    label="Price"
+                                    name="price"
+                                    value={formData.price}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                    type="number"
+                                />
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            style={{ color: "#ff9933" }}
+                                            checked={formData.isOpen}
+                                            onChange={handleCheckboxChange}
+                                            name="isOpen"
+                                        />
+                                    }
+                                    label="Is open"
+                                    sx={{ mb: 2 }}
+                                />
+                                <TextField
+                                    label="Discount"
+                                    name="specialDiscount"
+                                    value={formData.specialDiscount}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                    type="number"
+                                />
+                                <TextField
+                                    label="Date"
+                                    name="date"
+                                    value={formData.date}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                    type="datetime-local"
+                                />
+                                <TextField
+                                    label="Category"
+                                    name="category"
+                                    value={formData.category}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                />
+
+                                <TextField
+                                    label="Duration"
+                                    name="duration"
+                                    value={formData.duration}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                />
+                                <TextField
+                                    label="Location"
+                                    name="location"
+                                    value={formData.location}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                />
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        flexWrap: "wrap",
+                                    }}
+                                >
+                                    <label
+                                        style={{
+                                            fontSize: "16px",
+                                            fontWeight: "bold",
+                                            marginBottom: "10px",
+                                        }}
+                                    >
+                                        Tags
+                                    </label>
+                                    {allTags.map((element) => {
+                                        return (
+                                            <StandAloneToggleButton
+                                                key={element._id}
+                                                name={element.name}
+                                                tags={formData.tags}
+                                            />
+                                        );
+                                    })}
+                                </div>
+                                <Button type="submit" variant="contained" className="blackhover">
+                                    Update Activity
+                                </Button>
+                            </form>
+                        </Box>
+                    </Box>
+                </Paper>
+            </Box>
+        </Box>
+    );
 }
 
 export default EditActivity;
