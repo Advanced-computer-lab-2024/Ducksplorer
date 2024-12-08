@@ -37,23 +37,23 @@ export default function Error404({ route, errorMessage, backMessage }) {
         404 Not Found
       </h1>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginBottom: "2rem", // Space below the image
-        }}
-      >
-        <img
-          src="DuckError404.png"
-          alt="Duck Error 404"
-          style={{
-            width: "70%", // Adjust the image size for better responsiveness
-            maxWidth: "400px", // Set a max width for better scaling
-            height: "auto",
-          }}
-        />
-      </div>
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginBottom: "2rem", // Space below the image
+                }}
+            >
+                <img
+                    src="/DuckError404.png"
+                    alt="Duck Error 404"
+                    style={{
+                        width: "70%", // Adjust the image size for better responsiveness
+                        maxWidth: "400px", // Set a max width for better scaling
+                        height: "auto",
+                    }}
+                />
+            </div>
 
       <div
         style={{

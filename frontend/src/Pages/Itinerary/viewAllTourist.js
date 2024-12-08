@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { message } from "antd";
-import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 import ItineraryCard from "../../Components/itineraryCard.js";
 import UpdateIcon from "@mui/icons-material/Update";
+import GuestNavBar from "../../Components/NavBars/GuestNavBar.js";
+
 import {
   Stack,
   Typography,
@@ -383,8 +384,12 @@ function SearchItineraries() {
         paddingTop: "2vh", // Adjust for navbar height
       }}
     >
-      <TouristNavBar />
-      <Container sx={{ width: "100%" }}>
+        {isGuest === true ? (
+          <GuestNavBar /> // Replace with your guest navbar component
+        ) : (
+          <TouristNavBar /> // Replace with your tourist navbar component
+        )} 
+        <Container sx={{ width: "100%" }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography class="bigTitle">Itineraries</Typography>
         </Box>

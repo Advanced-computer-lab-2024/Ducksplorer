@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import LockIcon from "@mui/icons-material/Lock";
 import Cookies from "js-cookie";
+import LogoutIcon from '@mui/icons-material/Logout';
 
 function SellerNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -226,7 +227,7 @@ function SellerNavBar() {
               </MenuItem>
               <MenuItem onClick={handleLogout}>
                 <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <LockIcon sx={{ fontSize: 20, color: "black" }} />
+                  <LogoutIcon sx={{ fontSize: 20, color: "black" }} />
                   <Typography
                     textAlign="center"
                     marginLeft={2}

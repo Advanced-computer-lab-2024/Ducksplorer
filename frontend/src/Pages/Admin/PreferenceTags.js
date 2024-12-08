@@ -197,7 +197,6 @@ const PreferenceTags = () => {
             >
               <TextField
                 label="New Tag"
-                variant="outlined"
                 value={newTag}
                 onChange={handletagChange}
                 sx={{

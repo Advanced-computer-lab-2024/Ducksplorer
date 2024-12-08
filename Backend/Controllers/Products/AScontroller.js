@@ -5,6 +5,9 @@ const { $options } = require("sift");
 const multer = require("multer");
 const path = require("path");
 const { DataArray } = require("@mui/icons-material");
+const {
+  ConversationContextImpl,
+} = require("twilio/lib/rest/conversations/v1/conversation");
 const upload = multer({ dest: "uploads/" });
 
 const createProduct = async (req, res) => {
@@ -18,23 +21,20 @@ const createProduct = async (req, res) => {
     description,
     seller,
     reviews,
-    sales,
-    isArchived,
   } = req.body;
+
+  console.log("this is the req body", req.body);
 
   try {
     const product = await productModel.create({
       name,
       price,
       ratings,
-      picture,
       availableQuantity,
+      picture,
       description,
       seller,
       reviews,
-      sales,
-      isArchived,
-      totalGain
     });
     res.status(200).json(product);
   } catch (error) {

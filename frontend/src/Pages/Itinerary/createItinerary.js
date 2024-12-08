@@ -221,6 +221,7 @@ const AddItinerary = () => {
       <TourGuideNavBar />
       <div style={styles.container}>
         <div style={styles.leftSection}>
+          <img src="/path/to/your/image.jpg" alt="Itinerary" style={styles.image} />
           <Typography
             variant="h3"
             className="duckTitle"
@@ -612,9 +613,9 @@ const styles = {
   leftSection: {
     flex: 1,
     display: "flex",
-    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    position: "relative",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     color: "#fff",
     padding: "20px",
@@ -626,6 +627,18 @@ const styles = {
     alignItems: "center",
     backgroundColor: "rgba(255,255,255,0.95)",
     paddingBottom: "20px", // Add padding to the bottom
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    borderRadius: "8px",
+  },
+  welcomeText: {
+    position: "absolute",
+    fontSize: "3rem",
+    fontWeight: "bold",
+    color: "white",
   },
   welcomeText: {
     fontSize: "3rem",

@@ -29,6 +29,9 @@ function LandingPage() {
     };
   }, []);
 
+  const handleGuestClick = () => {
+    localStorage.setItem('guest', 'true');
+  };
   return (
     <div style={styles.container}>
       <div style={styles.leftSection}>
@@ -54,6 +57,9 @@ function LandingPage() {
               <Button variant="outlined" size="large" style={{ ...styles.button, ...styles.signUpButton }}>
                 Sign Up
               </Button>
+            </Link>
+            <Link to="/guestDashboard" style={styles.link2} onClick={handleGuestClick}>
+              Continue as a Guest
             </Link>
           </Box>
           <Grid container spacing={4} style={styles.features}>
@@ -218,6 +224,11 @@ const styles = {
   link: {
     textDecoration: "none",
     margin: "0 10px",
+  },
+  link2: {
+    color: "#ff9933",
+    textDecoration: "bold",
+    margin: "0 40px",
   },
   button: {
     margin: "10px",

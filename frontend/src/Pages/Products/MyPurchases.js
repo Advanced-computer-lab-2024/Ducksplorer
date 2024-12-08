@@ -22,7 +22,6 @@ function MyPurchases() {
         const response = await axios.get(
           `http://localhost:8000/touristRoutes/orderDetails/${orderNumber}`
         );
-        message.success("Purchases fetched successfully");
         const fetchedPurchases = response.data.purchases;
   
         // Store purchases with chosenQuantity
