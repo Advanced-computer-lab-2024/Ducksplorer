@@ -32,7 +32,8 @@ const touristSaveActivity = async (req, res) => {
     console.log("after ", activity);
 
     res.status(200).json({
-      message: "activity updated successfully"
+      message: "activity saved successfully",
+      saved: activity.saved,
     });
   } catch (err) {
     res.status(400).json({ error: err.message });

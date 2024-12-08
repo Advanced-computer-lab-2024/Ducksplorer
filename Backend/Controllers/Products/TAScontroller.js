@@ -28,32 +28,52 @@ const getProductById = async (req, res) => {
 };
 
 
+// const sortProducts = async (req, res) => {
+//   const sortingDecider = req.query.sortingDecider; // Get the sortingDecider from the query params
+
+//   try {
+//     const products = await productModel.find({}); // Fetch all products
+
+//     // Calculate average rating for each product
+//     products.forEach((product) => {
+//       product.averageRating =
+//         product.ratings.length > 0
+//           ? product.ratings.reduce((sum, num) => sum + num, 0) /
+//             product.ratings.length
+//           : 0;
+//     });
+
+//     if (sortingDecider === "1") {
+//       // Sort by average rating in descending order
+//       products.sort((a, b) => b.averageRating - a.averageRating);
+//     } else {
+//       // Sort by average rating in ascending order
+//       products.sort((a, b) => a.averageRating - b.averageRating);
+//     }
+
+//     res.status(200).send(products); // Send the sorted products back
+//   } catch (error) {
+//     res.status(500).json({ error: error.message }); // Handle any errors
+//   }
+// };
+
 const sortProducts = async (req, res) => {
-  const sortingDecider = req.query.sortingDecider; // Get the sortingDecider from the query params
-
   try {
-    const products = await productModel.find({}); // Fetch all products
-
-    // Calculate average rating for each product
-    products.forEach((product) => {
-      product.averageRating =
-        product.ratings.length > 0
-          ? product.ratings.reduce((sum, num) => sum + num, 0) /
-            product.ratings.length
-          : 0;
-    });
-
-    if (sortingDecider === "1") {
-      // Sort by average rating in descending order
-      products.sort((a, b) => b.averageRating - a.averageRating);
-    } else {
-      // Sort by average rating in ascending order
-      products.sort((a, b) => a.averageRating - b.averageRating);
+    // Get the sorting order from the query parameters (default to 'asc' if not provided)
+    const { sortOrder } = req.query; // Accept 'asc' or 'desc'
+    
+    let sortCriteria = { averageRating: 1 }; // Default to ascending
+    if (sortOrder && sortOrder === "desc") {
+      sortCriteria = { averageRating: -1 }; // Descending order
     }
 
-    res.status(200).send(products); // Send the sorted products back
-  } catch (error) {
-    res.status(500).json({ error: error.message }); // Handle any errors
+    // Fetch products and sort by averageRating
+    const products = await productModel.find().sort(sortCriteria);
+
+    // Return the sorted products
+    return res.status(200).json({ products });
+  } catch (err) {
+    return res.status(400).json({ message: err.message });
   }
 };
 
@@ -120,6 +140,14 @@ const touristUpdateProductRating = async (req, res) => {
       // Add a new rating if the user hasn't rated this product before
       product.ratings.push({ buyer, rating });
     }
+     // Calculate the average rating
+     if (product.ratings.length > 0) {
+      const totalRatings = product.ratings.reduce((sum, r) => sum + r.rating, 0);
+      product.averageRating = totalRatings / product.ratings.length;
+    } else {
+      product.averageRating = 0; // No ratings, so set to 0 or null
+    }
+
     await product.save();
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
