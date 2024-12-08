@@ -22,8 +22,7 @@ import ProductCardDetails from "../productCardDetailed";
 import { useState, useEffect } from "react";
 import Favorite from "@mui/icons-material/Favorite";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-
-
+import useUserRole from "../getRole";
 import Swal from "sweetalert2";
 
 // productCard component
@@ -31,6 +30,7 @@ export default function ProductCard({ product,
   showArchive,
   showUnarchive,
   productID,
+  showEditProduct,
   showRating, //shows the user review , also for myPurchases as a tourist
   showReview,
   inCartQuantity,
@@ -44,8 +44,9 @@ export default function ProductCard({ product,
   hideWishlist = true,
   showPurchase}) {
   const navigate = useNavigate();
+  const role = useUserRole();
   const [notified,setNotified] = useState(false);
-  const [productInCart, setProductInCArt] = useState(false);
+  const [productInCart, setProductInCart] = useState(false);
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [showWishlist, setShowWishlist] = useState(false);
@@ -55,160 +56,78 @@ export default function ProductCard({ product,
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleBooking = async (productId) => {
-    try {
-      const userJson = localStorage.getItem("user");
-      const isGuest = localStorage.getItem("guest") === "true";
-      if (isGuest) {
-        message.error("User is not logged in, Please login or sign up.");
-        navigate("/guestDashboard");
-        return;
-      }
-      if (!userJson) {
-        message.error("User is not logged in.");
-        return null;
-      }
-      const user = JSON.parse(userJson);
-      if (!user || !user.username) {
-        message.error("User information is missing.");
-        return null;
-      }
-
-      const type = "product";
-
-      localStorage.setItem("productId", productId);
-      localStorage.setItem("type", type);
-
-      const response = await axios.get(
-        `http://localhost:8000/touristRoutes/viewDesiredproduct/${productId}`
-      );
-
-      if (response.status === 200) {
-        if (response.data.isUpcoming) {
-          navigate("/payment");
-        } else {
-          message.error("You can't book an old product");
-        }
-      } else {
-        message.error("Booking failed.");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      message.error("An error occurred while booking.");
-    }
-  };
 
   React.useEffect(() => {
     setImage(
       `https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`
     );
   }, []);
+  const checkIfInWishlist = async () =>{
+    try {
+      const userJson = localStorage.getItem("user");
+      const user = JSON.parse(userJson);
+      const userName = user.username;
+      // console.log(userName);
+
+      // Call the backend to check cart
+      const response = await axios.get(
+        `http://localhost:8000/touristRoutes/myWishlist/${userName}`
+      );
+      if(!response.data[0]){
+        return;
+      }
+      // Check if the product ID exists in the cart data
+      const wishlistProducts = response.data[0].products || [];
+      const isProductInWishlist = wishlistProducts.some(
+        (wishlistItem) => wishlistItem._id === product._id
+      );
+      // console.log(isProductInCart);
+
+      // Update the state
+      setShowWishlist(isProductInWishlist);
+    } catch (error) {
+      console.error("Error checking product in wishlist:", error);
+      message.error("Failed to check product in wishlist.");
+    }
+  }
+  const checkIfInCart = async () => {
+    try {
+      const userJson = localStorage.getItem("user");
+      const user = JSON.parse(userJson);
+      const userName = user.username;
+      // console.log(userName);
+
+      // Call the backend to check cart
+      const response = await axios.get(
+        `http://localhost:8000/touristRoutes/myCart/${userName}`
+      );
+      // console.log(response.data);
+      if(!response.data.cart){
+        return;
+      }
+      // Check if the product ID exists in the cart data
+      const cartProducts = response.data.cart.products || [];
+      const isProductInCart = cartProducts.some(
+        (cartItem) => cartItem.product._id === product._id
+      );
+      // console.log(isProductInCart);
+
+      // Update the state
+      setProductInCart(isProductInCart);
+    } catch (error) {
+      console.error("Error checking product in cart:", error);
+      message.error("Failed to check product in cart.");
+    }
+  };
+
+  useEffect(() => {
+    checkIfInCart();
+    checkIfInWishlist();
+  }, [product._id]);
 
   const user = JSON.parse(localStorage.getItem("user"));
 
   const username = user?.username;
-
-  const handleSaveproduct = async (event, productId, currentIsSaved) => {
-    event.stopPropagation();
-    try {
-      const newIsSaved = !currentIsSaved;
-
-      const response = await axios.put(
-        `http://localhost:8000/product/save/${productId}`,
-        {
-          username: username,
-          save: newIsSaved,
-        }
-      );
-      if (response.status === 200) {
-        setSaveStates((prevState) => ({
-          ...prevState,
-          [productId]: newIsSaved, // Update the save state for this product
-        }));
-        message.success(
-          newIsSaved
-            ? "product saved successfully!"
-            : "product removed from saved list!"
-        );
-        // if (!newIsSaved && onRemove) {
-          // onRemove(productId);
-        // }
-      } else {
-        message.error("Failed to save");
-      }
-    } catch (error) {
-      console.error("Error toggling save state:", error);
-    }
-  };
-
-  const [saveStates, setSaveStates] = useState({});
-
-  useEffect(() => {
-    const fetchSaveStates = async () => {
-      const userJson = localStorage.getItem("user");
-      const user = JSON.parse(userJson);
-      const userName = user.username;
-
-      try {
-        const response = await axios.get(
-          `http://localhost:8000/product/getSave/${product._id}/${userName}`
-        );
-
-        if (response.status === 200) {
-          setSaveStates((prevState) => ({
-            ...prevState,
-            [product._id]: response.data.saved, // Update only the relevant product state
-          }));
-        }
-      } catch (error) {
-        console.error(`Failed to fetch save state for ${product._id}:`, error);
-      }
-    };
-    fetchSaveStates();
-  }, [product._id]);
-
-  const [notificationStates, setNotificationStates] = useState({});
-
-  const requestNotification = async (event, productId, currentIsNotified) => {
-    event.stopPropagation();
-    try {
-      const newIsNotified = !currentIsNotified;
-
-      const response = await axios.post(
-        "http://localhost:8000/notification/request",
-        {
-          user: username,
-          eventId: productId,
-        }
-      );
-
-      if (response.status === 201) {
-        message.success(
-          newIsNotified
-            ? "Notifications enabled for this product!"
-            : "Notifications disabled for this product!"
-        );
-        setNotified(!notified);
-        setNotificationStates((prev) => ({
-          ...prev,
-          [productId]: newIsNotified,
-        }));
-        message.success(
-          "You will be notified when this event starts accepting bookings."
-        );
-      } else if (response.status === 200) {
-        message.info(
-          "You have already requested to be notified for this product"
-        );
-      } else {
-        message.error(response.data.message);
-      }
-    } catch (error) {
-      console.error("Error requesting notification:", error);
-      message.error("Failed to request notification.");
-    }
-  };
-
 
   const addToWishlist = async (product) => {
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
@@ -234,6 +153,13 @@ export default function ProductCard({ product,
     }
   };
 
+
+  const handleEditProduct =() =>{
+    const productId = product._id;
+    navigate(`/editProduct/${productId}`);
+  };
+
+
   const handleAddToCartClick =async (e) => {
     if(!productInCart){
       try{
@@ -253,7 +179,7 @@ export default function ProductCard({ product,
   
         if (response.status === 200) {
           message.success("Product added to cart successfully!");
-          setProductInCArt(!productInCart);
+          setProductInCart(!productInCart);
         } else {
           message.error("Failed to add product to cart.");
         }
@@ -280,7 +206,7 @@ export default function ProductCard({ product,
   
         if (response.status === 200) {
           message.success("Product removed from successfully!");
-          setProductInCArt(!productInCart);
+          setProductInCart(!productInCart);
         } else {
           message.error("Failed to remove product to cart.");
         }
@@ -317,53 +243,8 @@ export default function ProductCard({ product,
     }
   };
 
+  const [archived, setArchived] = useState(product.isArchived);
 
-
-
-  const handleShareLink = (productId) => {
-    const link = `${window.location.origin}/product/searchActivities/${productId}`; // Update with your actual route
-    navigator.clipboard
-      .writeText(link)
-      .then(() => {
-        message.success("Link copied to clipboard!");
-      })
-      .catch(() => {
-        message.error("Failed to copy link.");
-      });
-  };
-
-  const handleShareEmail = (productId) => {
-    const link = `${window.location.origin}/product/searchActivities/${productId}`; // Update with your actual route
-    const subject = "Check out this product";
-    const body = `Here is the link to the product: ${link}`;
-    window.location.href = `mailto:?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
-  };
-
-  const handleClick = (event, productId) => {
-    event.stopPropagation();
-    // setAnchorEl(event.currentTarget);
-    Swal.fire({
-      title: "Share product",
-      html: `
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
-          <button id="share-link" style="padding: 10px 20px; font-size: 16px; background-color: #ff9933; color: white; border: none; border-radius: 8px; cursor: pointer;">
-            Share via Link
-          </button>
-          <Button className="blackhover" id="share-mail" style="padding: 10px 20px; font-size: 16px; background-color: #ff9933; color: white; border: none; border-radius: 8px; cursor: pointer;">
-            Share via Mail
-          </Button>
-        </div>
-      `,
-      showConfirmButton: false, // Hide default OK button
-      width: "400px", // Set the width of the popup
-      padding: "20px", // Add padding to the popup
-      customClass: {
-        popup: "my-swal-popup", // Optional: Add custom styling via CSS
-      },
-    });
-  };
 
   const TheCard = () => {
     return (
@@ -383,6 +264,12 @@ export default function ProductCard({ product,
             width: "100%",
             height: "100%",
             cursor: "pointer",
+            filter:
+            archived || product.availableQuantity === 0
+              ? "grayscale(100%)"
+              : "none",
+          opacity: archived || product.availableQuantity === 0 ? 0.6 : 1,
+       
           }}
         >
           <CardOverflow>
@@ -446,7 +333,7 @@ export default function ProductCard({ product,
                 </h4>
 
                 <Rating
-                  value={product.rating}
+                  value={product.averageRating}
                   icon={<StarIcon sx={{ color: "orange" }} />}
                   emptyIcon={<StarOutlineIcon />}
                   readOnly
@@ -499,6 +386,44 @@ export default function ProductCard({ product,
               >
                 {productInCart ? "Remove from Cart" : "Add to Cart"}
               </Button>
+              )}
+              {role==="Admin" || showEditProduct &&(
+              <Button
+                size="md"
+                variant="solid"
+                className="blackhover"
+                zIndex={2}
+                onClick={(event) => {
+                  event.stopPropagation(); // Stops propagation
+                  handleEditProduct(); // Call the function without passing `event`
+                }}
+                sx={{ backgroundColor: "#ff9933", marginRight: 1 }}
+              >
+                Edit Product
+              </Button>
+              )}
+              {product.availableQuantity === 0 && (
+                <div
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -180%)", // Center the text horizontally and vertically
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "rgba(255, 255, 255, 0.8)", // Optional: Add a semi-transparent background
+                  color: "black",
+                  fontSize: "1.5rem",
+                  fontWeight: "bold",
+                  textTransform: "uppercase",
+                  zIndex: 2, // Ensure it appears above other content
+                }}
+                >
+                  Sold Out
+                </div>
               )}
             </div>
           </div>
