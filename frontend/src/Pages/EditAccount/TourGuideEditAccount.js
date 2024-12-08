@@ -178,14 +178,6 @@ const TourGuideEditProfile = () => {
   };
 
   return (
-    <Box
-    sx={{
-     
-      height: "100vh",
-    }}
-  >
-    <TourGuideSidebar />
-    <TourGuideNavbar/>
     <Box sx={{ height: "100vh" }}>
       <TourGuideNavBar />
       <Box sx={{ p: 4, justifyContent: "center" }}>
@@ -207,9 +199,10 @@ const TourGuideEditProfile = () => {
                 alignItems: "center",
               }}
             >
-        <Avatar sx={{ bgcolor: "primary.main", width: 64, height: 64 }}>
-              <AccountCircleIcon fontSize="large" />
-            </Avatar>
+              <Avatar
+                src={tourGuideDetails.photo}
+                sx={{ width: 80, height: 80 }}
+              />
               {isEditing && (
                 <>
                   <input
@@ -399,8 +392,6 @@ const TourGuideEditProfile = () => {
 
           <Box sx={{ textAlign: "center", mt: 2 }}></Box>
         </Paper>
-        </Box>
-
       </Box>
     </Box>
   );

@@ -52,7 +52,7 @@ const CartPage = () => {
       localStorage.setItem("cartId", cartProducts._id);
       localStorage.setItem("type", type);
 
-      navigate("/payment", { state: {type2: "product" , data: paymentData} });
+      navigate("/payment", { state:  paymentData });
 
       // for (const item of cartProducts) {
       //   // Extract details
