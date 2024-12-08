@@ -78,7 +78,6 @@ const RUDMuseum = () => {
   };
 
   useEffect(() => {
-    //fetching all the tags because they will be used in the dropdown that appears when we try to  edit the tags of a particular museum visit
     const fetchMuseumTags = async () => {
       try {
         const response = await fetch(
@@ -90,6 +89,9 @@ const RUDMuseum = () => {
         }
         // Store the fetched tags in state
         setMuseumTagsOptions(data);
+
+        // Store the fetched tags in localStorage after stringifying the data
+        localStorage.setItem("selectedTags", JSON.stringify(data));
       } catch (error) {
         message.error(error.message);
       }
@@ -98,36 +100,13 @@ const RUDMuseum = () => {
     fetchMuseumTags(); // Call the function to fetch tags on component mount
   }, []);
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
 
   // Responsible for when the user clicks on edit icon
   const handleEditClick = (museum) => {
-    setFormData(museum);
-    setEditingMuseum(museum);
+    localStorage.setItem("selectedMuseum", JSON.stringify(museum));
+    navigate(`/editMuseum`);
   };
 
-  // When the edit icon is clicked the handleUpdate method calls the backend to execute this update
-  const handleUpdate = (event) => {
-    event.preventDefault();
-    axios
-      .put(
-        `http://localhost:8000/museum/updateMuseum/${editingMuseum._id}`,
-        formData
-      )
-      .then(() => {
-        setMuseums(
-          museums.map((museum) =>
-            museum._id === editingMuseum._id ? formData : museum
-          )
-        );
-        message.success("Museum updated successfully!");
-        setEditingMuseum(null);
-      })
-      .catch((error) => message.error("Error updating museum!", error));
-  };
 
   // When the delete icon is clicked a popup saying are you sure appears, this method opens it
   const handleClickOpen = (museum) => {
@@ -159,24 +138,6 @@ const RUDMuseum = () => {
       handleDelete(selectedMuseum._id);
     }
     handleClose();
-  };
-
-  // New function to reset editing state and form data
-  const handleCancelEdit = () => {
-    setEditingMuseum(null);
-    setFormData({
-      description: "",
-      pictures: "", // Reset to empty string
-      location: "",
-      ticketPrices: "",
-      openingTime: "",
-      closingTime: "",
-      museumDate: "",
-      museumName: "",
-      museumCategory: "",
-      tags: [],
-      //createdBy: ''
-    });
   };
 
   // Navigate to page to add a tag for museums
@@ -306,126 +267,6 @@ const RUDMuseum = () => {
                 </TableBody>
               </Table>
             </TableContainer>
-
-            {/* Update form */}
-            {editingMuseum && (
-              <form onSubmit={handleUpdate} style={{ marginTop: "20px" }}>
-                <Typography variant="h6">Edit Museum</Typography>
-                <TextField
-                  label="Description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                  required
-                />
-                <TextField
-                  label="Location"
-                  name="location"
-                  value={formData.location}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                  required
-                />
-                <TextField
-                  label="Picture" // Singular label
-                  name="pictures" // This should match the updated state field
-                  value={formData.pictures} // Access the pictures string directly
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                  required
-                />
-                <TextField
-                  label="Ticket Price"
-                  name="ticketPrices"
-                  value={formData.ticketPrices}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                  required
-                />
-                <TextField
-                  label="Opening Time"
-                  name="openingTime"
-                  value={formData.openingTime}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                  required
-                />
-                <TextField
-                  label="Closing Time"
-                  name="closingTime"
-                  value={formData.closingTime}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                  required
-                />
-                <TextField
-                  label="Museum Date"
-                  name="museumDate"
-                  value={formData.museumDate}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                  required
-                />
-                <TextField
-                  label="Museum Name"
-                  name="museumName"
-                  value={formData.museumName}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                  required
-                />
-                <TextField
-                  label="Museum Category"
-                  name="museumCategory"
-                  value={formData.museumCategory}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                  required
-                />
-                {/* Tags dropdown */}
-                <label>Tags:</label>
-                <Select
-                  mode="multiple"
-                  allowClear
-                  style={{ width: "100%" }}
-                  placeholder="Select tags"
-                  value={formData.tags} // Ensure the current tags are displayed in the dropdown
-                  onChange={(selectedTags) =>
-                    setFormData({ ...formData, tags: selectedTags })
-                  } // Handle adding/removing tags
-                >
-                  {museumTagsOptions.map((tag) => (
-                    <Select.Option key={tag._id} value={tag.museumTag}>
-                      {tag.museumTag}
-                    </Select.Option>
-                  ))}
-                </Select>
-
-                <Box sx={{ mt: 2 }}>
-                  <Button type="submit" variant="contained" color="primary">
-                    Update
-                  </Button>
-                  <Button
-                    onClick={handleCancelEdit}
-                    variant="contained"
-                    color="secondary"
-                    sx={{ ml: 2 }}
-                  >
-                    Cancel
-                  </Button>
-                </Box>
-              </form>
-            )}
 
             {/* Confirmation dialog for delete */}
             <Dialog open={open} onClose={handleClose}>

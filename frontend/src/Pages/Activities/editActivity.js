@@ -48,93 +48,14 @@ function EditActivity() {
     const [formData, setFormData] = useState(data);
     const [editingActivity, setEditingActivity] = useState(activity);
     const navigate = useNavigate();
+
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
     console.log(" i am printing form data ", formData);
     //updates location in formData based on input change
-    const handleLocationInputChange = (event, index) => {
-        const { value } = event.target;
-        setFormData((prevData) => {
-            const updatedLocations = [...prevData.locations];
-            updatedLocations[index] = value;
-            return { ...prevData, locations: updatedLocations };
-        });
-    };
-
-    //updates activity in formData based on input change
-    const handleActivityInputChange = (event, index) => {
-        const { name, value } = event.target;
-        setFormData((prevData) => {
-            const updatedActivities = [...prevData.activity];
-            updatedActivities[index] = {
-                ...updatedActivities[index],
-                [name]: value,
-            };
-            return {
-                ...prevData,
-                activity: updatedActivities,
-            };
-        });
-    };
-
-    //adds a new activity object to the formData
-    const addActivity = () => {
-        setFormData((prevData) => ({
-            ...prevData,
-            activity: [
-                ...prevData.activity,
-                { name: "", price: "", category: "", location: "" },
-            ],
-        }));
-    };
-
-    //deletes an activity based on its index
-    const deleteActivity = (index) => {
-        const updatedActivities = formData.activity.filter((_, i) => i !== index);
-        setFormData((prevData) => ({
-            ...prevData,
-            activity: updatedActivities,
-        }));
-    };
-
-    //updates available dates in formData based on input change
-    const handleAvailableDatesInputChange = (event, index) => {
-        const { value } = event.target;
-        setFormData((prevData) => {
-            const updatedDates = [...prevData.availableDatesAndTimes];
-            updatedDates[index] = value;
-            return { ...prevData, availableDatesAndTimes: updatedDates };
-        });
-    };
-
-    const handleAddDate = () => {
-        setFormData((prevData) => ({
-            ...prevData,
-            availableDatesAndTimes: [...prevData.availableDatesAndTimes, ""],
-        }));
-    };
-
-    const handleAddLocation = () => {
-        setFormData((prevData) => ({
-            ...prevData,
-            locations: [...prevData.locations, ""],
-        }));
-    };
-
-    const handleDeleteDate = (index) => {
-        const newDatesAndTimes = formData.availableDatesAndTimes.filter(
-            (_, i) => i !== index
-        );
-        setFormData({ ...formData, availableDatesAndTimes: newDatesAndTimes }); // Update state
-    };
-
-    const handleDeleteLocation = (index) => {
-        const newLocations = formData.locations.filter((_, i) => i !== index);
-        setFormData({ ...formData, locations: newLocations });
-    };
-
+   
     //for scrolling automatically when we click edit
     const formRef = useRef(null);
 
