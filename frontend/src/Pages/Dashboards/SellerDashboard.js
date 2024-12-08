@@ -6,11 +6,12 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 import SellerNavBar from "../../Components/NavBars/SellerNavBar";
 
 const SellerDashboard = () => {
-  const [videoEnded, setVideoEnded] = useState(false);
+  const [videoEnded, setVideoEnded] = useState(localStorage.getItem('videoEnded') === 'true');
 
   const handleVideoEnd = () => {
     setTimeout(() => {
       setVideoEnded(true);
+      localStorage.setItem('videoEnded', 'true');
     }, 1000); // Delay to allow fade-out animation
   };
 
@@ -71,109 +72,110 @@ const SellerDashboard = () => {
         backgroundColor: "#fff6e6",
       }}
     >
-      <video
-        autoPlay
-        muted
-        onEnded={handleVideoEnd}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          zIndex: videoEnded ? -1 : 0,
-          opacity: videoEnded ? 0 : 1,
-          transition: "opacity 1s ease-out",
-        }}
-      >
-        <source src="/planevidd.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+      {!videoEnded && (
+        <video
+          autoPlay
+          muted
+          onEnded={handleVideoEnd}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            zIndex: videoEnded ? -1 : 0,
+            opacity: videoEnded ? 0 : 1,
+            transition: "opacity 1s ease-out",
+          }}
+        >
+          <source src="/planevidd.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      )}
 
-      {/* Welcome Message with Semi-Transparent Box */}
       {videoEnded && (
         <Box sx={{ display: "flex", flexDirection: "column", p: 3 }}>
-        <Grid container spacing={2} sx={{ marginBottom: "20px" }}>
-          <Grid item xs={12} md={4}>
-            <Paper
-              elevation={3}
-              sx={{
-                padding: "20px",
-                textAlign: "center",
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }} className="bigTitle">
-                Total Revenue
-              </Typography>
-              <Typography variant="h4" sx={{ fontWeight: "bold" }} >
-                $20000
-              </Typography>
-            </Paper>
-          </Grid>
+          <Grid container spacing={2} sx={{ marginBottom: "90px", marginTop: "20px" }}>
+            <Grid item xs={12} md={4}>
+              <Paper
+                elevation={3}
+                sx={{
+                  padding: "20px",
+                  textAlign: "center",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }} className="bigTitle">
+                  Total Revenue
+                </Typography>
+                <Typography variant="h4" sx={{ fontWeight: "bold" }} >
+                  $20000
+                </Typography>
+              </Paper>
+            </Grid>
 
-          <Grid item xs={12} md={4}>
-            <Paper
-              elevation={3}
-              sx={{
-                padding: "20px",
-                textAlign: "center",
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }} className="bigTitle">
-                Total Products Sold
-              </Typography>
-              <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-                250
-              </Typography>
-            </Paper>
-          </Grid>
+            <Grid item xs={12} md={4}>
+              <Paper
+                elevation={3}
+                sx={{
+                  padding: "20px",
+                  textAlign: "center",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }} className="bigTitle">
+                  Total Products Sold
+                </Typography>
+                <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+                  250
+                </Typography>
+              </Paper>
+            </Grid>
 
-          <Grid item xs={12} md={4}>
-            <Paper
-              elevation={3}
-              sx={{
-                padding: "20px",
-                textAlign: "center",
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }} className="bigTitle">
-                Frequently Purchased
-              </Typography>
-              <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-                kelya
-              </Typography>
-            </Paper>
+            <Grid item xs={12} md={4}>
+              <Paper
+                elevation={3}
+                sx={{
+                  padding: "20px",
+                  textAlign: "center",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }} className="bigTitle">
+                  Frequently Purchased
+                </Typography>
+                <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+                  kelya
+                </Typography>
+              </Paper>
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <Box sx={{ height: "300px" }}>
-              <Line data={lineChartData} />
-            </Box>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <Box sx={{ height: "300px" }}>
+                <Line data={lineChartData} />
+              </Box>
+            </Grid>
+            <Grid item xs={6}>
+              <Box sx={{ height: "300px" }}>
+                <Bar data={barChartData} />
+              </Box>
+            </Grid>
           </Grid>
-          <Grid item xs={6}>
-            <Box sx={{ height: "300px" }}>
-              <Bar data={barChartData} />
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
+        </Box>
       )}
 
       <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>

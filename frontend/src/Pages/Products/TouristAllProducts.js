@@ -231,7 +231,11 @@ const TouristAllProducts = () => {
                   variant="contained"
                   onClick={handleFilterProducts}
                   className="blackhover"
-                  sx={{ marginTop: "16px", backgroundColor: "#ff9933", color: 'white' }}
+                  sx={{
+                    marginTop: "16px",
+                    backgroundColor: "#ff9933",
+                    color: "white",
+                  }}
                 >
                   Apply Filter
                 </Button>
@@ -290,6 +294,7 @@ const TouristAllProducts = () => {
                   product={product}
                   showAddToCart={true}
                   hideWishlist={false}
+                  showQuantity={true}
                 />
               ))
           ) : (

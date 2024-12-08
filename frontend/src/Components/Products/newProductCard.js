@@ -35,14 +35,15 @@ export default function ProductCard({
   showAddToCart = false,
   onProductRemove,
   onQuantityChange,
+  showQuantity = false,
   showRemoveWishlist,
   showAverageRatingNo, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
   removeProductFromWishlist,
   hideWishlist = true,
   showPurchase,
+  inCart,
   showNotify,
-  showChosenQuantity,
-  chosenQuantity,
+  onConfirm,
   quantityInCart = 0,
 }) {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ export default function ProductCard({
   const [productInCart, setProductInCart] = useState(false);
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [showWishlist, setShowWishlist] = useState(false);
+  const [showWishList, setShowWishList] = useState(false);
   const [archived, setArchived] = useState(product.isArchived);
   const [quantity, setQuantity] = useState(quantityInCart);
   const [open, setOpen] = React.useState(false);
@@ -59,10 +60,13 @@ export default function ProductCard({
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const handleConfirmClick = () => {
+    onConfirm();
+  };
+
   React.useEffect(() => {
     setImage(
-      `https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`
-    );
+`https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`);
   }, []);
   const checkIfInWishlist = async () => {
     try {
@@ -87,7 +91,7 @@ export default function ProductCard({
       // console.log(isProductInCart);
 
       // Update the state
-      setShowWishlist(isProductInWishlist);
+      setShowWishList(isProductInWishlist);
     } catch (error) {
       console.error("Error checking product in wishlist:", error);
       message.error("Failed to check product in wishlist.");
@@ -146,7 +150,7 @@ export default function ProductCard({
       );
       if (response.status === 200) {
         message.success("Product added to wishlist successfully!");
-        setShowWishlist(true);
+        setShowWishList(true);
       } else {
         message.error("Failed to add the product to the wishlist.");
       }
@@ -223,6 +227,63 @@ export default function ProductCard({
     }
   };
 
+  const handleAddToCartClick2 = async (e) => {
+    if (quantity > 0) {
+      try {
+        const userJson = localStorage.getItem("user");
+        const user = JSON.parse(userJson);
+        const userName = user.username;
+        const newQuantity = quantity;
+        console.log("this is the quantity i am requesting", newQuantity);
+        const response = await axios.patch(
+          "http://localhost:8000/touristRoutes/cart",
+          {
+            userName,
+            productId: product._id,
+            newQuantity,
+          }
+        );
+        if (response.status === 200) {
+          message.success("Product added to cart successfully!");
+          setProductInCart(!productInCart);
+        } else {
+          message.error("Failed to update quantity in cart.");
+        }
+      } catch (error) {
+        console.error(error);
+        message.error(
+          "An error occurred while adding the product to the cart."
+        );
+      }
+    } else {
+      try {
+        const userJson = localStorage.getItem("user");
+        const user = JSON.parse(userJson);
+        const userName = user.username;
+        const response = await axios.delete(
+          "http://localhost:8000/touristRoutes/cart",
+          {
+            params: {
+              userName,
+              productId: product._id,
+            },
+          }
+        );
+        if (response.status === 200) {
+          message.success("Product removed from successfully!");
+          setProductInCart(!productInCart);
+        } else {
+          message.error("Failed to update quantity in cart.");
+        }
+      } catch (error) {
+        console.error(error);
+        message.error(
+          "An error occurred while adding the product to the cart."
+        );
+      }
+    }
+  };
+
   const handleRemoveWishlist = async (product) => {
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
     const user = JSON.parse(userJson);
@@ -232,8 +293,8 @@ export default function ProductCard({
     console.log("username:", userName);
     try {
       const response = await axios.put(
-        `http://localhost:8000/touristRoutes/removeFromWishlist/${userName}/${productId}`
-      );
+`http://localhost:8000/touristRoutes/removeFromWishlist/${userName}/${productId}`);
+      setShowWishList(false);
 
       if (response.status === 200) {
         message.success("Product removed from wishlist successfully");
@@ -244,7 +305,6 @@ export default function ProductCard({
       }
     } catch (error) {
       console.error(error);
-      message.error("An error occurred while removing the product");
     }
   };
 
@@ -275,34 +335,38 @@ export default function ProductCard({
               <img src={product.picture || image} loading="lazy" alt="" />
             </AspectRatio>
             {role === "Tourist" && !hideWishlist && (
-            <Tooltip  title= {showRemoveWishlist ? "Remove from Wishlist" : "Add to Wishlist"}>
-              <IconButton
-                size="md"
-                variant={showWishlist ? "soft" : "solid"}
-                onClick={(event) => {
-                  event.stopPropagation(); // Stop event propagation
-                  showRemoveWishlist ? handleRemoveWishlist(product): addToWishlist(product);
-                }}
-                className="blackhover"
-                sx={{
-                  position: "absolute",
-                  zIndex: 2,
-                  color: "white",
-                  borderRadius: "50%",
-                  right: "1rem",
-                  bottom: 0,
-                  transform: "translateY(50%)",
-                  transition: "transform 0.3s",
-                  backgroundColor: "#ff9933",
-                }}
+              <Tooltip
+                title={
+                  showRemoveWishlist
+                    ? "Remove from Wishlist"
+                    : "Add to Wishlist"
+                }
               >
-                {showRemoveWishlist ? (
-                  <Done color="#ff9933" />
-                ) : (
-                  <Favorite />
-                )}
-              </IconButton>
-            </Tooltip>
+                <IconButton
+                  size="md"
+                  variant={showWishList ? "soft" : "solid"}
+                  onClick={(event) => {
+                    event.stopPropagation(); // Stop event propagation
+                    showWishList
+                      ? handleRemoveWishlist(product)
+                      : addToWishlist(product);
+                  }}
+                  className="blackhover"
+                  sx={{
+                    position: "absolute",
+                    zIndex: 2,
+                    color: "white",
+                    borderRadius: "50%",
+                    right: "1rem",
+                    bottom: 0,
+                    transform: "translateY(50%)",
+                    transition: "transform 0.3s",
+                    backgroundColor: "#ff9933",
+                  }}
+                >
+                  {showWishList ? <Done color="#ff9933" /> : <Favorite />}
+                </IconButton>
+              </Tooltip>
             )}
           </CardOverflow>
           <div style={{ height: "10%" }}>
@@ -345,89 +409,85 @@ export default function ProductCard({
               </div>
             </div>
           </div>
-          <div>
-            {role === "Tourist" && showChosenQuantity && (
-              <p marginTop="20px"  >
-              Chosen Quantity: {chosenQuantity}
-            </p>
-            )}
-            </div>
-          {product.availableQuantity > 0 && (
-            <div
-              style={{
-                display: "flex",
-                position: "absolute",
-                bottom: "15%",
-                width: "95%",
-                justifyContent: "flex-end",
-              }}
-            >
+          {product.availableQuantity > 0 &&
+            role === "Tourist" &&
+            showQuantity &&
+            (inCart || !productInCart) && (
               <div
                 style={{
-                  marginRight: 8,
                   display: "flex",
-                  width: quantity < 10 ? "111px" : "140px",
+                  position: "absolute",
+                  bottom: "15%",
+                  width: "95%",
+                  justifyContent: "flex-end",
                 }}
               >
-                <Button
-                  variant="outlined"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    quantity > 0 ? setQuantity(quantity - 1) : setQuantity(0);
-                  }}
-                  sx={{
-                    borderColor: "#ff9933",
-                    color: "#ff9933",
-                    borderTopRightRadius: 0,
-                    borderBottomRightRadius: 0,
-                    width: "33%",
-                    "&:hover": {
-                      backgroundColor: "rgba(0, 0, 0, 0.05)",
-                    },
+                <div
+                  style={{
+                    marginRight: 8,
+                    display: "flex",
+                    width: quantity < 10 ? "111px" : "140px",
                   }}
                 >
-                  -
-                </Button>
-                <Input
-                  value={quantity}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                  }}
-                  sx={{
-                    width: "50px",
-                    borderRight: 0,
-                    borderLeft: 0,
-                    borderRadius: 0,
-                    boxShadow: "none",
-                    width: "33%",
-                  }}
-                ></Input>
-                <Button
-                  variant="outlined"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    product.availableQuantity > quantity
-                      ? setQuantity(quantity + 1)
-                      : message.error(
-                          "Cannot purchase with a quantity more than the available"
-                        );
-                  }}
-                  sx={{
-                    borderColor: "#ff9933",
-                    color: "#ff9933",
-                    borderTopLeftRadius: 0,
-                    "&:hover": {
-                      backgroundColor: "rgba(0, 0, 0, 0.05)",
-                    },
-                    borderBottomLeftRadius: 0,
-                    width: "33%",
-                  }}
-                >
-                  +
-                </Button>
+                  <Button
+                    variant="outlined"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      quantity > 0 ? setQuantity(quantity - 1) : setQuantity(0);
+                    }}
+                    sx={{
+                      borderColor: "#ff9933",
+                      color: "#ff9933",
+                      borderTopRightRadius: 0,
+                      borderBottomRightRadius: 0,
+                      width: "33%",
+                      "&:hover": {
+                        backgroundColor: "rgba(0, 0, 0, 0.05)",
+                      },
+                    }}
+                  >
+                    -
+                  </Button>
+                  <Input
+                    value={quantity}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                    }}
+                    sx={{
+                      width: "50px",
+                      borderRight: 0,
+                      borderLeft: 0,
+                      borderRadius: 0,
+                      boxShadow: "none",
+                      width: "33%",
+                    }}
+                  ></Input>
+                  <Button
+                    variant="outlined"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      product.availableQuantity > quantity
+                        ? setQuantity(quantity + 1)
+                        : message.error(
+                            "Cannot purchase with a quantity more than the available"
+                          );
+                    }}
+                    sx={{
+                      borderColor: "#ff9933",
+                      color: "#ff9933",
+                      borderTopLeftRadius: 0,
+                      "&:hover": {
+                        backgroundColor: "rgba(0, 0, 0, 0.05)",
+                      },
+                      borderBottomLeftRadius: 0,
+                      width: "33%",
+                    }}
+                  >
+                    +
+                  </Button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
           <div
             style={{
@@ -461,7 +521,7 @@ export default function ProductCard({
                 onClick={(event) => {
                   event.stopPropagation(); // Stops propagation
                   if (product.availableQuantity > 0) {
-                    handleAddToCartClick(); // Call the function without passing `event`
+                    handleAddToCartClick(); // Call the function without passing event
                   }
                 }}
                 sx={{
@@ -481,6 +541,34 @@ export default function ProductCard({
                   : "Add To Cart"}
               </Button>
             )}
+
+            {inCart && (
+              <Button
+                size="md"
+                variant="solid"
+                className={product.availableQuantity > 0 ? "blackhover" : ""}
+                zIndex={2}
+                onClick={async (event) => {
+                  event.stopPropagation(); // Stops propagation
+                  if (product.availableQuantity > 0) {
+                    await handleAddToCartClick2(); // Call the function without passing event
+                    handleConfirmClick();
+                  }
+                }}
+                sx={{
+                  backgroundColor:
+                    product.availableQuantity !== 0 ? "#ff9933" : "gray",
+                  marginRight: 1,
+                  width: "111px",
+                  clickable: product.availableQuantity > 0,
+                  "&:hover": {
+                    backgroundColor: "gray",
+                  },
+                }}
+              >
+                Confirm
+              </Button>
+            )}
             {role === "Admin" ||
               (showEditProduct && (
                 <Button
@@ -490,36 +578,13 @@ export default function ProductCard({
                   zIndex={2}
                   onClick={(event) => {
                     event.stopPropagation(); // Stops propagation
-                    handleEditProduct(); // Call the function without passing `event`
+                    handleEditProduct(); // Call the function without passing event
                   }}
                   sx={{ backgroundColor: "#ff9933", marginRight: 1 }}
                 >
                   Edit Product
                 </Button>
               ))}
-            {product.availableQuantity === 0 && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -180%)", // Center the text horizontally and vertically
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: "rgba(255, 255, 255, 0.8)", // Optional: Add a semi-transparent background
-                  color: "black",
-                  fontSize: "1.5rem",
-                  fontWeight: "bold",
-                  textTransform: "uppercase",
-                  zIndex: 2, // Ensure it appears above other content
-                }}
-              >
-                Sold Out
-              </div>
-            )}
           </div>
         </Card>
         <div
@@ -586,8 +651,6 @@ export default function ProductCard({
             </div>
           </Popover>
         </div>
-
-
       </div>
     );
   };

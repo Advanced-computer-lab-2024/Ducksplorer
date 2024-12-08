@@ -3,7 +3,7 @@ const { rateTourGuide, getUserNameById, getTourGuideById } = require('../Control
 const router = express.Router();
 
 
-router.route("/rateTourGuide/:tourGuideId").patch(rateTourGuide);
+router.route("/rateTourGuide/:tourGuideId").patch(rateTourGuide);//done
 router.route("/getUserNameById/:bookingId").get(getUserNameById);
 router.route("/getTourGuideById/:id").get(getTourGuideById);
 

@@ -22,6 +22,9 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import MyNotifications from "../myNotifications";
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import Button from "@mui/material/Button";
+import LogoutIcon from '@mui/icons-material/Logout';
 
 function AdminNavBar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -85,8 +88,114 @@ function AdminNavBar() {
               </h2>
             </a>
           </Tooltip>
-
-          <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("addAdmin")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                Add Users
+              </Typography>
+            </Button>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("pendingusers")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                Manage Users
+              </Typography>
+            </Button>
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("preferenceTags")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                  fontSize: "1rem",
+                  fontFamily: "'Josefin Sans', sans-serif",
+                  color: "black",
+                  "&:hover": {
+                    color: "#ff9933",
+                  },
+                }}
+              >
+                Browse Selections
+              </Typography>
+            </Button>
+            {/*Add create promo code*/}
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("addPromoCode")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography textAlign="center" className="nav-bar-text" sx={{ fontSize: "1rem", fontFamily: "'Josefin Sans', sans-serif", color: "black", "&:hover": { color: "#ff9933" } }}>
+                Create Promo Code
+              </Typography>
+            </Button>
+          </Box>
           <Box sx={{ flexGrow: 0, marginRight: "3vw", display: "flex", alignItems: "center" }}>
             <Tooltip>
               <MyNotifications />
@@ -137,101 +246,10 @@ function AdminNavBar() {
                   </Typography>
                 </IconButton>
               </MenuItem>
-
-              <MenuItem onClick={() => handleNavigation("pendingusers")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <PeopleIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    User Managment
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={() => handleNavigation("addAdmin")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <PersonAddIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Add Users
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={() => handleNavigation("admin/complaints")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <ReportIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Complaints
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={() => handleNavigation("preferenceTags")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <LabelIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Browse Selections
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={() => handleNavigation("Adminproducts")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <ShoppingCartIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Products Management
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={() => handleNavigation("ViewAllActivities")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <WidgetsIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Events
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={() => handleNavigation("adminReport")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <EventNoteIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Reports
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
+              {/*Add create promo code*/}
               <MenuItem onClick={handleLogout}>
                 <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <LockIcon sx={{ fontSize: 20, color: "black" }} />
+                  <LogoutIcon sx={{ fontSize: 20, color: "black" }} />
                   <Typography
                     textAlign="center"
                     marginLeft={2}

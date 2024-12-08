@@ -10,12 +10,14 @@ import TouristNavBar from "../../Components/TouristNavBar.js";
 import GuestNavBar from "../../Components/NavBars/GuestNavBar.js";
 
 import DuckLoading from "../../Components/Loading/duckLoading.js";
-import { Box, Button, Typography, Grid, Container } from "@mui/material";
+import { Box, Button, Typography,Checkbox, Grid, Container,IconButton,Tooltip } from "@mui/material";
 import MuseumHistoricalPlaceCard from "../../Components/MuseumHistoricalPlaceCard";
 import Input from "@mui/joy/Input";
 import Error404 from "../../Components/Error404.js";
 import NavigationTabs from "../../Components/NavigationTabs.js";
 import HistoricalPlaceTouristPov from "./HistoricalPlaceTouristPov";
+import UpdateIcon from "@mui/icons-material/Update";
+
 
 const MuseumTouristPov = () => {
   const [searchTerm, setSearchTerm] = useState(""); // Single search term
@@ -26,9 +28,12 @@ const MuseumTouristPov = () => {
   const [currency, setCurrency] = useState("EGP");
   const [searchQuery, setSearchQuery] = useState(""); // Add this line
   const navigate = useNavigate();
+  const [showUpcomingOnly, setShowUpcomingOnly] = useState(false);
   const [loading, setLoading] = useState(false);
   const tabs = ["Museums", "Historical Places"];
   const paths = ["/MuseumTouristPov", "/HistoricalPlaceTouristPov"];
+  const [pastOrUpcoming,setPastOrUpcoming] = useState(false);
+
 
   useEffect(() => {
     setLoading(true);
@@ -57,6 +62,47 @@ const MuseumTouristPov = () => {
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
+  };
+
+
+  const handleUpcoming = () => {
+    if(!pastOrUpcoming){
+      axios
+      .get(`http://localhost:8000/museum/getAllUpcomingMuseums`)
+      .then((response) => {
+        setMuseums(response.data.upcomingMuseums);
+      })
+      .catch((error) => {
+        console.error(
+          "There was an error fetching the upcoming museum visits!",
+          error
+        );
+        message.error("Error fetching upcoming museum visits!");
+      });
+    }else{
+      setLoading(true);
+      axios
+      .get(`http://localhost:8000/museum/getAllMuseums`)
+      .then((response) => {
+        if (id === undefined) {
+          setMuseums(response.data);
+        } else {
+          const tempMuseums = response.data.filter(
+            (museum) => museum._id === id
+          );
+          setMuseums(tempMuseums);
+        }
+        console.log("this is how the data should be:", response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the museums!", error);
+        message.error("Error fetching museums!");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+    }
+    setPastOrUpcoming(!pastOrUpcoming);
   };
 
   const handleSearchMuseums = async () => {
@@ -152,6 +198,13 @@ const MuseumTouristPov = () => {
             >
               Search
             </Button>
+            <Tooltip title={pastOrUpcoming ? "All Museums" : "Upcoming Museums"}>
+              <IconButton onClick={handleUpcoming}>
+                {" "}
+                {/* try to make it on the right later */}
+                <UpdateIcon sx={{ color: "black" }} />
+              </IconButton>
+            </Tooltip>
             <MuseumFilterComponent onFilter={handleFilterResults} />
           </div>
 

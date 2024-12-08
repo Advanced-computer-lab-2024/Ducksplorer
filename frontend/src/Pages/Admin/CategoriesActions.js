@@ -47,6 +47,8 @@ const DeleteCategory = () => {
 
   const handleAddCategoryClick = () => {
     setShowTextField(!showTextField);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
   };
 
   const handleCategoryChange = (event) => {
@@ -181,7 +183,9 @@ const DeleteCategory = () => {
             sx={{ textAlign: "center", fontWeight: "bold" }}
             gutterBottom
           >
+          <Typography variant="h5" sx={{ fontWeight: "bold", color: "black", fontSize: "50px" }} className="bigTitle"> {/* Increased text size */}
             Available Categories
+          </Typography>
           </Typography>
           <br></br>
 

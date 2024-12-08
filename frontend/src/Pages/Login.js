@@ -67,16 +67,7 @@ function Login() {
           Advertiser: "/advertiserDashboard",
           Seller: "/sellerDashboard",
         };
-        // window.location.href = roleToDashboard[userRole] || "/";
-        // const userRole = response.data.role;
-        // const roleToDashboard = {
-        //   Admin: "/AdminDashboard",
-        //   Tourist: "/touristDashboard",
-        //   Guide: "/tourGuideDashboard",
-        //   Governor: "/governorDashboard",
-        //   Advertiser: "/advertiserDashboard",
-        //   Seller: "/sellerDashboard",
-        // };
+        localStorage.setItem('videoEnded', 'false');
         window.location.href = roleToDashboard[userRole] || "/";
         localStorage.setItem("user", JSON.stringify(response.data));
       } else {
@@ -193,16 +184,12 @@ function Login() {
             Login to continue your adventure
           </Typography> */}
           <Stack spacing={2} mt={3} >
-          <TextField
-        label="Username"
-        value={userName}
-        onChange={(e) => setUserName(e.target.value)}
-        fullWidth
-        InputLabelProps={{
-          shrink: !!userName, // Shrinks only if `userName` has a value
-        }}
-      />
-
+            <TextField
+              label="Username"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              fullWidth
+            />
             <TextField
               label="Password"
               type={showPassword ? "text" : "password"}

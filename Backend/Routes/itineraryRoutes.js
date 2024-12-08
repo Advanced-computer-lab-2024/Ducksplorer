@@ -64,20 +64,20 @@ router
   .put(updateItinerary)
   .delete(deleteOnlyNotBookedItinerary);
 
-router.post("/reminder", remindUpcomingItineraries);
+router.post("/reminder", remindUpcomingItineraries);//done but not tested
 
-router.route("/toggleFlagItinerary/:id").put(toggleFlagItinerary);
+router.route("/toggleFlagItinerary/:id").put(toggleFlagItinerary);//done but not tested
 
-router.route("/rateItinerary/:bookingId").patch(rateItinerary);
+router.route("/rateItinerary/:bookingId").patch(rateItinerary);//done but not tested
 
 router
   .route("/toggleItineraryActiveStatus/:id")
-  .put(toggleItineraryActiveStatus);
+  .put(toggleItineraryActiveStatus);//done but not tested
 
-router.route("/commentItinerary/:bookingId").patch(commentItinerary);
+router.route("/commentItinerary/:bookingId").patch(commentItinerary);//done but not tested
 
-router.route("/save/:id").put(touristSaveItinerary);
+router.route("/save/:id").put(touristSaveItinerary);//done but not tested
 
-router.route("/getSave/:id/:username").get(getSaveState);
+router.route("/getSave/:id/:username").get(getSaveState);//done but not tested
 
 module.exports = router;

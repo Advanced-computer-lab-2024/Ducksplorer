@@ -460,13 +460,17 @@ const TransportationBookingForm = () => {
       <div style={styles.rightSection}>
         <Container maxWidth="sm" style={{ marginTop: "-30vh" }}>
           <Box sx={{ mt: 4 }}>
-            <Typography
-              variant="h4"
-              style={{ textAlign: "center", marginBottom: "60px" }}
-              gutterBottom
-            >
-              Transportation Booking
-            </Typography>
+          <h2
+                className="bigTitle"
+                style={{
+                  textAlign: "center",
+                  alignSelf: "center",
+                  marginTop: "7vh",
+                  marginBottom: "3vh",
+                }}
+              >
+                Transportation Booking
+              </h2>
             <Grid container spacing={2} direction="column">
               <Grid item xs={12}>
                 <Autocomplete

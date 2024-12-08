@@ -5,13 +5,13 @@ const upload = require('../Controllers/Upload/upload'); // Adjust the path if ne
 const router = express.Router();
 
 // File upload route (multiple files for documents)
-router.post("/user/upload/documents", upload.fields([{ name: 'files', maxCount: 4 }]), uploadFiles);
+router.post("/user/upload/documents", upload.fields([{ name: 'files', maxCount: 4 }]), uploadFiles); //done but not tested
 
 // Single file upload for profile picture
-router.put("/user/upload/picture", upload.single('file'), uploadProfilePicture);
+router.put("/user/upload/picture", upload.single('file'), uploadProfilePicture); //done but not tested
 
 // Define the route to get user files
-router.get('/user/files/:userName', getUploadedFiles);
-router.get('/user/profile/picture/:userName', getProfilePicture);
+router.get('/user/files/:userName', getUploadedFiles); //done but not tested
+router.get('/user/profile/picture/:userName', getProfilePicture); //done but not tested
 
 module.exports = router;

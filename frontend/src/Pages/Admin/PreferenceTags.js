@@ -46,6 +46,8 @@ const PreferenceTags = () => {
 
   const handleAddtagClick = () => {
     setShowTextField(!showTextField);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
   };
 
   const handletagChange = (event) => {
@@ -163,7 +165,7 @@ const PreferenceTags = () => {
     >
       {/* Navbar */}
       <AdminNavbar />
-      \
+      
       {/* Main Content */}
       <div
         style={{ marginBottom: "40px", height: "100vh", paddingBottom: "10%" }}
@@ -178,7 +180,9 @@ const PreferenceTags = () => {
             sx={{ textAlign: "center", fontWeight: "bold" }}
             gutterBottom
           >
+          <Typography variant="h5" sx={{ fontWeight: "bold", color: "black", fontSize: "50px" }} className="bigTitle"> {/* Increased text size */}
             Available Tags
+          </Typography>
           </Typography>
           <br></br>
 
@@ -193,7 +197,6 @@ const PreferenceTags = () => {
             >
               <TextField
                 label="New Tag"
-                variant="outlined"
                 value={newTag}
                 onChange={handletagChange}
                 sx={{
