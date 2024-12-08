@@ -27,7 +27,7 @@ export default function ProductCard({
   showArchive,
   showUnarchive,
   productID,
-  showEditProduct,
+  showEditProduct=false,
   showRating, //shows the user review , also for myPurchases as a tourist
   showReview,
   inCartQuantity,
@@ -578,7 +578,7 @@ export default function ProductCard({
                 Confirm
               </Button>
             )}
-            {role === "Admin" ||
+            {
               (showEditProduct && (
                 <Button
                   size="md"
