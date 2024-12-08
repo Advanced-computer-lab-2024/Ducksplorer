@@ -15,12 +15,13 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney'; // Import a more 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
 
 const AdminDashboard = () => {
-  const [videoEnded, setVideoEnded] = useState(false);
+  const [videoEnded, setVideoEnded] = useState(localStorage.getItem('videoEnded') === 'true');
   const navigate = useNavigate();
 
   const handleVideoEnd = () => {
     setTimeout(() => {
       setVideoEnded(true);
+      localStorage.setItem('videoEnded', 'true');
     }, 1000); // Delay to allow fade-out animation
   };
 
@@ -31,6 +32,11 @@ const AdminDashboard = () => {
     return () => {
       document.body.style.overflow = "auto";
     };
+  }, []);
+
+  useEffect(() => {
+    // Reset videoEnded flag on login
+    localStorage.setItem('videoEnded', 'false');
   }, []);
 
   const lineChartData = {
@@ -82,25 +88,27 @@ const AdminDashboard = () => {
         backgroundColor: "#fff6e6",
       }}
     >
-      <video
-        autoPlay
-        muted
-        onEnded={handleVideoEnd}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          zIndex: videoEnded ? -1 : 0,
-          opacity: videoEnded ? 0 : 1,
-          transition: "opacity 1s ease-out",
-        }}
-      >
-        <source src="/planevidd.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+      {!videoEnded && (
+        <video
+          autoPlay
+          muted
+          onEnded={handleVideoEnd}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            zIndex: videoEnded ? -1 : 0,
+            opacity: videoEnded ? 0 : 1,
+            transition: "opacity 1s ease-out",
+          }}
+        >
+          <source src="/planevidd.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      )}
 
       {videoEnded && (
         <Box sx={{ display: "flex", flexDirection: "column", p: 3 }}>

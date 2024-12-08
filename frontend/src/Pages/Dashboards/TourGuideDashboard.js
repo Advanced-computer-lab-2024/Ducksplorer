@@ -7,11 +7,12 @@ import TourGuideNavBar from "../../Components/NavBars/TourGuideNavBar";
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
 
 const TourGuideDashboard = () => {
-  const [videoEnded, setVideoEnded] = useState(false);
+  const [videoEnded, setVideoEnded] = useState(localStorage.getItem('videoEnded') === 'true');
 
   const handleVideoEnd = () => {
     setTimeout(() => {
       setVideoEnded(true);
+      localStorage.setItem('videoEnded', 'true');
     }, 1000);
   };
 
@@ -23,6 +24,11 @@ const TourGuideDashboard = () => {
       document.body.style.overflow = "auto";
       document.body.style.backgroundColor = "";
     };
+  }, []);
+
+  useEffect(() => {
+    // Reset videoEnded flag on login
+    localStorage.setItem('videoEnded', 'false');
   }, []);
 
   const lineChartData = {
@@ -69,25 +75,27 @@ const TourGuideDashboard = () => {
         backgroundColor: "#fff6e6",
       }}
     >
-      <video
-        autoPlay
-        muted
-        onEnded={handleVideoEnd}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          zIndex: videoEnded ? -1 : 0,
-          opacity: videoEnded ? 0 : 1,
-          transition: "opacity 1s ease-out",
-        }}
-      >
-        <source src="/planevidd.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+      {!videoEnded && (
+        <video
+          autoPlay
+          muted
+          onEnded={handleVideoEnd}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            zIndex: videoEnded ? -1 : 0,
+            opacity: videoEnded ? 0 : 1,
+            transition: "opacity 1s ease-out",
+          }}
+        >
+          <source src="/planevidd.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      )}
 
       {videoEnded && (
         <Box sx={{ display: "flex", flexDirection: "column", p: 3 }}>
