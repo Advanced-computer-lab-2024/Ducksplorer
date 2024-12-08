@@ -193,7 +193,7 @@ const AdvertiserEditProfile = () => {
           sx={{
             marginTop: "30px",
             p: 4,
-            width: "700px",
+            width: "60vw",
             borderRadius: 3,
             boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
             maxHeight: "100vh",
@@ -249,9 +249,8 @@ const AdvertiserEditProfile = () => {
               )}
             </Box>
 
-            <Typography variant="h5" sx={{ mt: 2 }}>
-              Edit Profile
-            </Typography>
+            <h2 className="bigTitle"
+              style={{ fontWeight: "bold", textAlign: "center", marginTop: "3%" }}> Edit Profile</h2>
           </Box>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>

@@ -227,7 +227,8 @@ const TouristAllProducts = () => {
                 <Button
                   variant="contained"
                   onClick={handleFilterProducts}
-                  sx={{ marginTop: "16px", backgroundColor: "#ff9933" }}
+                  className="blackhover"
+                  sx={{ marginTop: "16px", backgroundColor: "#ff9933", color: 'white' }}
                 >
                   Apply Filter
                 </Button>
@@ -284,7 +285,6 @@ const TouristAllProducts = () => {
                 <NewProductCard
                   key={product._id}
                   product={product}
-                  showNotify={false}
                   showAddToCart={true}
                   hideWishlist={false}
                 />

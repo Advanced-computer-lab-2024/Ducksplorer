@@ -106,7 +106,7 @@ const ViewAllItineraries = () => {
             <Typography
               variant="h2"
               sx={{ textAlign: "center", fontWeight: "bold" }}
-              gutterBottom
+              gutterBottom className='bigTitle'
             >
               Events
             </Typography>

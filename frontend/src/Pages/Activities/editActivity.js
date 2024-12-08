@@ -10,7 +10,7 @@ import WarningIcon from "@mui/icons-material/Warning";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useNavigate } from "react-router-dom";
 import StandAloneToggleButton from "../../Components/ToggleButton.js";
-
+import AdvertiserNavBar from "../../Components/NavBars/AdvertiserNavBar.js"
 import {
     Rating,
     Checkbox,
@@ -48,93 +48,14 @@ function EditActivity() {
     const [formData, setFormData] = useState(data);
     const [editingActivity, setEditingActivity] = useState(activity);
     const navigate = useNavigate();
+
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
     console.log(" i am printing form data ", formData);
     //updates location in formData based on input change
-    const handleLocationInputChange = (event, index) => {
-        const { value } = event.target;
-        setFormData((prevData) => {
-            const updatedLocations = [...prevData.locations];
-            updatedLocations[index] = value;
-            return { ...prevData, locations: updatedLocations };
-        });
-    };
-
-    //updates activity in formData based on input change
-    const handleActivityInputChange = (event, index) => {
-        const { name, value } = event.target;
-        setFormData((prevData) => {
-            const updatedActivities = [...prevData.activity];
-            updatedActivities[index] = {
-                ...updatedActivities[index],
-                [name]: value,
-            };
-            return {
-                ...prevData,
-                activity: updatedActivities,
-            };
-        });
-    };
-
-    //adds a new activity object to the formData
-    const addActivity = () => {
-        setFormData((prevData) => ({
-            ...prevData,
-            activity: [
-                ...prevData.activity,
-                { name: "", price: "", category: "", location: "" },
-            ],
-        }));
-    };
-
-    //deletes an activity based on its index
-    const deleteActivity = (index) => {
-        const updatedActivities = formData.activity.filter((_, i) => i !== index);
-        setFormData((prevData) => ({
-            ...prevData,
-            activity: updatedActivities,
-        }));
-    };
-
-    //updates available dates in formData based on input change
-    const handleAvailableDatesInputChange = (event, index) => {
-        const { value } = event.target;
-        setFormData((prevData) => {
-            const updatedDates = [...prevData.availableDatesAndTimes];
-            updatedDates[index] = value;
-            return { ...prevData, availableDatesAndTimes: updatedDates };
-        });
-    };
-
-    const handleAddDate = () => {
-        setFormData((prevData) => ({
-            ...prevData,
-            availableDatesAndTimes: [...prevData.availableDatesAndTimes, ""],
-        }));
-    };
-
-    const handleAddLocation = () => {
-        setFormData((prevData) => ({
-            ...prevData,
-            locations: [...prevData.locations, ""],
-        }));
-    };
-
-    const handleDeleteDate = (index) => {
-        const newDatesAndTimes = formData.availableDatesAndTimes.filter(
-            (_, i) => i !== index
-        );
-        setFormData({ ...formData, availableDatesAndTimes: newDatesAndTimes }); // Update state
-    };
-
-    const handleDeleteLocation = (index) => {
-        const newLocations = formData.locations.filter((_, i) => i !== index);
-        setFormData({ ...formData, locations: newLocations });
-    };
-
+   
     //for scrolling automatically when we click edit
     const formRef = useRef(null);
 
@@ -205,112 +126,155 @@ function EditActivity() {
 
 
     return (
-        <div
-            style={{
-                overflow: "visible",
+        <Box
+            sx={{
                 height: "100vh",
             }}
         >
-            <h2 style={{ fontWeight: "bold", textAlign: "center" }}>Edit Itinerary</h2>
-            <form
-                onSubmit={handleUpdate}
-                style={{ marginTop: "20px" }}
-                ref={formRef}
+            <AdvertiserNavBar />
+
+            <Box
+                sx={{
+                    p: 4,
+                    justifyContent: "center",
+                }}
             >
-                <TextField
-                    label="Name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    fullWidth
-                    sx={{ mb: 2 }}
-                />
-                <TextField
-                    label="Price"
-                    name="price"
-                    value={formData.price}
-                    onChange={handleInputChange}
-                    fullWidth
-                    sx={{ mb: 2 }}
-                    type="number"
-                />
-                <FormControlLabel
-                    control={
-                        <Checkbox
-                            style={{ color: "#ff9933" }}
-                            checked={formData.isOpen}
-                            onChange={handleCheckboxChange}
-                            name="isOpen"
-                        />
-                    }
-                    label="Is open"
-                    sx={{ mb: 2 }}
-                />
-                <TextField
-                    label="Discount"
-                    name="specialDiscount"
-                    value={formData.specialDiscount}
-                    onChange={handleInputChange}
-                    fullWidth
-                    sx={{ mb: 2 }}
-                    type="number"
-                />
-                <TextField
-                    label="Date"
-                    name="date"
-                    value={formData.date}
-                    onChange={handleInputChange}
-                    fullWidth
-                    sx={{ mb: 2 }}
-                    type="datetime-local"
-                />
-                <TextField
-                    label="Category"
-                    name="category"
-                    value={formData.category}
-                    onChange={handleInputChange}
-                    fullWidth
-                    sx={{ mb: 2 }}
-                />
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        flexWrap: "wrap",
+                <Paper
+                    elevation={4}
+                    sx={{
+                        marginTop: "30px",
+                        p: 5,
+                        width: "60vw",
+                        borderRadius: 3,
+                        boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
+                        height: "100%",
                     }}
                 >
-                    {allTags.map((element) => {
-                        return (
-                            <StandAloneToggleButton
-                                key={element._id}
-                                name={element.name}
-                                tags={formData.tags}
-                            />
-                        );
-                    })}
-                </div>
-                <TextField
-                    label="Duration"
-                    name="duration"
-                    value={formData.duration}
-                    onChange={handleInputChange}
-                    fullWidth
-                    sx={{ mb: 2 }}
-                />
-                <TextField
-                    label="Location"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleInputChange}
-                    fullWidth
-                    sx={{ mb: 2 }}
-                />
-                <Button type="submit" variant="contained" className="blackhover">
-                    Update Activity
-                </Button>
-            </form>
-        </div>
-    )
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            mb: 3,
+                        }}
+                    >
+                        <h2 className="bigTitle"
+                            style={{ fontWeight: "bold", textAlign: "center" }}>Edit Activity</h2>
+                        <Box />
+                        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                            <form
+                                onSubmit={handleUpdate}
+                                style={{ marginTop: "20px" }}
+                                ref={formRef}
+                            >
+                                <TextField
+                                    label="Name"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                />
+                                <TextField
+                                    label="Price"
+                                    name="price"
+                                    value={formData.price}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                    type="number"
+                                />
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            style={{ color: "#ff9933" }}
+                                            checked={formData.isOpen}
+                                            onChange={handleCheckboxChange}
+                                            name="isOpen"
+                                        />
+                                    }
+                                    label="Is open"
+                                    sx={{ mb: 2 }}
+                                />
+                                <TextField
+                                    label="Discount"
+                                    name="specialDiscount"
+                                    value={formData.specialDiscount}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                    type="number"
+                                />
+                                <TextField
+                                    label="Date"
+                                    name="date"
+                                    value={formData.date}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                    type="datetime-local"
+                                />
+                                <TextField
+                                    label="Category"
+                                    name="category"
+                                    value={formData.category}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                />
+
+                                <TextField
+                                    label="Duration"
+                                    name="duration"
+                                    value={formData.duration}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                />
+                                <TextField
+                                    label="Location"
+                                    name="location"
+                                    value={formData.location}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                />
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        flexWrap: "wrap",
+                                    }}
+                                >
+                                    <label
+                                        style={{
+                                            fontSize: "16px",
+                                            fontWeight: "bold",
+                                            marginBottom: "10px",
+                                        }}
+                                    >
+                                        Tags
+                                    </label>
+                                    {allTags.map((element) => {
+                                        return (
+                                            <StandAloneToggleButton
+                                                key={element._id}
+                                                name={element.name}
+                                                tags={formData.tags}
+                                            />
+                                        );
+                                    })}
+                                </div>
+                                <Button type="submit" variant="contained" className="blackhover" style={{ marginTop: "5%" }}>
+                                    Update Activity
+                                </Button>
+                            </form>
+                        </Box>
+                    </Box>
+                </Paper>
+            </Box>
+        </Box>
+    );
 }
 
 export default EditActivity;

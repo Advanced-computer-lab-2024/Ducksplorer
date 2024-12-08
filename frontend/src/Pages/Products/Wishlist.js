@@ -15,27 +15,26 @@ function Wishlist() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
-    const user = JSON.parse(userJson);
-    const userName = user.username;
-    setLoading(true);
-    axios
-      .get(`http://localhost:8000/touristRoutes/myWishlist/${userName}`)
+useEffect(() => {
+  const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
+  const user = JSON.parse(userJson);
+  const userName = user.username;
+  setLoading(true);
+  axios
+    .get(`http://localhost:8000/touristRoutes/myWishlist/${userName}`)
 
-      .then((response) => {
-        message.success("wishlist fetched successfully");
-        setProducts(response.data[0].products);
-        console.log("these are the products", response.data[0].products);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the wishlist!", error);
-      })
-      .finally(() => {
-        setTimeout(() => setLoading(false), 1000); // Delay of 1 second
-      });
-  }, []);
-
+    .then((response) => {
+      message.success("wishlist fetched successfully");
+      setProducts(response.data[0].products);
+      console.log("these are the products", response.data[0].products);
+    })
+    .catch((error) => {
+      console.error("There was an error fetching the wishlist!", error);
+    })
+    .finally(() => {
+      setTimeout(() => setLoading(false), 1000); // Delay of 1 second
+    });
+}, []);
   const handleBackButtonClick = () => {
     window.history.back();
   };
@@ -45,6 +44,7 @@ function Wishlist() {
       prevProducts.filter((product) => product._id !== productId)
     );
   };
+
   if (loading) {
     return (
       <div>
@@ -80,7 +80,18 @@ function Wishlist() {
         >
           {/* Render the filtered products using the ProductCard component */}
           {products && products.length > 0 ? (
-            products.map((product) => <NewProductCard product={product} />)
+            products.map((product) => 
+              <NewProductCard
+                key={product._id}
+                product={product}
+                productID={product._id}
+                showRating={true}
+                showAverageRatingNo={true}
+                showRemoveWishlist={true}
+                removeProductFromWishlist={removeProductFromWishlist}
+                showAddToCart={true}
+                hideWishlist={false}
+              />)
           ) : (
             <div>
               <Error404 />
@@ -95,7 +106,14 @@ function Wishlist() {
 
 export default Wishlist;
 
-/* <ProductCard
+/*            
+        {products && products.length > 0 ? (
+            products.map((product) => (
+              <div
+                key={product._id}
+                style={{ position: "relative", marginBottom: "20px" }}
+              >
+                <ProductCard
                   key={product._id}
                   product={product}
                   productID={product._id}
@@ -104,4 +122,12 @@ export default Wishlist;
                   showRemoveWishlist={true}
                   removeProductFromWishlist={removeProductFromWishlist}
                   showAddToCart={true}
-                /> */
+                />
+              </div>
+            ))
+          ) : (
+            <Typography variant="body1" style={{ marginTop: "20px" }}>
+              No products found in your wishlist.
+            </Typography>
+          )}
+                */

@@ -3,13 +3,13 @@ const { getSellerDetails, updateSellerDetails, removeFileUrl, deleteMySellerAcco
 
 const router = express.Router();
 
-router.get("/viewaccount/:userName", getSellerDetails);
+router.get("/viewaccount/:userName", getSellerDetails);//done
 
-router.put("/editaccount", updateSellerDetails);
+router.put("/editaccount", updateSellerDetails);//done but not tested
 
-router.post('/removeFileUrl', removeFileUrl);
+router.post('/removeFileUrl', removeFileUrl);//done but not tested
 
-router.delete("/deleteMySellerAccount/:userName", deleteMySellerAccount);
+router.delete("/deleteMySellerAccount/:userName", deleteMySellerAccount);//done but not tested
 
 
 module.exports = router;

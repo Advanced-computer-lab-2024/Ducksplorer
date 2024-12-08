@@ -27,6 +27,6 @@ const upload = multer({
 });
 
 // Define the route with multer middleware
-router.post('/upload', upload.single('file'), uploadDocument);
+router.post('/upload', upload.single('file'), uploadDocument); //done but not tested
 
 module.exports = router;

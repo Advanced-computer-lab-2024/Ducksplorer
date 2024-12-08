@@ -21,7 +21,7 @@ import Cookies from "js-cookie";
 import MyNotifications from "../myNotifications";
 
 function AdvertiserNavBar() {
-  const image = "duckAvatar.png";
+  const image = "/duckAvatar.png";
   const [anchorElUser, setAnchorElUser] = useState(null);
   const navigate = useNavigate();
 
