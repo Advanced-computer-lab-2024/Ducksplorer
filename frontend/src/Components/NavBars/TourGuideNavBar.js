@@ -57,7 +57,7 @@ function TourGuideNavBar() {
       sx={{
         backgroundColor: "white",
         width: "100vw",
-        height: "10vh",
+        height: "7vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
