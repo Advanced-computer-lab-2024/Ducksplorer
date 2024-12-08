@@ -55,48 +55,6 @@ export default function ProductCard({ product,
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleBooking = async (productId) => {
-    try {
-      const userJson = localStorage.getItem("user");
-      const isGuest = localStorage.getItem("guest") === "true";
-      if (isGuest) {
-        message.error("User is not logged in, Please login or sign up.");
-        navigate("/guestDashboard");
-        return;
-      }
-      if (!userJson) {
-        message.error("User is not logged in.");
-        return null;
-      }
-      const user = JSON.parse(userJson);
-      if (!user || !user.username) {
-        message.error("User information is missing.");
-        return null;
-      }
-
-      const type = "product";
-
-      localStorage.setItem("productId", productId);
-      localStorage.setItem("type", type);
-
-      const response = await axios.get(
-        `http://localhost:8000/touristRoutes/viewDesiredproduct/${productId}`
-      );
-
-      if (response.status === 200) {
-        if (response.data.isUpcoming) {
-          navigate("/payment");
-        } else {
-          message.error("You can't book an old product");
-        }
-      } else {
-        message.error("Booking failed.");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      message.error("An error occurred while booking.");
-    }
-  };
 
   React.useEffect(() => {
     setImage(
@@ -107,108 +65,6 @@ export default function ProductCard({ product,
   const user = JSON.parse(localStorage.getItem("user"));
 
   const username = user?.username;
-
-  const handleSaveproduct = async (event, productId, currentIsSaved) => {
-    event.stopPropagation();
-    try {
-      const newIsSaved = !currentIsSaved;
-
-      const response = await axios.put(
-        `http://localhost:8000/product/save/${productId}`,
-        {
-          username: username,
-          save: newIsSaved,
-        }
-      );
-      if (response.status === 200) {
-        setSaveStates((prevState) => ({
-          ...prevState,
-          [productId]: newIsSaved, // Update the save state for this product
-        }));
-        message.success(
-          newIsSaved
-            ? "product saved successfully!"
-            : "product removed from saved list!"
-        );
-        // if (!newIsSaved && onRemove) {
-          // onRemove(productId);
-        // }
-      } else {
-        message.error("Failed to save");
-      }
-    } catch (error) {
-      console.error("Error toggling save state:", error);
-    }
-  };
-
-  const [saveStates, setSaveStates] = useState({});
-
-  useEffect(() => {
-    const fetchSaveStates = async () => {
-      const userJson = localStorage.getItem("user");
-      const user = JSON.parse(userJson);
-      const userName = user.username;
-
-      try {
-        const response = await axios.get(
-          `http://localhost:8000/product/getSave/${product._id}/${userName}`
-        );
-
-        if (response.status === 200) {
-          setSaveStates((prevState) => ({
-            ...prevState,
-            [product._id]: response.data.saved, // Update only the relevant product state
-          }));
-        }
-      } catch (error) {
-        console.error(`Failed to fetch save state for ${product._id}:`, error);
-      }
-    };
-    fetchSaveStates();
-  }, [product._id]);
-
-  const [notificationStates, setNotificationStates] = useState({});
-
-  const requestNotification = async (event, productId, currentIsNotified) => {
-    event.stopPropagation();
-    try {
-      const newIsNotified = !currentIsNotified;
-
-      const response = await axios.post(
-        "http://localhost:8000/notification/request",
-        {
-          user: username,
-          eventId: productId,
-        }
-      );
-
-      if (response.status === 201) {
-        message.success(
-          newIsNotified
-            ? "Notifications enabled for this product!"
-            : "Notifications disabled for this product!"
-        );
-        setNotified(!notified);
-        setNotificationStates((prev) => ({
-          ...prev,
-          [productId]: newIsNotified,
-        }));
-        message.success(
-          "You will be notified when this event starts accepting bookings."
-        );
-      } else if (response.status === 200) {
-        message.info(
-          "You have already requested to be notified for this product"
-        );
-      } else {
-        message.error(response.data.message);
-      }
-    } catch (error) {
-      console.error("Error requesting notification:", error);
-      message.error("Failed to request notification.");
-    }
-  };
-
 
   const addToWishlist = async (product) => {
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
@@ -317,53 +173,8 @@ export default function ProductCard({ product,
     }
   };
 
+  const [archived, setArchived] = useState(product.isArchived);
 
-
-
-  const handleShareLink = (productId) => {
-    const link = `${window.location.origin}/product/searchActivities/${productId}`; // Update with your actual route
-    navigator.clipboard
-      .writeText(link)
-      .then(() => {
-        message.success("Link copied to clipboard!");
-      })
-      .catch(() => {
-        message.error("Failed to copy link.");
-      });
-  };
-
-  const handleShareEmail = (productId) => {
-    const link = `${window.location.origin}/product/searchActivities/${productId}`; // Update with your actual route
-    const subject = "Check out this product";
-    const body = `Here is the link to the product: ${link}`;
-    window.location.href = `mailto:?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
-  };
-
-  const handleClick = (event, productId) => {
-    event.stopPropagation();
-    // setAnchorEl(event.currentTarget);
-    Swal.fire({
-      title: "Share product",
-      html: `
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
-          <button id="share-link" style="padding: 10px 20px; font-size: 16px; background-color: #ff9933; color: white; border: none; border-radius: 8px; cursor: pointer;">
-            Share via Link
-          </button>
-          <Button className="blackhover" id="share-mail" style="padding: 10px 20px; font-size: 16px; background-color: #ff9933; color: white; border: none; border-radius: 8px; cursor: pointer;">
-            Share via Mail
-          </Button>
-        </div>
-      `,
-      showConfirmButton: false, // Hide default OK button
-      width: "400px", // Set the width of the popup
-      padding: "20px", // Add padding to the popup
-      customClass: {
-        popup: "my-swal-popup", // Optional: Add custom styling via CSS
-      },
-    });
-  };
 
   const TheCard = () => {
     return (
@@ -383,6 +194,12 @@ export default function ProductCard({ product,
             width: "100%",
             height: "100%",
             cursor: "pointer",
+            filter:
+            archived || product.availableQuantity === 0
+              ? "grayscale(100%)"
+              : "none",
+          opacity: archived || product.availableQuantity === 0 ? 0.6 : 1,
+       
           }}
         >
           <CardOverflow>
@@ -446,7 +263,7 @@ export default function ProductCard({ product,
                 </h4>
 
                 <Rating
-                  value={product.rating}
+                  value={product.averageRating}
                   icon={<StarIcon sx={{ color: "orange" }} />}
                   emptyIcon={<StarOutlineIcon />}
                   readOnly
@@ -499,6 +316,29 @@ export default function ProductCard({ product,
               >
                 {productInCart ? "Remove from Cart" : "Add to Cart"}
               </Button>
+              )}
+              {product.availableQuantity === 0 && (
+                <div
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -180%)", // Center the text horizontally and vertically
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "rgba(255, 255, 255, 0.8)", // Optional: Add a semi-transparent background
+                  color: "black",
+                  fontSize: "1.5rem",
+                  fontWeight: "bold",
+                  textTransform: "uppercase",
+                  zIndex: 2, // Ensure it appears above other content
+                }}
+                >
+                  Sold Out
+                </div>
               )}
             </div>
           </div>
