@@ -41,28 +41,41 @@ const CartPage = () => {
       const orderNumber = +orderNumberStr;
       localStorage.setItem("orderNumber", orderNumber + 1); // Increment the order number
 
-      for (const item of cartProducts) {
-        // Extract details
-        const { product, quantity } = item;
+      const paymentData = {
+        userName,
+        cartProducts,
+        orderNumber,
+      };
 
-        // Call the backend API
-        const response = await axios.put(
-          "http://localhost:8000/touristRoutes/addPurchase",
-          {
-            userName,
-            productId: product._id,
-            chosenQuantity: quantity,
-            orderNumber: orderNumber,
-          }
-        );
-        const type = "product";
+      const type = "product";
 
-        localStorage.setItem("cartId", cartProducts._id);
-        localStorage.setItem("type", type);
-        if (response.status === 201) {
-          navigate("/payment");
-        }
-      }
+      localStorage.setItem("cartId", cartProducts._id);
+      localStorage.setItem("type", type);
+
+      navigate("/payment", { state: paymentData });
+
+      // for (const item of cartProducts) {
+      //   // Extract details
+      //   const { product, quantity } = item;
+
+      //   // Call the backend API
+      //   const response = await axios.put(
+      //     "http://localhost:8000/touristRoutes/addPurchase",
+      //     {
+      //       userName,
+      //       productId: product._id,
+      //       chosenQuantity: quantity,
+      //       orderNumber: orderNumber,
+      //     }
+      //   );
+      //   const type = "product";
+
+      //   localStorage.setItem("cartId", cartProducts._id);
+      //   localStorage.setItem("type", type);
+      //   if (response.status === 201) {
+      //     navigate("/payment");
+      //   }
+      // }
 
       // Optionally clear the cart (both frontend and backend)
       setCartProducts([]); // Clear frontend cart state

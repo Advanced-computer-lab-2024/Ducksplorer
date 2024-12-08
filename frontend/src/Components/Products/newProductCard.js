@@ -22,8 +22,7 @@ import ProductCardDetails from "../productCardDetailed";
 import { useState, useEffect } from "react";
 import Favorite from "@mui/icons-material/Favorite";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-
-
+import useUserRole from "../getRole";
 import Swal from "sweetalert2";
 
 // productCard component
@@ -45,6 +44,7 @@ export default function ProductCard({
   hideWishlist ,
   showPurchase, showNotify }) {
   const navigate = useNavigate();
+  const role = useUserRole();
   const [notified,setNotified] = useState(false);
   const [productInCart, setProductInCArt] = useState(false);
   const [image, setImage] = React.useState("https://picsum.photos/200/300");

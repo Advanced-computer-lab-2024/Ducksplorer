@@ -1,6 +1,6 @@
 import AddressDropdown from "../../Components/AddressDropdown.js";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import React from "react";
 import { Card, Typography, Space, message, Select, Form, Button } from "antd";
@@ -52,6 +52,9 @@ function PaymentPage() {
 
   const [selectedAddress, setSelectedAddress] = useState("");
   const [addresses, setAddresses] = useState([]);
+
+  const location = useLocation();
+  const { cartProducts, orderNumber } = location.state;
 
   const handleAddressSelect = (addressIndex) => {
     setSelectedAddress(addressIndex); // Update the selected address index
@@ -164,7 +167,6 @@ function PaymentPage() {
     }
   };
 
-  const [currentWallet, setCurrentWallet] = useState(null);
 
   const fetchWalletBalance = async (userName) => {
     try {
@@ -205,16 +207,6 @@ function PaymentPage() {
     }
   };
 
-  // const showWalletPopup = async (walletBalance) => {
-  //   await Swal.fire({
-  //     title: 'Wallet Balance',
-  //     text: `Your current wallet balance is: ${walletBalance} credits`,
-  //     icon: 'info',
-  //     confirmButtonText: 'OK',
-  //     allowOutsideClick: false, // Prevent dismissing the popup by clicking outside
-  //   });
-  // }
-
   const handleWalletSubmit = async (e) => {
     if (cartData && !selectedAddress) {
       message.error("Please choose a delivery address first.");
@@ -252,16 +244,44 @@ function PaymentPage() {
       );
       const data = await response.json();
       console.log(data);
+
       if (response.status === 200) {
-        message.success("Payment successfully completed!");
         if (itineraryOrActivity === "product") {
-          await axios.delete(
-            "http://localhost:8000/touristRoutes/emptyCart",{
-              data: {userName}
+          for (const item of cartProducts) {
+            const { product, quantity } = item;
+    
+            // Add purchase to the backend after successful payment
+            const response = await axios.put(
+              "http://localhost:8000/touristRoutes/addPurchase",
+              {
+                userName,
+                productId: product._id,
+                chosenQuantity: quantity,
+                orderNumber: orderNumber,
+              }
+            );
+    
+            if (response.status === 201) {
+              message.success("Purchase added successfully!");
+              try {
+                const res = await axios.delete(
+                  "http://localhost:8000/touristRoutes/emptyCart",{
+                    data: {userName}
+                  }
+                );
+                if (res.status === 200){
+                  message.success("Payment successfully completed!");
+                  await fetchWalletBalance(userName);
+                  navigate("/orders");
+                }
+              }
+              catch(error){
+                message.error("failed", error);
+              }
+            } else {
+              message.error("Failed to add purchase");
             }
-          );
-          await fetchWalletBalance(userName);
-          navigate("/orders");
+          }
         }
         // Payment succeeded; now create the booking in the backend
         const bookingResponse = await fetch(
@@ -445,16 +465,40 @@ function PaymentPage() {
       return;
     }
     try {
-      // Call the empty cart API
-      const response = await axios.delete(
-        "http://localhost:8000/touristRoutes/emptyCart",
-        {
-          data: { userName },
+      for (const item of cartProducts) {
+        const { product, quantity } = item;
+
+        // Add purchase to the backend after successful payment
+        const response = await axios.put(
+          "http://localhost:8000/touristRoutes/addPurchase",
+          {
+            userName,
+            productId: product._id,
+            chosenQuantity: quantity,
+            orderNumber: orderNumber,
+          }
+        );
+
+        if (response.status === 201) {
+          message.success("Purchase added successfully!");
+          try {
+            const res = await axios.delete(
+              "http://localhost:8000/touristRoutes/emptyCart",{
+                data: {userName}
+              }
+            );
+            if (res.status === 200){
+              message.success("Payment successfully completed!");
+              navigate("/orders");
+            }
+          }
+          catch(error){
+            message.error("failed", error);
+          }
+        } else {
+          message.error("Failed to add purchase");
         }
-      );
-      console.log(response.data.message); // Log success message
-      // Navigate to "My Purchases" on success
-      navigate("/orders");
+      }
     } catch (error) {
       console.error(
         "Error emptying cart:",
@@ -1408,6 +1452,24 @@ function PaymentPage() {
                       >
                         Wallet
                       </button>
+                      <button
+                        size="md"
+                        variant="solid"
+                        className="blackhover"
+                        zIndex={2}
+                        type="submit"
+                        style={{
+                          padding: "10px",
+                          fontSize: "1rem",
+                          flex: 1,
+                          marginRight: "12px",
+                          marginLeft: "2%",
+                          backgroundColor: "#ff9933",
+                        }}
+                        onClick={handleCashOnDelivery}
+                      >
+                        Cash on Delivery
+                      </button>
                     </form>
                   </Form>
                 </Paper>
@@ -2060,23 +2122,6 @@ function PaymentPage() {
                         onClick={handleWalletSubmit}
                       >
                         Wallet
-                      </button>
-                      <button
-                        size="md"
-                        variant="solid"
-                        className="blackhover"
-                        zIndex={2}
-                        type="submit"
-                        style={{
-                          padding: "10px",
-                          fontSize: "1rem",
-                          flex: 1,
-                          marginRight: "12px",
-                          backgroundColor: "#ff9933",
-                        }}
-                        onClick={handleCashOnDelivery}
-                      >
-                        Cash on Delivery
                       </button>
                     </form>
                   </Form>
