@@ -25,7 +25,6 @@ import ShareIcon from "@mui/icons-material/Share";
 import Swal from "sweetalert2";
 import BookmarksIcon from "@mui/icons-material/Bookmark";
 
-
 // ActivityCard component
 export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
   const navigate = useNavigate();
@@ -41,16 +40,25 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
     try {
       const userJson = localStorage.getItem("user");
       const isGuest = localStorage.getItem("guest") === "true";
+
+      // Check if the user is a guest and prompt to log in
       if (isGuest) {
         message.error("User is not logged in, Please login or sign up.");
         navigate("/guestDashboard");
         return;
       }
+
       if (!userJson) {
         message.error("User is not logged in.");
         return null;
       }
+
       const user = JSON.parse(userJson);
+      console.log("user", user);
+      console.log("username", user.username);
+      console.log("activityId", activityId);
+
+      // Validate user information
       if (!user || !user.username) {
         message.error("User information is missing.");
         return null;
@@ -61,22 +69,37 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
       localStorage.setItem("activityId", activityId);
       localStorage.setItem("type", type);
 
+      // Send request to check the activity's status
       const response = await axios.get(
-        `http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}`
+        `http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}/${user.username}`
       );
 
       if (response.status === 200) {
         if (response.data.isUpcoming) {
           navigate("/payment");
         } else {
-          message.error("You can't book an old activity");
+          message.error("You can't book an old activity.");
         }
       } else {
         message.error("Booking failed.");
       }
     } catch (error) {
       console.error("Error:", error);
-      message.error("An error occurred while booking.");
+
+      // Handle specific error messages from the backend
+      if (error.response && error.response.status === 400) {
+        const errorMessage = error.response.data.message;
+
+        if (errorMessage.includes("You must be at least 18 years old")) {
+          message.error(
+            "You are less than 18 years old and cannot book this activity."
+          );
+        } else {
+          message.error(errorMessage); // Display other backend error messages
+        }
+      } else {
+        message.error("An error occurred while booking.");
+      }
     }
   };
 
@@ -90,7 +113,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
 
   const username = user?.username;
 
-  const handleSaveActivity = async ( activityId, currentIsSaved) => {
+  const handleSaveActivity = async (activityId, currentIsSaved) => {
     // event.stopPropagation();
     try {
       const newIsSaved = !currentIsSaved;
@@ -270,7 +293,10 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                 size="md"
                 variant="solid"
                 color="primary"
-                onClick={(event) =>{event.stopPropagation(); handleClick(event, activity._id);}}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleClick(event, activity._id);
+                }}
                 className="blackhover"
                 sx={{
                   borderRadius: "50%",
@@ -349,7 +375,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                 <BookmarksIcon />
               )}
             </IconButton>
-          {showNotify && (
+            {showNotify && (
               <Tooltip title="Request Notifications">
                 <IconButton
                   size="md"

@@ -108,9 +108,9 @@ const findProduct = async (req, res) => {
   //search based on products name
   const name = req.query.name;
   console.log(name);
-  if (!name) {
-    res.status(400).json("please provide the name");
-  }
+  // if (!name) {
+  //   res.status(400).json("please provide the name");
+  // }
   try {
     const products = await productModel.find({
       name: { $regex: name, $options: "i" },
