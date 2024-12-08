@@ -66,8 +66,7 @@ export default function ProductCard({
 
   React.useEffect(() => {
     setImage(
-      `https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`
-    );
+`https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`);
   }, []);
   const checkIfInWishlist = async () => {
     try {
@@ -288,8 +287,7 @@ export default function ProductCard({
     console.log("username:", userName);
     try {
       const response = await axios.put(
-        `http://localhost:8000/touristRoutes/removeFromWishlist/${userName}/${productId}`
-      );
+`http://localhost:8000/touristRoutes/removeFromWishlist/${userName}/${productId}`);
       setShowWishList(false);
 
       if (response.status === 200) {
@@ -517,7 +515,7 @@ export default function ProductCard({
                 onClick={(event) => {
                   event.stopPropagation(); // Stops propagation
                   if (product.availableQuantity > 0) {
-                    handleAddToCartClick(); // Call the function without passing `event`
+                    handleAddToCartClick(); // Call the function without passing event
                   }
                 }}
                 sx={{
@@ -547,7 +545,7 @@ export default function ProductCard({
                 onClick={async (event) => {
                   event.stopPropagation(); // Stops propagation
                   if (product.availableQuantity > 0) {
-                    await handleAddToCartClick2(); // Call the function without passing `event`
+                    await handleAddToCartClick2(); // Call the function without passing event
                     handleConfirmClick();
                   }
                 }}
@@ -574,7 +572,7 @@ export default function ProductCard({
                   zIndex={2}
                   onClick={(event) => {
                     event.stopPropagation(); // Stops propagation
-                    handleEditProduct(); // Call the function without passing `event`
+                    handleEditProduct(); // Call the function without passing event
                   }}
                   sx={{ backgroundColor: "#ff9933", marginRight: 1 }}
                 >

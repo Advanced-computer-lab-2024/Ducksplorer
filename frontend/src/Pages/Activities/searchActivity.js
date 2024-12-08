@@ -115,23 +115,26 @@ function SearchActivity() {
     fetchActivities();
   }, [id]);
 
-  const fetchCategories = () => {
-    if (categories.length === 0 && !loading) {
-      // Avoid redundant calls
-      setLoading(true);
-      axios
-        .get(`http://localhost:8000/category`) // Use environment variable for the base URL
-        .then((response) => {
-          setCategories(response.data);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching categories:", error);
-          setError("Failed to fetch categories.");
-        })
-        .finally(() => setLoading(false));
-    }
-  };
+  useEffect(() => {
+    const fetchCategories = () => {
+      if (categories.length === 0 && !loading) {
+        // Avoid redundant calls
+        setLoading(true);
+        axios
+          .get(`http://localhost:8000/category`) // Use environment variable for the base URL
+          .then((response) => {
+            setCategories(response.data);
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.error("Error fetching categories:", error);
+            setError("Failed to fetch categories.");
+          })
+          .finally(() => setLoading(false));
+      }
+    };
+    fetchCategories();
+  });
 
   useEffect(() => {
     if (activities.length === 0) {
@@ -158,7 +161,7 @@ function SearchActivity() {
     setSortOrderAnchorEl(null);
   };
 
-  const handleSort = () => {
+  const handleSort = (sortBy, sortOrder) => {
     const showPreferences = localStorage.getItem("showPreferences");
     const favCategory = localStorage.getItem("category");
     setLoading(true);
@@ -483,7 +486,6 @@ function SearchActivity() {
                       id="category-select"
                       value={selectedCategory}
                       onChange={handleCategoryChange}
-                      onOpen={fetchCategories}
                       sx={{
                         "& .MuiOutlinedInput-root": {
                           "& fieldset": {
@@ -497,7 +499,7 @@ function SearchActivity() {
                           },
                         },
                         "& .MuiInputBase-input": {
-                          color: "#ff9933", // Change the text color to match the orange theme if needed
+                          color: "black", // Change the text color to match the orange theme if needed
                         },
                       }}
                     >

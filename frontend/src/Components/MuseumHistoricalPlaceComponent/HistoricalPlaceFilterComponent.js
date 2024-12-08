@@ -18,7 +18,6 @@ const HistoricalPlaceFilterComponent = ({ onFilter }) => {
   const [tags, setTags] = useState([]); // Tags selected by the user
   const [allTags, setAllTags] = useState([]); // All available tags from backend
   const [filterAnchorEl, setFilterAnchorEl] = useState(null);
-  const [showUpcomingOnly, setShowUpcomingOnly] = useState(false);
 
   // Fetch all tags from the backend
   useEffect(() => {
@@ -52,10 +51,7 @@ const HistoricalPlaceFilterComponent = ({ onFilter }) => {
 
   // Apply the selected filters by calling the backend
   const handleFilter = () => {
-    if (showUpcomingOnly) {
-      handleUpcoming();
-      return;
-    }
+    
     // Ensure all tags are strings
     const formattedTags = tags.map((tag) => tag.toLowerCase()); // Normalizing to lower case
 
@@ -102,22 +98,7 @@ const HistoricalPlaceFilterComponent = ({ onFilter }) => {
       });
   };
 
-  const handleUpcoming = () => {
-    axios
-      .get(
-        `http://localhost:8000/historicalPlace/getAllUpcomingHistoricalPlaces`
-      )
-      .then((response) => {
-        onFilter(response.data.upcomingHistoricalPlaces);
-      })
-      .catch((error) => {
-        console.error(
-          "There was an error fetching the upcoming historical place visits!",
-          error
-        );
-        message.error("Error fetching upcoming historical place visits!");
-      });
-  };
+  
 
   return (
     <div>
@@ -137,12 +118,6 @@ const HistoricalPlaceFilterComponent = ({ onFilter }) => {
               gap: "16px",
             }}
           >
-            <Checkbox
-              style={{ color: "#ff9933" }}
-              checked={showUpcomingOnly}
-              onChange={(e) => setShowUpcomingOnly(e.target.checked)}
-            />
-            <span>Upcoming Historical Places</span>
           </div>
         </MenuItem>
         <MenuItem>
