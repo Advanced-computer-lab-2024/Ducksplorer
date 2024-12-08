@@ -34,6 +34,7 @@ import ReportIcon from "@mui/icons-material/Report";
 import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
 import MailIcon from '@mui/icons-material/Mail';
 import MailLockIcon from '@mui/icons-material/MailLock';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -700,7 +701,7 @@ function TouristNavBar() {
 
               <MenuItem onClick={handleLogout}>
                 <IconButton component="a" sx={{ textAlign: "center", p: 0.5 }}>
-                  <LockIcon sx={{ fontSize: 20, color: "black" }} />
+                  <LogoutIcon sx={{ fontSize: 20, color: "black" }} />
                   <Typography
                     textAlign="center"
                     marginLeft={2}

@@ -92,7 +92,6 @@ function CreatePromoCode() {
                   InputProps={{
                     style: {
                       fontSize: "16px",
-                      color: "#ff9933",
                     },
                   }}
                   sx={{
@@ -112,7 +111,6 @@ function CreatePromoCode() {
                   InputProps={{
                     style: {
                       fontSize: "16px",
-                      color: "#ff9933",
                     },
                   }}
                   sx={{

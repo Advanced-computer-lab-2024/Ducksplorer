@@ -18,6 +18,7 @@ import Cookies from "js-cookie";
 import Button from "@mui/material/Button";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import LogoutIcon from '@mui/icons-material/Logout';
 
 function GovernorNavBar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -239,7 +240,7 @@ function GovernorNavBar() {
             >
               <MenuItem onClick={() => handleNavigation("changePassword")}>
                 <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <LockIcon sx={{ fontSize: 20, color: "black" }} />
+                  <LogoutIcon sx={{ fontSize: 20, color: "black" }} />
                   <Typography
                     textAlign="center"
                     marginLeft={2}

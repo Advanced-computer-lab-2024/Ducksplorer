@@ -81,7 +81,7 @@ function AddGovernor() {
                 justifyContent: "center",
                 marginBottom: "5%",
                 position: "relative",
-                top: "-25%",
+                top: "7%",
               }}
             >
               <div>
@@ -97,7 +97,7 @@ function AddGovernor() {
                 alignSelf: "center",
                 marginBottom: "5%",
                 position: "relative", // Add this to use 'top'
-                marginTop: "-20%",
+                marginTop: "20%",
               }}
             >
               Add Governor

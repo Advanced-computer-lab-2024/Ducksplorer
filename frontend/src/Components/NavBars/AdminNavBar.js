@@ -24,6 +24,7 @@ import WidgetsIcon from "@mui/icons-material/Widgets";
 import MyNotifications from "../myNotifications";
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import Button from "@mui/material/Button";
+import LogoutIcon from '@mui/icons-material/Logout';
 
 function AdminNavBar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -175,6 +176,25 @@ function AdminNavBar() {
                 Browse Selections
               </Typography>
             </Button>
+            {/*Add create promo code*/}
+            <Button
+              className="nav-item"
+              onClick={() => handleNavigation("addPromoCode")}
+              sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                color: "black",
+                textAlign: "center",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FEF4EA",
+                },
+              }}
+            >
+              <Typography textAlign="center" className="nav-bar-text" sx={{ fontSize: "1rem", fontFamily: "'Josefin Sans', sans-serif", color: "black", "&:hover": { color: "#ff9933" } }}>
+                Create Promo Code
+              </Typography>
+            </Button>
           </Box>
           <Box sx={{ flexGrow: 0, marginRight: "3vw", display: "flex", alignItems: "center" }}>
             <Tooltip>
@@ -227,21 +247,9 @@ function AdminNavBar() {
                 </IconButton>
               </MenuItem>
               {/*Add create promo code*/}
-              <MenuItem onClick={() => handleNavigation("addPromoCode")}>
-                <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <LocalOfferIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Create Promo Code
-                  </Typography>
-                </IconButton>
-              </MenuItem>
               <MenuItem onClick={handleLogout}>
                 <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <LockIcon sx={{ fontSize: 20, color: "black" }} />
+                  <LogoutIcon sx={{ fontSize: 20, color: "black" }} />
                   <Typography
                     textAlign="center"
                     marginLeft={2}
