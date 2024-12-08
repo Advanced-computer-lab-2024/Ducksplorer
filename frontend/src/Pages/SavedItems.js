@@ -6,7 +6,6 @@ import DuckLoading from "../Components/Loading/duckLoading.js";
 import Error404 from "../Components/Error404.js";
 
 import {
-
   Typography,
   Box,
   TableContainer,
@@ -180,63 +179,90 @@ function MySavedItems() {
     );
   }
 
+  if (
+    (!Array.isArray(itineraries) && !Array.isArray(activities)) ||
+    (itineraries.length === 0 && activities.length === 0)
+  ) {
+    return (
+      <>
+        <TouristNavBar />
+        <Error404
+          errorMessage={errorMessage}
+          backMessage={backMessage}
+          route="/touristDashboard"
+        />
+      </>
+    );
+  }
+
   return (
     <>
       <TouristNavBar />
+      
       <div style={{ overflowY: 'visible', height: '100vh', width: '100%', display: 'flex', flexDirection: 'column' }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Typography variant="h4" sx={{ fontFamily: "'Roboto', sans-serif", color: "black" }}>Saved</Typography>
+          <Typography
+            variant="h4"
+            className="bigTitle"
+            sx={{  color: "black", fontWeight: 'bold' }}
+          >
+            Saved
+          </Typography>
         </Box>
 
         <MyTabs tabNames={tabNames} onTabClick={(tabName) => setSelectedTab(tabName)} />
 
-        {
-          (selectedTab === "Itineraries" || selectedTab === "All") && (
+        {(selectedTab === "Itineraries" || selectedTab === "All") && (
+          <>
+            {/* <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+                <Typography variant="h4">Itineraries</Typography>
+              </Box> */}
+            <div style={{ flex: 1 }}>
+              {itineraries.length > 0 ? (
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(3, 1fr)",
+                    gap: "24px", // Adjust the gap between items as needed
+                    paddingBottom: 24,
+                    paddingTop: 24
+                  }}
+                >
+                  {
+                    itineraries.map((itinerary) =>
+                      itinerary.flag === false &&
+                        itinerary.isDeactivated === false &&
+                        itinerary.tourGuideDeleted === false &&
+                        itinerary.deletedItinerary === false &&
+                        itinerary.saved.user === username &&
+                        itinerary.saved.isSaved === true ? (
+                        <ItineraryCard itinerary={itinerary} onRemove={handleRemoveItinerary} showNotify={true} />
+                      ) : null
+                    ) // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists
+                  }
+                </div>
+              ) : (
+                <Typography variant="body1" style={{ marginTop: "20px" }}>
+                  No itineraries found.
+                </Typography>
+              )}
+            </div>
+          </>
+        )}
+
+        {(selectedTab === "Activities" ||
+          selectedTab === "All") && (
             <>
-              <div style={{ flex: 1 }}>
-                {itineraries.length > 0 ? (
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "repeat(3, 1fr)",
-                      gap: "24px",
-                      paddingBottom: 24,
-                      paddingTop: 24
-                    }}
-                  >
-                    {
-                      itineraries.map((itinerary) =>
-                        itinerary.flag === false &&
-                          itinerary.isDeactivated === false &&
-                          itinerary.tourGuideDeleted === false &&
-                          itinerary.deletedItinerary === false &&
-                          itinerary.saved.user === username &&
-                          itinerary.saved.isSaved === true ? (
-                          <ItineraryCard itinerary={itinerary} onRemove={handleRemoveItinerary} showNotify={true} />
-                        ) : null
-                      )
-                    }
-                  </div>
-                ) : (
-                  selectedTab === "Itineraries" && (
-                    <>
-                      <TouristNavBar />
-                      <Error404
-                        errorMessage={errorMessage}
-                        backMessage={backMessage}
-                        route="/touristDashboard"
-                      />
-                    </>
-                  )
-                )}
-              </div>
-            </>
-          )
-        }
-        {
-          (selectedTab === "Activities" || selectedTab === "All") && (
-            <>
-              <Box sx={{ display: "flex", justifyContent: "center", mb: 3, marginTop: "20px" }}></Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  mb: 3,
+                  marginTop: "20px",
+                }}
+              >
+                {/* <Typography variant="h4"> Activities</Typography> */}
+              </Box>
               <Grid container spacing={4}>
                 {Array.isArray(activities) && activities.length > 0 ? (
                   activities.map((activity) =>
@@ -251,32 +277,16 @@ function MySavedItems() {
                     ) : null
                   )
                 ) : (
-                  selectedTab === "Activities" && !activities && (
-                    <>
-                      <TouristNavBar />
-                      <Error404
-                        errorMessage={errorMessage}
-                        backMessage={backMessage}
-                        route="/touristDashboard"
-                      />
-                    </>
-                  )
+                  <Grid item xs={12}>
+                    <Typography variant="body1" color="textSecondary" align="center">
+                      No activities available
+                    </Typography>
+                  </Grid>
                 )}
               </Grid>
             </>
-          )
-        }
-        {
-          selectedTab === "All" && !itineraries && !activities && (
-            <>
-              <TouristNavBar />
-              <Error404
-                errorMessage={errorMessage}
-                backMessage={backMessage}
-                route="/touristDashboard"
-              />
-            </>
           )}
+        {/* </Box> */}
       </div>
       <Help />
     </>

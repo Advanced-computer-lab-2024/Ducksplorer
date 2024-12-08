@@ -23,6 +23,8 @@ import { useState, useEffect } from "react";
 import NotificationAddOutlinedIcon from "@mui/icons-material/NotificationAddOutlined";
 import ShareIcon from "@mui/icons-material/Share";
 import Swal from "sweetalert2";
+import BookmarksIcon from "@mui/icons-material/Bookmark";
+
 
 // ActivityCard component
 export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
@@ -88,8 +90,8 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
 
   const username = user?.username;
 
-  const handleSaveActivity = async (event, activityId, currentIsSaved) => {
-    event.stopPropagation();
+  const handleSaveActivity = async ( activityId, currentIsSaved) => {
+    // event.stopPropagation();
     try {
       const newIsSaved = !currentIsSaved;
 
@@ -289,31 +291,65 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
             <Tooltip title="Save Activity">
               <IconButton
                 size="md"
-                variant={saveStates[activity._id] ? "soft" : "solid"}
-                onClick={(event) =>
-                  handleSaveActivity(
-                    event,
-                    activity._id,
-                    saveStates[activity._id]
-                  )
-                }
+                variant="solid"
                 className="blackhover"
                 sx={{
                   position: "absolute",
                   zIndex: 2,
-                  color: "white",
-                  borderRadius: "50%",
+                  borderRadius: "100%",
+                  height: "10px",
+                  width: "10px",
                   right: "1rem",
+                  fontSize: "3px",
                   bottom: 0,
                   transform: "translateY(50%)",
-                  transition: "transform 0.3s",
+                  color: "white",
+                  size: "1px",
                   backgroundColor: "#ff9933",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
-                {saveStates[activity._id] ? <Done color="#ff9933" /> : <Add />}
+                <BookmarksIcon />
               </IconButton>
             </Tooltip>
-            {showNotify && (
+
+            <IconButton
+              size="md"
+              variant={saveStates[activity._id] ? "soft" : "solid"}
+              className="blackhover"
+              onClick={(event) => {
+                event.stopPropagation();
+                handleSaveActivity(activity._id, saveStates[activity._id]);
+              }}
+              onMouseEnter={(e) => (e.target.style.cursor = "pointer")}
+              onMouseLeave={(e) => (e.target.style.cursor = "default")}
+              sx={{
+                position: "absolute",
+                zIndex: 2,
+                borderRadius: "50%",
+                right: "1rem",
+                bottom: 0,
+                height: "10px",
+                width: "10px",
+                fontSize: "3px",
+                color: "white",
+                transform: "translateY(50%)",
+                transition: "transform 0.3s",
+                backgroundColor: "#ff9933",
+                "&:active": {
+                  transform: "translateY(50%) scale(0.9)",
+                },
+              }}
+            >
+              {saveStates[activity._id] ? (
+                <Done color="#ff9933" />
+              ) : (
+                <BookmarksIcon />
+              )}
+            </IconButton>
+          {showNotify && (
               <Tooltip title="Request Notifications">
                 <IconButton
                   size="md"
@@ -326,6 +362,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                       notificationStates[activity._id]
                     )
                   }
+                  className="blackhover"
                   sx={{
                     borderRadius: "50%",
                     position: "absolute",
@@ -335,11 +372,8 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                     justifyContent: "center  ",
                     alignItems: "center",
                     bottom: 0,
-                    transform: "translateY(50%) translateX(-260%)",
+                    transform: "translateY(50%) translateX(380%)",
                     transition: "transform 0.3s",
-                    "&:active": {
-                      transform: "translateY(50%) scale(0.9)",
-                    },
                     backgroundColor: "#ffcc00",
                   }}
                 >

@@ -29,7 +29,7 @@ const AdvertiserDashboard = () => {
     labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
     datasets: [
       {
-        label: "Bookings",
+        label: "Acivities",
         data: [40, 15, 20, 12, 30, 25, 10],
         borderColor: "#ff9933",
         backgroundColor: "rgba(255, 153, 51, 0.2)",
