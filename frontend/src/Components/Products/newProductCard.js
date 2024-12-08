@@ -45,6 +45,8 @@ export default function ProductCard({
   showNotify,
   onConfirm,
   quantityInCart = 0,
+  showChosenQuantity,
+  chosenQuantity,
 }) {
   const navigate = useNavigate();
   const role = useUserRole();
@@ -347,7 +349,7 @@ export default function ProductCard({
                   variant={showWishList ? "soft" : "solid"}
                   onClick={(event) => {
                     event.stopPropagation(); // Stop event propagation
-                    showWishList
+                    showRemoveWishlist
                       ? handleRemoveWishlist(product)
                       : addToWishlist(product);
                   }}
@@ -364,7 +366,7 @@ export default function ProductCard({
                     backgroundColor: "#ff9933",
                   }}
                 >
-                  {showWishList ? <Done color="#ff9933" /> : <Favorite />}
+                  {showRemoveWishlist ? <Done color="#ff9933" /> : <Favorite />}
                 </IconButton>
               </Tooltip>
             )}
@@ -409,6 +411,13 @@ export default function ProductCard({
               </div>
             </div>
           </div>
+          <div>
+            {role === "Tourist" && showChosenQuantity && (
+              <p marginTop="20px"  >
+              Chosen Quantity: {chosenQuantity}
+            </p>
+            )}
+            </div>
           {product.availableQuantity > 0 &&
             role === "Tourist" &&
             showQuantity &&
