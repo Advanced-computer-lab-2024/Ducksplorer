@@ -59,6 +59,11 @@ function EditMuseum() {
     };      
 
 
+    const handleGoBack = () => {
+        navigate(-1); // Navigate to the previous page
+      };
+
+
     // Update the museum details
     const handleUpdate = (event) => {
         event.preventDefault();
@@ -228,6 +233,18 @@ function EditMuseum() {
                                     <Button type="submit" variant="contained" className="blackhover" onClick={handleUpdate}>
                                         Update
                                     </Button>
+                                    <Button
+                                        variant="outlined"
+                                        color="error"
+                                        onClick={handleGoBack}
+                                        fullWidth
+                                        sx={{
+                                            py: 1.5,
+                                            marginTop: "3%",
+                                        }}
+                                        >
+                                    Cancel
+                                </Button>
                                 </Box>
                             </form>
                         </Box>

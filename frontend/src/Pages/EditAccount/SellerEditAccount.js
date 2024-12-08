@@ -201,6 +201,7 @@ const EditProfile = () => {
           width: "60vw",
           borderRadius: 3,
           boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
+          marginTop:"20%",
         }}
       >
         <Box sx={{ textAlign: "center", mb: 3 }}>
