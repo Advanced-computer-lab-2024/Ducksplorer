@@ -158,7 +158,7 @@ function SearchActivity() {
     setSortOrderAnchorEl(null);
   };
 
-  const handleSort = () => {
+  const handleSort = (sortBy , sortOrder) => {
     const showPreferences = localStorage.getItem("showPreferences");
     const favCategory = localStorage.getItem("category");
     setLoading(true);
