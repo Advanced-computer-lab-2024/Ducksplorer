@@ -52,7 +52,7 @@ export default function ProductCard({
   const [productInCart, setProductInCart] = useState(false);
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [showWishlist, setShowWishlist] = useState(false);
+  const [showWishList, setShowWishList] = useState(false);
   const [archived, setArchived] = useState(product.isArchived);
   const [quantity, setQuantity] = useState(quantityInCart);
   const [open, setOpen] = React.useState(false);
@@ -91,7 +91,7 @@ export default function ProductCard({
       // console.log(isProductInCart);
 
       // Update the state
-      setShowWishlist(isProductInWishlist);
+      setShowWishList(isProductInWishlist);
     } catch (error) {
       console.error("Error checking product in wishlist:", error);
       message.error("Failed to check product in wishlist.");
@@ -149,7 +149,7 @@ export default function ProductCard({
       );
       if (response.status === 200) {
         message.success("Product added to wishlist successfully!");
-        setShowWishlist(true);
+        setShowWishList(true);
       } else {
         message.error("Failed to add the product to the wishlist.");
       }
@@ -290,6 +290,7 @@ export default function ProductCard({
       const response = await axios.put(
         `http://localhost:8000/touristRoutes/removeFromWishlist/${userName}/${productId}`
       );
+      setShowWishList(false);
 
       if (response.status === 200) {
         message.success("Product removed from wishlist successfully");
@@ -300,7 +301,6 @@ export default function ProductCard({
       }
     } catch (error) {
       console.error(error);
-      message.error("An error occurred while removing the product");
     }
   };
 
@@ -340,10 +340,10 @@ export default function ProductCard({
               >
                 <IconButton
                   size="md"
-                  variant={showWishlist ? "soft" : "solid"}
+                  variant={showWishList ? "soft" : "solid"}
                   onClick={(event) => {
                     event.stopPropagation(); // Stop event propagation
-                    showRemoveWishlist
+                    showWishList
                       ? handleRemoveWishlist(product)
                       : addToWishlist(product);
                   }}
@@ -360,7 +360,7 @@ export default function ProductCard({
                     backgroundColor: "#ff9933",
                   }}
                 >
-                  {showRemoveWishlist ? <Done color="#ff9933" /> : <Favorite />}
+                  {showWishList ? <Done color="#ff9933" /> : <Favorite />}
                 </IconButton>
               </Tooltip>
             )}
@@ -581,29 +581,6 @@ export default function ProductCard({
                   Edit Product
                 </Button>
               ))}
-            {product.availableQuantity === 0 && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -180%)", // Center the text horizontally and vertically
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: "rgba(255, 255, 255, 0.8)", // Optional: Add a semi-transparent background
-                  color: "black",
-                  fontSize: "1.5rem",
-                  fontWeight: "bold",
-                  textTransform: "uppercase",
-                  zIndex: 2, // Ensure it appears above other content
-                }}
-              >
-                Sold Out
-              </div>
-            )}
           </div>
         </Card>
         <div

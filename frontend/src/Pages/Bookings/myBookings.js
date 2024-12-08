@@ -359,7 +359,6 @@ const BookingDetails = () => {
         height: "100vh",
         paddingTop: "64px",
         width: "90vw",
-        marginLeft: "5vw",
       }}
     >
       <TouristNavBar />
