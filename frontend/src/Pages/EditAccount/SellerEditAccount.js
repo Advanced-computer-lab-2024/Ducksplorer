@@ -132,6 +132,10 @@ const EditProfile = () => {
       });
   };
 
+  useEffect(() => {
+    document.body.style.overflow = "auto";
+  }, []);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setSellerDetails((prevDetails) => ({

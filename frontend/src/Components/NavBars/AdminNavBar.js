@@ -97,7 +97,7 @@ function AdminNavBar() {
                 sx={{ p: 0, ml: 4, width: 40, height: 40 }}
               >
                 <img
-                  src={"duckavatar.png"}
+                  src={"/duckavatar.png"} // Ensure this path is correct and the image is accessible
                   alt="Avatar"
                   style={{
                     maxWidth: "50px",
