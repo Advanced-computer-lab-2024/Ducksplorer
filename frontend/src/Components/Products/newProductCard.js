@@ -15,19 +15,17 @@ import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import ProductCardDetails from "../productCardDetailed";
 import { useState, useEffect } from "react";
-import Input from "@mui/joy/Input";
 import Favorite from "@mui/icons-material/Favorite";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import useUserRole from "../getRole";
 import Swal from "sweetalert2";
 
 // productCard component
-export default function ProductCard({
-  product,
+export default function ProductCard({ product,
   showArchive,
   showUnarchive,
   productID,
-  showEditProduct,
+  showEditProduct = false,
   showRating, //shows the user review , also for myPurchases as a tourist
   showReview,
   inCartQuantity,
@@ -228,56 +226,58 @@ export default function ProductCard({
         const userJson = localStorage.getItem("user");
         const user = JSON.parse(userJson);
         const userName = user.username;
-        const newQuantity = quantity;
-        console.log("this is the quantity i am requesting", newQuantity);
-        const response = await axios.patch(
+        // const newQuantity = quantity;
+        // Send the selected quantity and product details to the backend
+        const response = await axios.put(
           "http://localhost:8000/touristRoutes/cart",
           {
             userName,
             productId: product._id,
-            newQuantity,
+            // newQuantity,
           }
         );
+  
         if (response.status === 200) {
           message.success("Product added to cart successfully!");
           setProductInCart(!productInCart);
         } else {
-          message.error("Failed to update quantity in cart.");
+          message.error("Failed to add product to cart.");
         }
-      } catch (error) {
+      }catch(error){
         console.error(error);
-        message.error(
-          "An error occurred while adding the product to the cart."
-        );
+        message.error("An error occurred while adding the product to the cart.");
       }
-    } else {
-      try {
+    }else{
+      try{
         const userJson = localStorage.getItem("user");
         const user = JSON.parse(userJson);
         const userName = user.username;
+        // const newQuantity = quantity;
+        // Send the selected quantity and product details to the backend
         const response = await axios.delete(
-          "http://localhost:8000/touristRoutes/cart",
+          `http://localhost:8000/touristRoutes/cart`, 
           {
             params: {
-              userName,
-              productId: product._id,
-            },
+              userName: userName, // Your user name
+              productId: product._id, // The product ID
+            }
           }
         );
+  
         if (response.status === 200) {
           message.success("Product removed from successfully!");
           setProductInCart(!productInCart);
         } else {
-          message.error("Failed to update quantity in cart.");
+          message.error("Failed to remove product to cart.");
         }
-      } catch (error) {
+      }catch(error){
         console.error(error);
-        message.error(
-          "An error occurred while adding the product to the cart."
-        );
+        message.error("An error occurred while removing the product from the cart.");
       }
     }
+    
   };
+
 
   const handleRemoveWishlist = async (product) => {
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
@@ -294,8 +294,7 @@ export default function ProductCard({
 
       if (response.status === 200) {
         message.success("Product removed from wishlist successfully");
-        removeProductFromWishlist(product._id);
-        return response.data;
+        setShowWishlist(false);
       } else {
         message.error("Failed to remove product from wishlist");
       }
@@ -303,6 +302,9 @@ export default function ProductCard({
       console.error(error);
     }
   };
+
+  const [archived, setArchived] = useState(product.isArchived);
+
 
   const TheCard = () => {
     return (
@@ -322,8 +324,12 @@ export default function ProductCard({
             width: "100%",
             height: "100%",
             cursor: "pointer",
-            filter: archived ? "grayscale(100%)" : "none",
-            opacity: archived ? 0.6 : 1,
+            filter:
+            archived || product.availableQuantity === 0
+              ? "grayscale(100%)"
+              : "none",
+          opacity: archived || product.availableQuantity === 0 ? 0.6 : 1,
+       
           }}
         >
           <CardOverflow>
@@ -512,12 +518,30 @@ export default function ProductCard({
               <Button
                 size="md"
                 variant="solid"
-                className={product.availableQuantity > 0 ? "blackhover" : ""}
+                className="blackhover"
                 zIndex={2}
                 onClick={(event) => {
                   event.stopPropagation(); // Stops propagation
                   if (product.availableQuantity > 0) {
                     handleAddToCartClick(); // Call the function without passing `event`
+                  } // Call the function without passing `event`
+                }}
+                sx={{ backgroundColor: "#ff9933", marginRight: 1 }}
+              >
+                {productInCart ? "Remove from Cart" : "Add to Cart"}
+              </Button>
+              )}
+              {role==="Admin" || showEditProduct &&(
+              <Button
+                size="md"
+                variant="solid"
+                className={product.availableQuantity > 0 ? "blackhover" : ""}
+                zIndex={2}
+                onClick={async (event) => {
+                  event.stopPropagation(); // Stops propagation
+                  if (product.availableQuantity > 0) {
+                    await handleAddToCartClick2(); // Call the function without passing `event`
+                    handleConfirmClick();
                   }
                 }}
                 sx={{
@@ -530,7 +554,7 @@ export default function ProductCard({
                   },
                 }}
               >
-                {productInCart
+                 {productInCart
                   ? "Remove from Cart"
                   : product.availableQuantity === 0
                   ? "Sold Out"
