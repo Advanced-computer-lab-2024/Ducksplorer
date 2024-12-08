@@ -10,7 +10,7 @@ import WarningIcon from "@mui/icons-material/Warning";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useNavigate } from "react-router-dom";
 import StandAloneToggleButton from "../../Components/ToggleButton.js";
-
+import AdvertiserNavBar from "../../Components/TopNav/AdvertiserNavbar.js"
 import {
     Rating,
     Checkbox,
@@ -211,7 +211,8 @@ function EditActivity() {
                 height: "100vh",
             }}
         >
-            <h2 style={{ fontWeight: "bold", textAlign: "center" }}>Edit Itinerary</h2>
+            <AdvertiserNavBar />
+            <h2 style={{ fontWeight: "bold", textAlign: "center" }}>Edit Activity</h2>
             <form
                 onSubmit={handleUpdate}
                 style={{ marginTop: "20px" }}

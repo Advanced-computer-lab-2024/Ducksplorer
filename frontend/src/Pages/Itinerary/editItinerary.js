@@ -9,6 +9,8 @@ import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import WarningIcon from "@mui/icons-material/Warning";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useNavigate } from "react-router-dom";
+import TourGuideNavBar from "../../Components/NavBars/TourGuideNavBar"
+import StandAloneToggleButton from "../../Components/ToggleButton.js";
 
 import {
   TextField,
@@ -27,6 +29,8 @@ import {
 } from "@mui/material";
 
 function EditItinerary() {
+  let allTags = JSON.parse(localStorage.getItem("tags"));
+
   const location = useLocation();
   const { itinerary, data, tags, tagsSelected } = location.state || {};
   const [itineraries, setItineraries] = useState([]); //holds the list of itineraries
@@ -178,7 +182,7 @@ function EditItinerary() {
         setEditingItinerary(null);
         setSelectedTags([]);
         setTimeout(() => {
-          navigate("/rudItinerary");
+          navigate("/viewAllTourist");
         }, 2000);
       })
       .catch((error) => {
@@ -194,194 +198,241 @@ function EditItinerary() {
   };
 
   return (
-    <div
-      style={{
-        overflow: "visible",
+    <Box
+      sx={{
         height: "100vh",
       }}
     >
-      <h2 style={{ fontWeight: "bold", textAlign: "center" }}>Edit Itinerary</h2>
-      <form onSubmit={handleUpdate} style={{ marginTop: "20px" }} ref={formRef}>
-        {formData.activity &&
-          formData.activity.map((activity, index) => (
-            <div key={index}>
-              <div style={{ display: "flex", flexDirection: "row" }}>
+      <TourGuideNavBar />
+
+      <Box
+        sx={{
+          p: 4,
+          justifyContent: "center",
+        }}
+      >
+        <Paper
+          elevation={4}
+          sx={{
+            marginTop: "30px",
+            p: 5,
+            width: "700px",
+            borderRadius: 3,
+            boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
+            height: "100%",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              mb: 3,
+            }}
+          >
+            <h2 style={{ fontWeight: "bold", textAlign: "center" }}>Edit Itinerary</h2>
+            <Box />
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <form onSubmit={handleUpdate} style={{ marginTop: "20px" }} ref={formRef}>
+                {formData.activity &&
+                  formData.activity.map((activity, index) => (
+                    <div key={index}>
+                      <div style={{ display: "flex", flexDirection: "row" }}>
+                        <TextField
+                          label={`Activity ${index + 1} Name`}
+                          name="name"
+                          value={activity.name || ""}
+                          onChange={(e) => handleActivityInputChange(e, index)}
+                          fullWidth
+                          sx={{ mb: 2 }}
+                        />
+                        {index === 0 && (
+                          <IconButton onClick={addActivity}>
+                            <AddCircleIcon style={{ color: "ff9933" }} />
+                          </IconButton>
+                        )}
+                        <IconButton
+                          onClick={() => deleteActivity(index)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </div>
+                      <TextField
+                        label={`Activity ${index + 1} Price`}
+                        name="price"
+                        value={activity.price || ""}
+                        onChange={(e) => handleActivityInputChange(e, index)}
+                        fullWidth
+                        sx={{ mb: 2 }}
+                        type="number"
+                        min="0.01"
+                        step="0.01"
+                      />
+                      <TextField
+                        label={`Activity ${index + 1} Category `}
+                        name="category"
+                        value={activity.category || ""}
+                        onChange={(e) => handleActivityInputChange(e, index)}
+                        fullWidth
+                        sx={{ mb: 2 }}
+                      />
+                      <TextField
+                        label={`Activity ${index + 1} Location `}
+                        name="location"
+                        value={activity.location || ""}
+                        onChange={(e) => handleActivityInputChange(e, index)}
+                        fullWidth
+                        sx={{ mb: 2 }}
+                      />
+                    </div>
+                  ))}
+                {formData.locations.map((location, index) => (
+                  <Box
+                    key={index}
+                    sx={{ display: "flex", alignItems: "center", mb: 2 }}
+                  >
+                    <TextField
+                      value={location}
+                      onChange={(event) => handleLocationInputChange(event, index)}
+                      variant="outlined"
+                      fullWidth
+                      label={`Location ${index + 1}`}
+                    />
+                    {index === 0 && (
+                      <IconButton onClick={handleAddLocation}>
+                        <AddCircleIcon style={{ color: "ff9933" }} />
+                      </IconButton>
+                    )}
+                    <IconButton
+                      onClick={() => handleDeleteLocation(index)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
+                ))}
                 <TextField
-                  label={`Activity ${index + 1} Name`}
-                  name="name"
-                  value={activity.name || ""}
-                  onChange={(e) => handleActivityInputChange(e, index)}
+                  label="Timeline"
+                  name="timeline"
+                  value={formData.timeline}
+                  onChange={handleInputChange}
                   fullWidth
                   sx={{ mb: 2 }}
                 />
-                {index === 0 && (
-                  <IconButton onClick={addActivity}>
-                    <AddCircleIcon color="primary" />
-                  </IconButton>
-                )}
-                <IconButton
-                  onClick={() => deleteActivity(index)}
-                  color="secondary"
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </div>
-              <TextField
-                label={`Activity ${index + 1} Price`}
-                name="price"
-                value={activity.price || ""}
-                onChange={(e) => handleActivityInputChange(e, index)}
-                fullWidth
-                sx={{ mb: 2 }}
-                type="number"
-                min="0.01"
-                step="0.01"
-              />
-              <TextField
-                label={`Activity ${index + 1} Category `}
-                name="category"
-                value={activity.category || ""}
-                onChange={(e) => handleActivityInputChange(e, index)}
-                fullWidth
-                sx={{ mb: 2 }}
-              />
-              <TextField
-                label={`Activity ${index + 1} Location `}
-                name="location"
-                value={activity.location || ""}
-                onChange={(e) => handleActivityInputChange(e, index)}
-                fullWidth
-                sx={{ mb: 2 }}
-              />
-            </div>
-          ))}
-        {formData.locations.map((location, index) => (
-          <Box
-            key={index}
-            sx={{ display: "flex", alignItems: "center", mb: 2 }}
-          >
-            <TextField
-              value={location}
-              onChange={(event) => handleLocationInputChange(event, index)}
-              variant="outlined"
-              fullWidth
-              label={`Location ${index + 1}`}
-            />
-            {index === 0 && (
-              <IconButton onClick={handleAddLocation}>
-                <AddCircleIcon color="primary" />
-              </IconButton>
-            )}
-            <IconButton
-              onClick={() => handleDeleteLocation(index)}
-              color="secondary"
-            >
-              <DeleteIcon />
-            </IconButton>
-          </Box>
-        ))}
-        <TextField
-          label="Timeline"
-          name="timeline"
-          value={formData.timeline}
-          onChange={handleInputChange}
-          fullWidth
-          sx={{ mb: 2 }}
-        />
-        <TextField
-          label="Language"
-          name="language"
-          value={formData.language}
-          onChange={handleInputChange}
-          fullWidth
-          sx={{ mb: 2 }}
-        />
-        <TextField
-          label="Price"
-          name="price"
-          value={formData.price}
-          onChange={handleInputChange}
-          fullWidth
-          sx={{ mb: 2 }}
-          type="number"
-          min="0.01"
-          step="0.01"
-        />
-        {formData.availableDatesAndTimes.map((dateTime, index) => (
-          <Box
-            key={index}
-            sx={{ display: "flex", alignItems: "center", mb: 2 }}
-          >
-            <TextField
-              label={`Available Date and Time ${index + 1}`}
-              value={dateTime || ""}
-              onChange={(event) =>
-                handleAvailableDatesInputChange(event, index)
-              }
-              fullWidth
-              type="datetime-local"
-            />
-            {index === 0 && (
-              <IconButton onClick={handleAddDate}>
-                <AddCircleIcon color="primary" />
-              </IconButton>
-            )}
-            <IconButton
-              onClick={() => handleDeleteDate(index)}
-              color="secondary"
-            >
-              <DeleteIcon />
-            </IconButton>
-          </Box>
-        ))}
-
-        <TextField
-          label="Accessbility"
-          name="accessibility"
-          value={formData.accessibility}
-          onChange={handleInputChange}
-          fullWidth
-          sx={{ mb: 2 }}
-        />
-        <TextField
-          label="Pick Up Location"
-          name="pickUpLocation"
-          value={formData.pickUpLocation}
-          onChange={handleInputChange}
-          fullWidth
-          sx={{ mb: 2 }}
-        />
-        <TextField
-          label="Drop Off Location"
-          name="dropOffLocation"
-          value={formData.dropOffLocation}
-          onChange={handleInputChange}
-          fullWidth
-          sx={{ mb: 2 }}
-        />
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          {availableTags.length > 0 ? (
-            availableTags.map((tag) => (
-              <label key={tag.name}>
-                <input
-                  type="checkbox"
-                  style={{ color: "#ff9933" }}
-                  value={tag.name}
-                  checked={selectedTags.includes(tag.name)}
-                  onChange={() => handleCheckboxChange(tag.name)}
+                <TextField
+                  label="Language"
+                  name="language"
+                  value={formData.language}
+                  onChange={handleInputChange}
+                  fullWidth
+                  sx={{ mb: 2 }}
                 />
-                {tag.name}
-              </label>
-            ))
-          ) : (
-            <p>Loading tags...</p>
-          )}
-        </div>
-        <Button type="submit" variant="contained" color="primary">
-          Update Itinerary
-        </Button>
-      </form>
-    </div>
+                <TextField
+                  label="Price"
+                  name="price"
+                  value={formData.price}
+                  onChange={handleInputChange}
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  type="number"
+                  min="0.01"
+                  step="0.01"
+                />
+                {formData.availableDatesAndTimes.map((dateTime, index) => (
+                  <Box
+                    key={index}
+                    sx={{ display: "flex", alignItems: "center", mb: 2 }}
+                  >
+                    <TextField
+                      label={`Available Date and Time ${index + 1}`}
+                      value={dateTime || ""}
+                      onChange={(event) =>
+                        handleAvailableDatesInputChange(event, index)
+                      }
+                      fullWidth
+                      type="datetime-local"
+                    />
+                    {index === 0 && (
+                      <IconButton onClick={handleAddDate}>
+                        <AddCircleIcon style={{ color: "ff9933" }} />
+                      </IconButton>
+                    )}
+                    <IconButton
+                      onClick={() => handleDeleteDate(index)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
+                ))}
+
+                <TextField
+                  label="Accessbility"
+                  name="accessibility"
+                  value={formData.accessibility}
+                  onChange={handleInputChange}
+                  fullWidth
+                  sx={{ mb: 2 }}
+                />
+                <TextField
+                  label="Pick Up Location"
+                  name="pickUpLocation"
+                  value={formData.pickUpLocation}
+                  onChange={handleInputChange}
+                  fullWidth
+                  sx={{ mb: 2 }}
+                />
+                <TextField
+                  label="Drop Off Location"
+                  name="dropOffLocation"
+                  value={formData.dropOffLocation}
+                  onChange={handleInputChange}
+                  fullWidth
+                  sx={{ mb: 2 }}
+                />
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column", // Stack the label and toggle buttons vertically
+                    alignItems: "flex-start", // Align items to the start
+                  }}
+                >
+                  <label
+                    style={{
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                      marginBottom: "10px", // Add space between the label and the toggle buttons
+                    }}
+                  >
+                    Tags
+                  </label>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    {allTags.map((element) => {
+                      return (
+                        <StandAloneToggleButton
+                          key={element._id}
+                          name={element.name}
+                          tags={formData.tags}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <Button type="submit" variant="contained" className="blackhover">
+                  Update Itinerary
+                </Button>
+              </form>
+            </Box>
+          </Box>
+        </Paper>
+      </Box>
+    </Box>
   );
 }
 
