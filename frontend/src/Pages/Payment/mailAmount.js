@@ -256,8 +256,9 @@ function PaymentPage() {
         message.success("Payment successfully completed!");
         if (itineraryOrActivity === "product") {
           await axios.delete(
-            "http://localhost:8000/touristRoutes/emptyCart",
-            userName
+            "http://localhost:8000/touristRoutes/emptyCart",{
+              data: {userName}
+            }
           );
           await fetchWalletBalance(userName);
           navigate("/orders");
