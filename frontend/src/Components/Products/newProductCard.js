@@ -24,7 +24,6 @@ import Input from "@mui/joy/Input";
 import Favorite from "@mui/icons-material/Favorite";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import useUserRole from "../getRole";
-import useUserRole from "../getRole";
 import Swal from "sweetalert2";
 
 // productCard component
@@ -512,7 +511,6 @@ export default function ProductCard({
                   Sold Out
                 </div>
               )}
-            </div>
           </div>
         </Card>
         <div
