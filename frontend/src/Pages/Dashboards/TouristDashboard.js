@@ -29,11 +29,6 @@ const TouristDashboard = () => {
     };
   }, []);
 
-  useEffect(() => {
-    // Reset videoEnded flag on login
-    localStorage.setItem('videoEnded', 'false');
-  }, []);
-
   return (
     <Box
       sx={{
