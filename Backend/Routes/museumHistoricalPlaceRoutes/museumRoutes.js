@@ -10,14 +10,14 @@ const router = express.Router(); //creates an instance of the Router which is in
 // router.post("/addMuseum", upload.array('pictures', 10), addMuseum); // 'pictures' should match the key used in FormData
 
 
-router.post("/addMuseum", addMuseum);
-router.get("/getMuseum/:id", getMuseum);
-router.get("/getAllMyMuseums/:userName", getAllMyMuseums);
-router.get("/getAllMuseums", getAllMuseums);
-router.put("/updateMuseum/:id", updateMuseum);
-router.delete("/deleteMuseum/:id", deleteMuseum);
-router.get("/getAllUpcomingMuseums", getAllUpcomingMuseums);
-router.get("/searchMuseum", searchMuseum);
-router.get('/filterByTags', filterByTags);
+router.post("/addMuseum", addMuseum); //done
+router.get("/getMuseum/:id", getMuseum); //done
+router.get("/getAllMyMuseums/:userName", getAllMyMuseums);//done
+router.get("/getAllMuseums", getAllMuseums);//done
+router.put("/updateMuseum/:id", updateMuseum);//done
+router.delete("/deleteMuseum/:id", deleteMuseum);//done
+router.get("/getAllUpcomingMuseums", getAllUpcomingMuseums);//done
+router.get("/searchMuseum", searchMuseum); //done
+router.get('/filterByTags', filterByTags); //done
 
 module.exports = router;

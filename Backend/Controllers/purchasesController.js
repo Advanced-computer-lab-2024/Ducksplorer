@@ -1,5 +1,6 @@
 const PurchaseBooking = require("../Models/purchaseBookingModel.js");
 const Product = require("../Models/productModel.js");
+const Tourist = require("../Models/touristModel.js");
 const getMyPurchases = async (req, res) => {
   try {
     const myPurchases = await PurchaseBooking.find({ buyer: req.params.buyer });
@@ -184,8 +185,11 @@ const purchaseProduct = async (req, res) => {
 
 const cancelOrder = async (req, res) => {
   const { username, orderNumber } = req.params;
+  const { totalPrice } = req.body;
 
   try {
+    const tourist = await Tourist.findOne({userName: username});
+
     // Find and delete all documents with the specified username and order number
     const result = await PurchaseBooking.deleteMany({
       buyer: username, // Ensure you're matching the buyer field
@@ -196,6 +200,8 @@ const cancelOrder = async (req, res) => {
       return res.status(404).json({ message: "No purchases found for this order number" });
     }
 
+    tourist.wallet += parseFloat(totalPrice);
+    await tourist.save();
     res.status(200).json({ message: "Order canceled successfully", deletedCount: result.deletedCount });
   } catch (error) {
     res.status(500).json({ message: "An error occurred while canceling the order", error: error.message });

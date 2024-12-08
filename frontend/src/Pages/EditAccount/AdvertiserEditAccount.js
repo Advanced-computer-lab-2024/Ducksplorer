@@ -10,7 +10,6 @@ import {
 import axios from "axios";
 import { message } from "antd";
 import { Link } from "react-router-dom";
-import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar";
 // import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FileUpload from "../../Components/FileUpload";
 import IconButton from "@mui/material/IconButton";
@@ -18,6 +17,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Iconify from "../../Components/TopNav/iconify.js";
 // import ProfilePictureUpload from "../../Components/pp";
 import DownloadButton from "../../Components/DownloadButton";
+import AdvertiserNavBar from "../../Components/NavBars/AdvertiserNavBar.js";
 
 const AdvertiserEditProfile = () => {
   const [advertiserDetails, setAdvertiserDetails] = useState({
@@ -172,30 +172,28 @@ const AdvertiserEditProfile = () => {
   };
 
   return (
-    <box sx={{ height: "100vh" }}>
-      <AdvertiserSidebar />
+    <>
       <Box
         sx={{
           p: 5,
           display: "flex",
           flexDirection: "column",
+          overflowY: 'visible',
+          maxHeight: '100vh'
         }}
       >
-        <Link
-          to="/advertiserDashboard"
-          style={{ textDecoration: "none", color: "primary.main" }}
-        >
-          Back to Dashboard
-        </Link>
+        <AdvertiserNavBar />
+
         <Paper
           elevation={4}
           sx={{
             marginTop: "30px",
             p: 4,
-            width: "700px",
+            width: "60vw",
             borderRadius: 3,
             boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
-            height: "100%",
+            maxHeight: "100vh",
+            overflowY: "visible",
           }}
         >
           <Box
@@ -227,6 +225,7 @@ const AdvertiserEditProfile = () => {
                   />
                   <label htmlFor="photo">
                     <Button
+                      className="blackhover"
                       component="span"
                       color="primary"
                       variant="contained"
@@ -236,10 +235,9 @@ const AdvertiserEditProfile = () => {
                   </label>
                   {advertiserDetails.photo && (
                     <Button
-                      onClick={handlePhotoDelete}
-                      color="secondary"
-                      variant="contained"
-                    >
+                      variant="outlined"
+                      color="error"
+                      onClick={() => handlePhotoDelete()}>
                       Delete Photo
                     </Button>
                   )}
@@ -247,9 +245,8 @@ const AdvertiserEditProfile = () => {
               )}
             </Box>
 
-            <Typography variant="h5" sx={{ mt: 2 }}>
-              Edit Profile
-            </Typography>
+            <h2 className="bigTitle"
+              style={{ fontWeight: "bold", textAlign: "center", marginTop: "3%" }}> Edit Profile</h2>
           </Box>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -337,7 +334,10 @@ const AdvertiserEditProfile = () => {
               />
               {isEditing && (
                 <>
-                  <Button onClick={() => handleFileDelete("uploads")}>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={() => handleFileDelete("uploads")}>
                     Delete uploaded file
                   </Button>
                   <FileUpload
@@ -352,6 +352,7 @@ const AdvertiserEditProfile = () => {
           <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
             {isEditing ? (
               <Button
+                className="blackhover"
                 variant="contained"
                 color="success"
                 onClick={handleSaveClick}
@@ -362,6 +363,7 @@ const AdvertiserEditProfile = () => {
               </Button>
             ) : (
               <Button
+                className="blackhover"
                 variant="contained"
                 color="primary"
                 onClick={handleEditClick}
@@ -374,7 +376,7 @@ const AdvertiserEditProfile = () => {
           </Box>
         </Paper>
       </Box>
-    </box>
+    </>
   );
 };
 

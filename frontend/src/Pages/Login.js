@@ -30,6 +30,11 @@ function Login() {
   const navigate = useNavigate();
   localStorage.setItem("showPreferences", "false");
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleLogin();
+    }
+  };
 
   useEffect(() => {
     document.body.style.margin = "0";
@@ -184,7 +189,7 @@ function Login() {
           {/* <Typography variant="h6" style={styles.subtitle} >
             Login to continue your adventure
           </Typography> */}
-          <Stack spacing={2} mt={3}>
+          <Stack spacing={2} mt={3} >
             <TextField
               label="Username"
               value={userName}
@@ -196,6 +201,7 @@ function Login() {
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={handleKeyDown}
               fullWidth
               InputProps={{
                 endAdornment: (

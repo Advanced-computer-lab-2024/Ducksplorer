@@ -10,14 +10,15 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
-import { Link } from "react-router-dom";
 // import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FileUpload from "../../Components/FileUpload";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Iconify from "../../Components/TopNav/iconify.js";
+import sellerNavBar from "../../Components/NavBars/SellerNavBar";
 // import ProfilePictureUpload from "../../Components/pp";
 import DownloadButton from "../../Components/DownloadButton";
+import SellerNavBar from "../../Components/NavBars/SellerNavBar.js";
 
 const EditProfile = () => {
   const [sellerDetails, setSellerDetails] = useState({
@@ -166,12 +167,12 @@ const EditProfile = () => {
 
   return (
     <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-      <Link to="/sellerDashboard"> Back </Link>
+      <SellerNavBar />
       <Paper
         elevation={4}
         sx={{
           p: 4,
-          width: 500,
+          width: "60vw",
           borderRadius: 3,
           boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
         }}
@@ -194,15 +195,24 @@ const EditProfile = () => {
                   style={{ display: "none" }}
                 />
                 <label htmlFor="photo">
-                  <Button component="span" color="primary" variant="contained">
+                  <Button
+                    variant="outlined"
+                    component="span"
+                    sx={{
+                      color: "#ff9933",
+                      borderColor: "#ff9933",
+                      marginBottom: 2,
+                      marginTop: 2,
+                    }}
+                  >
                     Upload New Photo
                   </Button>
                 </label>
                 {sellerDetails.photo && (
                   <Button
                     onClick={handlePhotoDelete}
-                    color="secondary"
-                    variant="contained"
+                    color="error"
+                    variant="outlined"
                   >
                     Delete Photo
                   </Button>
@@ -211,9 +221,8 @@ const EditProfile = () => {
             )}
           </Box>
 
-          <Typography variant="h5" sx={{ mt: 2 }}>
-            Edit Seller Profile
-          </Typography>
+          <h2 className="bigTitle"
+            style={{ fontWeight: "bold", textAlign: "center", marginTop: "3%" }}> Edit Profile</h2>
         </Box>
 
         <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -289,7 +298,7 @@ const EditProfile = () => {
             />
             {isEditing && (
               <>
-                <Button onClick={() => handleFileDelete("uploads")}>
+                <Button variant="outlined" color="error" onClick={() => handleFileDelete("uploads")}>
                   Delete uploaded file
                 </Button>
                 <FileUpload
@@ -304,6 +313,7 @@ const EditProfile = () => {
         <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
           {isEditing ? (
             <Button
+              className="blackhover"
               variant="contained"
               color="success"
               onClick={handleSaveClick}
@@ -314,6 +324,7 @@ const EditProfile = () => {
             </Button>
           ) : (
             <Button
+              className="blackhover"
               variant="contained"
               color="primary"
               onClick={handleEditClick}
@@ -323,15 +334,6 @@ const EditProfile = () => {
               Edit Profile
             </Button>
           )}
-        </Box>
-
-        <Box sx={{ textAlign: "center", mt: 2 }}>
-          <Link
-            to="/sellerDashboard"
-            style={{ textDecoration: "none", color: "primary.main" }}
-          >
-            Back to Dashboard
-          </Link>
         </Box>
       </Paper>
     </Box>

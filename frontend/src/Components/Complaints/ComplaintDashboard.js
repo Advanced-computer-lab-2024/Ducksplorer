@@ -24,9 +24,9 @@ import {
 import axios from "axios";
 import { message } from "antd";
 import { Link } from "react-router-dom";
-import AdminNavbar from "../TopNav/Adminnavbar";
-import Sidebar from "../Sidebars/Sidebar";
+import AdminNavbar from "../NavBars/AdminNavBar";
 import DuckLoading from "../Loading/duckLoading";
+import Help from "../HelpIcon";
 
 const ComplaintsDashboard = () => {
   const [complaints, setComplaints] = useState([]);
@@ -123,22 +123,28 @@ const ComplaintsDashboard = () => {
     <Box
       sx={{
         height: "100vh",
-        paddingTop: "64px",
+
         width: "90vw",
-        marginLeft: "5vw",
       }}
     >
       <AdminNavbar />
-      <Sidebar />
+
       <Box
         sx={{
-          flex: 1,
           padding: "32px",
           margin: "0 auto",
           borderRadius: "12px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
         }}
       >
-        <Typography variant="h2" sx={{ textAlign: "center", fontWeight: "bold", paddingRight: "5%" }}>
+        <Typography
+          variant="h2"
+          className="bigTitle"
+          sx={{ textAlign: "center", fontWeight: "bold" }}
+        >
           Complaints
         </Typography>
 
@@ -149,14 +155,21 @@ const ComplaintsDashboard = () => {
             boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
             borderRadius: "1.5cap",
           }}
-        >          <Table>
+        >
+          {" "}
+          <Table>
             <TableHead>
               <TableRow>
                 <TableCell>
                   <Box sx={{ display: "flex", gap: 2 }}>
-                    <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
-                      <InputLabel
-                        sx={{ backgroundColor: "#ffeccc" }}>Sort by Date</InputLabel>
+                    <FormControl
+                      variant="outlined"
+                      size="small"
+                      sx={{ minWidth: 150 }}
+                    >
+                      <InputLabel sx={{ backgroundColor: "#ffeccc" }}>
+                        Sort by Date
+                      </InputLabel>
                       <Select
                         label="Sort by Date"
                         value={dateFilter}
@@ -168,9 +181,14 @@ const ComplaintsDashboard = () => {
                         <MenuItem value="oldest">Oldest</MenuItem>
                       </Select>
                     </FormControl>
-                    <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
-                      <InputLabel sx={{ backgroundColor: "#ffeccc" }}
-                      >Filter by Status</InputLabel>
+                    <FormControl
+                      variant="outlined"
+                      size="small"
+                      sx={{ minWidth: 150 }}
+                    >
+                      <InputLabel sx={{ backgroundColor: "#ffeccc" }}>
+                        Filter by Status
+                      </InputLabel>
                       <Select
                         label="Filter by Status"
                         value={statusFilter}
@@ -186,20 +204,70 @@ const ComplaintsDashboard = () => {
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }}>Title</TableCell>
-                <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }}>Date</TableCell>
-                <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }}>Status</TableCell>
-                <TableCell sx={{ fontSize: "18px", fontWeight: "bold", textAlign: "center", verticalAlign: "middle" }}>Actions</TableCell>
+                <TableCell
+                  sx={{
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    verticalAlign: "middle",
+                  }}
+                >
+                  Title
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    verticalAlign: "middle",
+                  }}
+                >
+                  Date
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    verticalAlign: "middle",
+                  }}
+                >
+                  Status
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    verticalAlign: "middle",
+                  }}
+                >
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {complaints.length > 0 ? (
                 complaints.map((complaint) => (
                   <TableRow key={complaint._id}>
-                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>{complaint.title}</TableCell>
-                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>{new Date(complaint.date).toLocaleDateString()}</TableCell>
-                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>{complaint.status ? "Resolved" : "Pending"}</TableCell>
-                    <TableCell sx={{ textAlign: "center", verticalAlign: "middle" }}>
+                    <TableCell
+                      sx={{ textAlign: "center", verticalAlign: "middle" }}
+                    >
+                      {complaint.title}
+                    </TableCell>
+                    <TableCell
+                      sx={{ textAlign: "center", verticalAlign: "middle" }}
+                    >
+                      {new Date(complaint.date).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell
+                      sx={{ textAlign: "center", verticalAlign: "middle" }}
+                    >
+                      {complaint.status ? "Resolved" : "Pending"}
+                    </TableCell>
+                    <TableCell
+                      sx={{ textAlign: "center", verticalAlign: "middle" }}
+                    >
                       <Button
                         onClick={() =>
                           updateComplaintStatus(
@@ -222,7 +290,11 @@ const ComplaintsDashboard = () => {
                         variant="contained"
                         className="blackhover"
                         size="small"
-                        sx={{ minWidth: "100px", fontSize: "12px" }}
+                        sx={{
+                          minWidth: "100px",
+                          fontSize: "12px",
+                          margin: "7.5px",
+                        }}
                       >
                         View Details
                       </Button>
@@ -263,8 +335,18 @@ const ComplaintsDashboard = () => {
             />
           </DialogContent>
           <DialogActions>
-            <Button className="blackhover" variant="contained" onClick={handleCloseReplyDialog}>Cancel</Button>
-            <Button className="blackhover" onClick={handleSendReply} variant="contained">
+            <Button
+              className="blackhover"
+              variant="contained"
+              onClick={handleCloseReplyDialog}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="blackhover"
+              onClick={handleSendReply}
+              variant="contained"
+            >
               Send Reply
             </Button>
           </DialogActions>

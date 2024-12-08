@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { message } from "antd";
-import AdminNavbar from "../../Components/TopNav/Adminnavbar.js";
+import AdminNavbar from "../../Components/NavBars/AdminNavBar";
 import {
   TextField,
   IconButton,
@@ -25,7 +25,9 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
-import Sidebar from "../../Components/Sidebars/Sidebar.js";
+import { useNavigate } from "react-router-dom";
+import NavigationTabs from "../../Components/NavigationTabs";
+
 const PreferenceTags = () => {
   const [tags, setTags] = useState([]);
   const [open, setOpen] = useState(false);
@@ -34,6 +36,13 @@ const PreferenceTags = () => {
   const [newTag, setNewTag] = useState("");
   const [editingTag, setEditingTag] = useState(null);
   const [editedTagName, setEditedTagName] = useState("");
+
+  const tabs = [
+    "Tags",
+    "Categories",
+  ];
+
+  const paths = ["/preferenceTags", "/categoriesActions"];
 
   const handleAddtagClick = () => {
     setShowTextField(!showTextField);
@@ -154,12 +163,15 @@ const PreferenceTags = () => {
     >
       {/* Navbar */}
       <AdminNavbar />
-      <Sidebar />
-
+      \
       {/* Main Content */}
       <div
         style={{ marginBottom: "40px", height: "100vh", paddingBottom: "10%" }}
       >
+        <div>
+          <NavigationTabs tabNames={tabs} paths={paths} />
+        </div>
+        <br></br>
         <div style={{ overflowY: "visible", height: "auto" }}>
           <Typography
             variant="h2"
@@ -194,11 +206,13 @@ const PreferenceTags = () => {
               <Button
                 variant="contained"
                 onClick={() => handleAdd(newTag)}
+                className="blackhover"
                 sx={{
                   borderRadius: "8px",
                   padding: "10px 24px",
                   textTransform: "none",
                   fontWeight: "bold",
+                  color: "white"
                 }}
               >
                 Add

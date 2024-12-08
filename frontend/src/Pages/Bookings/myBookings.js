@@ -19,7 +19,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import MyChips from "../../Components/MyChips";
+import MyTabs from "../../Components/MyTabs";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { message } from "antd";
 import TouristNavBar from "../../Components/TouristNavBar";
@@ -53,8 +53,8 @@ const BookingDetails = () => {
   const isGuest = localStorage.getItem("guest") === "true";
   const navigate = useNavigate();
   const [tourGuideNames, setTourGuideNames] = useState({});
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const chipNames = [
+  const [selectedTab, setSelectedTab] = useState("All");
+  const tabNames = [
     "Past",
     "All",
     "Activities",
@@ -66,20 +66,18 @@ const BookingDetails = () => {
 
   const errorMessage =
     "The bookings you are looking for might be removed or is temporarily unavailable";
-  const backMessage = "BACK TO TOURIST DASHBOARD";
+  const backMessage1 = "BACK TO TOURIST DASHBOARD";
+  const backMessage2 = "BACK TO ALL BOOKINGS"
 
   useEffect(() => {
-    if (selectedCategory === "Past") {
+    if (selectedTab === "Past") {
       navigate("/myPastBookings");
     }
-  }, [selectedCategory, navigate]);
-
-  const handleChipClick = (chipName) => {
-    setSelectedCategory(chipName);
-  };
+  }, [selectedTab, navigate]);
 
   const fetchTourGuideName = async (bookingId) => {
     try {
+      setLoading(true);
       const response = await axios.get(
         `http://localhost:8000/tourGuideRate/getUserNameById/${bookingId}`
       );
@@ -88,6 +86,9 @@ const BookingDetails = () => {
     } catch (error) {
       console.error("Error fetching tour guide name:", error.message);
       return "N/A";
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -117,6 +118,7 @@ const BookingDetails = () => {
   };
   const fetchBookings = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(
         `http://localhost:8000/touristRoutes/booking`,
         {
@@ -146,7 +148,7 @@ const BookingDetails = () => {
         error.response ? error.response.data : error.message
       );
     } finally {
-      setTimeout(() => setLoading(false), 1000); // Delay of 1 second
+      setLoading(false);
     }
   };
 
@@ -156,6 +158,7 @@ const BookingDetails = () => {
 
   const handleDeleteBooking = async (type, itemId, price, booking) => {
     try {
+      setLoading(true);
       const response = await axios.patch(
         `http://localhost:8000/touristRoutes/booking/${userName}`,
         {
@@ -194,10 +197,14 @@ const BookingDetails = () => {
         "Cannot cancel the booking within 48 hours of the start date or after the start of the activity/itinerary."
       );
     }
+    finally {
+      setLoading(false);
+    }
   };
 
   const handleDeleteThirdPartyBooking = async (type, price, booking) => {
     try {
+      setLoading(true);
       console.log("BookingID", booking);
       const response = await axios.patch(
         `http://localhost:8000/touristRoutes/booking/${userName}`,
@@ -240,7 +247,10 @@ const BookingDetails = () => {
         "Cannot cancel the booking within 48 hours of the start date or after the start of the activity/itinerary."
       );
     }
-  };
+    finally {
+      setLoading(false);
+    }
+  }
 
   if (loading) {
     return (
@@ -249,7 +259,6 @@ const BookingDetails = () => {
       </div>
     );
   }
-
   if (
     activityBookings.length === 0 &&
     itineraryBookings.length === 0 &&
@@ -262,11 +271,87 @@ const BookingDetails = () => {
         <TouristNavBar />
         <Error404
           errorMessage={errorMessage}
-          backMessage={backMessage}
+          backMessage={backMessage1}
           route="/touristDashboard"
         />
       </>
     );
+
+  else if (
+    activityBookings.length === 0 &&
+    (selectedTab === "activity")
+  )
+    return (
+      <>
+        <TouristNavBar />
+        <Error404
+          errorMessage={errorMessage}
+          backMessage={backMessage2}
+          route="/myBookings"
+        />
+      </>
+    );
+
+  else if (
+    itineraryBookings.length === 0 &&
+    (selectedTab === "itinerary")
+  )
+    return (
+      <>
+        <TouristNavBar />
+        <Error404
+          errorMessage={errorMessage}
+          backMessage={backMessage2}
+          route="/myBookings"
+        />
+      </>
+    );
+
+  else if (
+    flightsBookings.length === 0 &&
+    (selectedTab === "flight")
+  )
+    return (
+      <>
+        <TouristNavBar />
+        <Error404
+          errorMessage={errorMessage}
+          backMessage={backMessage2}
+          route="/myBookings"
+        />
+      </>
+    );
+
+  else if (
+    hotelsBookings.length === 0 &&
+    (selectedTab === "hotel")
+  )
+    return (
+      <>
+        <TouristNavBar />
+        <Error404
+          errorMessage={errorMessage}
+          backMessage={backMessage2}
+          route="/myBookings"
+        />
+      </>
+    );
+
+  else if (
+    transportationBookings.length === 0 &&
+    (selectedTab === "transportation")
+  )
+    return (
+      <>
+        <TouristNavBar />
+        <Error404
+          errorMessage={errorMessage}
+          backMessage={backMessage2}
+          route="/myBookings"
+        />
+      </>
+    );
+
 
   return (
     <Box
@@ -286,21 +371,22 @@ const BookingDetails = () => {
           <Typography
             variant="h2"
             sx={{ textAlign: "center", fontWeight: "bold", paddingTop: "5%" }}
-            gutterBottom
+            gutterBottom class="bigTitle"
+
           >
             Booking Details
           </Typography>
           <br></br>
-          <MyChips chipNames={chipNames} onChipClick={handleChipClick} />
+          <MyTabs tabNames={tabNames} onTabClick={(tabName) => setSelectedTab(tabName)} />
           {/* Activities Table */}
-          {(selectedCategory === "Activities" ||
-            selectedCategory === "All") && (
+          {(selectedTab === "Activities" ||
+            selectedTab === "All") && (
               <div>
                 {" "}
                 <Typography
                   variant="h5"
                   sx={{ fontWeight: "bold", marginBottom: "20px" }}
-                  gutterBottom
+                  gutterBottom 
                 >
                   Activities
                 </Typography>
@@ -430,8 +516,8 @@ const BookingDetails = () => {
               </div>
             )}
           {/* Itineraries Table */}
-          {(selectedCategory === "Itineraries" ||
-            selectedCategory === "All") && (
+          {(selectedTab === "Itineraries" ||
+            selectedTab === "All") && (
               <div>
                 {" "}
                 <Typography variant="h5" sx={{ fontWeight: "bold" }} gutterBottom>
@@ -595,7 +681,7 @@ const BookingDetails = () => {
               </div>
             )}
           {/* Flights Table */}
-          {(selectedCategory === "Flights" || selectedCategory === "All") && (
+          {(selectedTab === "Flights" || selectedTab === "All") && (
             <div>
               {" "}
               <Typography
@@ -743,7 +829,7 @@ const BookingDetails = () => {
             </div>
           )}
           {/* Hotels Table */}
-          {(selectedCategory === "Hotels" || selectedCategory === "All") && (
+          {(selectedTab === "Hotels" || selectedTab === "All") && (
             <div>
               <Typography
                 variant="h5"
@@ -838,8 +924,8 @@ const BookingDetails = () => {
             </div>
           )}
           {/* Transportation Table */}
-          {(selectedCategory === "Transportation" ||
-            selectedCategory === "All") && (
+          {(selectedTab === "Transportation" ||
+            selectedTab === "All") && (
               <div>
                 {" "}
                 <Typography

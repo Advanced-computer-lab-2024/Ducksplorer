@@ -289,7 +289,7 @@ export default function ItineraryCard({
               </IconButton>
             </Tooltip>
 
-            <Tooltip title="Save itinerary">
+            <Tooltip title="Save Itinerary">
               <IconButton
                 size="md"
                 variant="solid"
@@ -363,6 +363,7 @@ export default function ItineraryCard({
                       notificationStates[itinerary._id]
                     )
                   }
+                  className="blackhover"
                   sx={{
                     borderRadius: "50%",
                     position: "absolute",
