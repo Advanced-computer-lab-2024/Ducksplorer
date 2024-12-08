@@ -26,7 +26,7 @@ import useUserRole from "../getRole";
 import Swal from "sweetalert2";
 
 // productCard component
-export default function ProductCard({ 
+export default function ProductCard({
   product,
   showArchive,
   showUnarchive,
@@ -41,11 +41,13 @@ export default function ProductCard({
   showRemoveWishlist,
   showAverageRatingNo, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
   removeProductFromWishlist,
-  hideWishlist ,
-  showPurchase, showNotify }) {
+  hideWishlist = true,
+  showPurchase,
+  showNotify,
+}) {
   const navigate = useNavigate();
   const role = useUserRole();
-  const [notified,setNotified] = useState(false);
+  const [notified, setNotified] = useState(false);
   const [productInCart, setProductInCArt] = useState(false);
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -55,7 +57,6 @@ export default function ProductCard({
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
 
   React.useEffect(() => {
     setImage(
@@ -91,9 +92,9 @@ export default function ProductCard({
     }
   };
 
-  const handleAddToCartClick =async (e) => {
-    if(!productInCart){
-      try{
+  const handleAddToCartClick = async (e) => {
+    if (!productInCart) {
+      try {
         const userJson = localStorage.getItem("user");
         const user = JSON.parse(userJson);
         const userName = user.username;
@@ -107,48 +108,50 @@ export default function ProductCard({
             // newQuantity,
           }
         );
-  
+
         if (response.status === 200) {
           message.success("Product added to cart successfully!");
           setProductInCArt(!productInCart);
         } else {
           message.error("Failed to add product to cart.");
         }
-      }catch(error){
+      } catch (error) {
         console.error(error);
-        message.error("An error occurred while adding the product to the cart.");
+        message.error(
+          "An error occurred while adding the product to the cart."
+        );
       }
-    }else{
-      try{
+    } else {
+      try {
         const userJson = localStorage.getItem("user");
         const user = JSON.parse(userJson);
         const userName = user.username;
         // const newQuantity = quantity;
         // Send the selected quantity and product details to the backend
         const response = await axios.delete(
-          `http://localhost:8000/touristRoutes/cart`, 
+          `http://localhost:8000/touristRoutes/cart`,
           {
             params: {
               userName: userName, // Your user name
               productId: product._id, // The product ID
-            }
+            },
           }
         );
-  
+
         if (response.status === 200) {
           message.success("Product removed from successfully!");
           setProductInCArt(!productInCart);
         } else {
           message.error("Failed to remove product to cart.");
         }
-      }catch(error){
+      } catch (error) {
         console.error(error);
-        message.error("An error occurred while removing the product from the cart.");
+        message.error(
+          "An error occurred while removing the product from the cart."
+        );
       }
     }
-    
   };
-
 
   const handleRemoveWishlist = async (product) => {
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
@@ -159,14 +162,13 @@ export default function ProductCard({
     console.log("username:", userName);
     try {
       const response = await axios.put(
-        `http://localhost:8000/touristRoutes/removeFromWishlist/${userName}/${productId}`,
+        `http://localhost:8000/touristRoutes/removeFromWishlist/${userName}/${productId}`
       );
 
       if (response.status === 200) {
         message.success("Product removed from wishlist successfully");
         removeProductFromWishlist(product._id);
-        return response.data; 
-
+        return response.data;
       } else {
         message.error("Failed to remove product from wishlist");
       }
@@ -238,12 +240,8 @@ export default function ProductCard({
             width: "100%",
             height: "100%",
             cursor: "pointer",
-            filter:
-            archived || product.availableQuantity === 0
-              ? "grayscale(100%)"
-              : "none",
-          opacity: archived || product.availableQuantity === 0 ? 0.6 : 1,
-       
+            filter: archived ? "grayscale(100%)" : "none",
+            opacity: archived ? 0.6 : 1,
           }}
         >
           <CardOverflow>
@@ -251,34 +249,32 @@ export default function ProductCard({
               <img src={product.picture || image} loading="lazy" alt="" />
             </AspectRatio>
             {!hideWishlist && (
-            <Tooltip title="Add to Wishlist">
-              <IconButton
-                size="md"
-                variant={showWishlist ? "soft" : "solid"}
-                onClick={(event) => {
-                  event.stopPropagation(); // Stop event propagation
-                  showRemoveWishlist ? handleRemoveWishlist(product): addToWishlist(product);
-                }}
-                className="blackhover"
-                sx={{
-                  position: "absolute",
-                  zIndex: 2,
-                  color: "white",
-                  borderRadius: "50%",
-                  right: "1rem",
-                  bottom: 0,
-                  transform: "translateY(50%)",
-                  transition: "transform 0.3s",
-                  backgroundColor: "#ff9933",
-                }}
-              >
-                {showRemoveWishlist ? (
-                  <Done color="#ff9933" />
-                ) : (
-                  <Favorite />
-                )}
-              </IconButton>
-            </Tooltip>
+              <Tooltip title="Add to Wishlist">
+                <IconButton
+                  size="md"
+                  variant={showWishlist ? "soft" : "solid"}
+                  onClick={(event) => {
+                    event.stopPropagation(); // Stop event propagation
+                    showWishlist
+                      ? handleRemoveWishlist(product)
+                      : addToWishlist(product);
+                  }}
+                  className="blackhover"
+                  sx={{
+                    position: "absolute",
+                    zIndex: 2,
+                    color: "white",
+                    borderRadius: "50%",
+                    right: "1rem",
+                    bottom: 0,
+                    transform: "translateY(50%)",
+                    transition: "transform 0.3s",
+                    backgroundColor: "#ff9933",
+                  }}
+                >
+                  {showWishlist ? <Done color="#ff9933" /> : <Favorite />}
+                </IconButton>
+              </Tooltip>
             )}
           </CardOverflow>
           <div style={{ height: "10%" }}>
@@ -344,43 +340,34 @@ export default function ProductCard({
               >
                 {product.price}$
               </Typography>
-              {showAddToCart &&(
-              <Button
-                size="md"
-                variant="solid"
-                className="blackhover"
-                zIndex={2}
-                onClick={(event) => {
-                  event.stopPropagation(); // Stops propagation
-                  handleAddToCartClick(); // Call the function without passing `event`
-                }}
-                sx={{ backgroundColor: "#ff9933", marginRight: 1 }}
-              >
-                {productInCart ? "Remove from Cart" : "Add to Cart"}
-              </Button>
-              )}
-              {product.availableQuantity === 0 && (
-                <div
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -180%)", // Center the text horizontally and vertically
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: "rgba(255, 255, 255, 0.8)", // Optional: Add a semi-transparent background
-                  color: "black",
-                  fontSize: "1.5rem",
-                  fontWeight: "bold",
-                  textTransform: "uppercase",
-                  zIndex: 2, // Ensure it appears above other content
-                }}
+              {showAddToCart && (
+                <Button
+                  size="md"
+                  variant="solid"
+                  className={product.availableQuantity > 0 ? "blackhover" : ""}
+                  zIndex={2}
+                  onClick={(event) => {
+                    event.stopPropagation(); // Stops propagation
+                    if (product.availableQuantity > 0) {
+                      handleAddToCartClick(); // Call the function without passing `event`
+                    }
+                  }}
+                  sx={{
+                    backgroundColor:
+                      product.availableQuantity !== 0 ? "#ff9933" : "gray",
+                    marginRight: 1,
+                    clickable: product.availableQuantity > 0,
+                    "&:hover": {
+                      backgroundColor: "gray",
+                    },
+                  }}
                 >
-                  Sold Out
-                </div>
+                  {productInCart
+                    ? "Remove from Cart"
+                    : product.availableQuantity === 0
+                    ? "Sold Out"
+                    : "Add To Cart"}
+                </Button>
               )}
             </div>
           </div>
