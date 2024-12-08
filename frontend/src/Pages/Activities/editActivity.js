@@ -223,7 +223,7 @@ function EditActivity() {
                     sx={{
                         marginTop: "30px",
                         p: 5,
-                        width: "700px",
+                        width: "60vw",
                         borderRadius: 3,
                         boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
                         height: "100%",
@@ -237,7 +237,8 @@ function EditActivity() {
                             mb: 3,
                         }}
                     >
-                        <h2 style={{ fontWeight: "bold", textAlign: "center" }}>Edit Activity</h2>
+                        <h2 className="bigTitle"
+                            style={{ fontWeight: "bold", textAlign: "center" }}>Edit Activity</h2>
                         <Box />
                         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                             <form
@@ -343,7 +344,7 @@ function EditActivity() {
                                         );
                                     })}
                                 </div>
-                                <Button type="submit" variant="contained" className="blackhover">
+                                <Button type="submit" variant="contained" className="blackhover" style={{ marginTop: "5%" }}>
                                     Update Activity
                                 </Button>
                             </form>

@@ -185,7 +185,7 @@ const TourGuideEditProfile = () => {
           elevation={4}
           sx={{
             p: 4,
-            width: 800,
+            width: "60vw",
             borderRadius: 3,
             boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
             height: "100%",
@@ -216,7 +216,7 @@ const TourGuideEditProfile = () => {
                       variant="outlined"
                       component="span"
                       sx={{
-                        color:"#ff9933",
+                        color: "#ff9933",
                         borderColor: "#ff9933",
                         marginBottom: 2,
                         marginTop: 2,
@@ -239,9 +239,8 @@ const TourGuideEditProfile = () => {
               )}
             </Box>
 
-            <Typography variant="h5" sx={{ mt: 2 }}>
-              Edit Tour Guide Profile
-            </Typography>
+            <h2 className="bigTitle"
+              style={{ fontWeight: "bold", textAlign: "center", marginTop: "3%" }}> Edit Profile</h2>
           </Box>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -329,10 +328,10 @@ const TourGuideEditProfile = () => {
               />
               {isEditing && (
                 <>
-                  <Button 
-                      variant="outlined"
-                      color="error"
-                      onClick={() => handleFileDelete("nationalId")}>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={() => handleFileDelete("nationalId")}>
                     Delete National ID
                   </Button>
                   <FileUpload
@@ -351,10 +350,10 @@ const TourGuideEditProfile = () => {
               />
               {isEditing && (
                 <>
-                  <Button 
-                      variant="outlined"
-                      color="error"
-                      onClick={() => handleFileDelete("certificates")}>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={() => handleFileDelete("certificates")}>
                     Delete Certificates
                   </Button>
                   <FileUpload

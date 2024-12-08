@@ -199,242 +199,275 @@ const RUDHistoricalPlace = () => {
   };
 
   return (
-    <>
-    <GovernorNavBar/>
-      <Box sx={{ p: 6, maxWidth: 1200, overflowY: 'visible', height: '100vh' }}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
-          <Typography variant="h4">Available Historical Place Visits</Typography>
-        </Box>
+    <Box
+      sx={{
+        height: "100vh",
+        paddingTop: "64px",
+        width: "90vw",
+        marginLeft: "5vw",
+      }}
+    >
+      {/* Navbar */}
+      <GovernorNavBar />
 
-        {/* Button to navigate to page to create tags */}
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={goToUpcomingPage}
-          >
-            Create Tag for Historical Place Visits
-          </Button>
-        </Box>
-
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Description</TableCell>
-                <TableCell>Location</TableCell>
-                <TableCell>Pictures</TableCell>
-                <TableCell>
-                  Ticket Price
-                  <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
-                </TableCell>
-                <TableCell>Opening Time</TableCell>
-                <TableCell>Closing Time</TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Tags</TableCell>
-                {/* <TableCell>Created By</TableCell> */}
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {historicalPlaces.map((historicalPlace) => (
-                <TableRow key={historicalPlace._id}>
-                  <TableCell>{historicalPlace.description}</TableCell>
-                  <TableCell>{historicalPlace.location}</TableCell>
-                  <TableCell>
-                    <img
-                      src={historicalPlace.pictures}
-                      alt="Historical Place"
-                      style={{
-                        width: "100px",
-                        height: "auto",
-                        objectFit: "cover",
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    {(
-                      historicalPlace.ticketPrices *
-                      (exchangeRates[currency] || 1)
-                    ).toFixed(2)}{" "}
-                    {currency}
-                  </TableCell>
-                  <TableCell>{historicalPlace.openingTime}</TableCell>
-                  <TableCell>{historicalPlace.closingTime}</TableCell>
-                  <TableCell>{historicalPlace.HistoricalPlaceDate}</TableCell>
-                  <TableCell>{historicalPlace.HistoricalPlaceName}</TableCell>
-                  <TableCell>
-                    {historicalPlace.HistoricalPlaceCategory}
-                  </TableCell>
-                  <TableCell>{historicalPlace.tags.join(", ")}</TableCell>
-                  {/* <TableCell>{historicalPlace.createdBy}</TableCell> */}
-                  <TableCell>
-                    <Tooltip title="Delete Historical Place">
-                      <IconButton
-                        color="error"
-                        onClick={() => handleClickOpen(historicalPlace)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Edit Historical Place">
-                      <IconButton
-                        color="primary"
-                        onClick={() => handleEditClick(historicalPlace)}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-
-        {/* Update form */}
-        {editingHistoricalPlace && (
-          <form onSubmit={handleUpdate} style={{ marginTop: "20px" }}>
-            <Typography variant="h6">Edit Historical Place</Typography>
-            <TextField
-              label="Description"
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              fullWidth
-              sx={{ mb: 2 }}
-              required
-            />
-            <TextField
-              label="Location"
-              name="location"
-              value={formData.location}
-              onChange={handleInputChange}
-              fullWidth
-              sx={{ mb: 2 }}
-              required
-            />
-            <TextField
-              label="Picture"
-              name="pictures"
-              value={formData.pictures}
-              onChange={handleInputChange}
-              fullWidth
-              sx={{ mb: 2 }}
-              required
-            />
-            <TextField
-              label="Ticket Price"
-              name="ticketPrices"
-              value={formData.ticketPrices}
-              onChange={handleInputChange}
-              fullWidth
-              sx={{ mb: 2 }}
-              required
-            />
-            <TextField
-              label="Opening Time"
-              name="openingTime"
-              value={formData.openingTime}
-              onChange={handleInputChange}
-              fullWidth
-              sx={{ mb: 2 }}
-              required
-            />
-            <TextField
-              label="Closing Time"
-              name="closingTime"
-              value={formData.closingTime}
-              onChange={handleInputChange}
-              fullWidth
-              sx={{ mb: 2 }}
-              required
-            />
-            <TextField
-              label="Date"
-              name="HistoricalPlaceDate"
-              value={formData.HistoricalPlaceDate}
-              onChange={handleInputChange}
-              fullWidth
-              sx={{ mb: 2 }}
-              required
-            />
-            <TextField
-              label="Name"
-              name="HistoricalPlaceName"
-              value={formData.HistoricalPlaceName}
-              onChange={handleInputChange}
-              fullWidth
-              sx={{ mb: 2 }}
-              required
-            />
-            <TextField
-              label="Category"
-              name="HistoricalPlaceCategory"
-              value={formData.HistoricalPlaceCategory}
-              onChange={handleInputChange}
-              fullWidth
-              sx={{ mb: 2 }}
-              required
-            />
-
-            {/* Tags dropdown */}
-            <label>Tags:</label>
-            <Select
-              mode="multiple"
-              allowClear
-              style={{ width: "100%" }}
-              placeholder="Select tags"
-              value={formData.tags} // Ensure the current tags are displayed in the dropdown
-              onChange={(selectedTags) =>
-                setFormData({ ...formData, tags: selectedTags })
-              } // Handle adding/removing tags
-            >
-              {historicalPlaceTagsOptions.map((tag) => (
-                <Select.Option key={tag._id} value={tag.historicalPlaceTag}>
-                  {tag.historicalPlaceTag}
-                </Select.Option>
-              ))}
-            </Select>
-
-            <Box sx={{ mt: 2 }}>
-              <Button type="submit" variant="contained" color="primary">
-                Update
-              </Button>
+      {/* Main Content */}
+      <Box
+        sx={{
+          flex: 1, // Take the remaining width
+          padding: "32px", // Inner padding
+          margin: "0 auto", // Center content horizontally
+          borderRadius: "12px", // Rounded corners
+        }}
+      >
+        {/* Page Title */}
+        <div
+          style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
+        >
+          <div style={{ overflowY: "visible", height: "100vh" }}>
+            <Typography
+              variant="h2"
+              sx={{ textAlign: "center", fontWeight: "bold" }}
+              gutterBottom className="bigTitle">
+              Available Historical Place Visits</Typography>
+            {/* Button to navigate to page to create tags */}
+            <br></br>
+            {/* Button to navigate to page to create tags */}
+            <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
               <Button
-                onClick={handleCancelEdit}
                 variant="contained"
-                color="secondary"
-                sx={{ ml: 2 }}
+                className="blackhover" onClick={goToUpcomingPage}
               >
-                Cancel
+                Create Tag for Historical Place Visits
               </Button>
             </Box>
-          </form>
-        )}
 
-        {/* Confirmation Dialog for Deletion */}
-        <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Confirm Deletion</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Are you sure you want to delete this historical place?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleConfirmDelete} color="error">
-              Delete
-            </Button>
-          </DialogActions>
-        </Dialog>
+            <TableContainer
+              component={Paper}
+              sx={{
+                marginBottom: 4,
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+                borderRadius: "1.5cap",
+              }}
+            >
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Description</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Location</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Pictures</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
+                      Ticket Price
+                      <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
+                    </TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Opening Time</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Closing Time</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Date</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Name</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Category</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Tags</TableCell>
+                    {/* <TableCell>Created By</TableCell> */}
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {historicalPlaces.map((historicalPlace) => (
+                    <TableRow key={historicalPlace._id}>
+                      <TableCell>{historicalPlace.description}</TableCell>
+                      <TableCell>{historicalPlace.location}</TableCell>
+                      <TableCell>
+                        <img
+                          src={historicalPlace.pictures}
+                          alt="Historical Place"
+                          style={{
+                            width: "100px",
+                            height: "auto",
+                            objectFit: "cover",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        {(
+                          historicalPlace.ticketPrices *
+                          (exchangeRates[currency] || 1)
+                        ).toFixed(2)}{" "}
+                        {currency}
+                      </TableCell>
+                      <TableCell>{historicalPlace.openingTime}</TableCell>
+                      <TableCell>{historicalPlace.closingTime}</TableCell>
+                      <TableCell>{historicalPlace.HistoricalPlaceDate}</TableCell>
+                      <TableCell>{historicalPlace.HistoricalPlaceName}</TableCell>
+                      <TableCell>
+                        {historicalPlace.HistoricalPlaceCategory}
+                      </TableCell>
+                      <TableCell>{historicalPlace.tags.join(", ")}</TableCell>
+                      {/* <TableCell>{historicalPlace.createdBy}</TableCell> */}
+                      <TableCell>
+                        <Tooltip title="Delete Historical Place">
+                          <IconButton
+                            color="error"
+                            onClick={() => handleClickOpen(historicalPlace)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Edit Historical Place">
+                          <IconButton
+                            color="primary"
+                            onClick={() => handleEditClick(historicalPlace)}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+
+            {/* Update form */}
+            {editingHistoricalPlace && (
+              <form onSubmit={handleUpdate} style={{ marginTop: "20px" }}>
+                <Typography variant="h6">Edit Historical Place</Typography>
+                <TextField
+                  label="Description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  required
+                />
+                <TextField
+                  label="Location"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  required
+                />
+                <TextField
+                  label="Picture"
+                  name="pictures"
+                  value={formData.pictures}
+                  onChange={handleInputChange}
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  required
+                />
+                <TextField
+                  label="Ticket Price"
+                  name="ticketPrices"
+                  value={formData.ticketPrices}
+                  onChange={handleInputChange}
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  required
+                />
+                <TextField
+                  label="Opening Time"
+                  name="openingTime"
+                  value={formData.openingTime}
+                  onChange={handleInputChange}
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  required
+                />
+                <TextField
+                  label="Closing Time"
+                  name="closingTime"
+                  value={formData.closingTime}
+                  onChange={handleInputChange}
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  required
+                />
+                <TextField
+                  label="Date"
+                  name="HistoricalPlaceDate"
+                  value={formData.HistoricalPlaceDate}
+                  onChange={handleInputChange}
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  required
+                />
+                <TextField
+                  label="Name"
+                  name="HistoricalPlaceName"
+                  value={formData.HistoricalPlaceName}
+                  onChange={handleInputChange}
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  required
+                />
+                <TextField
+                  label="Category"
+                  name="HistoricalPlaceCategory"
+                  value={formData.HistoricalPlaceCategory}
+                  onChange={handleInputChange}
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  required
+                />
+
+                {/* Tags dropdown */}
+                <label>Tags:</label>
+                <Select
+                  mode="multiple"
+                  allowClear
+                  style={{ width: "100%" }}
+                  placeholder="Select tags"
+                  value={formData.tags} // Ensure the current tags are displayed in the dropdown
+                  onChange={(selectedTags) =>
+                    setFormData({ ...formData, tags: selectedTags })
+                  } // Handle adding/removing tags
+                >
+                  {historicalPlaceTagsOptions.map((tag) => (
+                    <Select.Option key={tag._id} value={tag.historicalPlaceTag}>
+                      {tag.historicalPlaceTag}
+                    </Select.Option>
+                  ))}
+                </Select>
+
+                <Box sx={{ mt: 2 }}>
+                  <Button type="submit" variant="contained" color="primary">
+                    Update
+                  </Button>
+                  <Button
+                    onClick={handleCancelEdit}
+                    variant="contained"
+                    color="secondary"
+                    sx={{ ml: 2 }}
+                  >
+                    Cancel
+                  </Button>
+                </Box>
+              </form>
+            )}
+
+            {/* Confirmation Dialog for Deletion */}
+            <Dialog open={open} onClose={handleClose}>
+              <DialogTitle>Confirm Deletion</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Are you sure you want to delete this historical place?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                  Cancel
+                </Button>
+                <Button onClick={handleConfirmDelete} color="error">
+                  Delete
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </div>
+        </div>
       </Box>
-    </>
+    </Box >
   );
-};
+}
 
 export default RUDHistoricalPlace;
