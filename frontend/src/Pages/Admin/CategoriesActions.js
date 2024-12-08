@@ -26,7 +26,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import { useNavigate } from "react-router-dom";
-import MyChips from "../../Components/MyChips";
+import NavigationTabs from "../../Components/NavigationTabs";
 
 const DeleteCategory = () => {
   const [categories, setCategories] = useState([]);
@@ -37,21 +37,13 @@ const DeleteCategory = () => {
   const [editingCategory, setEditingCategory] = useState(null);
   const [editedCategoryName, setEditedCategoryName] = useState("");
 
-  const navigate = useNavigate();
-
-  const chipNames = [
+  const tabs = [
     "Tags",
     "Categories",
   ];
 
-  const handleChipClick = (chipName) => {
-    setSelectedCategory(chipName);
+  const paths = ["/preferenceTags", "/categoriesActions"];
 
-    // Navigate or update view based on selected category
-    if (chipName === "Tags") {
-      navigate("/preferenceTags"); // 
-    }
-  };
 
   const handleAddCategoryClick = () => {
     setShowTextField(!showTextField);
@@ -180,7 +172,9 @@ const DeleteCategory = () => {
         style={{ marginBottom: "40px", height: "100vh", paddingBottom: "10%" }}
       >
         <div style={{ overflowY: "visible", height: "auto" }}>
-          <MyChips chipNames={chipNames} onChipClick={handleChipClick} />
+          <div>
+            <NavigationTabs tabNames={tabs} paths={paths} />
+          </div>
           <br></br>
           <Typography
             variant="h2"

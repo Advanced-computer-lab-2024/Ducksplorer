@@ -9,7 +9,7 @@ import { message } from 'antd';
 import Error404 from "../../Components/Error404.js";
 import AdminNavbar from "../../Components/NavBars/AdminNavBar";
 import DuckLoading from "../../Components/Loading/duckLoading.js";
-import MyChips from "../../Components/MyChips";
+import NavigationTabs from "../../Components/NavigationTabs.js";
 
 import {
     Box,
@@ -58,12 +58,9 @@ const ActivityReport = () => {
 
     const errorMessage = "The itinerary you are looking for might be removed or is temporarily unavailable";
     const backMessage = "BACK TO ADMIN AGAIN"
-    const navigate = useNavigate();
 
-    const chipNames2 = [
-        "Users Report",
-        "Revenue Report",
-    ];
+    const tabs = ["Users Report", "Revenue Report"];
+    const paths = ["/userReport", "/adminReport"];
 
     // Handle fetching activities by userName ID
     useEffect(() => {
@@ -151,15 +148,6 @@ const ActivityReport = () => {
         setFiltersApplied(true);
     }
 
-    const handleChipClick2 = (chipName) => {
-        setSelectedCategory2(chipName);
-
-        // Navigate or update view based on selected category
-        if (chipName === "Revenue Report") {
-            navigate("/adminReport"); // 
-        }
-    };
-
     if (loading) {
         return (
             <div>
@@ -191,7 +179,7 @@ const ActivityReport = () => {
                     style={{ marginBottom: "40px", height: "100vh", paddingBottom: "40px" }}
                 >
                     <br></br>
-                    <MyChips chipNames={chipNames2} onChipClick={handleChipClick2} />
+                    <NavigationTabs tabNames={tabs} paths={paths} />
                     <div style={{ overflowY: "visible", height: "100vh" }}>
                         <Typography
                             variant="h2"

@@ -21,9 +21,10 @@ import {
   Tooltip,
   CircularProgress,
   Grid,
+  Tabs,
+  Tab
 } from "@mui/material";
-import MyChips from "../Components/MyChips.js";
-import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
+import MyTabs from "../Components/MyTabs.js";
 import TouristNavBar from "../Components/TouristNavBar.js";
 import ItineraryCard from "../Components/itineraryCard.js";
 import ActivityCard from "../Components/activityCard.js";
@@ -32,8 +33,8 @@ import Help from "../Components/HelpIcon.js";
 function MySavedItems() {
   const { id } = useParams();
 
-  const chipNames = ["All", "Itineraries", "Activities"];
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const tabNames = ["All", "Itineraries", "Activities"];
+  const [selectedTab, setSelectedTab] = useState("All");
 
   const [itineraries, setItineraries] = useState([]);
 
@@ -59,10 +60,6 @@ function MySavedItems() {
   const handleCurrencyChange = (rates, selectedCurrency) => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
-  };
-
-  const handleChipClick = (chipName) => {
-    setSelectedCategory(chipName);
   };
 
   useEffect(() => {
@@ -93,6 +90,9 @@ function MySavedItems() {
           );
           setItineraries(tempItineraries);
         }
+        console.log("Itineraries Length: ", itineraries.length);
+        console.log("Activities Length: ", activities.length);
+
       } catch (error) {
         console.error("There was an error fetching the itineraries!", error);
       } finally {
@@ -180,92 +180,63 @@ function MySavedItems() {
     );
   }
 
-  if ((!Array.isArray(itineraries) && !Array.isArray(activities)) || (itineraries.length === 0 && activities.length === 0)) {
-    return (
-      <>
-        <TouristNavBar />
-        <Error404
-          errorMessage={errorMessage}
-          backMessage={backMessage}
-          route="/touristDashboard"
-        />
-      </>
-    );
-  }
-
   return (
     <>
       <TouristNavBar />
-      {/* <TouristSidebar /> */}
-      {/* <Box
-        sx={{
-          padding: "20px",
-          maxWidth: "1200px",
-          margin: "auto",
-          display: "flex",
-          flexDirection: "column",
-          overflowY: "visible",
-          height: "100vh",
-        }}
-      > */}
       <div style={{ overflowY: 'visible', height: '100vh', width: '100%', display: 'flex', flexDirection: 'column' }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <Typography variant="h4" sx={{ fontFamily: "'Roboto', sans-serif", color: "black" }}>Saved</Typography>
         </Box>
 
-        <MyChips chipNames={chipNames} onChipClick={handleChipClick} />
+        <MyTabs tabNames={tabNames} onTabClick={(tabName) => setSelectedTab(tabName)} />
 
-        {(selectedCategory === "Itineraries" || selectedCategory === "All") && (
-          <>
-            {/* <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-                <Typography variant="h4">Itineraries</Typography>
-              </Box> */}
-            <div style={{ flex: 1 }}>
-              {itineraries.length > 0 ? (
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(3, 1fr)",
-                    gap: "24px", // Adjust the gap between items as needed
-                    paddingBottom: 24,
-                    paddingTop: 24
-                  }}
-                >
-                  {
-                    itineraries.map((itinerary) =>
-                      itinerary.flag === false &&
-                        itinerary.isDeactivated === false &&
-                        itinerary.tourGuideDeleted === false &&
-                        itinerary.deletedItinerary === false &&
-                        itinerary.saved.user === username &&
-                        itinerary.saved.isSaved === true ? (
-                        <ItineraryCard itinerary={itinerary} onRemove={handleRemoveItinerary} showNotify={true} />
-                      ) : null
-                    ) // We don't output a row when it has `itinerary.flag` is true (ie itinerary is inappropriate) or when the itinerary is inactive or its tour guide has left the system  or the itinerary has been deleted but cannot be removed from database since it is booked my previous tourists
-                  }
-                </div>
-              ) : (
-                <Typography variant="body1" style={{ marginTop: "20px" }}>
-                  No itineraries found.
-                </Typography>
-              )}
-            </div>
-          </>
-        )}
-
-        {(selectedCategory === "Activities" ||
-          selectedCategory === "All") && (
+        {
+          (selectedTab === "Itineraries" || selectedTab === "All") && (
             <>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  mb: 3,
-                  marginTop: "20px",
-                }}
-              >
-                {/* <Typography variant="h4"> Activities</Typography> */}
-              </Box>
+              <div style={{ flex: 1 }}>
+                {itineraries.length > 0 ? (
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(3, 1fr)",
+                      gap: "24px",
+                      paddingBottom: 24,
+                      paddingTop: 24
+                    }}
+                  >
+                    {
+                      itineraries.map((itinerary) =>
+                        itinerary.flag === false &&
+                          itinerary.isDeactivated === false &&
+                          itinerary.tourGuideDeleted === false &&
+                          itinerary.deletedItinerary === false &&
+                          itinerary.saved.user === username &&
+                          itinerary.saved.isSaved === true ? (
+                          <ItineraryCard itinerary={itinerary} onRemove={handleRemoveItinerary} showNotify={true} />
+                        ) : null
+                      )
+                    }
+                  </div>
+                ) : (
+                  selectedTab === "Itineraries" && (
+                    <>
+                      <TouristNavBar />
+                      <Error404
+                        errorMessage={errorMessage}
+                        backMessage={backMessage}
+                        route="/touristDashboard"
+                      />
+                    </>
+                  )
+                )}
+              </div>
+            </>
+          )
+        }
+        {
+          (selectedTab === "Activities" || selectedTab === "All") && (
+            <>
+              <Box sx={{ display: "flex", justifyContent: "center", mb: 3, marginTop: "20px" }}></Box>
               <Grid container spacing={4}>
                 {Array.isArray(activities) && activities.length > 0 ? (
                   activities.map((activity) =>
@@ -280,20 +251,36 @@ function MySavedItems() {
                     ) : null
                   )
                 ) : (
-                  <Grid item xs={12}>
-                    <Typography variant="body1" color="textSecondary" align="center">
-                      No activities available
-                    </Typography>
-                  </Grid>
+                  selectedTab === "Activities" && !activities && (
+                    <>
+                      <TouristNavBar />
+                      <Error404
+                        errorMessage={errorMessage}
+                        backMessage={backMessage}
+                        route="/touristDashboard"
+                      />
+                    </>
+                  )
                 )}
               </Grid>
             </>
+          )
+        }
+        {
+          selectedTab === "All" && !itineraries && !activities && (
+            <>
+              <TouristNavBar />
+              <Error404
+                errorMessage={errorMessage}
+                backMessage={backMessage}
+                route="/touristDashboard"
+              />
+            </>
           )}
-        {/* </Box> */}
       </div>
+      <Help />
     </>
   );
 }
-
 
 export default MySavedItems;

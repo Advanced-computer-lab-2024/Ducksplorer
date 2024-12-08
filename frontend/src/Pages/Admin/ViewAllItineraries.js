@@ -7,7 +7,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AdminNavbar from "../../Components/NavBars/AdminNavBar";
 import { useNavigate } from "react-router-dom";
-import MyChips from "../../Components/MyChips";
+import NavigationTabs from '../../Components/NavigationTabs';
 
 import {
   Box,
@@ -26,12 +26,13 @@ import {
 const ViewAllItineraries = () => {
   const [itineraries, setItineraries] = useState([]);
   const [editingItinerary, setEditingItinerary] = useState(null); // Stores the currently selected itinerary for editing
-  const [selectedCategory, setSelectedCategory] = useState("Itineraries");
+  const [selectedTab, setSelectedTab] = useState("Itineraries");
   const navigate = useNavigate();
-  const chipNames = [
+  const tabs = [
     "Activities",
     "Itineraries",
   ];
+  const paths = ["/ViewAllActivities", "/ViewAllItineraries"];
 
   // Default rendering of all itineraries
   useEffect(() => {
@@ -75,14 +76,6 @@ const ViewAllItineraries = () => {
     handleSetFlag(itinerary._id, newFlagState);
   };
 
-  const handleChipClick = (chipName) => {
-    setSelectedCategory(chipName);
-
-    // Navigate or update view based on selected category
-    if (chipName === "Activities") {
-      navigate("/ViewAllActivities"); // 
-    }
-  };
 
   return (
     <Box
@@ -117,10 +110,12 @@ const ViewAllItineraries = () => {
             >
               Events
             </Typography>
-            <MyChips chipNames={chipNames} onChipClick={handleChipClick} />
+            <div>
+              <NavigationTabs tabNames={tabs} paths={paths} />
+            </div>
             <br></br>
             {/* Table Container */}
-            {selectedCategory === "Itineraries" && (
+            {selectedTab === "Itineraries" && (
               <TableContainer
                 component={Paper}
                 sx={{
