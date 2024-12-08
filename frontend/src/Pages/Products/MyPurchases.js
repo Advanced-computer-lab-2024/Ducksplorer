@@ -100,14 +100,14 @@ function MyPurchases() {
       <div>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography className="bigTitle" variant="h4" fontWeight="700">
-            My Purchases
+          Order Number: {orderNumber}
           </Typography>
         </Box>
         {/* <div>
           <NavigationTabs tabNames={tabs} paths={paths} />
         </div> */}
         <h2>
-          Order Number: {orderNumber}
+          
         </h2>
         <Grid container spacing={products && products.length > 1 && products.length < 3 ? 23 : 4}>
           {products && products.length > 0 ? (

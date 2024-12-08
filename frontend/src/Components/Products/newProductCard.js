@@ -339,9 +339,9 @@ export default function ProductCard({
               </div>
             </div>
           </div>
-          <div>
+          <div style={{marginTop: '4%'}}>
             {role === "Tourist" && showChosenQuantity && (
-              <p marginTop="20px"  >
+              <p  >
               Chosen Quantity: {chosenQuantity}
             </p>
             )}
