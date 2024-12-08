@@ -37,11 +37,17 @@ const TouristAllProducts = () => {
     axios
       .get("http://localhost:8000/adminRoutes/getproducts")
       .then((response) => {
-        setProducts(response.data);
+        // Ensure response.data is an array
+        if (Array.isArray(response.data)) {
+          setProducts(response.data);
+        } else {
+          setProducts([]); // Set to an empty array if response is not an array
+        }
       })
       .catch((error) => {
         console.error("There was an error fetching the products!", error);
         message.error("Failed to fetch products.");
+        setProducts([]); // Fallback to empty array in case of error
       })
       .finally(() => {
         setLoading(false);
@@ -57,7 +63,7 @@ const TouristAllProducts = () => {
         }
       );
       if (response.status === 200) {
-        message.success("Products viewed successfully");
+        message.success("Products searched successfully");
         setProducts(response.data);
       } else {
         message.error("Failed to search products");
@@ -76,6 +82,11 @@ const TouristAllProducts = () => {
   };
 
   const handleFilterProducts = async () => {
+    if (!minPrice || !maxPrice || parseFloat(minPrice) > parseFloat(maxPrice)) {
+      message.error("Please enter valid price ranges.");
+      return;
+    }
+
     try {
       const response = await axios.get(
         "http://localhost:8000/adminRoutes/filterProducts",
@@ -86,6 +97,7 @@ const TouristAllProducts = () => {
       if (response.status === 200) {
         message.success("Products filtered successfully");
         setProducts(response.data);
+        handleFilterClose(); // Close the filter menu after applying filter
       } else {
         message.error("Failed to filter products");
       }
@@ -107,12 +119,13 @@ const TouristAllProducts = () => {
       const response = await axios.get(
         "http://localhost:8000/adminRoutes/sortProducts",
         {
-          params: { sortingDecider: order },
+          params: { sortingDecider: order }, // Pass 'asc' or 'desc' based on the selected option
         }
       );
       if (response.status === 200) {
         message.success("Products sorted successfully");
-        setProducts(response.data);
+        setProducts(response.data); // Set the sorted products to the state
+        handleSortOrderClose(); // Close the sort menu after sorting
       } else {
         message.error("Failed to sort products");
       }
@@ -223,7 +236,7 @@ const TouristAllProducts = () => {
           </Menu>
 
           {/* Sort Section */}
-          <Tooltip title="Sort Order">
+          <Tooltip title="Sort by rating">
             <IconButton onClick={handleSortOrderClick}>
               <SwapVertIcon sx={{ color: "black" }} />
             </IconButton>
@@ -236,18 +249,18 @@ const TouristAllProducts = () => {
           >
             <MenuItem
               onClick={() => {
-                setSortOrder("asc");
-                handleSortProducts("asc");
-                handleSortOrderClose();
+                setSortOrder("asc"); // Set the state for ascending order
+                handleSortProducts("asc"); // Send the 'asc' query parameter to backend
+                handleSortOrderClose(); // Close the sort menu
               }}
             >
               Ascending
             </MenuItem>
             <MenuItem
               onClick={() => {
-                setSortOrder("desc");
-                handleSortProducts("desc");
-                handleSortOrderClose();
+                setSortOrder("desc"); // Set the state for descending order
+                handleSortProducts("desc"); // Send the 'desc' query parameter to backend
+                handleSortOrderClose(); // Close the sort menu
               }}
             >
               Descending
@@ -277,11 +290,10 @@ const TouristAllProducts = () => {
                 />
               ))
           ) : (
-            <Typography variant="body1" color="textSecondary" align="center">
-              No products found.
+            <Typography variant="h6" color="text.secondary">
+              No products available.
             </Typography>
           )}
-          <Help />
         </div>
       </Container>
     </Box>
