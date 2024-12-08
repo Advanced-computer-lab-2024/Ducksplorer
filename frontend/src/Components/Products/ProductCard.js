@@ -51,8 +51,8 @@ const ProductCard = ({
   const location = useLocation();
   const isGuest = localStorage.getItem("guest") === "true";
   const [purchaseStatus, setPurchaseStatus] = useState(null);
-  const [open, setOpen] = React.useState(false);
-  const [image, setImage] = React.useState("https://picsum.photos/200/300");
+  const [open, setOpen] = useState(false);
+  const [image, setImage] = useState("https://picsum.photos/200/300");
 
 
 
