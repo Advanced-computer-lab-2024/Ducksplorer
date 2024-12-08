@@ -79,11 +79,11 @@ function TouristNavBar() {
         console.log(response.data);
         const level = response.data;
         if (level === 1) {
-          setImage("level1.png");
+          setImage("/level1.png");
         } else if (level === 2) {
-          setImage("level2.png");
+          setImage("/level2.png");
         } else if (level === 3) {
-          setImage("level3.png");
+          setImage("/level3.png");
         }
       })
       .catch((error) => {
