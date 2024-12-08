@@ -137,7 +137,6 @@ function AddGovernor() {
                   InputProps={{
                     style: {
                       fontSize: "16px",
-                      color: "#ff9933",
                     },
                   }}
                   sx={{
@@ -158,7 +157,6 @@ function AddGovernor() {
                   InputProps={{
                     style: {
                       fontSize: "16px",
-                      color: "#ff9933",
                     },
                     endAdornment: (
                       <InputAdornment position="end">
