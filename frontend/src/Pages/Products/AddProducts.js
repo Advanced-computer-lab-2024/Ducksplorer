@@ -11,8 +11,8 @@ let picture = "";
 
 function AddProducts() {
   const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [availableQuantity, setAvailableQuantity] = useState("");
+  const [price, setPrice] = useState();
+  const [availableQuantity, setAvailableQuantity] = useState();
   const [description, setDescription] = useState("");
   const [URL, setURL] = useState("");
   const fileInputRef = useRef(null);
