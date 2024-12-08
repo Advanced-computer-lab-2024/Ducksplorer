@@ -20,7 +20,7 @@ const sortProducts = async (req, res) => {
 
   try {
     const products = await productModel.find({}); // Fetch all products
-
+    console.log("hena", products);
     // Calculate average rating for each product
     products.forEach((product) => {
       product.averageRating =
