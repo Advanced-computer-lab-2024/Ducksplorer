@@ -30,11 +30,12 @@ function AddGovernor() {
       );
       if (response.status === 200) {
         message.success("Governor added successfully");
-      } else {
-        message.error("Failed to add Governor");
+      }  else {
+        throw new Error(response.error);
       }
     } catch (error) {
-      message.error("An error occurred: " + error.message);
+      message.error(error.response?.data?.error || "Adding failed");
+      message.error(error.response?.data?.error || "Adding failed");
     }
   };
   useEffect(() => {

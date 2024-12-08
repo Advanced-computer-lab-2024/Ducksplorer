@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Box, Button, IconButton, InputAdornment, Stack, TextField } from "@mui/material";
+import {
+  Typography,
+  Box,
+  Button,
+  IconButton,
+  InputAdornment,
+  Stack,
+  TextField,
+} from "@mui/material";
 import { message } from "antd";
 import Iconify from "../../Components/TopNav/iconify.js";
 import axios from "axios";
@@ -12,7 +20,6 @@ function AddAdmin() {
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const tabs = ["Add Admin", "Add Governor"];
   const paths = ["/addAdmin", "/addGovernor"];
-
 
   const handleAdd = async () => {
     try {
@@ -29,16 +36,17 @@ function AddAdmin() {
         setUserName("");
         setPassword("");
       } else {
-        message.error("Failed to add admin");
+        throw new Error(response.error);
       }
     } catch (error) {
-      message.error("An error occurred: " + error.message);
+      message.error(error.response?.data?.error || "Adding failed");
+      message.error(error.response?.data?.error || "Adding failed");
     }
   };
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, []);
 
@@ -47,7 +55,11 @@ function AddAdmin() {
       <AdminNavBar />
       <div style={styles.container}>
         <div style={styles.leftSection}>
-          <Typography variant="h3" className="duckTitle" style={styles.welcomeText}>
+          <Typography
+            variant="h3"
+            className="duckTitle"
+            style={styles.welcomeText}
+          >
             Add Users
           </Typography>
         </div>
@@ -77,7 +89,6 @@ function AddAdmin() {
                 top: "-25%",
               }}
             >
-
               <div>
                 <NavigationTabs tabNames={tabs} paths={paths} />
               </div>
@@ -91,7 +102,7 @@ function AddAdmin() {
                 alignSelf: "center",
                 marginBottom: "5%",
                 position: "relative", // Add this to use 'top'
-                marginTop: "-20%"
+                marginTop: "-20%",
               }}
             >
               Add Admin
@@ -116,7 +127,10 @@ function AddAdmin() {
 
             {/* Form Section */}
             <div style={{ justifyContent: "center", alignContent: "center" }}>
-              <Stack spacing={3} style={{ justifyContent: "center", alignContent: "center" }}>
+              <Stack
+                spacing={3}
+                style={{ justifyContent: "center", alignContent: "center" }}
+              >
                 {/* Username Field */}
                 <TextField
                   name="username"
@@ -169,7 +183,9 @@ function AddAdmin() {
                           edge="end"
                         >
                           <Iconify
-                            icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
+                            icon={
+                              showPassword ? "eva:eye-fill" : "eva:eye-off-fill"
+                            }
                             style={{ color: "#ff9800", fontSize: "20px" }}
                           />
                         </IconButton>
