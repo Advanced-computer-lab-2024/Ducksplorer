@@ -6,9 +6,9 @@ import WarningIcon from "@mui/icons-material/Warning";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar.js";
-import { message } from "antd";
 import TourGuideSidebar from "../../Components/Sidebars/TourGuideSidebar.js";
 import DuckLoading from "../../Components/Loading/duckLoading.js";
+import Error404 from "../../Components/Error404.js";
 
 import {
   Box,
@@ -53,7 +53,9 @@ const ItineraryReport = () => {
   const [filtersApplied, setFiltersApplied] = useState(false);
 
   const [loading, setLoading] = useState(false); // State for loading status
-  const [errorMessage, setErrorMessage] = useState(""); // State for error message
+  const [errorMessage, setErrorMessage] = useState(
+    "Error retrieving report details ."
+  ); // State for error message
 
   const [activityExchangeRates, setActivityExchangeRates] = useState({});
   const [activityCurrency, setActivityCurrency] = useState("EGP");
@@ -74,7 +76,6 @@ const ItineraryReport = () => {
         console.log(response.data);
       } catch (error) {
         console.error("There was an error fetching the itineraries!", error);
-        message.error("error in fetching");
       } finally {
         setLoading(false);
       }
@@ -147,6 +148,13 @@ const ItineraryReport = () => {
       }
     } catch (error) {
       setErrorMessage("Error fetching itineraries!");
+      return (
+        <Error404
+          errorMessage={errorMessage}
+          backMessage={backMessage}
+          route="/tourGuideDashboard"
+        />
+      );
     } finally {
       setLoading(false);
     }
@@ -165,6 +173,10 @@ const ItineraryReport = () => {
       (year) => year >= 0
     );
   };
+
+  useEffect(() => {
+    document.body.style.overflow = "auto";
+  }, []);
 
   const [priceExchangeRates, setPriceExchangeRates] = useState({});
   const [priceCurrency, setPriceCurrency] = useState("EGP");
@@ -209,6 +221,8 @@ const ItineraryReport = () => {
     setCurrency(selectedCurrency);
   };
 
+  const backMessage = "Back to Dashboard";
+
   if (loading) {
     return (
       <div>
@@ -218,7 +232,13 @@ const ItineraryReport = () => {
   }
 
   if (!Array.isArray(itineraries) || itineraries.length === 0) {
-    return <p>No itineraries available.</p>;
+    return (
+      <Error404
+        errorMessage={errorMessage}
+        backMessage={backMessage}
+        route="/tourGuideDashboard"
+      />
+    );
   }
 
   return (

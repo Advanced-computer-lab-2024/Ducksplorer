@@ -45,7 +45,7 @@ export default function Error404({ route, errorMessage, backMessage }) {
                 }}
             >
                 <img
-                    src="DuckError404.png"
+                    src="/DuckError404.png"
                     alt="Duck Error 404"
                     style={{
                         width: "70%", // Adjust the image size for better responsiveness

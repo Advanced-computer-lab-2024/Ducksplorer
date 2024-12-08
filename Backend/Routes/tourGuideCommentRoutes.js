@@ -3,6 +3,6 @@ const { commentTourGuide } = require('../Controllers/tourGuideCommentController'
 const router = express.Router();
 
 
-router.route("/commentTourGuide/:tourGuideId").patch(commentTourGuide);
+router.route("/commentTourGuide/:tourGuideId").patch(commentTourGuide);//done
 
 module.exports = router

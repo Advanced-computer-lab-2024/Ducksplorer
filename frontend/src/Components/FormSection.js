@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import FileUpload from "./FileUpload";
+import Duckloading from "./Loading/duckLoading";
 
 const FormSection = () => {
   const { type } = useTypeContext();
@@ -36,6 +37,7 @@ const FormSection = () => {
   const [selectedFiles2, setSelectedFiles2] = useState([]);
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [openTerms, setOpenTerms] = useState(false);
+  const [loading, setLoading] = useState(false); // Add loading state
 
   // Additional state variables for conditional fields
   const [mobileNumber, setMobileNumber] = useState("");
@@ -182,6 +184,7 @@ const FormSection = () => {
     if (!validateFields()) {
       return;
     }
+    setLoading(true); // Set loading to true when starting the sign-up process
     let nationalIdUrl = null; // Initialize variables to store URLs
     let certificatesUrl = null;
     let data = null;
@@ -355,6 +358,8 @@ const FormSection = () => {
     } catch (error) {
       message.error("An error occurred: " + error.message);
       console.error("There was an error uploading document barra!", error);
+    } finally {
+      setLoading(false); // Set loading to false when the sign-up process is complete
     }
   };
 
@@ -364,6 +369,7 @@ const FormSection = () => {
 
   return (
     <div style={styles.container}>
+      {loading && <Duckloading />} {/* Show Duckloading component when loading */}
       <div style={styles.leftSection}>
         <Typography variant="h3" style={styles.welcomeText} className="duckTitle">
           Welcome to Ducksplorer

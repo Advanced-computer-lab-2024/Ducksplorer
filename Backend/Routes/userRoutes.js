@@ -2,7 +2,7 @@ const express = require('express')
 const { getUser } = require('../Controllers/userController');
 const router = express.Router();
 
-router.route("/:userName").get(getUser) //get certain user
+router.route("/:userName").get(getUser) //done
 
 module.exports = router;
 
