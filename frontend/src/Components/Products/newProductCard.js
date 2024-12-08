@@ -20,6 +20,7 @@ import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import ProductCardDetails from "../productCardDetailed";
 import { useState, useEffect } from "react";
+import Input from "@mui/joy/Input";
 import Favorite from "@mui/icons-material/Favorite";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import useUserRole from "../getRole";
@@ -53,6 +54,7 @@ export default function ProductCard({
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [showWishlist, setShowWishlist] = useState(false);
   const [archived, setArchived] = useState(product.isArchived);
+  const [quantity, setQuantity] = useState(0);
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => setOpen(true);
@@ -93,27 +95,25 @@ export default function ProductCard({
   };
 
   const handleAddToCartClick = async (e) => {
-    if (!productInCart) {
+    if (quantity > 0) {
       try {
         const userJson = localStorage.getItem("user");
         const user = JSON.parse(userJson);
         const userName = user.username;
-        // const newQuantity = quantity;
-        // Send the selected quantity and product details to the backend
-        const response = await axios.put(
+        const newQuantity = quantity;
+        console.log("this is the quantity i am requesting", newQuantity);
+        const response = await axios.patch(
           "http://localhost:8000/touristRoutes/cart",
           {
             userName,
             productId: product._id,
-            // newQuantity,
+            newQuantity,
           }
         );
-
         if (response.status === 200) {
-          message.success("Product added to cart successfully!");
-          setProductInCArt(!productInCart);
+          message.success("Product quantity updated successfully!");
         } else {
-          message.error("Failed to add product to cart.");
+          message.error("Failed to update quantity in cart.");
         }
       } catch (error) {
         console.error(error);
@@ -126,28 +126,25 @@ export default function ProductCard({
         const userJson = localStorage.getItem("user");
         const user = JSON.parse(userJson);
         const userName = user.username;
-        // const newQuantity = quantity;
-        // Send the selected quantity and product details to the backend
         const response = await axios.delete(
-          `http://localhost:8000/touristRoutes/cart`,
+          "http://localhost:8000/touristRoutes/cart",
           {
             params: {
-              userName: userName, // Your user name
-              productId: product._id, // The product ID
+              userName,
+              productId: product._id,
             },
           }
         );
-
         if (response.status === 200) {
-          message.success("Product removed from successfully!");
-          setProductInCArt(!productInCart);
+          message.success("Product removed successfully!");
+          onProductRemove(product._id);
         } else {
-          message.error("Failed to remove product to cart.");
+          message.error("Failed to update quantity in cart.");
         }
       } catch (error) {
         console.error(error);
         message.error(
-          "An error occurred while removing the product from the cart."
+          "An error occurred while adding the product to the cart."
         );
       }
     }
@@ -275,59 +272,135 @@ export default function ProductCard({
               </div>
             </div>
           </div>
-          <div>
+          {product.availableQuantity > 0 && (
             <div
               style={{
                 display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
                 position: "absolute",
-                bottom: 10,
+                bottom: "15%",
                 width: "95%",
+                justifyContent: "flex-end",
               }}
             >
-              <Typography
-                level="title-lg"
-                sx={{
-                  mt: 1,
-                  fontSize: 25,
-                  maxWidth: "30%",
-                  fontWeight: "xl",
+              <div
+                style={{
+                  marginRight: 8,
+                  display: "flex",
+                  width: quantity < 10 ? "111px" : "140px",
                 }}
               >
-                {product.price}$
-              </Typography>
-              {showAddToCart && (
                 <Button
-                  size="md"
-                  variant="solid"
-                  className={product.availableQuantity > 0 ? "blackhover" : ""}
-                  zIndex={2}
+                  variant="outlined"
                   onClick={(event) => {
-                    event.stopPropagation(); // Stops propagation
-                    if (product.availableQuantity > 0) {
-                      handleAddToCartClick(); // Call the function without passing `event`
-                    }
+                    event.stopPropagation();
+                    quantity > 0 ? setQuantity(quantity - 1) : setQuantity(0);
                   }}
                   sx={{
-                    backgroundColor:
-                      product.availableQuantity !== 0 ? "#ff9933" : "gray",
-                    marginRight: 1,
-                    clickable: product.availableQuantity > 0,
+                    borderColor: "#ff9933",
+                    color: "#ff9933",
+                    borderTopRightRadius: 0,
+                    borderBottomRightRadius: 0,
+                    width: "33%",
                     "&:hover": {
-                      backgroundColor: "gray",
+                      backgroundColor: "rgba(0, 0, 0, 0.05)",
                     },
                   }}
                 >
-                  {productInCart
-                    ? "Remove from Cart"
-                    : product.availableQuantity === 0
-                    ? "Sold Out"
-                    : "Add To Cart"}
+                  -
                 </Button>
-              )}
+                <Input
+                  value={quantity}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                  }}
+                  sx={{
+                    width: "50px",
+                    borderRight: 0,
+                    borderLeft: 0,
+                    borderRadius: 0,
+                    boxShadow: "none",
+                    width: "33%",
+                  }}
+                ></Input>
+                <Button
+                  variant="outlined"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    product.availableQuantity > quantity
+                      ? setQuantity(quantity + 1)
+                      : message.error(
+                          "Cannot purchase with a quantity more than the available"
+                        );
+                  }}
+                  sx={{
+                    borderColor: "#ff9933",
+                    color: "#ff9933",
+                    borderTopLeftRadius: 0,
+                    "&:hover": {
+                      backgroundColor: "rgba(0, 0, 0, 0.05)",
+                    },
+                    borderBottomLeftRadius: 0,
+                    width: "33%",
+                  }}
+                >
+                  +
+                </Button>
+              </div>
             </div>
+          )}
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              position: "absolute",
+              bottom: 10,
+              width: "95%",
+            }}
+          >
+            <Typography
+              level="title-lg"
+              sx={{
+                mt: 1,
+                fontSize: 25,
+                maxWidth: "30%",
+                fontWeight: "xl",
+              }}
+            >
+              {product.price}$
+            </Typography>
+
+            {showAddToCart && (
+              <Button
+                size="md"
+                variant="solid"
+                className={product.availableQuantity > 0 ? "blackhover" : ""}
+                zIndex={2}
+                onClick={(event) => {
+                  event.stopPropagation(); // Stops propagation
+                  if (product.availableQuantity > 0) {
+                    handleAddToCartClick(); // Call the function without passing `event`
+                  }
+                }}
+                sx={{
+                  backgroundColor:
+                    product.availableQuantity !== 0 ? "#ff9933" : "gray",
+                  marginRight: 1,
+                  clickable: product.availableQuantity > 0,
+                  "&:hover": {
+                    backgroundColor: "gray",
+                  },
+                }}
+              >
+                {productInCart
+                  ? "Remove from Cart"
+                  : product.availableQuantity === 0
+                  ? "Sold Out"
+                  : "Add To Cart"}
+              </Button>
+            )}
           </div>
         </Card>
         <div

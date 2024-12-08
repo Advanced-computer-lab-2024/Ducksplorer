@@ -135,6 +135,23 @@ const FlightsCards = ({
     const rate = exchangeRates["EGP"] / exchangeRates["EUR"];
     return (price * rate).toFixed(2);
   };
+  const isUser18OrOlder = (dob) => {
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+
+    // Adjust age if the current month is before the birth month or it's the birth month but the current day is before the birth day
+    if (
+      monthDifference < 0 ||
+      (monthDifference === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+
+    return age >= 18;
+  };
+
   const handleBooking = async (flightBooking) => {
     try {
       const userJson = localStorage.getItem("user");
@@ -147,7 +164,12 @@ const FlightsCards = ({
         message.error("User information is missing.");
         return null;
       }
-
+      const dob = user.dob;
+      console.log("dob", dob);
+      if (!isUser18OrOlder(dob)) {
+        message.error("You must be at least 18 years old to book a flight.");
+        return;
+      }
       const departure = cities.find(
         (city) =>
           city.code ===

@@ -54,7 +54,7 @@ function PaymentPage() {
   const [addresses, setAddresses] = useState([]);
 
   const location = useLocation();
-  const { cartProducts, orderNumber } = location.state;
+  const { cartProducts, orderNumber } = location.state || {};
 
   const handleAddressSelect = (addressIndex) => {
     setSelectedAddress(addressIndex); // Update the selected address index
@@ -157,7 +157,11 @@ function PaymentPage() {
         localStorage.setItem("paymentEmail", email);
         localStorage.setItem("clientSecret", data.clientSecret);
         // Redirect to checkout page
-        navigate("/checkout");
+        const paymentData = {
+          cartProducts,
+          orderNumber,
+        };
+        navigate("/checkout", { state: paymentData });
       } else {
         message.error("Error creating payment. Please try again.");
       }
@@ -166,7 +170,6 @@ function PaymentPage() {
       message.error("Error initiating payment. Please try again.");
     }
   };
-
 
   const fetchWalletBalance = async (userName) => {
     try {
@@ -249,7 +252,7 @@ function PaymentPage() {
         if (itineraryOrActivity === "product") {
           for (const item of cartProducts) {
             const { product, quantity } = item;
-    
+
             // Add purchase to the backend after successful payment
             const response = await axios.put(
               "http://localhost:8000/touristRoutes/addPurchase",
@@ -260,22 +263,22 @@ function PaymentPage() {
                 orderNumber: orderNumber,
               }
             );
-    
+
             if (response.status === 201) {
               message.success("Purchase added successfully!");
               try {
                 const res = await axios.delete(
-                  "http://localhost:8000/touristRoutes/emptyCart",{
-                    data: {userName}
+                  "http://localhost:8000/touristRoutes/emptyCart",
+                  {
+                    data: { userName },
                   }
                 );
-                if (res.status === 200){
+                if (res.status === 200) {
                   message.success("Payment successfully completed!");
                   await fetchWalletBalance(userName);
                   navigate("/orders");
                 }
-              }
-              catch(error){
+              } catch (error) {
                 message.error("failed", error);
               }
             } else {
@@ -359,7 +362,7 @@ function PaymentPage() {
 
       if (itineraryOrActivity === "itinerary" && itineraryId) {
         response = await axios.get(
-          `http://localhost:8000/touristRoutes/viewDesiredItinerary/${itineraryId}`
+          `http://localhost:8000/touristRoutes/viewDesiredItinerary/${itineraryId}/${user.username}`
         );
         if (response.status === 200) {
           setItineraryData(response.data);
@@ -372,7 +375,7 @@ function PaymentPage() {
       } else if (itineraryOrActivity === "activity" && activityId) {
         console.log("Fetching activity data for ID:", activityId); // Debugging
         response = await axios.get(
-          `http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}`
+          `http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}/${user.username}`
         );
         if (response.status === 200) {
           console.log("Activity data fetched:", response.data); // Debugging
@@ -483,16 +486,16 @@ function PaymentPage() {
           message.success("Purchase added successfully!");
           try {
             const res = await axios.delete(
-              "http://localhost:8000/touristRoutes/emptyCart",{
-                data: {userName}
+              "http://localhost:8000/touristRoutes/emptyCart",
+              {
+                data: { userName },
               }
             );
-            if (res.status === 200){
+            if (res.status === 200) {
               message.success("Payment successfully completed!");
               navigate("/orders");
             }
-          }
-          catch(error){
+          } catch (error) {
             message.error("failed", error);
           }
         } else {

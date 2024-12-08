@@ -8,7 +8,6 @@ import WarningIcon from "@mui/icons-material/Warning";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import TourGuideSidebar from "../../Components/Sidebars/TourGuideSidebar";
 import { useNavigate } from "react-router-dom";
-import TourGuideNavBar from "../../Components/NavBars/TourGuideNavBar";
 import {
   IconButton,
   Button,

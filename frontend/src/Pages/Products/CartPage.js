@@ -52,7 +52,7 @@ const CartPage = () => {
       localStorage.setItem("cartId", cartProducts._id);
       localStorage.setItem("type", type);
 
-      navigate("/payment", { state: paymentData });
+      navigate("/payment", { state:  paymentData });
 
       // for (const item of cartProducts) {
       //   // Extract details
@@ -113,10 +113,8 @@ const CartPage = () => {
           const cartData = response.data.cart;
           if (!cartData) {
             setCartProducts([]); // Set an empty list for display
-            message.info("Your cart is empty.");
           } else {
             setCartProducts(cartData.products); // Populate with product details
-            message.success("cart loaded successfully!");
           }
         } else {
           message.error("Failed to fetch cart details.");
