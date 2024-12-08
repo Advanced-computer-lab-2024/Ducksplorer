@@ -6,7 +6,7 @@ import {
   Container,
   Grid,
   Box,
-  Typography,
+  Typography
 } from "@mui/material";
 import axios from "axios";
 import { message } from "antd";

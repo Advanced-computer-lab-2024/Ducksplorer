@@ -8,7 +8,7 @@ import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import axios from 'axios';
 import AdminNavBar from '../../Components/NavBars/AdminNavBar.js';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import GovernorNavBar from '../../Components/NavBars/GovernorNavBar.js';
 
 function ChangePassword() {
@@ -17,7 +17,6 @@ function ChangePassword() {
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const [showNewPassword, setShowNewPassword] = useState(false); // State for password visibility
   const role = JSON.parse(localStorage.getItem('user')).role;
-  const navigate = useNavigate();
 
   const validatePassword = () => {
     if(!password || !newPassword) {
@@ -80,26 +79,15 @@ function ChangePassword() {
             }}
           >
             {/* Title Section */}
-            <h2 className="bigTitle" style={{ textAlign: "center", alignSelf: "center" , marginTop:"-20vh"}}>
+            <h2 className="bigTitle" style={{
+                textAlign: "center",
+                alignSelf: "center",
+                marginBottom: "7%",
+                position: "relative", // Add this to use 'top'
+                marginTop: "-25%"
+              }}>
               Change Password
             </h2>
-
-            {/* Logo Section */}
-            <Box sx={{ marginBottom: "24px" }}>
-              <img
-                src="logo1.png"
-                alt="Logo"
-                style={{
-                  alignContent: "center",
-                  justifyContent: "center",
-                  justifySelf: "center",
-                  width: "150px",
-                  height: "auto",
-                  marginTop: "5vh",
-                  marginBottom: "5vh",
-                }}
-              />
-            </Box>
 
             {/* Form Section */}
             <div style={{ justifyContent: "center", alignContent: "center" }}>
@@ -112,7 +100,12 @@ function ChangePassword() {
                   height="50"
                   width="20"
                   onChange={(e) => setPassword(e.target.value)}
+                  InputLabelProps={{ style: { color: "#777" } }}
                   InputProps={{
+                    style: {
+                      fontSize: "16px",
+                      color: "#ff9933",
+                    },
                     endAdornment: (
                       <InputAdornment position="end">
                         <IconButton
@@ -126,6 +119,22 @@ function ChangePassword() {
                       </InputAdornment>
                     ),
                   }}
+                  sx={{
+                    width: "130%",
+                    margin: "auto",
+                    right: "15%",
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "#ff9800",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#ff9800",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#ff9800",
+                      },
+                    },
+                  }}
                 />
 
                 <TextField
@@ -136,7 +145,12 @@ function ChangePassword() {
                   height="50"
                   width="20"
                   onChange={(e) => setNewPassword(e.target.value)}
+                  InputLabelProps={{ style: { color: "#777" } }}
                   InputProps={{
+                    style: {
+                      fontSize: "16px",
+                      color: "#ff9933",
+                    },
                     endAdornment: (
                       <InputAdornment position="end">
                         <IconButton
@@ -149,6 +163,22 @@ function ChangePassword() {
                         </IconButton>
                       </InputAdornment>
                     ),
+                  }}
+                  sx={{
+                    width: "130%",
+                    margin: "auto",
+                    right: "15%",
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "#ff9800",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#ff9800",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#ff9800",
+                      },
+                    },
                   }}
                 />
 
