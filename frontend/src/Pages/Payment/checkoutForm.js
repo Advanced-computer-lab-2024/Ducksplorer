@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
 import axios from "axios";
 import { message } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Help from "../../Components/HelpIcon.js";
 
 export default function CheckoutForm() {
@@ -19,6 +19,9 @@ export default function CheckoutForm() {
   const [showPointsAnimation, setShowPointsAnimation] = useState(false);
   const [loyaltyPoints, setLoyaltyPoints] = useState(0);
   const [totalPoints, setTotalPoints] = useState(0);
+
+  const location = useLocation();
+  const { cartProducts, orderNumber } = location.state;
 
   useEffect(() => {
     const storedClientSecret = localStorage.getItem("clientSecret");
@@ -204,14 +207,39 @@ export default function CheckoutForm() {
         const chosenDate = localStorage.getItem("date");
 
         if (itineraryOrActivity === "product") {
-          try {
-            await axios.delete(
-              "http://localhost:8000/touristRoutes/emptyCart",
-              userName
+          for (const item of cartProducts) {
+            const { product, quantity } = item;
+    
+            // Add purchase to the backend after successful payment
+            const response = await axios.put(
+              "http://localhost:8000/touristRoutes/addPurchase",
+              {
+                userName,
+                productId: product._id,
+                chosenQuantity: quantity,
+                orderNumber: orderNumber,
+              }
             );
-            navigate("/myPurchases");
-          } catch (error) {
-            message.error("failed to empty cart");
+    
+            if (response.status === 201) {
+              message.success("Purchase added successfully!");
+              try {
+                const res = await axios.delete(
+                  "http://localhost:8000/touristRoutes/emptyCart",{
+                    data: {userName}
+                  }
+                );
+                if (res.status === 200){
+                  message.success("Payment successfully completed!");
+                  navigate("/orders");
+                }
+              }
+              catch(error){
+                message.error("failed", error);
+              }
+            } else {
+              message.error("Failed to add purchase");
+            }
           }
         }
 
