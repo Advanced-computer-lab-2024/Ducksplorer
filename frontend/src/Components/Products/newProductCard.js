@@ -25,7 +25,8 @@ import Favorite from "@mui/icons-material/Favorite";
 import Swal from "sweetalert2";
 
 // productCard component
-export default function ProductCard({ product,
+export default function ProductCard({ 
+  product,
   showArchive,
   showUnarchive,
   productID,
@@ -39,7 +40,7 @@ export default function ProductCard({ product,
   showRemoveWishlist,
   showAverageRatingNo, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
   removeProductFromWishlist,
-  hideWishlist = true,
+  hideWishlist ,
   showPurchase, showNotify }) {
   const navigate = useNavigate();
   const [productInCart, setProductInCArt] = useState(false);
@@ -298,12 +299,14 @@ export default function ProductCard({ product,
     console.log("username:", userName);
     try {
       const response = await axios.put(
-        `http://localhost:8000/touristRoutes/removeFromWishlist/${userName}/${productId}`
+        `http://localhost:8000/touristRoutes/removeFromWishlist/${userName}/${productId}`,
       );
 
       if (response.status === 200) {
         message.success("Product removed from wishlist successfully");
-        setShowWishlist(false);
+        removeProductFromWishlist(product._id);
+        return response.data; 
+
       } else {
         message.error("Failed to remove product from wishlist");
       }
@@ -312,10 +315,6 @@ export default function ProductCard({ product,
       message.error("An error occurred while removing the product");
     }
   };
-
-
-
-
   const handleShareLink = (productId) => {
     const link = `${window.location.origin}/product/searchActivities/${productId}`; // Update with your actual route
     navigator.clipboard
@@ -392,9 +391,7 @@ export default function ProductCard({ product,
                 variant={showWishlist ? "soft" : "solid"}
                 onClick={(event) => {
                   event.stopPropagation(); // Stop event propagation
-                  showWishlist
-                    ? handleRemoveWishlist(product)
-                    : addToWishlist(product);
+                  showRemoveWishlist ? handleRemoveWishlist(product): addToWishlist(product);
                 }}
                 className="blackhover"
                 sx={{
@@ -409,7 +406,7 @@ export default function ProductCard({ product,
                   backgroundColor: "#ff9933",
                 }}
               >
-                {showWishlist ? (
+                {showRemoveWishlist ? (
                   <Done color="#ff9933" />
                 ) : (
                   <Favorite />
