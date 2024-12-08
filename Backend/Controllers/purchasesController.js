@@ -44,7 +44,7 @@ const getPurchasesByOrderNumber = async (req, res) => {
     // Query the database
     const purchases = await PurchaseBooking.find({
       orderNumber: orderNumberNum,
-    });
+    }).select("product chosenQuantity");
 
     // Check if any purchases were found
     if (purchases.length === 0) {

@@ -73,9 +73,11 @@ const EditProfile = () => {
     sellerDetails.uploads = await handleFileUpload(uploadsFile);
   };
   useEffect(() => {
+    window.scrollTo(0, 0);
     const userJson = localStorage.getItem("user");
     const user = JSON.parse(userJson);
     const userName = user.username;
+    document.body.style.overflow = "auto";
 
     if (userName) {
       axios
@@ -166,7 +168,7 @@ const EditProfile = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+    <Box sx={{ paddingTop: "25%" , display: "flex", justifyContent: "center", mt: 8 }}>
       <SellerNavBar />
       <Paper
         elevation={4}

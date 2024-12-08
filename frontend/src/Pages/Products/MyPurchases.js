@@ -19,26 +19,31 @@ function MyPurchases() {
   useEffect(() => {
     const fetchPurchases = async () => {
       try {
-        const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
-        const user = JSON.parse(userJson);
-        const username = user.username;
-
         const response = await axios.get(
           `http://localhost:8000/touristRoutes/orderDetails/${orderNumber}`
         );
         message.success("Purchases fetched successfully");
         const fetchedPurchases = response.data.purchases;
+  
+        // Store purchases with chosenQuantity
         setPurchases(fetchedPurchases);
-
-        // Fetch product details for each purchase
-        for (const purchase of fetchedPurchases) {
-          await fetchProductDetail(purchase.product);
-        }
+  
+        // Fetch product details for each purchase and include chosenQuantity
+        const productDetails = await Promise.all(
+          fetchedPurchases.map(async (purchase) => {
+            const productResponse = await axios.get(
+              `http://localhost:8000/touristRoutes/getOrderProducts/${purchase.product}`
+            );
+            return { ...productResponse.data, chosenQuantity: purchase.chosenQuantity };
+          })
+        );
+  
+        setProducts(productDetails); // Store products with chosenQuantity
       } catch (error) {
         console.error("There was an error fetching the purchases!", error);
       }
     };
-
+  
     fetchPurchases();
   }, [orderNumber]);
 
@@ -117,6 +122,8 @@ function MyPurchases() {
                   showAverageRating={true}
                   hideWishlist={true}
                   showPurchase={true}
+                  showChosenQuantity={true}
+                  chosenQuantity={item.chosenQuantity}
                 />
               </Grid>
             ))

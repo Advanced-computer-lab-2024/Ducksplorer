@@ -1,15 +1,10 @@
 import * as React from "react";
 import AspectRatio from "@mui/joy/AspectRatio";
 import Card from "@mui/joy/Card";
-import CardContent from "@mui/joy/CardContent";
 import CardOverflow from "@mui/joy/CardOverflow";
 import Popover from "@mui/material/Popover";
-import Divider from "@mui/joy/Divider";
 import Typography from "@mui/joy/Typography";
 import IconButton from "@mui/joy/IconButton";
-import Chip from "@mui/joy/Chip";
-import Link from "@mui/joy/Link";
-import Add from "@mui/icons-material/Bookmark";
 import StarIcon from "@mui/icons-material/Star";
 import Done from "@mui/icons-material/Done";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
@@ -44,6 +39,8 @@ export default function ProductCard({
   hideWishlist = true,
   showPurchase,
   showNotify,
+  showChosenQuantity,
+  chosenQuantity,
 }) {
   const navigate = useNavigate();
   const role = useUserRole();
@@ -204,7 +201,7 @@ export default function ProductCard({
             <AspectRatio ratio="2">
               <img src={product.picture || image} loading="lazy" alt="" />
             </AspectRatio>
-            {!hideWishlist && (
+            {role === "Tourist" && !hideWishlist && (
             <Tooltip  title= {showRemoveWishlist ? "Remove from Wishlist" : "Add to Wishlist"}>
               <IconButton
                 size="md"
@@ -276,6 +273,13 @@ export default function ProductCard({
             </div>
           </div>
           <div>
+            {role === "Tourist" && showChosenQuantity && (
+              <p marginTop="20px"  >
+              Chosen Quantity: {chosenQuantity}
+            </p>
+            )}
+            </div>
+          <div>  
             <div
               style={{
                 display: "flex",
@@ -394,6 +398,8 @@ export default function ProductCard({
             </div>
           </Popover>
         </div>
+
+
       </div>
     );
   };

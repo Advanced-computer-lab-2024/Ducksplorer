@@ -90,6 +90,7 @@ useEffect(() => {
                 showRemoveWishlist={true}
                 removeProductFromWishlist={removeProductFromWishlist}
                 showAddToCart={true}
+                hideWishlist={false}
               />)
           ) : (
             <div>
