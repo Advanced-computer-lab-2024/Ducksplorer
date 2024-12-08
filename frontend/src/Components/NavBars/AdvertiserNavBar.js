@@ -20,6 +20,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import MyNotifications from "../myNotifications";
 import Button from "@mui/material/Button";
+import LogoutIcon from '@mui/icons-material/Logout';
 
 function AdvertiserNavBar() {
   const image = "/duckAvatar.png";
@@ -225,7 +226,7 @@ function AdvertiserNavBar() {
               </MenuItem>
               <MenuItem onClick={handleLogout}>
                 <IconButton sx={{ textAlign: "center", p: 0.5 }}>
-                  <LockIcon sx={{ fontSize: 20, color: "black" }} />
+                  <LogoutIcon sx={{ fontSize: 20, color: "black" }} />
                   <Typography
                     textAlign="center"
                     marginLeft={2}

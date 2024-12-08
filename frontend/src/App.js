@@ -105,6 +105,7 @@ import HotelsPage from './Components/ThirdParty/HotelsPage';
 import TransportationsPage from './Components/ThirdParty/TransportationsPage'; // Import TransportationsPage
 
 import Error404 from "./Components/Error404.js";
+import AdminViewMyProducts from "./Pages/Products/AdminViewMyProducts.js";
 
 function App() {
   const { authUser } = useAuthContext();
@@ -340,6 +341,14 @@ function App() {
             }
           />
           <Route
+            path="/AdminViewMyProducts"
+            element={
+              <ProtectedRoute>
+                <AdminViewMyProducts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/pendingusers"
             element={
               <ProtectedRoute>
@@ -411,14 +420,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/admin/complaints"
-            element={
-              <ProtectedRoute>
-                <ComplaintsDashboard />
-              </ProtectedRoute>
-            }
-          />
+          
           <Route
             path="/admin/complaints/:id"
             element={

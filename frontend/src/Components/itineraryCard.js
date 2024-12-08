@@ -35,6 +35,7 @@ export default function ItineraryCard({
   const navigate = useNavigate();
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const isGuest = localStorage.getItem("guest") === "true";
 
   const [open, setOpen] = React.useState(false);
 
@@ -86,7 +87,6 @@ export default function ItineraryCard({
       // Check if the user is a guest and prompt to log in
       if (isGuest) {
         message.error("Can't book as a guest, Please login or sign up.");
-        navigate("/guestDashboard");
         return;
       }
 
@@ -172,7 +172,10 @@ export default function ItineraryCard({
   const handleSaveItinerary = async (itineraryId, currentIsSaved) => {
     try {
       const newIsSaved = !currentIsSaved;
-
+      if (isGuest) {
+        message.error("Can't save as a guest, Please login or sign up.");
+        return;
+      }
       const response = await axios.put(
         `http://localhost:8000/itinerary/save/${itineraryId}`,
         {
@@ -204,7 +207,9 @@ export default function ItineraryCard({
   const [saveStates, setSaveStates] = useState({});
 
   useEffect(() => {
-    const fetchSaveStates = async () => {
+    if(!isGuest)
+    {const fetchSaveStates = async () => {
+      
       const userJson = localStorage.getItem("user");
       const user = JSON.parse(userJson);
       const userName = user.username;
@@ -227,7 +232,7 @@ export default function ItineraryCard({
         );
       }
     };
-    fetchSaveStates();
+    fetchSaveStates();}
   }, [itinerary._id]);
 
   const [notificationStates, setNotificationStates] = useState({});

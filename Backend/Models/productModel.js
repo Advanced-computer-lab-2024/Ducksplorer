@@ -1,7 +1,6 @@
 const { urlencoded } = require("body-parser");
 const mongoose = require("mongoose");
 
-
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -37,10 +36,12 @@ const productSchema = new mongoose.Schema({
   sales: {
     type: Number,
     required: false,
+    default: 0,
   },
   isArchived: {
     type: Boolean,
     required: false,
+    default: false,
   },
   seller: {
     type: String,
@@ -57,13 +58,14 @@ const productSchema = new mongoose.Schema({
   },
   totalGain: {
     type: Number,
-    required: false
+    required: false,
+    default: 0,
   },
-  averageRating:{
+  averageRating: {
     type: Number,
-    default:0,
-    required: false
-  }
+    default: 0,
+    required: false,
+  },
 });
 
 const Product = mongoose.model("Product", productSchema);

@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { message } from "antd";
 import TouristNavBar from "../../Components/TouristNavBar";
 import ActivityCard from "../../Components/activityCard.js";
 import Error404 from "../../Components/Error404";
-import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
-import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
+import GuestNavBar from "../../Components/NavBars/GuestNavBar.js";
 import UpdateIcon from "@mui/icons-material/Update";
 import {
   Stack,
@@ -45,6 +43,7 @@ function SearchActivity() {
 
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [filterAnchorEl, setFilterAnchorEl] = useState(null);
+  
   const errorMessage =
     "The activity you are looking for might be removed or is temporarily unavailable";
   const backMessage = "Back to search again";
@@ -68,8 +67,7 @@ function SearchActivity() {
   const [loading, setLoading] = useState(true);
 
   const user = JSON.parse(localStorage.getItem("user"));
-
-  const username = user?.username;
+  
 
   //sorting consts
   const [sortOrder, setSortOrder] = useState("desc"); // Default to 'asc'
@@ -367,8 +365,13 @@ function SearchActivity() {
         paddingTop: "2vh", // Adjust for navbar height
       }}
     >
-      <TouristNavBar />
-      <Container sx={{ width: "100%" }}>
+
+        {isGuest === true ? (
+          <GuestNavBar /> // Replace with your guest navbar component
+        ) : (
+          <TouristNavBar /> // Replace with your tourist navbar component
+        )}      
+        <Container sx={{ width: "100%" }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography class="bigTitle">Activities</Typography>
         </Box>
@@ -499,7 +502,7 @@ function SearchActivity() {
                           },
                         },
                         "& .MuiInputBase-input": {
-                          color: "#ff9933", // Change the text color to match the orange theme if needed
+                          color: "black", // Change the text color to match the orange theme if needed
                         },
                       }}
                     >

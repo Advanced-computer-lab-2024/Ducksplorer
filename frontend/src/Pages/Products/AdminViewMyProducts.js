@@ -18,11 +18,11 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import SwapVertIcon from "@mui/icons-material/SwapVert"; // Ensure this is imported
 import NewProductCard from "../../Components/Products/newProductCard";
 import Help from "../../Components/HelpIcon";
-import SellerNavBar from "../../Components/NavBars/SellerNavBar";
+import AdminNavBar from "../../Components/NavBars/AdminNavBar";
 import DuckLoading from "../../Components/Loading/duckLoading";
 import NavigationTabs from "../../Components/NavigationTabs";
 
-const ProductDashboard = () => {
+const AdminViewMyProducts = () => {
   const navigate = useNavigate();
   const isGuest = localStorage.getItem("guest") === "true";
   const [searchQuery, setSearchQuery] = useState("");
@@ -164,7 +164,7 @@ const ProductDashboard = () => {
         paddingTop: "2vh", // Adjust for navbar height
       }}
     >
-      <SellerNavBar />
+      <AdminNavBar />
 
       <Container sx={{ width: "100%" }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
@@ -209,4 +209,4 @@ const ProductDashboard = () => {
   );
 };
 
-export default ProductDashboard;
+export default AdminViewMyProducts;

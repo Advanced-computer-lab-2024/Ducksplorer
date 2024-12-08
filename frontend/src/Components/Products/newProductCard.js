@@ -27,7 +27,7 @@ export default function ProductCard({
   showArchive,
   showUnarchive,
   productID,
-  showEditProduct,
+  showEditProduct=false,
   showRating, //shows the user review , also for myPurchases as a tourist
   showReview,
   inCartQuantity,
@@ -45,6 +45,8 @@ export default function ProductCard({
   showNotify,
   onConfirm,
   quantityInCart = 0,
+  showChosenQuantity,
+  chosenQuantity,
 }) {
   const navigate = useNavigate();
   const role = useUserRole();
@@ -56,7 +58,7 @@ export default function ProductCard({
   const [archived, setArchived] = useState(product.isArchived);
   const [quantity, setQuantity] = useState(quantityInCart);
   const [open, setOpen] = React.useState(false);
-
+  const isGuest = localStorage.getItem("guest") === "true";
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -66,11 +68,11 @@ export default function ProductCard({
 
   React.useEffect(() => {
     setImage(
-      `https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`
-    );
+`https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`);
   }, []);
   const checkIfInWishlist = async () => {
     try {
+
       const userJson = localStorage.getItem("user");
       const user = JSON.parse(userJson);
       const userName = user.username;
@@ -128,8 +130,9 @@ export default function ProductCard({
   };
 
   useEffect(() => {
+    if(!isGuest){
     checkIfInCart();
-    checkIfInWishlist();
+    checkIfInWishlist();}
   }, [product._id]);
 
   const user = JSON.parse(localStorage.getItem("user"));
@@ -168,6 +171,10 @@ export default function ProductCard({
   const handleAddToCartClick = async (e) => {
     if (quantity > 0) {
       try {
+        if (isGuest) {
+          message.error("Can't purchase a product as a guest, Please login or sign up.");
+          return;
+        }
         const userJson = localStorage.getItem("user");
         const user = JSON.parse(userJson);
         const userName = user.username;
@@ -288,8 +295,7 @@ export default function ProductCard({
     console.log("username:", userName);
     try {
       const response = await axios.put(
-        `http://localhost:8000/touristRoutes/removeFromWishlist/${userName}/${productId}`
-      );
+`http://localhost:8000/touristRoutes/removeFromWishlist/${userName}/${productId}`);
       setShowWishList(false);
 
       if (response.status === 200) {
@@ -343,7 +349,7 @@ export default function ProductCard({
                   variant={showWishList ? "soft" : "solid"}
                   onClick={(event) => {
                     event.stopPropagation(); // Stop event propagation
-                    showWishList
+                    showRemoveWishlist
                       ? handleRemoveWishlist(product)
                       : addToWishlist(product);
                   }}
@@ -360,7 +366,7 @@ export default function ProductCard({
                     backgroundColor: "#ff9933",
                   }}
                 >
-                  {showWishList ? <Done color="#ff9933" /> : <Favorite />}
+                  {showRemoveWishlist ? <Done color="#ff9933" /> : <Favorite />}
                 </IconButton>
               </Tooltip>
             )}
@@ -405,6 +411,13 @@ export default function ProductCard({
               </div>
             </div>
           </div>
+          <div style={{marginTop: "3%"}}>
+            {role === "Tourist" && showChosenQuantity && (
+              <p>
+              Chosen Quantity: {chosenQuantity}
+            </p>
+            )}
+            </div>
           {product.availableQuantity > 0 &&
             role === "Tourist" &&
             showQuantity &&
@@ -517,7 +530,7 @@ export default function ProductCard({
                 onClick={(event) => {
                   event.stopPropagation(); // Stops propagation
                   if (product.availableQuantity > 0) {
-                    handleAddToCartClick(); // Call the function without passing `event`
+                    handleAddToCartClick(); // Call the function without passing event
                   }
                 }}
                 sx={{
@@ -547,7 +560,7 @@ export default function ProductCard({
                 onClick={async (event) => {
                   event.stopPropagation(); // Stops propagation
                   if (product.availableQuantity > 0) {
-                    await handleAddToCartClick2(); // Call the function without passing `event`
+                    await handleAddToCartClick2(); // Call the function without passing event
                     handleConfirmClick();
                   }
                 }}
@@ -565,7 +578,7 @@ export default function ProductCard({
                 Confirm
               </Button>
             )}
-            {role === "Admin" ||
+            {
               (showEditProduct && (
                 <Button
                   size="md"
@@ -574,7 +587,7 @@ export default function ProductCard({
                   zIndex={2}
                   onClick={(event) => {
                     event.stopPropagation(); // Stops propagation
-                    handleEditProduct(); // Call the function without passing `event`
+                    handleEditProduct(); // Call the function without passing event
                   }}
                   sx={{ backgroundColor: "#ff9933", marginRight: 1 }}
                 >
