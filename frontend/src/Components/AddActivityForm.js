@@ -223,6 +223,7 @@ const AddActivityForm = () => {
                     </p>
                     <input
                       name="isOpen"
+
                       label="isOpen"
                       type="checkbox"
                       checked={isOpen}
@@ -230,6 +231,7 @@ const AddActivityForm = () => {
                         alignSelf: "center",
                         marginRight: 12,
                         borderRadius: "5px",
+                        color: "#ff9933"
                       }}
                       onChange={() => setIsOpen(!isOpen)}
                     />

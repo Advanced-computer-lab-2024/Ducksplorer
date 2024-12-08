@@ -206,11 +206,11 @@ const AddItinerary = () => {
   };
 
   useEffect(() => {
-      document.body.style.margin = "0";
-      document.body.style.padding = "0";
-      document.body.style.overflow = "hidden"; // Disable scrolling
-      document.body.style.height = "100%"; // Ensure full height
-      document.body.style.width = "100%";
+    document.body.style.margin = "0";
+    document.body.style.padding = "0";
+    document.body.style.overflow = "hidden"; // Disable scrolling
+    document.body.style.height = "100%"; // Ensure full height
+    document.body.style.width = "100%";
     return () => {
       document.body.style.overflow = "auto";
     };
@@ -280,103 +280,117 @@ const AddItinerary = () => {
                     Activities
                   </h3>
                   {activities.map((activity, index) => (
-                    <div key={index} style={styles.section}>
-                      <input
-                        type="text"
-                        placeholder="Activity Name"
-                        value={activity.name}
-                        onChange={(e) =>
-                          handleActivityChange(index, "name", e.target.value)
-                        }
-                        required
-                        style={styles.input}
-                      />
-                     <label style={{textAlign:"center"}}>Check if you want it Open</label>
-                      <input
-                        type="checkbox"
-                        checked={activity.isOpen}
-                        label="Is Open"
-                        onChange={(e) =>
-                          handleActivityChange(
-                            index,
-                            "isOpen",
-                            e.target.checked
-                          )
-                        }
-                        style={styles.checkbox}
-                      />
-                      <input
-                        type="datetime-local"
-                        value={activity.date}
-                        onChange={(e) =>
-                          handleActivityChange(index, "date", e.target.value)
-                        }
-                        required
-                        style={styles.input}
-                      />
-                      <input
-                        type="text"
-                        placeholder="Activity Location"
-                        value={activity.location}
-                        onChange={(e) =>
-                          handleActivityChange(
-                            index,
-                            "location",
-                            e.target.value
-                          )
-                        }
-                        required
-                        style={styles.input}
-                      />
-                      <input
-                        type="number"
-                        placeholder="Activity Price"
-                        value={activity.price}
-                        onChange={(e) =>
-                          handleActivityChange(index, "price", e.target.value)
-                        }
-                        required
-                        style={styles.input}
-                      />
-                      <input
-                        type="text"
-                        placeholder="Activity Category"
-                        value={activity.category}
-                        onChange={(e) =>
-                          handleActivityChange(
-                            index,
-                            "category",
-                            e.target.value
-                          )
-                        }
-                        required
-                        style={styles.input}
-                      />
-                      <input
-                        type="text"
-                        placeholder="Activity Tags"
-                        value={activity.tags}
-                        onChange={(e) =>
-                          handleActivityChange(index, "tags", e.target.value)
-                        }
-                        required
-                        style={styles.input}
-                      />
-                      <input
-                        type="text"
-                        placeholder="Activity Duration"
-                        value={activity.duration}
-                        onChange={(e) =>
-                          handleActivityChange(
-                            index,
-                            "duration",
-                            e.target.value
-                          )
-                        }
-                        required
-                        style={styles.input}
-                      />
-                    </div>
+                    <Grid container spacing={1} direction="column" sx={{ marginTop: "20px" }} key={index}>
+                      <Grid item xs={12}>
+                        <TextField
+                          name="name"
+                          label="Activity Name"
+                          type="text"
+                          value={activity.name}
+                          onChange={(e) => handleActivityChange(index, "name", e.target.value)}
+                          required
+                          style={styles.textField} // Apply the shortened width
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          name="price"
+                          label="Activity Price"
+                          type="number"
+                          value={activity.price}
+                          onChange={(e) => handleActivityChange(index, "price", e.target.value)}
+                          required
+                          style={styles.textField} // Apply the shortened width
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <div
+                          id="isOpenDiv"
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            border: "1px solid rgba(0,0,0,.2)",
+                            borderRadius: 5,
+                            height: 55,
+                            width: "90%", // Shorten the text boxes
+                          }}
+                        >
+                          <p
+                            style={{
+                              color: "rgba(0, 0, 0, 0.6) ",
+                              marginRight: "auto",
+                              paddingTop: 16,
+                              paddingLeft: 12,
+                            }}
+                          >
+                            isOpen
+                          </p>
+                          <input
+                            name="isOpen"
+                            label="isOpen"
+                            type="checkbox"
+                            style={{ color: "#ff9933" }}
+                            checked={activity.isOpen}
+                            onChange={() => handleActivityChange(index, "isOpen", !activity.isOpen)}
+                          />
+                        </div>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          name="date"
+                          label="Activity Date"
+                          type="datetime-local"
+                          value={activity.date}
+                          onChange={(e) => handleActivityChange(index, "date", e.target.value)}
+                          required
+                          style={styles.textField} // Apply the shortened width
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          name="location"
+                          label="Activity Location"
+                          type="text"
+                          value={activity.location}
+                          onChange={(e) => handleActivityChange(index, "location", e.target.value)}
+                          required
+                          style={styles.textField} // Apply the shortened width
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          name="category"
+                          label="Activity Category"
+                          type="text"
+                          value={activity.category}
+                          onChange={(e) => handleActivityChange(index, "category", e.target.value)}
+                          required
+                          style={styles.textField} // Apply the shortened width
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          name="tags"
+                          label="Activity Tags"
+                          type="text"
+                          value={activity.tags}
+                          onChange={(e) => handleActivityChange(index, "tags", e.target.value)}
+                          required
+                          style={styles.textField} // Apply the shortened width
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          name="duration"
+                          label="Activity Duration"
+                          type="text"
+                          value={activity.duration}
+                          onChange={(e) => handleActivityChange(index, "duration", e.target.value)}
+                          required
+                          style={styles.textField} // Apply the shortened width
+                        />
+                      </Grid>
+                    </Grid>
                   ))}
                   <IconButton
                     onClick={handleAddActivity}

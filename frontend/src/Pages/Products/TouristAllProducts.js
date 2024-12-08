@@ -124,7 +124,7 @@ const TouristAllProducts = () => {
       );
       if (response.status === 200) {
         message.success("Products sorted successfully");
-        setProducts(response.data.products); // Set the sorted products to the state
+        setProducts(response.data); // Set the sorted products to the state
         handleSortOrderClose(); // Close the sort menu after sorting
       } else {
         message.error("Failed to sort products");
@@ -236,7 +236,7 @@ const TouristAllProducts = () => {
           </Menu>
 
           {/* Sort Section */}
-          <Tooltip title="Sort Order">
+          <Tooltip title="Sort by rating">
             <IconButton onClick={handleSortOrderClick}>
               <SwapVertIcon sx={{ color: "black" }} />
             </IconButton>
@@ -254,7 +254,7 @@ const TouristAllProducts = () => {
                 handleSortOrderClose(); // Close the sort menu
               }}
             >
-              Rating Ascending
+              Ascending
             </MenuItem>
             <MenuItem
               onClick={() => {
@@ -263,7 +263,7 @@ const TouristAllProducts = () => {
                 handleSortOrderClose(); // Close the sort menu
               }}
             >
-              Rating Descending
+              Descending
             </MenuItem>
           </Menu>
         </div>
