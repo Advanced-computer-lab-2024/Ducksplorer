@@ -33,8 +33,8 @@ function EditHistoricalPlace() {
         historicalDate: historicalPlace.HistoricalPlaceDate 
             ? new Date(historicalPlace.HistoricalPlaceDate).toISOString().slice(0, 16) 
             : "",
-        historicalPlaceName: historicalPlace.HistoricalPlaceName || "",
-        historicalPlaceCategory: historicalPlace.HistoricalPlaceCategory || "",
+        HistoricalPlaceName: historicalPlace.HistoricalPlaceName || "",
+        HistoricalPlaceCategory: historicalPlace.HistoricalPlaceCategory || "",
         tags: historicalPlace.tags || [],
     });
     
@@ -46,11 +46,11 @@ function EditHistoricalPlace() {
         }
     }, []);
 
-    // Handle input changes
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setFormData((prevData) => ({ ...prevData, [name]: value }));
-    };
+    };    
+       
 
     // Handle tag selection
     const handleTagChange = (tag) => {
@@ -62,16 +62,21 @@ function EditHistoricalPlace() {
         });
     };    
 
+    const handleGoBack = () => {
+        navigate(-1); // Navigate to the previous page
+      };
+
     // Update the museum details
  // Update the museum details
-const handleUpdate = (event) => {
+ const handleUpdate = (event) => {
     event.preventDefault();
 
-    // Combine and clean the data to send only the necessary fields
     const payload = {
         ...formData,
         tags: formData.tags.map((tag) => tag.trim()), // Ensure no accidental whitespace
-    };    
+    };
+
+    console.log("Payload to update:", payload); // Debugging
 
     axios
         .put(
@@ -79,7 +84,7 @@ const handleUpdate = (event) => {
             payload
         )
         .then((response) => {
-            // Update local storage only if the backend update succeeds
+            console.log("Update response:", response.data); // Debugging
             localStorage.setItem(
                 "selectedHistoricalPlace",
                 JSON.stringify(response.data)
@@ -91,7 +96,7 @@ const handleUpdate = (event) => {
             console.error("Update failed:", error);
             message.error("Error updating Historical Place!");
         });
-    }        
+};
 
 
     return (
@@ -132,10 +137,10 @@ const handleUpdate = (event) => {
                         <Box />
                         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                             <form onSubmit={handleUpdate} style={{ marginTop: "20px" }}>
-                            <TextField
+                                <TextField
                                     label="Name"
-                                    name="historicalPlaceName"
-                                    value={formData.historicalPlaceName}
+                                    name="HistoricalPlaceName"
+                                    value={formData.HistoricalPlaceName}
                                     onChange={handleInputChange}
                                     fullWidth
                                     sx={{ mb: 2 }}
@@ -143,14 +148,14 @@ const handleUpdate = (event) => {
                                 />
                                 <TextField
                                     label="Category"
-                                    name="historicalPlaceCategory"
-                                    value={formData.historicalPlaceCategory}
+                                    name="HistoricalPlaceCategory"
+                                    value={formData.HistoricalPlaceCategory}
                                     onChange={handleInputChange}
                                     fullWidth
                                     sx={{ mb: 2 }}
                                     required
                                 />
-                                <TextField
+                                <TextField     
                                     label="Description"
                                     name="description"
                                     value={formData.description}
@@ -160,6 +165,7 @@ const handleUpdate = (event) => {
                                     required
                                 />
                                 <TextField
+                                id="location"
                                     label="Location"
                                     name="location"
                                     value={formData.location}
@@ -169,6 +175,7 @@ const handleUpdate = (event) => {
                                     required
                                 />
                                 <TextField
+                                id="pictures"
                                     label="Picture"
                                     name="pictures"
                                     value={formData.pictures}
@@ -178,6 +185,7 @@ const handleUpdate = (event) => {
                                     required
                                 />
                                 <TextField
+                                id="ticketPrices"
                                     label="Ticket Price"
                                     name="ticketPrices"
                                     value={formData.ticketPrices}
@@ -187,6 +195,7 @@ const handleUpdate = (event) => {
                                     required
                                 />
                                 <TextField
+                                id="HistoricalMuseumDate"
                                     name="historicalMuseumDate"
                                     type="datetime-local"
                                     value={formData.historicalDate}
@@ -197,6 +206,7 @@ const handleUpdate = (event) => {
                                 />
 
                                 <TextField
+                                id="openingTime"
                                     label="Opening Time"
                                     name="openingTime"
                                     value={formData.openingTime}
@@ -206,6 +216,7 @@ const handleUpdate = (event) => {
                                     required
                                 />
                                 <TextField
+                                id="closingTime"
                                     label="Closing Time"
                                     name="closingTime"
                                     value={formData.closingTime}
@@ -248,6 +259,18 @@ const handleUpdate = (event) => {
                                     <Button type="submit" variant="contained" className="blackhover" onClick={handleUpdate}>
                                         Update
                                     </Button>
+                                    <Button
+                                        variant="outlined"
+                                        color="error"
+                                        onClick={handleGoBack}
+                                        fullWidth
+                                        sx={{
+                                            py: 1.5,
+                                            marginTop: "3%",
+                                        }}
+                                        >
+                                    Cancel
+                                </Button>
                                 </Box>
                             </form>
                         </Box>
