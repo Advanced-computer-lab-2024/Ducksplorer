@@ -177,50 +177,6 @@ export default function ProductCard({
       message.error("An error occurred while removing the product");
     }
   };
-  const handleShareLink = (productId) => {
-    const link = `${window.location.origin}/product/searchActivities/${productId}`; // Update with your actual route
-    navigator.clipboard
-      .writeText(link)
-      .then(() => {
-        message.success("Link copied to clipboard!");
-      })
-      .catch(() => {
-        message.error("Failed to copy link.");
-      });
-  };
-
-  const handleShareEmail = (productId) => {
-    const link = `${window.location.origin}/product/searchActivities/${productId}`; // Update with your actual route
-    const subject = "Check out this product";
-    const body = `Here is the link to the product: ${link}`;
-    window.location.href = `mailto:?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
-  };
-
-  const handleClick = (event, productId) => {
-    event.stopPropagation();
-    // setAnchorEl(event.currentTarget);
-    Swal.fire({
-      title: "Share product",
-      html: `
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
-          <button id="share-link" style="padding: 10px 20px; font-size: 16px; background-color: #ff9933; color: white; border: none; border-radius: 8px; cursor: pointer;">
-            Share via Link
-          </button>
-          <Button className="blackhover" id="share-mail" style="padding: 10px 20px; font-size: 16px; background-color: #ff9933; color: white; border: none; border-radius: 8px; cursor: pointer;">
-            Share via Mail
-          </Button>
-        </div>
-      `,
-      showConfirmButton: false, // Hide default OK button
-      width: "400px", // Set the width of the popup
-      padding: "20px", // Add padding to the popup
-      customClass: {
-        popup: "my-swal-popup", // Optional: Add custom styling via CSS
-      },
-    });
-  };
 
   const TheCard = () => {
     return (
@@ -249,32 +205,34 @@ export default function ProductCard({
               <img src={product.picture || image} loading="lazy" alt="" />
             </AspectRatio>
             {!hideWishlist && (
-              <Tooltip title="Add to Wishlist">
-                <IconButton
-                  size="md"
-                  variant={showWishlist ? "soft" : "solid"}
-                  onClick={(event) => {
-                    event.stopPropagation(); // Stop event propagation
-                    showWishlist
-                      ? handleRemoveWishlist(product)
-                      : addToWishlist(product);
-                  }}
-                  className="blackhover"
-                  sx={{
-                    position: "absolute",
-                    zIndex: 2,
-                    color: "white",
-                    borderRadius: "50%",
-                    right: "1rem",
-                    bottom: 0,
-                    transform: "translateY(50%)",
-                    transition: "transform 0.3s",
-                    backgroundColor: "#ff9933",
-                  }}
-                >
-                  {showWishlist ? <Done color="#ff9933" /> : <Favorite />}
-                </IconButton>
-              </Tooltip>
+            <Tooltip  title= {showRemoveWishlist ? "Remove from Wishlist" : "Add to Wishlist"}>
+              <IconButton
+                size="md"
+                variant={showWishlist ? "soft" : "solid"}
+                onClick={(event) => {
+                  event.stopPropagation(); // Stop event propagation
+                  showRemoveWishlist ? handleRemoveWishlist(product): addToWishlist(product);
+                }}
+                className="blackhover"
+                sx={{
+                  position: "absolute",
+                  zIndex: 2,
+                  color: "white",
+                  borderRadius: "50%",
+                  right: "1rem",
+                  bottom: 0,
+                  transform: "translateY(50%)",
+                  transition: "transform 0.3s",
+                  backgroundColor: "#ff9933",
+                }}
+              >
+                {showRemoveWishlist ? (
+                  <Done color="#ff9933" />
+                ) : (
+                  <Favorite />
+                )}
+              </IconButton>
+            </Tooltip>
             )}
           </CardOverflow>
           <div style={{ height: "10%" }}>
