@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, CssBaseline } from "@mui/material";
 import { Outlet } from "react-router-dom";
-import GuestSidebar from '../../Components/Sidebars/GuestSidebar';
-
+import GuestNavBar from '../../Components/NavBars/GuestNavBar';
 const GuestDashboard = () => {
   const [videoEnded, setVideoEnded] = useState(false);
 
@@ -32,12 +31,13 @@ const GuestDashboard = () => {
       width: "100vw",
       height: "100vh", // Covers the full viewport
       overflow: "hidden",
-      backgroundImage: 'url("/ducksplorer welcome.jpg")', // Fullscreen background image
+      backgroundColor: "#fef4ea",
       backgroundSize: "cover",
       backgroundPosition: "center",
       backgroundRepeat: "no-repeat",
     }}
   >
+    <GuestNavBar/>
     {/* Background Video */}
     <video
       autoPlay
@@ -70,7 +70,7 @@ const GuestDashboard = () => {
           zIndex: 10,
           textAlign: "center",
           color: "white",
-          backgroundColor: "rgba(0, 0, 0, 0.1)", // Semi-transparent black background
+          backgroundColor: "rgba(255, 254, 244, 0.8)", 
           padding: "40px",
           borderRadius: "12px",
           animation: "fadeIn 1.5s ease-out", // Smooth fade-in for text
@@ -81,18 +81,20 @@ const GuestDashboard = () => {
         }}
       >
         <Typography
+        className="duckTitle"
           variant="h3"
           sx={{
+            color: "#ff9933",
             fontWeight: "bold",
-            background: "navy",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
+            padding: "10px", // Optional padding to make the background more noticeable
+            borderRadius: "8px", // Optional: To give the background rounded corners
             mb: 2,
           }}
         >
           Welcome to Ducksplorer
         </Typography>
-        <Typography variant="h5" sx={{ color: "navy" }}>
+
+        <Typography className="duckTitle" variant="h5" sx={{ color: "#ff9933", fontSize: "1.5rem" }}>
           Start your journey now!
         </Typography>
       </Box>
@@ -100,7 +102,6 @@ const GuestDashboard = () => {
 
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <GuestSidebar />
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Outlet />
       </Box>

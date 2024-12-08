@@ -2,13 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
-import HistoricalPlaceSearch from "../../Components/MuseumHistoricalPlaceComponent/HistoricalPlaceSearch";
 import HistoricalPlaceFilterComponent from "../../Components/MuseumHistoricalPlaceComponent/HistoricalPlaceFilterComponent";
-import { Link, useParams } from "react-router-dom";
-import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
+import { Link, useParams } from "react-router-dom"; 
 import Help from "../../Components/HelpIcon.js";
 import TouristNavBar from "../../Components/TouristNavBar.js";
-import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
+import GuestNavBar from "../../Components/NavBars/GuestNavBar.js";
 import DuckLoading from "../../Components/Loading/duckLoading.js";
 import NavigationTabs from "../../Components/NavigationTabs.js";
 import { Box, Button, Typography, Grid, Container } from "@mui/material";
@@ -126,7 +124,12 @@ const HistoricalPlaceTouristPov = () => {
         paddingTop: "2vh", // Adjust for navbar height
       }}
     >
-      <TouristNavBar />
+      {isGuest === true ? (
+        <GuestNavBar /> 
+      ) : (
+        <TouristNavBar /> 
+      )}  
+      
       <div>
         <NavigationTabs tabNames={tabs} paths={paths} />
       </div>

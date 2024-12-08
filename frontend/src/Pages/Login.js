@@ -168,6 +168,9 @@ function Login() {
     navigate("/"); // Navigate to the homepage
   };
 
+    const handleGuestClick = () => {
+      localStorage.setItem('guest', 'true');
+    };
   return (
     <div style={styles.container}>
       <div style={styles.leftSection}>
@@ -227,7 +230,7 @@ function Login() {
               handleSendOtp();
             }}
             style={{
-              ...styles.link,
+              ...styles.link2,
               cursor: userName ? "pointer" : "not-allowed",
               color: userName ? "#007bff" : "#aaa",
             }}
@@ -246,10 +249,13 @@ function Login() {
           </Button>
           <Typography variant="body2" style={styles.linkText}>
             Don't have an account?{" "}
-            <Link to="/signUp" style={styles.link}>
+            <Link to="/signUp" style={styles.link2}>
               Sign Up
             </Link>
           </Typography>
+          <Link to="/guestDashboard" style={styles.link2} onClick={handleGuestClick}>
+              Continue as a Guest
+            </Link>
           <Button
             variant="outlined"
             color="secondary"
@@ -361,6 +367,11 @@ const styles = {
     color: "#007bff",
     textDecoration: "none",
     fontWeight: "bold",
+  },
+  link2: {
+    color: '#ff9933', // Add the color here
+    textDecoration: 'none', // Optional: to remove the underline
+    fontWeight: 'bold', // Optional: for emphasis
   },
   backButton: {
     marginTop: "15px",

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { message } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; 
 import MuseumSearch from "../../Components/MuseumHistoricalPlaceComponent/MuseumSearch";
 import MuseumFilterComponent from "../../Components/MuseumHistoricalPlaceComponent/MuseumFilterComponent";
 import { Link, useParams } from "react-router-dom";
-import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import Help from "../../Components/HelpIcon.js";
-import TouristSidebar from "../../Components/Sidebars/TouristSidebar.js";
 import TouristNavBar from "../../Components/TouristNavBar.js";
+import GuestNavBar from "../../Components/NavBars/GuestNavBar.js";
+
 import DuckLoading from "../../Components/Loading/duckLoading.js";
 import { Box, Button, Typography, Grid, Container } from "@mui/material";
 import MuseumHistoricalPlaceCard from "../../Components/MuseumHistoricalPlaceCard";
@@ -111,8 +111,12 @@ const MuseumTouristPov = () => {
         paddingTop: "2vh", // Adjust for navbar height
       }}
     >
-      <TouristNavBar />
-      <div style={{ marginLeft: "4%", marginTop: "2%" }}>
+      {isGuest === true ? (
+        <GuestNavBar /> 
+      ) : (
+        <TouristNavBar /> 
+      )}      
+        <div style={{ marginLeft: "4%", marginTop: "2%" }}>
         <div>
           <NavigationTabs tabNames={tabs} paths={paths} />
         </div>

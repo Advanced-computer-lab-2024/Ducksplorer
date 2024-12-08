@@ -19,7 +19,7 @@ import NewProductCard from "../../Components/Products/newProductCard";
 import Help from "../../Components/HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar";
 import DuckLoading from "../../Components/Loading/duckLoading";
-
+import GuestNavBar from "../../Components/NavBars/GuestNavBar";
 const TouristAllProducts = () => {
   const navigate = useNavigate();
   const isGuest = localStorage.getItem("guest") === "true";
@@ -155,8 +155,11 @@ const TouristAllProducts = () => {
         paddingTop: "2vh", // Adjust for navbar height
       }}
     >
-      <TouristNavBar />
-
+      {isGuest === true ? (
+        <GuestNavBar /> 
+      ) : (
+        <TouristNavBar /> 
+      )}  
       <Container sx={{ width: "100%" }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography class="bigTitle">Products</Typography>
