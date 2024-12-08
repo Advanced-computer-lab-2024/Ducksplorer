@@ -46,6 +46,8 @@ const PreferenceTags = () => {
 
   const handleAddtagClick = () => {
     setShowTextField(!showTextField);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
   };
 
   const handletagChange = (event) => {
