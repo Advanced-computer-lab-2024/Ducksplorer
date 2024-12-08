@@ -6,7 +6,7 @@ import {
   Container,
   Grid,
   Box,
-  Typography,
+  Typography
 } from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
@@ -78,15 +78,28 @@ const AddActivityForm = () => {
   let isClicked = null;
 
   const validateFields = () => {
-    if (
-      !date ||
-      !price ||
-      !specialDiscount ||
-      !duration ||
-      !name ||
-      !category
-    ) {
-      message.error("All fields are required");
+    if (!name) {
+      message.error("Name is required");
+      return false;
+    }
+    if (!date) {
+      message.error("Date is required");
+      return false;
+    }
+    if (!price) {
+      message.error("Price is required");
+      return false;
+    }
+    if (!specialDiscount) {
+      message.error("Special Discount is required");
+      return false;
+    }
+    if (!duration) {
+      message.error("Duration is required");
+      return false;
+    }
+    if (!category) {
+      message.error("Category is required");
       return false;
     }
     return true;
