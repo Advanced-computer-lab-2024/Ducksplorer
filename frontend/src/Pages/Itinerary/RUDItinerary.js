@@ -6,8 +6,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import WarningIcon from "@mui/icons-material/Warning";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import TourGuideSidebar from "../../Components/Sidebars/TourGuideSidebar";
 import { useNavigate } from "react-router-dom";
-import TourGuideNavbar from "../../Components/NavBars/TourGuideNavBar";
 import {
   IconButton,
   Button,

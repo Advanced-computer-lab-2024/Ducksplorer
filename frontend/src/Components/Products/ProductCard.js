@@ -13,7 +13,7 @@ import {
   Button,
   TextField,
   Rating,
-  Tooltip
+  Tooltip,
 } from "@mui/material";
 import useUserRole from "../getRole";
 import { message } from "antd";
@@ -39,8 +39,8 @@ const ProductCard = ({
   showRemoveWishlist,
   showAverageRatingNo, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
   removeProductFromWishlist,
-  hideWishlist=true,
-  showPurchase
+  hideWishlist = true,
+  showPurchase,
 }) => {
   const [isFormVisible, setFormVisible] = useState(false); // Controls form visibility
   const [productInCart, setProductInCArt] = useState(false);
@@ -51,15 +51,11 @@ const ProductCard = ({
   const location = useLocation();
   const isGuest = localStorage.getItem("guest") === "true";
   const [purchaseStatus, setPurchaseStatus] = useState(null);
-  const [open, setOpen] = React.useState(false);
-  const [image, setImage] = React.useState("https://picsum.photos/200/300");
-
-
+  const [open, setOpen] = useState(false);
+  const [image, setImage] = useState("https://picsum.photos/200/300");
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  
 
   // useEffect(() => {
   //   const fetchPurchaseStatus = async () => {
@@ -85,16 +81,9 @@ const ProductCard = ({
   //   fetchPurchaseStatus();
   // }, [product._id]);
 
-
-
-
-
- 
-  
-
-  const handleAddToCartClick =async (e) => {
+  const handleAddToCartClick = async (e) => {
     e.preventDefault();
-    try{
+    try {
       const userJson = localStorage.getItem("user");
       const user = JSON.parse(userJson);
       const userName = user.username;
@@ -115,7 +104,7 @@ const ProductCard = ({
       } else {
         message.error("Failed to add product to cart.");
       }
-    }catch(error){
+    } catch (error) {
       console.error(error);
       message.error("An error occurred while adding the product to the cart.");
     }
@@ -336,119 +325,115 @@ const ProductCard = ({
         }}
       >
         <CardOverflow>
-            <AspectRatio ratio="2">
-              <img src={product.picture || image} loading="lazy" alt="" />
-            </AspectRatio>
-            <Tooltip title="Add to Wishlist">
-              <IconButton
-                size="md"
-                variant={showRemoveWishlist ? "soft" : "solid"}
-                onClick={() =>
-                  showRemoveWishlist
-                    ? handleRemoveWishlist(product)
-                    : addToWishlist(product)
-                }
-                className="blackhover"
-                sx={{
-                  position: "absolute",
-                  zIndex: 2,
-                  color: "white",
-                  borderRadius: "50%",
-                  right: "1rem",
-                  bottom: 0,
-                  transform: "translateY(50%)",
-                  transition: "transform 0.3s",
-                  backgroundColor: "#ff9933",
-                }}
-              >
-                {showRemoveWishlist ? (
-                  <Done color="#ff9933" />
-                ) : (
-                  <Favorite />
-                )}
-              </IconButton>
-            </Tooltip>
+          <AspectRatio ratio="2">
+            <img src={product.picture || image} loading="lazy" alt="" />
+          </AspectRatio>
+          <Tooltip title="Add to Wishlist">
+            <IconButton
+              size="md"
+              variant={showRemoveWishlist ? "soft" : "solid"}
+              onClick={() =>
+                showRemoveWishlist
+                  ? handleRemoveWishlist(product)
+                  : addToWishlist(product)
+              }
+              className="blackhover"
+              sx={{
+                position: "absolute",
+                zIndex: 2,
+                color: "white",
+                borderRadius: "50%",
+                right: "1rem",
+                bottom: 0,
+                transform: "translateY(50%)",
+                transition: "transform 0.3s",
+                backgroundColor: "#ff9933",
+              }}
+            >
+              {showRemoveWishlist ? <Done color="#ff9933" /> : <Favorite />}
+            </IconButton>
+          </Tooltip>
         </CardOverflow>
-          <div style={{ height: "10%" }}>
+        <div style={{ height: "10%" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
             <div
               style={{
                 display: "flex",
                 flexDirection: "column",
               }}
             >
+              <h4
+                style={{
+                  fontWeight: "bold",
+                  margin: 0,
+                  marginRight: 20,
+                }}
+              >
+                {product.name}
+              </h4>
+
+              <Rating
+                value={product.rating}
+                icon={<StarIcon sx={{ color: "orange" }} />}
+                emptyIcon={<StarOutlineIcon />}
+                readOnly
+                precision={0.5}
+              />
               <div
                 style={{
                   display: "flex",
-                  flexDirection: "column",
+                  flexDirection: "row",
+                  marginTop: "5px",
                 }}
-              >
-                <h4
-                  style={{
-                    fontWeight: "bold",
-                    margin: 0,
-                    marginRight: 20,
-                  }}
-                >
-                  {product.name}
-                </h4>
-
-                <Rating
-                  value={product.rating}
-                  icon={<StarIcon sx={{ color: "orange" }} />}
-                  emptyIcon={<StarOutlineIcon />}
-                  readOnly
-                  precision={0.5}
-                />
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    marginTop: "5px",
-                  }}
-                ></div>
-              </div>
+              ></div>
             </div>
           </div>
-          <div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                position: "absolute",
-                bottom: 10,
-                width: "95%",
+        </div>
+        <div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              position: "absolute",
+              bottom: 10,
+              width: "95%",
+            }}
+          >
+            <Typography
+              level="title-lg"
+              sx={{
+                mt: 1,
+                fontSize: 25,
+                maxWidth: "30%",
+                fontWeight: "xl",
               }}
             >
-              <Typography
-                level="title-lg"
-                sx={{
-                  mt: 1,
-                  fontSize: 25,
-                  maxWidth: "30%",
-                  fontWeight: "xl",
-                }}
-              >
-                {product.price}$
-              </Typography>
-              <Button
-                size="md"
-                variant="solid"
-                className="blackhover"
-                zIndex={2}
-                onClick={handleAddToCartClick}
-                sx={{ backgroundColor: "#ff9933", marginRight: 1 }}
-              >
-                {productInCart ? "Remove from Cart" : "Add to Cart"}
-              </Button>
-            </div>
+              {product.price}$
+            </Typography>
+            <Button
+              size="md"
+              variant="solid"
+              className="blackhover"
+              zIndex={2}
+              onClick={handleAddToCartClick}
+              sx={{ backgroundColor: "#ff9933", marginRight: 1 }}
+            >
+              {productInCart ? "Remove from Cart" : "Add to Cart"}
+            </Button>
           </div>
+        </div>
       </Card>
     </div>
-    );
-  };
-        /* <div style={{ overflow: "auto", height: "40%" }}>
+  );
+};
+/* <div style={{ overflow: "auto", height: "40%" }}>
           <CardContent>
             <Typography variant="h5" style={{ fontWeight: "bold" }}>
               {product.name}
@@ -588,7 +573,7 @@ const ProductCard = ({
                 }}
               >
                 {/* Quantity Selector */
-                /* <div
+/* <div
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -608,7 +593,7 @@ const ProductCard = ({
                   <Button
                     variant="outlined"
                     color="primary"
-                    onClick={handleIncrementForCart}
+                    onClick={handle"Increment"ForCart}
                     style={{ minWidth: "40px", minHeight: "40px" }}
                   >
                     +
@@ -636,7 +621,7 @@ const ProductCard = ({
                 }}
               >
                 {/* Quantity Selector */
-                /* <div
+/* <div
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -692,7 +677,5 @@ const ProductCard = ({
             </div>
           </CardContent>
         </div> */
-    
-  
 
 export default ProductCard;

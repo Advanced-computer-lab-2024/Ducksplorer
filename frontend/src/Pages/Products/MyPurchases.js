@@ -3,18 +3,19 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { message } from "antd";
 import { Typography, Button, Box, Grid, Container } from "@mui/material";
-import ProductCard from "../../Components/Products/ProductCard";
+import NewProductCard from "../../Components/Products/newProductCard";
 import Help from "../../Components/HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 import { useNavigate } from "react-router-dom";
-
+import NavigationTabs from "../../Components/NavigationTabs";
 function MyPurchases() {
   const [purchases, setPurchases] = useState([]);
   const [products, setProducts] = useState([]); // Use state for products
   const { orderNumber } = useParams();
   const navigate = useNavigate();
-
+  const tabs = ["My Orders"];
+  const paths = ["/orders"];
   useEffect(() => {
     const fetchPurchases = async () => {
       try {
@@ -70,22 +71,12 @@ function MyPurchases() {
     <Box
       sx={{
         height: "100vh",
-        backgroundColor: "#ffffff",
         paddingTop: "64px",
       }}
     >
       <TouristNavBar />
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-        <Box sx={{ textAlign: "center", mb: 4 }}>
-          <Typography variant="h4" fontWeight="700">
-            My Purchases
-          </Typography>
-        </Box>
-
-        <h2>
-          Order Number: {orderNumber}
-        </h2>
-        <Button
+      <Button
+        className="blackhover"
           onClick={handleBackButtonClick}
           variant="contained"
           sx={{
@@ -101,12 +92,23 @@ function MyPurchases() {
         >
           Back
         </Button>
-
-        <Grid container spacing={3}>
+      <div>
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Typography className="bigTitle" variant="h4" fontWeight="700">
+            My Purchases
+          </Typography>
+        </Box>
+        {/* <div>
+          <NavigationTabs tabNames={tabs} paths={paths} />
+        </div> */}
+        <h2>
+          Order Number: {orderNumber}
+        </h2>
+        <Grid container spacing={products && products.length > 1 && products.length < 3 ? 23 : 4}>
           {products && products.length > 0 ? (
             products.map((item, index) => (
               <Grid item xs={12} sm={6} md={4} key={item._id || index}>
-                <ProductCard
+                <NewProductCard
                   product={item} // Pass the full product object
                   productID={item._id}
                   showAddToCart={false}
@@ -127,7 +129,7 @@ function MyPurchases() {
           )}
         </Grid>
         <Help />
-      </Container>
+        </div>
     </Box>
   );
 }
