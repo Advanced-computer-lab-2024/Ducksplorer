@@ -6,11 +6,12 @@ import TouristNavBar from "../../Components/TouristNavBar";
 import Help from "../../Components/HelpIcon";
 
 const TouristDashboard = () => {
-  const [videoEnded, setVideoEnded] = useState(false);
+  const [videoEnded, setVideoEnded] = useState(localStorage.getItem('videoEnded') === 'true');
 
   const handleVideoEnd = () => {
     setTimeout(() => {
       setVideoEnded(true);
+      localStorage.setItem('videoEnded', 'true');
       document.body.style.backgroundColor = "#FEF4EA"; // Change background color when video ends
     }, 1000); // Delay to allow fade-out animation
   };
@@ -28,6 +29,11 @@ const TouristDashboard = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // Reset videoEnded flag on login
+    localStorage.setItem('videoEnded', 'false');
+  }, []);
+
   return (
     <Box
       sx={{
@@ -43,25 +49,27 @@ const TouristDashboard = () => {
       }}
     >
       {/* Background Video */}
-      <video
-        autoPlay
-        muted
-        onEnded={handleVideoEnd}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: "0%",
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          zIndex: videoEnded ? -1 : 0, // Hide video after it ends
-          opacity: videoEnded ? 0 : 1, // Fade-out effect
-          transition: "opacity 1s ease-out", // Smooth fade-out
-        }}
-      >
-        <source src="/planevidd.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+      {!videoEnded && (
+        <video
+          autoPlay
+          muted
+          onEnded={handleVideoEnd}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: "0%",
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            zIndex: videoEnded ? -1 : 0, // Hide video after it ends
+            opacity: videoEnded ? 0 : 1, // Fade-out effect
+            transition: "opacity 1s ease-out", // Smooth fade-out
+          }}
+        >
+          <source src="/planevidd.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      )}
 
       {/* Welcome Message with Semi-Transparent Box */}
       {videoEnded && (

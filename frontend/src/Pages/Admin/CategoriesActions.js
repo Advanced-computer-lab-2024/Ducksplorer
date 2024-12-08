@@ -47,6 +47,8 @@ const DeleteCategory = () => {
 
   const handleAddCategoryClick = () => {
     setShowTextField(!showTextField);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
   };
 
   const handleCategoryChange = (event) => {

@@ -6,11 +6,12 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 import GovernorNavBar from "../../Components/NavBars/GovernorNavBar";
 
 const GovernorDashboard = () => {
-  const [videoEnded, setVideoEnded] = useState(false);
+  const [videoEnded, setVideoEnded] = useState(localStorage.getItem('videoEnded') === 'true');
 
   const handleVideoEnd = () => {
     setTimeout(() => {
       setVideoEnded(true);
+      localStorage.setItem('videoEnded', 'true');
     }, 1000); // Delay to allow fade-out animation
   };
 
@@ -25,6 +26,11 @@ const GovernorDashboard = () => {
       document.body.style.overflow = "auto";
       document.body.style.backgroundColor = "";
     };
+  }, []);
+
+  useEffect(() => {
+    // Reset videoEnded flag on login
+    localStorage.setItem('videoEnded', 'false');
   }, []);
 
   const lineChartData = {
@@ -71,27 +77,28 @@ const GovernorDashboard = () => {
         backgroundColor: "#fff6e6",
       }}
     >
-      <video
-        autoPlay
-        muted
-        onEnded={handleVideoEnd}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          zIndex: videoEnded ? -1 : 0,
-          opacity: videoEnded ? 0 : 1,
-          transition: "opacity 1s ease-out",
-        }}
-      >
-        <source src="/planevidd.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+      {!videoEnded && (
+        <video
+          autoPlay
+          muted
+          onEnded={handleVideoEnd}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            zIndex: videoEnded ? -1 : 0,
+            opacity: videoEnded ? 0 : 1,
+            transition: "opacity 1s ease-out",
+          }}
+        >
+          <source src="/planevidd.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      )}
 
-      {/* Welcome Message with Semi-Transparent Box */}
       {videoEnded && (
         <Box sx={{ display: "flex", flexDirection: "column", p: 3 }}>
           <Grid container spacing={2} sx={{ marginBottom: "90px", marginTop: "20px" }}>
