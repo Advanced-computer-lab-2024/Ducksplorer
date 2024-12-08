@@ -34,6 +34,7 @@ const createProduct = async (req, res) => {
       reviews,
       sales,
       isArchived,
+      totalGain
     });
     res.status(200).json(product);
   } catch (error) {
