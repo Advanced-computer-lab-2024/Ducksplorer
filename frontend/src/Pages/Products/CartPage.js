@@ -160,43 +160,46 @@ const CartPage = () => {
             width: "100%",
           }}
         >
-          {cartProducts.length > 0 ? (
-            cartProducts.map((item, index) => (
-              <NewProductCard product={item.product} />
-            ))
-          ) : (
-            <div
+          {cartProducts.length > 0
+            ? cartProducts.map((item, index) => (
+                <NewProductCard product={item.product} />
+              ))
+            : null}
+        </div>
+        {cartProducts.length <= 0 && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column", // Stack image and text vertically
+              alignItems: "center", // Center both horizontally
+              justifyContent: "center", // Center vertically within the parent
+              marginBottom: "2rem", // Space below the image and text
+              alignContent: "center",
+              alignSelf: "center",
+              justifySelf: "center",
+            }}
+          >
+            <img
+              src="DuckEmptyCart.jpg"
+              alt="Duck Empty Cart"
               style={{
-                display: "flex",
-                flexDirection: "column", // Stack image and text vertically
-                alignItems: "center", // Center both horizontally
-                justifyContent: "center", // Center vertically within the parent
-                marginBottom: "2rem", // Space below the image and text
-                alignContent: 'center'
+                width: "70%", // Adjust the image size for better responsiveness
+                maxWidth: "400px", // Set a max width for better scaling
+                height: "auto",
+              }}
+            />
+            <p
+              style={{
+                marginTop: "1rem", // Add spacing between the image and text
+                fontSize: "1.2rem", // Adjust the text size
+                textAlign: "center", // Center-align the text
+                color: "#555", // Change color for better contrast
               }}
             >
-              <img
-                src="DuckEmptyCart.jpg"
-                alt="Duck Empty Cart"
-                style={{
-                  width: "70%", // Adjust the image size for better responsiveness
-                  maxWidth: "400px", // Set a max width for better scaling
-                  height: "auto",
-                }}
-              />
-              <p
-                style={{
-                  marginTop: "1rem", // Add spacing between the image and text
-                  fontSize: "1.2rem", // Adjust the text size
-                  textAlign: "center", // Center-align the text
-                  color: "#555", // Change color for better contrast
-                }}
-              >
-                Your Cart is Empty, Start shopping now!
-              </p>
-            </div>
-          )}
-        </div>
+              Your Cart is Empty, Start shopping now!
+            </p>
+          </div>
+        )}
         {cartProducts.length > 0 && (
           <div style={{ textAlign: "center", marginTop: "20px" }}>
             <Button
