@@ -92,6 +92,11 @@ function EditItinerary() {
     }));
   };
 
+
+  const handleGoBack = () => {
+    navigate(-1); // Navigate to the previous page
+  };
+
   //updates available dates in formData based on input change
   const handleAvailableDatesInputChange = (event, index) => {
     const { value } = event.target;
@@ -182,7 +187,7 @@ function EditItinerary() {
         setEditingItinerary(null);
         setSelectedTags([]);
         setTimeout(() => {
-          navigate("/viewAllTourist");
+          navigate("/rudItinerary");
         }, 2000);
       })
       .catch((error) => {
@@ -428,6 +433,19 @@ function EditItinerary() {
                 <Button type="submit" variant="contained" className="blackhover" style={{ marginTop: "5%" }}>
                   Update Itinerary
                 </Button>
+                <Button
+                variant="outlined"
+                color="error"
+                onClick={handleGoBack}
+                fullWidth
+                sx={{
+                  py: 1.5,
+                  marginTop: "3%",
+                }}
+                >
+                  Cancel
+                </Button>
+
               </form>
             </Box>
           </Box>

@@ -75,6 +75,11 @@ function EditActivity() {
         });
     };
 
+
+    const handleGoBack = () => {
+        navigate(-1); // Navigate to the previous page
+      };
+
     //update
     //submit the updated activity data.
     const handleUpdate = (event) => {
@@ -267,6 +272,18 @@ function EditActivity() {
                                 </div>
                                 <Button type="submit" variant="contained" className="blackhover" style={{ marginTop: "5%" }}>
                                     Update Activity
+                                </Button>
+                                <Button
+                                        variant="outlined"
+                                        color="error"
+                                        onClick={handleGoBack}
+                                        fullWidth
+                                        sx={{
+                                            py: 1.5,
+                                            marginTop: "3%",
+                                        }}
+                                        >
+                                    Cancel
                                 </Button>
                             </form>
                         </Box>

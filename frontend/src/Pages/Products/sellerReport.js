@@ -188,11 +188,16 @@ const MyPurchases = () => {
   }
 
   const getReviewerRating = (reviewer) => {
-    const ratingEntry = products.ratings.find(
-      (rating) => rating.buyer === reviewer
-    );
-    return ratingEntry ? ratingEntry.rating : "No rating available";
+    const product = products.find(p => p.product._id === reviewer);  // Find the product by reviewer ID
+    if (product && Array.isArray(product.product.ratings)) {
+      const ratingEntry = product.product.ratings.find(
+        (rating) => rating.buyer === reviewer
+      );
+      return ratingEntry ? ratingEntry.rating : "No rating available";
+    }
+    return "No ratings available";
   };
+  
 
   if (loading) {
     return (
@@ -212,7 +217,6 @@ const MyPurchases = () => {
         height: "100vh",
         paddingTop: "64px",
         width: "90vw",
-        marginLeft: "5vw",
       }}
     >
       <SellerNavBar />
@@ -223,7 +227,7 @@ const MyPurchases = () => {
           <Typography
             variant="h2"
             sx={{ textAlign: "center", fontWeight: "bold" }}
-            gutterBottom
+            gutterBottom className="duckTitle"
           >
             Products Report
           </Typography>
@@ -343,6 +347,8 @@ const MyPurchases = () => {
                     Description</TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
                     Reviews</TableCell>
+                    <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    Purchase Count</TableCell>
                   <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
                     Earnings
                     <CurrencyConvertor onCurrencyChange={handleEarningsCurrencyChange} />
@@ -352,7 +358,7 @@ const MyPurchases = () => {
               <TableBody>
                 {products.length > 0 ? (
                   products.map((entry) =>
-                    entry && entry.product.totalGain !== undefined ? (
+                    entry  ? (
                       <TableRow key={entry.product._id}>
                         <TableCell>{entry.product.name}</TableCell>
                         <TableCell>
@@ -384,6 +390,9 @@ const MyPurchases = () => {
                         )}
                         </TableCell>
                         <TableCell>
+                          {entry.bookedCount}
+                        </TableCell>
+                        <TableCell>
                           {((entry.totalEarnings * 0.9) * (earningsExchangeRates[earningsCurrency] || 1)).toFixed(2)} {earningsCurrency}
                         </TableCell>
                       </TableRow>
@@ -399,7 +408,6 @@ const MyPurchases = () => {
             </Table>
           </TableContainer>
         </div>
-        <Help />
       </div>
     </Box >
   );

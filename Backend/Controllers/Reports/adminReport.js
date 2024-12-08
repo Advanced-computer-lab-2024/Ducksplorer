@@ -58,18 +58,34 @@ const viewAllItineraries = async (req, res) => {
 };
 
 const viewAllProducts = async (req, res) => {
+
   try {
-    // Fetch all products
+    // Fetch all products for this seller
     const products = await Product.find();
 
     if (!products || products.length === 0) {
       return res.status(404).json({ error: "No products found" });
     }
-    // Mapping over the products to include the necessary fields (bookedCount, totalGain)
-    const productsWithStats = products.map((product) => ({
-      product,
-      totalEarnings: product.totalGain,
-    }));
+
+    // Mapping over the products to include the necessary fields (bookedCount, totalEarnings)
+    const productsWithStats = await Promise.all(
+      products.map(async (product) => {
+        // Fetch all bookings for this product
+        const bookings = await PurchaseBooking.find({ product: product._id });
+
+        // Calculate total earnings (sum of chosen price for each booking)
+        const totalEarnings = bookings.reduce((acc, booking) => acc + booking.chosenPrice, 0);
+
+        // Count how many times this product has been booked
+        const bookedCount = bookings.length;
+
+        return {
+          product,
+          bookedCount, // Add the booked count
+          totalEarnings, // Calculate total earnings
+        };
+      })
+    );
 
     // Send the response with the products and their associated stats
     res.status(200).json(productsWithStats);
@@ -321,38 +337,44 @@ const filterAllProducts = async (req, res) => {
   }
 
   try {
-    // Find all Products
-    const products = await Product.find();
+    // Find all Products for the given seller
+    const products = await Product.find({
+      // ...filters, // Apply date filters to products if needed
+    });
 
     if (!products || products.length === 0) {
-      return res.status(404).json({ message: "No products found" });
+      return res
+        .status(404)
+        .json({ message: "No products found for the seller" });
     }
 
-    // Array to store results
-    const results = [];
+    // Mapping over the products to include the necessary fields (bookedCount, totalEarnings)
+    const productsWithStats = await Promise.all(
+      products.map(async (product) => {
+        // Fetch all bookings for the current product with date filters applied
+        const productBookings = await PurchaseBooking.find({
+          product: product._id,
+          ...filters, // Apply date filters to bookings
+        });
 
-    for (const product of products) {
-      // Fetch all bookings for the current product
-      const productBookings = await PurchaseBooking.find({
-        product: product._id,
-        ...filters, // Apply date filters to bookings
-      });
+        // Calculate the number of bookings and total earnings
+        const bookedCount = productBookings.length;
+        const totalEarnings = productBookings.reduce(
+          (sum, booking) => sum + booking.chosenPrice,
+          0
+        );
 
-      // Calculate total earnings
-      const totalEarnings = productBookings.reduce(
-        (sum, booking) => sum + booking.chosenPrice,
-        0
-      );
+        // Return the product with the stats
+        return {
+          product,
+          bookedCount,
+          totalEarnings,
+        };
+      })
+    );
 
-      // Add result to the array
-      results.push({
-        product,
-        totalEarnings,
-      });
-    }
-
-    // Send the response
-    res.status(200).json(results);
+    // Send the response with products and their associated stats
+    res.status(200).json(productsWithStats);
   } catch (error) {
     console.error("Error fetching products:", error);
     res.status(500).json({ error: "Internal Server Error" });
