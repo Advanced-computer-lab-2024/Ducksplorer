@@ -1,21 +1,21 @@
+
 # Ducksplorer: Get Your Ducks in a Row! 
 
 Ducksplorer is your all-in-one travel companion, designed to make vacation planning seamless, organized, and enjoyable. Inspired by the saying *"get your ducks in a row,"* which means to have everything well-planned and in perfect order, Ducksplorer ensures that every detail of your trip is taken care of. Whether you’re drawn to historic landmarks, serene beaches, or adventurous getaways, Ducksplorer combines personalized planning, seamless booking, smart budgeting, and curated local recommendations into one intuitive platform. With features like real-time notifications, customizable itineraries, and even an exclusive gift shop, Ducksplorer helps you plan, organize, and execute your dream vacation effortlessly. Start exploring with Ducksplorer and experience hassle-free travel like never before!  
 
-
 ## Motivation
 Ducksplorer was initially conceived as a project for our Advanced Computer Lab course, a requirement of our university curriculum. However, our purpose went far beyond fulfilling academic obligations. We saw this as an opportunity to learn and apply advanced programming concepts, collaborate effectively as a team, and develop a real-world application that solves a genuine problem. Travel planning is often a complex and time-consuming process, and we wanted to design a solution that simplifies and enhances the experience for users. Through this project, we aimed to improve our technical skills, explore innovative features, and create something meaningful that could inspire further development in the future.
-
 ## Build Status
 The current build of Ducksplorer is stable and free from any critical bugs or errors. However, users may experience slower loading times due to the resource-intensive nature of the platform. This is because Ducksplorer integrates multiple features and services, such as real-time notifications, curated recommendations, and seamless booking options, all of which utilize significant computational resources. While the platform is fully functional, optimizing loading performance is a key area we aim to address in future updates. We appreciate your understanding and welcome any suggestions to improve this aspect of the application.  
-
 
 ## Code Style
 
 For Ducksplorer, we adhered to a camel casing style for naming variables, functions, and other identifiers. While no formal style guide was strictly followed, we focused on maintaining consistency and clarity in the code through team collaboration. Contributors were encouraged to write clean, readable, and well-documented code to ensure the project remains easy to understand and maintain.
 
 ## Screenshots/Videos of the website
+
 Here is a link to a folder on google drive:
+
 https://drive.google.com/drive/folders/1QEX_bJYIjdphBVo_t6tFjP5BgRcCnQ10?usp=sharing
 
 ## Tech/Framework used
@@ -27,8 +27,9 @@ In Ducksplorer, we used the MERN stack to build the application. The frontend is
 Ducksplorer stands out by offering a fully personalized travel planning experience, allowing users to tailor their trips based on specific interests. Unlike other platforms, it integrates seamless bookings for flights, hotels, and transportation, all within the app—no redirects required. It also provides intelligent budgeting suggestions that ensure your activities fit within your remaining budget. What sets Ducksplorer apart is its curated list of local activities, museums, and landmarks, complete with ticket prices and directions, plus real-time updates on upcoming events. The app also features customizable itineraries and expert-guided tours, making it perfect for both spontaneous and well-planned travelers. Lastly, an in-app gift shop adds a unique touch, allowing you to purchase local souvenirs to remember your trip.
 
 ## Code Examples
-
 ### 1. BE Routes Example:
+```javascript
+ 
 router.route("/filter").get(filterItineraries);
 
 router.route("/deletePast").delete(deletePastItineraries);
@@ -41,7 +42,10 @@ router.route("/filterUpcoming").get(filterUpcomingItineraries);
 
 router.route("/myItineraries/:userName").get(getAllMyItineraries);
 
+ ```
 ### 2. BE Create Itinerary Controller Example:
+```javascript
+ 
 const createItinerary = async (req, res) => {
     
   const {
@@ -98,7 +102,10 @@ const createItinerary = async (req, res) => {
   }
 };
 
-### BE Itinerary Model Example:
+```
+ 
+### 3. BE Itinerary Model Example:
+```javascript
 const mongoose = require("mongoose");
 const { schema } = require("./activityModel"); // This line is correct
 const Activity = require("./activityModel");
@@ -238,8 +245,10 @@ const itinerarySchema = new Schema(
 const Itinerary = mongoose.model("Itinerary", itinerarySchema);
 
 module.exports = Itinerary;
+```
 
-### FE Add Governor:
+### 4. FE Add Governor Example:
+```javascript
 import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import { message } from "antd";
@@ -510,10 +519,10 @@ const styles = {
 };
 
 export default AddGovernor;
+```
 
-
-### FE Create Itinerary Example:
-
+### 5. FE Create Itinerary Example:
+```javascript
 import React, { useState, useEffect, createContext } from "react";
 import axios from "axios";
 import { message } from "antd";
@@ -923,7 +932,7 @@ const AddItinerary = () => {
 };
 
 export default AddItinerary;
-
+```
 ## Installation
 
 To get started with Ducksplorer, you'll need to install several software tools and dependencies. Below are the steps for installation:
@@ -979,6 +988,7 @@ To get started with Ducksplorer, you'll need to install several software tools a
    - **Postman** is a tool for testing APIs. Download and install it from [Postman download page](https://www.postman.com/downloads/), and choose the version suitable for your operating system.
 
 By following these steps, you should be able to successfully install everything you need for the Ducksplorer project. If you encounter any issues, feel free to consult the links provided for additional setup help.
+
 ## API References
 
 There is a JSON file  inside the Ducksplorer of our collection exported.
@@ -1225,6 +1235,7 @@ We welcome contributions to Ducksplorer! If you'd like to help improve the app o
 ### 4. Database Optimization:
 
 - Help with optimizing the app’s interactions with the database would be highly valuable. If you have experience with MongoDB and Mongoose, improving the queries and performance with larger datasets would be a great addition.
+
 ## Credits
 We would like to give credit to the following resources, which were essential in helping us build and understand various technologies used in this project. These resources include YouTube channels, tutorials, and articles.
 
