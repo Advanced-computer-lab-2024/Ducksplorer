@@ -255,11 +255,9 @@ function PaymentPage() {
       if (response.status === 200) {
         message.success("Payment successfully completed!");
         if (itineraryOrActivity === "product") {
-          await axios.delete(
-            "http://localhost:8000/touristRoutes/emptyCart",{
-              data: {userName}
-            }
-          );
+          await axios.delete("http://localhost:8000/touristRoutes/emptyCart", {
+            data: { userName },
+          });
           await fetchWalletBalance(userName);
           navigate("/orders");
         }
@@ -339,7 +337,7 @@ function PaymentPage() {
 
       if (itineraryOrActivity === "itinerary" && itineraryId) {
         response = await axios.get(
-          `http://localhost:8000/touristRoutes/viewDesiredItinerary/${itineraryId}`
+          `http://localhost:8000/touristRoutes/viewDesiredItinerary/${itineraryId}/${user.username}`
         );
         if (response.status === 200) {
           setItineraryData(response.data);
@@ -352,7 +350,7 @@ function PaymentPage() {
       } else if (itineraryOrActivity === "activity" && activityId) {
         console.log("Fetching activity data for ID:", activityId); // Debugging
         response = await axios.get(
-          `http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}`
+          `http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}/${user.username}`
         );
         if (response.status === 200) {
           console.log("Activity data fetched:", response.data); // Debugging

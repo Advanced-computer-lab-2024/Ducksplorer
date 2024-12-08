@@ -82,42 +82,63 @@ export default function ItineraryCard({
     try {
       const userJson = localStorage.getItem("user");
       const isGuest = localStorage.getItem("guest") === "true";
+
+      // Check if the user is a guest and prompt to log in
       if (isGuest) {
         message.error("Can't book as a guest, Please login or sign up.");
         navigate("/guestDashboard");
         return;
       }
+
       if (!userJson) {
         message.error("User is not logged in.");
         return null;
       }
+
       const user = JSON.parse(userJson);
+
+      // Validate user information
       if (!user || !user.username) {
         message.error("User information is missing.");
         return null;
       }
-      // const userName = user.username;
+
       const type = "itinerary";
 
       localStorage.setItem("itineraryId", itineraryId);
       localStorage.setItem("type", type);
 
+      // Send request to check the itinerary's status
       const response = await axios.get(
-        `http://localhost:8000/touristRoutes/viewDesiredItinerary/${itineraryId}`
+        `http://localhost:8000/touristRoutes/viewDesiredItinerary/${itineraryId}/${user.username}`
       );
 
       if (response.status === 200) {
         if (response.data.isUpcoming) {
           navigate("/payment");
         } else {
-          message.error("You can't book an old itinerary");
+          message.error("You can't book an old itinerary.");
         }
       } else {
         message.error("Booking failed.");
       }
     } catch (error) {
       console.error("Error:", error);
-      message.error("An error occurred while booking.");
+
+      // Handle specific error messages from the backend
+      if (error.response && error.response.status === 400) {
+        const errorMessage = error.response.data.message;
+
+        if (errorMessage.includes("You are less than 18 years old")) {
+          message.error(
+            "You are less than 18 years old and cannot book this itinerary."
+          );
+        } else {
+          message.error(errorMessage); // Display other backend error messages
+        }
+      } else {
+        message.error("An error occurred while booking.");
+      }
     }
   };
 
@@ -272,7 +293,10 @@ export default function ItineraryCard({
                 variant="solid"
                 color="primary"
                 className="blackhover"
-                onClick={(event) =>{event.stopPropagation(); handleClick(event, itinerary._id);}}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleClick(event, itinerary._id);
+                }}
                 sx={{
                   borderRadius: "50%",
                   position: "absolute",
