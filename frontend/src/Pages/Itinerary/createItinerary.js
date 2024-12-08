@@ -235,10 +235,10 @@ const AddItinerary = () => {
               marginTop: "8vh",
               height: "99%",
               width: "100%",
-              backgroundColor: "rgba(255,255,255,0.65)",
+              backgroundColor: "rgba(255,255,255,0.05)",
             }}
           >
-            <Box sx={{ height: "calc(100% - 1px)", overflowY: "auto", paddingBottom: "56px" }}>
+            <Box sx={{ height: "calc(100% - 1px)", overflowY: "auto", paddingBottom: "56px", boxShadow:"none" }}>
               <h2
                 className="bigTitle"
                 style={{
@@ -250,16 +250,8 @@ const AddItinerary = () => {
                 Create Itinerary
               </h2>
               <form onSubmit={handleSubmit} style={styles.form}>
-                <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
-                  <h3
-                    style={{
-                      marginLeft: "1vw",
-                      alignSelf: "center",
-                      margin: "2 2 2 2",
-                    }}
-                  >
-                    Itinerary Name
-                  </h3>
+                <Box sx={{ flex: 1, display: "flex", flexDirection: "column" , boxShadow:"none"}}>
+                 
                   <div style={styles.section}>
                     <input
                       type="text"
@@ -269,6 +261,7 @@ const AddItinerary = () => {
                       onChange={handleChange}
                       required
                       style={styles.input}
+                      
                     />
                   </div>
                   <h3
@@ -276,6 +269,8 @@ const AddItinerary = () => {
                       marginLeft: "1vw",
                       alignSelf: "center",
                       marginTop: "5px",
+                      fontFamily: "'Playwrite HR Lijeva', 'cursive' "
+
                     }}
                   >
                     Activities
@@ -292,20 +287,7 @@ const AddItinerary = () => {
                         required
                         style={styles.input}
                       />
-                      <label style={{ textAlign: "center" }}>Check if you want it Open</label>
-                      <input
-                        type="checkbox"
-                        checked={activity.isOpen}
-                        label="Is Open"
-                        onChange={(e) =>
-                          handleActivityChange(
-                            index,
-                            "isOpen",
-                            e.target.checked
-                          )
-                        }
-                        style={styles.checkbox}
-                      />
+                    
                       <input
                         type="datetime-local"
                         value={activity.date}
@@ -377,6 +359,22 @@ const AddItinerary = () => {
                         required
                         style={styles.input}
                       />
+                        <div style={{display:"flex" , justifyContent:"space-between" , width:"70%" ,alignSelf:"center"}}>
+                      <label style={{ textAlign: "center" }}>Check To Open</label>
+                      <input
+                        type="checkbox"
+                        checked={activity.isOpen}
+                        label="Is Open"
+                        onChange={(e) =>
+                          handleActivityChange(
+                            index,
+                            "isOpen",
+                            e.target.checked
+                          )
+                        }
+                        style={styles.checkbox}
+                      />
+                      </div>
                     </div>
                   ))}
                   <IconButton
@@ -392,6 +390,7 @@ const AddItinerary = () => {
                     display: "flex",
                     flexDirection: "column",
                     gap: "16px",
+                    boxShadow:"none"
                   }}
                 >
                   <h3
@@ -399,6 +398,8 @@ const AddItinerary = () => {
                       marginLeft: "1vw",
                       alignSelf: "center",
                       marginTop: "5px",
+                      fontFamily: "'Playwrite HR Lijeva', 'cursive' "
+
                     }}
                   >
                     Locations
@@ -431,6 +432,8 @@ const AddItinerary = () => {
                       marginLeft: "1vw",
                       alignSelf: "center",
                       marginTop: "5px",
+                      fontFamily: "'Playwrite HR Lijeva', 'cursive' "
+
                     }}
                   >
                     Timeline, Language & Price
@@ -471,6 +474,8 @@ const AddItinerary = () => {
                       marginLeft: "1vw",
                       alignSelf: "center",
                       marginTop: "5px",
+                      fontFamily: "'Playwrite HR Lijeva', 'cursive' "
+
                     }}
                   >
                     Available Dates & Times
@@ -507,6 +512,7 @@ const AddItinerary = () => {
                     display: "flex",
                     flexDirection: "column",
                     gap: "16px",
+                    boxShadow:"none"
                   }}
                 >
                   <h3
@@ -514,6 +520,8 @@ const AddItinerary = () => {
                       marginLeft: "1vw",
                       alignSelf: "center",
                       marginTop: "5px",
+                      fontFamily: "'Playwrite HR Lijeva', 'cursive' "
+
                     }}
                   >
                     General Information
@@ -554,6 +562,7 @@ const AddItinerary = () => {
                     display: "flex",
                     flexDirection: "column",
                     gap: "16px",
+                    boxShadow:"none"
                   }}
                 >
                   <h3
@@ -561,6 +570,8 @@ const AddItinerary = () => {
                       marginLeft: "1vw",
                       alignSelf: "center",
                       marginTop: "5px",
+                      fontFamily: "'Playwrite HR Lijeva', 'cursive' "
+
                     }}
                   >
                     Tags
@@ -609,7 +620,7 @@ const styles = {
     padding: "20px",
   },
   rightSection: {
-    flex: 0.7,
+    flex: 1,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -634,9 +645,9 @@ const styles = {
     flexDirection: "column",
     gap: "16px",
     padding: "16px",
-    backgroundColor: "#f9f9f9",
+
     borderRadius: "8px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  
     marginBottom: "16px",
   },
   input: {
@@ -651,6 +662,7 @@ const styles = {
     transform: "scale(1.2)",
     alignSelf: "center",
     cursor: "pointer",
+    borderRadius:"5px",
     color: "#ff9933",
   },
   generalInfo: {
@@ -658,28 +670,23 @@ const styles = {
     flexDirection: "column",
     gap: "16px",
     padding: "16px",
-    backgroundColor: "#f9f9f9",
     borderRadius: "8px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
     marginBottom: "16px",
   },
   tagsContainer: {
-    backgroundColor: "#f9f9f9",
     borderRadius: "8px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
     marginBottom: "16px",
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
     flexBasis: 10,
+    marginLeft: '5%',
   },
   submitButtonContainer: {
     display: "flex",
     justifyContent: "center",
     padding: "16px",
-    backgroundColor: "#f9f9f9",
     borderRadius: "8px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
     marginTop: "16px",
     marginBottom: "20px", // Add margin to the bottom
   },
