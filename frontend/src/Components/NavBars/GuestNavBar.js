@@ -23,23 +23,16 @@ import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import LockIcon from "@mui/icons-material/Lock";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import MyNotifications from "./myNotifications";
 import Cookies from "js-cookie";
-import PersistentDrawerLeft from "./Drawer";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import Button from "@mui/material/Button";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import ReportIcon from "@mui/icons-material/Report";
-import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
-import MailIcon from '@mui/icons-material/Mail';
-import MailLockIcon from '@mui/icons-material/MailLock';
-import LogoutIcon from '@mui/icons-material/Logout';
 
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function TouristNavBar() {
+function GuestNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [image, setImage] = React.useState("");
@@ -53,47 +46,8 @@ function TouristNavBar() {
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
-  //call the getImage in a useEffect
-  const userName = JSON.parse(localStorage.getItem("user")).username;
 
-  //get the notifications length periodically
 
-  const handleLogout = () => {
-    handleCloseUserMenu();
-    axios
-      .post("http://localhost:8000/signUp/logout")
-      .then((response) => {
-        console.log(response.data);
-        localStorage.removeItem("user");
-        Cookies.remove("jwt");
-        window.location.href = "/login";
-      })
-      .catch((error) => {
-        console.error("There was an error logging out!", error);
-      });
-  };
-
-  useEffect(() => {
-    //const storedPicture = localStorage.getItem('profilePicture');
-
-    axios
-      .get(`http://localhost:8000/touristRoutes/getLevel/${userName}`)
-      .then((response) => {
-        console.log(response.data);
-        const level = response.data;
-        if (level === 1) {
-          setImage("/level1.png");
-        } else if (level === 2) {
-          setImage("/level2.png");
-        } else if (level === 3) {
-          setImage("/level3.png");
-        }
-      })
-      .catch((error) => {
-        console.log("Error: ", error.message);
-        console.error("There was an error fetching the image!", error);
-      });
-  }, [userName]);
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
@@ -115,22 +69,6 @@ function TouristNavBar() {
     localStorage.setItem("showPreferences", !showPreferences);
   };
 
-  const [notifyViaMail, setNotifyViaMail] = React.useState(() => {
-    const savedNotify = localStorage.getItem("notifyViaMail");
-    return savedNotify !== null ? JSON.parse(savedNotify) : false;
-  });
-
-  const handleToggleNotifyViaMail =async () => {
-    setNotifyViaMail((prev) => !prev);
-    localStorage.setItem("notifyViaMail", !notifyViaMail);
-    try {
-      const response = await axios.post("http://localhost:8000/toggle-cron");
-      console.log("Cron job state toggled:", response.data);
-    } catch (error) {
-      console.error("Error toggling cron state:", error);
-    }
-  };
-
   return (
     <AppBar
       position="fixed"
@@ -146,7 +84,7 @@ function TouristNavBar() {
       <Container sx={{ width: "100%" }}>
         <Toolbar disableGutters sx={{ width: "100vw", justifySelf: "center" }}>
           <Tooltip title="Home">
-            <a href="/touristDashboard" style={{ textDecoration: "none" }}>
+            <a href="/guestDashboard" style={{ textDecoration: "none" }}>
               <h2
                 className="duckTitle"
                 style={{
@@ -161,36 +99,6 @@ function TouristNavBar() {
               </h2>
             </a>
           </Tooltip>
-          {/* <PersistentDrawerLeft /> */}
-          {/* <Tooltip title="Ducksplorer Home Page">
-          <TravelExploreIcon
-            sx={{
-              display: { xs: "none", md: "flex" },
-              ml: "auto",  // This pushes it to the right in a flex container
-              mr: 1,
-            }}
-          />
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
-              onClick={() => navigate("/touristDashboard")}
-              sx={{
-                ml: 11,  // Increase the margin-left value to move the text further to the right
-                display: { xs: "none", md: "flex" },
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
-                cursor: "pointer",
-              }}
-            >
-              Ducksplorer
-            </Typography>
-
-          </Tooltip> */}
-
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -225,12 +133,7 @@ function TouristNavBar() {
                   alignItems: "center",
                 }}
               >
-                {/* <MenuItem onClick={() => handleNavigation("myCart")}>
-                  <IconButton>
-                    <ShoppingCartIcon />
-                  </IconButton>
-                  <Typography textAlign="center">Cart</Typography>
-                </MenuItem> */}
+                
                 <MenuItem onClick={() => handleNavigation("activities")}>
                   <IconButton>
                     <FestivalIcon />
@@ -302,16 +205,7 @@ function TouristNavBar() {
               alignItems: "center",
             }}
           >
-            {/* <Tooltip title="My Cart">
-              <IconButton
-                onClick={() => handleNavigation("myCart")}
-              >
-                <ShoppingCartIcon />
-                <Typography textAlign="center" marginRight={3}>
-                  Cart
-                </Typography>
-              </IconButton>
-            </Tooltip> */}
+            
             <Button
               className="nav-item"
               onClick={() => handleNavigation("activity/searchActivities")}
@@ -517,207 +411,67 @@ function TouristNavBar() {
             </Button>
           </Box>
           <Box sx={{ flexGrow: 0, marginRight: "3vw " }}>
-            <Tooltip>
-              <MyNotifications />
-            </Tooltip>
-            <Tooltip>
-              <IconButton onClick={() => handleNavigation("wishlist")}>
-                <FavoriteBorderIcon
-                  sx={{
-                    color: "black",
-                    "&:hover": {
-                      color: "#ff9933",
-                    },
-                  }}
-                />
-                {/* <Typography textAlign="center" marginRight={1}>
-                   Wishlist
-                 </Typography> */}
-              </IconButton>
-            </Tooltip>
-            <Tooltip>
-              <IconButton onClick={() => handleNavigation("myCart")}>
-                <ShoppingCartIcon
-                  sx={{
-                    color: "black",
-                    "&:hover": {
-                      color: "#ff9933",
-                    },
-                  }}
-                />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Open Account settings">
-              <IconButton
-                onClick={handleOpenUserMenu}
-                sx={{ p: 0, ml: 4, width: 40, height: 40 }}
-              >
-                <img
-                  src={image} // Fallback to a default image if image is undefined
-                  alt="Avatar"
-                  style={{
-                    maxWidth: "60px", // Use consistent units
-                    maxHeight: "60px",
-                    borderRadius: "100%", // Circular shape
-                    border: "2px solid #FFD700", // Add a gold border for a premium feel
-                  }}
-                  // Fallback in case of image load error
-                  title="User Avatar" // Tooltip for accessibility
-                />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+          <Button
+            className="nav-item"
+            onClick={() => handleNavigation("login")}
+            sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                textAlign: "center",
+                textTransform: "none",
+                backgroundColor: "#ff9933", // Keep the background color for the login button
+                "&:hover": {
+                    backgroundColor: "#ff7700",
+                  },
+            }}
             >
-              <MenuItem onClick={handleTogglePreferences}>
-                <IconButton
-                  sx={{ textAlign: "center", p: 0.5, color: "black" }}
-                >
-                  {showPreferences ? (
-                    <VisibilityIcon sx={{ fontSize: 20, color: "green" }} />
-                  ) : (
-                    <VisibilityOffIcon sx={{ fontSize: 20, color: "red" }} />
-                  )}
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Show Preferences
-                  </Typography>
-                </IconButton>
-              </MenuItem>
+            <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                fontSize: "1rem",
+                fontFamily: "'Josefin Sans', sans-serif",
+                color: "#FEF4EA", // Text color for Login button
+                "&:hover": {
+                    color: "#FEF4EA", // Keep the same color on hover
+                },
+                }}
+            >
+                Login
+            </Typography>
+            </Button>
 
-              <MenuItem onClick={handleToggleNotifyViaMail}>
-                <IconButton
-                  sx={{ textAlign: "center", p: 0.5, color: "black" }}
-                >
-                  {notifyViaMail ? (
-                    <MailIcon sx={{ fontSize: 20, color: "green" }} />
-                  ) : (
-                    <MailLockIcon sx={{ fontSize: 20, color: "red" }} />
-                  )}
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Notify via Mail
-                  </Typography>
-                </IconButton>
-              </MenuItem>
+            <Button
+            className="nav-item"
+            onClick={() => handleNavigation("signUp")}
+            sx={{
+                fontSize: "1.25rem",
+                fontFamily: "'Roboto', sans-serif",
+                textAlign: "center",
+                textTransform: "none",
+                backgroundColor: "transparent", // No background color for the Sign Up button
+                color: "#ff9933", // Set the Sign Up text color to #ff9933
+                "&:hover": {
+                color: "#e68a00", // Change color to a darker shade on hover
+                },
+            }}
+            >
+            <Typography
+                textAlign="center"
+                className="nav-bar-text"
+                sx={{
+                fontSize: "1rem",
+                fontFamily: "'Josefin Sans', sans-serif",
+                color: "#ff9933", // Text color for Sign Up button
+                "&:hover": {
+                    color: "#e68a00", // Slightly darker peach on hover
+                },
+                }}
+            >
+                Sign Up
+            </Typography>
+            </Button>
 
-              <MenuItem onClick={handleCloseUserMenu}>
-                <IconButton
-                  component="a"
-                  href="/editAccount"
-                  sx={{ textAlign: "center", p: 0.5, color: "black" }}
-                >
-                  <AccountCircleIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Profile
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={handleCloseUserMenu}>
-                <IconButton
-                  component="a"
-                  href="/mySaved"
-                  sx={{ textAlign: "center", p: 0.5 }}
-                >
-                  <BookmarksIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Saved
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={handleCloseUserMenu}>
-                <IconButton
-                  component="a"
-                  href="/mybookings"
-                  sx={{ textAlign: "center", p: 0.5 }}
-                >
-                  <BookmarkAddedIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    My Bookings
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={handleCloseUserMenu}>
-                <IconButton
-                  component="a"
-                  href="/orders"
-                  sx={{ textAlign: "center", p: 0.5 }}
-                >
-                  <StorefrontIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    My Orders
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={handleCloseUserMenu}>
-                <IconButton
-                  component="a"
-                  href="/myComplaints"
-                  sx={{ textAlign: "center", p: 0.5 }}
-                >
-                  <ReportIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    My Complaints
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={handleLogout}>
-                <IconButton component="a" sx={{ textAlign: "center", p: 0.5 }}>
-                  <LogoutIcon sx={{ fontSize: 20, color: "black" }} />
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Logout
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-            </Menu>
           </Box>
         </Toolbar>
       </Container>
@@ -725,4 +479,4 @@ function TouristNavBar() {
   );
 }
 
-export default TouristNavBar;
+export default GuestNavBar;

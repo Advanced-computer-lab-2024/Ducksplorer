@@ -17,7 +17,7 @@ import WidgetsIcon from "@mui/icons-material/Widgets";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
 const drawerWidth = 300;
-
+ 
 const GuestSidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for sidebar toggle
   const navigate = useNavigate();

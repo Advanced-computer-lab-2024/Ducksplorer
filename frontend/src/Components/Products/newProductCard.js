@@ -56,7 +56,7 @@ export default function ProductCard({
   const [archived, setArchived] = useState(product.isArchived);
   const [quantity, setQuantity] = useState(quantityInCart);
   const [open, setOpen] = React.useState(false);
-
+  const isGuest = localStorage.getItem("guest") === "true";
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -70,6 +70,7 @@ export default function ProductCard({
   }, []);
   const checkIfInWishlist = async () => {
     try {
+
       const userJson = localStorage.getItem("user");
       const user = JSON.parse(userJson);
       const userName = user.username;
@@ -127,8 +128,9 @@ export default function ProductCard({
   };
 
   useEffect(() => {
+    if(!isGuest){
     checkIfInCart();
-    checkIfInWishlist();
+    checkIfInWishlist();}
   }, [product._id]);
 
   const user = JSON.parse(localStorage.getItem("user"));
@@ -167,6 +169,10 @@ export default function ProductCard({
   const handleAddToCartClick = async (e) => {
     if (quantity > 0) {
       try {
+        if (isGuest) {
+          message.error("Can't purchase a product as a guest, Please login or sign up.");
+          return;
+        }
         const userJson = localStorage.getItem("user");
         const user = JSON.parse(userJson);
         const userName = user.username;

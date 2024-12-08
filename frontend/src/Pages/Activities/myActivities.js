@@ -46,6 +46,7 @@ const MyActivities = () => {
   const [selectedTags, setSelectedTags] = useState([]); // For storing selected tags
   const [availableTags, setAvailableTags] = useState([]); // For storing fetched tags
   let allTags = JSON.parse(localStorage.getItem("tags"));
+  const isGuest = localStorage.getItem("guest") === "true";
 
   const [formData, setFormData] = useState({
     name: "",
@@ -65,7 +66,8 @@ const MyActivities = () => {
   const navigate = useNavigate();
   // Handle fetching activities by userName ID
   useEffect(() => {
-    console.log(userName);
+    if(!isGuest){
+
     const fetchActivities = async () => {
       try {
         const response = await axios.get(
@@ -77,6 +79,7 @@ const MyActivities = () => {
       }
     };
     fetchActivities();
+  }
   }, [userName]); // Depend on userNameId
 
   // Handle edit button click

@@ -6,16 +6,21 @@ import { Button, Input } from "@mui/joy";
 import UploadFile from "../../Components/ProductUploadImage";
 import { Typography } from "@mui/material";
 import SellerNavBar from "../../Components/NavBars/SellerNavBar";
+import useUserRole from "../../Components/getRole";
+import AdminNavBar from "../../Components/NavBars/AdminNavBar";
+import { useNavigate } from "react-router-dom";
 
 let picture = "";
 
 function AddProducts() {
   const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [availableQuantity, setAvailableQuantity] = useState("");
+  const [price, setPrice] = useState(0);
+  const [availableQuantity, setAvailableQuantity] = useState(0);
   const [description, setDescription] = useState("");
   const [URL, setURL] = useState("");
   const fileInputRef = useRef(null);
+  const role = useUserRole();
+  const navigate = useNavigate();
 
   const handleAddProduct = async () => {
     try {
@@ -23,6 +28,9 @@ function AddProducts() {
       const user = JSON.parse(userJson);
       const userName = user.username;
       const seller = userName;
+      const sentAvailableQuantity = Number(availableQuantity);
+      const sentPrice = Number(price);
+      console.log("availableQuantity:", typeof availableQuantity);
       console.log("URL:", typeof URL);
       console.log("picture", picture);
       const response = await axios.post(
@@ -31,8 +39,8 @@ function AddProducts() {
           name,
           price,
           ratings: [],
-          availableQuantity,
           picture,
+          availableQuantity,
           description,
           seller,
           reviews: [],
@@ -42,6 +50,11 @@ function AddProducts() {
         console.log("i am posting", response.data);
         console.log(picture);
         message.success("product added successfully");
+        if (role === "Admin") {
+          navigate("/AdminDashboard");
+        } else if (role === "Seller") {
+          navigate("/sellerDashboard");
+        }
       } else {
         message.error("failed to add admin");
       }
@@ -60,102 +73,113 @@ function AddProducts() {
   };
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, []);
 
   return (
-    <div style={{height:"100vh" , overflow: "hidden"}}>
-    <SellerNavBar/>
-    <div style={styles.container}>
-      <div style={styles.leftSection}>
-        <Typography variant="h3" className="duckTitle"  style={styles.welcomeText}>
-          Add Your Product
-        </Typography>
-      </div>
-      <div style={styles.rightSection}>
-        <Paper sx={{ height: "100%" , width:"100%" , paddingTop:"40px" , backgroundColor: "rgba(255,255,255,0.65)"}}>
-          <div style={{ marginBottom: "40px" }}>
-            {/* <Button
+    <div style={{ height: "100vh", overflow: "hidden" }}>
+      {role === "Admin" ? <AdminNavBar /> : <SellerNavBar />}
+      <div style={styles.container}>
+        <div style={styles.leftSection}>
+          <Typography
+            variant="h3"
+            className="duckTitle"
+            style={styles.welcomeText}
+          >
+            Add Your Product
+          </Typography>
+        </div>
+        <div style={styles.rightSection}>
+          <Paper
+            sx={{
+              height: "100%",
+              width: "100%",
+              paddingTop: "40px",
+              backgroundColor: "rgba(255,255,255,0.65)",
+            }}
+          >
+            <div style={{ marginBottom: "40px" }}>
+              {/* <Button
               onClick={handleBackClick}
               sx={{ marginBottom: "10px", width: "100px" }}
               className="blackhover"
             >
               Back
             </Button> */}
-            <h2
-              className="bigTitle"
+              <h2
+                className="bigTitle"
+                style={{
+                  textAlign: "center",
+                  alignSelf: "center",
+                  marginTop: "10%",
+                }}
+              >
+                Add Product
+              </h2>
+            </div>
+            <div
               style={{
-                textAlign: "center",
-                alignSelf: "center",
-                marginTop: "10%",
+                display: "flex",
+                flexDirection: "column",
+                columnGap: "30px",
+                rowGap: "20px",
               }}
             >
-              Add Product
-            </h2>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              columnGap: "30px",
-              rowGap: "20px",
-            }}
-          >
-            <Input
-              placeholder="Product Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              variant="outlined"
-              sx = {{width:"80%" , alignSelf:"center"}}
-              size="lg"
-            />
-            <Input
-              placeholder="Price"
-              type="number"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              sx = {{width:"80%" , alignSelf:"center"}}
-              variant="outlined"
-              size="lg"
-            />
-            <Input
-              placeholder="Available Quantity"
-              type="number"
-              value={availableQuantity}
-              onChange={(e) => setAvailableQuantity(e.target.value)}
-              variant="outlined"
-              sx = {{width:"80%" , alignSelf:"center"}}
-              size="lg"
-            />
-            <Input
-              placeholder="Description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              variant="outlined"
-              multiline
-              sx = {{width:"80%" , alignSelf:"center"}}
-              size="lg"
-              rows={4}
-            />
-            <div style={{width:"80%" , alignSelf:"center"}}>
-            <UploadFile onUpload={handleUpload}  />
+              <Input
+                placeholder="Product Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                variant="outlined"
+                sx={{ width: "80%", alignSelf: "center" }}
+                size="lg"
+              />
+              <Input
+                placeholder="Price"
+                type="number"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                sx={{ width: "80%", alignSelf: "center" }}
+                variant="outlined"
+                size="lg"
+              />
+              <Input
+                placeholder="Available Quantity"
+                type="number"
+                value={availableQuantity}
+                onChange={(e) => setAvailableQuantity(e.target.value)}
+                variant="outlined"
+                sx={{ width: "80%", alignSelf: "center" }}
+                size="lg"
+              />
+              <Input
+                placeholder="Description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                variant="outlined"
+                multiline
+                sx={{ width: "80%", alignSelf: "center" }}
+                size="lg"
+                rows={4}
+              />
+              <div style={{ width: "80%", alignSelf: "center" }}>
+                <UploadFile onUpload={handleUpload} />
+              </div>
+              <Button
+                className="blackhover"
+                color="primary"
+                onClick={handleAddProduct}
+                style={{ marginTop: "10px", width: "80%", alignSelf: "center" }}
+                size="lg"
+              >
+                Add Product
+              </Button>
             </div>
-            <Button
-              className="blackhover"
-              color="primary"
-              onClick={handleAddProduct}
-              style={{ marginTop: "10px" , width:"80%" , alignSelf:"center"}}
-              size="lg"
-            >
-              Add Product
-            </Button>
-          </div>
-        </Paper>
+          </Paper>
+        </div>
       </div>
-    </div>
     </div>
   );
 }

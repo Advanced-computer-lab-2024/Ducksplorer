@@ -32,6 +32,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const [open, setOpen] = React.useState(false);
+  const isGuest = localStorage.getItem("guest") === "true";
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -40,11 +41,10 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
     try {
       const userJson = localStorage.getItem("user");
       const isGuest = localStorage.getItem("guest") === "true";
-
+      
       // Check if the user is a guest and prompt to log in
       if (isGuest) {
         message.error("User is not logged in, Please login or sign up.");
-        navigate("/guestDashboard");
         return;
       }
 
@@ -54,9 +54,6 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
       }
 
       const user = JSON.parse(userJson);
-      console.log("user", user);
-      console.log("username", user.username);
-      console.log("activityId", activityId);
 
       // Validate user information
       if (!user || !user.username) {
@@ -70,16 +67,19 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
       localStorage.setItem("type", type);
 
       // Send request to check the activity's status
-      const response = await axios.get(
+      if(!isGuest)
+      {const response = await axios.get(
         `http://localhost:8000/touristRoutes/viewDesiredActivity/${activityId}/${user.username}`
       );
-
       if (response.status === 200) {
         if (response.data.isUpcoming) {
           navigate("/payment");
         } else {
           message.error("You can't book an old activity.");
         }
+      }
+
+      
       } else {
         message.error("Booking failed.");
       }
@@ -117,7 +117,10 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
     // event.stopPropagation();
     try {
       const newIsSaved = !currentIsSaved;
-
+      if (isGuest) {
+        message.error("User is not logged in, Please login or sign up.");
+        return;
+      }
       const response = await axios.put(
         `http://localhost:8000/activity/save/${activityId}`,
         {
@@ -149,6 +152,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
   const [saveStates, setSaveStates] = useState({});
 
   useEffect(() => {
+    if(!isGuest){
     const fetchSaveStates = async () => {
       const userJson = localStorage.getItem("user");
       const user = JSON.parse(userJson);
@@ -170,6 +174,8 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
       }
     };
     fetchSaveStates();
+  }
+  
   }, [activity._id]);
 
   const [notificationStates, setNotificationStates] = useState({});

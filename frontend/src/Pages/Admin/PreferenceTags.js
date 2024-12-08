@@ -46,6 +46,8 @@ const PreferenceTags = () => {
 
   const handleAddtagClick = () => {
     setShowTextField(!showTextField);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
   };
 
   const handletagChange = (event) => {
@@ -195,7 +197,6 @@ const PreferenceTags = () => {
             >
               <TextField
                 label="New Tag"
-                variant="outlined"
                 value={newTag}
                 onChange={handletagChange}
                 sx={{
