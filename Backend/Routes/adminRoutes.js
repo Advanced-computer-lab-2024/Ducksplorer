@@ -22,6 +22,6 @@ router.post("/createProducts", upload.single("picture"), createProduct); //done 
 router.get("/sortProducts", sortProducts); //done
 router.get("/findProduct", findProduct); //done
 router.get("/filterProducts", filterProducts); //done
-router.put("/editProduct", editProduct); //done but el
+router.put("/editProduct", editProduct); //done but hena men8eir /id laken passed fel FE
 
 module.exports = router;

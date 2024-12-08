@@ -33,19 +33,19 @@ const addSeller = async (req, res) => {
 
 const router = express.Router();
 
-router.get("/getProducts", getProducts);
-router.post("/addSeller", addSeller);
-router.get("/product/:productId", getProductById);
-router.get("/report/:sellerName", viewMyProducts);
-router.route("/filterReport/:sellerName").get(filterMyProducts);
-router.get("/ViewMyProducts/:seller", ViewMyProducts);
+router.get("/getProducts", getProducts);//done
+router.post("/addSeller", addSeller); //WHAT IS THIS
+router.get("/product/:productId", getProductById);//done
+router.get("/report/:sellerName", viewMyProducts);//done
+router.route("/filterReport/:sellerName").get(filterMyProducts);//done
+router.get("/ViewMyProducts/:seller", ViewMyProducts);//done
 //router.post("/createProducts", createProduct);
 
-router.post("/createProducts", upload.single("picture"), createProduct);
+router.post("/createProducts", upload.single("picture"), createProduct);//done
 
-router.post("/sortProducts", sortProducts);
-router.get("/findProduct", findProduct);
-router.get("/filterProducts", filterProducts);
-router.put("/editProduct/:productId", editProduct);
+router.post("/sortProducts", sortProducts);// WHY IS THIS POST, TEST THIS FE?
+router.get("/findProduct", findProduct);//done
+router.get("/filterProducts", filterProducts);//done
+router.put("/editProduct/:productId", editProduct);//done
 
 module.exports = router;

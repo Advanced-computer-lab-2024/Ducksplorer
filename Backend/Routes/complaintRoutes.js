@@ -12,12 +12,12 @@ const { filterComplaints } = require('../Controllers/Complaints/complaintFilterC
 
 const router = express.Router();
 
-router.route("/").get(getAllComplaints);
-router.route("/").post(createComplaint); // Create, get all complaints
-router.route("/sort").get(sortComplaints);
-router.route("/filter").get(filterComplaints);
-router.route("/myComplaints/:touristName").get(getMyComplaints);
-router.route("/:id").get(getComplaintByID).put(updateComplaints); // Update, get one complaint
-router.route("/:id/reply").post(addReplyToComplaint); // Add a reply to a complaint
+router.route("/").get(getAllComplaints);//done but not tested
+router.route("/").post(createComplaint); // done but not tested
+router.route("/sort").get(sortComplaints);//done but not tested
+router.route("/filter").get(filterComplaints);//done but not tested
+router.route("/myComplaints/:touristName").get(getMyComplaints);//done but not tested
+router.route("/:id").get(getComplaintByID).put(updateComplaints); // done but not tested
+router.route("/:id/reply").post(addReplyToComplaint); // done but not tested
 
 module.exports = router;

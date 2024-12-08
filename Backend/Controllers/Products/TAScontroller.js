@@ -27,7 +27,6 @@ const getProductById = async (req, res) => {
   }
 };
 
-
 // const sortProducts = async (req, res) => {
 //   const sortingDecider = req.query.sortingDecider; // Get the sortingDecider from the query params
 
@@ -61,7 +60,7 @@ const sortProducts = async (req, res) => {
   try {
     // Get the sorting order from the query parameters (default to 'asc' if not provided)
     const { sortOrder } = req.query; // Accept 'asc' or 'desc'
-    
+
     let sortCriteria = { averageRating: 1 }; // Default to ascending
     if (sortOrder && sortOrder === "desc") {
       sortCriteria = { averageRating: -1 }; // Descending order
@@ -77,32 +76,70 @@ const sortProducts = async (req, res) => {
   }
 };
 
+// const filterProducts = async (req, res) => {
+//   const minPrice = parseFloat(req.query.minPrice);
+//   const maxPrice = parseFloat(req.query.maxPrice);
+//   if (maxPrice < minPrice) {
+//     return res.send("maximum is smaller than minimum");
+//   }
+
+//   try {
+//     const products = await productModel
+//       .find({
+//         price: { $gte: minPrice, $lte: maxPrice }, // gte means greater than or equal, lte means less than or equal
+//       })
+//       .sort({ price: 1 }); // Sort by price in ascending order
+
+//     if (!products || products.length === 0) {
+//       return res
+//         .status(400)
+//         .send("No products were found in the given price range.");
+//     }
+
+//     res.status(200).send(products);
+//   } catch (err) {
+//     res.status(400).send(err.message);
+//   }
+// };
+
 const filterProducts = async (req, res) => {
-  const minPrice = parseFloat(req.query.minPrice);
-  const maxPrice = parseFloat(req.query.maxPrice);
-  if (maxPrice < minPrice) {
-    return res.send("maximum is smaller than minimum");
+  const minPrice = req.query.minPrice
+    ? parseFloat(req.query.minPrice)
+    : undefined;
+  const maxPrice = req.query.maxPrice
+    ? parseFloat(req.query.maxPrice)
+    : undefined;
+
+  // Validate input
+  if (minPrice !== undefined && maxPrice !== undefined && maxPrice < minPrice) {
+    return res
+      .status(400)
+      .send("Maximum price cannot be smaller than minimum price.");
+  }
+
+  // Build the query dynamically
+  const query = {};
+  if (minPrice !== undefined) {
+    query.price = { ...query.price, $gte: minPrice };
+  }
+  if (maxPrice !== undefined) {
+    query.price = { ...query.price, $lte: maxPrice };
   }
 
   try {
-    const products = await productModel
-      .find({
-        price: { $gte: minPrice, $lte: maxPrice }, // gte means greater than or equal, lte means less than or equal
-      })
-      .sort({ price: 1 }); // Sort by price in ascending order
+    const products = await productModel.find(query).sort({ price: 1 }); // Sort by price in ascending order
 
     if (!products || products.length === 0) {
       return res
-        .status(400)
-        .send("No products were found in the given price range.");
+        .status(404)
+        .send("No products found for the given price range.");
     }
 
-    res.status(200).send(products);
+    res.status(200).json(products);
   } catch (err) {
-    res.status(400).send(err.message);
+    res.status(500).json({ error: err.message });
   }
 };
-
 
 const findProduct = async (req, res) => {
   //search based on products name
@@ -140,9 +177,12 @@ const touristUpdateProductRating = async (req, res) => {
       // Add a new rating if the user hasn't rated this product before
       product.ratings.push({ buyer, rating });
     }
-     // Calculate the average rating
-     if (product.ratings.length > 0) {
-      const totalRatings = product.ratings.reduce((sum, r) => sum + r.rating, 0);
+    // Calculate the average rating
+    if (product.ratings.length > 0) {
+      const totalRatings = product.ratings.reduce(
+        (sum, r) => sum + r.rating,
+        0
+      );
       product.averageRating = totalRatings / product.ratings.length;
     } else {
       product.averageRating = 0; // No ratings, so set to 0 or null
@@ -244,8 +284,6 @@ const touristUpdateProductReview = async (req, res) => {
   }
 };
 
-
-
 module.exports = {
   getProducts,
   findProduct,
@@ -254,5 +292,5 @@ module.exports = {
   touristUpdateProductRating,
   getProductRating,
   touristUpdateProductReview,
-  getProductById
+  getProductById,
 };
