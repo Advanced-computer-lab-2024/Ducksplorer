@@ -24,7 +24,7 @@ import {
 import axios from "axios";
 import { message } from "antd";
 import { Link } from "react-router-dom";
-import AdminNavbar from "../TopNav/Adminnavbar";
+import AdminNavbar from "../NavBars/AdminNavBar";
 import DuckLoading from "../Loading/duckLoading";
 import Help from "../HelpIcon";
 
@@ -51,8 +51,8 @@ const ComplaintsDashboard = () => {
             statusFilter === "Resolved"
               ? true
               : statusFilter === "Pending"
-              ? false
-              : undefined,
+                ? false
+                : undefined,
         },
       });
       setComplaints(response.data);

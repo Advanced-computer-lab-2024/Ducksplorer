@@ -10,10 +10,10 @@ router.get("/getproducts", getProducts);
 
 //router.post("/createProducts", createProduct);
 
-router.post('/createProducts', upload.single('picture'), createProduct);
-router.get("/sortProducts", sortProducts);
-router.get("/findProduct", findProduct);
-router.get("/filterProducts", filterProducts);
-router.put("/editProduct", editProduct);
+router.post('/createProducts', upload.single('picture'), createProduct); //done but not tested
+router.get("/sortProducts", sortProducts); //done 
+router.get("/findProduct", findProduct); //done
+router.get("/filterProducts", filterProducts); //done
+router.put("/editProduct", editProduct); //done but el 
 
 module.exports = router;

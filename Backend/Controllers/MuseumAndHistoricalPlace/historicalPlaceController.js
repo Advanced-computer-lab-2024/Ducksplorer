@@ -155,10 +155,9 @@ const deleteHistoricalPlace = async (req, res) => {
         }
 
         //res.status(200).json({ message: "Museum and Historical Place deleted successfully", museumHistoricalPlace: deletedMuseumHistoricalPlace })
-        res.status(200).json(deletedHistoricalPlace)
+        res.status(200).json({message: "Historical Place deleted successfully"})
 
     }
-
     catch (error) {
         res.status(400).json({ message: "Error deleting Historical Place", error: error.message })
     }
@@ -173,10 +172,10 @@ const getAllUpcomingHistoricalPlaces = async (req, res) => {
             HistoricalPlaceDate: { $gt: currentDate } // Compare activityDate with current date
         });
         // Check if any upcoming places were found
-        if (!upcomingHistoricalPlaces) {
-            return res.status(404).json({ message: " Historical Place not found" });
+        if (!upcomingHistoricalPlaces||upcomingHistoricalPlaces.length===0) {
+            return res.status(404).json({ message: " No Upcoming Historical Places found" });
         }
-        res.status(200).json({ message: "upcoming Historical Places found successfully", upcomingHistoricalPlaces });
+        res.status(200).json({ message: "Upcoming Historical Places found successfully", upcomingHistoricalPlaces });
 
     } catch (error) {
         res.status(500).json({ message: "Error retrieving Historical Place", error: error.message })

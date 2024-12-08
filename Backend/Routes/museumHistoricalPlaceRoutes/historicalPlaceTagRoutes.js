@@ -6,7 +6,7 @@ const router = express.Router(); //creates an instance of the Router which is in
 
 
 
-router.post("/addHistoricalPlaceTag", addHistoricalPlaceTag);
-router.get("/getAllHistoricalPlaceTags", getAllHistoricalPlaceTags);
+router.post("/addHistoricalPlaceTag", addHistoricalPlaceTag); //done
+router.get("/getAllHistoricalPlaceTags", getAllHistoricalPlaceTags); //done
 
 module.exports = router;

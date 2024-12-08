@@ -3,13 +3,13 @@ const {createTags,deleteTags,updateTags,getTagsbyName,getAllTags } = require("..
 
 const router = express.Router();
 
-router.get("/", getAllTags);
+router.get("/", getAllTags); //done
 
-router.post("/", createTags);
+router.post("/", createTags); //done
 
-router.put("/", updateTags);
+router.put("/", updateTags); //done
 
-router.delete("/", deleteTags);
+router.delete("/", deleteTags);//done
 
 
 module.exports = router;
