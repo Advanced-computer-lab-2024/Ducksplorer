@@ -50,6 +50,7 @@ function Login() {
 
   const handleLogin = async () => {
     try {
+      localStorage.setItem('guest', 'false');
       setLoading(true);
       const response = await axios.post("http://localhost:8000/signUp/login", {
         userName,
