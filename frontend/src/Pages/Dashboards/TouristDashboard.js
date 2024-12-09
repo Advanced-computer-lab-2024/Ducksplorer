@@ -7,6 +7,7 @@ import Help from "../../Components/HelpIcon";
 
 const TouristDashboard = () => {
   const [videoEnded, setVideoEnded] = useState(localStorage.getItem('videoEnded') === 'true');
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
 
   const handleVideoEnd = () => {
     setTimeout(() => {
@@ -17,33 +18,13 @@ const TouristDashboard = () => {
   };
 
   const openDemoVideo = () => {
-    const videoFilePath = "/duck-toy.mp4"; // Correct path to your demo video file
-  
-    // Create the popup window with a defined width, height, and centered position
-    const popupWindow = window.open(
-      "",
-      "DemoVideoPopup",
-      "width=800,height=450,top=" + (window.innerHeight / 2 - 225) + ",left=" + (window.innerWidth / 2 - 400)
-    );
-  
-    popupWindow.document.write(`
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- Removed the <title> tag to avoid showing a title -->
-      </head>
-      <body style="text-align: center; display: flex; justify-content: center; align-items: center; margin: 0; height: 100vh;">
-        <video controls autoplay style="max-width: 100%; height: auto; border: none;">
-          <source src="${videoFilePath}" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      </body>
-      </html>
-    `);
+    setIsVideoOpen(true);
   };
-  
+
+  const closeDemoVideo = () => {
+    setIsVideoOpen(false);
+  };
+
   useEffect(() => {
     // Disable scrolling on mount
     document.body.style.overflow = "hidden";
@@ -157,13 +138,18 @@ const TouristDashboard = () => {
             transform: "translateX(-50%)",
             zIndex: 10,
             textAlign: "center",
+            animation: "fadeIn 1.5s ease-out", // Smooth fade-in for button
+            "@keyframes fadeIn": {
+              from: { opacity: 0 },
+              to: { opacity: 1 },
+            },
           }}
         >
           <Button
             variant="contained"
             color="primary"
             sx={{
-              mt: 3,
+              mt: 4,
               backgroundColor: "#FF9800",
               "&:hover": { backgroundColor: "#F57C00" },
             }}
@@ -171,6 +157,65 @@ const TouristDashboard = () => {
           >
             View a Demo of How to Use Our Website
           </Button>
+        </Box>
+      )}
+
+      {/* Demo Video Modal */}
+      {isVideoOpen && (
+        <Box
+          onClick={closeDemoVideo}
+          sx={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            zIndex: 20,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            onClick={(e) => e.stopPropagation()}
+            sx={{
+              position: "relative",
+              backgroundColor: "rgba(245, 145, 0, 0.8)",
+              padding: "4px",
+              borderRadius: "12px",
+              textAlign: "center",
+              border: "0.5px solid rgba(255, 165, 0, 0.5)", // Thinner transparent orange border
+              width: "100%", // Adjust width to make the modal smaller
+              maxWidth: "1000px", // Set a maximum width
+            }}
+          >
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                closeDemoVideo();
+              }}
+              sx={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                color: "white",
+                backgroundColor: "red",
+                minWidth: "30px",
+                minHeight: "30px",
+                padding: "5px", // Add padding to make it more clickable
+                fontSize: "20px",
+                zIndex: 30, // Ensure the button is above other elements
+                "&:hover": { backgroundColor: "darkred" },
+              }}
+            >
+              X
+            </Button>
+            <video controls autoPlay style={{ maxWidth: "100%", height: "auto" }}>
+              <source src="/demo.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </Box>
         </Box>
       )}
 
