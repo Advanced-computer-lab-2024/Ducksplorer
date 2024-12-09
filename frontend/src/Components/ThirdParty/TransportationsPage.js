@@ -29,7 +29,8 @@ const TransportationsPage = () => {
           fontSize: "40px",
           fontWeight: "700",
           color: "orange",
-          fontSize: '2rem'
+          fontSize: '2rem',
+          marginTop:"2%"
         }}>
         Available Transportations
       </h1>

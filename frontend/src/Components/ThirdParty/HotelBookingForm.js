@@ -108,7 +108,7 @@ const HotelBookingForm = () => {
           {
             headers: {
               "x-rapidapi-key":
-                "c7ca2a8100mshd130920df3324d6p1981b5jsnd001bc3dd180",
+                "f8555f553fmsh3e198fe5c248e9ep1555dbjsn4f903c052e8f",
               "x-rapidapi-host": "tripadvisor16.p.rapidapi.com",
             },
           }
@@ -132,7 +132,7 @@ const HotelBookingForm = () => {
               },
               headers: {
                 "x-rapidapi-key":
-                  "c7ca2a8100mshd130920df3324d6p1981b5jsnd001bc3dd180",
+                  "f8555f553fmsh3e198fe5c248e9ep1555dbjsn4f903c052e8f",
                 "x-rapidapi-host": "tripadvisor16.p.rapidapi.com",
               },
             }
