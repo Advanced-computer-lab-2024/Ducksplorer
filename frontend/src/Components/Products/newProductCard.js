@@ -158,6 +158,7 @@ export default function ProductCard({
       `https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`
     );
   }, []);
+
   const checkIfInWishlist = async () => {
     try {
       const userJson = localStorage.getItem("user");
@@ -476,7 +477,7 @@ export default function ProductCard({
                   variant={showWishList ? "soft" : "solid"}
                   onClick={(event) => {
                     event.stopPropagation(); // Stop event propagation
-                    showRemoveWishlist
+                    showWishList
                       ? handleRemoveWishlist(product)
                       : addToWishlist(product);
                   }}
@@ -493,7 +494,7 @@ export default function ProductCard({
                     backgroundColor: "#ff9933",
                   }}
                 >
-                  {showRemoveWishlist ? <Done color="#ff9933" /> : <Favorite />}
+                  {showWishList ? <Done color="#ff9933" /> : <Favorite />}
                 </IconButton>
               </Tooltip>
             )}
