@@ -318,6 +318,13 @@ const [selectedTab, setSelectedTab] = useState("All");
             selectedTab === "All") && (
               <>
                 {" "}
+                <Typography
+                  variant="h5"
+                  sx={{ fontWeight: "bold", marginBottom: "20px" }}
+                  gutterBottom
+                >
+                  Activities
+                </Typography>
                 <TableContainer
                   component={Paper}
                   sx={{
@@ -454,6 +461,13 @@ const [selectedTab, setSelectedTab] = useState("All");
             selectedTab === "All") && (
               <div>
                 {" "}
+                <Typography
+                  variant="h5"
+                  sx={{ fontWeight: "bold", marginBottom: "20px" }}
+                  gutterBottom
+                >
+                  Itineraries
+                </Typography>
                 {/* Itineraries Table */}
                 <TableContainer
                   component={Paper}
