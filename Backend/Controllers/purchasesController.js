@@ -188,25 +188,60 @@ const cancelOrder = async (req, res) => {
   const { totalPrice } = req.body;
 
   try {
-    const tourist = await Tourist.findOne({userName: username});
+    // Find the tourist
+    const tourist = await Tourist.findOne({ userName: username });
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found" });
+    }
 
-    // Find and delete all documents with the specified username and order number
-    const result = await PurchaseBooking.deleteMany({
-      buyer: username, // Ensure you're matching the buyer field
+    // Find all purchase bookings for this order number
+    const purchases = await PurchaseBooking.find({
+      buyer: username,
       orderNumber: orderNumber,
     });
 
-    if (result.deletedCount === 0) {
+    if (!purchases || purchases.length === 0) {
       return res.status(404).json({ message: "No purchases found for this order number" });
     }
 
+    // Update availableQuantity for each product
+    for (const purchase of purchases) {
+      const productId = purchase.product;
+
+      // Fetch the product using its ID
+      const product = await Product.findById(productId);
+      if (!product) {
+        console.warn(`Product with ID ${productId} not found`);
+        continue; // Skip if the product doesn't exist
+      }
+
+      // Update the availableQuantity
+      product.availableQuantity += purchase.chosenQuantity;
+      await product.save(); // Save the updated product
+    }
+
+    // Delete the purchases
+    const result = await PurchaseBooking.deleteMany({
+      buyer: username,
+      orderNumber: orderNumber,
+    });
+
+    // Update the tourist's wallet
     tourist.wallet += parseFloat(totalPrice);
     await tourist.save();
-    res.status(200).json({ message: "Order canceled successfully", deletedCount: result.deletedCount });
+
+    res.status(200).json({
+      message: "Order canceled successfully",
+      deletedCount: result.deletedCount,
+    });
   } catch (error) {
-    res.status(500).json({ message: "An error occurred while canceling the order", error: error.message });
+    res.status(500).json({
+      message: "An error occurred while canceling the order",
+      error: error.message,
+    });
   }
 };
+
 
 
 module.exports = {

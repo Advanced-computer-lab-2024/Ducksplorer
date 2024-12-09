@@ -201,7 +201,7 @@ const HotelCards = ({
   };
 
   return (
-    <Box sx={{ flexGrow: 1, mt: 4, overflowY: "visible", height: "90vh" }}>
+    <Box sx={{ flexGrow: 1, mt: 4, overflowY: "visible", height: "90vh" , marginTop:"0%"}}>
       <Typography
         variant="h6"
         component="div"

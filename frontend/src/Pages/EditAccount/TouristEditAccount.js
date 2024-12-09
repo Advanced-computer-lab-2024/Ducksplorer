@@ -47,6 +47,7 @@ const EditProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
 
+
   useEffect(() => {
     const userJson = localStorage.getItem("user");
     const user = JSON.parse(userJson);

@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 import axios from "axios";
 import Help from "../../Components/HelpIcon";
+import Swal from "sweetalert2";
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
@@ -56,6 +57,7 @@ const OrdersPage = () => {
       );
       if (response.status === 200) {
         message.success("Order cancelled successfully");
+        await fetchWalletBalance(username);
         setOrders((prevOrders) =>
           prevOrders.filter((order) => order.orderNumber !== orderNumber)
         );
@@ -69,6 +71,45 @@ const OrdersPage = () => {
 
   const handleViewDetails = (orderNumber) => {
     navigate(`/myPurchases/${orderNumber}`);
+  };
+
+  const fetchWalletBalance = async (userName) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/touristRoutes/balance/${userName}`
+      );
+
+      // Extract the wallet balance from the response
+      const wallet = response.data;
+      console.log("res is ", response.data);
+      console.log("balance is", wallet);
+
+      // Display wallet balance in a SweetAlert popup
+      await Swal.fire({
+        title: "Wallet Balance",
+        text: `Your new wallet balance is $${wallet}`,
+        icon: "info",
+        customClass: {
+          icon: "custom-icon-color", // Use this class to style the icon
+        },
+        confirmButtonText: "OK",
+      });
+
+      // Return the wallet balance if needed for further use
+      return wallet;
+    } catch (error) {
+      console.error("Error fetching wallet balance:", error);
+
+      // Show an error popup if something goes wrong
+      await Swal.fire({
+        title: "Error",
+        text: "Failed to fetch wallet balance. Please try again later.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+
+      throw error; // Rethrow the error if you want to handle it elsewhere
+    }
   };
 
   return (

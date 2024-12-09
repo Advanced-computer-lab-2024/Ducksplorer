@@ -65,16 +65,27 @@ function EditActivity() {
         }
     }, [activity]);
 
-    const handleCheckboxChange = (tag) => {
+    const handleTagsCheckboxChange = (event, tag) => {
+        const { checked } = event.target;  // Get the checked state of the checkbox
         setSelectedTags((prevSelectedTags) => {
-            if (prevSelectedTags.includes(tag)) {
-                return prevSelectedTags.filter((t) => t !== tag); // Remove tag if already selected
+            if (checked) {
+                // Add tag to the selectedTags array if checked
+                return [...prevSelectedTags, tag];
             } else {
-                return [...prevSelectedTags, tag]; // Add tag if not already selected
+                // Remove tag from the selectedTags array if unchecked
+                return prevSelectedTags.filter((t) => t !== tag);
             }
         });
     };
-
+    
+    const handleCheckboxChange = (event) => {
+        const { checked } = event.target;  // Get the checked state of the checkbox
+        setFormData((prevData) => ({
+            ...prevData,
+            isOpen: checked,  // Toggle the isOpen value
+        }));
+    };
+    
 
     const handleGoBack = () => {
         navigate(-1); // Navigate to the previous page
@@ -99,7 +110,7 @@ function EditActivity() {
 
         // Update activity using the PUT request
         axios
-            .put(
+            .patch(
                 `http://localhost:8000/activity/${editingActivity._id}`,  // Update the activity endpoint
                 updatedData
             )
@@ -190,17 +201,18 @@ function EditActivity() {
                                     type="number"
                                 />
                                 <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            style={{ color: "#ff9933" }}
-                                            checked={formData.isOpen}
-                                            onChange={handleCheckboxChange}
-                                            name="isOpen"
-                                        />
-                                    }
-                                    label="Is open"
-                                    sx={{ mb: 2 }}
-                                />
+                                control={
+                                    <Checkbox
+                                        style={{ color: "#ff9933" }}
+                                        checked={formData.isOpen}  // This should reflect the formData state
+                                        onChange={handleCheckboxChange}  // This will update formData
+                                        name="isOpen"
+                                    />
+                                }
+                                label="Is open"
+                                sx={{ mb: 2 }}
+                            />
+
                                 <TextField
                                     label="Discount"
                                     name="specialDiscount"
@@ -211,14 +223,15 @@ function EditActivity() {
                                     type="number"
                                 />
                                 <TextField
-                                    label="Date"
-                                    name="date"
-                                    value={formData.date}
-                                    onChange={handleInputChange}
-                                    fullWidth
-                                    sx={{ mb: 2 }}
-                                    type="datetime-local"
-                                />
+                                label="Date"
+                                name="date"
+                                value={formData.date ? formData.date.split('T')[0] + 'T' + formData.date.split('T')[1].substring(0, 5) : ''} // Ensure correct format (YYYY-MM-DDTHH:mm)
+                                onChange={handleInputChange}
+                                fullWidth
+                                sx={{ mb: 2 }}
+                                type="datetime-local"
+                            />
+
                                 <TextField
                                     label="Category"
                                     name="category"
@@ -244,6 +257,16 @@ function EditActivity() {
                                     fullWidth
                                     sx={{ mb: 2 }}
                                 />
+                                        <label
+                                            style={{
+                                                fontSize: "16px",
+                                                fontWeight: "bold",
+                                                marginBottom: "10px",
+                                                
+                                            }}
+                                        >
+                                            Tags
+                                        </label>
                                 <div
                                     style={{
                                         display: "flex",
@@ -251,24 +274,20 @@ function EditActivity() {
                                         flexWrap: "wrap",
                                     }}
                                 >
-                                    <label
-                                        style={{
-                                            fontSize: "16px",
-                                            fontWeight: "bold",
-                                            marginBottom: "10px",
-                                        }}
-                                    >
-                                        Tags
-                                    </label>
-                                    {allTags.map((element) => {
-                                        return (
-                                            <StandAloneToggleButton
-                                                key={element._id}
+                                   {allTags.map((element) => (
+                                    <FormControlLabel
+                                        key={element._id}
+                                        control={
+                                            <Checkbox
+                                                checked={selectedTags.includes(element.name)}  // Check if the tag is selected
+                                                onChange={(event) => handleTagsCheckboxChange(event, element.name)}  // Pass both event and tag name
                                                 name={element.name}
-                                                tags={formData.tags}
                                             />
-                                        );
-                                    })}
+                                        }
+                                        label={element.name}
+                                    />
+                                ))}
+
                                 </div>
                                 <Button type="submit" variant="contained" className="blackhover" style={{ marginTop: "5%" }}>
                                     Update Activity

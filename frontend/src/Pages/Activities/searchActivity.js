@@ -77,6 +77,7 @@ function SearchActivity() {
 
   const [showUpcomingOnly, setShowUpcomingOnly] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [allOrUpcoming, setAllOrUpcoming] = useState(false);
 
   // Fetch all activities when component mounts
   useEffect(() => {
@@ -291,18 +292,51 @@ function SearchActivity() {
   };
 
   const handleGetUpcomingActivities = async (event) => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8000/activity/upcoming"
-      );
-      const data = response.data.map((activity) => ({
-        ...activity,
-        saved: activity.saved || { isSaved: false, user: null },
-      }));
-      setActivities(data); // Updates the state with the fetched activities
-    } catch (error) {
-      console.error("There was an error fetching the activities!", error);
+    if(!allOrUpcoming){
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/activity/upcoming"
+        );
+        const data = response.data.map((activity) => ({
+          ...activity,
+          saved: activity.saved || { isSaved: false, user: null },
+        }));
+        setActivities(data); // Updates the state with the fetched activities
+      } catch (error) {
+        console.error("There was an error fetching the activities!", error);
+      }
+    }else{
+      const showPreferences = localStorage.getItem("showPreferences");
+      const favCategory = localStorage.getItem("category");
+      console.log(showPreferences, favCategory);
+      setLoading(true);
+      try {
+        const response = await axios.get("http://localhost:8000/activity/", {
+          params: {
+            showPreferences: showPreferences.toString(),
+            favCategory,
+          },
+        });
+        const data = response.data.map((activity) => ({
+          ...activity,
+          saved: activity.saved || { isSaved: false, user: null },
+        }));
+        if (id === undefined) {
+          setActivities(data); // Set initial activities to all fetched activities
+        } else {
+          const tempActivities = response.data.filter(
+            (activity) => activity._id === id
+          );
+          setActivities(tempActivities);
+        }
+      } catch (error) {
+        console.error("There was an error fetching the activities!", error);
+      } finally {
+        setTimeout(() => setLoading(false), 1000); // Delay of 1 second
+      }
     }
+    setAllOrUpcoming(!allOrUpcoming);
+    
   };
 
   const displayUpcomingActivities = async () => {
@@ -405,7 +439,7 @@ function SearchActivity() {
 
           <div>
             {/* Filtering */}
-            <Tooltip title="Upcoming Activities">
+            <Tooltip title={allOrUpcoming ? "All Activities" : "Upcoming Activities"}>
               <IconButton onClick={handleGetUpcomingActivities}>
                 {" "}
                 {/* try to make it on the right later */}

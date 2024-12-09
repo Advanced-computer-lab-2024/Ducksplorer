@@ -10,7 +10,7 @@ import StarOutlineIcon from "@mui/icons-material/StarOutline";
 
 export default function FlightCardDetails({ flightsData }) {
     return (
-        <Card variant="outlined" sx={{ width: "100%", height: "84.5vh" }}>
+        <Card variant="outlined" sx={{ width: "100%", height: "100%" }}>
             <AspectRatio ratio="2">
                 <img
                     src="/flight.png"
