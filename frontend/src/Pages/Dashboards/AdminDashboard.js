@@ -10,7 +10,8 @@ import AddIcon from '@mui/icons-material/Add';
 import TagIcon from '@mui/icons-material/Tag';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import EventIcon from '@mui/icons-material/Event';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney'; // Import a more suitable icon for Revenue Reports
+import DescriptionIcon from '@mui/icons-material/Description'; // For document-based reports
+import SummarizeIcon from '@mui/icons-material/Summarize'; // For summary-based reports
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
 
@@ -148,9 +149,9 @@ const AdminDashboard = () => {
                 }}
                 onClick={() => handleCardClick("adminReport")}
               >
-                <AttachMoneyIcon sx={{ fontSize: 40, color: "black", mb: 1 }} /> {/* Changed icon and added marginBottom for space between icon and text */}
+                <DescriptionIcon sx={{ fontSize: 40, color: "black", mb: 1 }} /> {/* Changed icon and added marginBottom for space between icon and text */}
                 <Typography variant="h5" sx={{ fontWeight: "bold", color: "black" }} className="bigTitle"> {/* Increased text size */}
-                  Revenue Reports
+                  Reports
                 </Typography>
                 {/* <Typography variant="h4" sx={{ fontWeight: "bold" }}>
                   View Reports

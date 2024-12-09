@@ -34,6 +34,35 @@ const viewAllActivities = async (req, res) => {
   }
 };
 
+const calculateTotalBookingsAndEarnings = async (req, res) => {
+  try {
+    // Aggregate the total bookings and earnings
+    const totals = await ActivityBooking.aggregate([
+      {
+        $group: {
+          _id: null, // Group all documents together
+          totalBookings: { $sum: 1 }, // Count the number of bookings
+          totalEarnings: { $sum: "$chosenPrice" }, // Sum the earnings from `amountPaid`
+        },
+      },
+    ]);
+
+    if (totals.length === 0) {
+      return res.status(404).json({ message: "No bookings found" });
+    }
+
+    // Extract the totals from the aggregation result
+    const { totalBookings, totalEarnings } = totals[0];
+
+    // Send the aggregated totals
+    res.status(200).json({ totalBookings, totalEarnings });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
 const viewAllItineraries = async (req, res) => {
   try {
     // Fetch all itineraries
@@ -54,6 +83,34 @@ const viewAllItineraries = async (req, res) => {
   } catch (err) {
     console.error("Error fetching itineraries:", err);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const calculateTotalItineraryBookingsAndEarnings = async (req, res) => {
+  try {
+    // Aggregate the total bookings and earnings for itineraries
+    const totals = await ItineraryBooking.aggregate([
+      {
+        $group: {
+          _id: null, // Group all documents together
+          totalBookings: { $sum: 1 }, // Count the number of bookings
+          totalEarnings: { $sum: "$chosenPrice" }, // Sum the earnings from `chosenPrice`
+        },
+      },
+    ]);
+
+    if (totals.length === 0) {
+      return res.status(404).json({ message: "No itinerary bookings found" });
+    }
+
+    // Extract the totals from the aggregation result
+    const { totalBookings, totalEarnings } = totals[0];
+
+    // Send the aggregated totals
+    res.status(200).json({ totalBookings, totalEarnings });
+  } catch (err) {
+    console.error("Error calculating itinerary totals:", err);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -89,6 +146,49 @@ const viewAllProducts = async (req, res) => {
 
     // Send the response with the products and their associated stats
     res.status(200).json(productsWithStats);
+  } catch (err) {
+    console.error("Error fetching products:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const calculateTotalProductBookingsAndEarnings = async (req, res) => {
+
+  try {
+    // Fetch all products
+    const products = await Product.find();
+
+    if (!products || products.length === 0) {
+      return res.status(404).json({ error: "No products found" });
+    }
+
+    // Initialize total counters
+    let totalBookings = 0;
+    let totalEarnings = 0;
+
+    // Mapping over the products to calculate total bookings and total earnings
+    await Promise.all(
+      products.map(async (product) => {
+        // Fetch all bookings for this product
+        const bookings = await PurchaseBooking.find({ product: product._id });
+
+        // Calculate total earnings for this product (sum of chosen price for each booking)
+        const totalProductEarnings = bookings.reduce((acc, booking) => acc + booking.chosenPrice, 0);
+
+        // Count how many times this product has been booked
+        const bookedCount = bookings.length;
+
+        // Add the current product's stats to the overall totals
+        totalBookings += bookedCount;
+        totalEarnings += totalProductEarnings;
+      })
+    );
+
+    // Send the response with only the total bookings and total earnings
+    res.status(200).json({
+      totalBookings, // Total booked count across all products
+      totalEarnings, // Total earnings across all products
+    });
   } catch (err) {
     console.error("Error fetching products:", err);
     res.status(500).json({ message: "Internal server error" });
@@ -190,6 +290,85 @@ const filterAllActivities = async (req, res) => {
   }
 };
 
+const calculateTotalBookingsAndEarningsWithFilters = async (req, res) => {
+  const { date, month, year } = req.query;
+
+  try {
+    // Prepare the date filters
+    const dateFilters = [];
+
+    if (date) {
+      const dateObject = new Date(date);
+      const startOfDay = new Date(
+        Date.UTC(
+          dateObject.getUTCFullYear(),
+          dateObject.getUTCMonth(),
+          dateObject.getUTCDate(),
+          0,
+          0,
+          0
+        )
+      );
+      const endOfDay = new Date(
+        Date.UTC(
+          dateObject.getUTCFullYear(),
+          dateObject.getUTCMonth(),
+          dateObject.getUTCDate(),
+          23,
+          59,
+          59,
+          999
+        )
+      );
+      dateFilters.push({ chosenDate: { $gte: startOfDay, $lte: endOfDay } });
+    }
+
+    if (month || year) {
+      const yearNum = year ? parseInt(year, 10) : new Date().getUTCFullYear();
+
+      if (month) {
+        const monthNum = parseInt(month, 10) - 1; // Adjust for zero-based months
+        const startOfMonth = new Date(Date.UTC(yearNum, monthNum, 1));
+        const endOfMonth = new Date(
+          Date.UTC(yearNum, monthNum + 1, 0, 23, 59, 59, 999)
+        );
+        dateFilters.push({ chosenDate: { $gte: startOfMonth, $lte: endOfMonth } });
+      } else {
+        // If only year is specified, filter the entire year
+        const startOfYear = new Date(Date.UTC(yearNum, 0, 1));
+        const endOfYear = new Date(
+          Date.UTC(yearNum + 1, 0, 0, 23, 59, 59, 999)
+        );
+        dateFilters.push({ chosenDate: { $gte: startOfYear, $lte: endOfYear } });
+      }
+    }
+
+    // Combine filters into a single query
+    const filters = dateFilters.length > 0 ? { $and: dateFilters } : {};
+
+    // Aggregate the total bookings and earnings with filters applied
+    const totals = await ActivityBooking.aggregate([
+      { $match: filters }, // Apply date filters
+      {
+        $group: {
+          _id: null, // Group all documents
+          totalBookings: { $sum: 1 }, // Count bookings
+          totalEarnings: { $sum: "$chosenPrice" }, // Sum earnings
+        },
+      },
+    ]);
+
+    // If no totals found, set both totalBookings and totalEarnings to 0
+    const { totalBookings = 0, totalEarnings = 0 } = totals.length > 0 ? totals[0] : {};
+
+    // Send the aggregated totals
+    res.status(200).json({ totalBookings, totalEarnings });
+  } catch (err) {
+    console.error("Error calculating totals:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 const filterAllItineraries = async (req, res) => {
   const { date, month, year } = req.query;
 
@@ -283,6 +462,87 @@ const filterAllItineraries = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+const calculateTotalItineraryBookingsAndEarningsWithFilters = async (req, res) => {
+  const { date, month, year } = req.query;
+
+  try {
+    // Prepare the date filters
+    const dateFilters = [];
+
+    if (date) {
+      const dateObject = new Date(date);
+      const startOfDay = new Date(
+        Date.UTC(
+          dateObject.getUTCFullYear(),
+          dateObject.getUTCMonth(),
+          dateObject.getUTCDate(),
+          0,
+          0,
+          0
+        )
+      );
+      const endOfDay = new Date(
+        Date.UTC(
+          dateObject.getUTCFullYear(),
+          dateObject.getUTCMonth(),
+          dateObject.getUTCDate(),
+          23,
+          59,
+          59,
+          999
+        )
+      );
+      dateFilters.push({ chosenDate: { $gte: startOfDay, $lte: endOfDay } });
+    }
+
+    if (month || year) {
+      const yearNum = year ? parseInt(year, 10) : new Date().getUTCFullYear();
+
+      if (month) {
+        const monthNum = parseInt(month, 10) - 1; // Adjust for zero-based months
+        const startOfMonth = new Date(Date.UTC(yearNum, monthNum, 1));
+        const endOfMonth = new Date(
+          Date.UTC(yearNum, monthNum + 1, 0, 23, 59, 59, 999)
+        );
+        dateFilters.push({ chosenDate: { $gte: startOfMonth, $lte: endOfMonth } });
+      } else {
+        // If only year is specified, filter the entire year
+        const startOfYear = new Date(Date.UTC(yearNum, 0, 1));
+        const endOfYear = new Date(
+          Date.UTC(yearNum + 1, 0, 0, 23, 59, 59, 999)
+        );
+        dateFilters.push({ chosenDate: { $gte: startOfYear, $lte: endOfYear } });
+      }
+    }
+
+    // Combine filters into a single query
+    const filters = dateFilters.length > 0 ? { $and: dateFilters } : {};
+
+    // Aggregate total bookings and earnings for filtered itineraries
+    const totals = await ItineraryBooking.aggregate([
+      { $match: filters }, // Apply date filters
+      {
+        $group: {
+          _id: null, // Group all documents together
+          totalBookings: { $sum: 1 }, // Count total bookings
+          totalEarnings: { $sum: "$chosenPrice" }, // Sum total earnings
+        },
+      },
+    ]);
+
+    // If no totals found, set both totalBookings and totalEarnings to 0
+    const { totalBookings = 0, totalEarnings = 0 } = totals.length > 0 ? totals[0] : {};
+
+    // Return the totals
+    res.status(200).json({ totalBookings, totalEarnings });
+  } catch (err) {
+    console.error("Error calculating filtered totals:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
 const filterAllProducts = async (req, res) => {
   const { date, month, year } = req.query;
 
@@ -380,6 +640,81 @@ const filterAllProducts = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+const calculateTotalProductBookingsAndEarningsWithFilters = async (req, res) => {
+  const { date, month, year } = req.query;
+
+  // Prepare the date filters
+  const dateFilters = [];
+
+  // Exact date filter
+  if (date) {
+    const dateObject = new Date(date); // Input date
+    const startOfDay = new Date(
+      Date.UTC(
+        dateObject.getUTCFullYear(),
+        dateObject.getUTCMonth(),
+        dateObject.getUTCDate(),
+        0,
+        0,
+        0
+      )
+    );
+    const endOfDay = new Date(
+      Date.UTC(
+        dateObject.getUTCFullYear(),
+        dateObject.getUTCMonth(),
+        dateObject.getUTCDate(),
+        23,
+        59,
+        59,
+        999
+      )
+    );
+
+    dateFilters.push({ chosenDate: { $gte: startOfDay, $lte: endOfDay } });
+  }
+
+  // Year and Month filter
+  if (month || year) {
+    const yearNum = year ? parseInt(year, 10) : new Date().getUTCFullYear(); // Default to current year if not provided
+    const monthNum = month ? parseInt(month, 10) - 1 : 0; // Default to January if month is not provided
+
+    const startOfMonth = new Date(Date.UTC(yearNum, monthNum, 1)); // Start of the month
+    const endOfMonth = new Date(
+      Date.UTC(yearNum, monthNum + 1, 0, 23, 59, 59, 999)
+    ); // End of the month
+
+    dateFilters.push({ chosenDate: { $gte: startOfMonth, $lte: endOfMonth } });
+  }
+
+  // Apply date filters
+  const filters = {};
+  if (dateFilters.length > 0) {
+    filters.$and = dateFilters;
+  }
+
+  try {
+    // Fetch all bookings for all products with the date filters applied
+    const bookings = await PurchaseBooking.find({
+      ...filters, // Apply date filters to bookings
+    });
+
+    // Calculate the total number of bookings and total earnings
+    const totalBookings = bookings.length;
+    const totalEarnings = bookings.reduce((sum, booking) => sum + booking.chosenPrice, 0);
+
+    // Return the aggregated totals
+    res.status(200).json({
+      totalBookings,
+      totalEarnings,
+    });
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 
 const getAllUsersWithEmails = async (req, res) => {
   try {
@@ -545,4 +880,10 @@ module.exports = {
   filterAllProducts,
   getAllUsersWithEmails,
   getAllUsersWithEmailsFilteredByMonth,
+  calculateTotalBookingsAndEarnings,
+  calculateTotalBookingsAndEarningsWithFilters,
+  calculateTotalItineraryBookingsAndEarnings,
+  calculateTotalItineraryBookingsAndEarningsWithFilters,
+  calculateTotalProductBookingsAndEarnings,
+  calculateTotalProductBookingsAndEarningsWithFilters
 };
