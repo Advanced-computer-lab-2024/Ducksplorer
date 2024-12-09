@@ -507,7 +507,7 @@ function PaymentPage() {
         "Error emptying cart:",
         error.response?.data || error.message
       );
-      message.error("Failed to empty the cart. Please try again.");
+      message.error("Failed to empty the cart.", error);
     }
   };
 
