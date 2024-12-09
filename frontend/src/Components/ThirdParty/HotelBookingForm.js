@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   Button,
@@ -108,7 +108,7 @@ const HotelBookingForm = () => {
           {
             headers: {
               "x-rapidapi-key":
-                "c7ca2a8100mshd130920df3324d6p1981b5jsnd001bc3dd180",
+                "f8555f553fmsh3e198fe5c248e9ep1555dbjsn4f903c052e8f",
               "x-rapidapi-host": "tripadvisor16.p.rapidapi.com",
             },
           }
@@ -132,7 +132,7 @@ const HotelBookingForm = () => {
               },
               headers: {
                 "x-rapidapi-key":
-                  "c7ca2a8100mshd130920df3324d6p1981b5jsnd001bc3dd180",
+                  "f8555f553fmsh3e198fe5c248e9ep1555dbjsn4f903c052e8f",
                 "x-rapidapi-host": "tripadvisor16.p.rapidapi.com",
               },
             }
@@ -195,11 +195,10 @@ const HotelBookingForm = () => {
     return true;
   };
 
- 
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, []);
 
@@ -211,29 +210,31 @@ const HotelBookingForm = () => {
     );
   }
 
- 
-
   return (
     <div style={styles.container}>
       <div style={styles.leftSection}>
-        <Typography variant="h3" className="duckTitle" style={styles.welcomeText}>
+        <Typography
+          variant="h3"
+          className="duckTitle"
+          style={styles.welcomeText}
+        >
           Hotel Booking
         </Typography>
       </div>
       <div style={styles.rightSection}>
         <Container maxWidth="sm" style={{ marginTop: "-30vh" }}>
           <Box>
-          <h2
-                className="bigTitle"
-                style={{
-                  textAlign: "center",
-                  alignSelf: "center",
-                  marginTop: "7vh",
-                  marginBottom: "3vh",
-                }}
-              >
-                Hotel Booking
-              </h2>
+            <h2
+              className="bigTitle"
+              style={{
+                textAlign: "center",
+                alignSelf: "center",
+                marginTop: "7vh",
+                marginBottom: "3vh",
+              }}
+            >
+              Hotel Booking
+            </h2>
             <Grid container spacing={2} direction="column">
               <Grid item xs={12}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>

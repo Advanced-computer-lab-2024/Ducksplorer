@@ -507,7 +507,7 @@ function PaymentPage() {
         "Error emptying cart:",
         error.response?.data || error.message
       );
-      message.error("Failed to empty the cart. Please try again.");
+      message.error("Failed to empty the cart.", error);
     }
   };
 
@@ -1491,7 +1491,6 @@ function PaymentPage() {
                   <Card
                     style={{
                       width: "800px",
-                      margin: "20px auto",
                       borderRadius: "8px",
                     }}
                   >
@@ -1510,7 +1509,7 @@ function PaymentPage() {
                     justifyContent: "center",
                     alignItems: "center",
                     textAlign: "center",
-                    height: "89.5vh",
+                    height: "auto",
                   }}
                 >
                   <Form style={{ width: "100%", height: "90%" }}>
@@ -1701,6 +1700,7 @@ function PaymentPage() {
                   display: "flex",
                   alignItems: "flex-start",
                   gap: "20px",
+                  
                 }}
               >
                 {/* Left Section */}
@@ -1708,8 +1708,9 @@ function PaymentPage() {
                   <Card
                     style={{
                       width: "800px",
-                      margin: "20px auto",
+                    
                       borderRadius: "8px",
+                      
                     }}
                   >
                     <TransportationCardDetailed
@@ -1720,16 +1721,16 @@ function PaymentPage() {
                 <Paper
                   elevation={3}
                   style={{
-                    width: "800px",
+                    width: "50vw",
                     minHeight: "600px",
-                    margin: "20px auto",
+                    marginTop:"2%",
                     padding: "20px",
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "center",
                     textAlign: "center",
-                    height: "89.5vh",
+                    height: "auto",
                   }}
                 >
                   <Form style={{ width: "100%", height: "90%" }}>
@@ -1752,6 +1753,7 @@ function PaymentPage() {
                           marginBottom: "1%",
                           fontWeight: "bold",
                           fontSize: 20,
+                          
                         }}
                       >
                         Email
@@ -1927,7 +1929,6 @@ function PaymentPage() {
                   <Card
                     style={{
                       width: "800px",
-                      margin: "20px auto",
                       borderRadius: "8px",
                     }}
                   >
