@@ -96,9 +96,7 @@ export default function CheckoutForm() {
         localStorage.getItem("activityId") ||
         localStorage.getItem("itineraryId");
       const type = localStorage.getItem("type");
-      // const hotel = localStorage.getItem("hotelBooking"); // Example: add this if relevant
-      // const flight = localStorage.getItem("flightBooking"); // Example: add this if relevant
-      // const transportation = localStorage.getItem("transportationBooking"); // Example: add this if relevant
+      
       console.log("email,item,type:", email, itemId, type);
       // Make a POST request to the backend
       const response = await fetch(
@@ -112,9 +110,7 @@ export default function CheckoutForm() {
             email,
             itemId,
             type,
-            // hotel,
-            // flight,
-            // transportation,
+            thirdParty: type==="flight" ? JSON.parse(localStorage.getItem("flight")) : type==="hotel" ? JSON.parse(localStorage.getItem("hotel")) : type==="transportation" ? JSON.parse(localStorage.getItem("transportation")) : null,
           }),
         }
       );
@@ -262,6 +258,9 @@ export default function CheckoutForm() {
               activityId: activityId,
               itineraryId: itineraryId,
               type: itineraryOrActivity,
+              hotel: itineraryOrActivity=== "hotel" ? JSON.parse(localStorage.getItem("hotel")) : null,
+              flight: itineraryOrActivity=== "flight" ? JSON.parse(localStorage.getItem("flight")) : null,
+              transportation: itineraryOrActivity=== "transportation" ? JSON.parse(localStorage.getItem("transportation")) : null,
               date: chosenDate,
             }),
           }
