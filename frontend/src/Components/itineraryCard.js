@@ -500,7 +500,7 @@ export default function ItineraryCard({
                   </Chip>
                 }
               >
-                {itinerary.price}$
+                {itinerary.price}
               </Typography>
               <Button
                 variant="solid"

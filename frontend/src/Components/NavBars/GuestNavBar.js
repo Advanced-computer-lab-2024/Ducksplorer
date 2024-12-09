@@ -28,11 +28,13 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import Button from "@mui/material/Button";
 import ReportIcon from "@mui/icons-material/Report";
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney'; // Import the currency icon
 
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import CurrencyConverterGeneral from "../ThirdParty/CurrencyConverterGeneral";
 
-function GuestNavBar() {
+function GuestNavBar({ onCurrencyChange }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [image, setImage] = React.useState("");
@@ -67,6 +69,16 @@ function GuestNavBar() {
   const handleTogglePreferences = () => {
     setShowPreferences((prev) => !prev);
     localStorage.setItem("showPreferences", !showPreferences);
+  };
+
+  const [currencyAnchorEl, setCurrencyAnchorEl] = React.useState(null);
+
+  const handleCurrencyIconClick = (event) => {
+    setCurrencyAnchorEl(event.currentTarget);
+  };
+
+  const handleCurrencyMenuClose = () => {
+    setCurrencyAnchorEl(null);
   };
 
   return (
@@ -471,7 +483,18 @@ function GuestNavBar() {
                 Sign Up
             </Typography>
             </Button>
-
+            <Tooltip title="Currency Converter">
+              <IconButton onClick={handleCurrencyIconClick}>
+                <AttachMoneyIcon sx={{ color: "black" }} />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              anchorEl={currencyAnchorEl}
+              open={Boolean(currencyAnchorEl)}
+              onClose={handleCurrencyMenuClose}
+            >
+              <CurrencyConverterGeneral onCurrencyChange={onCurrencyChange} initialCurrency="USD" />
+            </Menu>
           </Box>
         </Toolbar>
       </Container>

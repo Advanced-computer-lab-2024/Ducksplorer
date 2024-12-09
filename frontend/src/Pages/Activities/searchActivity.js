@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import TouristNavBar from "../../Components/TouristNavBar";
 import ActivityCard from "../../Components/activityCard.js";
@@ -23,7 +23,6 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
-import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
 import Help from "../../Components/HelpIcon.js";
 import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
@@ -50,8 +49,9 @@ function SearchActivity() {
   //filtering consts
   const [rating, setRating] = useState(null);
 
+  const initialCurrency = "USD"; // Set initial currency
   const [exchangeRates, setExchangeRates] = useState({});
-  const [currency, setCurrency] = useState("EGP");
+  const [currency, setCurrency] = useState(initialCurrency);
   const [price, setPrice] = useState("");
   const [date, setDate] = useState("");
   const [categories, setCategories] = useState([]);
@@ -258,10 +258,19 @@ function SearchActivity() {
     setSelectedFilters(newFilters);
   };
 
-  const handleCurrencyChange = (rates, selectedCurrency) => {
+  const handleCurrencyChange = useCallback((rates, selectedCurrency) => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
+  }, []);
+
+  const convertPrice = (price, fromCurrency) => {
+    if (!exchangeRates || !exchangeRates[fromCurrency] || !exchangeRates[currency]) {
+      return price;
+    }
+    const rate = exchangeRates[currency] / exchangeRates[fromCurrency];
+    return (price * rate).toFixed(2);
   };
+
   //clear all filters
   const handleClearAllFilters = () => {
     setPrice("");
@@ -401,15 +410,14 @@ function SearchActivity() {
     >
 
         {isGuest === true ? (
-          <GuestNavBar /> // Replace with your guest navbar component
+          <GuestNavBar onCurrencyChange={handleCurrencyChange} /> 
         ) : (
-          <TouristNavBar /> // Replace with your tourist navbar component
+          <TouristNavBar onCurrencyChange={handleCurrencyChange} /> 
         )}      
         <Container sx={{ width: "100%" }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography class="bigTitle">Activities</Typography>
         </Box>
-
         <div
           style={{
             //div to surround search bar, button and the filter, and 2 sort icons
@@ -788,7 +796,7 @@ function SearchActivity() {
               !activity.isDeactivated &&
               !activity.tourGuideDeleted &&
               !activity.deletedActivity ? (
-                <ActivityCard key={activity._id} activity={activity} />
+                <ActivityCard key={activity._id} activity={{ ...activity, price: convertPrice(activity.price, "USD") }} />
               ) : null
             )}
           </div>

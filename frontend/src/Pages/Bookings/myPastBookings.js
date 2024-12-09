@@ -18,15 +18,13 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  CircularProgress,
-  Chip,
 } from "@mui/material";
 import MyTabs from "../../Components/MyTabs";
 import { Link } from "react-router-dom";
 import Help from "../../Components/HelpIcon";
-import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
+import Error404 from "../../Components/Error404";
 import DuckLoading from "../../Components/Loading/duckLoading";
-import { message } from "statuses";
+import { message } from "antd";
 
 const PastBookingDetails = () => {
   const userName = JSON.parse(localStorage.getItem("user")).username;
@@ -43,10 +41,8 @@ const PastBookingDetails = () => {
   const [tourGuideId, setSelectedTourGuideId] = useState(null);
   const [tourGuideNames, setTourGuideNames] = useState({});
   const [loading, setLoading] = useState(true);
-
-  const [selectedTab, setSelectedTab] = useState("All");
+const [selectedTab, setSelectedTab] = useState("All");
   const tabNames = ["All", "Activities", "Itineraries"];
-
 
   const fetchTourGuideName = async (bookingId) => {
     try {
@@ -57,13 +53,12 @@ const PastBookingDetails = () => {
       return response.data.userName;
     } catch (error) {
       console.error("Error fetching tour guide name:", error.message);
-      return "N/A (Guide left the system)";
+      return "N/A";
     }
   };
 
   useEffect(() => {
     const fetchBooking = async () => {
-      setLoading(true);
       try {
         const response = await axios.get(
           `http://localhost:8000/touristRoutes/myPastBookings`,
@@ -85,7 +80,7 @@ const PastBookingDetails = () => {
         const initialItineraryRatings = {};
         itineraryBookings?.forEach((itineraryBooking) => {
           initialItineraryRatings[itineraryBooking._id] =
-            itineraryBooking.averageRating || 0;
+            itineraryBooking.itinerary.averageRating || 0;
         });
         setSelectedItineraryRatings(initialItineraryRatings);
 
@@ -136,10 +131,10 @@ const PastBookingDetails = () => {
     } catch (error) {
       if (error.response) {
         console.error("Error response data:", error.response.data);
-        alert(`Failed to submit rating: ${error.response.data.message}`);
+        message.error(`Failed to submit rating: ${error.response.data.message}`);
       } else {
         console.error("Error submitting rating:", error.message);
-        alert("Failed to submit rating. Please try again.");
+        message.error("Failed to submit rating. Please try again.");
       }
     }
   };
@@ -173,12 +168,12 @@ const PastBookingDetails = () => {
     } catch (error) {
       if (error.response) {
         console.error("Error response data:", error.response.data);
-        alert(
+        message.error(
           `Failed to submit itinerary rating: ${error.response.data.message}`
         );
       } else {
         console.error("Error submitting itinerary rating:", error.message);
-        alert("Failed to submit itinerary rating. Please try again.");
+        message.error("Failed to submit itinerary rating. Please try again.");
       }
     }
   };
@@ -195,11 +190,11 @@ const PastBookingDetails = () => {
           comment: activityComments[bookingId],
         }
       );
-      alert("Comment submitted successfully!");
+      message.success("Comment submitted successfully!");
       setActivityComments((prev) => ({ ...prev, [bookingId]: "" })); // Clear the comment input after submission
     } catch (error) {
       console.error("Error submitting comment:", error.message);
-      alert("Failed to submit comment. Please try again.");
+      message.error("Failed to submit comment. Please try again.");
     }
   };
 
@@ -215,11 +210,11 @@ const PastBookingDetails = () => {
           comment: itineraryComments[bookingId],
         }
       );
-      alert("Comment submitted successfully!");
+      message.success("Comment submitted successfully!");
       setItineraryComments((prev) => ({ ...prev, [bookingId]: "" })); // Clear the comment input after submission
     } catch (error) {
       console.error("Error submitting comment:", error.message);
-      alert("Failed to submit comment. Please try again.");
+      message.error("Failed to submit comment. Please try again.");
     }
   };
 
@@ -249,7 +244,7 @@ const PastBookingDetails = () => {
       setTourGuideRating(0);
     } catch (error) {
       console.error("Error rating tour guide:", error.message);
-      alert("Failed to submit rating. Please try again.");
+      message.error("Failed to submit rating. Please try again.");
     }
   };
 
@@ -265,7 +260,7 @@ const PastBookingDetails = () => {
       setTourGuideComment("");
     } catch (error) {
       console.error("Error submitting comment:", error.message);
-      alert("Failed to submit comment. Please try again.");
+      message.error("Failed to submit comment. Please try again.");
     }
   };
 
@@ -283,24 +278,16 @@ const PastBookingDetails = () => {
     );
   }
 
-  if (
-    (!Array.isArray(activityBookings) && !Array.isArray(itineraryBookings)) ||
-    (activityBookings.length === 0 && itineraryBookings.length === 0)
-  ) {
-    return (
-      <>
-        <TouristNavBar />
-        <p
-          style={{
-            fontSize: "2rem",
-            fontWeight: "bold",
-            fontFamily: "'Roboto', sans-serif",
-          }}
-        >
-          No booking details available.
-        </p>
-      </>
-    );
+  const errorMessage3 =
+    "The past bookings you are looking for might be removed or is temporarily unavailable";
+  const backMessage = "BACK TO ALL BOOKINGS";
+
+  if (!Array.isArray(activityBookings) || !Array.isArray(itineraryBookings)) {
+    return  <Error404
+    errorMessage={errorMessage3}
+    backMessage={backMessage}
+    route="/mybookings"
+  />
   }
 
   return (
@@ -331,13 +318,6 @@ const PastBookingDetails = () => {
             selectedTab === "All") && (
               <>
                 {" "}
-                <Typography
-                  variant="h5"
-                  sx={{ fontWeight: "bold", marginBottom: "20px" }}
-                  gutterBottom
-                >
-                  Activities
-                </Typography>
                 <TableContainer
                   component={Paper}
                   sx={{
@@ -432,6 +412,7 @@ const PastBookingDetails = () => {
                               <TextField
                                 variant="outlined"
                                 size="small"
+                                width="auto"
                                 value={
                                   activityComments[activityBooking._id] || ""
                                 }
@@ -446,6 +427,7 @@ const PastBookingDetails = () => {
                                   flexGrow: 1,
                                   "& .MuiOutlinedInput-root": {
                                     borderRadius: 2,
+                                    width:"10vw",
                                   },
                                 }}
                               />
@@ -473,13 +455,6 @@ const PastBookingDetails = () => {
               <div>
                 {" "}
                 {/* Itineraries Table */}
-                <Typography
-                  variant="h5"
-                  sx={{ fontWeight: "bold", marginBottom: "20px" }}
-                  gutterBottom
-                >
-                  Itineraries
-                </Typography>
                 <TableContainer
                   component={Paper}
                   sx={{
@@ -623,6 +598,7 @@ const PastBookingDetails = () => {
                             <TextField
                               variant="outlined"
                               size="small"
+                              
                               value={
                                 itineraryComments[itineraryBooking._id] || ""
                               }
@@ -633,6 +609,13 @@ const PastBookingDetails = () => {
                                 )
                               }
                               placeholder="Comment"
+                              sx={{
+                                flexGrow: 1,
+                                "& .MuiOutlinedInput-root": {
+                                  borderRadius: 2,
+                                  width:"8vw",
+                                },
+                              }}
                             />
                             <Button
                               onClick={() =>

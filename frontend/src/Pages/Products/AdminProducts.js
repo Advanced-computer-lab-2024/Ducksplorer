@@ -35,7 +35,7 @@ const ProductDashboard = () => {
   const [filterAnchorEl, setFilterAnchorEl] = useState(null); // Menu state for filter
   const [sortOrderAnchorEl, setSortOrderAnchorEl] = useState(null); // Menu state for sorting
 
-  const tabs=["All Products","My Products"];
+  const tabs=["All Products", "My Products"];
   const paths=["/AdminProducts","/AdminViewMyProducts"]
 
   useEffect(() => {
@@ -174,7 +174,7 @@ const ProductDashboard = () => {
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography class="bigTitle">Products</Typography>
           <div>
-                <NavigationTabs tabNames={tabs} paths={paths} />
+            <NavigationTabs tabNames={tabs} paths={paths} />
           </div>
         </Box>
 
@@ -297,7 +297,6 @@ const ProductDashboard = () => {
           <AddIconCard/>
           {products.filter((product) => !product.isArchived).length > 0 ? (
             products
-              .filter((product) => !product.isArchived)
               .map((product) => (
                 <NewProductCard
                   key={product._id}
@@ -305,6 +304,8 @@ const ProductDashboard = () => {
                   showAddToCart={false}
                   hideWishlist={true}
                   showEditProduct={true}
+                  showArchive={true}
+                  showUnarchive={true}
                 />
               ))
           ) : (

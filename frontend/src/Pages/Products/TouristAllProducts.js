@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -20,6 +20,7 @@ import Help from "../../Components/HelpIcon";
 import TouristNavBar from "../../Components/TouristNavBar";
 import DuckLoading from "../../Components/Loading/duckLoading";
 import GuestNavBar from "../../Components/NavBars/GuestNavBar";
+
 const TouristAllProducts = () => {
   const navigate = useNavigate();
   const isGuest = localStorage.getItem("guest") === "true";
@@ -31,6 +32,22 @@ const TouristAllProducts = () => {
   const [loading, setLoading] = useState(true);
   const [filterAnchorEl, setFilterAnchorEl] = useState(null); // Menu state for filter
   const [sortOrderAnchorEl, setSortOrderAnchorEl] = useState(null); // Menu state for sorting
+  const initialCurrency = "USD"; // Set initial currency
+  const [exchangeRates, setExchangeRates] = useState({});
+  const [currency, setCurrency] = useState(initialCurrency);
+
+  const handleCurrencyChange = useCallback((rates, selectedCurrency) => {
+    setExchangeRates(rates);
+    setCurrency(selectedCurrency);
+  }, []);
+
+  const convertPrice = (price, fromCurrency) => {
+    if (!exchangeRates || !exchangeRates[fromCurrency] || !exchangeRates[currency]) {
+      return price;
+    }
+    const rate = exchangeRates[currency] / exchangeRates[fromCurrency];
+    return (price * rate).toFixed(2);
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -156,15 +173,14 @@ const TouristAllProducts = () => {
       }}
     >
       {isGuest === true ? (
-        <GuestNavBar /> 
+        <GuestNavBar onCurrencyChange={handleCurrencyChange} /> 
       ) : (
-        <TouristNavBar /> 
+        <TouristNavBar onCurrencyChange={handleCurrencyChange} /> 
       )}  
       <Container sx={{ width: "100%" }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography class="bigTitle">Products</Typography>
         </Box>
-
         <div
           style={{
             display: "grid",
@@ -291,7 +307,7 @@ const TouristAllProducts = () => {
               .map((product) => (
                 <NewProductCard
                   key={product._id}
-                  product={product}
+                  product={{ ...product, price: convertPrice(product.price, "USD") }}
                   showAddToCart={true}
                   hideWishlist={false}
                   showQuantity={true}

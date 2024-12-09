@@ -3,8 +3,11 @@ import { message, Select } from "antd";
 import Input from "@mui/joy/Input"; // Import Input from MUI
 import Button from "@mui/joy/Button"; // Import Button from MUI
 import Typography from "@mui/material/Typography";
+import { useNavigate } from "react-router-dom";
+
 
 function HistoricalPlaceForm() {
+  const navigate = useNavigate();
   const [description, setDescription] = useState("");
   const [pictures, setPictures] = useState(""); // Changed to a string for URL Input
   const [location, setLocation] = useState("");
@@ -72,6 +75,7 @@ function HistoricalPlaceForm() {
     if (response.ok) {
       const json = await response.json();
       message.success("Historical place added successfully!"); // Success message
+      navigate("/GovernorDashboard");
       console.log("New historical place added:", json);
       // Reset form fields if necessary
     } else {

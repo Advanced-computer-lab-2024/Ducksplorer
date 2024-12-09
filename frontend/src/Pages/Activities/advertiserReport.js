@@ -5,7 +5,7 @@ import { calculateAverageRating } from "../../Utilities/averageRating.js";
 import WarningIcon from "@mui/icons-material/Warning";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CurrencyConvertor from "../../Components/CurrencyConvertor";
-
+import Error404 from "../../Components/Error404.js";
 import { message } from "antd";
 import Help from "../../Components/HelpIcon.js";
 import DuckLoading from "../../Components/Loading/duckLoading.js";
@@ -48,6 +48,7 @@ const ActivityReport = () => {
   const [year, setYear] = useState("");
   const [date, setDate] = useState(null);
   const [filterAnchorEl, setFilterAnchorEl] = useState(null);
+  const[showError,setShowError] = useState(true);
 
   const [selectedFilters, setSelectedFilters] = useState([]);
 
@@ -55,8 +56,9 @@ const ActivityReport = () => {
   const [filtersApplied, setFiltersApplied] = useState(false);
 
   const [loading, setLoading] = useState(false); // State for loading status
-  const [errorMessage, setErrorMessage] = useState(""); // State for error message
-
+  const errorMessage =
+    "The activity you are looking for might be removed or is temporarily unavailable";
+  const backMessage = "Back to search again";
   // Handle fetching activities by userName ID
   useEffect(() => {
     console.log(userName);
@@ -74,6 +76,9 @@ const ActivityReport = () => {
         message.error("error in fetching");
       } finally {
         setLoading(false);
+      }
+      if(activities.length >0){
+        setShowError(false);
       }
     };
     fetchActivities();
@@ -110,7 +115,6 @@ const ActivityReport = () => {
 
   const fetchFilteredActivities = async () => {
     setLoading(true);
-    setErrorMessage(""); // Reset error message before fetching
 
     try {
       let queryString = "";
@@ -148,10 +152,9 @@ const ActivityReport = () => {
       // setEarnings(earningsData);
 
       if (response.data.length === 0) {
-        setErrorMessage("No activities found for the selected filters.");
+        setShowError(true);
       }
     } catch (error) {
-      setErrorMessage("Error fetching activities!");
     } finally {
       setLoading(false);
     }
@@ -212,9 +215,7 @@ const ActivityReport = () => {
     );
   }
 
-  if (!Array.isArray(activities) || activities.length === 0) {
-    return <p>No activities available.</p>;
-  }
+  
 
   return (
     <Box
@@ -225,6 +226,9 @@ const ActivityReport = () => {
       }}
     >
       <AdvertiserNavBar />
+      
+    {activities.length > 0 ? (
+      <>
       <Typography
         variant="h2"
         className="bigTitle"
@@ -478,7 +482,14 @@ const ActivityReport = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      </>
+      ) : (<Error404
+        errorMessage={errorMessage}
+        backMessage={backMessage}
+        route="/activity/searchActivities" // Change route for activities
+      />) }
       <Help />
+      
     </Box>
   );
 };

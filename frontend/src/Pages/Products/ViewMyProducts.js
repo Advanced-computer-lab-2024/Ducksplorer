@@ -171,11 +171,9 @@ const ProductDashboard = () => {
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography class="bigTitle">Products</Typography>
           <div>
-                <NavigationTabs tabNames={tabs} paths={paths} />
+              <NavigationTabs tabNames={tabs} paths={paths} />
           </div>
         </Box>
-
-        
 
         <div
           style={{
@@ -187,9 +185,8 @@ const ProductDashboard = () => {
           }}
         >
           <AddIconCard/>
-          {products.filter((product) => !product.isArchived).length > 0 ? (
+          {products.length > 0 ? (
             products
-              .filter((product) => !product.isArchived)
               .map((product) => (
                 <NewProductCard
                   key={product._id}
@@ -197,6 +194,8 @@ const ProductDashboard = () => {
                   showAddToCart={false}
                   hideWishlist={true}
                   showEditProduct={true}
+                  showArchive={true}
+                  showUnarchive={true}
                 />
               ))
           ) : (

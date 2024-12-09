@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -15,24 +15,32 @@ import Input from "@mui/joy/Input";
 import Error404 from "../../Components/Error404.js";
 import UpdateIcon from "@mui/icons-material/Update";
 
-
 const HistoricalPlaceTouristPov = () => {
   const [searchTerm, setSearchTerm] = useState(""); // Single search term
   const { id } = useParams();
   const [HistoricalPlaces, setHistoricalPlaces] = useState([]);
   const navigate = useNavigate();
   const isGuest = localStorage.getItem("guest") === "true";
+  const initialCurrency = "USD"; // Set initial currency
   const [exchangeRates, setExchangeRates] = useState({});
-  const [currency, setCurrency] = useState("EGP");
+  const [currency, setCurrency] = useState(initialCurrency);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const tabs = ["Museums", "Historical Places"];
   const [pastOrUpcoming,setPastOrUpcoming] = useState(false); 
   const paths = ["/MuseumTouristPov", "/HistoricalPlaceTouristPov"];
 
-  const handleCurrencyChange = (rates, selectedCurrency) => {
+  const handleCurrencyChange = useCallback((rates, selectedCurrency) => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
+  }, []);
+
+  const convertPrice = (price, fromCurrency) => {
+    if (!exchangeRates || !exchangeRates[fromCurrency] || !exchangeRates[currency]) {
+      return price;
+    }
+    const rate = exchangeRates[currency] / exchangeRates[fromCurrency];
+    return (price * rate).toFixed(2);
   };
 
   useEffect(() => {
@@ -163,7 +171,8 @@ const HistoricalPlaceTouristPov = () => {
 
   const errorMessage =
     "There are currently no upcoming historical places. Try again in a few";
-  const backMessage = "Back to search again";
+  const backMessage =
+    "Back to search again";
 
   if (loading) {
     return (
@@ -182,9 +191,9 @@ const HistoricalPlaceTouristPov = () => {
       }}
     >
       {isGuest === true ? (
-        <GuestNavBar /> 
+        <GuestNavBar onCurrencyChange={handleCurrencyChange} /> 
       ) : (
-        <TouristNavBar /> 
+        <TouristNavBar onCurrencyChange={handleCurrencyChange} /> 
       )}  
       
       <div>
@@ -194,6 +203,7 @@ const HistoricalPlaceTouristPov = () => {
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography class="bigTitle">Historical Places</Typography>
         </Box>
+        
         <div
           style={{
             //div to surround search bar, button and the filter, and 2 sort icons
@@ -234,7 +244,7 @@ const HistoricalPlaceTouristPov = () => {
           {Array.isArray(HistoricalPlaces) && HistoricalPlaces.length > 0 ? (
             HistoricalPlaces.map((historicalPlace) => (
               <Grid item xs={12} sm={6} md={4} key={historicalPlace._id}>
-                <MuseumHistoricalPlaceCard place={historicalPlace} />
+                <MuseumHistoricalPlaceCard place={{ ...historicalPlace, price: convertPrice(historicalPlace.price, "USD") }} />
               </Grid>
             ))
           ) : (

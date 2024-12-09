@@ -35,18 +35,24 @@ import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlin
 import MailIcon from '@mui/icons-material/Mail';
 import MailLockIcon from '@mui/icons-material/MailLock';
 import LogoutIcon from '@mui/icons-material/Logout';
+import CurrencyConverterGeneral from "./ThirdParty/CurrencyConverterGeneral";
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney'; // Import the currency icon
+import { useLocation } from "react-router-dom";
 
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function TouristNavBar() {
+const TouristNavBar = ({ onCurrencyChange }) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [image, setImage] = React.useState("");
   const [storedPicture, setStoredPicture] = React.useState(
     localStorage.getItem("profilePicture")
   );
+  const [currencyAnchorEl, setCurrencyAnchorEl] = React.useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const hideCurrencyIcon = ["/flights", "/hotels", "/transportation", "/TransportationsPage", "/HotelsPage", "/FlightsPage"].includes(location.pathname);
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -104,6 +110,14 @@ function TouristNavBar() {
   const handleNavigation = (page) => {
     handleCloseNavMenu();
     window.location.href = `/${page}`;
+  };
+
+  const handleCurrencyIconClick = (event) => {
+    setCurrencyAnchorEl(event.currentTarget);
+  };
+
+  const handleCurrencyMenuClose = () => {
+    setCurrencyAnchorEl(null);
   };
 
   const [showPreferences, setShowPreferences] = React.useState(() => {
@@ -530,9 +544,6 @@ function TouristNavBar() {
                     },
                   }}
                 />
-                {/* <Typography textAlign="center" marginRight={1}>
-                   Wishlist
-                 </Typography> */}
               </IconButton>
             </Tooltip>
             <Tooltip>
@@ -547,6 +558,22 @@ function TouristNavBar() {
                 />
               </IconButton>
             </Tooltip>
+            {!hideCurrencyIcon && (
+              <>
+                <Tooltip title="Currency Converter">
+                  <IconButton onClick={handleCurrencyIconClick}>
+                    <AttachMoneyIcon sx={{ color: "black" }} />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  anchorEl={currencyAnchorEl}
+                  open={Boolean(currencyAnchorEl)}
+                  onClose={handleCurrencyMenuClose}
+                >
+                  <CurrencyConverterGeneral onCurrencyChange={onCurrencyChange} initialCurrency="USD" />
+                </Menu>
+              </>
+            )}
             <Tooltip title="Open Account settings">
               <IconButton
                 onClick={handleOpenUserMenu}
@@ -597,25 +624,6 @@ function TouristNavBar() {
                     sx={{ color: "black", fontSize: "14px" }}
                   >
                     Show Preferences
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
-              <MenuItem onClick={handleToggleNotifyViaMail}>
-                <IconButton
-                  sx={{ textAlign: "center", p: 0.5, color: "black" }}
-                >
-                  {notifyViaMail ? (
-                    <MailIcon sx={{ fontSize: 20, color: "green" }} />
-                  ) : (
-                    <MailLockIcon sx={{ fontSize: 20, color: "red" }} />
-                  )}
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Notify via Mail
                   </Typography>
                 </IconButton>
               </MenuItem>
