@@ -60,6 +60,9 @@ const AdminReport = () => {
   const [itineraries, setItineraries] = useState([]);
   const [products, setProducts] = useState([]);
 
+  const [numOfBookings, setNumOfBookings] = useState("");
+  const [totalEarnings, setTotalEarning] = useState("");
+
   const [priceExchangeRates, setPriceExchangeRates] = useState({});
   const [priceCurrency, setPriceCurrency] = useState("EGP");
 
@@ -105,37 +108,66 @@ const AdminReport = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/admin/reportActivities")
-      .then((response) => {
-        setActivities(response.data);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the activities!", error);
-      });
-  }, []);
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:8000/admin/reportItineraries")
-      .then((response) => {
-        setItineraries(response.data);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the itineraries!", error);
-      });
-  }, []);
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:8000/admin/reportProducts")
-      .then((response) => {
-        setProducts(response.data);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the products!", error);
-      });
-  }, []);
+    const fetchReportData = async (url, setStateCallback, errorMessage) => {
+      try {
+        const response = await axios.get(url);
+        setStateCallback(response.data);
+      } catch (error) {
+        console.error(errorMessage, error);
+      }
+    };
+  
+    const fetchTotalData = async (url, setEarningCallback, setBookingsCallback, errorMessage) => {
+      try {
+        const response = await axios.get(url);
+        setEarningCallback(response.data.totalEarnings);
+        setBookingsCallback(response.data.totalBookings);
+      } catch (error) {
+        console.error(errorMessage, error);
+      }
+    };
+  
+    if (selectedTab === "Activities Report") {
+      fetchReportData(
+        "http://localhost:8000/admin/reportActivities",
+        setActivities,
+        "There was an error fetching the activities!"
+      );
+  
+      fetchTotalData(
+        "http://localhost:8000/admin/getTotalActivityBookAndEarn",
+        setTotalEarning,
+        setNumOfBookings,
+        "There was an error fetching total activities data!"
+      );
+    } else if (selectedTab === "Itineraries Report") {
+      fetchReportData(
+        "http://localhost:8000/admin/reportItineraries",
+        setItineraries,
+        "There was an error fetching the itineraries!"
+      );
+  
+      fetchTotalData(
+        "http://localhost:8000/admin/getTotalItineraryBookAndEarn",
+        setTotalEarning,
+        setNumOfBookings,
+        "There was an error fetching total itineraries data!"
+      );
+    } else {
+      fetchReportData(
+        "http://localhost:8000/admin/reportProducts",
+        setProducts,
+        "There was an error fetching the products!"
+      );
+      fetchTotalData(
+        "http://localhost:8000/admin/getTotalProductBookAndEarn",
+        setTotalEarning,
+        setNumOfBookings,
+        "There was an error fetching total products data!"
+      );
+    }
+  }, [selectedTab]);
+  
 
   //Filtering handlers
   const activityHandleFilterChoiceClick = (event) => {
@@ -244,12 +276,21 @@ const AdminReport = () => {
         : queryString;
 
       // Fetch activities with the constructed query string
-      const response = await axios.get(
+      const response1 = await axios.get(
         `http://localhost:8000/admin/filterReportActivities?${queryString}`
       );
-      setActivities(response.data);
+      setActivities(response1.data);
 
-      if (response.data.length === 0) {
+      if (response1.data.length === 0) {
+        activitySetErrorMessage("No activities found for the selected filters.");
+      }
+      const response2 = await axios.get(
+        `http://localhost:8000/admin/getTotalBookAndEarnFilter?${queryString}`
+      );
+      setTotalEarning(response2.data.totalEarnings);
+      setNumOfBookings(response2.data.totalBookings);
+
+      if (response2.data.length === 0) {
         activitySetErrorMessage("No activities found for the selected filters.");
       }
     } catch (error) {
@@ -286,12 +327,21 @@ const AdminReport = () => {
         : queryString;
 
       // Fetch itineraries with the constructed query string
-      const response = await axios.get(
+      const response1 = await axios.get(
         `http://localhost:8000/admin/filterReportItineraries?${queryString}`
       );
-      setItineraries(response.data);
+      setItineraries(response1.data);
 
-      if (response.data.length === 0) {
+      if (response1.data.length === 0) {
+        itinerarySetErrorMessage("No itineraries found for the selected filters.");
+      }
+      const response2 = await axios.get(
+        `http://localhost:8000/admin/getTotalItineraryBookAndEarn?${queryString}`
+      );
+      setTotalEarning(response2.data.totalEarnings);
+      setNumOfBookings(response2.data.totalBookings);
+
+      if (response2.data.length === 0) {
         itinerarySetErrorMessage("No itineraries found for the selected filters.");
       }
     } catch (error) {
@@ -328,16 +378,25 @@ const AdminReport = () => {
         : queryString;
 
       // Fetch products with the constructed query string
-      const response = await axios.get(
+      const response1 = await axios.get(
         `http://localhost:8000/admin/filterReportProducts?${queryString}`
       );
-      setProducts(response.data);
+      setItineraries(response1.data);
 
-      if (response.data.length === 0) {
-        productSetErrorMessage("No products found for the selected filters.");
+      if (response1.data.length === 0) {
+        itinerarySetErrorMessage("No products found for the selected filters.");
+      }
+      const response2 = await axios.get(
+        `http://localhost:8000/admin/getTotalProductBookAndEarn?${queryString}`
+      );
+      setTotalEarning(response2.data.totalEarnings);
+      setNumOfBookings(response2.data.totalBookings);
+
+      if (response2.data.length === 0) {
+        itinerarySetErrorMessage("No products found for the selected filters.");
       }
     } catch (error) {
-      productSetErrorMessage("Error fetching products!");
+      itinerarySetErrorMessage("Error fetching products!");
     } finally {
       setLoading(false);
     }
@@ -536,6 +595,13 @@ const AdminReport = () => {
           </Typography>
           </Typography>
           <br></br>
+
+
+          <div component={Paper} style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end',  padding: 2 }}>
+            {`Total number of users: ${numOfBookings}`} <br />
+            {`Total number of earnings: ${totalEarnings}`}
+          </div>
+
           <MyTabs tabNames={tabNames} onTabClick={(tabName) => setSelectedTab(tabName)} />
 
           {selectedTab === "Activities Report" && (
@@ -546,7 +612,7 @@ const AdminReport = () => {
               </IconButton>
               <Menu
                 anchorEl={activityFilterAnchorEl}
-                // open={Boolean(activityFilterAnchorEl)}
+                open={Boolean(activityFilterAnchorEl)}
                 onClose={activityHandleFilterClose}
               >
                 {/* Radio Buttons for Filter Selection */}
