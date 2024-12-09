@@ -37,7 +37,7 @@ const ProductDashboard = () => {
   const role = useUserRole();
 
   const tabs=["All Products","My Products"];
-  const paths=["/ProductDashboard","/ViewMyProducts"];
+  const paths=["/ProductDashboard", "/ViewMyProducts"];
 
   useEffect(() => {
     setLoading(true);
@@ -295,9 +295,8 @@ const ProductDashboard = () => {
             paddingBottom: 24,
           }}
         >
-          {products.filter((product) => !product.isArchived).length > 0 ? (
+          {products.length > 0 ? (
             products
-              .filter((product) => !product.isArchived)
               .map((product) => (
                 <NewProductCard
                   key={product._id}

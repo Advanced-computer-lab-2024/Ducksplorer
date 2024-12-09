@@ -35,7 +35,7 @@ const AdminViewMyProducts = () => {
   const [sortOrderAnchorEl, setSortOrderAnchorEl] = useState(null); // Menu state for sorting
 
   const tabs=["All Products","My Products"];
-  const paths=["/ProductDashboard","/ViewMyProducts"]
+  const paths=["/AdminProducts","/AdminViewMyProducts"]
 
   useEffect(() => {
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
@@ -186,9 +186,8 @@ const AdminViewMyProducts = () => {
           }}
         >
           <AddIconCard/>
-          {products.filter((product) => !product.isArchived).length > 0 ? (
+          {products.length > 0 ? (
             products
-              .filter((product) => !product.isArchived)
               .map((product) => (
                 <NewProductCard
                   key={product._id}
@@ -196,6 +195,8 @@ const AdminViewMyProducts = () => {
                   showAddToCart={false}
                   hideWishlist={true}
                   showEditProduct={true}
+                  showArchive={true}
+                  showUnarchive={true}
                 />
               ))
           ) : (

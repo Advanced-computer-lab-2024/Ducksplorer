@@ -8,7 +8,7 @@ import { Rating } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 
-export default function ProductCardDetails({ product }) {
+export default function ProductCardDetails({ product, role }) {
   return (
     <Card variant="outlined" sx={{ width: "100%", height: "auto" }}>
       <AspectRatio ratio="2">
@@ -40,6 +40,11 @@ export default function ProductCardDetails({ product }) {
           <strong>Available Quantity:</strong>{" "}
           {product.availableQuantity || "N/A"}
         </p>
+        {(role === "Admin" || role === "Seller") && (
+          <p>
+           <strong>Sales:</strong> {product.sales}
+          </p>
+        )}
         <p>
           <strong>Reviews:</strong>
         </p>
