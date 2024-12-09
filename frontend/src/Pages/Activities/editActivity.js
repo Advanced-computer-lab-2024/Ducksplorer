@@ -65,7 +65,7 @@ function EditActivity() {
         }
     }, [activity]);
 
-    const handleCheckboxChange = (event, tag) => {
+    const handleTagsCheckboxChange = (event, tag) => {
         const { checked } = event.target;  // Get the checked state of the checkbox
         setSelectedTags((prevSelectedTags) => {
             if (checked) {
@@ -76,6 +76,14 @@ function EditActivity() {
                 return prevSelectedTags.filter((t) => t !== tag);
             }
         });
+    };
+    
+    const handleCheckboxChange = (event) => {
+        const { checked } = event.target;  // Get the checked state of the checkbox
+        setFormData((prevData) => ({
+            ...prevData,
+            isOpen: checked,  // Toggle the isOpen value
+        }));
     };
     
 
@@ -102,7 +110,7 @@ function EditActivity() {
 
         // Update activity using the PUT request
         axios
-            .put(
+            .patch(
                 `http://localhost:8000/activity/${editingActivity._id}`,  // Update the activity endpoint
                 updatedData
             )
@@ -272,7 +280,7 @@ function EditActivity() {
                                         control={
                                             <Checkbox
                                                 checked={selectedTags.includes(element.name)}  // Check if the tag is selected
-                                                onChange={(event) => handleCheckboxChange(event, element.name)}  // Pass both event and tag name
+                                                onChange={(event) => handleTagsCheckboxChange(event, element.name)}  // Pass both event and tag name
                                                 name={element.name}
                                             />
                                         }
