@@ -613,39 +613,61 @@ const AdminReport = () => {
           </Typography>
           <br></br>
 
-
-          <Box
-        component={Paper}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center', // Center align items
-          padding: 2,
-          backgroundColor: '#f5f5f5',
-          borderRadius: '8px',
-          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-          width: '30%', // Make the container smaller
-          margin: '0 auto 20px auto', // Center the box horizontally and add margin below
-        }}
-      >
-        <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'orange' }}>
-          Total Number of Users
-        </Typography>
-        <Typography variant="h4" sx={{ color: 'orange' }}>
-          {numOfBookings}
-        </Typography>
-        <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'orange', marginTop: '16px' }}>
-          Total Earnings
-        </Typography>
-        <Typography variant="h4" sx={{ color: 'orange' }}>
-          {totalEarnings}
-        </Typography>
-      </Box>
-
           <MyTabs tabNames={tabNames} onTabClick={(tabName) => setSelectedTab(tabName)} index={tabIndex} />
 
           {selectedTab === "Activities Report" && (
             <div>
+              {/* Total Number of Users and Total Earnings */}
+              <Box
+                component={Paper}
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-around', // Align items side by side
+                  alignItems: 'center',
+                  padding: 2,
+                  backgroundColor: 'transparent', // Make the outer container transparent
+                  borderRadius: '8px',
+                  width: '80%', // Adjust the width to be smaller
+                  margin: '20px auto', // Add margin-top and center the box horizontally
+                }}
+              >
+                <Box
+                  component={Paper}
+                  sx={{
+                    textAlign: 'center',
+                    padding: 2,
+                    backgroundColor: '#ffffff',
+                    borderRadius: '8px',
+                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+                    width: '45%', // Adjust the width to be smaller
+                  }}
+                >
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'black' }}>
+                    Total Number of Users
+                  </Typography>
+                  <Typography variant="h5" sx={{ color: 'black' }}> {/* Adjusted text size */}
+                    {numOfBookings}
+                  </Typography>
+                </Box>
+                <Box
+                  component={Paper}
+                  sx={{
+                    textAlign: 'center',
+                    padding: 2,
+                    backgroundColor: '#ffffff',
+                    borderRadius: '8px',
+                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+                    width: '45%', // Adjust the width to be smaller
+                  }}
+                >
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'black' }}>
+                    Total Earnings
+                  </Typography>
+                  <Typography variant="h5" sx={{ color: 'black' }}> {/* Adjusted text size */}
+                    {totalEarnings}
+                  </Typography>
+                </Box>
+              </Box>
               {/* Filtering */}
               <IconButton onClick={activityHandleFilterChoiceClick}>
                 <FilterAltIcon style={{ color: "black" }} />
@@ -831,6 +853,57 @@ const AdminReport = () => {
 
           {selectedTab === "Itineraries Report" && (
             <div>
+              {/* Total Number of Users and Total Earnings */}
+              <Box
+                component={Paper}
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-around', // Align items side by side
+                  alignItems: 'center',
+                  padding: 2,
+                  backgroundColor: 'transparent', // Make the outer container transparent
+                  borderRadius: '8px',
+                  width: '80%', // Adjust the width to be smaller
+                  margin: '20px auto', // Add margin-top and center the box horizontally
+                }}
+              >
+                <Box
+                  component={Paper}
+                  sx={{
+                    textAlign: 'center',
+                    padding: 2,
+                    backgroundColor: '#ffffff',
+                    borderRadius: '8px',
+                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+                    width: '45%', // Adjust the width to be smaller
+                  }}
+                >
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'black' }}>
+                    Total Number of Users
+                  </Typography>
+                  <Typography variant="h5" sx={{ color: 'black' }}> {/* Adjusted text size */}
+                    {numOfBookings}
+                  </Typography>
+                </Box>
+                <Box
+                  component={Paper}
+                  sx={{
+                    textAlign: 'center',
+                    padding: 2,
+                    backgroundColor: '#ffffff',
+                    borderRadius: '8px',
+                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+                    width: '45%', // Adjust the width to be smaller
+                  }}
+                >
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'black' }}>
+                    Total Earnings
+                  </Typography>
+                  <Typography variant="h5" sx={{ color: 'black' }}> {/* Adjusted text size */}
+                    {totalEarnings}
+                  </Typography>
+                </Box>
+              </Box>
               {/* Filtering */}
               <IconButton onClick={itineraryHandleFilterChoiceClick}>
                 <FilterAltIcon style={{ color: "black" }}/>
@@ -1064,6 +1137,57 @@ const AdminReport = () => {
 
           {selectedTab === "Products Report" && (
             <div>
+              {/* Total Number of Users and Total Earnings */}
+              <Box
+                component={Paper}
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-around', // Align items side by side
+                  alignItems: 'center',
+                  padding: 2,
+                  backgroundColor: 'transparent', // Make the outer container transparent
+                  borderRadius: '8px',
+                  width: '80%', // Adjust the width to be smaller
+                  margin: '20px auto', // Add margin-top and center the box horizontally
+                }}
+              >
+                <Box
+                  component={Paper}
+                  sx={{
+                    textAlign: 'center',
+                    padding: 2,
+                    backgroundColor: '#ffffff',
+                    borderRadius: '8px',
+                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+                    width: '45%', // Adjust the width to be smaller
+                  }}
+                >
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'black' }}>
+                    Total Number of Users
+                  </Typography>
+                  <Typography variant="h5" sx={{ color: 'black' }}> {/* Adjusted text size */}
+                    {numOfBookings}
+                  </Typography>
+                </Box>
+                <Box
+                  component={Paper}
+                  sx={{
+                    textAlign: 'center',
+                    padding: 2,
+                    backgroundColor: '#ffffff',
+                    borderRadius: '8px',
+                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+                    width: '45%', // Adjust the width to be smaller
+                  }}
+                >
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'black' }}>
+                    Total Earnings
+                  </Typography>
+                  <Typography variant="h5" sx={{ color: 'black' }}> {/* Adjusted text size */}
+                    {totalEarnings}
+                  </Typography>
+                </Box>
+              </Box>
               {/* Filtering */}
               <IconButton onClick={productHandleFilterChoiceClick}>
                 <FilterAltIcon style={{ color: "black" }} />
