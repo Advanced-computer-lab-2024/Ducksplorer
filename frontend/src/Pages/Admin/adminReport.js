@@ -4,7 +4,6 @@ import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import { Link, useNavigate } from "react-router-dom";
 import WarningIcon from "@mui/icons-material/Warning";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { calculateProductRating } from "../../Utilities/averageRating";
 import { calculateAverageRating } from "../../Utilities/averageRating";
 import MyTabs from "../../Components/MyTabs.js";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
