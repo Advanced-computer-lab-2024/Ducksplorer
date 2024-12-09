@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { Tabs, Tab } from "@mui/material";
 
-const MyTabs = ({ tabNames, onTabClick , paths }) => {
-    const [selectedTab, setSelectedTab] = useState(tabNames[0]);
+const MyTabs = ({ tabNames, onTabClick , paths,index }) => {
+    if (!index){index=0}
+    const [selectedTab, setSelectedTab] = useState(tabNames[index]);
+    console.log("tabNames",tabNames)
+    console.log("selectedTab",selectedTab)
+    console.log("index",index)
 
     const handleTabChange = (event, newValue) => {
         setSelectedTab(newValue);
