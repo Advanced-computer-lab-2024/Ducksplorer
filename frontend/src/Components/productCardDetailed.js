@@ -54,7 +54,7 @@ export default function ProductCardDetails({ product }) {
           ))}
         </p>
         <Rating
-          value={product.rating || 0}
+          value={product.averageRating || 0}
           icon={<StarIcon sx={{ color: "orange" }} />}
           emptyIcon={<StarOutlineIcon />}
           readOnly

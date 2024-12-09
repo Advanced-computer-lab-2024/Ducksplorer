@@ -450,10 +450,14 @@ const AdminReport = () => {
   };
 
   const getReviewerRating = (reviewer) => {
-    const ratingEntry = products.ratings.find(
-      (rating) => rating.buyer === reviewer
-    );
-    return ratingEntry ? ratingEntry.rating : "No rating available";
+    const product = products.find(p => p.product._id === reviewer);  // Find the product by reviewer ID
+    if (product && Array.isArray(product.product.ratings)) {
+      const ratingEntry = product.product.ratings.find(
+        (rating) => rating.buyer === reviewer
+      );
+      return ratingEntry ? ratingEntry.rating : "No rating available";
+    }
+    return "No ratings available";
   };
 
   if (loading) {
@@ -542,7 +546,7 @@ const AdminReport = () => {
               </IconButton>
               <Menu
                 anchorEl={activityFilterAnchorEl}
-                open={Boolean(activityFilterAnchorEl)}
+                // open={Boolean(activityFilterAnchorEl)}
                 onClose={activityHandleFilterClose}
               >
                 {/* Radio Buttons for Filter Selection */}
@@ -723,7 +727,7 @@ const AdminReport = () => {
             <div>
               {/* Filtering */}
               <IconButton onClick={itineraryHandleFilterChoiceClick}>
-                <FilterAltIcon />
+                <FilterAltIcon style={{ color: "black" }}/>
               </IconButton>
               <Menu
                 anchorEl={itineraryFilterAnchorEl}
@@ -956,7 +960,7 @@ const AdminReport = () => {
             <div>
               {/* Filtering */}
               <IconButton onClick={productHandleFilterChoiceClick}>
-                <FilterAltIcon />
+                <FilterAltIcon style={{ color: "black" }} />
               </IconButton>
               <Menu
                 anchorEl={productFilterAnchorEl}
@@ -1087,6 +1091,8 @@ const AdminReport = () => {
                           fontWeight: "bold",
                           fontSize: "18px",
                         }}>Reviews</TableCell>
+                         <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                         Purchase Count</TableCell>
                       <TableCell
                         sx={{
                           fontWeight: "bold",
@@ -1097,50 +1103,53 @@ const AdminReport = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {products.length > 0 ? (
-                      products.map((entry) =>
-                        entry && entry.product.totalGain !== undefined ? (
-                          <TableRow key={entry.product._id}>
-                            <TableCell>{entry.product.name}</TableCell>
-                            <TableCell>
-                              {(entry.product.price * (priceExchangeRates[priceCurrency] || 1)).toFixed(2)} {priceCurrency}
-                            </TableCell>
-                            <TableCell>
-                              <Rating
-                                value={calculateAverageRating(entry.product.ratings)}
-                                precision={0.1}
-                                readOnly
-                              />
-                            </TableCell>
-                            <TableCell>{entry.product.availableQuantity}</TableCell>
-                            <TableCell>{entry.product.description}</TableCell>
-                            <TableCell>{Object.entries(entry.product.reviews).length > 0 ? (
-                              Object.entries(entry.product.reviews).map(([user, review]) => (
-                                <div key={user}>
-                                  <Typography variant="body2">User: {review.buyer}</Typography>
-                                  <Typography variant="body2">
-                                    Rating: {getReviewerRating(review.buyer)}
-                                  </Typography>
-                                  <Typography variant="body2">
-                                    Comment: {review.review}
-                                  </Typography>
-                                </div>
-                              ))
-                            ) : (
-                              <Typography variant="body2">No reviews available.</Typography>
-                            )}
-                            </TableCell>
-                            <TableCell>
-                              {((entry.totalEarnings * 0.1) * (earningsExchangeRates[earningsCurrency] || 1)).toFixed(2)} {earningsCurrency}
-                            </TableCell>
-                          </TableRow>
-                        ) : null // Don't render the row for deleted products
-                      )
-                    ) : (
-                      <TableRow>
-                        <TableCell colSpan={12}>No products found</TableCell>
+                  {products.length > 0 ? (
+                  products.map((entry) =>
+                    entry  ? (
+                      <TableRow key={entry.product._id}>
+                        <TableCell>{entry.product.name}</TableCell>
+                        <TableCell>
+                          {(entry.product.price * (priceExchangeRates[priceCurrency] || 1)).toFixed(2)} {priceCurrency}
+                        </TableCell>
+                        <TableCell>
+                          <Rating
+                            value={calculateAverageRating(entry.product.ratings)}
+                            precision={0.1}
+                            readOnly
+                          />
+                        </TableCell>
+                        <TableCell>{entry.product.availableQuantity}</TableCell>
+                        <TableCell>{entry.product.description}</TableCell>
+                        <TableCell>{Object.entries(entry.product.reviews).length > 0 ? (
+                          Object.entries(entry.product.reviews).map(([user, review]) => (
+                            <div key={user}>
+                              <Typography variant="body2">User: {review.buyer}</Typography>
+                              <Typography variant="body2">
+                                Rating: {getReviewerRating(review.buyer)}
+                              </Typography>
+                              <Typography variant="body2">
+                                Comment: {review.review}
+                              </Typography>
+                            </div>
+                          ))
+                        ) : (
+                          <Typography variant="body2">No reviews available.</Typography>
+                        )}
+                        </TableCell>
+                        <TableCell>
+                          {entry.bookedCount}
+                        </TableCell>
+                        <TableCell>
+                          {((entry.totalEarnings * 0.9) * (earningsExchangeRates[earningsCurrency] || 1)).toFixed(2)} {earningsCurrency}
+                        </TableCell>
                       </TableRow>
-                    )}
+                    ) : null // Don't render the row for deleted products
+                  )
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={12}>No products found</TableCell>
+                  </TableRow>
+                )}
 
                   </TableBody>
                 </Table>

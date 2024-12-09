@@ -22,8 +22,7 @@ import AdminNavBar from "../../Components/NavBars/AdminNavBar";
 import DuckLoading from "../../Components/Loading/duckLoading";
 import NavigationTabs from "../../Components/NavigationTabs";
 
-
-const ProductDashboard = () => {
+const AdminViewMyProducts = () => {
   const navigate = useNavigate();
   const isGuest = localStorage.getItem("guest") === "true";
   const [searchQuery, setSearchQuery] = useState("");
@@ -36,29 +35,26 @@ const ProductDashboard = () => {
   const [sortOrderAnchorEl, setSortOrderAnchorEl] = useState(null); // Menu state for sorting
 
   const tabs=["All Products","My Products"];
-  const paths=["/AdminProducts","/AdminViewMyProducts"]
+  const paths=["/ProductDashboard","/ViewMyProducts"]
 
   useEffect(() => {
-    setLoading(true);
+    const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
+    const user = JSON.parse(userJson);
+    const seller = user.username;
     axios
-      .get("http://localhost:8000/adminRoutes/getproducts")
+      .get(`http://localhost:8000/sellerRoutes/ViewMyProducts/${seller}`)
       .then((response) => {
-        // Ensure response.data is an array
-        if (Array.isArray(response.data)) {
-          setProducts(response.data);
-        } else {
-          setProducts([]); // Set to an empty array if response is not an array
-        }
+        message.success("Products fetched successfully");
+        setProducts(response.data);
       })
       .catch((error) => {
         console.error("There was an error fetching the products!", error);
-        message.error("Failed to fetch products.");
-        setProducts([]); // Fallback to empty array in case of error
       })
       .finally(() => {
         setLoading(false);
       });
   }, []);
+
 
   const handleSearchProducts = async () => {
     try {
@@ -178,112 +174,7 @@ const ProductDashboard = () => {
           </div>
         </Box>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "2.5fr 0.5fr auto auto",
-            gap: "16px",
-            paddingBottom: 24,
-            width: "100%",
-          }}
-        >
-          <Input
-            placeholder="Search for a product..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            fullWidth
-            variant="filled"
-            color="primary"
-          />
-
-          <Button
-            variant="solid"
-            onClick={handleSearchProducts}
-            className="blackhover"
-            sx={{ backgroundColor: "#ff9933" }}
-          >
-            Search
-          </Button>
-          <Tooltip title="Filter Products">
-            <IconButton onClick={handleFilterChoiceClick}>
-              <FilterAltIcon sx={{ color: "black" }} />
-            </IconButton>
-          </Tooltip>
-          <Menu
-            anchorEl={filterAnchorEl}
-            open={Boolean(filterAnchorEl)}
-            onClose={handleFilterClose}
-          >
-            <MenuItem>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "16px",
-                }}
-              >
-                <Input
-                  placeholder="Enter minimum price"
-                  type="number"
-                  value={minPrice}
-                  onChange={(e) => setMinPrice(e.target.value)}
-                  fullWidth
-                  variant="filled"
-                  color="primary"
-                />
-                <Input
-                  placeholder="Enter maximum price"
-                  type="number"
-                  value={maxPrice}
-                  onChange={(e) => setMaxPrice(e.target.value)}
-                  fullWidth
-                  variant="filled"
-                  color="primary"
-                />
-                <Button
-                  variant="contained"
-                  onClick={handleFilterProducts}
-                  className="blackhover"
-                  sx={{ marginTop: "16px", backgroundColor: "#ff9933", color: 'white' }}
-                >
-                  Apply Filter
-                </Button>
-              </div>
-            </MenuItem>
-          </Menu>
-
-          {/* Sort Section */}
-          <Tooltip title="Sort by rating">
-            <IconButton onClick={handleSortOrderClick}>
-              <SwapVertIcon sx={{ color: "black" }} />
-            </IconButton>
-          </Tooltip>
-
-          <Menu
-            anchorEl={sortOrderAnchorEl}
-            open={Boolean(sortOrderAnchorEl)}
-            onClose={handleSortOrderClose}
-          >
-            <MenuItem
-              onClick={() => {
-                setSortOrder("asc"); // Set the state for ascending order
-                handleSortProducts("asc"); // Send the 'asc' query parameter to backend
-                handleSortOrderClose(); // Close the sort menu
-              }}
-            >
-              Ascending
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                setSortOrder("desc"); // Set the state for descending order
-                handleSortProducts("desc"); // Send the 'desc' query parameter to backend
-                handleSortOrderClose(); // Close the sort menu
-              }}
-            >
-              Descending
-            </MenuItem>
-          </Menu>
-        </div>
+        
 
         <div
           style={{
@@ -318,4 +209,4 @@ const ProductDashboard = () => {
   );
 };
 
-export default ProductDashboard;
+export default AdminViewMyProducts;

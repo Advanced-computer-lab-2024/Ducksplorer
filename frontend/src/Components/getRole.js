@@ -4,9 +4,11 @@ import axios from "axios";
 
 const useUserRole = () => {
   const [userRole, setUserRole] = useState("");
+  const isGuest = localStorage.getItem("guest") === "true";
 
   useEffect(() => {
-    const fetchUserRole = async () => {
+    if(!isGuest)
+{    const fetchUserRole = async () => { 
       const userJson = localStorage.getItem("user");
       const user = JSON.parse(userJson);
       const userName = user.username;
@@ -23,7 +25,7 @@ const useUserRole = () => {
       }
     };
 
-    fetchUserRole();
+    fetchUserRole();}
   }, []);
 
   return userRole;

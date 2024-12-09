@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import DuckLoading from "../Loading/duckLoading";
+import AdminNavBar from "../NavBars/AdminNavBar";
 
 const ComplaintDetails = () => {
   const { id } = useParams(); // Get the complaint ID from the URL
@@ -60,7 +61,9 @@ const ComplaintDetails = () => {
   }
 
   return (
+    
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
+      <AdminNavBar/>
       <Paper elevation={4} sx={{ p: 4, borderRadius: 2 }}>
         <Typography
           variant="h4"

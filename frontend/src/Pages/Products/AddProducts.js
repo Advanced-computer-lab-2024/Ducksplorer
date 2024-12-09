@@ -6,21 +6,16 @@ import { Button, Input } from "@mui/joy";
 import UploadFile from "../../Components/ProductUploadImage";
 import { Typography } from "@mui/material";
 import SellerNavBar from "../../Components/NavBars/SellerNavBar";
-import useUserRole from "../../Components/getRole";
-import AdminNavBar from "../../Components/NavBars/AdminNavBar";
-import { useNavigate } from "react-router-dom";
 
 let picture = "";
 
 function AddProducts() {
   const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [availableQuantity, setAvailableQuantity] = useState("");
+  const [price, setPrice] = useState();
+  const [availableQuantity, setAvailableQuantity] = useState();
   const [description, setDescription] = useState("");
   const [URL, setURL] = useState("");
   const fileInputRef = useRef(null);
-  const role = useUserRole();
-  const navigate = useNavigate();
 
   const handleAddProduct = async () => {
     try {
@@ -47,12 +42,6 @@ function AddProducts() {
         console.log("i am posting", response.data);
         console.log(picture);
         message.success("product added successfully");
-        if(role==="Admin"){
-          navigate('/AdminDashboard');
-        }
-        else if (role==="Seller"){
-          navigate('/sellerDashboard');
-        }
       } else {
         message.error("failed to add admin");
       }
@@ -79,10 +68,10 @@ function AddProducts() {
 
   return (
     <div style={{height:"100vh" , overflow: "hidden"}}>
-  {role === "Admin" ? <AdminNavBar/> : <SellerNavBar/>} 
-  <div style={styles.container}>
+    <SellerNavBar/>
+    <div style={styles.container}>
       <div style={styles.leftSection}>
-        <Typography variant="h3" className="duckTitle"  style={styles.welcomeText}>
+        <Typography variant="h3" className="duckTitle"  style={styles.welcomeText} >
           Add Your Product
         </Typography>
       </div>
@@ -101,7 +90,6 @@ function AddProducts() {
               style={{
                 textAlign: "center",
                 alignSelf: "center",
-                marginTop: "10%",
               }}
             >
               Add Product
@@ -200,7 +188,6 @@ const styles = {
     fontSize: "3rem",
     fontWeight: "bold",
     marginBottom: "20px",
-    position: "fixed",
   },
   descriptionText: {
     fontSize: "1.5rem",

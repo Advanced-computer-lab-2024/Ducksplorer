@@ -198,9 +198,10 @@ const RUDMuseum = () => {
               <Table>
                 <TableHead>
                   <TableRow>
+                  <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Name</TableCell>
                     <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Description</TableCell>
                     <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Location</TableCell>
-                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Pictures</TableCell>
+                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Picture</TableCell>
                     <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>
                       Ticket Price
                       <CurrencyConvertor onCurrencyChange={handleCurrencyChange} />
@@ -208,7 +209,6 @@ const RUDMuseum = () => {
                     <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Opening Time</TableCell>
                     <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Closing Time</TableCell>
                     <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Date</TableCell>
-                    <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Name</TableCell>
                     <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Category</TableCell>
                     <TableCell sx={{ fontSize: "18px", fontWeight: "bold" }}>Tags</TableCell>
                     {/* <TableCell>Created By</TableCell> */}
@@ -218,6 +218,7 @@ const RUDMuseum = () => {
                 <TableBody>
                   {museums.map((museum) => (
                     <TableRow key={museum._id}>
+                      <TableCell>{museum.museumName}</TableCell>
                       <TableCell>{museum.description}</TableCell>
                       <TableCell>{museum.location}</TableCell>
                       <TableCell>
@@ -239,8 +240,7 @@ const RUDMuseum = () => {
                       </TableCell>
                       <TableCell>{museum.openingTime}</TableCell>
                       <TableCell>{museum.closingTime}</TableCell>
-                      <TableCell>{museum.museumDate}</TableCell>
-                      <TableCell>{museum.museumName}</TableCell>
+                      <TableCell>{new Date(museum.museumDate).toLocaleDateString()}</TableCell>
                       <TableCell>{museum.museumCategory}</TableCell>
                       <TableCell>{museum.tags.join(", ")}</TableCell>
                       {/* <TableCell>{museum.createdBy}</TableCell> */}

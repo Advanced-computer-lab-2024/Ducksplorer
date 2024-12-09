@@ -1,11 +1,15 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
+import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Select from "@mui/joy/Select";
+import Option from "@mui/joy/Option";
+import Input from "@mui/joy/Input";
+import { selectClasses } from "@mui/joy/Select";
+import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
+import{FormControl,Menu} from "@mui/material"
 import axios from "axios";
-import { useState } from "react";
 
 export default function CategoriesDropDown() {
   const [category, setCategory] = useState("Category");
@@ -34,34 +38,51 @@ export default function CategoriesDropDown() {
         console.error("There was an error fetching the categories!", error);
       });
   }, []);
-  // Additional state variables for conditional fields
 
   return (
-    <PopupState variant="popover" popupId="demo-popup-menu">
+    <PopupState variant="popover" style={{color:"yellow"}}popupId="demo-popup-menu">
       {(popupState) => (
         <>
-          <Button
-            style={{ marginBottom: "10px", backgroundColor : "orange" , alignself : "center" , width : "100%" }}
-            variant="contained"
-            {...bindTrigger(popupState)}
-          >
-            {category}
-          </Button>
+          {/* Replaced Button with TextField */}
+          <FormControl sx={{ width: "100%" }}>
+            <Select
+              indicator={<KeyboardArrowDown />}
+              color="grey"
+              placeholder="Category"
+              onChange={(e, newValue) => {
+                setCategory(newValue);
+              }}
+              sx={{
+                width: "100%",
+                [`& .${selectClasses.indicator}`]: {
+                  transition: "0.2s",
+                  [`&.${selectClasses.expanded}`]: {
+                    transform: "rotate(-180deg)",
+                  },
+                },
+              }}
+            >
+              {categoryNames.map((cat) => (
+                <Option key={cat._id} value={cat.name}>
+                  {cat.name}
+                </Option>
+              ))}
+            </Select>
+          </FormControl>
           <Menu {...bindMenu(popupState)}>
-            {categoryNames.map((element) => {
-              return (
-                <MenuItem
-                  key={element._id}
-                  onClick={() => {
-                    selectCategory(`${element.name}`, popupState);
-                    console.log(element.name);
-                    localStorage.setItem("category", element.name);
-                  }}
-                >
-                  {element.name}
-                </MenuItem>
-              );
-            })}
+            {categoryNames.map((element) => (
+              <MenuItem
+                
+                key={element._id}
+                onClick={() => {
+                  selectCategory(`${element.name}`, popupState);
+                  console.log(element.name);
+                  localStorage.setItem("category", element.name);
+                }}
+              >
+                {element.name}
+              </MenuItem>
+            ))}
           </Menu>
         </>
       )}

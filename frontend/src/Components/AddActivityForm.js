@@ -205,7 +205,7 @@ const AddActivityForm = () => {
                     id="isOpenDiv"
                     style={{
                       display: "flex",
-                      flexDirection: "row",
+                      flexDirection: "row", 
                       border: "1px solid rgba(0,0,0,.2)",
                       borderRadius: 5,
                       height: 55,
@@ -223,7 +223,7 @@ const AddActivityForm = () => {
                     </p>
                     <input
                       name="isOpen"
-
+                        
                       label="isOpen"
                       type="checkbox"
                       checked={isOpen}
@@ -272,6 +272,7 @@ const AddActivityForm = () => {
                     }}
                     fullWidth
                   />
+                  
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
@@ -282,12 +283,10 @@ const AddActivityForm = () => {
                     disabled // Make it non-editable, coming from the map
                     fullWidth
                   />
-                </Grid>
-                <Grid item xs={12}>
-                  <Button
+                     <Button
                     variant="contained"
                     color="primary"
-                    sx={{ backgroundColor: "orange" }}
+                    sx={{ backgroundColor: "baby-blue", marginTop:"2%" }}
                     onClick={handleNavigate} // Use the handleNavigate function for routing
                     fullWidth
                   >
@@ -295,7 +294,10 @@ const AddActivityForm = () => {
                   </Button>
                 </Grid>
                 <Grid item xs={12}>
-                  <CategoriesDropDown style={{ backgroundColor: "orange" }} />
+                  
+                </Grid>
+                <Grid item xs={12}>
+                  <CategoriesDropDown style={{ Color: "orange" }} />
                 </Grid>
                 <Grid item xs={12}>
                   <div
@@ -304,8 +306,10 @@ const AddActivityForm = () => {
                       flexDirection: "row",
                       flexWrap: "wrap",
                       flexBasis: 10,
+                      backgroundColor: "baby-blue"
                     }}
                   >
+                 
                     {allTags.map((element) => {
                       return (
                         <StandAloneToggleButton
@@ -315,6 +319,7 @@ const AddActivityForm = () => {
                         />
                       );
                     })}
+                    
                   </div>
                 </Grid>
                 <Grid item xs={12}>
@@ -332,6 +337,7 @@ const AddActivityForm = () => {
                       fontSize: "16px",
                     }}
                   >
+
                     Add Activity
                   </Button>
                 </Grid>
@@ -352,6 +358,7 @@ const styles = {
     background: 'url("/duckActivity.jpg") no-repeat left center fixed',
     backgroundSize: "cover",
     overflowY: "visible",
+    marginTop:"70px"
   },
   leftSection: {
     flex: 1,
