@@ -29,6 +29,7 @@ import { Link } from "react-router-dom";
 import TouristSidebar from "../../Components/Sidebars/TouristSidebar";
 import DuckLoading from "../../Components/Loading/duckLoading";
 import Error404 from "../../Components/Error404";
+import Swal from "sweetalert2";
 
 const BookingDetails = () => {
   const userName = JSON.parse(localStorage.getItem("user")).username;
@@ -185,6 +186,7 @@ const BookingDetails = () => {
             prev.filter((itinerary) => itinerary._id !== itemId)
           );
         }
+        fetchWalletBalance(userName);
         await fetchBookings();
         // Re-fetch bookings to ensure the state is in sync with the server
         //fetchBookings();
@@ -201,6 +203,44 @@ const BookingDetails = () => {
       );
     } finally {
       setLoading(false);
+    }
+  };
+  const fetchWalletBalance = async (userName) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/touristRoutes/balance/${userName}`
+      );
+
+      // Extract the wallet balance from the response
+      const wallet = response.data;
+      console.log("res is ", response.data);
+      console.log("balance is", wallet);
+
+      // Display wallet balance in a SweetAlert popup
+      await Swal.fire({
+        title: "Wallet Balance",
+        text: `Your current wallet balance is $${wallet}`,
+        icon: "info",
+        customClass: {
+          icon: "custom-icon-color", // Use this class to style the icon
+        },
+        confirmButtonText: "OK",
+      });
+
+      // Return the wallet balance if needed for further use
+      return wallet;
+    } catch (error) {
+      console.error("Error fetching wallet balance:", error);
+
+      // Show an error popup if something goes wrong
+      await Swal.fire({
+        title: "Error",
+        text: "Failed to fetch wallet balance. Please try again later.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+
+      throw error; // Rethrow the error if you want to handle it elsewhere
     }
   };
 
@@ -234,7 +274,8 @@ const BookingDetails = () => {
             prev.filter((transportation) => transportation.id !== booking)
           );
         }
-
+        console.log("username", userName);
+        fetchWalletBalance(userName);
         // Re-fetch bookings to ensure the state is in sync with the server
         fetchBookings();
       } else {
