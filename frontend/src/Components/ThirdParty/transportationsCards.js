@@ -111,7 +111,7 @@ const TransportationsCards = ({ transportations }) => {
   }, []);
 
   return (
-    <Box sx={{ flexGrow: 1, mt: 4, overflowY: "visible", height: "90vh" }}>
+    <Box sx={{ flexGrow: 1, mt: 4, overflowY: "visible", height: "90vh", marginTop:"0px" }}>
       <Typography
         variant="h6"
         component="div"
@@ -140,12 +140,13 @@ const TransportationsCards = ({ transportations }) => {
               variant="outlined"
               className="activity-card"
               sx={{
-                width: "30vw",
-                height: "85vh",
+                width: "auto",
+                height: "auto",
                 cursor: "pointer",
                 borderRadius: 5,
                 boxShadow: "0 8px 16px 0 rgba(0,0,0,0.2)",
                 backgroundColor: "#f5f5f5",
+
               }}
             >
               <CardContent sx={{ padding: 2 }}>

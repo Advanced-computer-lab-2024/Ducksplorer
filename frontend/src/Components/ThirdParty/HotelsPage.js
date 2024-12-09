@@ -29,6 +29,7 @@ const HotelsPage = () => {
           fontSize: "40px",
           fontWeight: "700",
           color: "orange",
+          marginTop:"2%",
           fontSize: '2rem'
         }}>
         Available Hotels
