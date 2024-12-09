@@ -366,7 +366,7 @@ const confirmOTP = async (req, res) => {
 };
 
 const sendConfirmation = async (req, res) => {
-  const { email, itemId, type } = req.body;
+  const { email, itemId, type,thirdParty } = req.body;
 
   let booking;
   switch (type) {
@@ -380,18 +380,29 @@ const sendConfirmation = async (req, res) => {
         "name activity date locations chosenDate price category tags duration averageRating -_id"
       );
       break;
+    case "flight":
+      booking = thirdParty;
+      break;
+    case "hotel":
+      booking = thirdParty;
+      break;
+    case "transportation":
+      booking = thirdParty;
+      break;    
     default:
       return res.status(400).json({ message: "Invalid booking type" });
-  }
+      }
+  
 
-  if (!booking) {
+  if (!booking && (type === "activity" || type === "itinerary")) {
     return res.status(404).json({ message: "Booking not found" });
   }
 
   // Convert booking object to plain object and handle the activities array
-  const formattedBooking = booking.toObject();
+  const formattedBooking = (type==="activity" || type==="itinerary")? booking.toObject() : booking;
 
-  if (formattedBooking.activity && Array.isArray(formattedBooking.activity)) {
+
+  if ((type==="activity" || type==="itinerary")   && formattedBooking.activity && Array.isArray(formattedBooking.activity)) {
     // Extract only the names of activities
     formattedBooking.activities = formattedBooking.activity
       .map((item) => item.name)
