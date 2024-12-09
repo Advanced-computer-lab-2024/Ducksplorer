@@ -325,6 +325,7 @@ const PastBookingDetails = () => {
             Past Bookings History
           </Typography>
           <br></br>
+<<<<<<< HEAD
           <MyTabs
             tabNames={tabNames}
             onTabClick={(tabName) => setSelectedTab(tabName)}
@@ -370,6 +371,145 @@ const PastBookingDetails = () => {
                         >
                           {header}
                         </TableCell>
+=======
+          <MyTabs tabNames={tabNames} onTabClick={(tabName) => setSelectedTab(tabName)} />
+          {(selectedTab === "Activities" ||
+            selectedTab === "All") && (
+              <>
+                {" "}
+                <Typography
+                  variant="h5"
+                  sx={{ fontWeight: "bold", marginBottom: "20px" }}
+                  gutterBottom
+                >
+                  Activities
+                </Typography>
+                <TableContainer
+                  component={Paper}
+                  sx={{
+                    marginBottom: 4,
+                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+                    borderRadius: "1.5cap",
+                  }}
+                >
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        {[
+                          "Name",
+                          "Is Open",
+                          "Advertiser",
+                          "Date",
+                          "Location",
+                          "Price",
+                          "Category",
+                          "Tags",
+                          "Special Discount",
+                          "Duration",
+                          "Rating",
+                          "Rate",
+                          "Comment",
+                        ].map((header) => (
+                          <TableCell
+                            sx={{ fontWeight: "bold", fontSize: "18px" }}
+                          >
+                            {header}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {activityBookings.map((activityBooking) => (
+                        <TableRow key={activityBooking.activity._id}>
+                          <TableCell>{activityBooking.activity.name}</TableCell>
+                          <TableCell>
+                            {activityBooking.activity.isOpen ? "Yes" : "No"}
+                          </TableCell>
+                          <TableCell>
+                            {activityBooking.activity.advertiser}
+                          </TableCell>
+                          <TableCell>
+                            {new Date(
+                              activityBooking.activity.date
+                            ).toLocaleDateString()}
+                          </TableCell>
+                          <TableCell>
+                            {activityBooking.activity.location}
+                          </TableCell>
+                          <TableCell>{activityBooking.chosenPrice}</TableCell>
+                          <TableCell>
+                            {activityBooking.activity.category}
+                          </TableCell>
+                          <TableCell>
+                            {activityBooking.activity &&
+                              activityBooking.activity.tags?.length
+                              ? activityBooking.activity.tags.join(", ")
+                              : "No tags available"}
+                          </TableCell>
+                          <TableCell>
+                            {activityBooking.activity.specialDiscount}%
+                          </TableCell>
+                          <TableCell>
+                            {activityBooking.activity.duration} mins
+                          </TableCell>
+                          <TableCell>{activityBooking.rating}/5</TableCell>
+                          <TableCell>
+                            <Rating
+                              name={`activity-rating-${activityBooking._id}`}
+                              value={activityBooking.rating}
+                              precision={0.5}
+                              onChange={(event, newValue) =>
+                                handleActivityRatingChange(
+                                  activityBooking._id,
+                                  newValue
+                                )
+                              }
+                              sx={{ color: "#FFD700" }} // Golden color for stars
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                              }}
+                            >
+                              <TextField
+                                variant="outlined"
+                                size="small"
+                                width="auto"
+                                value={
+                                  activityComments[activityBooking._id] || ""
+                                }
+                                onChange={(e) =>
+                                  handleActivityCommentChange(
+                                    activityBooking._id,
+                                    e.target.value
+                                  )
+                                }
+                                placeholder="Add a comment"
+                                sx={{
+                                  flexGrow: 1,
+                                  "& .MuiOutlinedInput-root": {
+                                    borderRadius: 2,
+                                  },
+                                }}
+                              />
+                              <Button
+                                onClick={() =>
+                                  handleActivityCommentSubmit(activityBooking._id)
+                                }
+                                variant="contained"
+                                className="blackhover"
+                                size="small"
+                              >
+                                Submit
+                              </Button>
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+>>>>>>> 87b569640fd0fb01935e5e9f1ac6f31c7f55d918
                       ))}
                     </TableRow>
                   </TableHead>
