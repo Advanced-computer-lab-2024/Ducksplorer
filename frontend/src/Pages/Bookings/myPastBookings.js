@@ -432,6 +432,7 @@ const PastBookingDetails = () => {
                               <TextField
                                 variant="outlined"
                                 size="small"
+                                width="auto"
                                 value={
                                   activityComments[activityBooking._id] || ""
                                 }
