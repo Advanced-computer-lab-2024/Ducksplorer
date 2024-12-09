@@ -32,6 +32,7 @@ const FlightsPage = () => {
           fontWeight: "700",
           color: "orange",
           fontSize: "2rem",
+          marginTop:"2%"
         }}
       >
         Available Flights

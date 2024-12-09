@@ -6,11 +6,11 @@ import {
   Container,
   Grid,
   Box,
-  Typography
+  Typography,
 } from "@mui/material";
 import axios from "axios";
 import { message } from "antd";
-import CategoriesDropDown from "./CategoryDropDown";
+import CategoriesDropDown from "./CategoryDropDown"; // Ensure CategoriesDropDown is imported
 import StandAloneToggleButton from "./ToggleButton";
 import AdvertiserSidebar from "./Sidebars/AdvertiserSidebar";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +24,7 @@ const AddActivityForm = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [location, setLocation] = useState(""); // Location state
   const [price, setPrice] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(""); // Category state - no longer using localStorage
   const [specialDiscount, setSpecialDiscount] = useState("");
   const [duration, setDuration] = useState("");
   const allTags = JSON.parse(localStorage.getItem("tags")) || [];
@@ -48,14 +48,14 @@ const AddActivityForm = () => {
         specialDiscount: storedDiscount,
         duration: storedDuration,
         tags: storedTags,
+        category: storedCategory,
       } = JSON.parse(storedFormData);
 
       setName(storedName || "");
       setDate(storedDate || "");
       setIsOpen(storedIsOpen || false);
       setPrice(storedPrice || "");
-      // setCategory(localStorage.getItem("category") ? localStorage.getItem("category").trim() : "");
-      setCategory(localStorage.getItem("category") || "");
+      setCategory(storedCategory || ""); // Now category is managed by state
       setSpecialDiscount(storedDiscount || "");
       setDuration(storedDuration || "");
       tags = storedTags || [];
@@ -69,7 +69,7 @@ const AddActivityForm = () => {
     date,
     location, // Use updated location
     price,
-    category,
+    category, // Include the selected category here
     tags,
     specialDiscount,
     duration,
@@ -148,6 +148,11 @@ const AddActivityForm = () => {
     navigate("/location"); // Navigate to /location when button is clicked
   };
 
+  // Callback to update the selected category
+  const handleCategoryChange = (selectedCategory) => {
+    setCategory(selectedCategory); // Update the category state
+  };
+
   return (
     <div>
       <AdvertiserNavBar />
@@ -205,7 +210,7 @@ const AddActivityForm = () => {
                     id="isOpenDiv"
                     style={{
                       display: "flex",
-                      flexDirection: "row", 
+                      flexDirection: "row",
                       border: "1px solid rgba(0,0,0,.2)",
                       borderRadius: 5,
                       height: 55,
@@ -223,7 +228,6 @@ const AddActivityForm = () => {
                     </p>
                     <input
                       name="isOpen"
-                        
                       label="isOpen"
                       type="checkbox"
                       checked={isOpen}
@@ -231,7 +235,7 @@ const AddActivityForm = () => {
                         alignSelf: "center",
                         marginRight: 12,
                         borderRadius: "5px",
-                        color: "#ff9933"
+                        color: "#ff9933",
                       }}
                       onChange={() => setIsOpen(!isOpen)}
                     />
@@ -268,11 +272,9 @@ const AddActivityForm = () => {
                     value={duration}
                     onChange={(e) => {
                       setDuration(e.target.value);
-                      setCategory(localStorage.getItem("category"));
                     }}
                     fullWidth
                   />
-                  
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
@@ -283,10 +285,10 @@ const AddActivityForm = () => {
                     disabled // Make it non-editable, coming from the map
                     fullWidth
                   />
-                     <Button
+                  <Button
                     variant="contained"
                     color="primary"
-                    sx={{ backgroundColor: "baby-blue", marginTop:"2%" }}
+                    sx={{ backgroundColor: "baby-blue", marginTop: "2%" }}
                     onClick={handleNavigate} // Use the handleNavigate function for routing
                     fullWidth
                   >
@@ -294,11 +296,10 @@ const AddActivityForm = () => {
                   </Button>
                 </Grid>
                 <Grid item xs={12}>
-                  
+                  <CategoriesDropDown onCategorySelect={handleCategoryChange} />{" "}
+                  {/* Make sure prop name matches here */}
                 </Grid>
-                <Grid item xs={12}>
-                  <CategoriesDropDown style={{ Color: "orange" }} />
-                </Grid>
+
                 <Grid item xs={12}>
                   <div
                     style={{
@@ -306,10 +307,9 @@ const AddActivityForm = () => {
                       flexDirection: "row",
                       flexWrap: "wrap",
                       flexBasis: 10,
-                      backgroundColor: "baby-blue"
+                      backgroundColor: "baby-blue",
                     }}
                   >
-                 
                     {allTags.map((element) => {
                       return (
                         <StandAloneToggleButton
@@ -319,7 +319,6 @@ const AddActivityForm = () => {
                         />
                       );
                     })}
-                    
                   </div>
                 </Grid>
                 <Grid item xs={12}>
@@ -337,7 +336,6 @@ const AddActivityForm = () => {
                       fontSize: "16px",
                     }}
                   >
-
                     Add Activity
                   </Button>
                 </Grid>
@@ -358,7 +356,7 @@ const styles = {
     background: 'url("/duckActivity.jpg") no-repeat left center fixed',
     backgroundSize: "cover",
     overflowY: "visible",
-    marginTop:"70px"
+    marginTop: "70px",
   },
   leftSection: {
     flex: 1,
@@ -386,12 +384,9 @@ const styles = {
   },
   welcomeText: {
     fontSize: "3rem",
-    fontWeight: "bold",
-    marginBottom: "20px",
-    position: "fixed",
-  },
-  descriptionText: {
-    fontSize: "1.5rem",
+    fontWeight: 600,
+    letterSpacing: "1px",
+    marginBottom: "10px",
     textAlign: "center",
   },
 };

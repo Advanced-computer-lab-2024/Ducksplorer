@@ -20,6 +20,8 @@ import Help from "../../Components/HelpIcon";
 import SellerNavBar from "../../Components/NavBars/SellerNavBar";
 import DuckLoading from "../../Components/Loading/duckLoading";
 import NavigationTabs from "../../Components/NavigationTabs";
+import AdminNavBar from "../../Components/NavBars/AdminNavBar";
+import useUserRole from "../../Components/getRole";
 
 const ProductDashboard = () => {
   const navigate = useNavigate();
@@ -32,6 +34,7 @@ const ProductDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [filterAnchorEl, setFilterAnchorEl] = useState(null); // Menu state for filter
   const [sortOrderAnchorEl, setSortOrderAnchorEl] = useState(null); // Menu state for sorting
+  const role = useUserRole();
 
   const tabs=["All Products","My Products"];
   const paths=["/ProductDashboard","/ViewMyProducts"];
@@ -166,7 +169,7 @@ const ProductDashboard = () => {
         paddingTop: "2vh", // Adjust for navbar height
       }}
     >
-      <SellerNavBar />
+      {role === "Admin" ? <AdminNavBar /> : <SellerNavBar />}
 
       <Container sx={{ width: "100%" }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
