@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { message } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
-import StandAloneToggleButton from "../../Components/ToggleButton.js";
+import StandAloneToggleButton from "../../Components/MuseumHistoricalPlaceComponent/TagsToggleButtons";
 
 import {
     Box,
@@ -11,12 +11,11 @@ import {
     Paper,
     TextField,
 } from "@mui/material";
-import AdvertiserNavBar from "../../Components/TopNav/AdvertiserNavbar";
+import GovernorNavBar from "../../Components/NavBars/GovernorNavBar";
 import { Select } from "antd";  // Import Select component
 
 function EditHistoricalPlace() {
     const historicalPlace = JSON.parse(localStorage.getItem("selectedHistoricalPlace"));
-    let allTags = JSON.parse(localStorage.getItem("HistoricalTags"));
     const { state } = useLocation();
     const navigate = useNavigate();
     const museum = JSON.parse(localStorage.getItem("selectedMuseum"));
@@ -37,14 +36,34 @@ function EditHistoricalPlace() {
         HistoricalPlaceCategory: historicalPlace.HistoricalPlaceCategory || "",
         tags: historicalPlace.tags || [],
     });
+    const [allTags, setAllTags] = useState([]);
+
+    useEffect(() => {
+        const fetchTags = async () => {
+            try {
+                const response = await axios.get("http://localhost:8000/historicalPlaceTags/getAllHistoricalPlaceTags");
+                const data = response.data;
+                const historicalPlaceTags = data.map((element) => ({
+                    _id: element._id,
+                    name: element.historicalPlaceTag,
+                }));
+                setAllTags(historicalPlaceTags);
+                localStorage.setItem("HistoricalTags", JSON.stringify(historicalPlaceTags));
+            } catch (error) {
+                console.error("There was an error fetching the tags:", error);
+            }
+        };
+
+        fetchTags();
+    }, []);
     
 
-    // Scroll to form on edit
-    useEffect(() => {
-        if (formRef.current) {
-            formRef.current.scrollIntoView({ behavior: "smooth" });
-        }
-    }, []);
+    // // Scroll to form on edit
+    // useEffect(() => {
+    //     if (formRef.current) {
+    //         formRef.current.scrollIntoView({ behavior: "smooth" });
+    //     }
+    // }, []);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -105,7 +124,7 @@ function EditHistoricalPlace() {
                 height: "100vh",
             }}
         >
-            <AdvertiserNavBar />
+            <GovernorNavBar />
 
             <Box
                 sx={{
@@ -246,6 +265,7 @@ function EditHistoricalPlace() {
                                     {allTags.map((element) => {
                                         return (
                                             <StandAloneToggleButton
+                                                tagType={"historicalPlace"}
                                                 key={element._id}
                                                 name={element.name}
                                                 tags={formData.tags}
