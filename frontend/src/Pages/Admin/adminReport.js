@@ -597,10 +597,33 @@ const AdminReport = () => {
           <br></br>
 
 
-          <div component={Paper} style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end',  padding: 2 }}>
-            {`Total number of users: ${numOfBookings}`} <br />
-            {`Total number of earnings: ${totalEarnings}`}
-          </div>
+          <Box
+        component={Paper}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center', // Center align items
+          padding: 2,
+          backgroundColor: '#f5f5f5',
+          borderRadius: '8px',
+          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+          width: '30%', // Make the container smaller
+          margin: '0 auto 20px auto', // Center the box horizontally and add margin below
+        }}
+      >
+        <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'orange' }}>
+          Total Number of Users
+        </Typography>
+        <Typography variant="h4" sx={{ color: 'orange' }}>
+          {numOfBookings}
+        </Typography>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'orange', marginTop: '16px' }}>
+          Total Earnings
+        </Typography>
+        <Typography variant="h4" sx={{ color: 'orange' }}>
+          {totalEarnings}
+        </Typography>
+      </Box>
 
           <MyTabs tabNames={tabNames} onTabClick={(tabName) => setSelectedTab(tabName)} />
 

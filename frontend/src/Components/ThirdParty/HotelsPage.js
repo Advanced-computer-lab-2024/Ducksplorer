@@ -20,7 +20,7 @@ const HotelsPage = () => {
 
   return (
     <div style={styles.container}>
-      <TouristNavbar /> {/* Add TouristNavbar */}
+      <TouristNavbar onCurrencyChange={() => {}} /> {/* Add TouristNavbar with onCurrencyChange prop */}
       <h1
         className="duckTitle"
         style={{

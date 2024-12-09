@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { message } from "antd";
 import ItineraryCard from "../../Components/itineraryCard.js";
@@ -23,7 +23,6 @@ import {
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { Link, useParams } from "react-router-dom";
-import CurrencyConvertor from "../../Components/CurrencyConvertor.js";
 import Help from "../../Components/HelpIcon.js";
 import TouristNavBar from "../../Components/TouristNavBar";
 import Input from "@mui/joy/Input";
@@ -52,8 +51,9 @@ function SearchItineraries() {
   const [tags, setTags] = useState([]); // Tags selected by the user
   const [allTags, setAllTags] = useState([]); // All available tags from backend
 
+  const initialCurrency = "USD"; // Set initial currency
   const [exchangeRates, setExchangeRates] = useState({});
-  const [currency, setCurrency] = useState("EGP");
+  const [currency, setCurrency] = useState(initialCurrency);
   const [loading, setLoading] = useState(true);
   const [activityExchangeRates, setActivityExchangeRates] = useState({});
   const [activityCurrency, setActivityCurrency] = useState("EGP");
@@ -222,10 +222,19 @@ function SearchItineraries() {
     setSelectedFilters(newFilters);
   };
 
-  const handleCurrencyChange = (rates, selectedCurrency) => {
+  const handleCurrencyChange = useCallback((rates, selectedCurrency) => {
     setExchangeRates(rates);
     setCurrency(selectedCurrency);
+  }, []);
+
+  const convertPrice = (price, fromCurrency) => {
+    if (!exchangeRates || !exchangeRates[fromCurrency] || !exchangeRates[currency]) {
+      return price;
+    }
+    const rate = exchangeRates[currency] / exchangeRates[fromCurrency];
+    return (price * rate).toFixed(2);
   };
+
   //clear all filters
   const handleClearAllFilters = () => {
     setMinPrice("");
@@ -385,15 +394,14 @@ function SearchItineraries() {
       }}
     >
         {isGuest === true ? (
-          <GuestNavBar /> // Replace with your guest navbar component
+          <GuestNavBar onCurrencyChange={handleCurrencyChange} /> 
         ) : (
-          <TouristNavBar /> // Replace with your tourist navbar component
+          <TouristNavBar onCurrencyChange={handleCurrencyChange} /> 
         )} 
         <Container sx={{ width: "100%" }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography class="bigTitle">Itineraries</Typography>
         </Box>
-
         <div
           style={{
             //div to surround search bar, button and the filter, and 2 sort icons
@@ -721,7 +729,7 @@ function SearchItineraries() {
               !itinerary.isDeactivated &&
               !itinerary.tourGuideDeleted &&
               !itinerary.deletedItinerary ? (
-                <ItineraryCard key={itinerary._id} itinerary={itinerary} />
+                <ItineraryCard key={itinerary._id} itinerary={{ ...itinerary, price: convertPrice(itinerary.price, "USD") }} />
               ) : null
             )}
           </div>
