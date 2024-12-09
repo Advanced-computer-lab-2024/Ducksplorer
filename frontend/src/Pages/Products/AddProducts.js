@@ -71,7 +71,7 @@ function AddProducts() {
     <SellerNavBar/>
     <div style={styles.container}>
       <div style={styles.leftSection}>
-        <Typography variant="h3" className="duckTitle"  style={styles.welcomeText}>
+        <Typography variant="h3" className="duckTitle"  style={styles.welcomeText} >
           Add Your Product
         </Typography>
       </div>
@@ -188,7 +188,6 @@ const styles = {
     fontSize: "3rem",
     fontWeight: "bold",
     marginBottom: "20px",
-    position: "fixed",
   },
   descriptionText: {
     fontSize: "1.5rem",
