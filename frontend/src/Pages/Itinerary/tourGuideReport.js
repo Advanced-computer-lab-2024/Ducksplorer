@@ -9,7 +9,6 @@ import AdvertiserSidebar from "../../Components/Sidebars/AdvertiserSidebar.js";
 import TourGuideSidebar from "../../Components/Sidebars/TourGuideSidebar.js";
 import DuckLoading from "../../Components/Loading/duckLoading.js";
 import Error404 from "../../Components/Error404.js";
-
 import {
   Box,
   Typography,
@@ -149,11 +148,14 @@ const ItineraryReport = () => {
     } catch (error) {
       setErrorMessage("Error fetching itineraries!");
       return (
+        <div>
+        <TourGuideNavBar />
         <Error404
           errorMessage={errorMessage}
           backMessage={backMessage}
           route="/tourGuideDashboard"
         />
+        </div>
       );
     } finally {
       setLoading(false);
@@ -233,11 +235,14 @@ const ItineraryReport = () => {
 
   if (!Array.isArray(itineraries) || itineraries.length === 0) {
     return (
+      <div>
+        <TourGuideNavBar />
       <Error404
         errorMessage={errorMessage}
         backMessage={backMessage}
         route="/tourGuideDashboard"
       />
+      </div>
     );
   }
 

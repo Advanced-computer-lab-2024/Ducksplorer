@@ -147,21 +147,7 @@ const ComplaintsDashboard = () => {
         >
           Complaints
         </Typography>
-
-        <TableContainer
-          component={Paper}
-          sx={{
-            margin: "5%",
-            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
-            borderRadius: "1.5cap",
-          }}
-        >
-          {" "}
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <Box sx={{ display: "flex", gap: 2 }}>
+        <Box sx={{ display: "flex", gap: 2 , marginTop:"3%"}}>
                     <FormControl
                       variant="outlined"
                       size="small"
@@ -201,8 +187,18 @@ const ComplaintsDashboard = () => {
                       </Select>
                     </FormControl>
                   </Box>
-                </TableCell>
-              </TableRow>
+        <TableContainer
+          component={Paper}
+          sx={{
+            margin: "2%",
+            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+            borderRadius: "1.5cap",
+          }}
+        >
+          {" "}
+          
+          <Table>
+            <TableHead>
               <TableRow>
                 <TableCell
                   sx={{
