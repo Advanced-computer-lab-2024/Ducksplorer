@@ -285,7 +285,7 @@ const AdminReport = () => {
         activitySetErrorMessage("No activities found for the selected filters.");
       }
       const response2 = await axios.get(
-        `http://localhost:8000/admin/getTotalBookAndEarnFilter?${queryString}`
+        `http://localhost:8000/admin/getTotalActivityBookAndEarnFilter?${queryString}`
       );
       setTotalEarning(response2.data.totalEarnings);
       setNumOfBookings(response2.data.totalBookings);
@@ -293,6 +293,9 @@ const AdminReport = () => {
       if (response2.data.length === 0) {
         activitySetErrorMessage("No activities found for the selected filters.");
       }
+      console.log(activities)
+      console.log(totalEarnings);
+      console.log(numOfBookings);
     } catch (error) {
       activitySetErrorMessage("Error fetching activities!");
     } finally {
@@ -336,7 +339,7 @@ const AdminReport = () => {
         itinerarySetErrorMessage("No itineraries found for the selected filters.");
       }
       const response2 = await axios.get(
-        `http://localhost:8000/admin/getTotalItineraryBookAndEarn?${queryString}`
+        `http://localhost:8000/admin/getTotalItineraryBookAndEarnFilter?${queryString}`
       );
       setTotalEarning(response2.data.totalEarnings);
       setNumOfBookings(response2.data.totalBookings);
@@ -344,6 +347,8 @@ const AdminReport = () => {
       if (response2.data.length === 0) {
         itinerarySetErrorMessage("No itineraries found for the selected filters.");
       }
+      console.log(totalEarnings);
+      console.log(numOfBookings);
     } catch (error) {
       itinerarySetErrorMessage("Error fetching itineraries!");
     } finally {
@@ -387,7 +392,7 @@ const AdminReport = () => {
         itinerarySetErrorMessage("No products found for the selected filters.");
       }
       const response2 = await axios.get(
-        `http://localhost:8000/admin/getTotalProductBookAndEarn?${queryString}`
+        `http://localhost:8000/admin/getTotalProductBookAndEarnFilter?${queryString}`
       );
       setTotalEarning(response2.data.totalEarnings);
       setNumOfBookings(response2.data.totalBookings);
@@ -395,6 +400,8 @@ const AdminReport = () => {
       if (response2.data.length === 0) {
         itinerarySetErrorMessage("No products found for the selected filters.");
       }
+      console.log(totalEarnings);
+      console.log(numOfBookings);
     } catch (error) {
       itinerarySetErrorMessage("Error fetching products!");
     } finally {

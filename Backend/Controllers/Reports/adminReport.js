@@ -358,11 +358,8 @@ const calculateTotalBookingsAndEarningsWithFilters = async (req, res) => {
       },
     ]);
 
-    if (totals.length === 0) {
-      return res.status(404).json({ message: "No bookings found for the specified filters" });
-    }
-
-    const { totalBookings, totalEarnings } = totals[0];
+    // If no totals found, set both totalBookings and totalEarnings to 0
+    const { totalBookings = 0, totalEarnings = 0 } = totals.length > 0 ? totals[0] : {};
 
     // Send the aggregated totals
     res.status(200).json({ totalBookings, totalEarnings });
@@ -534,11 +531,8 @@ const calculateTotalItineraryBookingsAndEarningsWithFilters = async (req, res) =
       },
     ]);
 
-    if (totals.length === 0) {
-      return res.status(404).json({ message: "No bookings found for the specified filters" });
-    }
-
-    const { totalBookings, totalEarnings } = totals[0];
+    // If no totals found, set both totalBookings and totalEarnings to 0
+    const { totalBookings = 0, totalEarnings = 0 } = totals.length > 0 ? totals[0] : {};
 
     // Return the totals
     res.status(200).json({ totalBookings, totalEarnings });
