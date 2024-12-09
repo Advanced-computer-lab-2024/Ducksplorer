@@ -447,6 +447,7 @@ const PastBookingDetails = () => {
                                   flexGrow: 1,
                                   "& .MuiOutlinedInput-root": {
                                     borderRadius: 2,
+                                    width:"10vw",
                                   },
                                 }}
                               />
@@ -624,6 +625,7 @@ const PastBookingDetails = () => {
                             <TextField
                               variant="outlined"
                               size="small"
+                              
                               value={
                                 itineraryComments[itineraryBooking._id] || ""
                               }
@@ -634,6 +636,13 @@ const PastBookingDetails = () => {
                                 )
                               }
                               placeholder="Comment"
+                              sx={{
+                                flexGrow: 1,
+                                "& .MuiOutlinedInput-root": {
+                                  borderRadius: 2,
+                                  width:"8vw",
+                                },
+                              }}
                             />
                             <Button
                               onClick={() =>
