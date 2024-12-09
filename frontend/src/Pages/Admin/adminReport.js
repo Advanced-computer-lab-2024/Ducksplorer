@@ -41,6 +41,7 @@ import AdminNavbar from "../../Components/NavBars/AdminNavBar";
 
 const AdminReport = () => {
 
+  let tabIndex = localStorage.getItem("tabIndex") || 0;
   const tabs = ["Users Report", "Revenue Report"];
   const paths = ["/userReport", "/adminReport"];
   const tabNames = ["Activities Report", "Itineraries Report", "Products Report"];
@@ -408,6 +409,8 @@ const AdminReport = () => {
     }
   };
 
+
+
   useEffect(() => {
     if (!activityFiltersApplied) return;
     if (!activityDate && !activityMonth && !activityYear) return;
@@ -534,6 +537,8 @@ const AdminReport = () => {
   }
 
   else if (products.length === 0 && selectedTab === "Products Report") {
+    localStorage.setItem("tabIndex", 2);
+    tabIndex = 2;
     return (
       <>
         <AdminNavbar />
@@ -548,6 +553,8 @@ const AdminReport = () => {
   }
 
   else if (activities.length === 0 && selectedTab === "Activities Report") {
+    localStorage.setItem("tabIndex", 0);
+    tabIndex = 0;
     return (
       <>
         <AdminNavbar />
@@ -562,14 +569,18 @@ const AdminReport = () => {
   }
 
   else if (itineraries.length === 0 && selectedTab === "Itineraries Report") {
+    localStorage.setItem("tabIndex", 1);
+    tabIndex = 1;
     return (
       <>
         <AdminNavbar />
-        <Error404
+        {/* <Error404
           errorMessage={errorMessage3}
           backMessage={backMessage}
           route="/adminDashboard"
-        />
+        /> */}
+        <DuckLoading/>
+
       </>
     );
   }
@@ -608,7 +619,7 @@ const AdminReport = () => {
             {`Total number of earnings: ${totalEarnings}`}
           </div>
 
-          <MyTabs tabNames={tabNames} onTabClick={(tabName) => setSelectedTab(tabName)} />
+          <MyTabs tabNames={tabNames} onTabClick={(tabName) => setSelectedTab(tabName)} index={tabIndex} />
 
           {selectedTab === "Activities Report" && (
             <div>
