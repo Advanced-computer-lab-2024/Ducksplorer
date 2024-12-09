@@ -19,12 +19,24 @@ const {
   filterAllItineraries,
   filterAllProducts,
   getAllUsersWithEmails,
-  getAllUsersWithEmailsFilteredByMonth,
+  getAllUsersWithEmailsFilteredByMonth, calculateTotalBookingsAndEarnings, calculateTotalBookingsAndEarningsWithFilters,
+  calculateTotalItineraryBookingsAndEarnings, calculateTotalItineraryBookingsAndEarningsWithFilters,
+  calculateTotalProductBookingsAndEarnings, calculateTotalProductBookingsAndEarningsWithFilters
 } = require("../../Controllers/Reports/adminReport.js");
 
 const { createPromoCode } = require("../../Controllers/promoCodeController.js");
 
 const router = express.Router();
+
+router.get("/getTotalActivityBookAndEarn",calculateTotalBookingsAndEarnings);
+router.get("/getTotalActivityBookAndEarnFilter",calculateTotalBookingsAndEarningsWithFilters);
+
+router.get("/getTotalItineraryBookAndEarn",calculateTotalItineraryBookingsAndEarnings);
+router.get("/getTotalItineraryBookAndEarnFilter",calculateTotalItineraryBookingsAndEarningsWithFilters);
+
+router.get("/getTotalProductBookAndEarn",calculateTotalProductBookingsAndEarnings);
+router.get("/getTotalProductBookAndEarnFilter",calculateTotalProductBookingsAndEarningsWithFilters);
+
 
 router.post("/addAdmin", addAdmin); //done
 

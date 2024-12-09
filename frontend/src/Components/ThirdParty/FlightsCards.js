@@ -219,6 +219,7 @@ const FlightsCards = ({
         overflowY: "visible",
         height: "60vh",
         marginLeft: 5,
+        marginTop:"0px"
       }}
     >
       <Typography
@@ -240,7 +241,7 @@ const FlightsCards = ({
             sm={4}
             key={index}
             gap={"20px"}
-            sx={{ mt: 2, overflowY: "auto" }}
+            sx={{ mt: 2, overflowY: "hidden" }}
           >
             <Card
               onClick={() => handleBooking(flight)}

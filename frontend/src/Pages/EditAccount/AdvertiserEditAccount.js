@@ -260,10 +260,14 @@ const AdvertiserEditProfile = () => {
                   />
                   <label htmlFor="photo">
                     <Button
-                      className="blackhover"
+                      variant="outlined"
                       component="span"
-                      color="primary"
-                      variant="contained"
+                      sx={{
+                        color: "#ff9933",
+                        borderColor: "#ff9933",
+                        marginBottom: 2,
+                        marginTop: 2,
+                      }}
                     >
                       Upload New Photo
                     </Button>
