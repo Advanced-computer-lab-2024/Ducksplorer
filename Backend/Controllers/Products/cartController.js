@@ -7,6 +7,37 @@ const touristModel = require("../../Models/touristModel");
 const {
   createNotification,
 } = require("../Notifications/NotificationsController");
+const User = require("../../Models/userModel");
+const nodemailer = require("nodemailer");
+const Seller = require("../../Models/sellerModel");
+
+
+const sendEmail = async (to, subject, message) => {
+  try {
+    // Configure the email transporter
+    const transporter = nodemailer.createTransport({
+      service: "Gmail", // You can replace it with another service like SendGrid, etc.
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    // Email options
+    const mailOptions = {
+      from: "Ducksplorer@gmail.com", // Sender address
+      to, // Receiver's email address
+      subject, // Email subject
+      text: message, // Email message
+    };
+
+    // Send email
+    await transporter.sendMail(mailOptions);
+    console.log(`Email sent to ${to}`);
+  } catch (error) {
+    console.error(`Failed to send email: ${error.message}`);
+  }
+};
 
 const viewCart = async (req, res) => {
   try {
@@ -240,6 +271,39 @@ const addPurchase2 = async (req, res) => {
         product.seller,
         "Out of stock"
       );
+
+      //SEND EMAIL TO SELLER START
+
+      // Send notification to the seller by mail
+      const emailMessage = `Dear seller, your product ${product.name} is out of stock. Please restock it as soon as possible.`;
+      //get the email of the owner of the product that is out of stock
+      const sellerName = product.seller;
+
+      const user = await User.findOne({ userName: sellerName });
+
+      //get the user role
+      const role = user.role;
+
+
+      if(role === "Seller"){
+        const seller = await Seller.findOne({ userName: sellerName });
+        const mail = seller.email;
+        await sendEmail(
+          mail,
+         `Product ${product.name} is out of stock`,
+          emailMessage
+       );
+      }
+
+      //SEND EMAIL TO SELLER END
+          
+
+
+
+
+    
+
+      
     }
 
     await product.save();
