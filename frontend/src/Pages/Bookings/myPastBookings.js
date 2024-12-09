@@ -327,85 +327,127 @@ const [selectedTab, setSelectedTab] = useState("All");
                   }}
                 >
                   <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Is Open</TableCell>
-              <TableCell>Advertiser</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Location</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell>Tags</TableCell>
-              <TableCell>Special Discount</TableCell>
-              <TableCell>Duration</TableCell>
-              <TableCell>Rating</TableCell>
-              <TableCell>Rate</TableCell>
-              <TableCell>Comment</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {activityBookings.map((activityBooking) => (
-              <TableRow key={activityBooking.activity._id}>
-                <TableCell>{activityBooking.activity.name}</TableCell>
-                <TableCell>
-                  {activityBooking.activity.isOpen ? "Yes" : "No"}
-                </TableCell>
-                <TableCell>{activityBooking.activity.advertiser}</TableCell>
-                <TableCell>
-                  {new Date(activityBooking.activity.date).toLocaleDateString()}
-                </TableCell>
-                <TableCell>{activityBooking.activity.location}</TableCell>
-                <TableCell>{activityBooking.chosenPrice}</TableCell>
-                <TableCell>{activityBooking.activity.category}</TableCell>
-                <TableCell>
-                  {activityBooking.activity.tags.join(", ")}
-                </TableCell>
-                <TableCell>
-                  {activityBooking.activity.specialDiscount}%
-                </TableCell>
-                <TableCell>{activityBooking.activity.duration} mins</TableCell>
-                <TableCell>{activityBooking.rating}/5</TableCell>
-                <TableCell>
-                  <Rating
-                    name={`activity-rating-${activityBooking._id}`}
-                    value={activityBooking.rating}
-                    precision={0.5} // Set precision to 0.5 for half-star ratings
-                    onChange={(event, newValue) =>
-                      handleActivityRatingChange(activityBooking._id, newValue)
-                    } // Pass the new value from the Rating component
-                  />
-                </TableCell>
-
-                <TableCell>
-                  <TextField
-                    variant="outlined"
-                    size="small"
-                    value={activityComments[activityBooking._id] || ""}
-                    onChange={(e) =>
-                      handleActivityCommentChange(
-                        activityBooking._id,
-                        e.target.value
-                      )
-                    }
-                    placeholder="Comment"
-                  />
-                  <Button
-                    onClick={() =>
-                      handleActivityCommentSubmit(activityBooking._id)
-                    }
-                    variant="contained"
-                    className="blackhover" 
-                    size="small"
-                  >
-                    Submit
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+                    <TableHead>
+                      <TableRow>
+                        {[
+                          "Name",
+                          "Is Open",
+                          "Advertiser",
+                          "Date",
+                          "Location",
+                          "Price",
+                          "Category",
+                          "Tags",
+                          "Special Discount",
+                          "Duration",
+                          "Rating",
+                          "Rate",
+                          "Comment",
+                        ].map((header) => (
+                          <TableCell
+                            sx={{ fontWeight: "bold", fontSize: "18px" }}
+                          >
+                            {header}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {activityBookings.map((activityBooking) => (
+                        <TableRow key={activityBooking.activity._id}>
+                          <TableCell>{activityBooking.activity.name}</TableCell>
+                          <TableCell>
+                            {activityBooking.activity.isOpen ? "Yes" : "No"}
+                          </TableCell>
+                          <TableCell>
+                            {activityBooking.activity.advertiser}
+                          </TableCell>
+                          <TableCell>
+                            {new Date(
+                              activityBooking.activity.date
+                            ).toLocaleDateString()}
+                          </TableCell>
+                          <TableCell>
+                            {activityBooking.activity.location}
+                          </TableCell>
+                          <TableCell>{activityBooking.chosenPrice}</TableCell>
+                          <TableCell>
+                            {activityBooking.activity.category}
+                          </TableCell>
+                          <TableCell>
+                            {activityBooking.activity &&
+                              activityBooking.activity.tags?.length
+                              ? activityBooking.activity.tags.join(", ")
+                              : "No tags available"}
+                          </TableCell>
+                          <TableCell>
+                            {activityBooking.activity.specialDiscount}%
+                          </TableCell>
+                          <TableCell>
+                            {activityBooking.activity.duration} mins
+                          </TableCell>
+                          <TableCell>{activityBooking.rating}/5</TableCell>
+                          <TableCell>
+                            <Rating
+                              name={`activity-rating-${activityBooking._id}`}
+                              value={activityBooking.rating}
+                              precision={0.5}
+                              onChange={(event, newValue) =>
+                                handleActivityRatingChange(
+                                  activityBooking._id,
+                                  newValue
+                                )
+                              }
+                              sx={{ color: "#FFD700" }} // Golden color for stars
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                              }}
+                            >
+                              <TextField
+                                variant="outlined"
+                                size="small"
+                                width="auto"
+                                value={
+                                  activityComments[activityBooking._id] || ""
+                                }
+                                onChange={(e) =>
+                                  handleActivityCommentChange(
+                                    activityBooking._id,
+                                    e.target.value
+                                  )
+                                }
+                                placeholder="Add a comment"
+                                sx={{
+                                  flexGrow: 1,
+                                  "& .MuiOutlinedInput-root": {
+                                    borderRadius: 2,
+                                    width:"10vw",
+                                  },
+                                }}
+                              />
+                              <Button
+                                onClick={() =>
+                                  handleActivityCommentSubmit(activityBooking._id)
+                                }
+                                variant="contained"
+                                className="blackhover"
+                                size="small"
+                              >
+                                Submit
+                              </Button>
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
               </>
             )}
           {(selectedTab === "Itineraries" ||
@@ -422,119 +464,174 @@ const [selectedTab, setSelectedTab] = useState("All");
                   }}
                 >
                   <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Activity Names</TableCell>
-              <TableCell>Locations</TableCell>
-              <TableCell>Timeline</TableCell>
-              <TableCell>Language</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>Available Dates & Times</TableCell>
-              <TableCell>Chosen Date</TableCell>
-              <TableCell>Accessibility</TableCell>
-              <TableCell>Pick-Up Location</TableCell>
-              <TableCell>Drop-Off Location</TableCell>
-              <TableCell>Tags</TableCell>
-              <TableCell>Tour Guide</TableCell>
-              <TableCell>Rating</TableCell>
-              <TableCell>Rate</TableCell>
-              <TableCell>Comment</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {itineraryBookings.map((itineraryBooking) => (
-              <TableRow key={itineraryBooking._id}>
-                <TableCell>
-                  {itineraryBooking.itinerary.activity
-                    .map((act) => act.name)
-                    .join(", ")}
-                </TableCell>
-                <TableCell>
-                  {itineraryBooking.itinerary.locations.join(", ")}
-                </TableCell>
-                <TableCell>{itineraryBooking.itinerary.timeline}</TableCell>
-                <TableCell>{itineraryBooking.itinerary.language}</TableCell>
-                <TableCell>{itineraryBooking.chosenPrice}</TableCell>
-                <TableCell>
-                  {itineraryBooking.itinerary.availableDatesAndTimes
-                    .map((date) => new Date(date).toLocaleDateString())
-                    .join(", ")}
-                </TableCell>
-                <TableCell>
-                  {new Date(itineraryBooking.chosenDate).toLocaleDateString()}
-                </TableCell>
-                <TableCell>
-                  {itineraryBooking.itinerary.accessibility}
-                </TableCell>
-                <TableCell>
-                  {itineraryBooking.itinerary.pickUpLocation}
-                </TableCell>
-                <TableCell>
-                  {itineraryBooking.itinerary.dropOffLocation}
-                </TableCell>
-                <TableCell>
-                  {itineraryBooking.itinerary.tags.join(", ")}
-                </TableCell>
-                <TableCell>
-                  <div style={{ display: "flex", flexDirection: "column" }}>
-                    {tourGuideNames[itineraryBooking._id] || "Loading..."}
-                    <Button
-                      onClick={() =>
-                        handleOpenDialog(
-                          itineraryBooking.itinerary.tourGuideModel
-                        )
-                      }
-                      variant="contained"
-                      className="blackhover" 
-                      size="small"
-                      style={{ marginTop: "5px" }}
-                    >
-                      Rate&Comment
-                    </Button>
-                  </div>
-                </TableCell>
-                <TableCell>{itineraryBooking.rating}/5</TableCell>
-                <TableCell>
-                  <Rating
-                    name={`itinerary-rating-${itineraryBooking._id}`}
-                    value={itineraryBooking.rating}
-                    precision={0.5} // Set precision to 0.5 for half-star ratings
-                    onChange={(event, newValue) =>
-                      handleItineraryRatingChange(
-                        itineraryBooking._id,
-                        newValue
-                      )
-                    } // Pass the new value from the Rating component
-                  />
-                </TableCell>
-                <TableCell>
-                  <TextField
-                    variant="outlined"
-                    size="small"
-                    value={itineraryComments[itineraryBooking._id] || ""}
-                    onChange={(e) =>
-                      handleItineraryCommentChange(
-                        itineraryBooking._id,
-                        e.target.value
-                      )
-                    }
-                    placeholder="Comment"
-                  />
-                  <Button
-                    onClick={() =>
-                      handleItineraryCommentSubmit(itineraryBooking._id)
-                    }
-                    variant="contained"
-                    className="blackhover" 
-                    size="small"
-                  >
-                    Submit
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                          Name
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                          Activity Names
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                          Language
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                          Price
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                          Available Dates & Times
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                          Chosen Date
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                          Pick-Up Location
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                          Drop-Off Location
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                          {" "}
+                          Tags
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                          Tour Guide
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                          Rating
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                          Rate
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                          Comment
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {itineraryBookings.map((itineraryBooking) => (
+                        <TableRow key={itineraryBooking._id}>
+                          <TableCell>
+                            {itineraryBooking.itinerary?.name ||
+                              "Still doesn't have a name"}
+                          </TableCell>
+                          <TableCell>
+                            {itineraryBooking.itinerary &&
+                              Array.isArray(itineraryBooking.itinerary.activity)
+                              ? itineraryBooking.itinerary.activity
+                                .map((act) => act.name)
+                                .join(", ")
+                              : "No activities"}
+                          </TableCell>
+
+                          <TableCell>
+                            {itineraryBooking.itinerary?.language}
+                          </TableCell>
+                          <TableCell>{itineraryBooking?.chosenPrice}</TableCell>
+                          <TableCell>
+                            {itineraryBooking.itinerary &&
+                              Array.isArray(
+                                itineraryBooking.itinerary.availableDatesAndTimes
+                              ) &&
+                              itineraryBooking.itinerary.availableDatesAndTimes
+                                .length > 0
+                              ? itineraryBooking.itinerary.availableDatesAndTimes
+                                .map((date) =>
+                                  new Date(date).toLocaleDateString()
+                                )
+                                .join(", ")
+                              : "No dates available"}
+                          </TableCell>
+                          <TableCell>
+                            {new Date(
+                              itineraryBooking.chosenDate
+                            ).toLocaleDateString()}
+                          </TableCell>
+                          <TableCell>
+                            {itineraryBooking.itinerary?.pickUpLocation}
+                          </TableCell>
+                          <TableCell>
+                            {itineraryBooking.itinerary?.dropOffLocation}
+                          </TableCell>
+                          <TableCell>
+                            {itineraryBooking.itinerary &&
+                              itineraryBooking.itinerary.tags?.length
+                              ? itineraryBooking.itinerary.tags.join(", ")
+                              : "No tags available"}
+                          </TableCell>
+                          <TableCell>
+                            <div
+                              style={{ display: "flex", flexDirection: "column" }}
+                            >
+                              {tourGuideNames[itineraryBooking._id] ||
+                                "Loading..."}
+                              <Button
+                                onClick={() =>
+                                  handleOpenDialog(
+                                    itineraryBooking.itinerary.tourGuideModel
+                                  )
+                                }
+                                className="blackhover"
+                                variant="contained"
+                                size="small"
+                                style={{ marginTop: "5px" }}
+                              >
+                                Rate & Comment
+                              </Button>
+                            </div>
+                          </TableCell>
+                          <TableCell>{itineraryBooking.rating}/5</TableCell>
+                          <TableCell>
+                            <Rating
+                              name={`itinerary-rating-${itineraryBooking._id}`}
+                              value={itineraryBooking.rating}
+                              precision={0.5} // Set precision to 0.5 for half-star ratings
+                              onChange={(event, newValue) =>
+                                handleItineraryRatingChange(
+                                  itineraryBooking._id,
+                                  newValue
+                                )
+                              } // Pass the new value from the Rating component
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <TextField
+                              variant="outlined"
+                              size="small"
+                              
+                              value={
+                                itineraryComments[itineraryBooking._id] || ""
+                              }
+                              onChange={(e) =>
+                                handleItineraryCommentChange(
+                                  itineraryBooking._id,
+                                  e.target.value
+                                )
+                              }
+                              placeholder="Comment"
+                              sx={{
+                                flexGrow: 1,
+                                "& .MuiOutlinedInput-root": {
+                                  borderRadius: 2,
+                                  width:"8vw",
+                                },
+                              }}
+                            />
+                            <Button
+                              onClick={() =>
+                                handleItineraryCommentSubmit(itineraryBooking._id)
+                              }
+                              className="blackhover"
+                              size="small"
+                              style={{ color: "white" }}
+                            >
+                              Submit
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
                 </TableContainer>
               </div>
             )}
