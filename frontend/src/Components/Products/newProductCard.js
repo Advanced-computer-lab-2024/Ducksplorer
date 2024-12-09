@@ -8,16 +8,10 @@ import IconButton from "@mui/joy/IconButton";
 import StarIcon from "@mui/icons-material/Star";
 import Done from "@mui/icons-material/Done";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
-import {
-  Rating,
-  Tooltip,
-  Box,
-  TextField,
-  Dialog,
+import { Rating, Tooltip, Box, TextField, Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
-} from "@mui/material";
+  DialogActions, } from "@mui/material";
 import Button from "@mui/joy/Button";
 import axios from "axios";
 import { message } from "antd";
@@ -164,6 +158,7 @@ export default function ProductCard({
       `https://picsum.photos/200/300?random=${Math.floor(Math.random() * 1000)}`
     );
   }, []);
+
   const checkIfInWishlist = async () => {
     try {
       const userJson = localStorage.getItem("user");
@@ -482,7 +477,7 @@ export default function ProductCard({
                   variant={showWishList ? "soft" : "solid"}
                   onClick={(event) => {
                     event.stopPropagation(); // Stop event propagation
-                    showRemoveWishlist
+                    showWishList
                       ? handleRemoveWishlist(product)
                       : addToWishlist(product);
                   }}
@@ -499,7 +494,7 @@ export default function ProductCard({
                     backgroundColor: "#ff9933",
                   }}
                 >
-                  {showRemoveWishlist ? <Done color="#ff9933" /> : <Favorite />}
+                  {showWishList ? <Done color="#ff9933" /> : <Favorite />}
                 </IconButton>
               </Tooltip>
             )}
@@ -792,7 +787,8 @@ export default function ProductCard({
             </Button>
           )} */}
             {role === "Tourist" && showReview && (
-              <Button
+
+               <Button
                 variant="contained"
                 color="primary"
                 className="blackhover"
@@ -869,7 +865,7 @@ export default function ProductCard({
                     color="primary"
                     className="blackhover"
                     sx={{
-                      color: "white",
+                      color:'white'
                     }}
                   >
                     Submit Review
@@ -886,64 +882,62 @@ export default function ProductCard({
             alignItems: "center",
           }}
         >
-          {!showReviewBox && (
-            <Popover
-              open={open}
-              anchorEl={null}
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: "center",
-                horizontal: "center",
-              }}
-              transformOrigin={{
-                vertical: "center",
-                horizontal: "center",
-              }}
-              sx={{
-                "& .MuiPopover-paper": {
-                  height: "100vh",
-                  background: "none",
-                  boxShadow: "none",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: 0,
-                },
+         {!showReviewBox && (<Popover
+            open={open}
+            anchorEl={null}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "center",
+              horizontal: "center",
+            }}
+            transformOrigin={{
+              vertical: "center",
+              horizontal: "center",
+            }}
+            sx={{
+              "& .MuiPopover-paper": {
+                height: "100vh",
+                background: "none",
+                boxShadow: "none",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: 0,
+              },
+            }}
+          >
+            <div
+              style={{
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                width: "60vw",
+                maxWidth: "90%",
+                maxHeight: "80vh",
+                overflow: "auto",
+                borderRadius: "16px",
+                backgroundColor: "#f5f5f5",
               }}
             >
-              <div
+              <button
+                onClick={handleClose}
                 style={{
-                  position: "relative",
-                  display: "flex",
-                  flexDirection: "column",
-                  width: "60vw",
-                  maxWidth: "90%",
-                  maxHeight: "80vh",
-                  overflow: "auto",
-                  borderRadius: "16px",
-                  backgroundColor: "#f5f5f5",
+                  position: "absolute",
+                  top: "10px",
+                  right: "10px",
+                  background: "transparent",
+                  border: "none",
+                  fontSize: "1.5rem",
+                  cursor: "pointer",
+                  color: "#333",
                 }}
               >
-                <button
-                  onClick={handleClose}
-                  style={{
-                    position: "absolute",
-                    top: "10px",
-                    right: "10px",
-                    background: "transparent",
-                    border: "none",
-                    fontSize: "1.5rem",
-                    cursor: "pointer",
-                    color: "#333",
-                  }}
-                >
-                  &times;
-                </button>
+                &times;
+              </button>
 
-                <ProductCardDetails product={product} role={role} />
-              </div>
-            </Popover>
-          )}
+              <ProductCardDetails product={product} role={role} />
+            </div>
+          </Popover> )}
         </div>
       </div>
     );

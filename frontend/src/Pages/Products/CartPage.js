@@ -170,6 +170,7 @@ const CartPage = () => {
                   inCart={true}
                   quantityInCart={item.quantity}
                   onConfirm={handleConfirm}
+                  hideWishlist={false}
                 />
               ))
             : null}

@@ -14,9 +14,13 @@ For Ducksplorer, we adhered to a camel casing style for naming variables, functi
 
 ## Screenshots/Videos of the website
 
-Here is a link to a folder on google drive:
+Here are links to a folder on google drive:
 
+Screenshots:
 https://drive.google.com/drive/folders/1QEX_bJYIjdphBVo_t6tFjP5BgRcCnQ10?usp=sharing
+
+Videos:
+https://drive.google.com/file/d/1vEfB2cxJn_ptKG56gme_h5V2dTgEwrNO/view?usp=sharing
 
 ## Tech/Framework used
 

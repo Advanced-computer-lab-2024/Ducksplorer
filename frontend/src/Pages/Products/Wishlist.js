@@ -84,12 +84,12 @@ function Wishlist() {
                   key={product._id}
                   product={product}
                   productID={product._id}
-                  showRating={true}
                   showAverageRatingNo={true}
                   showRemoveWishlist={true}
                   removeProductFromWishlist={removeProductFromWishlist}
                   showAddToCart={true}
                   hideWishlist={false}
+                  showQuantity={true}
                 />
               ))
             : null}
