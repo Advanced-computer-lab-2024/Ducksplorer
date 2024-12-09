@@ -8,11 +8,20 @@ import IconButton from "@mui/joy/IconButton";
 import StarIcon from "@mui/icons-material/Star";
 import Done from "@mui/icons-material/Done";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
-import { Rating, Tooltip, Box } from "@mui/material";
+import {
+  Rating,
+  Tooltip,
+  Box,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
 import Button from "@mui/joy/Button";
 import axios from "axios";
 import { message } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import ProductCardDetails from "../productCardDetailed";
 import { useState, useEffect } from "react";
 import Input from "@mui/joy/Input";
@@ -27,7 +36,7 @@ export default function ProductCard({
   showArchive,
   showUnarchive,
   productID,
-  showEditProduct,
+  showEditProduct = false,
   showRating, //shows the user review , also for myPurchases as a tourist
   showReview,
   inCartQuantity,
@@ -50,14 +59,102 @@ export default function ProductCard({
   const [notified, setNotified] = useState(false);
   const [productInCart, setProductInCart] = useState(false);
   const [image, setImage] = React.useState("https://picsum.photos/200/300");
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [showWishlist, setShowWishlist] = useState(false);
+  const [showWishList, setShowWishList] = useState(false);
   const [archived, setArchived] = useState(product.isArchived);
   const [quantity, setQuantity] = useState(quantityInCart);
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [rating, setRating] = useState(null);
+  const location = useLocation();
+  const [review, setReview] = useState("");
+  const [showReviewBox, setShowReviewBox] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null); // To control Popover position
+  const [openDialog, setOpenDialog] = useState(false);
+
+  useEffect(() => {
+    setArchived(product.isArchived);
+  }, [product.isArchived]);
+
+  const getReviewerRating = (reviewer) => {
+    const ratingEntry = product.ratings.find(
+      (rating) => rating.buyer === reviewer
+    );
+    return ratingEntry ? ratingEntry.rating : "No rating available";
+  };
+
+  useEffect(() => {
+    if (location.pathname.startsWith("/myPurchases/")) {
+      const fetchRating = async () => {
+        const userJson = localStorage.getItem("user");
+        const user = JSON.parse(userJson);
+        const userName = user.username;
+
+        try {
+          const response = await axios.get(
+            `http://localhost:8000/touristRoutes/getRating/${productID}/rating/${userName}`
+          );
+
+          if (response.status === 200 && response.data.rating !== undefined) {
+            setRating(response.data.rating); // Set the buyer's rating from the database
+          }
+        } catch (error) {
+          console.error("Failed to fetch rating:", error);
+        }
+      };
+
+      fetchRating();
+    }
+  }, [productID, rating, location.pathname]);
+
+  const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
+  const user = JSON.parse(userJson);
+  const username = user.username;
+
+  const handleRatingChange = async (event, newValue) => {
+    setRating(newValue);
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/touristRoutes/updateProducts/${productID}`,
+        {
+          buyer: username,
+          ratingstr: newValue,
+        }
+      );
+      if (response.status === 200) {
+        message.success("Rating updated successfully");
+      } else {
+        message.error("Failed to submit rating");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleAddReview = async () => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/touristRoutes/addReview/${productID}`,
+        {
+          buyer: username,
+          review: review,
+        }
+      );
+      if (response.status === 200) {
+        message.success("Review added successfully");
+        setShowReviewBox(false);
+      } else {
+        message.error("Failed to submit review");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleConfirmClick = () => {
+    onConfirm();
+  };
 
   React.useEffect(() => {
     setImage(
@@ -123,13 +220,11 @@ export default function ProductCard({
   };
 
   useEffect(() => {
-    checkIfInCart();
-    checkIfInWishlist();
+    if (!isGuest) {
+      checkIfInCart();
+      checkIfInWishlist();
+    }
   }, [product._id]);
-
-  const user = JSON.parse(localStorage.getItem("user"));
-
-  const username = user?.username;
 
   const addToWishlist = async (product) => {
     const userJson = localStorage.getItem("user"); // Get the 'user' item as a JSON string
@@ -160,9 +255,19 @@ export default function ProductCard({
     navigate(`/editProduct/${productId}`);
   };
 
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
   const handleAddToCartClick = async (e) => {
     if (quantity > 0) {
       try {
+        if (isGuest) {
+          message.error(
+            "Can't purchase a product as a guest, Please login or sign up."
+          );
+          return;
+        }
         const userJson = localStorage.getItem("user");
         const user = JSON.parse(userJson);
         const userName = user.username;
@@ -228,6 +333,7 @@ export default function ProductCard({
       const response = await axios.put(
         `http://localhost:8000/touristRoutes/removeFromWishlist/${userName}/${productId}`
       );
+      setShowWishList(false);
 
       if (response.status === 200) {
         message.success("Product removed from wishlist successfully");
@@ -238,7 +344,42 @@ export default function ProductCard({
       }
     } catch (error) {
       console.error(error);
-      message.error("An error occurred while removing the product");
+    }
+  };
+
+  const handleArchive = async () => {
+    const data = { isArchived: true };
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/sellerRoutes/editProduct/${product._id}`,
+        data
+      );
+      if (response.status === 200) {
+        message.success("Product Archived");
+        setArchived(true);
+      } else {
+        message.error("Failed to edit products");
+      }
+    } catch (error) {
+      message.error("An error occurred: " + error.message);
+    }
+  };
+
+  const handleUnarchive = async () => {
+    const data = { isArchived: false };
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/sellerRoutes/editProduct/${product._id}`,
+        data
+      );
+      if (response.status === 200) {
+        message.success("Product Unarchived");
+        setArchived(false);
+      } else {
+        message.error("Failed to edit products");
+      }
+    } catch (error) {
+      message.error("An error occurred: " + error.message);
     }
   };
 
@@ -340,90 +481,114 @@ export default function ProductCard({
                     marginTop: "5px",
                   }}
                 ></div>
+                {role === "Tourist" && showRating && (
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <div key={product._id} style={{ marginTop: "8%" }}>
+                      <p style={{ marginBottom: 0 }}>Rate this product:</p>
+                    </div>
+                    <div style={{ height: "30px" }}>
+                      <Rating
+                        value={rating}
+                        onChange={handleRatingChange}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                        }}
+                        icon={<StarIcon sx={{ color: "orange" }} />}
+                        emptyIcon={<StarOutlineIcon />}
+                        sx={{ marginTop: 0 }}
+                        readOnly={false}
+                        precision={0.5}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
-          <div>
+          <div style={{ marginTop: "3%" }}>
             {role === "Tourist" && showChosenQuantity && (
-              <p marginTop="20px">Chosen Quantity: {chosenQuantity}</p>
+              <p>Chosen Quantity: {chosenQuantity}</p>
             )}
           </div>
-          {product.availableQuantity > 0 && (
-            <div
-              style={{
-                display: "flex",
-                position: "absolute",
-                bottom: "15%",
-                width: "95%",
-                justifyContent: "flex-end",
-              }}
-            >
+          {product.availableQuantity > 0 &&
+            role === "Tourist" &&
+            showQuantity &&
+            (inCart || !productInCart) && (
               <div
                 style={{
-                  marginRight: 8,
                   display: "flex",
-                  width: quantity < 10 ? "111px" : "140px",
+                  position: "absolute",
+                  bottom: "15%",
+                  width: "95%",
+                  justifyContent: "flex-end",
                 }}
               >
-                <Button
-                  variant="outlined"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    quantity > 0 ? setQuantity(quantity - 1) : setQuantity(0);
-                  }}
-                  sx={{
-                    borderColor: "#ff9933",
-                    color: "#ff9933",
-                    borderTopRightRadius: 0,
-                    borderBottomRightRadius: 0,
-                    width: "33%",
-                    "&:hover": {
-                      backgroundColor: "rgba(0, 0, 0, 0.05)",
-                    },
+                <div
+                  style={{
+                    marginRight: 8,
+                    display: "flex",
+                    width: quantity < 10 ? "111px" : "140px",
                   }}
                 >
-                  -
-                </Button>
-                <Input
-                  value={quantity}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                  }}
-                  sx={{
-                    width: "50px",
-                    borderRight: 0,
-                    borderLeft: 0,
-                    borderRadius: 0,
-                    boxShadow: "none",
-                    width: "33%",
-                  }}
-                ></Input>
-                <Button
-                  variant="outlined"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    product.availableQuantity > quantity
-                      ? setQuantity(quantity + 1)
-                      : message.error(
-                          "Cannot purchase with a quantity more than the available"
-                        );
-                  }}
-                  sx={{
-                    borderColor: "#ff9933",
-                    color: "#ff9933",
-                    borderTopLeftRadius: 0,
-                    "&:hover": {
-                      backgroundColor: "rgba(0, 0, 0, 0.05)",
-                    },
-                    borderBottomLeftRadius: 0,
-                    width: "33%",
-                  }}
-                >
-                  +
-                </Button>
+                  <Button
+                    variant="outlined"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      quantity > 0 ? setQuantity(quantity - 1) : setQuantity(0);
+                    }}
+                    sx={{
+                      borderColor: "#ff9933",
+                      color: "#ff9933",
+                      borderTopRightRadius: 0,
+                      borderBottomRightRadius: 0,
+                      width: "33%",
+                      "&:hover": {
+                        backgroundColor: "rgba(0, 0, 0, 0.05)",
+                      },
+                    }}
+                  >
+                    -
+                  </Button>
+                  <Input
+                    value={quantity}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                    }}
+                    sx={{
+                      width: "50px",
+                      borderRight: 0,
+                      borderLeft: 0,
+                      borderRadius: 0,
+                      boxShadow: "none",
+                      width: "33%",
+                    }}
+                  ></Input>
+                  <Button
+                    variant="outlined"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      product.availableQuantity > quantity
+                        ? setQuantity(quantity + 1)
+                        : message.error(
+                            "Cannot purchase with a quantity more than the available"
+                          );
+                    }}
+                    sx={{
+                      borderColor: "#ff9933",
+                      color: "#ff9933",
+                      borderTopLeftRadius: 0,
+                      "&:hover": {
+                        backgroundColor: "rgba(0, 0, 0, 0.05)",
+                      },
+                      borderBottomLeftRadius: 0,
+                      width: "33%",
+                    }}
+                  >
+                    +
+                  </Button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
           <div
             style={{
@@ -477,45 +642,181 @@ export default function ProductCard({
                   : "Add To Cart"}
               </Button>
             )}
-            {role === "Admin" ||
-              (showEditProduct && (
+
+            {inCart && (
+              <Button
+                size="md"
+                variant="solid"
+                className={product.availableQuantity > 0 ? "blackhover" : ""}
+                zIndex={2}
+                onClick={async (event) => {
+                  event.stopPropagation(); // Stops propagation
+                  if (product.availableQuantity > 0) {
+                    await handleAddToCartClick2(); // Call the function without passing event
+                    handleConfirmClick();
+                  }
+                }}
+                sx={{
+                  backgroundColor:
+                    product.availableQuantity !== 0 ? "#ff9933" : "gray",
+                  marginRight: 1,
+                  width: "111px",
+                  clickable: product.availableQuantity > 0,
+                  "&:hover": {
+                    backgroundColor: "gray",
+                  },
+                }}
+              >
+                Confirm
+              </Button>
+            )}
+            {showEditProduct && (
+              <Button
+                size="md"
+                variant="solid"
+                className="blackhover"
+                zIndex={2}
+                onClick={(event) => {
+                  event.stopPropagation(); // Stops propagation
+                  handleEditProduct(); // Call the function without passing event
+                }}
+                sx={{ backgroundColor: "#ff9933", marginRight: "-10%" }}
+              >
+                Edit Product
+              </Button>
+            )}
+            {(role === "Admin" || role === "Seller") &&
+              showArchive &&
+              !archived && (
                 <Button
                   size="md"
                   variant="solid"
                   className="blackhover"
                   zIndex={2}
                   onClick={(event) => {
-                    event.stopPropagation(); // Stops propagation
-                    handleEditProduct(); // Call the function without passing `event`
+                    event.stopPropagation();
+                    handleArchive();
                   }}
-                  sx={{ backgroundColor: "#ff9933", marginRight: 1 }}
+                  sx={{ backgroundColor: "#ff9933", marginRight: "2%" }}
                 >
-                  Edit Product
+                  Archive
                 </Button>
-              ))}
-            {product.availableQuantity === 0 && (
-              <div
+              )}
+            {archived && showUnarchive && (
+              <Button
+                size="md"
+                variant="solid"
+                className="blackhover"
+                zIndex={2}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleUnarchive();
+                }}
+                sx={{ backgroundColor: "#ff9933", marginRight: "2%" }}
+              >
+                Unarchive
+              </Button>
+            )}
+            {/* {role === "Tourist" && showReview && (
+            <Button
+              variant="contained"
+              color="primary"
+              className="blackhover"
+              style={{ position: "absolute", right: "10px", bottom: "10px", color:'white' }}
+              onClick={(event) => {
+                event.stopPropagation()
+                setShowReviewBox(!showReviewBox)
+              }}
+            >
+              {showReviewBox ? "Cancel" : "Add Review"}
+            </Button>
+          )} */}
+            {role === "Tourist" && showReview && (
+              <Button
+                variant="contained"
+                color="primary"
+                className="blackhover"
                 style={{
                   position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -180%)", // Center the text horizontally and vertically
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: "rgba(255, 255, 255, 0.8)", // Optional: Add a semi-transparent background
-                  color: "black",
-                  fontSize: "1.5rem",
-                  fontWeight: "bold",
-                  textTransform: "uppercase",
-                  zIndex: 2, // Ensure it appears above other content
+                  right: "10px",
+                  bottom: "10px",
+                  color: "white",
+                }}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setAnchorEl(event.currentTarget); // Open popover
+                  setShowReviewBox(!showReviewBox);
                 }}
               >
-                Sold Out
-              </div>
+                {showReviewBox ? "Cancel" : "Add Review"}
+              </Button>
             )}
+
+            <Popover
+              open={showReviewBox}
+              anchorEl={null}
+              onClose={(event) => {
+                event.stopPropagation();
+                setShowReviewBox(false);
+              }} // Close when clicking outside
+              // onClick={(event) => {
+              //   event.stopPropagation();
+              // }}
+              anchorOrigin={{
+                vertical: "center",
+                horizontal: "center",
+              }}
+              transformOrigin={{
+                vertical: "center",
+                horizontal: "center",
+              }}
+              sx={{
+                "& .MuiPopover-paper": {
+                  height: "30vh",
+                  boxShadow: "none",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: 0,
+                },
+              }}
+            >
+              <div
+                style={{ padding: "16px", width: "400px", alignSelf: "center" }}
+              >
+                <TextField
+                  label="Write your review"
+                  variant="outlined"
+                  fullWidth
+                  multiline
+                  rows={4}
+                  value={review}
+                  onChange={(e) => {
+                    setReview(e.target.value);
+                  }}
+                  // onClick={(e) => {
+                  //   e.stopPropagation()
+                  // }}
+                />
+                <div style={{ marginTop: "10px" }}>
+                  <Button
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      handleAddReview();
+                      setShowReviewBox(false);
+                    }}
+                    variant="contained"
+                    color="primary"
+                    className="blackhover"
+                    sx={{
+                      color: "white",
+                    }}
+                  >
+                    Submit Review
+                  </Button>
+                </div>
+              </div>
+            </Popover>
           </div>
         </Card>
         <div
@@ -525,62 +826,64 @@ export default function ProductCard({
             alignItems: "center",
           }}
         >
-          <Popover
-            open={open}
-            anchorEl={null}
-            onClose={handleClose}
-            anchorOrigin={{
-              vertical: "center",
-              horizontal: "center",
-            }}
-            transformOrigin={{
-              vertical: "center",
-              horizontal: "center",
-            }}
-            sx={{
-              "& .MuiPopover-paper": {
-                height: "100vh",
-                background: "none",
-                boxShadow: "none",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: 0,
-              },
-            }}
-          >
-            <div
-              style={{
-                position: "relative",
-                display: "flex",
-                flexDirection: "column",
-                width: "60vw",
-                maxWidth: "90%",
-                maxHeight: "80vh",
-                overflow: "auto",
-                borderRadius: "16px",
-                backgroundColor: "#f5f5f5",
+          {!showReviewBox && (
+            <Popover
+              open={open}
+              anchorEl={null}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: "center",
+                horizontal: "center",
+              }}
+              transformOrigin={{
+                vertical: "center",
+                horizontal: "center",
+              }}
+              sx={{
+                "& .MuiPopover-paper": {
+                  height: "100vh",
+                  background: "none",
+                  boxShadow: "none",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: 0,
+                },
               }}
             >
-              <button
-                onClick={handleClose}
+              <div
                 style={{
-                  position: "absolute",
-                  top: "10px",
-                  right: "10px",
-                  background: "transparent",
-                  border: "none",
-                  fontSize: "1.5rem",
-                  cursor: "pointer",
-                  color: "#333",
+                  position: "relative",
+                  display: "flex",
+                  flexDirection: "column",
+                  width: "60vw",
+                  maxWidth: "90%",
+                  maxHeight: "80vh",
+                  overflow: "auto",
+                  borderRadius: "16px",
+                  backgroundColor: "#f5f5f5",
                 }}
               >
-                &times;
-              </button>
+                <button
+                  onClick={handleClose}
+                  style={{
+                    position: "absolute",
+                    top: "10px",
+                    right: "10px",
+                    background: "transparent",
+                    border: "none",
+                    fontSize: "1.5rem",
+                    cursor: "pointer",
+                    color: "#333",
+                  }}
+                >
+                  &times;
+                </button>
 
-              <ProductCardDetails product={product} />
-            </div>
-          </Popover>
+                <ProductCardDetails product={product} role={role} />
+              </div>
+            </Popover>
+          )}
         </div>
       </div>
     );

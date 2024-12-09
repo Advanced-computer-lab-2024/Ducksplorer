@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom"; 
@@ -18,7 +18,6 @@ import NavigationTabs from "../../Components/NavigationTabs.js";
 import HistoricalPlaceTouristPov from "./HistoricalPlaceTouristPov";
 import UpdateIcon from "@mui/icons-material/Update";
 
-
 const MuseumTouristPov = () => {
   const [searchTerm, setSearchTerm] = useState(""); // Single search term
   const { id } = useParams();
@@ -33,7 +32,20 @@ const MuseumTouristPov = () => {
   const tabs = ["Museums", "Historical Places"];
   const paths = ["/MuseumTouristPov", "/HistoricalPlaceTouristPov"];
   const [pastOrUpcoming,setPastOrUpcoming] = useState(false);
+  const initialCurrency = "USD"; // Set initial currency
 
+  const handleCurrencyChange = useCallback((rates, selectedCurrency) => {
+    setExchangeRates(rates);
+    setCurrency(selectedCurrency);
+  }, []);
+
+  const convertPrice = (price, fromCurrency) => {
+    if (!exchangeRates || !exchangeRates[fromCurrency] || !exchangeRates[currency]) {
+      return price;
+    }
+    const rate = exchangeRates[currency] / exchangeRates[fromCurrency];
+    return (price * rate).toFixed(2);
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -58,12 +70,6 @@ const MuseumTouristPov = () => {
         setLoading(false);
       });
   }, [id]);
-
-  const handleCurrencyChange = (rates, selectedCurrency) => {
-    setExchangeRates(rates);
-    setCurrency(selectedCurrency);
-  };
-
 
   const handleUpcoming = () => {
     if(!pastOrUpcoming){
@@ -158,9 +164,9 @@ const MuseumTouristPov = () => {
       }}
     >
       {isGuest === true ? (
-        <GuestNavBar /> 
+        <GuestNavBar onCurrencyChange={handleCurrencyChange} /> 
       ) : (
-        <TouristNavBar /> 
+        <TouristNavBar onCurrencyChange={handleCurrencyChange} /> 
       )}      
         <div style={{ marginLeft: "4%", marginTop: "2%" }}>
         <div>
@@ -212,7 +218,7 @@ const MuseumTouristPov = () => {
             {Array.isArray(Museums) && Museums.length > 0 ? (
               Museums.map((museum) => (
                 <Grid item xs={12} sm={6} md={4} key={museum._id}>
-                  <MuseumHistoricalPlaceCard place={museum} />
+                  <MuseumHistoricalPlaceCard place={{ ...museum, price: convertPrice(museum.price, "USD") }} />
                 </Grid>
               ))
             ) : (

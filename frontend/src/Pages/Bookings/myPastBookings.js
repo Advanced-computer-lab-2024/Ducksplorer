@@ -24,7 +24,7 @@ import { Link } from "react-router-dom";
 import Help from "../../Components/HelpIcon";
 import Error404 from "../../Components/Error404";
 import DuckLoading from "../../Components/Loading/duckLoading";
-import { message } from "statuses";
+import { message } from "antd";
 
 const PastBookingDetails = () => {
   const userName = JSON.parse(localStorage.getItem("user")).username;

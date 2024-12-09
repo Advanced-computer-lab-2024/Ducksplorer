@@ -3,8 +3,10 @@ import { message, Select } from "antd";
 import Input from "@mui/joy/Input"; // Import Input from MUI
 import Button from "@mui/joy/Button"; // Import Button from MUI
 import Typography from "@mui/material/Typography";
+import { useNavigate } from "react-router-dom";
 
 function MuseumForm() {
+  const navigate = useNavigate();
   const [description, setDescription] = useState("");
   const [pictures, setPictures] = useState(""); // Change to a string for URL Input
   const [location, setLocation] = useState("");
@@ -74,6 +76,7 @@ function MuseumForm() {
     }
     if (response.ok) {
       message.success("Museum added successfully!");
+      navigate("/GovernorDashboard");
       // Reset form fields
       setDescription("");
       setPictures([]); // Reset to an empty array

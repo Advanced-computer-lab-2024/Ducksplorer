@@ -1,4 +1,5 @@
 const productModel = require("../../Models/productModel");
+const PurchaseBooking = require("../../Models/purchaseBookingModel");
 const purchases = require("../../Models/purchasesModel");
 
 const getProducts = async (req, res) => {
@@ -160,7 +161,8 @@ const findProduct = async (req, res) => {
 
 const touristUpdateProductRating = async (req, res) => {
   const productId = req.params.id;
-  const { rating, buyer } = req.body;
+  const { ratingstr, buyer } = req.body;
+  const rating = Number(ratingstr);
   console.log("this is the req body", req.body);
   try {
     const product = await productModel.findById(productId);
@@ -190,30 +192,30 @@ const touristUpdateProductRating = async (req, res) => {
 
     await product.save();
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    const purchase = await purchases
-      .findOne({ buyer: buyer })
-      .populate("products");
+    // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // const purchase = await PurchaseBooking
+    //   .findOne({ buyer: buyer })
+      
 
-    if (!purchase) {
-      return res.status(404).json({ message: "Purchase record not found." });
-    }
+    // if (!purchase) {
+    //   return res.status(404).json({ message: "Purchase record not found." });
+    // }
 
-    console.log("Purchase Record:", purchase);
-    const productIndex = purchase.products.findIndex((prod) => {
-      console.log("Checking productId:", prod._id); // Log each productId for debugging
-      return prod._id.toString() === productId; // Ensure productId is valid
-    });
-    if (productIndex === -1) {
-      return res
-        .status(404)
-        .json({ message: "Product not found in purchase record." });
-    }
+    // console.log("Purchase Record:", purchase);
+    // const productIndex = purchase.products.findIndex((prod) => {
+    //   console.log("Checking productId:", prod._id); // Log each productId for debugging
+    //   return prod._id.toString() === productId; // Ensure productId is valid
+    // });
+    // if (productIndex === -1) {
+    //   return res
+    //     .status(404)
+    //     .json({ message: "Product not found in purchase record." });
+    // }
 
-    purchase.products[productIndex] = product;
-    await purchase.save();
+    // purchase.products[productIndex] = product;
+    // await purchase.save();
 
-    return purchase;
+    // return purchase;
   } catch (err) {
     res.status(400).json(err.message);
   }
@@ -257,28 +259,28 @@ const touristUpdateProductReview = async (req, res) => {
     await product.save();
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    const purchase = await purchases
-      .findOne({ buyer: buyer })
-      .populate("products");
+    // const purchase = await purchases
+    //   .findOne({ buyer: buyer })
+    //   .populate("products");
 
-    if (!purchase) {
-      return res.status(404).json({ message: "Purchase record not found." });
-    }
+    // if (!purchase) {
+    //   return res.status(404).json({ message: "Purchase record not found." });
+    // }
 
-    const productIndex = purchase.products.findIndex((prod) => {
-      console.log("Checking productId:", prod._id); // Log each productId for debugging
-      return prod._id.toString() === productId; // Ensure productId is valid
-    });
-    if (productIndex === -1) {
-      return res
-        .status(404)
-        .json({ message: "Product not found in purchase record." });
-    }
+    // const productIndex = purchase.products.findIndex((prod) => {
+    //   console.log("Checking productId:", prod._id); // Log each productId for debugging
+    //   return prod._id.toString() === productId; // Ensure productId is valid
+    // });
+    // if (productIndex === -1) {
+    //   return res
+    //     .status(404)
+    //     .json({ message: "Product not found in purchase record." });
+    // }
 
-    purchase.products[productIndex] = product;
-    await purchase.save();
-    res.status(200).json({ product, purchase });
-    return purchase;
+    // purchase.products[productIndex] = product;
+    // await purchase.save();
+    res.status(200).json({ product });
+   // return purchase;
   } catch (err) {
     res.status(400).json(err.message);
   }

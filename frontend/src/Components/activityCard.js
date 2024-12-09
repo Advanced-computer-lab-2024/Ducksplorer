@@ -500,7 +500,7 @@ export default function ActivityCard({ activity = {}, onRemove, showNotify }) {
                   </Chip>
                 }
               >
-                {activity.price}$
+                {activity.price}
               </Typography>
               <Button
                 size="md"

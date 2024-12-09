@@ -68,6 +68,7 @@ const RUDHistoricalPlace = () => {
         )
         .then((response) => {
           setHistoricalPlaces(response.data);
+          localStorage.setItem("HistoricalTags", JSON.stringify(response.data));
         })
         .catch((error) => {
           console.error(

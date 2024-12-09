@@ -91,7 +91,7 @@ const RUDMuseum = () => {
         setMuseumTagsOptions(data);
 
         // Store the fetched tags in localStorage after stringifying the data
-        localStorage.setItem("selectedTags", JSON.stringify(data));
+        localStorage.setItem("MuseumTags", JSON.stringify(data));
       } catch (error) {
         message.error(error.message);
       }
