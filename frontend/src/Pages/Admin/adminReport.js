@@ -4,7 +4,6 @@ import CurrencyConvertor from "../../Components/CurrencyConvertor";
 import { Link, useNavigate } from "react-router-dom";
 import WarningIcon from "@mui/icons-material/Warning";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { calculateProductRating } from "../../Utilities/averageRating";
 import { calculateAverageRating } from "../../Utilities/averageRating";
 import MyTabs from "../../Components/MyTabs.js";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
@@ -42,6 +41,7 @@ import AdminNavbar from "../../Components/NavBars/AdminNavBar";
 
 const AdminReport = () => {
 
+  let tabIndex = localStorage.getItem("tabIndex") || 0;
   const tabs = ["Users Report", "Revenue Report"];
   const paths = ["/userReport", "/adminReport"];
   const tabNames = ["Activities Report", "Itineraries Report", "Products Report"];
@@ -285,7 +285,7 @@ const AdminReport = () => {
         activitySetErrorMessage("No activities found for the selected filters.");
       }
       const response2 = await axios.get(
-        `http://localhost:8000/admin/getTotalBookAndEarnFilter?${queryString}`
+        `http://localhost:8000/admin/getTotalActivityBookAndEarnFilter?${queryString}`
       );
       setTotalEarning(response2.data.totalEarnings);
       setNumOfBookings(response2.data.totalBookings);
@@ -293,6 +293,9 @@ const AdminReport = () => {
       if (response2.data.length === 0) {
         activitySetErrorMessage("No activities found for the selected filters.");
       }
+      console.log(activities)
+      console.log(totalEarnings);
+      console.log(numOfBookings);
     } catch (error) {
       activitySetErrorMessage("Error fetching activities!");
     } finally {
@@ -336,7 +339,7 @@ const AdminReport = () => {
         itinerarySetErrorMessage("No itineraries found for the selected filters.");
       }
       const response2 = await axios.get(
-        `http://localhost:8000/admin/getTotalItineraryBookAndEarn?${queryString}`
+        `http://localhost:8000/admin/getTotalItineraryBookAndEarnFilter?${queryString}`
       );
       setTotalEarning(response2.data.totalEarnings);
       setNumOfBookings(response2.data.totalBookings);
@@ -344,6 +347,8 @@ const AdminReport = () => {
       if (response2.data.length === 0) {
         itinerarySetErrorMessage("No itineraries found for the selected filters.");
       }
+      console.log(totalEarnings);
+      console.log(numOfBookings);
     } catch (error) {
       itinerarySetErrorMessage("Error fetching itineraries!");
     } finally {
@@ -387,7 +392,7 @@ const AdminReport = () => {
         itinerarySetErrorMessage("No products found for the selected filters.");
       }
       const response2 = await axios.get(
-        `http://localhost:8000/admin/getTotalProductBookAndEarn?${queryString}`
+        `http://localhost:8000/admin/getTotalProductBookAndEarnFilter?${queryString}`
       );
       setTotalEarning(response2.data.totalEarnings);
       setNumOfBookings(response2.data.totalBookings);
@@ -395,12 +400,16 @@ const AdminReport = () => {
       if (response2.data.length === 0) {
         itinerarySetErrorMessage("No products found for the selected filters.");
       }
+      console.log(totalEarnings);
+      console.log(numOfBookings);
     } catch (error) {
       itinerarySetErrorMessage("Error fetching products!");
     } finally {
       setLoading(false);
     }
   };
+
+
 
   useEffect(() => {
     if (!activityFiltersApplied) return;
@@ -528,6 +537,8 @@ const AdminReport = () => {
   }
 
   else if (products.length === 0 && selectedTab === "Products Report") {
+    localStorage.setItem("tabIndex", 2);
+    tabIndex = 2;
     return (
       <>
         <AdminNavbar />
@@ -542,6 +553,8 @@ const AdminReport = () => {
   }
 
   else if (activities.length === 0 && selectedTab === "Activities Report") {
+    localStorage.setItem("tabIndex", 0);
+    tabIndex = 0;
     return (
       <>
         <AdminNavbar />
@@ -556,14 +569,18 @@ const AdminReport = () => {
   }
 
   else if (itineraries.length === 0 && selectedTab === "Itineraries Report") {
+    localStorage.setItem("tabIndex", 1);
+    tabIndex = 1;
     return (
       <>
         <AdminNavbar />
-        <Error404
+        {/* <Error404
           errorMessage={errorMessage3}
           backMessage={backMessage}
           route="/adminDashboard"
-        />
+        /> */}
+        <DuckLoading/>
+
       </>
     );
   }
@@ -625,7 +642,7 @@ const AdminReport = () => {
         </Typography>
       </Box>
 
-          <MyTabs tabNames={tabNames} onTabClick={(tabName) => setSelectedTab(tabName)} />
+          <MyTabs tabNames={tabNames} onTabClick={(tabName) => setSelectedTab(tabName)} index={tabIndex} />
 
           {selectedTab === "Activities Report" && (
             <div>

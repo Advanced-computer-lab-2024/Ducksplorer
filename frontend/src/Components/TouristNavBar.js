@@ -628,25 +628,6 @@ const TouristNavBar = ({ onCurrencyChange }) => {
                 </IconButton>
               </MenuItem>
 
-              <MenuItem onClick={handleToggleNotifyViaMail}>
-                <IconButton
-                  sx={{ textAlign: "center", p: 0.5, color: "black" }}
-                >
-                  {notifyViaMail ? (
-                    <MailIcon sx={{ fontSize: 20, color: "green" }} />
-                  ) : (
-                    <MailLockIcon sx={{ fontSize: 20, color: "red" }} />
-                  )}
-                  <Typography
-                    textAlign="center"
-                    marginLeft={2}
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    Notify via Mail
-                  </Typography>
-                </IconButton>
-              </MenuItem>
-
               <MenuItem onClick={handleCloseUserMenu}>
                 <IconButton
                   component="a"
