@@ -24,7 +24,7 @@ import { Link } from "react-router-dom";
 import Help from "../../Components/HelpIcon";
 import Error404 from "../../Components/Error404";
 import DuckLoading from "../../Components/Loading/duckLoading";
-import { message } from "statuses";
+import { message } from "antd";
 
 const PastBookingDetails = () => {
   const userName = JSON.parse(localStorage.getItem("user")).username;
@@ -113,7 +113,7 @@ const [selectedTab, setSelectedTab] = useState("All");
         { rating: newRating }
       );
       console.log("Rating response:", response.data);
-      alert("Activity rating submitted successfully!");
+      message.success("Activity rating submitted successfully!");
 
       setSelectedActivityRatings((prevRatings) => ({
         ...prevRatings,
@@ -131,10 +131,10 @@ const [selectedTab, setSelectedTab] = useState("All");
     } catch (error) {
       if (error.response) {
         console.error("Error response data:", error.response.data);
-        alert(`Failed to submit rating: ${error.response.data.message}`);
+        message.error(`Failed to submit rating: ${error.response.data.message}`);
       } else {
         console.error("Error submitting rating:", error.message);
-        alert("Failed to submit rating. Please try again.");
+        message.error("Failed to submit rating. Please try again.");
       }
     }
   };
@@ -150,7 +150,7 @@ const [selectedTab, setSelectedTab] = useState("All");
         { rating: newRating }
       );
       console.log("Rating response:", response.data);
-      alert("Itinerary rating submitted successfully!");
+      message.success("Itinerary rating submitted successfully!");
 
       setSelectedItineraryRatings((prevRatings) => ({
         ...prevRatings,
@@ -168,12 +168,12 @@ const [selectedTab, setSelectedTab] = useState("All");
     } catch (error) {
       if (error.response) {
         console.error("Error response data:", error.response.data);
-        alert(
+        message.error(
           `Failed to submit itinerary rating: ${error.response.data.message}`
         );
       } else {
         console.error("Error submitting itinerary rating:", error.message);
-        alert("Failed to submit itinerary rating. Please try again.");
+        message.error("Failed to submit itinerary rating. Please try again.");
       }
     }
   };
@@ -190,11 +190,11 @@ const [selectedTab, setSelectedTab] = useState("All");
           comment: activityComments[bookingId],
         }
       );
-      alert("Comment submitted successfully!");
+      message.success("Comment submitted successfully!");
       setActivityComments((prev) => ({ ...prev, [bookingId]: "" })); // Clear the comment input after submission
     } catch (error) {
       console.error("Error submitting comment:", error.message);
-      alert("Failed to submit comment. Please try again.");
+      message.error("Failed to submit comment. Please try again.");
     }
   };
 
@@ -210,11 +210,11 @@ const [selectedTab, setSelectedTab] = useState("All");
           comment: itineraryComments[bookingId],
         }
       );
-      alert("Comment submitted successfully!");
+      message.success("Comment submitted successfully!");
       setItineraryComments((prev) => ({ ...prev, [bookingId]: "" })); // Clear the comment input after submission
     } catch (error) {
       console.error("Error submitting comment:", error.message);
-      alert("Failed to submit comment. Please try again.");
+      message.error("Failed to submit comment. Please try again.");
     }
   };
 
@@ -240,11 +240,11 @@ const [selectedTab, setSelectedTab] = useState("All");
           rating: tourGuideRating,
         }
       );
-      alert("Tour Guide rated successfully!");
+      message.success("Tour Guide rated successfully!");
       setTourGuideRating(0);
     } catch (error) {
       console.error("Error rating tour guide:", error.message);
-      alert("Failed to submit rating. Please try again.");
+      message.error("Failed to submit rating. Please try again.");
     }
   };
 
@@ -256,11 +256,11 @@ const [selectedTab, setSelectedTab] = useState("All");
           comment: tourGuideComment,
         }
       );
-      alert("Comment submitted successfully!");
+      message.success("Comment submitted successfully!");
       setTourGuideComment("");
     } catch (error) {
       console.error("Error submitting comment:", error.message);
-      alert("Failed to submit comment. Please try again.");
+      message.error("Failed to submit comment. Please try again.");
     }
   };
 
