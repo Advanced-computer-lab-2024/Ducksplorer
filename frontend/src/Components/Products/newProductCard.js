@@ -8,16 +8,10 @@ import IconButton from "@mui/joy/IconButton";
 import StarIcon from "@mui/icons-material/Star";
 import Done from "@mui/icons-material/Done";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
-import {
-  Rating,
-  Tooltip,
-  Box,
-  TextField,
-  Dialog,
+import { Rating, Tooltip, Box, TextField, Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
-} from "@mui/material";
+  DialogActions, } from "@mui/material";
 import Button from "@mui/joy/Button";
 import axios from "axios";
 import { message } from "antd";
@@ -44,15 +38,18 @@ export default function ProductCard({
   showAddToCart = false,
   onProductRemove,
   onQuantityChange,
+  showQuantity = false,
   showRemoveWishlist,
   showAverageRatingNo, //shows/hides the average rating to users , for hiding when viewing in myPurchases Page as a tourist
   removeProductFromWishlist,
   hideWishlist = true,
   showPurchase,
+  inCart,
   showNotify,
+  onConfirm,
+  quantityInCart = 0,
   showChosenQuantity,
   chosenQuantity,
-  quantityInCart = 0,
 }) {
   const navigate = useNavigate();
   const role = useUserRole();
@@ -63,7 +60,7 @@ export default function ProductCard({
   const [archived, setArchived] = useState(product.isArchived);
   const [quantity, setQuantity] = useState(quantityInCart);
   const [open, setOpen] = React.useState(false);
-
+  const isGuest = localStorage.getItem("guest") === "true";
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [rating, setRating] = useState(null);
@@ -183,7 +180,7 @@ export default function ProductCard({
       // console.log(isProductInCart);
 
       // Update the state
-      setShowWishlist(isProductInWishlist);
+      setShowWishList(isProductInWishlist);
     } catch (error) {
       console.error("Error checking product in wishlist:", error);
       message.error("Failed to check product in wishlist.");
@@ -239,7 +236,7 @@ export default function ProductCard({
       );
       if (response.status === 200) {
         message.success("Product added to wishlist successfully!");
-        setShowWishlist(true);
+        setShowWishList(true);
       } else {
         message.error("Failed to add the product to the wishlist.");
       }
@@ -274,6 +271,63 @@ export default function ProductCard({
         const newQuantity = quantity;
         console.log("this is the quantity i am requesting", newQuantity);
         const response = await axios.put(
+          "http://localhost:8000/touristRoutes/cart",
+          {
+            userName,
+            productId: product._id,
+            newQuantity,
+          }
+        );
+        if (response.status === 200) {
+          message.success("Product added to cart successfully!");
+          setProductInCart(!productInCart);
+        } else {
+          message.error("Failed to update quantity in cart.");
+        }
+      } catch (error) {
+        console.error(error);
+        message.error(
+          "An error occurred while adding the product to the cart."
+        );
+      }
+    } else {
+      try {
+        const userJson = localStorage.getItem("user");
+        const user = JSON.parse(userJson);
+        const userName = user.username;
+        const response = await axios.delete(
+          "http://localhost:8000/touristRoutes/cart",
+          {
+            params: {
+              userName,
+              productId: product._id,
+            },
+          }
+        );
+        if (response.status === 200) {
+          message.success("Product removed from successfully!");
+          setProductInCart(!productInCart);
+        } else {
+          message.error("Failed to update quantity in cart.");
+        }
+      } catch (error) {
+        console.error(error);
+        message.error(
+          "An error occurred while adding the product to the cart."
+        );
+      }
+    }
+  };
+
+  const handleAddToCartClick2 = async (e) => {
+    if (quantity > 0) {
+      try {
+        const userJson = localStorage.getItem("user");
+        const user = JSON.parse(userJson);
+        const userName = user.username;
+        const newQuantity = quantity;
+        console.log("this is the quantity i am requesting", newQuantity);
+        const response = await axios.patch(
           "http://localhost:8000/touristRoutes/cart",
           {
             userName,
@@ -419,7 +473,7 @@ export default function ProductCard({
               >
                 <IconButton
                   size="md"
-                  variant={showWishlist ? "soft" : "solid"}
+                  variant={showWishList ? "soft" : "solid"}
                   onClick={(event) => {
                     event.stopPropagation(); // Stop event propagation
                     showRemoveWishlist
@@ -622,7 +676,7 @@ export default function ProductCard({
                 onClick={(event) => {
                   event.stopPropagation(); // Stops propagation
                   if (product.availableQuantity > 0) {
-                    handleAddToCartClick(); // Call the function without passing `event`
+                    handleAddToCartClick(); // Call the function without passing event
                   }
                 }}
                 sx={{
@@ -732,7 +786,8 @@ export default function ProductCard({
             </Button>
           )} */}
             {role === "Tourist" && showReview && (
-              <Button
+
+               <Button
                 variant="contained"
                 color="primary"
                 className="blackhover"
@@ -809,7 +864,7 @@ export default function ProductCard({
                     color="primary"
                     className="blackhover"
                     sx={{
-                      color: "white",
+                      color:'white'
                     }}
                   >
                     Submit Review
@@ -826,64 +881,62 @@ export default function ProductCard({
             alignItems: "center",
           }}
         >
-          {!showReviewBox && (
-            <Popover
-              open={open}
-              anchorEl={null}
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: "center",
-                horizontal: "center",
-              }}
-              transformOrigin={{
-                vertical: "center",
-                horizontal: "center",
-              }}
-              sx={{
-                "& .MuiPopover-paper": {
-                  height: "100vh",
-                  background: "none",
-                  boxShadow: "none",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: 0,
-                },
+         {!showReviewBox && (<Popover
+            open={open}
+            anchorEl={null}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "center",
+              horizontal: "center",
+            }}
+            transformOrigin={{
+              vertical: "center",
+              horizontal: "center",
+            }}
+            sx={{
+              "& .MuiPopover-paper": {
+                height: "100vh",
+                background: "none",
+                boxShadow: "none",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: 0,
+              },
+            }}
+          >
+            <div
+              style={{
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                width: "60vw",
+                maxWidth: "90%",
+                maxHeight: "80vh",
+                overflow: "auto",
+                borderRadius: "16px",
+                backgroundColor: "#f5f5f5",
               }}
             >
-              <div
+              <button
+                onClick={handleClose}
                 style={{
-                  position: "relative",
-                  display: "flex",
-                  flexDirection: "column",
-                  width: "60vw",
-                  maxWidth: "90%",
-                  maxHeight: "80vh",
-                  overflow: "auto",
-                  borderRadius: "16px",
-                  backgroundColor: "#f5f5f5",
+                  position: "absolute",
+                  top: "10px",
+                  right: "10px",
+                  background: "transparent",
+                  border: "none",
+                  fontSize: "1.5rem",
+                  cursor: "pointer",
+                  color: "#333",
                 }}
               >
-                <button
-                  onClick={handleClose}
-                  style={{
-                    position: "absolute",
-                    top: "10px",
-                    right: "10px",
-                    background: "transparent",
-                    border: "none",
-                    fontSize: "1.5rem",
-                    cursor: "pointer",
-                    color: "#333",
-                  }}
-                >
-                  &times;
-                </button>
+                &times;
+              </button>
 
-                <ProductCardDetails product={product} role={role} />
-              </div>
-            </Popover>
-          )}
+              <ProductCardDetails product={product} role={role} />
+            </div>
+          </Popover> )}
         </div>
       </div>
     );
