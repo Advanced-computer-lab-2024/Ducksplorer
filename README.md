@@ -1,6 +1,4 @@
-
 # Ducksplorer: Get Your Ducks in a Row! 
-
 Ducksplorer is your all-in-one travel companion, designed to make vacation planning seamless, organized, and enjoyable. Inspired by the saying *"get your ducks in a row,"* which means to have everything well-planned and in perfect order, Ducksplorer ensures that every detail of your trip is taken care of. Whether you’re drawn to historic landmarks, serene beaches, or adventurous getaways, Ducksplorer combines personalized planning, seamless booking, smart budgeting, and curated local recommendations into one intuitive platform. With features like real-time notifications, customizable itineraries, and even an exclusive gift shop, Ducksplorer helps you plan, organize, and execute your dream vacation effortlessly. Start exploring with Ducksplorer and experience hassle-free travel like never before!  
 
 ## Motivation
@@ -10,26 +8,177 @@ Ducksplorer was initially conceived as a project for our Advanced Computer Lab c
 The current build of Ducksplorer is stable and free from any critical bugs or errors. However, users may experience slower loading times due to the resource-intensive nature of the platform. This is because Ducksplorer integrates multiple features and services, such as real-time notifications, curated recommendations, and seamless booking options, all of which utilize significant computational resources. We also experience slowness when typing a review for a product. While the platform is fully functional, optimizing loading performance is a key area we aim to address in future updates. We appreciate your understanding and welcome any suggestions to improve this aspect of the application.  
 
 ## Code Style
-
 For Ducksplorer, we adhered to a camel casing style for naming variables, functions, and other identifiers. While no formal style guide was strictly followed, we focused on maintaining consistency and clarity in the code through team collaboration. Contributors were encouraged to write clean, readable, and well-documented code to ensure the project remains easy to understand and maintain.
 
 ## Screenshots/Videos of the website
-
 Here are links to a folder on google drive:
 
 Screenshots:
 https://drive.google.com/drive/folders/1QEX_bJYIjdphBVo_t6tFjP5BgRcCnQ10?usp=sharing
 
-Videos:
+Video:
 https://drive.google.com/file/d/1vEfB2cxJn_ptKG56gme_h5V2dTgEwrNO/view?usp=sharing
 
 ## Tech/Framework used
-
 In Ducksplorer, we used the MERN stack to build the application. The frontend is developed using React, which allows for a dynamic and responsive user interface. For the backend, we used Node.js along with Express.js to handle routing and server-side logic efficiently. The database is managed using Mongoose, which provides an easy-to-use Object Data Modeling (ODM) tool for MongoDB, simplifying database interactions. This tech stack ensures a robust, scalable, and high-performance application. To fully understand and contribute to the project, familiarity with these technologies is essential.
 
 ## Features
+1. Signup
 
-Ducksplorer stands out by offering a fully personalized travel planning experience, allowing users to tailor their trips based on specific interests. Unlike other platforms, it integrates seamless bookings for flights, hotels, and transportation, all within the app—no redirects required. It also provides intelligent budgeting suggestions that ensure your activities fit within your remaining budget. What sets Ducksplorer apart is its curated list of local activities, museums, and landmarks, complete with ticket prices and directions, plus real-time updates on upcoming events. The app also features customizable itineraries and expert-guided tours, making it perfect for both spontaneous and well-planned travelers. Lastly, an in-app gift shop adds a unique touch, allowing you to purchase local souvenirs to remember your trip.
+2. Login
+
+3. Tourist
+	-View my profile
+	-Edit profile
+	-Show prefrences
+	-My complaints
+	-Logout
+	-File a complaint
+	-Currency converter
+	-View all saved activities and itineraries
+	-View a demo on how to use the website
+	-Activities:
+		->Book
+		->View Details
+		->Pay wallet
+		->Pay visa
+		->Save
+		->Share
+		->Search
+		->View Upcoming
+		->Filter
+		->Sort
+		->View my bookings
+		->View past bookings
+		->Apply promo code
+	-Itineraries:
+		->Book
+		->View Details
+		->Pay wallet
+		->Pay visa
+		->Save
+		->Share
+		->Search
+		->View Upcoming
+		->Filter
+		->Sort
+		->View my bookings
+		->View past bookings
+		->Apply promo code
+		->Choose one of the upcoming available details
+	-Products:
+		->Pay wallet
+		->Pay visa
+		->Cash on delivery
+		->Add to wishlist
+		->Add to cart
+		->Choose quantity
+		->View my cart
+		->Change quantity
+		->Checkout
+		->Add address
+		->Apply promo code
+		->Choose saved address
+		->View wishlist
+		->View my orders
+		->View order details 
+		->Add review
+		->Submit review
+	-Flights, Hotels, Transportation:
+		->Book
+		->Apply promo code
+		->Pay visa
+		->Pay wallet
+		->View my bookings
+	-Museums and Historical Places:
+		->View details
+		->Share
+		->Search
+		->Filter 
+		->View Upcoming
+
+4. Tour Guide
+	-View profile
+	-Edit Account
+	-Delete Account
+	-View Notifications
+	-Logout
+	-Change password
+	-Itineraries:
+		->View my itineraries
+		->Activate/Deactivate
+		->Edit
+		->Delete
+		->Add activity
+		->Report (filter, number of bookings, number of earnings)
+
+5. Advertiser
+	-View profile
+	-Edit Account
+	-Delete Account
+	-View Notifications
+	-Logout
+	-Change password
+	-Activities:
+		->Edit
+		->Delete
+		->Report (filter, number of bookings, number of earnings)
+		->Add Activity
+		->View my activities
+
+6. Seller
+	-View profile
+	-Edit Account
+	-Delete Account
+	-View Notifications
+	-Logout
+	-Change password
+	-Products:
+		->View all products
+		->View my products
+		->Report (filter, number of bookings, number of earnings)
+
+7. Governor
+	-Add a new museum
+	-Add a new historical place
+	-View all museums
+	-View all historical places
+	-Edit/Delete museum details
+	-Edit/Delete historical place details
+	-Change password
+	-Logout
+	-Create museum tags
+	-Create historical place tags
+	-View notifications
+	-Change password
+	-Logout
+
+8. Admin
+	-Add admin
+	-Add governor
+	-Approve pending users
+	-View files uploaded by pending users
+	-Delete approved users
+	-View available tags/categories
+	-Add new tags/categories
+	-Create promo code
+	-View complaints
+	-Sort complaints by date
+	-Filter complaints by status
+	-Mark complaint as pending/resolved
+	-View complaint details
+	-Reply on a complaint
+	-View all users report
+	-Filter on all users (by month)
+	-View activities/itineraries/products report
+	-View total earnings and total number of users booked each activity/itinerary/product
+	-Filter by date/(month and/or year) in the three reports
+	-View all products
+	-View my products
+	-Add product
+	-View all activities/itineraries
+	-Change activity/itinerary flag
+
 
 ## Code Examples
 ### 1. BE Routes Example:
@@ -992,11 +1141,41 @@ To get started with Ducksplorer, you'll need to install several software tools a
 ### 10. Install Postman
    - **Postman** is a tool for testing APIs. Download and install it from [Postman download page](https://www.postman.com/downloads/), and choose the version suitable for your operating system.
 
-By following these steps, you should be able to successfully install everything you need for the Ducksplorer project. If you encounter any issues, feel free to consult the links provided for additional setup help.
+### 11. Clone the repository:
+   ```
+  git clone https://github.com/Advanced-computer-lab-2024/Ducksplorer.git
+   ```
+
+### 12. Navigate to the project directory:
+   ```
+   cd ducksplorer
+   ```
+
+### 13. Install the required dependencies:
+   ```
+   npm install
+   ```
+
+### 14. Set Up Environment Variables
+- Create a `.env` file in the root of the project and add your MongoDB connection string, like:
+  ```
+  MONGO_URI=mongodb://localhost:8000/ducksplorer
+  ```
+
+### 15. Run the Backend Server
+- Start the backend server using Nodemon to automatically reload the server on code changes: nodemon server.js.
+- Your backend server will run on http://localhost:8000.
+
+### 16. Run the Frontend Application
+- Open a new terminal window or tab.
+- Navigate to the frontend folder: cd frontend
+- Start the React development server: npm start
+- The frontend will be available at http://localhost:3000.
+
+By following these steps, you should be able to successfully install everything you need for the Ducksplorer project to run on your local machine. You can now  begin planning your trips or exploring the app's features. If you encounter any issues, feel free to consult the links provided for additional setup help.
 
 ## API References
-
-There is a JSON file  inside the Ducksplorer of our collection exported.
+There is a JSON file of our collection exported inside the Ducksplorer folder.
 
 You will also find here the link to our collection with all of the routes:
 
@@ -1174,56 +1353,105 @@ http://localhost:8000/touristRoutes/getLevel/noha1
 TYPE: GET
 
 ## How To Use?
-Follow the steps below to set up and use Ducksplorer on your local machine. This guide assumes you have already completed the installation process mentioned earlier.
+Welcome to Ducksplorer! Follow the steps below to navigate through the website. This guide assumes you have already completed the installation process mentioned earlier.
 
-### 1. Clone the repository:
-   ```
-  git clone https://github.com/Advanced-computer-lab-2024/Ducksplorer.git
-   ```
+General Notes for All Users:
+Upon accessing the website, you will first see the homepage. From there, you can choose to sign up, log in, or continue as a guest. Tourism governors are added to the system by the administrator. Tourist accounts are automatically approved upon signup. Tour guides, sellers, and advertisers, however, must wait for administrator approval.
 
-### 2. Navigate to the project directory:
-   ```
-   cd ducksplorer
-   ```
+For Tourists:
+After logging in, you will be taken to the tourist dashboard. A demo video is available to help you navigate the website. The right most side of the navigation bar, located at the top of the screen, contains several key features:
 
-### 3. Install the required dependencies:
-   ```
-   npm install
-   ```
+* Notifications (Bell Icon): Receive system notifications, such as upcoming activities, itineraries, birthday promo codes, and receipts for booked activities/itineraries.
 
-### 4. Set Up Environment Variables
-- Create a `.env` file in the root of the project and add your MongoDB connection string, like:
-  ```
-  MONGO_URI=mongodb://localhost:8000/ducksplorer
-  ```
+* Cart Icon: Access your shopping cart.
 
-### 5. Run the Backend Server
-- Start the backend server using Nodemon to automatically reload the server on code changes: nodemon server.js.
-- Your backend server will run on http://localhost:8000.
+* Wishlist Icon: View your saved items.
 
-### 6. Run the Frontend Application
-- Open a new terminal window or tab.
-- Navigate to the frontend folder: cd frontend
-- Start the React development server: npm start
-- The frontend will be available at http://localhost:3000.
+* Profile Icon: Access your profile, where you can log out, view your bookings, complaints, saved events, and other profile details.
 
-### 7. Use the Application
-Using this application, you can for example:
-- Plan your trip by selecting your travel preferences (e.g., historic sites, beaches, shopping).
-- Book flights, hotels, and transportation directly within the app.
-- Discover local gems, activities, and guided tours for your destination.
-- Buy products from the gift shop
+In the center of the navigation bar, you can access various sections of the website, including activities, itineraries, flights, hotels, transportation, landmarks (museums and historical places), and the marketplace.
 
-### 8. Test API Endpoints 
-If you're a developer and want to test the API, you can use Postman or any other API testing tool:
-Import the Postman collection shared in the project documentation.
+A question mark icon in the bottom right corner of the screen allows you to submit a complaint.
 
-### 9. Log Out or Restart
-Once you're done using the app, you can stop the development servers by pressing Ctrl+C in the terminal for each server.
+You can return to your dashboard from any tab by clicking the Ducksplorer logo.
 
-By following these steps, you should be able to get Ducksplorer running on your local machine and begin planning your trips or exploring the app's features. 
+
+For Tour Guides:
+Upon logging in, you will be directed to the tour guide dashboard, displaying your total revenue, total booked itineraries, and total active itineraries. The right most side of navigation bar offers the following:
+
+* Notifications Icon: View notifications, such as itinerary flags for inappropriate content from the administrator.
+
+* Profile/Logout: Edit your profile or log out.
+
+In the center of the navigation bar, you can manage your itineraries: view all created itineraries, create new itineraries, or view sales reports. Sales reports show profit per itinerary and the number of participating tourists. You can filter these reports by day, month, year, or a specific date.
+
+You can return to your dashboard from any tab by clicking the Ducksplorer logo.
+
+
+For Advertisers:
+After logging in, you will arrive at the advertiser dashboard, displaying your total revenue, total booked activities, and total activities. The right most side of the navigation bar includes:
+
+* Notifications Icon: View notifications, such as activity flags for inappropriate content from the administrator.
+
+* Profile/Logout: Edit your profile or log out.
+
+In the center of the navigation bar, you can manage your activities: view all created activities, create new activities, or view sales reports. Sales reports show profit per activity and the number of attendees. You can filter these reports by day, month, year, or a specific date.
+
+You can return to your dashboard from any tab by clicking the Ducksplorer logo.
+
+
+For Sellers:
+Upon logging in, you will see your total revenue, total products sold, and your most frequently sold product. The right most side of the navigation bar provides:
+
+* Notifications Icon: View notifications, such as low stock alerts.
+
+* Profile/Logout: Edit your profile or log out.
+
+The "Manage Products" section in the center of the navigation bar allows you to view all your products or all products in general. In "My Products," you can add new products using the plus icon. The "All Products" page allows you to filter, search, and sort products.
+
+The "Report" section displays your profit from each product and the total number of users who purchased it. You can filter the report by day, month, year, or a specific date.
+
+You can return to your dashboard from any tab by clicking the Ducksplorer logo.
+
+
+For Administrators:
+After logging in, you will access the admin dashboard. From here, you can:
+
+* View all complaints.
+
+* View sales reports for itineraries and activities, filterable by day, month, year, or a specific date.
+
+* View user reports showing the total number of users on the system and the number of new users per month.
+
+* Manage products.
+
+* View all events (itineraries/activities) and flag them as inappropriate.
+
+The right most side of the navigation bar includes:
+
+* Notifications: View notifications, such as product stock alerts.
+
+* Change Password/Logout: Change your password or log out.
+
+In the center of the navigation bar, you can:
+
+* Add users (admin/tourism governor).
+
+* Manage users (approve/disapprove new users or delete existing users).
+
+* Browse selections (tags or categories).
+
+* Create promo codes.
+
+You can return to your dashboard from any tab by clicking the Ducksplorer logo.
+
+
+For Tourism Governors:
+Upon logging in, you will be taken to your dashboard, displaying the total number of historical places and museums. On the right most side of the navigation bar  you will can click to edit your profile or log out. In the center of the navigation bar, you can view and create museums or historical places.
+You can return to your dashboard from any tab by clicking the Ducksplorer logo.
+
+
 ## Contribute
-
 We welcome contributions to Ducksplorer! If you'd like to help improve the app or fix any issues, here's how you can get started.
 
 ### 1. Performance Optimization:
@@ -1263,7 +1491,6 @@ We would like to give credit to the following resources, which were essential in
 -  **[Stack Overflow](https://stackoverflow.com/)** - The go-to forum for troubleshooting errors and finding solutions to common coding problems.
 
 ## License
-
 This project is licensed under the following licenses:
 
 - **ISC License**
