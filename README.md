@@ -126,7 +126,7 @@ In Ducksplorer, we used the MERN stack to build the application. The frontend is
 		-> Add Activity
 		-> View my activities
 
-6. Seller
+### 6. Seller
 	- View profile
 	- Edit Account
 	- Delete Account
