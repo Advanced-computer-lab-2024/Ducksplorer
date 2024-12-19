@@ -23,161 +23,161 @@ https://drive.google.com/file/d/1vEfB2cxJn_ptKG56gme_h5V2dTgEwrNO/view?usp=shari
 In Ducksplorer, we used the MERN stack to build the application. The frontend is developed using React, which allows for a dynamic and responsive user interface. For the backend, we used Node.js along with Express.js to handle routing and server-side logic efficiently. The database is managed using Mongoose, which provides an easy-to-use Object Data Modeling (ODM) tool for MongoDB, simplifying database interactions. This tech stack ensures a robust, scalable, and high-performance application. To fully understand and contribute to the project, familiarity with these technologies is essential.
 
 ## Features
-1. Signup
+### 1. Signup
 
-2. Login
+### 2. Login
 
-3. Tourist
-	-View my profile
-	-Edit profile
-	-Show prefrences
-	-My complaints
-	-Logout
-	-File a complaint
-	-Currency converter
-	-View all saved activities and itineraries
-	-View a demo on how to use the website
-	-Activities:
-		->Book
-		->View Details
-		->Pay wallet
-		->Pay visa
-		->Save
-		->Share
-		->Search
-		->View Upcoming
-		->Filter
-		->Sort
-		->View my bookings
-		->View past bookings
-		->Apply promo code
+### 3. Tourist
+	- View my profile
+	- Edit profile
+	- Show prefrences
+	- My complaints
+	- Logout
+	- File a complaint
+	- Currency converter
+	- View all saved activities and itineraries
+	- View a demo on how to use the website
+	- Activities:
+		-> Book
+		-> View Details
+		-> Pay wallet
+		-> Pay visa
+		-> Save
+		-> Share
+		-> Search
+		-> View Upcoming
+		-> Filter
+		-> Sort
+		-> View my bookings
+		-> View past bookings
+		-> Apply promo code
 	-Itineraries:
-		->Book
-		->View Details
-		->Pay wallet
-		->Pay visa
-		->Save
-		->Share
-		->Search
-		->View Upcoming
-		->Filter
-		->Sort
-		->View my bookings
-		->View past bookings
-		->Apply promo code
-		->Choose one of the upcoming available details
-	-Products:
-		->Pay wallet
-		->Pay visa
-		->Cash on delivery
-		->Add to wishlist
-		->Add to cart
-		->Choose quantity
-		->View my cart
-		->Change quantity
-		->Checkout
-		->Add address
-		->Apply promo code
-		->Choose saved address
-		->View wishlist
-		->View my orders
-		->View order details 
-		->Add review
-		->Submit review
-	-Flights, Hotels, Transportation:
-		->Book
-		->Apply promo code
-		->Pay visa
-		->Pay wallet
-		->View my bookings
-	-Museums and Historical Places:
-		->View details
-		->Share
-		->Search
-		->Filter 
-		->View Upcoming
+		-> Book
+		-> View Details
+		-> Pay wallet
+		-> Pay visa
+		-> Save
+		-> Share
+		-> Search
+		-> View Upcoming
+		-> Filter
+		-> Sort
+		-> View my bookings
+		-> View past bookings
+		-> Apply promo code
+		-> Choose one of the upcoming available details
+	- Products:
+		-> Pay wallet
+		-> Pay visa
+		-> Cash on delivery
+		-> Add to wishlist
+		-> Add to cart
+		-> Choose quantity
+		-> View my cart
+		-> Change quantity
+		-> Checkout
+		-> Add address
+		-> Apply promo code
+		-> Choose saved address
+		-> View wishlist
+		-> View my orders
+		-> View order details 
+		-> Add review
+		-> Submit review
+	- Flights, Hotels, Transportation:
+		-> Book
+		-> Apply promo code
+		-> Pay visa
+		-> Pay wallet
+		-> View my bookings
+	- Museums and Historical Places:
+		-> View details
+		-> Share
+		-> Search
+		-> Filter 
+		-> View Upcoming
 
-4. Tour Guide
-	-View profile
-	-Edit Account
-	-Delete Account
-	-View Notifications
-	-Logout
-	-Change password
-	-Itineraries:
-		->View my itineraries
-		->Activate/Deactivate
-		->Edit
-		->Delete
-		->Add activity
-		->Report (filter, number of bookings, number of earnings)
+### 4. Tour Guide
+	- View profile
+	- Edit Account
+	- Delete Account
+	- View Notifications
+	- Logout
+	- Change password
+	- Itineraries:
+		-> View my itineraries
+		-> Activate/Deactivate
+		-> Edit
+		-> Delete
+		-> Add activity
+		-> Report (filter, number of bookings, number of earnings)
 
-5. Advertiser
-	-View profile
-	-Edit Account
-	-Delete Account
-	-View Notifications
-	-Logout
-	-Change password
-	-Activities:
-		->Edit
-		->Delete
-		->Report (filter, number of bookings, number of earnings)
-		->Add Activity
-		->View my activities
+### 5. Advertiser
+	- View profile
+	- Edit Account
+	- Delete Account
+	- View Notifications
+	- Logout
+	- Change password
+	- Activities:
+		-> Edit
+		-> Delete
+		-> Report (filter, number of bookings, number of earnings)
+		-> Add Activity
+		-> View my activities
 
 6. Seller
-	-View profile
-	-Edit Account
-	-Delete Account
-	-View Notifications
-	-Logout
-	-Change password
-	-Products:
-		->View all products
-		->View my products
-		->Report (filter, number of bookings, number of earnings)
+	- View profile
+	- Edit Account
+	- Delete Account
+	- View Notifications
+	- Logout
+	- Change password
+	- Products:
+		-> View all products
+		-> View my products
+		-> Report (filter, number of bookings, number of earnings)
 
-7. Governor
-	-Add a new museum
-	-Add a new historical place
-	-View all museums
-	-View all historical places
-	-Edit/Delete museum details
-	-Edit/Delete historical place details
-	-Change password
-	-Logout
-	-Create museum tags
-	-Create historical place tags
-	-View notifications
-	-Change password
-	-Logout
+### 7. Governor
+	- Add a new museum
+	- Add a new historical place
+	- View all museums
+	- View all historical places
+	- Edit/Delete museum details
+	- Edit/Delete historical place details
+	- Change password
+	- Logout
+	- Create museum tags
+	- Create historical place tags
+	- View notifications
+	- Change password
+	- Logout
 
-8. Admin
-	-Add admin
-	-Add governor
-	-Approve pending users
-	-View files uploaded by pending users
-	-Delete approved users
-	-View available tags/categories
-	-Add new tags/categories
-	-Create promo code
-	-View complaints
-	-Sort complaints by date
-	-Filter complaints by status
-	-Mark complaint as pending/resolved
-	-View complaint details
-	-Reply on a complaint
-	-View all users report
-	-Filter on all users (by month)
-	-View activities/itineraries/products report
-	-View total earnings and total number of users booked each activity/itinerary/product
-	-Filter by date/(month and/or year) in the three reports
-	-View all products
-	-View my products
-	-Add product
-	-View all activities/itineraries
-	-Change activity/itinerary flag
+### 8. Admin
+	- Add admin
+	- Add governor
+	- Approve pending users
+	- View files uploaded by pending users
+	- Delete approved users
+	- View available tags/categories
+	- Add new tags/categories
+	- Create promo code
+	- View complaints
+	- Sort complaints by date
+	- Filter complaints by status
+	- Mark complaint as pending/resolved
+	- View complaint details
+	- Reply on a complaint
+	- View all users report
+	- Filter on all users (by month)
+	- View activities/itineraries/products report
+	- View total earnings and total number of users booked each activity/itinerary/product
+	- Filter by date/(month and/or year) in the three reports
+	- View all products
+	- View my products
+	- Add product
+	- View all activities/itineraries
+	- Change activity/itinerary flag
 
 
 ## Code Examples
@@ -1355,10 +1355,10 @@ TYPE: GET
 ## How To Use?
 Welcome to Ducksplorer! Follow the steps below to navigate through the website. This guide assumes you have already completed the installation process mentioned earlier.
 
-General Notes for All Users:
+### General Notes for All Users:
 Upon accessing the website, you will first see the homepage. From there, you can choose to sign up, log in, or continue as a guest. Tourism governors are added to the system by the administrator. Tourist accounts are automatically approved upon signup. Tour guides, sellers, and advertisers, however, must wait for administrator approval.
 
-For Tourists:
+### For Tourists:
 After logging in, you will be taken to the tourist dashboard. A demo video is available to help you navigate the website. The right most side of the navigation bar, located at the top of the screen, contains several key features:
 
 * Notifications (Bell Icon): Receive system notifications, such as upcoming activities, itineraries, birthday promo codes, and receipts for booked activities/itineraries.
@@ -1376,7 +1376,7 @@ A question mark icon in the bottom right corner of the screen allows you to subm
 You can return to your dashboard from any tab by clicking the Ducksplorer logo.
 
 
-For Tour Guides:
+### For Tour Guides:
 Upon logging in, you will be directed to the tour guide dashboard, displaying your total revenue, total booked itineraries, and total active itineraries. The right most side of navigation bar offers the following:
 
 * Notifications Icon: View notifications, such as itinerary flags for inappropriate content from the administrator.
@@ -1388,7 +1388,7 @@ In the center of the navigation bar, you can manage your itineraries: view all c
 You can return to your dashboard from any tab by clicking the Ducksplorer logo.
 
 
-For Advertisers:
+### For Advertisers:
 After logging in, you will arrive at the advertiser dashboard, displaying your total revenue, total booked activities, and total activities. The right most side of the navigation bar includes:
 
 * Notifications Icon: View notifications, such as activity flags for inappropriate content from the administrator.
@@ -1400,7 +1400,7 @@ In the center of the navigation bar, you can manage your activities: view all cr
 You can return to your dashboard from any tab by clicking the Ducksplorer logo.
 
 
-For Sellers:
+### For Sellers:
 Upon logging in, you will see your total revenue, total products sold, and your most frequently sold product. The right most side of the navigation bar provides:
 
 * Notifications Icon: View notifications, such as low stock alerts.
@@ -1413,8 +1413,7 @@ The "Report" section displays your profit from each product and the total number
 
 You can return to your dashboard from any tab by clicking the Ducksplorer logo.
 
-
-For Administrators:
+### For Administrators:
 After logging in, you will access the admin dashboard. From here, you can:
 
 * View all complaints.
@@ -1445,8 +1444,7 @@ In the center of the navigation bar, you can:
 
 You can return to your dashboard from any tab by clicking the Ducksplorer logo.
 
-
-For Tourism Governors:
+### For Tourism Governors:
 Upon logging in, you will be taken to your dashboard, displaying the total number of historical places and museums. On the right most side of the navigation bar  you will can click to edit your profile or log out. In the center of the navigation bar, you can view and create museums or historical places.
 You can return to your dashboard from any tab by clicking the Ducksplorer logo.
 
